@@ -12,8 +12,16 @@ function ShowVehiculeListeComponent({
   handleSearchChange,
   filteredVehicles,
   handleVehicleClick,
+  selectedVehicle,
 }) {
-  const { currentVehicule } = useContext(DataContext);
+  const { currentVehicule, currentdataFusionnee } = useContext(DataContext);
+
+  // const deviceID = currentVehicule.deviceID;
+
+  // Recherche du véhicule correspondant dans la liste
+  const foundVehicle = currentdataFusionnee.find(
+    (v) => v.deviceID === selectedVehicle
+  );
   return (
     <>
       {showVehiculeListe && (
@@ -29,6 +37,7 @@ function ShowVehiculeListeComponent({
             <h2
               onClick={() => {
                 setShowVehiculeListe(!showVehiculeListe);
+                // console.log(foundVehicle.description);
               }}
               className="absolute left-0 top-4 right-0 font-semibold text-gray-700 dark:text-gray-100 mb-2 text-lg pl-7 border-b-2 pb-2 border-gray-600/20"
             >
@@ -61,9 +70,7 @@ function ShowVehiculeListeComponent({
                   className="cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:hover:bg-gray-800/50 dark:text-gray-50"
                 >
                   <FaCar className="text-orange-600/80 min-w-8 text-lg dark:text-orange-400" />
-                  <p className="">
-                    { vehicule.description || "---"}
-                  </p>
+                  <p className="">{vehicule.description || "---"}</p>
                 </div>
               ))} */}
 
@@ -73,7 +80,7 @@ function ShowVehiculeListeComponent({
                     key={vehicule.deviseID}
                     onClick={() => handleVehicleClick(vehicule)}
                     className={`${
-                      vehicule.description === currentVehicule?.description &&
+                      vehicule.description === foundVehicle?.description &&
                       "bg-orange-50"
                     } cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-gray-700`}
                   >

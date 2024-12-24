@@ -38,7 +38,8 @@ const LocationPage = () => {
   );
 
   const vehicleData = vehiculeActive.map((vehicule) => ({
-    deviceID: vehicule.deviceID || "",
+    // deviceID: 33333333333,
+    deviceID: vehicule.deviceID || "---",
     description: vehicule.description || "Véhicule",
     lastValidLatitude: vehicule.vehiculeDetails?.[0]?.latitude || "",
     lastValidLongitude: vehicule.vehiculeDetails?.[0]?.longitude || "",
@@ -51,9 +52,15 @@ const LocationPage = () => {
   }));
 
   const handleVehicleClick = (vehicle) => {
+    console.log("iiiiiiiiii", selectedVehicle);
+    console.log("vvvvvvv", vehicle.deviceID);
     setSelectedVehicle(vehicle.deviceID);
     setShowVehiculeListe(!showVehiculeListe);
   };
+
+  useEffect(() => {
+    console.log(selectedVehicle);
+  }, [selectedVehicle]);
 
   const showAllVehicles = () => {
     setSelectedVehicle(null);
@@ -136,6 +143,14 @@ const LocationPage = () => {
 
   return (
     <div className="relative">
+      {/* <div
+        onClick={() => {
+          console.log(mergedData);
+        }}
+        className="fixed top-[5rem] z-[99999999999999999999999] left-0"
+      >
+        asfasdfs
+      </div> */}
       <HeaderLocation
         setShowVehiculeListe={setShowVehiculeListe}
         selectedVehicle={selectedVehicle}
@@ -152,6 +167,7 @@ const LocationPage = () => {
         handleSearchChange={handleSearchChange}
         filteredVehicles={filteredVehicles}
         handleVehicleClick={handleVehicleClick}
+        selectedVehicle={selectedVehicle}
       />
 
       <div className="relative">

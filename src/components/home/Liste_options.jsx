@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { RiShutDownLine } from "react-icons/ri";
 import { FaMicrophone } from "react-icons/fa";
@@ -96,10 +96,36 @@ function Liste_options({}) {
     }
   };
 
+  ////////////////////////////////////////////////////////////////////////////////
+
+  const containerRef = useRef(null); // La référence pour le composant à surveiller
+
+  // Fonction pour fermer le tooltip si on clique en dehors du composant
+  const handleClickOutside = (event) => {
+    if (containerRef.current && !containerRef.current.contains(event.target)) {
+      setshowControlePupup(false); // Désactive l'état "isOffline" si on clique en dehors
+    }
+  };
+
+  // Ajouter l'event listener quand le composant est monté et le nettoyer à la destruction
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    // Nettoyer l'event listener au démontage du composant
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  ////////////////////////////////////////////////////////////////////////////////
+
   return (
     <div className="bg-black/50 dark:bg-black/80 fixed z-[111111] inset-0 flex justify-center items-center">
       {showControlePupup && (
-        <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
+        <div
+          ref={containerRef}
+          className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70"
+        >
           <div className="relative w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setshowControlePupup(false)}

@@ -648,18 +648,71 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   }, [vehicleData]);
 
   // Pour fusionnee les donnes des fonctions fetchVehicleData et fetchVehicleDetails
+  // const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
+  //   const dataFusionne = {};
+  //   const seenEvents = new Set();
+
+  //   vehicleData.forEach((vehicle) => {
+  //     const { deviceID } = vehicle;
+  //     dataFusionne[deviceID] = {
+  //       ...vehicle,
+  //       vehiculeDetails:
+  //         vehicleDetails.find((v) => v.Device === deviceID)?.vehiculeDetails ||
+  //         [],
+  //     };
+  //   });
+
+  //   eventData.forEach((event) => {
+  //     const { deviceID, timestamp, ...eventDetails } = event;
+  //     const eventKey = `${deviceID}-${timestamp}`;
+
+  //     if (!seenEvents.has(eventKey)) {
+  //       seenEvents.add(eventKey);
+
+  //       if (dataFusionne[deviceID]) {
+  //         if (Object.keys(eventDetails).length > 0) {
+  //           dataFusionne[deviceID].vehiculeDetails.push({
+  //             timestamp,
+  //             ...eventDetails,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
+  //   setMergedData(dataFusionne);
+  //   setIsLoading(false);
+  //   if (!statisticFilter) {
+  //     setstatisticFilter(mergedData);
+  //     setstatisticFilterText("tout");
+  //   }
+
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 15000); // 10 000 millisecondes = 10 secondes
+
+  //   return dataFusionne;
+  // };
+
   const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
     const dataFusionne = {};
     const seenEvents = new Set();
 
+    // Vérifiez si deviceID existe bien dans vehicleData
     vehicleData.forEach((vehicle) => {
       const { deviceID } = vehicle;
-      dataFusionne[deviceID] = {
-        ...vehicle,
-        vehiculeDetails:
-          vehicleDetails.find((v) => v.Device === deviceID)?.vehiculeDetails ||
-          [],
-      };
+      if (deviceID) {
+        // Vérification de l'existence de deviceID
+        dataFusionne[deviceID] = {
+          ...vehicle,
+          vehiculeDetails:
+            vehicleDetails.find((v) => v.Device === deviceID)
+              ?.vehiculeDetails || [],
+        };
+      } else {
+        console.warn("deviceID manquant dans vehicleData", vehicle);
+      }
     });
 
     eventData.forEach((event) => {
@@ -676,6 +729,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
               ...eventDetails,
             });
           }
+        } else {
+          console.warn("deviceID manquant dans eventData", event);
         }
       }
     });
@@ -690,7 +745,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     setTimeout(() => {
       setIsLoading(false);
-    }, 15000); // 10 000 millisecondes = 10 secondes
+    }, 15000); // 15 secondes
 
     return dataFusionne;
   };
@@ -2184,7 +2239,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       .toString()
       .padStart(2, "0")} 00:00:00`;
 
-    console.log(mergedData);
+    console.log("xxxxxxxxxxxxx", mergedData);
+    console.log(vehicleData);
+    console.log(vehicleDetails);
 
     if (vehicleData && vehicleData.length > 0) {
       vehicleData.forEach((vehicle) => {

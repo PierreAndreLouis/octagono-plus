@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { DataContext } from "../../context/DataContext";
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 
 function Statistics() {
   const {
@@ -136,93 +137,100 @@ function Statistics() {
       {/* ------------------------------- */}
       {/* Début des statistiques */}
       <div className="p-2 grid grid-cols-2 gap-2 mt-4 md:mt-10">
-        <Link
-          onClick={() => {
-            setstatisticFilter(vehicleArray);
-            setstatisticFilterText("tout");
-            // setchooseALl(true);
-            // setchooseActifs(false);
-            // setchooseStationnement(false);
-            // setchooseInactifs(false);
-          }}
-          // to="/Statistics_Page"
-          className="bg-white dark:bg-gray-800 rounded-lg"
+        <Tooltip
+        // title="Cliquez ici pour plus d'info"
         >
-          <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md p-3">
-            {/* <div className="border overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
-            <div>
-              <div className="flex items-center  gap-2">
-                <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                  Total
-                </h3>
-                {statisticFilterText === "tout" && (
-                  <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-blue-400"></div>
-                )}
+          <div
+            onClick={() => {
+              setstatisticFilter(vehicleArray);
+              setstatisticFilterText("tout");
+              // setchooseALl(true);
+              // setchooseActifs(false);
+              // setchooseStationnement(false);
+              // setchooseInactifs(false);
+            }}
+            // to="/Statistics_Page"
+            className="bg-white dark:bg-gray-800 rounded-lg"
+          >
+            <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md p-3">
+              {/* <div className="border overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
+              <div>
+                <div className="flex items-center  gap-2">
+                  <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                    Total
+                  </h3>
+                  {statisticFilterText === "tout" && (
+                    <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-blue-400"></div>
+                  )}
+                </div>
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                  {totalVehicleCount}
+                </h2>
               </div>
-              <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                {totalVehicleCount}
-              </h2>
-            </div>
-            <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
-              <img
-                className="dark:hidden w-8 md:w-12 lg:w-14"
-                src="/img/home_icon/total.png"
-                alt="Total"
-              />
-              <img
-                className="hidden dark:block w-8 md:w-12 lg:w-14"
-                src="/img/home_icon/white_total.png"
-                alt="Total"
-              />
+              <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
+                <img
+                  className="dark:hidden w-8 md:w-12 lg:w-14"
+                  src="/img/home_icon/total.png"
+                  alt="Total"
+                />
+                <img
+                  className="hidden dark:block w-8 md:w-12 lg:w-14"
+                  src="/img/home_icon/white_total.png"
+                  alt="Total"
+                />
+              </div>
             </div>
           </div>
-        </Link>
-
+        </Tooltip>
         {/*  */}
-        <Link
-          onClick={() => {
-            setstatisticFilter(activeVehicleCount);
-            setstatisticFilterText("mouvement");
-
-            // setchooseALl(false);
-            // setchooseActifs(true);
-            // setchooseStationnement(false);
-            // setchooseInactifs(false);
-          }}
-          // to="/Statistics_Page"
-          className="bg-white dark:bg-gray-800 rounded-lg"
+        <Tooltip
+        // title="Cliquez ici pour plus d'info"
         >
-          <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-600/40 flex justify-between items-start rounded-lg shadow-md p-3">
-            {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
-            <div>
-              <div className="flex items-center  gap-2">
-                <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                  En Mouvement
-                </h3>
-                {statisticFilterText === "mouvement" && (
-                  <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-green-400"></div>
-                )}
+          <div
+            onClick={() => {
+              setstatisticFilter(activeVehicleCount);
+              setstatisticFilterText("mouvement");
+
+              // setchooseALl(false);
+              // setchooseActifs(true);
+              // setchooseStationnement(false);
+              // setchooseInactifs(false);
+            }}
+            // to="/Statistics_Page"
+            className="bg-white dark:bg-gray-800 rounded-lg"
+          >
+            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-600/40 flex justify-between items-start rounded-lg shadow-md p-3">
+              {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
+              <div>
+                <div className="flex items-center  gap-2">
+                  <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                    En Mouvement
+                  </h3>
+                  {statisticFilterText === "mouvement" && (
+                    <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-green-400"></div>
+                  )}
+                </div>
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                  {activeVehicleCount.length || "0"}
+                </h2>
               </div>
-              <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                {activeVehicleCount.length || "0"}
-              </h2>
-            </div>
-            <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
-              <img
-                className="dark:hidden w-14 md:w-16 lg:w-20"
-                src="/img/home_icon/active.png"
-                alt="Véhicules actifs"
-              />
-              <img
-                className="hidden dark:block w-14 md:w-16 lg:w-20"
-                src="/img/home_icon/rapport_active.png"
-                alt="Véhicules actifs"
-              />
+              <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
+                <img
+                  className="dark:hidden w-14 md:w-16 lg:w-20"
+                  src="/img/home_icon/active.png"
+                  alt="Véhicules actifs"
+                />
+                <img
+                  className="hidden dark:block w-14 md:w-16 lg:w-20"
+                  src="/img/home_icon/rapport_active.png"
+                  alt="Véhicules actifs"
+                />
+              </div>
             </div>
           </div>
-        </Link>
+        </Tooltip>
         {/*  */}
-        <Link
+        <div
           onClick={() => {
             setstatisticFilter(filteredVehicles);
             setstatisticFilterText("parking");
@@ -263,9 +271,9 @@ function Statistics() {
               />
             </div>
           </div>
-        </Link>
+        </div>
         {/*  */}
-        <Link
+        <div
           onClick={() => {
             setstatisticFilter(filteredVehiclesInactifs);
             setstatisticFilterText("hors_service");
@@ -306,7 +314,7 @@ function Statistics() {
               />
             </div>
           </div>
-        </Link>
+        </div>
         {/* <button
           onClick={() => {
             console.log(vehicleArray);
