@@ -270,8 +270,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         localStorage.setItem("userData", JSON.stringify(userData));
         setUserData(userData);
         navigate("/home");
-        setstatisticFilter(mergedData);
-        setstatisticFilterText("tout");
+        if (!statisticFilter) {
+          setstatisticFilter(mergedData);
+          setstatisticFilterText("tout");
+        }
 
         // Stocker les informations de connexion en local
         localStorage.setItem("account", account);
@@ -681,8 +683,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
     setMergedData(dataFusionne);
     setIsLoading(false);
-    setstatisticFilter(mergedData);
-    setstatisticFilterText("tout");
+    if (!statisticFilter) {
+      setstatisticFilter(mergedData);
+      setstatisticFilterText("tout");
+    }
 
     setTimeout(() => {
       setIsLoading(false);

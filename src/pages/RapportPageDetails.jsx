@@ -233,10 +233,10 @@ function RapportPageDetails() {
 
     // Créer un nouveau graphique
     new Chart(ctx, {
-      // type: "line", // Type de graphique
+      type: "line", // Type de graphique
       // type: "polarArea", // Type de graphique
       // type: "radar", // Type de graphique
-      type: "bar", // Type de graphique
+      // type: "bar", // Type de graphique
       fill: true, // Ajoutez cette propriété pour un graphique en aires
 
       data: {
@@ -323,8 +323,8 @@ function RapportPageDetails() {
     series: [
       {
         data: speeds,
-        type: "bar", // Type de graphique (ligne)
-        // type: "line", // Type de graphique (ligne)
+        // type: "bar", // Type de graphique (ligne)
+        type: "line", // Type de graphique (ligne)
         itemStyle: {
           color: "rgba(75, 192, 192, 0.8)", // Couleur des lignes ou barres
         },
