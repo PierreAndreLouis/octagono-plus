@@ -152,7 +152,7 @@ function Statistics() {
             {/* <div className="border overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
             <div>
               <div className="flex items-center  gap-2">
-                <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.8rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                   Total
                 </h3>
                 {statisticFilterText === "tout" && (
@@ -196,7 +196,7 @@ function Statistics() {
             {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
             <div>
               <div className="flex items-center  gap-2">
-                <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.8rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                   En Mouvement
                 </h3>
                 {statisticFilterText === "mouvement" && (
@@ -239,7 +239,7 @@ function Statistics() {
             {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-900/40 flex justify-between items-start rounded-lg shadow-md p-3"> */}
             <div>
               <div className="flex items-center  gap-2">
-                <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.8rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                   En Stationnement
                 </h3>
                 {statisticFilterText === "parking" && (
@@ -282,7 +282,7 @@ function Statistics() {
             {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-950/50 flex justify-between items-start rounded-lg shadow-md p-3"> */}
             <div>
               <div className="flex items-center  gap-2">
-                <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.8rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                   Hors Service
                 </h3>
                 {statisticFilterText === "hors_service" && (

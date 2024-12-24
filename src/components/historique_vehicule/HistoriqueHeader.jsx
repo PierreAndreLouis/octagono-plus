@@ -1,4 +1,5 @@
 import React from "react";
+
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 // import { DataContext } from "../../context/DataContext";
@@ -34,13 +35,16 @@ function HistoriqueHeader({
           onClick={() => {
             setShowHistoriqueInMap(!showHistoriqueInMap);
           }}
-          className="cursor-pointer shadow-xl border md:border-orange-200 min-w-10 rounded-md flex justify-center items-center py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-300/30"
+          className="cursor-pointer relative shadow-xl border md:border-orange-200 min-w-10 rounded-md flex justify-center items-center py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-300/30"
         >
           {showHistoriqueInMap ? (
             <IoStatsChart className="text-xl text-orange-600 " />
           ) : (
             <img className="w-[1.7rem]" src="/img/cars/parcoure.png" alt="" />
           )}
+          {/* <div className="absolute z-10 top-[3em] left-0 w-[20rem] p-2 border text-gray-6 bg-orange-50 rounded-lg">
+            hover to display me !{" "}
+          </div> */}
         </div>
 
         <div
