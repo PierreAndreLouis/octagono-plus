@@ -57,7 +57,7 @@ function RapportPageDetailsOptions({
         >
           Groupe
         </button>
-        <button
+        {/* <button
           onClick={() => {
             setpageSection("search");
             setShowOptions(false);
@@ -74,7 +74,7 @@ function RapportPageDetailsOptions({
           } border border-gray-100 dark:text-gray-50 dark:border-gray-50/0 dark:shadow-gray-700 dark:shadow-lg rounded-lg shadow-lg-- shadow-gray-200 w-full py-1`}
         >
           Recherche
-        </button>
+        </button> */}
         {/* <button
           onClick={() => {
             setShowListOption(true);

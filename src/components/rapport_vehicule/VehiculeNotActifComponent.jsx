@@ -91,9 +91,7 @@ function VehiculeNotActifComponent({
                         <h2
                           className={`text-purple-900 dark:text-purple-200 text-gray-800-- font-semibold text-md md:text-xl mb-2 `}
                         >
-                          {vehicule.displayName ||
-                            vehicule?.description ||
-                            "non disponible"}
+                          {vehicule?.description || "non disponible"}
                         </h2>
                         <div className="flex mb-2 gap-4 text-gray-600 text-md">
                           <div className="flex gap-3 items-center dark:text-gray-300">

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { FaCar } from "react-icons/fa";
+import { DataContext } from "../../context/DataContext";
 
 function ShowVehiculeListeComponent({
   showVehiculeListe,
@@ -12,6 +13,7 @@ function ShowVehiculeListeComponent({
   filteredVehicles,
   handleVehicleClick,
 }) {
+  const { currentVehicule } = useContext(DataContext);
   return (
     <>
       {showVehiculeListe && (
@@ -52,7 +54,7 @@ function ShowVehiculeListeComponent({
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-[80vh] max-h-[58vh] pb-20">
-              {filteredVehicles?.map((vehicule) => (
+              {/* {filteredVehicles?.map((vehicule) => (
                 <div
                   key={vehicule.deviseID}
                   onClick={() => handleVehicleClick(vehicule)}
@@ -60,10 +62,30 @@ function ShowVehiculeListeComponent({
                 >
                   <FaCar className="text-orange-600/80 min-w-8 text-lg dark:text-orange-400" />
                   <p className="">
-                    {vehicule.displayName || vehicule.description || "---"}
+                    { vehicule.description || "---"}
                   </p>
                 </div>
-              ))}
+              ))} */}
+
+              {filteredVehicles.length > 0 ? (
+                filteredVehicles?.map((vehicule, index) => (
+                  <div
+                    key={vehicule.deviseID}
+                    onClick={() => handleVehicleClick(vehicule)}
+                    className={`${
+                      vehicule.description === currentVehicule?.description &&
+                      "bg-orange-50"
+                    } cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-gray-700`}
+                  >
+                    <FaCar className="text-orange-600/80 min-w-8 text-lg dark:text-orange-400" />
+                    <p className="text-gray-700 dark:text-white">
+                      {index + 1} - {vehicule.description || "---"}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center px-3 mt-10">Pas de resultat</p>
+              )}
             </div>
           </div>
         </div>

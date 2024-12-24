@@ -39,7 +39,7 @@ const LocationPage = () => {
 
   const vehicleData = vehiculeActive.map((vehicule) => ({
     deviceID: vehicule.deviceID || "",
-    description: vehicule.displayName || vehicule.description || "Véhicule",
+    description: vehicule.description || "Véhicule",
     lastValidLatitude: vehicule.vehiculeDetails?.[0]?.latitude || "",
     lastValidLongitude: vehicule.vehiculeDetails?.[0]?.longitude || "",
     address: vehicule.vehiculeDetails?.[0]?.address || "",
@@ -130,10 +130,8 @@ const LocationPage = () => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredVehicles = vehiculeActive?.filter(
-    (vehicule) =>
-      vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehicles = vehiculeActive?.filter((vehicule) =>
+    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

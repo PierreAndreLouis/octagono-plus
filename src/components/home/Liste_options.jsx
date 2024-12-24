@@ -107,9 +107,7 @@ function Liste_options({}) {
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
               <h1 className="px-3 mt-8 mb-2">
-                {currentVehicule?.displayName ||
-                  currentVehicule?.description ||
-                  "---"}
+                {currentVehicule?.description || "---"}
               </h1>
             </div>
             <div className="p-4 flex flex-col gap-4 py-6 pb-10">
@@ -169,9 +167,7 @@ function Liste_options({}) {
       <div className="border min-w-[90vw] sm:min-w-[30rem] bg-white dark:border-gray-50/10 dark:shadow-lg dark:shadow-gray-900 dark:shadow-lg-- dark:bg-gray-800 mx-4 rounded-xl overflow-hidden">
         <div className="p-4 py-6 pt-10 bg-orange-200/50 dark:bg-gray-900 dark:text-gray-50 dark:shadow-lg  dark:shadow-gray-700/50 relative">
           <h2 className="text-xl text-center font-semibold">
-            {currentVehicule?.displayName ||
-              currentVehicule?.description ||
-              "---"}
+            {currentVehicule?.description || "---"}
           </h2>
           <IoMdClose
             onClick={() => {

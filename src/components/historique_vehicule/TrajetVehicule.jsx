@@ -139,7 +139,7 @@ function TrajetVehicule({
               const firstMarkerIcon = L.icon({
                 iconUrl: "/pin/start.png", // Remplacez par le chemin de votre icône
                 iconSize: [50, 60], // Taille plus grande
-                iconAnchor: [4, 61], // Point d'ancrage
+                iconAnchor: [47, 61], // Point d'ancrage
               });
 
               const lastMarkerIcon = L.icon({
@@ -232,8 +232,10 @@ function TrajetVehicule({
                       <p>
                         <strong>Statut : </strong>
                         {speedKPH < 1 && "en arret"}
-                        {speedKPH > 20 && "en deplacement"}
-                        {speedKPH >= 1 && speedKPH <= 20 && "en ralenti"}
+                        {speedKPH > 20 && "Vitesse normale (v <= 20 km/h)"}
+                        {speedKPH >= 1 &&
+                          speedKPH <= 20 &&
+                          "Vitesse reduit (v <= 20 km/h)"}
                       </p>
                       <p>
                         <strong>License Plate :</strong>{" "}

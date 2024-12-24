@@ -123,9 +123,7 @@ function VehiculeNotActiveAjourdhuiComponent({
                         <h2
                           className={`text-red-800 dark:text-red-200 text-gray-800-- font-semibold text-md md:text-xl mb-2 `}
                         >
-                          {vehicule.displayName ||
-                            vehicule?.description ||
-                            "non disponible"}
+                          {vehicule?.description || "non disponible"}
                         </h2>
                         <div className="flex mb-2 gap-3 text-gray-600 text-md">
                           <div className="flex gap-3 items-center  dark:text-gray-300">

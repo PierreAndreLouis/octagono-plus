@@ -326,9 +326,7 @@ function RapportPersonnel({
                 <p>
                   Nom du Véhicule :{" "}
                   <span className=" dark:text-orange-500 font-normal text-gray-700 pl-3">
-                    {currentVehicule?.displayName ||
-                      currentVehicule?.description ||
-                      "---"}
+                    {currentVehicule?.description || "---"}
                   </span>
                 </p>
 
@@ -494,7 +492,7 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <p>
+                {/* <p>
                   Heure de départ:{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveDebut
@@ -518,6 +516,67 @@ function RapportPersonnel({
                           )
                         : formatTimestampToTime(heureActiveFin.timestamp)
                       : "Pas de mouvement"}{" "}
+                  </span>
+                </p> */}
+                <p>
+                  Date recherchée :
+                  <span className="font-semibold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      // true ||
+                      // jourDebut === jourFin &&
+                      // moisDebut === moisFin &&
+                      // anneeDebut === anneeFin ? (
+                      //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
+                      //     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                      //       Le {jourDebut || ""} {moisDebut || ""}{" "}
+                      //       {anneeDebut || ""}
+                      //     </span>{" "}
+                      //   </span>
+                      // ) : (
+                      <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
+                        Du{" "}
+                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                          {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
+                          {anneeDebut === anneeFin ? "" : anneeDebut}
+                        </span>{" "}
+                        au{" "}
+                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                          {jourFin} {moisFin} {anneeFin}
+                        </span>
+                      </span>
+                      // )
+                    }
+                  </span>
+                </p>
+                <p>
+                  Heure du Recherche :
+                  <span className="font-semibold dark:text-orange-500 text-gray-700 pl-3">
+                    De{" "}
+                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                      {selectUTC
+                        ? formatTimestampToTimeWithTimezone(
+                            currentVehicule?.vehiculeDetails[
+                              currentVehicule?.vehiculeDetails?.length - 1
+                            ]?.timestamp,
+                            selectUTC
+                          )
+                        : formatTimestampToTime(
+                            currentVehicule?.vehiculeDetails?.[
+                              currentVehicule?.vehiculeDetails?.length - 1
+                            ]?.timestamp
+                          )}
+                    </span>{" "}
+                    a{" "}
+                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                      {selectUTC
+                        ? formatTimestampToTimeWithTimezone(
+                            currentVehicule?.vehiculeDetails[0]?.timestamp,
+                            selectUTC
+                          )
+                        : formatTimestampToTime(
+                            currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                          )}
+                    </span>{" "}
                   </span>
                 </p>
                 {/*  */}
@@ -823,9 +882,7 @@ function RapportPersonnel({
                   />
                   <h3 className="text-orange-500">Historique</h3>
                   <h2 className="text-gray-700 dark:text-gray-200">
-                    {currentVehicule?.displayName ||
-                      currentVehicule?.description ||
-                      ""}
+                    {currentVehicule?.description || ""}
                   </h2>
                 </div>
                 <div className="relative  overflow-auto mx-1 w-full h-[90vh] p-1 mx-4- max-w-[90vw]">

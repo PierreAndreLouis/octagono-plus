@@ -52,9 +52,6 @@ function Liste() {
           vehicle?.description
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          vehicle?.displayName
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
           (vehicle.vehiculeDetails?.[0]?.address &&
             vehicle.vehiculeDetails[0].address
               .toLowerCase()
@@ -331,7 +328,7 @@ function Liste() {
                     <h2
                       className={`${activeTextColor} text-gray-800 dark:text-gray-100 font-semibold text-md md:text-xl mb-2 `}
                     >
-                      {vehicle?.displayName || vehicle?.description || "---"}
+                      {vehicle?.description || "---"}
                     </h2>
                     <div className="flex mb-2 gap-4 text-gray-600 text-md dark:text-gray-300">
                       <div className="flex gap-3 items-center">

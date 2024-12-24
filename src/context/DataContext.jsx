@@ -117,6 +117,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const [searchdonneeFusionneeForRapport, setSearchdonneeFusionneeForRapport] =
     useState([]);
 
+  const [statisticFilter, setstatisticFilter] = useState(mergedData);
+  const [statisticFilterText, setstatisticFilterText] = useState("tout");
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Pupup
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,6 +270,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         localStorage.setItem("userData", JSON.stringify(userData));
         setUserData(userData);
         navigate("/home");
+        setstatisticFilter(mergedData);
+        setstatisticFilterText("tout");
 
         // Stocker les informations de connexion en local
         localStorage.setItem("account", account);
@@ -676,6 +681,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
     setMergedData(dataFusionne);
     setIsLoading(false);
+    setstatisticFilter(mergedData);
+    setstatisticFilterText("tout");
 
     setTimeout(() => {
       setIsLoading(false);
@@ -2335,6 +2342,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         lancerAppel,
         setIsLoading,
         setUsername,
+        statisticFilter,
+        setstatisticFilter,
+        statisticFilterText,
+        setstatisticFilterText,
       }}
     >
       {children}

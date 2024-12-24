@@ -70,7 +70,7 @@ function MapComponent() {
 
   const vehicleData = vehiculeActive.map((vehicule) => ({
     deviceID: vehicule.deviceID || "",
-    description: vehicule.displayName || vehicule.description || "Véhicule",
+    description: vehicule.description || "Véhicule",
     lastValidLatitude: vehicule.vehiculeDetails?.[0]?.latitude || "",
     lastValidLongitude: vehicule.vehiculeDetails?.[0]?.longitude || "",
     address:
@@ -179,10 +179,8 @@ function MapComponent() {
   // const vehiculeActive = dataFusionee.filter((vehicule) =>  vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0 )
   // const vehiculeActive = dataFusionee.filter((vehicule) =>  !vehicule.vehiculeDetails || vehicule.vehiculeDetails.length === 0 )
 
-  const filteredVehicles = vehiculeActive?.filter(
-    (vehicule) =>
-      vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehicles = vehiculeActive?.filter((vehicule) =>
+    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   function formatTimestampToTime(timestamp) {
@@ -273,9 +271,7 @@ function MapComponent() {
               <div className="w-[70vw] max-w-[20rem]">
                 <p className="font-bold text-[1rem]">
                   <span>Description :</span>{" "}
-                  {vehicle.displayName ||
-                    vehicle.description ||
-                    "Non disponible"}
+                  {vehicle.description || "Non disponible"}
                 </p>
                 {/* <p className="font-bold text-[1rem]">
                         <span>Description :</span>{" "}
@@ -319,10 +315,10 @@ function MapComponent() {
                 <p>
                   <strong>Statut : </strong>
                   {vehicle.speedKPH < 1 && "en arret"}
-                  {vehicle.speedKPH > 20 && "en deplacement"}
+                  {vehicle.speedKPH > 20 && "Vitesse normale (v > 20 km/h)"}
                   {vehicle.speedKPH >= 1 &&
                     vehicle.speedKPH <= 20 &&
-                    "en ralenti"}
+                    "Vitesse reduit (v <= 20 km/h)"}
                 </p>
                 <p>
                   <strong>Plaque d'immatriculation :</strong>{" "}

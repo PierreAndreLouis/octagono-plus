@@ -27,10 +27,9 @@ function DetailsVehiculePage() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredVehicles = dataFusionee?.filter(
-    (vehicule) =>
-      vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehicles = dataFusionee?.filter((vehicule) =>
+    // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -52,9 +51,10 @@ function DetailsVehiculePage() {
               }}
               className="text-start w-[90%] overflow-hidden whitespace-nowrap text-ellipsis"
             >
-              {currentVehicule?.displayName ||
-                currentVehicule?.description ||
-                "Choisis un véhicule"}
+              {
+                // currentVehicule?.displayName ||
+                currentVehicule?.description || "Choisis un véhicule"
+              }
             </p>
             <FaChevronDown className="mt-1" />
           </div>
@@ -76,7 +76,7 @@ function DetailsVehiculePage() {
           />
         </div>
         <h1 className="text-center dark:text-gray-200 font-bold text-xl mt-8 text-gray-600">
-          {currentVehicule?.displayName || ""}
+          {currentVehicule?.description || ""}
         </h1>
 
         <VehiculeDetailInformationComponent

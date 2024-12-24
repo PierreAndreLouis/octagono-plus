@@ -37,9 +37,6 @@ function Liste() {
           vehicle?.description
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          vehicle?.displayName
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
           (vehicle.vehiculeDetails?.[0]?.address &&
             vehicle.vehiculeDetails[0].address
               .toLowerCase()
@@ -173,7 +170,10 @@ function Liste() {
       <button
         onClick={() => {
           // Debug test - VehicleAddress
-          VehicleAddress({ longitude: -46.76834833333334, latitude: -23.4797645 });
+          VehicleAddress({
+            longitude: -46.76834833333334,
+            latitude: -23.4797645,
+          });
         }}
       >
         Test Adresse
@@ -200,7 +200,9 @@ function Liste() {
           const currentTime = Date.now();
           const lastUpdateTime = vehicle?.lastUpdateTime;
           const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0;
-          const isInactive = lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+          const isInactive =
+            lastUpdateTimeMs > 0 &&
+            currentTime - lastUpdateTimeMs >= twentyHoursInMs;
 
           if (!vehicle.vehiculeDetails || isInactive) {
             main_text_color = "text-purple-900 dark:text-purple-300 md:hidden";
@@ -236,12 +238,14 @@ function Liste() {
                   className={imgClass}
                 />
                 <div className="flex flex-col">
-                  <p className={`font-medium ${main_text_color}`}>{vehicle?.description}</p>
+                  <p className={`font-medium ${main_text_color}`}>
+                    {vehicle?.description}
+                  </p>
                   <p
                     className={`font-medium md:hidden ${main_text_color}`}
                     onClick={() => handleClick(vehicle)}
                   >
-                    {vehicle?.displayName || vehicle?.description}
+                    {vehicle?.description}
                   </p>
                 </div>
               </div>
@@ -255,7 +259,9 @@ function Liste() {
                 </div>
                 <div className="flex gap-1 text-sm text-gray-500">
                   <IoMdTime className="text-lg" />
-                  {formatTimestampToTime(vehicle.vehiculeDetails?.[0]?.timestamp)}
+                  {formatTimestampToTime(
+                    vehicle.vehiculeDetails?.[0]?.timestamp
+                  )}
                 </div>
                 <VehicleAddress
                   latitude={vehicle.vehiculeDetails?.[0]?.latitude}

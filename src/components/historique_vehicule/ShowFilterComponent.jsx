@@ -16,6 +16,12 @@ function ShowFilterComponent({
   handleCheckboxChange,
   applyFilter,
   setTypeDeVue,
+  timeFrom,
+  timeTo,
+  startDate,
+  startTime,
+  endDate,
+  endTime,
 }) {
   const {
     vehiclueHistoriqueDetails,
@@ -30,7 +36,6 @@ function ShowFilterComponent({
       vehiclueHistoriqueDetails,
     }));
   };
-
 
   return (
     <>
@@ -54,22 +59,10 @@ function ShowFilterComponent({
               >
                 <label htmlFor="mapType">Type de vue</label>
                 <FaChevronDown />
+                <hr className="dark:border-gray-600 mt-5" />
               </div>
             )}
 
-            <div
-              onClick={() => {
-                setShowDatePicker(true);
-                setshowFilter(false);
-              }}
-              className="flex my-3 p-2 rounded-md hover:bg-orange-100/50 cursor-pointer items-center gap-3 dark:hover:bg-gray-700"
-            >
-              <MdDateRange className="text-xl text-orange-600 dark:text-orange-400" />
-              <h3 className="text-gray-800 dark:text-gray-200">
-                Filtrer par Date
-              </h3>
-            </div>
-            <hr className="dark:border-gray-600" />
             <form action="" className="p-2">
               <div className="flex pt-4 mb-4 items-center gap-3">
                 <FaCarRear className="text-xl text-orange-600/90 dark:text-orange-400" />
@@ -124,7 +117,7 @@ function ShowFilterComponent({
                   </label>
                 </div>
 
-                <div className="pt-4">
+                {/* <div className="pt-4">
                   <hr className="dark:border-gray-600" />
 
                   <Link
@@ -140,19 +133,57 @@ function ShowFilterComponent({
                       Rapport du Vehicule
                     </h3>
                   </Link>
-                </div>
-
-                <p
-                  onClick={() => {
-                    applyFilter();
-                    setshowFilter(false);
-                  }}
-                  className="border cursor-pointer border-orange-500 text-center text-orange-600 font-semibold rounded-md pt-1 pb-1.5 px-6 mt-5 dark:text-orange-400 dark:border-orange-400"
-                >
-                  Appliquer
-                </p>
+                </div> */}
               </div>
             </form>
+
+            <hr className="dark:border-gray-600" />
+
+            <div
+              onClick={() => {
+                setShowDatePicker(true);
+                // setshowFilter(false);
+              }}
+              className="flex my-3 p-2 rounded-md hover:bg-orange-100/50 cursor-pointer items-center gap-3 dark:hover:bg-gray-700"
+            >
+              <MdDateRange className="text-xl text-orange-600 dark:text-orange-400" />
+              <h3 className="text-gray-800 dark:text-gray-200">
+                Filtrer par Date
+              </h3>
+            </div>
+
+            <hr className="dark:border-gray-600" />
+            <div className="py-3 pl-2">
+              <div className="font-semibold dark:text-gray-50 ">
+                Date et heure de Depart:{"  "}
+                <span className="ml-4 font-normal dark:text-orange-500">
+                  {startDate} - {startTime}:00
+                </span>
+              </div>
+
+              <div className="font-semibold mt-1 dark:text-gray-50 ">
+                Date et heure de Depart:{"  "}
+                <span className="ml-4 font-normal dark:text-orange-500">
+                  {endDate} - {endTime}:00
+                </span>
+              </div>
+            </div>
+            <hr className="dark:border-gray-600" />
+            {!currentVehicule ? (
+              <h2 className="my-3 p-2 bg-red-100 text-red-600 rounded-lg">
+                Veuillez selectionner un vehicule
+              </h2>
+            ) : (
+              <p
+                onClick={() => {
+                  applyFilter();
+                  setshowFilter(false);
+                }}
+                className="border cursor-pointer border-orange-500 text-center text-orange-600 font-semibold rounded-md pt-1 pb-1.5 px-6 mt-5 dark:text-orange-400 dark:border-orange-400"
+              >
+                Appliquer
+              </p>
+            )}
           </div>
           <hr className="dark:border-gray-600" />
         </div>

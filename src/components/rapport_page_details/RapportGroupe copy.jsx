@@ -363,8 +363,8 @@ function RapportGroupe({
                 {/*  */}
 
                 <div className="">
-                  {earliestVehicle?.displayName != latestVehicle?.displayName ||
-                  earliestVehicle?.description != latestVehicle?.description ? (
+                  {earliestVehicle?.description !=
+                  latestVehicle?.description ? (
                     <div className="flex flex-col gap-3">
                       <div>
                         <p>

@@ -4,7 +4,6 @@ import { IoMdTime } from "react-icons/io";
 import { DataContext } from "../../context/DataContext";
 
 import { Chart, registerables } from "chart.js";
-import { FaCar } from "react-icons/fa";
 
 import { FaChevronDown } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
@@ -108,17 +107,6 @@ function RapportPageDetailsHeader({
   // const filteredAddresses = uniqueAddresses?.filter((adresse) =>
   //   adresse.toLowerCase().includes(searchTerm.toLowerCase())
   // );
-
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearchChange = (e) => {
-    e.preventDefault();
-    setSearchQuery(e.target.value);
-  };
-
-  const filteredVehicles = currentdataFusionnee?.filter((vehicule) =>
-    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
   return (
     <div className=" shadow-md shadow-gray-400/20 pb-2">
       <div
@@ -152,53 +140,113 @@ function RapportPageDetailsHeader({
             </div>
           </div>
         )}
-      </div>
 
-      {showOptions && (
-        <div className="fixed  pt-[5.5rem] p-4 dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
-          <div className="absolute top-[2.4rem] left-4 right-4 p-2">
-            <input
-              className="w-full border p-4 py-1.5 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-              type="text"
-              placeholder="Recherche"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
+        {showOptions && (
+          <div className="absolute  pt-10== p-4 dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
+            <div
+              onClick={() => {
+                setShowOptions(!showOptions);
+              }}
+              className="flex justify-end"
+            >
+              <IoMdClose className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]" />
+            </div>
+            <div className="overflow-auto h-[40vh]">
+              {/* <div
+              onClick={() => {
+                setShowOptions(!showOptions);
+                setPersonnelDetails(false);
+              }}
+              className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
+            >
+              <div className="min-w-[2.5rem]">
+                <img
+                  className="w-[2em] ml-2"
+                  src="/img/home_icon/total.png"
+                  alt="Icône total"
+                />
+              </div>
+
+              <h3 className="dark:text-gray-200">Rapport de groupe</h3>
+            </div> */}
+
+              {vehiculeActiveAjourdhui &&
+                vehiculeActiveAjourdhui.map((vehicule, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        setShowOptions(!showOptions);
+                        handleClick(vehicule);
+                      }}
+                      className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
+                    >
+                      <div className="min-w-[2.5rem]">
+                        <img
+                          className="w-[2.5em]"
+                          src="/img/home_icon/active.png"
+                          alt="Icône actif"
+                        />
+                      </div>
+                      <h3 className="dark:text-gray-200">
+                        {/* {!personnelDetails || "Rapport en groupe"}
+                      {(personnelDetails && vehicule.description) || "---"} */}
+                        {vehicule.description || "---"}
+                      </h3>
+                    </div>
+                  );
+                })}
+
+              {vehiculeNotActiveAjourdhui &&
+                vehiculeNotActiveAjourdhui.map((vehicule, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        setShowOptions(!showOptions);
+                        handleClick(vehicule);
+                      }}
+                      className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
+                    >
+                      <div className="min-w-[2.5rem]">
+                        <img
+                          className="w-[2em] ml-2"
+                          src="/img/cars/parking.png"
+                          alt="Icône parking"
+                        />
+                      </div>
+                      <h3 className="dark:text-gray-200">
+                        {vehicule.description || "---"}
+                      </h3>
+                    </div>
+                  );
+                })}
+
+              {vehiculeNotActif &&
+                vehiculeNotActif.map((vehicule, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        setShowOptions(!showOptions);
+                        handleClick(vehicule);
+                      }}
+                      className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
+                    >
+                      <div className="min-w-[2.5rem]">
+                        <img
+                          className="w-[1.72em] ml-1"
+                          src="/img/home_icon/payer.png"
+                          alt="Icône paiement"
+                        />
+                      </div>
+                      <h3 className="dark:text-gray-200">
+                        {vehicule.description || "---"}
+                      </h3>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
-          <div
-            onClick={() => {
-              setShowOptions(false);
-            }}
-            className="flex justify-end absolute top-4 left-0 right-4"
-          >
-            <IoMdClose className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]" />
-          </div>
-          <div className="overflow-auto h-[40vh]">
-            {filteredVehicles?.length > 0 ? (
-              filteredVehicles?.map((vehicule, index) => (
-                <div
-                  key={vehicule.deviseID}
-                  onClick={() => {
-                    handleClick(vehicule);
-                    setShowOptions(false);
-                  }}
-                  className={`${
-                    vehicule.description === currentVehicule?.description &&
-                    "bg-orange-50"
-                  } cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-gray-700`}
-                >
-                  <FaCar className="text-orange-600/80 min-w-8 text-lg dark:text-orange-400" />
-                  <p className="text-gray-700 dark:text-white">
-                    {index + 1} - {vehicule.description || "---"}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-center px-3 mt-10">Pas de resultat</p>
-            )}
-          </div>
-        </div>
-      )}
+        )}
+      </div>
       {currentdataFusionnee.length > 0 &&
         (pageSection === "unite" || pageSection === "groupe") && (
           <div className="flex justify-between gap-3 px-4 ">

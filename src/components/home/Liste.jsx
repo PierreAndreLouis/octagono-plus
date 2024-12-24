@@ -41,18 +41,18 @@ function Liste() {
     fonctionTest,
     fonctionTest2,
     setSearchdonneeFusionneeForRapport,
+    statisticFilter,
+    setstatisticFilter,
+    statisticFilterText,
   } = useContext(DataContext);
 
-  const dataFusionee = mergedData ? Object.values(mergedData) : [];
+  const dataFusionee = statisticFilter ? Object.values(statisticFilter) : [];
 
   // Filtrer les données selon la recherche
   const filteredData = searchQuery
     ? dataFusionee.filter(
         (vehicle) =>
           vehicle?.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          vehicle?.displayName
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
           (vehicle.vehiculeDetails?.[0]?.address &&
@@ -163,6 +163,66 @@ function Liste() {
       });
     }
   };
+
+  // Calculer les 20 heures en millisecondes
+  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+  const activeVehicleCount = filteredData.filter(
+    (vehicle) =>
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].speedKPH > 0
+  );
+
+  // Filtrer les véhicules correspondant aux nouvelles conditions
+  const filteredVehicles = filteredData.filter((vehicle) => {
+    // Vérifie si le véhicule a des détails
+    const hasDetails =
+      vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0;
+
+    // Vérifie la vitesse (noSpeed)
+    // const noSpeed = vehicle.vehiculeDetails?.[0]?.speedKPH <= 1;
+    const noSpeed = vehicle.vehiculeDetails?.every(
+      (detail) => detail.speedKPH <= 0
+    );
+
+    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+    const lastUpdateTimeMs = vehicle.lastUpdateTime
+      ? vehicle.lastUpdateTime * 1000
+      : 0;
+    const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
+    return hasDetails && noSpeed && isActive;
+    // return hasDetails && isActive && noSpeed;
+  });
+
+  //
+  //
+  //
+  //
+  // Filtrer les véhicules sans détails ou inactifs
+  const filteredVehiclesInactifs = filteredData.filter((vehicle) => {
+    // Vérifier si le véhicule n'a pas de détails
+    const noDetails =
+      !vehicle.vehiculeDetails || vehicle.vehiculeDetails.length === 0;
+
+    // Vérifier si le véhicule est inactif
+    const lastUpdateTime = vehicle?.lastUpdateTime;
+    const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
+    const isInactive =
+      lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+
+    // Retourne true si l'une des conditions est satisfaite
+    // return isInactive;
+    // return noDetails || isInactive;
+    return noDetails || isInactive;
+  });
+
+  // Nombre de véhicules filtrés
+  // const notActiveVehicleCount = "0";
+  //
 
   return (
     <div className="p-2 flex flex-col gap-4 mt-4 mb-[10rem]-- pb-[6rem] dark:text-white">
@@ -315,8 +375,13 @@ function Liste() {
               <div
                 onClick={() => handleClick(vehicle)}
                 key={vehicle.deviceID}
-                className={` ${lite_bg_color} shadow-md rounded-lg p-3 border-2-- border-red-500--`}
+                className={` ${lite_bg_color} shadow-md relative rounded-lg p-3 border-2-- border-red-500--`}
               >
+                <div
+                  className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-4 pb-4 font-bold text-lg `}
+                >
+                  {index + 1}
+                </div>
                 <div className="----">
                   <div className="flex relative gap-3 md:py-2 border-2-- border-green-500--">
                     <div className="flex flex-col items-center md:min-w-32">
@@ -339,7 +404,7 @@ function Liste() {
                       <h2
                         className={`${activeTextColor} text-gray-800 dark:text-gray-100 font-semibold text-md md:text-xl mb-2 `}
                       >
-                        {vehicle?.displayName || vehicle?.description || "---"}
+                        {vehicle?.description || "---"}
                       </h2>
                       <div className="flex mb-2 gap-4 text-gray-600 text-md dark:text-gray-300">
                         <div className="flex gap-3 items-center">

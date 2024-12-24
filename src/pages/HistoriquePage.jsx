@@ -88,9 +88,8 @@ function HistoriquePage() {
     : [];
   const vehicleData = historiqueInMap?.map((vehicule) => ({
     description:
-      currentVehicule?.displayName ||
-      currentVehicule?.description ||
-      "Véhicule",
+      // currentVehicule?.displayName ||
+      currentVehicule?.description || "Véhicule",
     lastValidLatitude: vehicule?.latitude || "",
     lastValidLongitude: vehicule?.longitude || "",
     address: vehicule?.backupAddress || vehicule?.address || "",
@@ -210,11 +209,6 @@ function HistoriquePage() {
     }));
   };
 
-  // Fonction pour appliquer les filtres
-  const applyFilter = () => {
-    setAppliedCheckboxes(checkboxes);
-  };
-
   const handleMapTypeChange = (type) => {
     setMapType(type);
     setTypeDeVue(false);
@@ -226,10 +220,9 @@ function HistoriquePage() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredVehiclesPupup = dataFusionee?.filter(
-    (vehicule) =>
-      vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehiclesPupup = dataFusionee?.filter((vehicule) =>
+    // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Récupérer les positions successives pour les lignes rouges
@@ -257,16 +250,33 @@ function HistoriquePage() {
   const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
   const [endDate, setEndDate] = useState(getCurrentDate());
   const [endTime, setEndTime] = useState(getCurrentTime());
+  const [timeFrom, settimeFrom] = useState();
+  const [timeTo, settimeTo] = useState();
+  // const [startTimeText, setstartTimeText] = useState("");
+  // const [endTimeText, setendTimeText] = useState("");
+  // const [startDateText, setstartDateText] = useState("");
+  // const [enddateText, setenddateText] = useState("");
 
   const handleApply = (e) => {
     e.preventDefault();
     const timeFrom = `${startDate} ${startTime}:00`;
     const timeTo = `${endDate} ${endTime}:00`;
+
+    settimeFrom(timeFrom);
+    settimeTo(timeTo);
+    //
     // handleDateChange(timeFrom, timeTo);
-    fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
+    // fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
 
     setShowDatePicker(false);
     // setLoadingHistoriqueFilter(true);
+  };
+
+  // Fonction pour appliquer les filtres
+
+  const applyFilter = () => {
+    fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
+    setAppliedCheckboxes(checkboxes);
   };
 
   return (
@@ -334,6 +344,12 @@ function HistoriquePage() {
             handleCheckboxChange={handleCheckboxChange}
             applyFilter={applyFilter}
             setTypeDeVue={setTypeDeVue}
+            timeFrom={timeFrom}
+            timeTo={timeTo}
+            startDate={startDate}
+            startTime={startTime}
+            endDate={endDate}
+            endTime={endTime}
           />
         </div>
       </div>

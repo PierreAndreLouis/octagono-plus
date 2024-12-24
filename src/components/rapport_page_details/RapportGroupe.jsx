@@ -861,6 +861,9 @@ function RapportGroupe({
                 <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
                   <thead>
                     <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                        Numéro
+                      </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
                         Véhicule
                       </th>
@@ -882,9 +885,16 @@ function RapportGroupe({
                     {vehiculeMouvementOrdered?.map((vehicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.displayName ||
-                            vehicule?.description ||
-                            "---"}
+                          {
+                            //
+                            index + 1 || "---"
+                          }
+                        </td>
+                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                          {
+                            //
+                            vehicule?.description || "---"
+                          }
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
@@ -974,6 +984,9 @@ function RapportGroupe({
                 <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
                   <thead>
                     <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                        Numéro
+                      </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
                         Véhicule
                       </th>
@@ -998,10 +1011,17 @@ function RapportGroupe({
                   <tbody>
                     {vehiclesByDistance?.map((vehicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
+                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                          {
+                            //
+                            index + 1 || "---"
+                          }
+                        </td>
                         <td className="border py-3 px-2   dark:bg-gray-800  dark:border-gray-600">
-                          {vehicule?.displayName ||
-                            vehicule?.description ||
-                            "---"}
+                          {
+                            //
+                            vehicule?.description || "---"
+                          }
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {vehicule?.totalDistance.toFixed(2) + " Km"}
@@ -1083,6 +1103,10 @@ function RapportGroupe({
                 <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
                   <thead>
                     <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                        Numéro
+                      </th>
+
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
                         Véhicule
                       </th>
@@ -1108,9 +1132,16 @@ function RapportGroupe({
                     {vehiclesByMovingDuration?.map((vehicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.displayName ||
-                            vehicule?.description ||
-                            "---"}
+                          {
+                            //
+                            index + 1 || "---"
+                          }
+                        </td>
+                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                          {
+                            //
+                            vehicule?.description || "---"
+                          }
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {vehicule?.totalDuration}
@@ -1192,9 +1223,14 @@ function RapportGroupe({
                 <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
                   <thead>
                     <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                        Numéro
+                      </th>
+
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
                         Véhicule
                       </th>
+
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
                         vitesse nimimale
                       </th>
@@ -1223,9 +1259,10 @@ function RapportGroupe({
                     {vehiclesByDistance?.map((vehicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.displayName ||
-                            vehicule?.description ||
-                            "---"}
+                          {index + 1 || "---"}
+                        </td>
+                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                          {vehicule?.description || "---"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {vehicule?.minSpeed.toFixed(2) + " Km/h"}
@@ -1316,6 +1353,10 @@ function RapportGroupe({
                 <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
                   <thead>
                     <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                        Numéro
+                      </th>
+
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
                         Véhicule
                       </th>
@@ -1350,9 +1391,10 @@ function RapportGroupe({
                     {vehiculeMouvementOrdered?.map((vehicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
-                          {vehicule?.displayName ||
-                            vehicule?.description ||
-                            "---"}
+                          {index + 1 || "---"}
+                        </td>
+                        <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
+                          {vehicule?.description || "---"}
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {vehicule.totalDuration || "0h 0m 0s "}
@@ -1862,8 +1904,7 @@ function RapportGroupe({
                   Nom du vehicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0
-                      ? vehiclesByDistance[0]?.displayName ||
-                        vehiclesByDistance[0]?.description + " "
+                      ? vehiclesByDistance[0]?.description + " "
                       : "Pas de vehicule en mouvement"}
                   </span>{" "}
                   {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
@@ -2057,8 +2098,7 @@ function RapportGroupe({
                   Nom du vehicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0
-                      ? vehiclesByMovingDuration[0]?.displayName ||
-                        vehiclesByMovingDuration[0]?.description
+                      ? vehiclesByMovingDuration[0]?.description
                       : "Pas de vehicule en mouvement"}
                   </span>
                   {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
@@ -2256,8 +2296,7 @@ function RapportGroupe({
                   Nom du vehicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0
-                      ? vehiclesByMaxSpeed[0]?.displayName ||
-                        vehiclesByMaxSpeed[0]?.description
+                      ? vehiclesByMaxSpeed[0]?.description
                       : "Pas de vehicule en mouvement"}
                   </span>
                   <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
@@ -2663,6 +2702,10 @@ function RapportGroupe({
           <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
             <thead>
               <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                  Numéro
+                </th>
+
                 <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
                   Véhicule
                 </th>
@@ -2700,7 +2743,10 @@ function RapportGroupe({
                 (vehicule, index) => (
                   <tr key={index} className="border dark:border-gray-600">
                     <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {vehicule?.displayName || vehicule?.description || "---"}
+                      {index + 1 || "---"}
+                    </td>
+                    <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                      {vehicule?.description || "---"}
                     </td>
                     {/*  */}
                     <td className="border py-3 px-2   dark:border-gray-600">

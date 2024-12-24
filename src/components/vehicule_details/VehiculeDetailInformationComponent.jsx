@@ -48,7 +48,7 @@ function VehiculeDetailInformationComponent({
               Nom du véhicule
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
-              {currentVehicule?.displayName || ""}
+              {currentVehicule?.description || ""}
             </p>
           </div>
 
