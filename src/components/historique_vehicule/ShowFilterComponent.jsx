@@ -162,7 +162,7 @@ function ShowFilterComponent({
               </div>
 
               <div className="font-semibold mt-1 dark:text-gray-50 ">
-                Date et heure de Depart:{"  "}
+                Date et heure de d'arrivée:{"  "}
                 <span className="ml-4 font-normal dark:text-orange-500">
                   {endDate} - {endTime}:00
                 </span>
