@@ -175,24 +175,60 @@ function RapportPageDetailsHeader({
           </div>
           <div className="overflow-auto h-[40vh]">
             {filteredVehicles?.length > 0 ? (
-              filteredVehicles?.map((vehicule, index) => (
-                <div
-                  key={vehicule.deviseID}
-                  onClick={() => {
-                    handleClick(vehicule);
-                    setShowOptions(false);
-                  }}
-                  className={`${
-                    vehicule.description === currentVehicule?.description &&
-                    "bg-orange-50"
-                  } cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-gray-700`}
-                >
-                  <FaCar className="text-orange-600/80 min-w-8 text-lg dark:text-orange-400" />
-                  <p className="text-gray-700 dark:text-white">
-                    {index + 1} - {vehicule.description || "---"}
-                  </p>
-                </div>
-              ))
+              filteredVehicles?.map((vehicule, index) => {
+                const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+                const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+                const isMoving = vehicule.vehiculeDetails?.some(
+                  (detail) => detail.speedKPH >= 1
+                );
+
+                const hasDetails =
+                  vehicule.vehiculeDetails &&
+                  vehicule.vehiculeDetails.length > 0;
+
+                const noSpeed = vehicule.vehiculeDetails?.every(
+                  (detail) => detail.speedKPH <= 0
+                );
+
+                // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                const lastUpdateTimeMs = vehicule.lastUpdateTime
+                  ? vehicule.lastUpdateTime * 1000
+                  : 0;
+                const isActive =
+                  currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+                let iconBg = "text-red-500";
+
+                if (hasDetails && isMoving) {
+                  iconBg = "text-green-500";
+                } else if (hasDetails && noSpeed && isActive) {
+                  iconBg = "text-red-500";
+                } else if (!hasDetails || !isActive) {
+                  iconBg = "text-purple-500";
+                }
+
+                return (
+                  <div
+                    key={vehicule.deviseID}
+                    onClick={() => {
+                      handleClick(vehicule);
+                      setShowOptions(false);
+                    }}
+                    className={`${
+                      vehicule.description === currentVehicule?.description &&
+                      "bg-orange-50"
+                    }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-gray-700`}
+                  >
+                    <FaCar
+                      className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg dark:text-orange-400 `}
+                    />
+                    <p className="text-gray-700 dark:text-white">
+                      {index + 1} - {vehicule.description || "---"}
+                    </p>
+                  </div>
+                );
+              })
             ) : (
               <p className="text-center px-3 mt-10">Pas de resultat</p>
             )}

@@ -1435,6 +1435,7 @@ function RapportPageDetails() {
           centerOnFirstMarker={centerOnFirstMarker}
           showHistoriqueInMap={showHistoriqueInMap}
           openGoogleMaps={openGoogleMaps}
+          setpageSection={setpageSection}
         />
       )}
 

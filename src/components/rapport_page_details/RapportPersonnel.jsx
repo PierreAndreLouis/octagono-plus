@@ -856,12 +856,16 @@ function RapportPersonnel({
             </div>
           </div> */}
           {/* ///////////////////////////////////////// */}
-
-          <div
-            className="dark:bg-gray-100 pt-5 rounded-lg"
-            style={{ width: "100%", height: "400px" }}
-          >
-            <ReactECharts option={options} style={{ height: "100%" }} />
+          <div className="overflow-auto max-w-[100vw]">
+            <div className="w-[200rem]-- max-h-[40rem] ">
+              <div className="dark:bg-gray-100 w-[100%] h-[20rem]  md:h-[30rem] pt-5 border  rounded-lg">
+                <ReactECharts
+                  className="-translate-x-52--- p-0 m-0"
+                  option={options}
+                  style={{ height: "100%" }}
+                />
+              </div>
+            </div>
           </div>
 
           {/*  */}

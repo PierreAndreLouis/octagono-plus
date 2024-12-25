@@ -287,7 +287,10 @@ function MapComponent() {
                 </p>
                 <p>
                   <strong>Vitesse :</strong>{" "}
-                  {vehicle.speedKPH || "Non disponible"} Km/h
+                  {/* {vehicle.speedKPH || "Non disponible"} Km/h */}
+                  {vehicle.speedKPH && !isNaN(Number(vehicle.speedKPH))
+                    ? Number(vehicle.speedKPH).toFixed(0) + " km"
+                    : "Non disponible"}
                 </p>
 
                 {/* <p>

@@ -205,8 +205,8 @@ function TrajetVehicule({
                       <p>
                         <strong>Vitesse :</strong>{" "}
                         {speedKPH && !isNaN(Number(speedKPH))
-                          ? Number(speedKPH).toFixed(2)
-                          : "Non disponible"}
+                          ? Number(speedKPH).toFixed(0)
+                          : "Non disponible"}{" "}
                         Km/h
                       </p>
 

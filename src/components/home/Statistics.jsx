@@ -157,7 +157,7 @@ function Statistics() {
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                    Total
+                    Totale
                   </h3>
                   {statisticFilterText === "tout" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-blue-400"></div>

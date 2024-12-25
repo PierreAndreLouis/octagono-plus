@@ -57,6 +57,7 @@ function RapportGroupe({
   uniqueAddresses,
   uniqueAddressesZerroSpeed,
   setShowOptions,
+  setpageSection,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -65,6 +66,7 @@ function RapportGroupe({
     setVehiclueHistoriqueDetails,
     // currentVehicule,
     setdonneeFusionneeForRapport,
+    setCurrentVehicule,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const [voirPlus, setvoirPlus] = useState(false);
@@ -691,6 +693,29 @@ function RapportGroupe({
     console.log("tableSortBy:", tableSortBy);
     console.log("tableSortByColorBg:", tableSortByColorBg);
   }, [tableSortBy, tableSortByColorBg]);
+
+  const handleClick = (vehicle) => {
+    // setCurrentVehicule(vehicle);
+
+    const deviceID = vehicle.deviceID;
+
+    // // Recherche du véhicule correspondant dans la liste
+    const foundVehicle = currentdataFusionnee.find(
+      (v) => v.deviceID === deviceID
+    );
+
+    if (foundVehicle) {
+      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+      setpageSection("unite");
+      window.scrollTo({
+        top: 0,
+        behavior: "auto", // Défilement fluide
+        // behavior: "smooth", // Défilement fluide
+      });
+    } else {
+      console.error("Véhicule introuvable avec le deviceID :", deviceID);
+    }
+  };
   return (
     <>
       <div className=" px-4 pb-20 md:max-w-[80vw] w-full">
@@ -714,7 +739,7 @@ function RapportGroupe({
                     setshowRapportPupup={setnothing}
                     formatTimestampToDate={formatTimestampToDate}
                     formatTimestampToTime={formatTimestampToTime}
-                    handleClick={doNothing}
+                    handleClick={handleClick}
                     selectUTC={selectUTC}
                   />
                 )}
@@ -727,7 +752,7 @@ function RapportGroupe({
                     setshowRapportPupup={setnothing}
                     formatTimestampToDate={formatTimestampToDate}
                     formatTimestampToTime={formatTimestampToTime}
-                    handleClick={doNothing}
+                    handleClick={handleClick}
                     selectUTC={selectUTC}
                   />
                 )}
@@ -740,7 +765,7 @@ function RapportGroupe({
                     setshowRapportPupup={setnothing}
                     formatTimestampToDate={formatTimestampToDate}
                     formatTimestampToTime={formatTimestampToTime}
-                    handleClick={doNothing}
+                    handleClick={handleClick}
                   />
                 )}
                 {defineVehiculeListePupup === "tous" && (
@@ -752,7 +777,7 @@ function RapportGroupe({
                       setshowRapportPupup={setnothing}
                       formatTimestampToDate={formatTimestampToDate}
                       formatTimestampToTime={formatTimestampToTime}
-                      handleClick={doNothing}
+                      handleClick={handleClick}
                       selectUTC={selectUTC}
                     />
                     <VehiculeNotActiveAjourdhuiComponent
@@ -762,7 +787,7 @@ function RapportGroupe({
                       setshowRapportPupup={setnothing}
                       formatTimestampToDate={formatTimestampToDate}
                       formatTimestampToTime={formatTimestampToTime}
-                      handleClick={doNothing}
+                      handleClick={handleClick}
                       selectUTC={selectUTC}
                     />
                     <VehiculeNotActifComponent
@@ -772,7 +797,7 @@ function RapportGroupe({
                       setshowRapportPupup={setnothing}
                       formatTimestampToDate={formatTimestampToDate}
                       formatTimestampToTime={formatTimestampToTime}
-                      handleClick={doNothing}
+                      handleClick={handleClick}
                     />
                   </div>
                 )}
