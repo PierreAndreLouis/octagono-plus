@@ -41,7 +41,7 @@ const assets = [
 ];
 
 // cache size limit function
-const limitCacheSize = (name, size = 5000) => {
+const limitCacheSize = (name, size = 50) => {
   caches.open(name).then(cache => {
     cache.keys().then(keys => {
       if (keys.length > size) {
@@ -82,7 +82,7 @@ self.addEventListener('fetch', evt => {
           return caches.open(dynamicCacheName).then(cache => {
             cache.put(evt.request.url, fetchRes.clone());
             // check cached items size
-            limitCacheSize(dynamicCacheName, 5000);
+            limitCacheSize(dynamicCacheName, 15);
             return fetchRes;
           });
         });

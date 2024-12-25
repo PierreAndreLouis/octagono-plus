@@ -267,7 +267,20 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           userData[fieldName] = fieldValue;
         }
 
-        localStorage.setItem("userData", JSON.stringify(userData));
+        // localStorage.setItem("userData", JSON.stringify(userData));
+
+        try {
+          localStorage.setItem("userData", JSON.stringify(userData));
+        } catch (error) {
+          if (error.name === "QuotaExceededError") {
+            console.error(
+              "Quota dépassé pour userData : essayez de réduire la taille des données ou de nettoyer localStorage."
+            );
+          } else {
+            console.error("Erreur de stockage : ", error);
+          }
+        }
+
         setUserData(userData);
         navigate("/home");
         if (!statisticFilter) {
@@ -353,6 +366,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     localStorage.removeItem("password");
     setPassword("");
+
+    setstatisticFilter();
+    localStorage.clear();
+    currentdataFusionnee = [];
 
     navigate("/login");
   };
@@ -735,7 +752,19 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       }
     });
 
-    localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
+    try {
+      // localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
+      localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        console.error(
+          "Quota dépassé pour mergedData: essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
+
     setMergedData(dataFusionne);
     setIsLoading(false);
     if (!statisticFilter) {
@@ -974,10 +1003,25 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setdonneeFusionneeForRapport(dataFusionnee);
 
     // Enregistrer les données fusionnées dans localStorage
-    localStorage.setItem(
-      "donneeFusionneeForRapport",
-      JSON.stringify(dataFusionnee)
-    );
+    // localStorage.setItem(
+    //   "donneeFusionneeForRapport",
+    //   JSON.stringify(dataFusionnee)
+    // );
+
+    try {
+      localStorage.setItem(
+        "donneeFusionneeForRapport",
+        JSON.stringify(dataFusionnee)
+      );
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        console.error(
+          "Quota dépassé pour donneeFusionneeForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
 
     setTimeout(() => {
       setRapportDataLoading(false);
@@ -2140,18 +2184,69 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
   // Sauvegarde des données dans localStorage à chaque mise à jour des états
   useEffect(() => {
-    localStorage.setItem("vehicleDetails", JSON.stringify(vehicleDetails));
-    localStorage.setItem("mergedData", JSON.stringify(mergedData));
+    // localStorage.setItem("vehicleDetails", JSON.stringify(vehicleDetails));
+    try {
+      localStorage.setItem("vehicleDetails", JSON.stringify(vehicleDetails));
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        console.error(
+          "Quota dépassé pour vehicleDetails: essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
 
-    localStorage.setItem(
-      "rapportvehicleDetails",
-      JSON.stringify(rapportvehicleDetails)
-    );
+    // localStorage.setItem("mergedData", JSON.stringify(mergedData));
+    try {
+      localStorage.setItem("mergedData", JSON.stringify(mergedData));
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        console.error(
+          "Quota dépassé pour mergedData : essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
 
-    localStorage.setItem(
-      "donneeFusionneeForRapport",
-      JSON.stringify(donneeFusionneeForRapport)
-    );
+    // localStorage.setItem(
+    //   "rapportvehicleDetails",
+    //   JSON.stringify(rapportvehicleDetails)
+    // );
+    try {
+      localStorage.setItem(
+        "rapportvehicleDetails",
+        JSON.stringify(rapportvehicleDetails)
+      );
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        console.error(
+          "Quota dépassé pour rapportvehicleDetails : essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
+
+    // localStorage.setItem(
+    //   "donneeFusionneeForRapport",
+    //   JSON.stringify(donneeFusionneeForRapport)
+    // );
+    try {
+      localStorage.setItem(
+        "donneeFusionneeForRapport",
+        JSON.stringify(donneeFusionneeForRapport)
+      );
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        console.error(
+          "Quota dépassé pour donneeFusionneeForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
   }, [
     donneeFusionneeForRapport,
     vehicleDetails,
