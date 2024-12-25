@@ -52,10 +52,11 @@ function Liste() {
   } = useContext(DataContext);
 
   const dataFusionee = statisticFilter ? Object.values(statisticFilter) : [];
+  const dataFusionee2 = mergedData ? Object.values(mergedData) : [];
 
   // Filtrer les données selon la recherche
   const filteredData = searchQuery
-    ? dataFusionee.filter(
+    ? (statisticFilterText ? dataFusionee : dataFusionee2).filter(
         (vehicle) =>
           vehicle?.description
             .toLowerCase()
@@ -65,7 +66,22 @@ function Liste() {
               .toLowerCase()
               .includes(searchQuery.toLowerCase()))
       )
-    : dataFusionee;
+    : statisticFilterText
+    ? dataFusionee
+    : dataFusionee2;
+
+  // const filteredData = searchQuery
+  // ? (dataFusionee || dataFusionee2).filter(
+  //     (vehicle) =>
+  //       vehicle?.description
+  //         .toLowerCase()
+  //         .includes(searchQuery.toLowerCase()) ||
+  //       (vehicle.vehiculeDetails?.[0]?.address &&
+  //         vehicle.vehiculeDetails[0].address
+  //           .toLowerCase()
+  //           .includes(searchQuery.toLowerCase()))
+  //   )
+  // : dataFusionee || dataFusionee2;
 
   useEffect(() => {
     console.log("Véhicule mis à jour", currentVehicule);
@@ -234,7 +250,9 @@ function Liste() {
       {/* <button
         onClick={() => {
           // Debug test - VehicleAddress
-          fonctionTest();
+          // fonctionTest();
+          console.log("aaaaaaaaaa", dataFusionee);
+          console.log("bbbbbbbbbb", statisticFilterText);
         }}
       >
         test

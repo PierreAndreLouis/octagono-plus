@@ -117,8 +117,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const [searchdonneeFusionneeForRapport, setSearchdonneeFusionneeForRapport] =
     useState([]);
 
-  const [statisticFilter, setstatisticFilter] = useState(mergedData);
-  const [statisticFilterText, setstatisticFilterText] = useState("tout");
+  const [statisticFilter, setstatisticFilter] = useState();
+  const [statisticFilterText, setstatisticFilterText] = useState("");
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Pupup
@@ -283,10 +283,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         setUserData(userData);
         navigate("/home");
-        if (!statisticFilter) {
-          setstatisticFilter(mergedData);
-          setstatisticFilterText("tout");
-        }
+        // if (!statisticFilter) {
+        //   // setstatisticFilter(mergedData);
+        //   setstatisticFilterText("tout");
+        // }
 
         // Stocker les informations de connexion en local
         localStorage.setItem("account", account);
@@ -368,6 +368,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setPassword("");
 
     setstatisticFilter();
+    setstatisticFilterText("");
     localStorage.clear();
     currentdataFusionnee = [];
 
@@ -767,10 +768,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     setMergedData(dataFusionne);
     setIsLoading(false);
-    if (!statisticFilter) {
-      setstatisticFilter(mergedData);
-      setstatisticFilterText("tout");
-    }
+    // if (!statisticFilter) {
+    //   // setstatisticFilter(mergedData);
+    //   setstatisticFilterText("tout");
+    // }
 
     setTimeout(() => {
       setIsLoading(false);
