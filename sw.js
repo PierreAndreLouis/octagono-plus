@@ -44,7 +44,7 @@ const assets = [
 
 
 // Limite de taille pour le cache dynamique
-const limitCacheSize = (name, size = 5000) => {
+const limitCacheSize = (name, size = 100) => {
   caches.open(name).then((cache) => {
     cache.keys().then((keys) => {
       if (keys.length > size) {
@@ -92,7 +92,7 @@ self.addEventListener('fetch', (evt) => {
             .then((fetchRes) => {
               return caches.open(dynamicCacheName).then((cache) => {
                 cache.put(evt.request.url, fetchRes.clone());
-                limitCacheSize(dynamicCacheName, 5000); // Limite de taille dynamique
+                limitCacheSize(dynamicCacheName, 100); // Limite de taille dynamique
                 return fetchRes;
               });
             })
