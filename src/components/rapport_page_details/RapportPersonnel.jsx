@@ -263,7 +263,7 @@ function RapportPersonnel({
                 <p>
                   Date recherchée :
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    {
+                    {jourDebut ? (
                       // true ||
                       // jourDebut === jourFin &&
                       // moisDebut === moisFin &&
@@ -286,41 +286,52 @@ function RapportPersonnel({
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
+                    ) : (
                       // )
-                    }
+                      <span>Pas de date disonible</span>
+                    )}
                   </span>
                 </p>
 
                 <p>
                   Heure du Recherche :
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    De{" "}
-                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp
-                          )}
-                    </span>{" "}
-                    a{" "}
-                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[0]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                          )}
-                    </span>{" "}
-                  </span>
+                  {currentVehicule?.vehiculeDetails[
+                    currentVehicule?.vehiculeDetails?.length - 1
+                  ]?.timestamp ? (
+                    <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                      De{" "}
+                      <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                        {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp
+                            )}
+                      </span>{" "}
+                      a{" "}
+                      <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                        {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[0]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                            )}
+                      </span>{" "}
+                    </span>
+                  ) : (
+                    <span className="font-normal ml-2 dark:text-orange-500">
+                      {" "}
+                      Pas d'heure disponible
+                    </span>
+                  )}
                 </p>
 
                 <p>
@@ -520,8 +531,8 @@ function RapportPersonnel({
                 </p> */}
                 <p>
                   Date recherchée :
-                  <span className="font-semibold dark:text-orange-500 text-gray-700 pl-3">
-                    {
+                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                    {jourDebut ? (
                       // true ||
                       // jourDebut === jourFin &&
                       // moisDebut === moisFin &&
@@ -544,40 +555,51 @@ function RapportPersonnel({
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
+                    ) : (
                       // )
-                    }
+                      <span>Pas de date disonible</span>
+                    )}
                   </span>
                 </p>
                 <p>
                   Heure du Recherche :
-                  <span className="font-semibold dark:text-orange-500 text-gray-700 pl-3">
-                    De{" "}
-                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp
-                          )}
-                    </span>{" "}
-                    a{" "}
-                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[0]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                          )}
-                    </span>{" "}
-                  </span>
+                  {currentVehicule?.vehiculeDetails[
+                    currentVehicule?.vehiculeDetails?.length - 1
+                  ]?.timestamp ? (
+                    <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                      De{" "}
+                      <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                        {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp
+                            )}
+                      </span>{" "}
+                      a{" "}
+                      <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                        {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[0]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                            )}
+                      </span>{" "}
+                    </span>
+                  ) : (
+                    <span className="font-normal ml-2 dark:text-orange-500">
+                      {" "}
+                      Pas d'heure disponible
+                    </span>
+                  )}
                 </p>
                 {/*  */}
                 {/*  */}
@@ -1085,7 +1107,7 @@ function RapportPersonnel({
                 <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
                 <p className="text-[.9rem]">
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    {
+                    {jourDebut ? (
                       // true ||
                       // jourDebut === jourFin &&
                       // moisDebut === moisFin &&
@@ -1108,8 +1130,11 @@ function RapportPersonnel({
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
+                    ) : (
                       // )
-                    }
+
+                      <span>Pas de date disponible</span>
+                    )}
                   </span>
                 </p>
               </div>
@@ -1117,36 +1142,44 @@ function RapportPersonnel({
               <div className="flex gap-0 items-center">
                 <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
 
-                <p className="text-[.9rem]">
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    De{" "}
-                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp
-                          )}
-                    </span>{" "}
-                    a{" "}
-                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[0]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                          )}
-                    </span>{" "}
-                  </span>
-                </p>
+                {currentVehicule?.vehiculeDetails[
+                  currentVehicule?.vehiculeDetails?.length - 1
+                ]?.timestamp ? (
+                  <p className="text-[.9rem]">
+                    <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                      De{" "}
+                      <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
+                        {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp
+                            )}
+                      </span>{" "}
+                      a{" "}
+                      <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
+                        {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[0]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                            )}
+                      </span>{" "}
+                    </span>
+                  </p>
+                ) : (
+                  <p className="text-[.9rem] ml-3 text-gray-700 dark:text-orange-500">
+                    Pas d'heure disponible
+                  </p>
+                )}
               </div>
             </div>
             {/*  */}
