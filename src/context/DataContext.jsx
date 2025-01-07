@@ -1130,7 +1130,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       </EventData>
     </GTSRequest>`;
 
-    console.log("2222222222");
+    // console.log("2222222222");
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -1138,7 +1138,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
       });
-      console.log("3333333333333");
+      // console.log("3333333333333");
 
       const data = await response.text();
       const parser = new DOMParser();
@@ -1155,7 +1155,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           const fieldValue = fields[j].textContent;
           details[fieldName] = fieldValue;
         }
-        console.log("4444444444444");
+        // console.log("4444444444444");
 
         details.backupAddress = "";
 
@@ -1181,11 +1181,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         //     details.backupAddress = "Coordonnées non disponibles";
         //   }
         // }
-        console.log("555555555555555");
+        // console.log("555555555555555");
 
         newVehicleDetails.push(details);
       }
-      console.log("66666666666666");
+      // console.log("66666666666666");
 
       // Suppression des doublons dans `newVehicleDetails`
       const uniqueVehicleDetails = newVehicleDetails.filter(
@@ -1199,18 +1199,18 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
               t.longitude === detail.longitude
           )
       );
-      console.log("7777777777777777");
+      // console.log("7777777777777777");
 
       setSearchrapportVehicleDetails((prevDetails) => [
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...uniqueVehicleDetails,
       ]);
 
-      console.log("888888888888888888");
+      // console.log("888888888888888888");
 
       console.log("end fetching.................");
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.");
-      console.log("uniqueVehicleDetails.");
+      // console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.");
+      // console.log("uniqueVehicleDetails.");
 
       setTimeout(() => {
         setRapportDataLoading(false);

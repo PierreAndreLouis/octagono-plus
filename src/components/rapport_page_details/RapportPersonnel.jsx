@@ -77,6 +77,10 @@ function RapportPersonnel({
   uniqueAddresses,
   uniqueAddressesZerroSpeed,
   setShowOptions,
+  startDate,
+  startTime,
+  endDate,
+  endTime,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -102,18 +106,18 @@ function RapportPersonnel({
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
+  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
+  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
   const timestampInSecondsFin = currentVehicule?.vehiculeDetails[1]?.timestamp;
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
+  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
   const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
   const [ordreCroissant, setordreCroissant] = useState(false);
@@ -169,6 +173,44 @@ function RapportPersonnel({
       item?.address?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
+
+  // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const day = date.getDate(); // Jour du mois en chiffre
+
+    const month = date.toLocaleDateString("fr-FR", { month: "long" });
+    const year = date.getFullYear();
+
+    return { day, month, year };
+  };
+
+  const {
+    day: jourDebut,
+    month: moisDebut,
+    year: anneeDebut,
+  } = formatDate(startDate);
+  const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
+
+  const formatTo12Hour = (time) => {
+    let [hours, minutes] = time?.split(":").map(Number);
+    const isAM = hours < 12;
+    hours = hours % 12 || 12; // Convertir l'heure 0 à 12 (minuit) en 12 AM
+    const period = isAM ? "AM" : "PM";
+    return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
+  };
+
+  // Convertir les heures
+  const heureDebut = formatTo12Hour(startTime);
+  const heureFin = formatTo12Hour(endTime);
 
   return (
     <>
@@ -301,7 +343,8 @@ function RapportPersonnel({
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                        {selectUTC
+                        {heureDebut}
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[
                                 currentVehicule?.vehiculeDetails?.length - 1
@@ -312,18 +355,19 @@ function RapportPersonnel({
                               currentVehicule?.vehiculeDetails?.[
                                 currentVehicule?.vehiculeDetails?.length - 1
                               ]?.timestamp
-                            )}
+                            )} */}
                       </span>{" "}
                       a{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                        {selectUTC
+                        {heureFin}{" "}
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[0]?.timestamp,
                               selectUTC
                             )
                           : formatTimestampToTime(
                               currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )}
+                            )} */}
                       </span>{" "}
                     </span>
                   ) : (
@@ -543,7 +587,8 @@ function RapportPersonnel({
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                        {selectUTC
+                        {heureDebut}{" "}
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[
                                 currentVehicule?.vehiculeDetails?.length - 1
@@ -554,18 +599,19 @@ function RapportPersonnel({
                               currentVehicule?.vehiculeDetails?.[
                                 currentVehicule?.vehiculeDetails?.length - 1
                               ]?.timestamp
-                            )}
+                            )} */}
                       </span>{" "}
                       a{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                        {selectUTC
+                        {heureFin}{" "}
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[0]?.timestamp,
                               selectUTC
                             )
                           : formatTimestampToTime(
                               currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )}
+                            )} */}
                       </span>{" "}
                     </span>
                   ) : (
@@ -1156,7 +1202,8 @@ function RapportPersonnel({
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
-                        {selectUTC
+                        {heureDebut}
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[
                                 currentVehicule?.vehiculeDetails?.length - 1
@@ -1167,18 +1214,20 @@ function RapportPersonnel({
                               currentVehicule?.vehiculeDetails?.[
                                 currentVehicule?.vehiculeDetails?.length - 1
                               ]?.timestamp
-                            )}
+                            )} */}
                       </span>{" "}
                       a{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
-                        {selectUTC
+                        {heureFin}
+
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[0]?.timestamp,
                               selectUTC
                             )
                           : formatTimestampToTime(
                               currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )}
+                            )} */}
                       </span>{" "}
                     </span>
                   </p>

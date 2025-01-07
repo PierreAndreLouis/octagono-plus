@@ -28,6 +28,10 @@ function RapportPageDetailsHeader({
   setpageSection,
   setShowChooseDate,
   pageSection,
+  startDate,
+  startTime,
+  endDate,
+  endTime,
 }) {
   const { selectUTC, currentdataFusionnee } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
   const formatTime = (hours, minutes, seconds) => {
@@ -68,9 +72,9 @@ function RapportPageDetailsHeader({
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
+  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
+  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
   // const timestampInSecondsFin = currentVehicule?.vehiculeDetails[0]?.timestamp;
@@ -78,9 +82,9 @@ function RapportPageDetailsHeader({
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
+  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
   const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
   const [ordreCroissant, setordreCroissant] = useState(true);
@@ -121,6 +125,62 @@ function RapportPageDetailsHeader({
   const filteredVehicles = currentdataFusionnee?.filter((vehicule) =>
     vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  ///////////////////////////////////////////////////////////////////////////////
+
+  // const {
+  //   startDate,
+  //   startTime,
+  //   endDate,
+  //   endTime,
+  // } = useContext(DataContext);
+
+  // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    // const day = date.toLocaleDateString('fr-FR', { weekday: 'long' });
+    const day = date.getDate(); // Jour du mois en chiffre
+
+    const month = date.toLocaleDateString("fr-FR", { month: "long" });
+    const year = date.getFullYear();
+
+    return { day, month, year };
+  };
+
+  const {
+    day: jourDebut,
+    month: moisDebut,
+    year: anneeDebut,
+  } = formatDate(startDate);
+  const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
+
+  const formatTo12Hour = (time) => {
+    let [hours, minutes] = time.split(":").map(Number);
+    const isAM = hours < 12;
+    hours = hours % 12 || 12; // Convertir l'heure 0 à 12 (minuit) en 12 AM
+    const period = isAM ? "AM" : "PM";
+    return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
+  };
+
+  // Convertir les heures
+  const heureDebut = formatTo12Hour(startTime);
+  const heureFin = formatTo12Hour(endTime);
+
+  console.log("Jour Début:", jourDebut);
+  console.log("Mois Début:", moisDebut);
+  console.log("Année Début:", anneeDebut);
+
+  console.log("Jour Fin:", jourFin);
+  console.log("Mois Fin:", moisFin);
+  console.log("Année Fin:", anneeFin);
+
   return (
     <div className=" shadow-md shadow-gray-400/20 pb-2">
       <div
@@ -254,7 +314,15 @@ function RapportPageDetailsHeader({
           <div className="flex justify-between gap-3 px-4 ">
             <div className="sm:flex w-full   gap-10 max-w-[50rem] mx-4-- justify-start items-center ">
               <div className="flex gap-0 items-center">
-                <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
+                <FaRegCalendarAlt
+                  onClick={() => {
+                    console.log("startDate", startDate);
+                    console.log("startTime", startTime);
+                    console.log("endDate", endDate);
+                    console.log("endTime", endTime);
+                  }}
+                  className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5"
+                />
                 <p className="text-[.9rem]">
                   <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
                     {
@@ -293,7 +361,8 @@ function RapportPageDetailsHeader({
                   <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
                     De{" "}
                     <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
-                      {selectUTC
+                      {heureDebut}
+                      {/* {selectUTC
                         ? formatTimestampToTimeWithTimezone(
                             vehiculeActiveAjourdhui[0]?.vehiculeDetails[
                               vehiculeActiveAjourdhui[0]?.vehiculeDetails
@@ -320,11 +389,13 @@ function RapportPageDetailsHeader({
                               vehiculeNotActif[0]?.vehiculeDetails[
                                 vehiculeNotActif[0]?.vehiculeDetails.length - 1
                               ]?.timestamp
-                          )}
+                          )} */}
                     </span>{" "}
                     a{" "}
                     <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
-                      {selectUTC
+                      {heureFin}
+
+                      {/* {selectUTC
                         ? formatTimestampToTimeWithTimezone(
                             vehiculeActiveAjourdhui[0]?.vehiculeDetails[0]
                               ?.timestamp ||
@@ -340,7 +411,7 @@ function RapportPageDetailsHeader({
                               vehiculeNotActiveAjourdhui[0]?.vehiculeDetails[0]
                                 ?.timestamp ||
                               vehiculeNotActif[0]?.vehiculeDetails[0]?.timestamp
-                          )}
+                          )} */}
                     </span>{" "}
                   </span>
                 </p>

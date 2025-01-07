@@ -1265,6 +1265,37 @@ function RapportPageDetails() {
   const [showDatePicker2, setShowDatePicker2] = useState(false);
   const [selectedDate, setSelectedDate] = useState(""); // Date sélectionnée
 
+  ////////////////////////////////////////////////////////////////////////////c/cvv
+  ////////////////////////////////////////////////////////////////////////////c/cvv
+  ////////////////////////////////////////////////////////////////////////////c/cvv
+  ////////////////////////////////////////////////////////////////////////////c/cvv
+  // Formatage de la date actuelle
+  const getCurrentDate = () => new Date().toISOString().split("T")[0];
+  const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
+  const today = new Date(); // La date actuelle
+
+  const [startDate, setStartDate] = useState(today);
+  const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
+  const [endDate, setEndDate] = useState(today);
+  const [endTime, setEndTime] = useState(getCurrentTime());
+
+  const [startDateToDisplay, setStartDateToDisplay] = useState(startDate);
+  const [startTimeToDisplay, setStartTimeToDisplay] = useState(startTime); // Heure de début fixée à minuit
+  const [endDateToDisplay, setEndDateToDisplay] = useState(endDate);
+  const [endTimeToDisplay, setEndTimeToDisplay] = useState(endTime);
+
+  useEffect(() => {
+    console.log(startDateToDisplay);
+    console.log(startTimeToDisplay);
+    console.log(endTimeToDisplay);
+    console.log(endTimeToDisplay);
+  }, [
+    startTimeToDisplay,
+    startDateToDisplay,
+    endDateToDisplay,
+    endTimeToDisplay,
+  ]);
+
   // Gestion de la soumission
   const handleApply = (e) => {
     e.preventDefault();
@@ -1273,6 +1304,7 @@ function RapportPageDetails() {
     setShowDatePicker2(false);
     console.log("okk");
     console.log("vehiculeDate", dataFusionee);
+
     // setpageSection("search");
 
     // Fonction pour convertir une date au format dd/MM/yyyy
@@ -1339,20 +1371,15 @@ function RapportPageDetails() {
         //   "2024-12-24 00:00:00",
         //   "2024-12-26 00:00:00"
         // );
+        setStartDateToDisplay(selectedDate);
+        setStartTimeToDisplay(startTime);
+        setEndDateToDisplay(selectedDate);
+        setEndTimeToDisplay(endTime);
       });
     }
   };
 
-  // Formatage de la date actuelle
-  const getCurrentDate = () => new Date().toISOString().split("T")[0];
-  const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
-  const today = new Date(); // La date actuelle
-
   // Initialisation de la date et de l'heure actuelles par défaut
-  const [startDate, setStartDate] = useState(today);
-  const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
-  const [endDate, setEndDate] = useState(today);
-  const [endTime, setEndTime] = useState(getCurrentTime());
 
   const handleApply2 = (e) => {
     e.preventDefault();
@@ -1390,6 +1417,11 @@ function RapportPageDetails() {
     if (dataFusionee && dataFusionee.length > 0) {
       dataFusionee.forEach((vehicle) => {
         fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+
+        setStartDateToDisplay(startDate);
+        setStartTimeToDisplay(startTime);
+        setEndDateToDisplay(endDate);
+        setEndTimeToDisplay(endTime);
       });
     }
 
@@ -1481,6 +1513,14 @@ function RapportPageDetails() {
               pageSection={pageSection}
               setpageSection={setpageSection}
               setShowChooseDate={setShowChooseDate}
+              startDate={startDateToDisplay}
+              startTime={startTimeToDisplay}
+              endDate={endDateToDisplay}
+              endTime={endTimeToDisplay}
+              // startDate={startDate}
+              // startTime={startTime}
+              // endDate={endDate}
+              // endTime={endTime}
             />
           </div>
           {/* )} */}
@@ -1542,6 +1582,14 @@ function RapportPageDetails() {
           uniqueAddresses={uniqueAddresses}
           uniqueAddressesZerroSpeed={uniqueAddressesZerroSpeed}
           setShowOptions={setShowOptions}
+          startDate={startDateToDisplay}
+          startTime={startTimeToDisplay}
+          endDate={endDateToDisplay}
+          endTime={endTimeToDisplay}
+          // startDate={startDate}
+          // startTime={startTime}
+          // endDate={endDate}
+          // endTime={endTime}
         />
       )}
 
@@ -1583,7 +1631,14 @@ function RapportPageDetails() {
           openGoogleMaps={openGoogleMaps}
           setpageSection={setpageSection}
           setSelectedVehicle={setSelectedVehicle}
-
+          startDate={startDateToDisplay}
+          startTime={startTimeToDisplay}
+          endDate={endDateToDisplay}
+          endTime={endTimeToDisplay}
+          // startDate={startDate}
+          // startTime={startTime}
+          // endDate={endDate}
+          // endTime={endTime}
         />
       )}
 

@@ -59,6 +59,10 @@ function RapportGroupe({
   setShowOptions,
   setpageSection,
   setSelectedVehicle,
+  startDate,
+  startTime,
+  endDate,
+  endTime,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -107,9 +111,9 @@ function RapportGroupe({
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
+  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
+  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
   const timestampInSecondsFin = dernierDetails;
@@ -117,9 +121,59 @@ function RapportGroupe({
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
+  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+
+  //////////////////////////////////////////////////////////////////
+
+  // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const day = date.getDate(); // Jour du mois en chiffre
+
+    const month = date.toLocaleDateString("fr-FR", { month: "long" });
+    const year = date.getFullYear();
+
+    return { day, month, year };
+  };
+
+  const {
+    day: jourDebut,
+    month: moisDebut,
+    year: anneeDebut,
+  } = formatDate(startDate);
+  const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
+
+  const formatTo12Hour = (time) => {
+    let [hours, minutes] = time.split(":").map(Number);
+    const isAM = hours < 12;
+    hours = hours % 12 || 12; // Convertir l'heure 0 à 12 (minuit) en 12 AM
+    const period = isAM ? "AM" : "PM";
+    return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
+  };
+
+  // Convertir les heures
+  const heureDebut = formatTo12Hour(startTime);
+  const heureFin = formatTo12Hour(endTime);
+
+  // console.log("Jour Début:", jourDebut);
+  // console.log("Mois Début:", moisDebut);
+  // console.log("Année Début:", anneeDebut);
+
+  // console.log("Jour Fin:", jourFin);
+  // console.log("Mois Fin:", moisFin);
+  // console.log("Année Fin:", anneeFin);
+
+  ///////////////////////////////////////////////////////////
 
   const [showActiveVehicule, setshowActiveVehicule] = useState(true);
   const [showParkingVehicule, setshowParkingVehicule] = useState(true);
@@ -428,18 +482,18 @@ function RapportGroupe({
   const vehiclesByMovingDuration = sortVehiclesByMovingDuration(filteredData);
   const vehiclesByMaxSpeed = sortVehiclesByMaxSpeed(filteredData);
 
-  console.log("Vehicles sorted by total distance:", vehiclesByDistance);
-  console.log(
-    "Vehicles sorted by total moving duration:",
-    vehiclesByMovingDuration
-  );
-  console.log("Vehicles sorted by max speed:", vehiclesByMaxSpeed);
+  // console.log("Vehicles sorted by total distance:", vehiclesByDistance);
+  // console.log(
+  //   "Vehicles sorted by total moving duration:",
+  //   vehiclesByMovingDuration
+  // );
+  // console.log("Vehicles sorted by max speed:", vehiclesByMaxSpeed);
 
-  console.log(
-    "Final filtered data with total distances, durations, and pauses:",
-    filteredData
-  );
-  console.log("Vehicles sorted by last speedKPH:", vehiculeMouvementOrdered);
+  // console.log(
+  //   "Final filtered data with total distances, durations, and pauses:",
+  //   filteredData
+  // );
+  // console.log("Vehicles sorted by last speedKPH:", vehiculeMouvementOrdered);
   ////////////////////////////////////////////////////////
   const totalDistanceSum = vehiculeMouvementOrdered.reduce(
     (sum, vehicle) => sum + vehicle.totalDistance,
@@ -1537,6 +1591,49 @@ function RapportGroupe({
               </span>
             </p>
 
+            <p>
+              Heure du Recherche :
+              {currentVehicule?.vehiculeDetails[
+                currentVehicule?.vehiculeDetails?.length - 1
+              ]?.timestamp ? (
+                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                  De{" "}
+                  <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                    {heureDebut}
+                    {/* {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp
+                            )} */}
+                  </span>{" "}
+                  a{" "}
+                  <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                    {heureFin}{" "}
+                    {/* {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[0]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                            )} */}
+                  </span>{" "}
+                </span>
+              ) : (
+                <span className="font-normal ml-2 dark:text-orange-500">
+                  {" "}
+                  Pas d'heure disponible
+                </span>
+              )}
+            </p>
+
             {/*  */}
             {/*  */}
             {/*  */}
@@ -2481,6 +2578,49 @@ function RapportGroupe({
                   }
                 </span>
               </p>
+
+              <p>
+                Heure du Recherche :
+                {currentVehicule?.vehiculeDetails[
+                  currentVehicule?.vehiculeDetails?.length - 1
+                ]?.timestamp ? (
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    De{" "}
+                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                      {heureDebut}
+                      {/* {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[
+                                currentVehicule?.vehiculeDetails?.length - 1
+                              ]?.timestamp
+                            )} */}
+                    </span>{" "}
+                    a{" "}
+                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                      {heureFin}{" "}
+                      {/* {selectUTC
+                          ? formatTimestampToTimeWithTimezone(
+                              currentVehicule?.vehiculeDetails[0]?.timestamp,
+                              selectUTC
+                            )
+                          : formatTimestampToTime(
+                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                            )} */}
+                    </span>{" "}
+                  </span>
+                ) : (
+                  <span className="font-normal ml-2 dark:text-orange-500">
+                    {" "}
+                    Pas d'heure disponible
+                  </span>
+                )}
+              </p>
               {/*  */}
               {/*  */}
               {/*  */}
@@ -2661,7 +2801,7 @@ function RapportGroupe({
                 Filtrer
               </p>
               {showsortfilterpupup && (
-                <div className="absolute flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow-gray-900 dark:border shadow-lg shadow-gray-500 rounded-md p-3 top-10 -right-2 min-w-[15rem]">
+                <div className="absolute z-[30] flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow-gray-900 dark:border shadow-lg shadow-gray-500 rounded-md p-3 top-10 -right-2 min-w-[15rem]">
                   <div className="flex justify-between mb-2 items-center ">
                     <p className="text-orange-500  font-semibold">
                       Filtrer par :
@@ -2679,10 +2819,10 @@ function RapportGroupe({
                       settableSortByColorBg("vehiculeMouvementOrdered");
                       setshowsortfilterpupup(false);
 
-                      console.log(
-                        "xxxxxxxxxxxxxxxxxxxxxxx",
-                        tableSortByColorBg
-                      );
+                      // console.log(
+                      //   "xxxxxxxxxxxxxxxxxxxxxxx",
+                      //   tableSortByColorBg
+                      // );
                     }}
                     className={`${
                       tableSortByColorBg ===
