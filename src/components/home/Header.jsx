@@ -9,6 +9,7 @@ import { HiOutlineViewList } from "react-icons/hi";
 import { toggleTheme } from "../../theme/themeSlice";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
+import Tooltip from "@mui/material/Tooltip";
 
 // ok
 
@@ -22,6 +23,7 @@ function Header() {
     setSearchQuery,
     tab,
     handleTabClick,
+    username,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -107,83 +109,296 @@ function Header() {
           </div>
         </div>
         <div className="hidden lg:flex justify-center items-center gap-5 font-semibold text-gray-700 dark:text-gray-300">
-          <Link
-            onClick={() => handleTabClick("acceuil")}
-            to="/home?tab=acceuil"
-            className={`${
-              tab === "acceuil" && "text-orange-500"
-            } hover:text-orange-500 cursor-pointer`}
+          <Tooltip
+            title="Page d'accueil
+"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
           >
-            Accueil
-          </Link>
-          <Link
-            onClick={() => handleTabClick("ajouter")}
-            to="/ajouter_vehicule?tab=ajouter"
-            className={`${
-              tab === "ajouter" && "text-orange-500"
-            } hover:text-orange-500 cursor-pointer`}
+            <Link
+              onClick={() => handleTabClick("acceuil")}
+              to="/home?tab=acceuil"
+              className={`${
+                tab === "acceuil" && "text-orange-500"
+              } hover:text-orange-500 cursor-pointer`}
+            >
+              Accueil
+            </Link>
+          </Tooltip>
+          {username === "admin" && (
+            <Tooltip
+              title="Enregistrer un nouveau véhicule
+"
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, 0], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+            >
+              <Link
+                onClick={() => handleTabClick("ajouter")}
+                to="/ajouter_vehicule?tab=ajouter"
+                className={`${
+                  tab === "ajouter" && "text-orange-500"
+                } hover:text-orange-500 cursor-pointer`}
+              >
+                Ajouter
+              </Link>
+            </Tooltip>
+          )}
+          {username === "admin" && (
+            <Tooltip
+              title="Modifier ou Supprimer un Véhicule
+
+"
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, 0], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+            >
+              <Link
+                onClick={() => handleTabClick("modifier")}
+                to="/modifier_vehicule?tab=modifier"
+                className={`${
+                  tab === "modifier" && "text-orange-500"
+                } hover:text-orange-500 cursor-pointer`}
+              >
+                Modifier/Supprimer
+              </Link>
+            </Tooltip>
+          )}
+          <Tooltip
+            title="Voir la position géographique des véhicules
+
+"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
           >
-            Ajouter
-          </Link>
-          <Link
-            onClick={() => handleTabClick("modifier")}
-            to="/modifier_vehicule?tab=modifier"
-            className={`${
-              tab === "modifier" && "text-orange-500"
-            } hover:text-orange-500 cursor-pointer`}
+            <Link
+              to="/Groupe_vehicule_location?tab=localisation"
+              onClick={() => handleTabClick("localisation")}
+              className={`${
+                tab === "localisation" && "text-orange-500"
+              } hover:text-orange-500 cursor-pointer`}
+            >
+              Localisation
+            </Link>
+          </Tooltip>
+          <Tooltip
+            title="Voir tous les détails sur le déplacement d'un véhicule
+
+"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
           >
-            Modifier/Supprimer
-          </Link>
-          <Link
-            to="/Groupe_vehicule_location?tab=localisation"
-            onClick={() => handleTabClick("localisation")}
-            className={`${
-              tab === "localisation" && "text-orange-500"
-            } hover:text-orange-500 cursor-pointer`}
-          >
-            Localisation
-          </Link>
-          <Link
-            to="/rapport_page_details?tab=rapport"
-            onClick={() => handleTabClick("rapport")}
-            className={`${
-              tab === "rapport" && "text-orange-500"
-            } hover:text-orange-500 cursor-pointer`}
-          >
-            Rapport
-          </Link>
+            <Link
+              to="/rapport_page_details?tab=rapport"
+              onClick={() => handleTabClick("rapport")}
+              className={`${
+                tab === "rapport" && "text-orange-500"
+              } hover:text-orange-500 cursor-pointer`}
+            >
+              Rapport
+            </Link>
+          </Tooltip>
         </div>
         <div className="flex gap-4 items-center">
-          <IoSearch
-            onClick={() => {
-              setSearchVehicule(true); // Affiche la barre de recherche
+          <Tooltip
+            title="Rechercher un véhicule"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
             }}
-            className="text-2xl cursor-pointer text-gray-500 dark:text-gray-200"
-          />
-          <button
-            className="text-gray-500 dark:text-gray-200"
-            onClick={() => dispatch(toggleTheme())} // Permet de basculer entre les thèmes
           >
-            {theme === "light" ? (
-              <FaSun className="text-lg" />
-            ) : (
-              <FaMoon className="text-lg" />
-            )}
-          </button>
-          <Link
-            className="hidden lg:block"
-            onClick={() => handleTabClick("profile")}
-            to="/User_Profile?tab=profile"
+            <button>
+              <IoSearch
+                onClick={() => {
+                  setSearchVehicule(true); // Affiche la barre de recherche
+                }}
+                className="text-2xl cursor-pointer text-gray-500 dark:text-gray-200"
+              />
+            </button>
+          </Tooltip>
+          <Tooltip
+            title="Changer en mode sombre ou clair"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
           >
-            <FaUserCircle
-              className={`${
-                tab === "profile" && "text-orange-500"
-              } hover:text-orange-500 cursor-pointer text-gray-500 text-2xl dark:text-gray-200`}
-            />
-          </Link>
-          <div onClick={() => setShowSideBar(!showSideBar)}>
-            <HiOutlineViewList className="text-2xl cursor-pointer text-gray-500 dark:text-gray-200" />
-          </div>
+            <button
+              className="text-gray-500 dark:text-gray-200"
+              onClick={() => dispatch(toggleTheme())} // Permet de basculer entre les thèmes
+            >
+              {theme === "light" ? (
+                <FaSun className="text-lg" />
+              ) : (
+                <FaMoon className="text-lg" />
+              )}
+            </button>
+          </Tooltip>
+          <Tooltip
+            title="Mon Profil
+"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
+          >
+            <Link
+              className="hidden lg:block"
+              onClick={() => handleTabClick("profile")}
+              to="/User_Profile?tab=profile"
+            >
+              <FaUserCircle
+                className={`${
+                  tab === "profile" && "text-orange-500"
+                } hover:text-orange-500 cursor-pointer text-gray-500 text-2xl dark:text-gray-200`}
+              />
+            </Link>
+          </Tooltip>
+          <Tooltip
+            title="Menu"
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 0], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
+          >
+            <div onClick={() => setShowSideBar(!showSideBar)}>
+              <HiOutlineViewList className="text-2xl cursor-pointer text-gray-500 dark:text-gray-200" />
+            </div>
+          </Tooltip>
         </div>
       </div>
     </div>

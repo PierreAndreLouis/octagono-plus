@@ -371,7 +371,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setstatisticFilterText("");
     localStorage.clear();
     currentdataFusionnee = [];
-
+    setCurrentVehicule(null);
     navigate("/login");
   };
   //
@@ -2377,6 +2377,14 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   };
 
+  const [dateDebut, setDateDebut] = useState(null);
+  useEffect(() => {
+    // Définit la date actuelle par défaut au moment du rendu du composant
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Réinitialise l'heure pour éviter un décalage
+    setDateDebut(today); // Définit la date actuelle par défaut
+  }, []);
+
   return (
     <DataContext.Provider
       value={{
@@ -2503,6 +2511,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         setstatisticFilter,
         statisticFilterText,
         setstatisticFilterText,
+        dateDebut,
+        setDateDebut,
       }}
     >
       {children}

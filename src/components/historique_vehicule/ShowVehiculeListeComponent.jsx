@@ -4,6 +4,7 @@ import { IoMdTime } from "react-icons/io";
 import { FaCar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { DataContext } from "../../context/DataContext";
+import SearchVehiculePupup from "../rapport_page_details/SearchVehiculePupup";
 
 function ShowVehiculeListeComponent({
   showVehiculeListe,
@@ -17,7 +18,7 @@ function ShowVehiculeListeComponent({
   return (
     <>
       {showVehiculeListe && (
-        <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-20 shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80 dark:border-gray-600">
+        <div className="fixed z-[999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50  shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80 dark:border-gray-600">
           <div className="pt-28 relative w-full max-w-[30rem] rounded-xl p-4 max-h-[70vh] overflow-hidden bg-white dark:bg-gray-800">
             <IoMdClose
               onClick={() => {
@@ -45,7 +46,7 @@ function ShowVehiculeListeComponent({
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-[80vh] max-h-[58vh] pb-20">
-              {filteredVehiclesPupup.length > 0 ? (
+              {/* {filteredVehiclesPupup.length > 0 ? (
                 filteredVehiclesPupup?.map((vehicule, index) => (
                   <div
                     key={vehicule.deviseID}
@@ -63,7 +64,16 @@ function ShowVehiculeListeComponent({
                 ))
               ) : (
                 <p className="text-center px-3 mt-10">Pas de resultat</p>
-              )}
+              )} */}
+              <SearchVehiculePupup
+                searchQuery={searchQuery}
+                handleSearchChange={handleSearchChange}
+                setShowOptions={setShowVehiculeListe}
+                filteredVehicles={filteredVehiclesPupup}
+                handleClick={handleVehicleClick}
+                currentVehicule={currentVehicule}
+                isMapcomponent="false"
+              />
             </div>
           </div>
         </div>

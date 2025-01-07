@@ -26,12 +26,36 @@ function Statistics() {
 
   const totalVehicleCount = vehicleArray.length;
 
-  const activeVehicleCount = vehicleArray.filter(
-    (vehicle) =>
+  // const activeVehicleCount = vehicleArray.filter(
+  //   (vehicle) =>
+  //     vehicle.vehiculeDetails &&
+  //     vehicle.vehiculeDetails[0] &&
+  //     vehicle.vehiculeDetails[0].speedKPH > 0
+  // );
+
+  const twentyHoursInMs = 20 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+  const activeVehicleCount = vehicleArray.filter((vehicle) => {
+    // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
+    const isSpeedActive =
       vehicle.vehiculeDetails &&
       vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].speedKPH > 0
-  );
+      vehicle.vehiculeDetails[0].speedKPH > 0;
+
+    // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
+    const lastUpdateTimeMs = vehicle.lastUpdateTime
+      ? vehicle.lastUpdateTime * 1000
+      : 0;
+    const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    // Le véhicule doit être actif selon la vitesse et la mise à jour
+    return isSpeedActive && isRecentlyUpdated;
+  });
+
+  // console.log(activeVehicleCount); // Affiche la liste des véhicules actifs
+
+  // retireer les vehicule avec plus de 24h de misae a jour
   //
   //
   //
@@ -47,8 +71,8 @@ function Statistics() {
   //
   //
   // Calculer les 20 heures en millisecondes
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
+  // const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  // const currentTime = Date.now(); // Heure actuelle en millisecondes
 
   // Filtrer les véhicules correspondant aux nouvelles conditions
   const filteredVehicles = vehicleArray.filter((vehicle) => {
@@ -138,7 +162,17 @@ function Statistics() {
       {/* Début des statistiques */}
       <div className="p-2 grid grid-cols-2 gap-2 mt-4 md:mt-10">
         <Tooltip
-        // title="Cliquez ici pour plus d'info"
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -40], // Décalage horizontal et vertical
+                },
+              },
+            ],
+          }}
+          title="Nombre total de véhicules"
         >
           <div
             onClick={() => {
@@ -184,7 +218,17 @@ function Statistics() {
         </Tooltip>
         {/*  */}
         <Tooltip
-        // title="Cliquez ici pour plus d'info"
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -40], // Décalage horizontal et vertical
+                },
+              },
+            ],
+          }}
+          title="Véhicules actuellement en service."
         >
           <div
             onClick={() => {
@@ -230,91 +274,120 @@ function Statistics() {
           </div>
         </Tooltip>
         {/*  */}
-        <div
-          onClick={() => {
-            setstatisticFilter(filteredVehicles);
-            setstatisticFilterText("parking");
 
-            // setchooseALl(false);
-            // setchooseActifs(false);
-            // setchooseStationnement(true);
-            // setchooseInactifs(false);
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -40], // Décalage horizontal et vertical
+                },
+              },
+            ],
           }}
-          // to="/Statistics_Page"
-          className="bg-white dark:bg-gray-800 rounded-lg"
+          title="Véhicules actuellement stationnés"
         >
-          <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-800/50 flex justify-between items-start rounded-lg shadow-md p-3">
-            {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-900/40 flex justify-between items-start rounded-lg shadow-md p-3"> */}
-            <div>
-              <div className="flex items-center  gap-2">
-                <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                  En Stationnement
-                </h3>
-                {statisticFilterText === "parking" && (
-                  <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-red-400"></div>
-                )}
+          <div
+            onClick={() => {
+              setstatisticFilter(filteredVehicles);
+              setstatisticFilterText("parking");
+
+              // setchooseALl(false);
+              // setchooseActifs(false);
+              // setchooseStationnement(true);
+              // setchooseInactifs(false);
+            }}
+            // to="/Statistics_Page"
+            className="bg-white dark:bg-gray-800 rounded-lg"
+          >
+            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-800/50 flex justify-between items-start rounded-lg shadow-md p-3">
+              {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-900/40 flex justify-between items-start rounded-lg shadow-md p-3"> */}
+              <div>
+                <div className="flex items-center  gap-2">
+                  <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                    En Stationnement
+                  </h3>
+                  {statisticFilterText === "parking" && (
+                    <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-red-400"></div>
+                  )}
+                </div>
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                  {inactiveVehicleCount}
+                </h2>
               </div>
-              <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                {inactiveVehicleCount}
-              </h2>
-            </div>
-            <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
-              <img
-                className="dark:hidden w-8 md:w-12 lg:w-14"
-                src="/img/cars/parking.png"
-                alt="Véhicules en stationnement"
-              />
-              <img
-                className="hidden dark:block w-8 md:w-12 lg:w-14"
-                src="/img/home_icon/rapport_parking.png"
-                alt="Véhicules en stationnement"
-              />
+              <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
+                <img
+                  className="dark:hidden w-8 md:w-12 lg:w-14"
+                  src="/img/cars/parking.png"
+                  alt="Véhicules en stationnement"
+                />
+                <img
+                  className="hidden dark:block w-8 md:w-12 lg:w-14"
+                  src="/img/home_icon/rapport_parking.png"
+                  alt="Véhicules en stationnement"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </Tooltip>
         {/*  */}
-        <div
-          onClick={() => {
-            setstatisticFilter(filteredVehiclesInactifs);
-            setstatisticFilterText("hors_service");
-
-            // setchooseALl(false);
-            // setchooseActifs(false);
-            // setchooseStationnement(false);
-            // setchooseInactifs(true);
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -40], // Décalage horizontal et vertical
+                },
+              },
+            ],
           }}
-          // to="/Statistics_Page"
-          className="bg-white dark:bg-gray-400/10 rounded-lg"
+          title="Véhicules actuellement hors service ou en panne"
         >
-          <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-700/30 flex justify-between items-start rounded-lg shadow-md p-3">
-            {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-950/50 flex justify-between items-start rounded-lg shadow-md p-3"> */}
-            <div>
-              <div className="flex items-center  gap-2">
-                <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                  Hors Service
-                </h3>
-                {statisticFilterText === "hors_service" && (
-                  <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-purple-400"></div>
-                )}
+          <div
+            onClick={() => {
+              setstatisticFilter(filteredVehiclesInactifs);
+              setstatisticFilterText("hors_service");
+
+              // setchooseALl(false);
+              // setchooseActifs(false);
+              // setchooseStationnement(false);
+              // setchooseInactifs(true);
+            }}
+            // to="/Statistics_Page"
+            className="bg-white dark:bg-gray-400/10 rounded-lg"
+          >
+            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-700/30 flex justify-between items-start rounded-lg shadow-md p-3">
+              {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-950/50 flex justify-between items-start rounded-lg shadow-md p-3"> */}
+              <div>
+                <div className="flex items-center  gap-2">
+                  <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
+                    Hors Service
+                  </h3>
+                  {statisticFilterText === "hors_service" && (
+                    <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-purple-400"></div>
+                  )}
+                </div>
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                  {notActiveVehicleCount}
+                </h2>
               </div>
-              <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                {notActiveVehicleCount}
-              </h2>
-            </div>
-            <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
-              <img
-                className="dark:hidden w-8 md:w-12 lg:w-14"
-                src="/img/home_icon/payer.png"
-                alt="Véhicules inactifs"
-              />
-              <img
-                className="hidden dark:block w-8 md:w-12 lg:w-14"
-                src="/img/home_icon/rapport_not_active.png"
-                alt="Véhicules inactifs"
-              />
+              <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
+                <img
+                  className="dark:hidden w-8 md:w-12 lg:w-14"
+                  src="/img/home_icon/payer.png"
+                  alt="Véhicules inactifs"
+                />
+                <img
+                  className="hidden dark:block w-8 md:w-12 lg:w-14"
+                  src="/img/home_icon/rapport_not_active.png"
+                  alt="Véhicules inactifs"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </Tooltip>
         {/* <button
           onClick={() => {
             console.log(vehicleArray);

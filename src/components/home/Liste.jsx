@@ -262,16 +262,7 @@ function Liste() {
         <p>Chargement des données...</p>
       ) : filteredData.length > 0 ? (
         filteredData.map((vehicle, index) => {
-          // const speed = 100;
           const speed = vehicle.vehiculeDetails?.[0]?.speedKPH || 0;
-
-          // let main_text_color,
-          // lite_bg_color,
-          //   active_bg_color,
-          //   imgClass,
-          //   activeTextColor,
-          //   statut,
-          //   vitess_img;
 
           let main_text_color = "text-red-900 dark:text-red-300";
           let statut = "";
@@ -284,26 +275,37 @@ function Liste() {
           let border_top =
             "border-t border-t-red-200 dark:border-t-red-600/30 ";
 
-          ////////////////////////////////////////////////////////////////////////
-
-          // Calculer les 20 heures en millisecondes
           const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
           const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-          const noDetails =
-            !vehicle.vehiculeDetails || vehicle.vehiculeDetails.length <= 0;
+          const isMoving = vehicle.vehiculeDetails?.some(
+            (detail) => detail.speedKPH >= 1
+          );
 
-          // Vérifier si le véhicule est inactif
-          const lastUpdateTime = vehicle?.lastUpdateTime;
-          const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
-          const isInactive =
-            lastUpdateTimeMs > 0 &&
-            currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+          const hasDetails =
+            vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0;
 
-          // /////////////////////////////////////////////////////
+          const noSpeed = vehicle.vehiculeDetails?.every(
+            (detail) => detail.speedKPH <= 0
+          );
 
-          // if (true) {
-          if (noDetails || isInactive) {
+          // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+          const lastUpdateTimeMs = vehicle.lastUpdateTime
+            ? vehicle.lastUpdateTime * 1000
+            : 0;
+          const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+          let iconBg = "text-red-500 dark:text-red-500";
+
+          if (hasDetails && isMoving) {
+            iconBg = "text-green-500 dark:text-green-500";
+          } else if (hasDetails && noSpeed && isActive) {
+            iconBg = "text-red-500 dark:text-red-500";
+          } else if (!hasDetails || !isActive) {
+            iconBg = "text-purple-500 dark:text-purple-500";
+          }
+
+          if (!hasDetails || !isActive) {
             main_text_color = "text-purple-900 dark:text-purple-300 hidden";
             statut = "Hors service";
             lite_bg_color =
@@ -314,9 +316,7 @@ function Liste() {
             imgClass = "w-14 sm:w-16 md:w-24";
             border_top =
               "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
-          }
-          //
-          else if (speed < 1) {
+          } else if (hasDetails && speed < 1 && isActive) {
             main_text_color = "text-red-900 dark:text-red-300";
             statut = "En Stationnement";
             lite_bg_color =
@@ -326,9 +326,13 @@ function Liste() {
             vitess_img = "img/cars/orange_vitess.png";
             imgClass = "w-14 sm:w-16 md:w-24";
             border_top = "border-t border-t-red-200 dark:border-t-red-600/30 ";
-          }
-          //
-          else if (speed >= 1 && speed <= 20) {
+          } else if (
+            hasDetails &&
+            // isMoving &&
+            isActive &&
+            speed >= 1 &&
+            speed <= 20
+          ) {
             main_text_color = "text-[#555b03] dark:text-yellow-300";
             statut = "En ralenti";
             lite_bg_color =
@@ -339,9 +343,12 @@ function Liste() {
             imgClass = "w-12 sm:w-14 md:w-20";
             border_top =
               "border-t border-t-yellow-200 dark:border-t-yellow-600/30 ";
-          }
-          //
-          else {
+          } else if (
+            hasDetails &&
+            //  isMoving &&
+            isActive &&
+            speed > 20
+          ) {
             main_text_color = "text-green-700 dark:text-green-400";
             statut = "En marche";
             lite_bg_color =
@@ -353,46 +360,6 @@ function Liste() {
             border_top =
               "border-t border-t-green-200 dark:border-t-green-600/30 ";
           }
-
-          // if (noDetails || isInactive) {
-          //   // if (!noDetails || isInactive) {
-          //   main_text_color = "text-purple-900 dark:text-purple-300";
-          //   statut = "En Stationnement";
-          //   lite_bg_color =
-          //     "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
-          //   activeTextColor = "text-purple-900 dark:text-purple-200";
-          //   active_bg_color = "bg-purple-200/50 dark:bg-purple-600/50";
-          //   vitess_img = "/img/home_icon/payer.png";
-          //   imgClass = "w-14 sm:w-16 md:w-24";
-          // }
-
-          // const [address, setAddress] = useState("Chargement de l'adresse...");
-
-          // const [backupAddress, setBackupAddress] = useState("Chargement de l'adresse...");
-          // const latitude = vehicle?.vehiculeDetails[0]?.latitude;
-          // const longitude = vehicle?.vehiculeDetails[0]?.longitude;
-
-          // async function fetchAddress() {
-          //   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-          //   try {
-          //     const response = await fetch(url);
-          //     const data = await response.json();
-          //     if (data && data.display_name) {
-          //       setBackupAddress(data.display_name);
-          //     } else {
-          //       setBackupAddress("Adresse introuvable");
-          //     }
-          //   } catch (error) {
-          //     console.error("Erreur réseau :", error);
-          //   }
-          // }
-
-          // fetchAddress();
-          // useEffect(() => {
-          //   fetchAddress();
-          // }, [latitude, longitude]);
-
-          // console.log("Adresse:", address);
 
           return (
             <div className="bg-white dark:bg-gray-800">

@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { FaCar } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
+import SearchVehiculePupup from "../rapport_page_details/SearchVehiculePupup";
 
 function ShowVehiculeListeComponent({
   showVehiculeListe,
@@ -74,7 +75,7 @@ function ShowVehiculeListeComponent({
                 </div>
               ))} */}
 
-              {filteredVehicles.length > 0 ? (
+              {/* {filteredVehicles.length > 0 ? (
                 filteredVehicles?.map((vehicule, index) => (
                   <div
                     key={vehicule.deviseID}
@@ -92,7 +93,16 @@ function ShowVehiculeListeComponent({
                 ))
               ) : (
                 <p className="text-center px-3 mt-10">Pas de resultat</p>
-              )}
+              )} */}
+              <SearchVehiculePupup
+                searchQuery={searchQuery}
+                handleSearchChange={handleSearchChange}
+                setShowOptions={setShowVehiculeListe}
+                filteredVehicles={filteredVehicles}
+                handleClick={handleVehicleClick}
+                currentVehicule={currentVehicule}
+                isMapcomponent="true"
+              />
             </div>
           </div>
         </div>

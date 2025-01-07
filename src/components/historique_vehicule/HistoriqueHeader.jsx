@@ -5,6 +5,7 @@ import { IoMdTime } from "react-icons/io";
 // import { DataContext } from "../../context/DataContext";
 import { MdLocationPin, MdDateRange } from "react-icons/md";
 import { FaCar } from "react-icons/fa";
+import Tooltip from "@mui/material/Tooltip";
 
 // import DateTimePicker from "./DateTimePicker";
 
@@ -38,44 +39,132 @@ function HistoriqueHeader({
           className="cursor-pointer relative shadow-xl border md:border-orange-200 min-w-10 rounded-md flex justify-center items-center py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-300/30"
         >
           {showHistoriqueInMap ? (
-            <IoStatsChart className="text-xl text-orange-600 " />
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Voir l'historique du véhicule"
+            >
+              <div className="cursor-pointer">
+                <IoStatsChart className="text-xl text-orange-600 " />
+              </div>
+            </Tooltip>
           ) : (
-            <img className="w-[1.7rem]" src="/img/cars/parcoure.png" alt="" />
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Voir le trajet du véhicule"
+            >
+              <img className="w-[1.7rem]" src="/img/cars/parcoure.png" alt="" />
+            </Tooltip>
           )}
           {/* <div className="absolute z-10 top-[3em] left-0 w-[20rem] p-2 border text-gray-6 bg-orange-50 rounded-lg">
             hover to display me !{" "}
           </div> */}
         </div>
-
-        <div
-          onClick={() => {
-            setShowVehiculeListe(!showVehiculeListe);
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -10], // Décalage horizontal et vertical
+                },
+              },
+              {
+                name: "zIndex",
+                enabled: true,
+                phase: "write",
+                fn: ({ state }) => {
+                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                },
+              },
+            ],
           }}
-          className="relative w-full "
+          title="Choisissez un véhicule"
         >
           <div
-            className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
-                 px-3 py-2 bg-orange-50 shadow-xl text-center"
+            onClick={() => {
+              setShowVehiculeListe(!showVehiculeListe);
+            }}
+            className="relative w-full "
           >
-            <p
-              // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
-              className="md:hidden"
+            <div
+              className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
+                 px-3 py-2 bg-orange-50 shadow-xl text-center"
             >
-              Choisis un véhicule
-            </p>
-            <p className="hidden md:block">
-              {currentVehicule?.description || "Choisir un vehicule"}
-            </p>
-            <FaChevronDown className="mt-1" />
+              <p
+                // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
+                className="md:hidden"
+              >
+                Choisis un véhicule
+              </p>
+              <p className="hidden md:block">
+                {currentVehicule?.description || "Choisir un vehicule"}
+              </p>
+              <FaChevronDown className="mt-1" />
+            </div>
           </div>
-        </div>
-
-        <div
-          onClick={() => setshowFilter(!showFilter)}
-          className="min-w-10 cursor-pointer border rounded-md shadow-xl md:border-orange-200 flex justify-center items-center py-2 bg-orange-50  dark:bg-gray-900/50 dark:border-gray-300/30"
+        </Tooltip>
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -10], // Décalage horizontal et vertical
+                },
+              },
+              {
+                name: "zIndex",
+                enabled: true,
+                phase: "write",
+                fn: ({ state }) => {
+                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                },
+              },
+            ],
+          }}
+          title="Filtrer les résultats de recherche"
         >
-          <BsFilterRight className="text-2xl text-orange-600 " />
-        </div>
+          <div
+            onClick={() => setshowFilter(!showFilter)}
+            className="min-w-10 cursor-pointer border rounded-md shadow-xl md:border-orange-200 flex justify-center items-center py-2 bg-orange-50  dark:bg-gray-900/50 dark:border-gray-300/30"
+          >
+            <BsFilterRight className="text-2xl text-orange-600 " />
+          </div>
+        </Tooltip>
       </div>
     </>
   );

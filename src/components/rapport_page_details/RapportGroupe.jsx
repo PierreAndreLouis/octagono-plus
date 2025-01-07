@@ -58,6 +58,7 @@ function RapportGroupe({
   uniqueAddressesZerroSpeed,
   setShowOptions,
   setpageSection,
+  setSelectedVehicle,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -915,7 +916,12 @@ function RapportGroupe({
                             index + 1 || "---"
                           }
                         </td>
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            handleClick(vehicule);
+                          }}
+                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {
                             //
                             vehicule?.description || "---"
@@ -1042,7 +1048,12 @@ function RapportGroupe({
                             index + 1 || "---"
                           }
                         </td>
-                        <td className="border py-3 px-2   dark:bg-gray-800  dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            handleClick(vehicule);
+                          }}
+                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2   dark:bg-gray-800  dark:border-gray-600"
+                        >
                           {
                             //
                             vehicule?.description || "---"
@@ -1162,7 +1173,12 @@ function RapportGroupe({
                             index + 1 || "---"
                           }
                         </td>
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            handleClick(vehicule);
+                          }}
+                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {
                             //
                             vehicule?.description || "---"
@@ -1286,7 +1302,12 @@ function RapportGroupe({
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {index + 1 || "---"}
                         </td>
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            handleClick(vehicule);
+                          }}
+                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule?.description || "---"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
@@ -1418,7 +1439,12 @@ function RapportGroupe({
                         <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
                           {index + 1 || "---"}
                         </td>
-                        <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            handleClick(vehicule);
+                          }}
+                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600"
+                        >
                           {vehicule?.description || "---"}
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
@@ -2593,7 +2619,7 @@ function RapportGroupe({
                 </div>
               </button>
               <div className=" -translate-y-[10rem]---">
-                <MapComponent />
+                <MapComponent mapType={mapType} />
               </div>
             </div>
           </div>
@@ -2604,6 +2630,7 @@ function RapportGroupe({
               // onClick={centerOnFirstMarker}
               onClick={() => {
                 setzoomPosition(true);
+                setSelectedVehicle(null);
               }}
             >
               <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
@@ -2611,7 +2638,7 @@ function RapportGroupe({
               </div>
             </button>
             <div className=" -translate-y-[10rem]">
-              <MapComponent />
+              <MapComponent mapType={mapType} />
             </div>
           </div>
         )}
@@ -2722,154 +2749,240 @@ function RapportGroupe({
           </div>
         </div>
 
-        <div className="w-full mt-4 mb-20 overflow-auto">
+        <div className="w-full mt-4 max-h-[30rem] md:h-[20rem] mb-20 overflow-x-auto overflow-y-hidden">
           {/*  */}
-          <table className="overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
-            <thead>
-              <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
-                  Numéro
-                </th>
+          <thead>
+            <tr className="bg-orange-50 relative z-20 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+              <th className="text-start border-l-4  border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                Numéro
+              </th>
 
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
-                  Véhicule
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem]">
-                  Date et Heure de départ
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem]">
-                  Date et Heure d'arrivée
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
-                  Vitesse moyenne
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
-                  Vitesse maximale
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
-                  Distance totale
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
-                  Nombre d'arrêts
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem]">
-                  Temps en mouvement
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]">
-                  Adresse de départ
-                </th>
-                <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]">
-                  Adresse d'arrivée
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {(tableSortBy || vehiclesByMovingDuration)?.map(
-                (vehicule, index) => (
-                  <tr key={index} className="border dark:border-gray-600">
-                    <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {index + 1 || "---"}
-                    </td>
-                    <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {vehicule?.description || "---"}
-                    </td>
-                    {/*  */}
-                    <td className="border py-3 px-2   dark:border-gray-600">
-                      {vehicule?.vehiculeDetails[0]?.timestamp
-                        ? formatTimestampToDate(
-                            vehicule?.vehiculeDetails[
-                              vehicule?.vehiculeDetails.length - 1
-                            ]?.timestamp
-                          )
-                        : ""}{" "}
-                      {vehicule?.vehiculeDetails[0]?.timestamp && (
-                        <span className="px-2">/</span>
-                      )}{" "}
-                      {vehicule?.vehiculeDetails[0]?.timestamp
-                        ? selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              vehicule?.vehiculeDetails[
-                                vehicule?.vehiculeDetails.length - 1
-                              ]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              vehicule?.vehiculeDetails[
-                                vehicule?.vehiculeDetails.length - 1
-                              ]?.timestamp
-                            )
-                        : "Pas de dépacement"}{" "}
-                    </td>
-                    <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {vehicule?.vehiculeDetails[0]?.timestamp
-                        ? formatTimestampToDate(
-                            vehicule?.vehiculeDetails[0]?.timestamp
-                          )
-                        : ""}{" "}
-                      {vehicule?.vehiculeDetails[0]?.timestamp && (
-                        <span className="px-2">/</span>
-                      )}{" "}
-                      {vehicule?.vehiculeDetails[0]?.timestamp
-                        ? selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              vehicule?.vehiculeDetails[0]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              vehicule?.vehiculeDetails[0]?.timestamp
-                            )
-                        : "Pas de dépacement"}{" "}
-                    </td>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
+                Véhicule
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[13rem]">
+                Date et Heure de départ
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[13rem]">
+                Date et Heure d'arrivée
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                Vitesse moyenne
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                Vitesse maximale
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                Distance totale
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                Nombre d'arrêts
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[12rem]">
+                Temps en mouvement
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[30rem]">
+                Adresse de départ
+              </th>
+              <th className="text-start border dark:border-gray-600 py-3 px-2 min-w-[30rem]">
+                Adresse d'arrivée
+              </th>
+            </tr>
+          </thead>
 
-                    {/* Vitesse moyenne */}
-                    <td className="border py-3 px-2 dark:border-gray-600">
-                      {((vehicule?.maxSpeed + vehicule?.minSpeed) / 2).toFixed(
-                        2
-                      ) + " Km/h"}
-                    </td>
-                    {/* max speed */}
-                    <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {(vehicule?.maxSpeed).toFixed(2) + " Km/h"}
-                    </td>
+          <div className="border-2-- pb-10 -translate-y-[3.1rem] w-full min-w-[160rem] border-red-500 h-[30rem] md:h-[20rem] overflow-y-auto overflow-x-hidden">
+            <table className=" w-full text-left dark:bg-gray-800 dark:text-gray-200">
+              <thead>
+                <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                  <th className="border border-l-4  border-l-red-600 dark:border-gray-600 py-3 px-2 min-w-[4rem]">
+                    Numéro
+                  </th>
 
-                    {/* Distance totale */}
-                    <td className="border py-3 px-2 dark:border-gray-600">
-                      {vehicule.totalDistance.toFixed(2)} km
-                    </td>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
+                    Véhicule
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem]">
+                    Date et Heure de départ
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem]">
+                    Date et Heure d'arrivée
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                    Vitesse moyenne
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                    Vitesse maximale
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                    Distance totale
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem]">
+                    Nombre d'arrêts
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem]">
+                    Temps en mouvement
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]">
+                    Adresse de départ
+                  </th>
+                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]">
+                    Adresse d'arrivée
+                  </th>
+                </tr>
+              </thead>
 
-                    {/* Nombre d'arret */}
-                    <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
-                      {vehicule.stopCount + " arrêts"}
-                    </td>
+              <tbody className="border-2-- border-red-500  max-w-20">
+                {(tableSortBy || vehiclesByMovingDuration)?.map(
+                  (vehicule, index) => {
+                    const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+                    const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-                    {/* Temps actifs */}
-                    <td className="border py-3 px-2 dark:border-gray-600">
-                      {vehicule?.totalMovingDuration}
-                    </td>
+                    const isMoving = vehicule.vehiculeDetails?.some(
+                      (detail) => detail.speedKPH >= 1
+                    );
 
-                    {/* Addresse départ */}
-                    <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                      {vehicule.vehiculeDetails[
-                        vehicule.vehiculeDetails.length - 1
-                      ]?.backupAddress ||
-                        vehicule.vehiculeDetails[
-                          vehicule.vehiculeDetails.length - 1
-                        ]?.address ||
-                        "Pas de deplacement"}
-                    </td>
+                    const hasDetails =
+                      vehicule.vehiculeDetails &&
+                      vehicule.vehiculeDetails.length > 0;
 
-                    {/* Addresse départ */}
-                    <td className="border py-3 px-2     dark:border-gray-600">
-                      {vehicule.vehiculeDetails[0]?.backupAddress ||
-                        vehicule.vehiculeDetails[0]?.address ||
-                        "Pas de deplacement"}
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
+                    const noSpeed = vehicule.vehiculeDetails?.every(
+                      (detail) => detail.speedKPH <= 0
+                    );
+
+                    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                    const lastUpdateTimeMs = vehicule.lastUpdateTime
+                      ? vehicule.lastUpdateTime * 1000
+                      : 0;
+                    const isActive =
+                      currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+                    let iconBg = "text-red-500 dark:text-red-500";
+
+                    if (hasDetails && isMoving) {
+                      iconBg =
+                        "text-green-500 dark:text-green-500 border-l-green-600 dark:border-l-green-600";
+                    } else if (hasDetails && noSpeed && isActive) {
+                      iconBg =
+                        "text-red-500 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
+                    } else if (!hasDetails || !isActive) {
+                      iconBg =
+                        "text-gray-800 dark:text-gray-100 border-l-gray-300 dark:border-l-gray-600";
+                    }
+                    return (
+                      <tr key={index} className="border dark:border-gray-600">
+                        <td
+                          className={`${iconBg} border font-semibold text-lg border-l-4   py-3 px-2  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
+                        >
+                          {index + 1 || "---"}
+                        </td>
+                        <td
+                          onClick={() => {
+                            handleClick(vehicule);
+                          }}
+                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700 py-3 px-2  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
+                        >
+                          {vehicule?.description || "---"}
+                        </td>
+                        {/*  */}
+                        <td className="border py-3 px-2   dark:border-gray-600">
+                          {vehicule?.vehiculeDetails[0]?.timestamp
+                            ? formatTimestampToDate(
+                                vehicule?.vehiculeDetails[
+                                  vehicule?.vehiculeDetails.length - 1
+                                ]?.timestamp
+                              )
+                            : ""}{" "}
+                          {vehicule?.vehiculeDetails[0]?.timestamp && (
+                            <span className="px-2">/</span>
+                          )}{" "}
+                          {vehicule?.vehiculeDetails[0]?.timestamp
+                            ? selectUTC
+                              ? formatTimestampToTimeWithTimezone(
+                                  vehicule?.vehiculeDetails[
+                                    vehicule?.vehiculeDetails.length - 1
+                                  ]?.timestamp,
+                                  selectUTC
+                                )
+                              : formatTimestampToTime(
+                                  vehicule?.vehiculeDetails[
+                                    vehicule?.vehiculeDetails.length - 1
+                                  ]?.timestamp
+                                )
+                            : "Pas de dépacement"}{" "}
+                        </td>
+                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                          {vehicule?.vehiculeDetails[0]?.timestamp
+                            ? formatTimestampToDate(
+                                vehicule?.vehiculeDetails[0]?.timestamp
+                              )
+                            : ""}{" "}
+                          {vehicule?.vehiculeDetails[0]?.timestamp && (
+                            <span className="px-2">/</span>
+                          )}{" "}
+                          {vehicule?.vehiculeDetails[0]?.timestamp
+                            ? selectUTC
+                              ? formatTimestampToTimeWithTimezone(
+                                  vehicule?.vehiculeDetails[0]?.timestamp,
+                                  selectUTC
+                                )
+                              : formatTimestampToTime(
+                                  vehicule?.vehiculeDetails[0]?.timestamp
+                                )
+                            : "Pas de dépacement"}{" "}
+                        </td>
+
+                        {/* Vitesse moyenne */}
+                        <td className="border py-3 px-2 dark:border-gray-600">
+                          {(
+                            (vehicule?.maxSpeed + vehicule?.minSpeed) /
+                            2
+                          ).toFixed(2) + " Km/h"}
+                        </td>
+                        {/* max speed */}
+                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                          {(vehicule?.maxSpeed).toFixed(2) + " Km/h"}
+                        </td>
+
+                        {/* Distance totale */}
+                        <td className="border py-3 px-2 dark:border-gray-600">
+                          {vehicule.totalDistance.toFixed(2)} km
+                        </td>
+
+                        {/* Nombre d'arret */}
+                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                          {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
+                          {vehicule.stopCount + " arrêts"}
+                        </td>
+
+                        {/* Temps actifs */}
+                        <td className="border py-3 px-2 dark:border-gray-600">
+                          {vehicule?.totalMovingDuration}
+                        </td>
+
+                        {/* Addresse départ */}
+                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                          {vehicule.vehiculeDetails[
+                            vehicule.vehiculeDetails.length - 1
+                          ]?.backupAddress ||
+                            vehicule.vehiculeDetails[
+                              vehicule.vehiculeDetails.length - 1
+                            ]?.address ||
+                            "Pas de deplacement"}
+                        </td>
+
+                        {/* Addresse départ */}
+                        <td className="border py-3 px-2     dark:border-gray-600">
+                          {vehicule.vehiculeDetails[0]?.backupAddress ||
+                            vehicule.vehiculeDetails[0]?.address ||
+                            "Pas de deplacement"}
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

@@ -2,6 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { MdErrorOutline } from "react-icons/md";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const DateTimePicker = ({
   setShowDatePicker,
@@ -23,7 +25,19 @@ const DateTimePicker = ({
     // fetchHistoriqueVehicleDetails,
     currentVehicule,
     setLoadingHistoriqueFilter,
+    dateDebut,
+    setDateDebut,
   } = useContext(DataContext);
+
+  const today = new Date(); // La date actuelle
+
+  // Fonction pour formater une date en 'YYYY-MM-DD'
+  const formatDateToISO = (date) => {
+    const adjustedDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
+    return adjustedDate.toISOString().split("T")[0];
+  };
 
   return (
     <div className="fixed inset-0 z-10 flex justify-center items-center bg-black/50 dark:bg-black/80">
@@ -50,12 +64,22 @@ const DateTimePicker = ({
               <label className="block text-gray-500 dark:text-gray-300">
                 Date de Début:
               </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+
+              <DatePicker
+                id="date"
                 className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:focus:ring-indigo-700 dark:focus:border-indigo-500"
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Choisissez une date"
                 required
+                selected={startDate} // Passer directement l'objet Date
+                onChange={(date) => {
+                  if (date) {
+                    // const formattedDate = formatDateToISO(date); // Formater la date
+                    setStartDate(date); // Mettre à jour l'état avec l'objet Date
+                    // console.log("Date choisie :", formattedDate); // Afficher la date formatée dans la console
+                  }
+                }}
+                maxDate={today}
               />
             </div>
             <div className="w-full">
@@ -78,12 +102,22 @@ const DateTimePicker = ({
               <label className="block text-gray-500 dark:text-gray-300">
                 Date de Fin:
               </label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+
+              <DatePicker
+                id="date"
                 className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:focus:ring-indigo-700 dark:focus:border-indigo-500"
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Choisissez une date"
                 required
+                selected={endDate} // Passer directement l'objet Date
+                onChange={(date) => {
+                  if (date) {
+                    // const formattedDate = formatDateToISO(date); // Formater la date
+                    setEndDate(date); // Mettre à jour l'état avec l'objet Date
+                    // console.log("Date choisie :", formattedDate); // Afficher la date formatée dans la console
+                  }
+                }}
+                maxDate={today}
               />
             </div>
             <div className="w-full">
@@ -107,6 +141,14 @@ const DateTimePicker = ({
             >
               Appliquer
             </button>
+            {/* <p
+              onClick={() => {
+                console.log("StartDate", endDate2);
+              }}
+              className="py-2 px-12 bg-orange-500 rounded-lg mt-3 text-white dark:bg-orange-600 dark:hover:bg-orange-500"
+            >
+              test
+            </p> */}
           </div>
         </div>
       </form>

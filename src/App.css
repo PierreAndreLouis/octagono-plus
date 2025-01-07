@@ -26,3 +26,11 @@
   height: 30rem !important;
   width: 50rem !important;
 }
+
+.leaflet-control-zoom {
+  position: absolute !important;
+  left: 10px; /* Ajustez cette valeur pour positionner plus à gauche */
+  top: 13rem; /* Positionner au centre verticalement */
+  z-index: 999999999999999;
+  transform: translateY(-50%); /* Pour centrer précisément */
+}

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IoClose } from "react-icons/io5";
+import { DataContext } from "../../context/DataContext";
+import DatePicker from "react-datepicker";
 
 function DatePupup({
   showChooseDate,
@@ -9,6 +11,17 @@ function DatePupup({
   selectedDate,
   setSelectedDate,
 }) {
+  const { dateDebut } = useContext(DataContext);
+
+  // const formatDate = (dateString) => {
+  //   const [day, month, year] = dateString.split("/"); // Sépare le jour, le mois et l'année
+  //   return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
+  // };
+
+  // Conversion des variables startDate et endDate
+  // const formattedStartDate = formatDate(dateDebut);
+  const today = new Date(); // La date actuelle
+
   return (
     <>
       {showChooseDate && (
@@ -49,12 +62,39 @@ function DatePupup({
                       Choisissez une date :
                     </h2> */}
             {/* <p> {formatDate(selectedDate)}</p> */}
-            <label className="px-3 mt-3 mb-6 ">
-              <input
+            <label className="px-3- w-full-- border border-orange-100 rounded-lg mx-4 mt-3 mb-6 bg-orange-100  dark:border-gray-600">
+              {/* <input
                 className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border p-2 rounded-lg w-full bg-orange-100 dark:bg-gray-400--  dark:border-gray-600 dark:text-gray-200--"
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
+              /> */}
+
+              {/* <DatePicker
+                id="date"
+                className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border p-2 rounded-lg w-full bg-orange-100 dark:bg-gray-400--  dark:border-gray-600 dark:text-gray-200--"
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Choisissez une date"
+                required
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                maxDate={today} // Désactive tous les jours futurs
+              /> */}
+              <DatePicker
+                id="date"
+                className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border- p-2 rounded-lg w-full bg-orange-100- dark:bg-gray-400--  dark:border-gray-600- dark:text-gray-200--"
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Choisissez une date"
+                required
+                selected={selectedDate} // Passer directement l'objet Date
+                onChange={(date) => {
+                  if (date) {
+                    // const formattedDate = formatDateToISO(date); // Formater la date
+                    setSelectedDate(date); // Mettre à jour l'état avec l'objet Date
+                    // console.log("Date choisie :", formattedDate); // Afficher la date formatée dans la console
+                  }
+                }}
+                maxDate={today}
               />
             </label>
             <div className="flex mx-4 mb-4">

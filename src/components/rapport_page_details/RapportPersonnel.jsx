@@ -503,32 +503,6 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                {/* <p>
-                  Heure de départ:{" "}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {heureActiveDebut
-                      ? selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            heureActiveDebut.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(heureActiveDebut.timestamp)
-                      : "Pas de mouvement"}{" "}
-                  </span>
-                </p>
-                <p>
-                  Heure d'arriver:{" "}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {heureActiveFin
-                      ? selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            heureActiveFin.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(heureActiveFin.timestamp)
-                      : "Pas de mouvement"}{" "}
-                  </span>
-                </p> */}
                 <p>
                   Date recherchée :
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
@@ -600,6 +574,39 @@ function RapportPersonnel({
                       Pas d'heure disponible
                     </span>
                   )}
+                </p>
+                {/*  */}
+                {/*  */}
+                {/*  */}
+                <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+                {/*  */}
+                {/*  */}
+                {/*  */}
+                <p>
+                  Heure de départ:{" "}
+                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    {heureActiveDebut
+                      ? selectUTC
+                        ? formatTimestampToTimeWithTimezone(
+                            heureActiveDebut.timestamp,
+                            selectUTC
+                          )
+                        : formatTimestampToTime(heureActiveDebut.timestamp)
+                      : "Pas de mouvement"}{" "}
+                  </span>
+                </p>
+                <p>
+                  Heure d'arriver:{" "}
+                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    {heureActiveFin
+                      ? selectUTC
+                        ? formatTimestampToTimeWithTimezone(
+                            heureActiveFin.timestamp,
+                            selectUTC
+                          )
+                        : formatTimestampToTime(heureActiveFin.timestamp)
+                      : "Pas de mouvement"}{" "}
+                  </span>
                 </p>
                 {/*  */}
                 {/*  */}
@@ -879,8 +886,8 @@ function RapportPersonnel({
           </div> */}
           {/* ///////////////////////////////////////// */}
           <div className="overflow-auto max-w-[100vw]">
-            <div className="w-[200rem]-- max-h-[40rem] ">
-              <div className="dark:bg-gray-100 w-[100%] h-[20rem]  md:h-[30rem] pt-5 border  rounded-lg">
+            <div className="w-[200rem]-- max-h-[30rem] ">
+              <div className="dark:bg-gray-100 w-[100%] h-[20rem]  md:h-[25rem] pt-5 border  rounded-lg">
                 <ReactECharts
                   className="-translate-x-52--- p-0 m-0"
                   option={options}

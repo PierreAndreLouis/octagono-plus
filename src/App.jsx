@@ -68,6 +68,9 @@ function App() {
           {!shouldHideComponent && <Navigation_bar />}
           {!shouldHideComponent && <SideBar />}
         </div>
+        {/* <SideBar />
+        <Header />
+        <HomePage /> */}
 
         <Routes>
           <Route

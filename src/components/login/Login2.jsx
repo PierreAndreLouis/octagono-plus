@@ -3,6 +3,8 @@ import Flag from "react-world-flags";
 import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../context/DataContext.jsx";
+import InstallationPWA from "../../pages/InstallationPWA.jsx";
+import { GrInstallOption } from "react-icons/gr";
 
 function Login2({ setShowLogin }) {
   const [selectedLang, setSelectedLang] = useState("en");
@@ -127,6 +129,13 @@ function Login2({ setShowLogin }) {
           <h2 className="mt-4 dark:text-gray-100 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Bienvenue à Octagono Plus
           </h2>
+          <div className="flex justify-center items-center gap-2">
+            <p className="text-center cursor-pointer">
+              {/* <GrInstallOption /> */}
+              <InstallationPWA />
+              {/* Installer l'application */}
+            </p>
+          </div>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

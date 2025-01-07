@@ -8,6 +8,8 @@ import { FaCar } from "react-icons/fa";
 
 import { FaChevronDown } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
+import SearchVehiculePupup from "./SearchVehiculePupup";
+import Tooltip from "@mui/material/Tooltip";
 
 // import "leaflet/dist/leaflet.css";
 
@@ -155,85 +157,97 @@ function RapportPageDetailsHeader({
       </div>
 
       {showOptions && (
-        <div className="fixed  pt-[5.5rem] p-4 dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
-          <div className="absolute top-[2.4rem] left-4 right-4 p-2">
-            <input
-              className="w-full border p-4 py-1.5 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-              type="text"
-              placeholder="Recherche"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <div
-            onClick={() => {
-              setShowOptions(false);
-            }}
-            className="flex justify-end absolute top-4 left-0 right-4"
-          >
-            <IoMdClose className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]" />
-          </div>
-          <div className="overflow-auto h-[40vh]">
-            {filteredVehicles?.length > 0 ? (
-              filteredVehicles?.map((vehicule, index) => {
-                const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-                const currentTime = Date.now(); // Heure actuelle en millisecondes
+        <SearchVehiculePupup
+          searchQuery={searchQuery}
+          handleSearchChange={handleSearchChange}
+          setShowOptions={setShowOptions}
+          filteredVehicles={filteredVehicles}
+          handleClick={handleClick}
+          currentVehicule={currentVehicule}
+          isMapcomponent="false"
+        />
 
-                const isMoving = vehicule.vehiculeDetails?.some(
-                  (detail) => detail.speedKPH >= 1
-                );
+        // <div className="fixed mx-auto   max-w-[50rem] pt-[5.5rem] p-4 dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
+        //   <div className="absolute top-[2.4rem] left-4 right-4 p-2">
+        //     <input
+        //       className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
+        //       type="text"
+        //       placeholder="Recherche"
+        //       value={searchQuery}
+        //       onChange={handleSearchChange}
+        //     />
+        //   </div>
+        //   <div
+        //     onClick={() => {
+        //       setShowOptions(false);
+        //     }}
+        //     className="flex justify-end absolute top-4 left-0 right-4"
+        //   >
+        //     <IoMdClose className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]" />
+        //   </div>
+        //   <div className="overflow-auto h-[60vh]">
+        //     {filteredVehicles?.length > 0 ? (
+        //       filteredVehicles?.map((vehicule, index) => {
+        //         const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+        //         const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-                const hasDetails =
-                  vehicule.vehiculeDetails &&
-                  vehicule.vehiculeDetails.length > 0;
+        //         const isMoving = vehicule.vehiculeDetails?.some(
+        //           (detail) => detail.speedKPH >= 1
+        //         );
 
-                const noSpeed = vehicule.vehiculeDetails?.every(
-                  (detail) => detail.speedKPH <= 0
-                );
+        //         const hasDetails =
+        //           vehicule.vehiculeDetails &&
+        //           vehicule.vehiculeDetails.length > 0;
 
-                // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-                const lastUpdateTimeMs = vehicule.lastUpdateTime
-                  ? vehicule.lastUpdateTime * 1000
-                  : 0;
-                const isActive =
-                  currentTime - lastUpdateTimeMs < twentyHoursInMs;
+        //         const noSpeed = vehicule.vehiculeDetails?.every(
+        //           (detail) => detail.speedKPH <= 0
+        //         );
 
-                let iconBg = "text-red-500";
+        //         // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+        //         const lastUpdateTimeMs = vehicule.lastUpdateTime
+        //           ? vehicule.lastUpdateTime * 1000
+        //           : 0;
+        //         const isActive =
+        //           currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-                if (hasDetails && isMoving) {
-                  iconBg = "text-green-500";
-                } else if (hasDetails && noSpeed && isActive) {
-                  iconBg = "text-red-500";
-                } else if (!hasDetails || !isActive) {
-                  iconBg = "text-purple-500";
-                }
+        //         let iconBg = "text-red-500 dark:text-red-500";
 
-                return (
-                  <div
-                    key={vehicule.deviseID}
-                    onClick={() => {
-                      handleClick(vehicule);
-                      setShowOptions(false);
-                    }}
-                    className={`${
-                      vehicule.description === currentVehicule?.description &&
-                      "bg-orange-50"
-                    }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-gray-700`}
-                  >
-                    <FaCar
-                      className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg dark:text-orange-400 `}
-                    />
-                    <p className="text-gray-700 dark:text-white">
-                      {index + 1} - {vehicule.description || "---"}
-                    </p>
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-center px-3 mt-10">Pas de resultat</p>
-            )}
-          </div>
-        </div>
+        //         if (hasDetails && isMoving) {
+        //           iconBg = "text-green-500 dark:text-green-500";
+        //         } else if (hasDetails && noSpeed && isActive) {
+        //           iconBg = "text-red-500 dark:text-red-500";
+        //         } else if (!hasDetails || !isActive) {
+        //           iconBg = "text-purple-500 dark:text-purple-500";
+        //         }
+
+        //         return (
+        //           <div
+        //             key={vehicule.deviseID}
+        //             onClick={() => {
+        //               handleClick(vehicule);
+        //               setShowOptions(false);
+        //             }}
+        //             className={`${
+        //               vehicule.description === currentVehicule?.description &&
+        //               "bg-orange-50 dark:bg-gray-800"
+        //             }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:bg-gray-600-- dark:hover:bg-gray-800`}
+        //           >
+        //             <FaCar
+        //               className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg dark:text-orange-400 `}
+        //             />
+        //             <p className="text-gray-700 dark:text-white">
+        //               {index + 1} - {vehicule.description || "---"}
+        //             </p>
+        //           </div>
+        //         );
+        //       })
+        //     ) : (
+        //       <p className="text-center dark:text-gray-50 px-3 mt-10">
+        //         Pas de resultat
+        //       </p>
+        //     )}
+        //   </div>
+        // </div>
       )}
       {currentdataFusionnee.length > 0 &&
         (pageSection === "unite" || pageSection === "groupe") && (
@@ -332,14 +346,36 @@ function RapportPageDetailsHeader({
                 </p>
               </div>
             </div>
-            <div
-              onClick={() => {
-                setShowChooseDate(true);
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
               }}
-              className="flex  gap-2 items-center cursor-pointer"
+              title="Recherche par date"
             >
-              <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
-            </div>
+              <div
+                onClick={() => {
+                  setShowChooseDate(true);
+                }}
+                className="flex  gap-2 items-center cursor-pointer"
+              >
+                <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+              </div>
+            </Tooltip>
           </div>
         )}
 

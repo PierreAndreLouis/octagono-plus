@@ -53,6 +53,9 @@ function RapportPageDetails() {
     fetSearchRapportchVehicleDetails,
     setRapportDataLoading,
     mergedData,
+    dateDebut,
+    setDateDebut,
+    setSelectedVehicle,
   } = useContext(DataContext);
 
   const dataFusionee = mergedData ? Object.values(mergedData) : [];
@@ -209,127 +212,199 @@ function RapportPageDetails() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////
   // section du diagrame de vitesse
-  useEffect(() => {
-    const canvas = document.getElementById("myChart");
-    if (!canvas) {
-      console.error("L'élément canvas avec l'ID 'myChart' n'existe pas.");
-      return;
-    }
+  // useEffect(() => {
+  //   const canvas = document.getElementById("myChart");
+  //   if (!canvas) {
+  //     console.error("L'élément canvas avec l'ID 'myChart' n'existe pas.");
+  //     return;
+  //   }
 
-    // Vérifiez si un graphique existe déjà, et détruisez-le
-    const existingChart = Chart.getChart("myChart"); // Récupérer le graphique existant par ID
-    if (existingChart) {
-      existingChart.destroy(); // Détruire le graphique existant
-    }
-    const ctx = canvas.getContext("2d");
+  //   // Vérifiez si un graphique existe déjà, et détruisez-le
+  //   const existingChart = Chart.getChart("myChart"); // Récupérer le graphique existant par ID
+  //   if (existingChart) {
+  //     existingChart.destroy(); // Détruire le graphique existant
+  //   }
+  //   const ctx = canvas.getContext("2d");
 
-    // Exemple de données
-    const data = filteredVehicles;
+  //   // const data = sortedData || [];
+  //   const data = filteredVehicles || [];
 
-    const timestamps = data?.map((item) =>
-      new Date(item.timestamp * 1000).toLocaleTimeString()
-    );
-    const speeds = data?.map((item) => parseFloat(item.speedKPH));
+  //   // const timestamps = data?.map((item) =>
+  //   //   new Date(item.timestamp * 1000).toLocaleTimeString()
+  //   // );
+  //   // const speeds = data?.map((item) => parseFloat(item.speedKPH));
 
-    // Créer un nouveau graphique
-    new Chart(ctx, {
-      type: "line", // Type de graphique
-      // type: "polarArea", // Type de graphique
-      // type: "radar", // Type de graphique
-      // type: "bar", // Type de graphique
-      fill: true, // Ajoutez cette propriété pour un graphique en aires
+  //   const timestamps = data
+  //     ?.map((item) => new Date(item.timestamp * 1000).toLocaleTimeString())
+  //     .reverse(); // Inverser l'ordre des timestamps
 
-      data: {
-        labels: timestamps, // Échelle X
-        datasets: [
-          {
-            label: "Vitesse (km/h)",
-            data: speeds,
-            borderColor: "rgba(75, 192, 192, 1)",
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderWidth: 2,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-        },
-        scales: {
-          x: {
-            type: "category", // Type de l'échelle X
-            title: {
-              display: true,
-              text: "Heures",
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: "Vitesse (km/h)",
-            },
-            ticks: {
-              stepSize: 1, // Augmente l'écart entre les valeurs de l'axe Y
-            },
-          },
-        },
-      },
-    });
-  }, []); // Exécuter une seule fois au montage du composant
+  //   const speeds = data?.map((item) => parseFloat(item.speedKPH)).reverse(); // Inverser l'ordre des vitesses
 
-  const data = filteredVehicles || [];
+  //   // Créer un nouveau graphique
+  //   new Chart(ctx, {
+  //     type: "line", // Type de graphique
+  //     // type: "polarArea", // Type de graphique
+  //     // type: "radar", // Type de graphique
+  //     // type: "bar", // Type de graphique
+  //     fill: true, // Ajoutez cette propriété pour un graphique en aires
 
-  const timestamps = data.map((item) =>
-    new Date(item.timestamp * 1000).toLocaleTimeString()
+  //     data: {
+  //       labels: timestamps, // Échelle X
+  //       datasets: [
+  //         {
+  //           label: "Vitesse (km/h)",
+  //           data: speeds,
+  //           borderColor: "rgba(75, 192, 192, 1)",
+  //           backgroundColor: "rgba(75, 192, 192, 0.2)",
+  //           borderWidth: 2,
+  //         },
+  //       ],
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { display: true },
+  //       },
+  //       scales: {
+  //         x: {
+  //           type: "category", // Type de l'échelle X
+  //           title: {
+  //             display: true,
+  //             text: "Heures",
+  //           },
+  //         },
+  //         y: {
+  //           title: {
+  //             display: true,
+  //             text: "Vitesse (km/h)",
+  //           },
+  //           ticks: {
+  //             stepSize: 1, // Augmente l'écart entre les valeurs de l'axe Y
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }, []); // Exécuter une seule fois au montage du composant
+
+  // const sortedData = [...(filteredVehicles || [])].sort((a, b) => {
+  //   // Remplace "key" par la clé par laquelle tu veux trier
+  //   if (a.key > b.key) return -1;
+  //   if (a.key < b.key) return 1;
+  //   return 0;
+  // });
+  // const data = sortedData || [];
+  // const data = filteredVehicles || [];
+
+  // const timestamps = data
+  //   ?.map((item) => new Date(item.timestamp * 1000).toLocaleTimeString())
+  //   .reverse(); // Inverser l'ordre des timestamps
+
+  // const speeds = data?.map((item) => parseFloat(item.speedKPH)).reverse(); // Inverser l'ordre des vitesses
+
+  // const options = {
+  //   title: {
+  //     // text: "Diagramme des vitesses",
+  //     text: "",
+  //     left: "center",
+  //     textStyle: {
+  //       fontSize: 16, // Taille de la police pour le titre
+  //       fontWeight: "bold",
+  //     },
+  //   },
+  //   tooltip: {
+  //     trigger: "axis",
+  //   },
+  //   xAxis: {
+  //     type: "category",
+  //     data: timestamps,
+  //     name: "Heures",
+  //     nameLocation: "middle",
+  //     nameTextStyle: {
+  //       fontSize: 14, // Taille du texte pour le nom
+  //       padding: 20, // Espace autour du texte
+  //     },
+  //   },
+  //   yAxis: {
+  //     type: "value",
+  //     name: "Vitesse (km/h)", // Nom de l'axe Y
+  //     nameLocation: "middle", // Place le nom au milieu de l'axe
+  //     nameTextStyle: {
+  //       fontSize: 14, // Taille de la police pour le nom
+  //       padding: 40, // Distance entre le texte et l'axe
+  //     },
+  //     axisLabel: {
+  //       fontSize: 12, // Taille des étiquettes des graduations
+  //     },
+  //   },
+  //   series: [
+  //     {
+  //       data: speeds,
+  //       // type: "bar", // Type de graphique (ligne)
+  //       type: "line", // Type de graphique (ligne)
+  //       itemStyle: {
+  //         color: "rgba(75, 192, 192, 0.8)", // Couleur des lignes ou barres
+  //       },
+  //       lineStyle: {
+  //         width: 2, // Épaisseur de la ligne
+  //       },
+  //     },
+  //   ],
+  // };
+
+  function formatTimestampToTime(timestamp) {
+    const date = new Date(timestamp * 1000);
+    let hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+    const period = hours >= 12 ? "PM" : "AM";
+
+    // Convert to 12-hour format
+    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
+    hours = hours.toString().padStart(2, "0");
+
+    return `${hours}:${minutes} ${period}`;
+  }
+
+  const data = filteredVehicles.reverse() || [];
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp * 1000); // Convertir le timestamp en millisecondes
+    return `${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+  };
+
+  const speedData = data.map((vehicle) => parseFloat(vehicle.speedKPH));
+  const timeData = data.map((vehicle) =>
+    formatTimestampToTime(vehicle.timestamp)
   );
-  const speeds = data.map((item) => parseFloat(item.speedKPH));
+  // const timeData = data.map((vehicle) => formatTimestamp(vehicle.timestamp));
 
   const options = {
-    title: {
-      // text: "Diagramme des vitesses",
-      text: "",
-      left: "center",
-      textStyle: {
-        fontSize: 16, // Taille de la police pour le titre
-        fontWeight: "bold",
-      },
-    },
+    // title: {
+    //   // text: "",
+    //   // text: "Vitesse des véhicules",
+    // },
     tooltip: {
       trigger: "axis",
     },
     xAxis: {
       type: "category",
-      data: timestamps,
-      name: "Heures",
-      nameLocation: "middle",
-      nameTextStyle: {
-        fontSize: 14, // Taille du texte pour le nom
-        padding: 20, // Espace autour du texte
-      },
+      data: timeData, // Heure sur l'axe des X
+      boundaryGap: false,
     },
     yAxis: {
       type: "value",
-      name: "Vitesse (km/h)", // Nom de l'axe Y
-      nameLocation: "middle", // Place le nom au milieu de l'axe
-      nameTextStyle: {
-        fontSize: 14, // Taille de la police pour le nom
-        padding: 40, // Distance entre le texte et l'axe
-      },
-      axisLabel: {
-        fontSize: 12, // Taille des étiquettes des graduations
-      },
+      name: "Vitesse (KPH)",
+      // min: 0, // Vous pouvez ajuster la valeur minimale selon vos besoins
+      // max: 20, // Définissez une valeur maximale qui n'est pas trop éloignée des valeurs de votre vitesse
+      // interval: 1, // Définit un intervalle précis entre les valeurs
     },
     series: [
       {
-        data: speeds,
-        // type: "bar", // Type de graphique (ligne)
-        type: "line", // Type de graphique (ligne)
-        itemStyle: {
-          color: "rgba(75, 192, 192, 0.8)", // Couleur des lignes ou barres
-        },
+        data: speedData, // Vitesses sur l'axe des Y
+        type: "line",
+        smooth: true,
         lineStyle: {
-          width: 2, // Épaisseur de la ligne
+          color: "rgba(75, 192, 192, 0.8)",
         },
       },
     ],
@@ -1200,16 +1275,70 @@ function RapportPageDetails() {
     console.log("vehiculeDate", dataFusionee);
     // setpageSection("search");
 
+    // Fonction pour convertir une date au format dd/MM/yyyy
+    // const formatDate = (date) => {
+    //   // Vérifiez si c'est déjà une chaîne, sinon, convertissez-la en format "dd/MM/yyyy"
+    //   if (typeof date === "string") {
+    //     const [day, month, year] = date.split("/"); // Sépare le jour, le mois et l'année
+    //     return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
+    //   } else if (date instanceof Date) {
+    //     // Si c'est un objet Date, formatez-le en "dd/MM/yyyy"
+    //     const day = ("0" + date.getDate()).slice(-2);
+    //     const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    //     const year = date.getFullYear();
+    //     return `${year}-${month}-${day}`;
+    //   }
+    //   return date; // Retourne la date telle quelle si elle n'est ni string ni Date
+    // };
+
+    // const formatDateToISO = (date) => {
+    //   const adjustedDate = new Date(
+    //     date.getTime() - date.getTimezoneOffset() * 60000
+    //   );
+    //   return adjustedDate.toISOString().split("T")[0];
+    // };
+    const formatDateToISO = (date) => {
+      if (!(date instanceof Date)) {
+        date = new Date(date); // Convertir en objet Date si nécessaire
+      }
+      const adjustedDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      return adjustedDate.toISOString().split("T")[0];
+    };
+
+    // Conversion des variables startDate et endDate
+    const formattedStartDate = formatDateToISO(selectedDate);
+    const formattedEndDate = formatDateToISO(selectedDate);
+
+    // Conversion des variables startDate et endDate
+    // const formattedStartDate = formatDate(selectedDate);
+    // const formattedEndDate = formatDate(selectedDate);
+
     const startTime = "00:00:00";
     const endTime = "23:59:59";
 
-    const timeFrom = `${selectedDate} ${startTime}`;
-    const timeTo = `${selectedDate} ${endTime}`;
+    // Combine les dates formatées avec les heures
+    const timeFrom = `${formattedStartDate} ${startTime}`;
+    const timeTo = `${formattedEndDate} ${endTime}`;
+
+    // const timeFrom = `${selectedDate} ${startTime}`;
+    // const timeTo = `${selectedDate} ${endTime}`;
+
+    console.log("timeFrom", timeFrom);
+    console.log("timeTo", timeTo);
+    // console.log("timeFrom", timeFrom)
+    // console.log("timeFrom", timeFrom)
 
     if (dataFusionee && dataFusionee.length > 0) {
       dataFusionee?.forEach((vehicle) => {
         // console.log("Readyyyyyyyyyyyyyyyy");
         fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+        // fetSearchRapportchVehicleDetails(
+        //   vehicle.deviceID,
+        //   "2024-12-24 00:00:00",
+        //   "2024-12-26 00:00:00"
+        // );
       });
     }
   };
@@ -1217,40 +1346,56 @@ function RapportPageDetails() {
   // Formatage de la date actuelle
   const getCurrentDate = () => new Date().toISOString().split("T")[0];
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
+  const today = new Date(); // La date actuelle
 
   // Initialisation de la date et de l'heure actuelles par défaut
-  const [startDate, setStartDate] = useState(getCurrentDate());
+  const [startDate, setStartDate] = useState(today);
   const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
-  const [endDate, setEndDate] = useState(getCurrentDate());
+  const [endDate, setEndDate] = useState(today);
   const [endTime, setEndTime] = useState(getCurrentTime());
 
   const handleApply2 = (e) => {
-    console.log("Startt...................");
     e.preventDefault();
-    const timeFrom = `${startDate} ${startTime}:00`;
-    const timeTo = `${endDate} ${endTime}:00`;
-    setShowDatePicker2(false);
-    setRapportDataLoading(true);
-    // setpageSection("search");
 
-    console.log("Startt........222222222222...........");
+    // Fonction pour formater une date en 'YYYY-MM-DD'
+    // const formatDateToISO = (date) => {
+    //   const adjustedDate = new Date(
+    //     date.getTime() - date.getTimezoneOffset() * 60000
+    //   );
+    //   return adjustedDate.toISOString().split("T")[0];
+    // };
+
+    const formatDateToISO = (date) => {
+      if (!(date instanceof Date)) {
+        date = new Date(date); // Convertir en objet Date si nécessaire
+      }
+      const adjustedDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      return adjustedDate.toISOString().split("T")[0];
+    };
+
+    // Conversion des variables startDate et endDate
+    const formattedStartDate = formatDateToISO(startDate);
+    const formattedEndDate = formatDateToISO(endDate);
+
+    // Combine les dates formatées avec les heures
+    const timeFrom = `${formattedStartDate} ${startTime}:00`;
+    const timeTo = `${formattedEndDate} ${endTime}:00`;
+
+    console.log("timeFrom+++++++++++++", timeFrom);
+    console.log("timeTo+++++++++++++++", timeTo);
+
     // handleDateChange(timeFrom, timeTo);
     if (dataFusionee && dataFusionee.length > 0) {
       dataFusionee.forEach((vehicle) => {
-        console.log("Startt.......333333333333............");
-
         fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
       });
     }
-    console.log("Startt..........444444444444.........");
 
-    // fetSearchRapportchVehicleDetails(
-    //   currentVehicule.deviceID,
-    //   timeFrom,
-    //   timeTo
-    // );
+    setShowDatePicker2(false);
+    setRapportDataLoading(true);
 
-    setShowDatePicker(false);
     // setLoadingHistoriqueFilter(true);
   };
   return (
@@ -1317,6 +1462,7 @@ function RapportPageDetails() {
               setpageSection={setpageSection}
               setShowOptions={setShowOptions}
               showOptions={showOptions}
+              setSelectedVehicle={setSelectedVehicle}
             />
             <RapportPageDetailsHeader
               setShowOptions={setShowOptions}
@@ -1436,6 +1582,8 @@ function RapportPageDetails() {
           showHistoriqueInMap={showHistoriqueInMap}
           openGoogleMaps={openGoogleMaps}
           setpageSection={setpageSection}
+          setSelectedVehicle={setSelectedVehicle}
+
         />
       )}
 

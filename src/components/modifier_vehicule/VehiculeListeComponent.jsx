@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { FaCar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { DataContext } from "../../context/DataContext";
+import SearchVehiculePupup from "../rapport_page_details/SearchVehiculePupup";
 
 function VehiculeListeComponent({
   showVehiculeListe,
@@ -73,6 +74,16 @@ function VehiculeListeComponent({
               ) : (
                 <p className="text-center px-3 mt-10">Pas de resultat</p>
               )}
+
+              <SearchVehiculePupup
+                searchQuery={searchQuery}
+                handleSearchChange={handleSearchChange}
+                setShowOptions={setShowVehiculeListe}
+                filteredVehicles={filteredVehicles}
+                handleClick={handleVehicleClick}
+                currentVehicule={currentVehicule}
+                isMapcomponent="false"
+              />
             </div>
           </div>
         </div>

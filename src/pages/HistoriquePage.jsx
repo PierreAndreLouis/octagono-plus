@@ -151,15 +151,6 @@ function HistoriquePage() {
 
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
-  // Fonctions pour formater le temps et la date
-  // function formatTimestampToTime(timestamp) {
-  //   const date = new Date(timestamp * 1000);
-  //   const hours = date.getUTCHours().toString().padStart(2, "0");
-  //   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-  //   const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-  //   return `${hours}:${minutes}:${seconds}`;
-  // }
-
   function formatTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000);
     let hours = date.getUTCHours();
@@ -241,29 +232,73 @@ function HistoriquePage() {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  /////////////////////////////////////////////////////////////////////////
   // Formatage de la date actuelle
   const getCurrentDate = () => new Date().toISOString().split("T")[0];
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
+  const today = new Date(); // La date actuelle
 
   // Initialisation de la date et de l'heure actuelles par défaut
-  const [startDate, setStartDate] = useState(getCurrentDate());
+  const [startDate, setStartDate] = useState(today);
   const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
-  const [endDate, setEndDate] = useState(getCurrentDate());
+  const [endDate, setEndDate] = useState(today);
   const [endTime, setEndTime] = useState(getCurrentTime());
   const [timeFrom, settimeFrom] = useState();
   const [timeTo, settimeTo] = useState();
-  // const [startTimeText, setstartTimeText] = useState("");
-  // const [endTimeText, setendTimeText] = useState("");
-  // const [startDateText, setstartDateText] = useState("");
-  // const [enddateText, setenddateText] = useState("");
 
   const handleApply = (e) => {
     e.preventDefault();
-    const timeFrom = `${startDate} ${startTime}:00`;
-    const timeTo = `${endDate} ${endTime}:00`;
+
+    // Fonction pour convertir une date au format dd/MM/yyyy
+    // const formatDate = (date) => {
+    //   // Vérifiez si c'est déjà une chaîne, sinon, convertissez-la en format "dd/MM/yyyy"
+    //   if (typeof date === "string") {
+    //     const [day, month, year] = date.split("-"); // Sépare le jour, le mois et l'année
+    //     return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
+    //   } else if (date instanceof Date) {
+    //     // Si c'est un objet Date, formatez-le en "dd/MM/yyyy"
+    //     const day = ("0" + date.getDate()).slice(-2);
+    //     const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    //     const year = date.getFullYear();
+    //     return `${year}-${month}-${day}`;
+    //   }
+    //   return date; // Retourne la date telle quelle si elle n'est ni string ni Date
+    // };
+
+    const formatDateToISO = (date) => {
+      if (!(date instanceof Date)) {
+        date = new Date(date); // Convertir en objet Date si nécessaire
+      }
+      const adjustedDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      return adjustedDate.toISOString().split("T")[0];
+    };
+
+    // Conversion des variables startDate et endDate
+    // const formattedStartDate = formatDateToISO(startDate || today);
+    // const formattedEndDate = formatDateToISO(endDate || today);
+
+    // Conversion des variables startDate et endDate
+    const formattedStartDate = formatDateToISO(startDate);
+    const formattedEndDate = formatDateToISO(endDate);
+
+    // const timeFrom = `${startDate} ${startTime}:00`;
+    // const timeTo = `${endDate} ${endTime}:00`;
+    // Combine les dates formatées avec les heures
+    const timeFrom = `${formattedStartDate} ${startTime}:00`;
+    const timeTo = `${formattedEndDate} ${endTime}:00`;
 
     settimeFrom(timeFrom);
     settimeTo(timeTo);
+
+    console.log("timeFrom:", timeFrom);
+    console.log("timeToo:", timeTo);
+    // console.log("startDate:", startDate);
+    // console.log("endDate:", endDate);
+    // console.log("formattedStartDate:", formattedStartDate);
+    // console.log("formattedEndDate:", formattedEndDate);
+
     //
     // handleDateChange(timeFrom, timeTo);
     // fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
@@ -350,6 +385,8 @@ function HistoriquePage() {
             startTime={startTime}
             endDate={endDate}
             endTime={endTime}
+            showVehiculeListe={showVehiculeListe}
+            setShowVehiculeListe={setShowVehiculeListe}
           />
         </div>
       </div>

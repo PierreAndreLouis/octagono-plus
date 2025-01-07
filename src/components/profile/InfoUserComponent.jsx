@@ -98,13 +98,13 @@ function InfoUserComponent({
       </div>
 
       {/* Boutons d'action */}
-      <div className="grid max-w-[30rem] mx-auto grid-cols-1 xs:grid-cols-2 mt-10 gap-2">
+      <div className="flex  justify-center max-w-[30rem] mx-auto grid-cols-1 xs:grid-cols-2 mt-10 gap-2">
         {username === "admin" && (
           <div
             onClick={() => {
               setShowChangePasswordPupup(true);
             }}
-            className="text-orange-500 dark:text-orange-400 cursor-pointer text-center rounded-lg px-3 border border-orange-500 dark:border-orange-400 py-2 hover:bg-orange-100 dark:hover:bg-orange-900"
+            className="text-orange-500 w-full dark:text-orange-400 cursor-pointer text-center rounded-lg px-3 border border-orange-500 dark:border-orange-400 py-2 hover:bg-orange-100 dark:hover:bg-orange-900"
           >
             Changer le mot de passe{" "}
           </div>
@@ -113,7 +113,7 @@ function InfoUserComponent({
           onClick={() => {
             setLogOut(true);
           }}
-          className="bg-orange-500 dark:bg-orange-400 text-center rounded-lg px-3 text-white py-2 hover:bg-orange-600 dark:hover:bg-orange-500"
+          className="bg-orange-500 w-full dark:bg-orange-400 text-center rounded-lg px-3 text-white py-2 hover:bg-orange-600 dark:hover:bg-orange-500"
         >
           Se déconnecter{" "}
         </button>

@@ -24,7 +24,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
 });
 
-function MapComponent() {
+function MapComponent({ mapType }) {
   const {
     mergedData,
     currentVehicule,
@@ -97,7 +97,7 @@ function MapComponent() {
   // const { mergedData, currentVehicule, selectedVehicle, setSelectedVehicle } =
   // useContext(DataContext);
 
-  const [mapType, setMapType] = useState("streets");
+  // const [mapType, setMapType] = useState("streets");
   const mapRef = useRef(null);
   const vehicles = selectedVehicle
     ? vehicleData.filter((v) => v.deviceID === selectedVehicle)
@@ -154,10 +154,10 @@ function MapComponent() {
     return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
   }, [selectedVehicle, vehicles]);
 
-  const handleMapTypeChange = (type) => {
-    setMapType(type);
-    setTypeDeVue(false);
-  };
+  // const handleMapTypeChange = (type) => {
+  //   setMapType(type);
+  //   setTypeDeVue(false);
+  // };
 
   const getMarkerIcon = (speedKPH) => {
     if (speedKPH < 1) return iconLowSpeed;
