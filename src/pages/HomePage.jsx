@@ -194,7 +194,7 @@ const Home = () => {
         </div>
       )}
 
-      {derniereUpdate?.mostRecentTimestamp && (
+      {derniereUpdate?.mostRecentTimestamp !== -Infinity && (
         <div className="shadow-md dark:bg-red-900/40 dark:shadow-gray-900  flex gap-4 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100">
           <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" />
           <div className=" xs:flex items-center gap-4 ">
