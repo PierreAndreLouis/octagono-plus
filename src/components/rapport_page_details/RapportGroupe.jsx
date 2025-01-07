@@ -343,7 +343,7 @@ function RapportGroupe({
         speeds.length > 0
           ? (
               speeds.reduce((sum, speed) => sum + speed, 0) / speeds.length
-            ).toFixed(2)
+            ).toFixed(0)
           : 0;
 
       if (speeds.length === 0) {
@@ -1114,7 +1114,7 @@ function RapportGroupe({
                           }
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.totalDistance.toFixed(2) + " Km"}
+                          {vehicule?.totalDistance.toFixed(0) + " Km"}
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
@@ -1365,16 +1365,16 @@ function RapportGroupe({
                           {vehicule?.description || "---"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.minSpeed.toFixed(2) + " Km/h"}
+                          {vehicule?.minSpeed.toFixed(0) + " Km/h"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.maxSpeed.toFixed(2) + " Km/h"}
+                          {vehicule?.maxSpeed.toFixed(0) + " Km/h"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {(
                             (vehicule?.maxSpeed + vehicule?.minSpeed) /
                             2
-                          ).toFixed(2) + " Km/h"}
+                          ).toFixed(0) + " Km/h"}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
@@ -1514,7 +1514,7 @@ function RapportGroupe({
                           2h 22m 45s
                         </td> */}
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.totalDistance?.toFixed(2) + " km" ||
+                          {vehicule?.totalDistance?.toFixed(0) + " km" ||
                             " 0 km"}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
@@ -2057,7 +2057,7 @@ function RapportGroupe({
                   </span>{" "}
                   {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
                     "( environ " +
-                      vehiclesByDistance[0]?.totalDistance.toFixed(2) +
+                      vehiclesByDistance[0]?.totalDistance.toFixed(0) +
                       " Km )"}
                 </p>
                 {/*  */}
@@ -2450,7 +2450,7 @@ function RapportGroupe({
                   <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
                     {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
                       "( " +
-                        vehiclesByMaxSpeed[0]?.maxSpeed.toFixed(2) +
+                        vehiclesByMaxSpeed[0]?.maxSpeed.toFixed(0) +
                         " km/h )"}{" "}
                   </span>
                 </p>
@@ -2655,7 +2655,7 @@ function RapportGroupe({
                 Distance totale parcourue:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {/* {result2?.totalDistanceAllVehicles.toFixed(2) || "0"} km{" "} */}
-                  {totalDistanceSum.toFixed(2) + " km" || "Pas de mouvement"}
+                  {totalDistanceSum.toFixed(0) + " km" || "Pas de mouvement"}
                 </span>
               </p>
               {/* <p>
@@ -2698,7 +2698,7 @@ function RapportGroupe({
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {result5?.globalStats.minSpeed.toFixed(2) || "---"} Km/h */}
                     {/* {totalminSpeed || "0 km/h"} */}
-                    {smallestMinSpeed.toFixed(2) + " Km/h" || "0 Km/h"}
+                    {smallestMinSpeed.toFixed(0) + " Km/h" || "0 Km/h"}
                   </span>
                 </p>{" "}
                 <p
@@ -2716,7 +2716,7 @@ function RapportGroupe({
                   {/* {result5?.globalStats.maxSpeed.toFixed(2) || "---"} Km/h */}
                   {/* {totalmaxSpeed.toFixed(2) + " km" || "0 km/h"} */}
                   {vehiclesByMaxSpeed[0]?.maxSpeed
-                    ? vehiclesByMaxSpeed[0]?.maxSpeed.toFixed(2) + " Km/h"
+                    ? vehiclesByMaxSpeed[0]?.maxSpeed.toFixed(0) + " Km/h"
                     : "0.00 Km/h"}
                 </span>
               </p>
@@ -2729,7 +2729,7 @@ function RapportGroupe({
                     ? (
                         (smallestMinSpeed + vehiclesByMaxSpeed[0]?.maxSpeed) /
                         2
-                      ).toFixed(2) + " km/h "
+                      ).toFixed(0) + " km/h "
                     : " 0.00 km/h"}
                 </span>
               </p>
@@ -3076,16 +3076,16 @@ function RapportGroupe({
                           {(
                             (vehicule?.maxSpeed + vehicule?.minSpeed) /
                             2
-                          ).toFixed(2) + " Km/h"}
+                          ).toFixed(0) + " Km/h"}
                         </td>
                         {/* max speed */}
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                          {(vehicule?.maxSpeed).toFixed(2) + " Km/h"}
+                          {(vehicule?.maxSpeed).toFixed(0) + " Km/h"}
                         </td>
 
                         {/* Distance totale */}
                         <td className="border py-3 px-2 dark:border-gray-600">
-                          {vehicule.totalDistance.toFixed(2)} km
+                          {vehicule.totalDistance.toFixed(0)} km
                         </td>
 
                         {/* Nombre d'arret */}

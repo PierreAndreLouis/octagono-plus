@@ -54,6 +54,7 @@ const InstallationPWA = () => {
     <>
       {status === "installed" && (
         <div
+          onClick={handleInstallClick}
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <p className="flex items-center gap-3 justify-center">
@@ -91,12 +92,10 @@ const InstallationPWA = () => {
       )}
       {status === "prompt" && (
         <div
+          onClick={handleInstallClick}
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
-          <p
-            className="flex items-center gap-3 justify-center cursor-pointer"
-            onClick={handleInstallClick}
-          >
+          <p className="flex items-center gap-3 justify-center cursor-pointer">
             <GrInstallOption />
             Installer l'application
           </p>

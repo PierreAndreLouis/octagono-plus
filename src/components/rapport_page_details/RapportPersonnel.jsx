@@ -719,7 +719,7 @@ function RapportPersonnel({
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {calculateTotalDistance(
                       currentVehicule?.vehiculeDetails
-                    ).toFixed(2)}
+                    ).toFixed(0)}
                     Km{" "}
                   </span>
                 </p>
@@ -738,19 +738,20 @@ function RapportPersonnel({
                 <p>
                   Vitesse minimale:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {(minSpeed && minSpeed.toFixed(2)) || "0"} Km/h/
+                    {(minSpeed && minSpeed.toFixed(0)) || "0"} Km/h
                   </span>
                 </p>{" "}
                 <p>
                   Vitesse maximale:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {(maxSpeed && maxSpeed.toFixed(2)) || "0"} Km/h
+                    {(maxSpeed && maxSpeed.toFixed(0)) || "0"} Km/h
                   </span>
                 </p>
                 <p>
                   Vitesse moyenne:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/
+                    {/* {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/ */}
+                    {((maxSpeed + minSpeed) / 2).toFixed(0) || 0} Km/h
                   </span>
                 </p>
               </div>
@@ -1290,7 +1291,7 @@ function RapportPersonnel({
                             <p>
                               <span className="font-bold">Vitesse : </span>
                               {item.speedKPH && !isNaN(Number(item.speedKPH))
-                                ? Number(item.speedKPH).toFixed(2) + " km"
+                                ? Number(item.speedKPH).toFixed(0) + " km"
                                 : "Non disponible"}
                             </p>
                             <p>
@@ -1361,7 +1362,7 @@ function RapportPersonnel({
                                 Vitesse :{" "}
                               </span>
                               {item.speedKPH && !isNaN(Number(item.speedKPH))
-                                ? Number(item.speedKPH).toFixed(2) + " km"
+                                ? Number(item.speedKPH).toFixed(0) + " km"
                                 : "Non disponible"}
                             </p>
                             <p>
