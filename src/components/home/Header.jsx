@@ -24,6 +24,7 @@ function Header() {
     tab,
     handleTabClick,
     username,
+    sethistiriqueSelectedLocationIndex,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -235,7 +236,10 @@ function Header() {
           >
             <Link
               to="/Groupe_vehicule_location?tab=localisation"
-              onClick={() => handleTabClick("localisation")}
+              onClick={() => {
+                handleTabClick("localisation");
+                sethistiriqueSelectedLocationIndex(0);
+              }}
               className={`${
                 tab === "localisation" && "text-orange-500"
               } hover:text-orange-500 cursor-pointer`}

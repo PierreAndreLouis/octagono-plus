@@ -34,34 +34,20 @@ function MapComponent({ mapType }) {
     searchdonneeFusionneeForRapport,
     donneeFusionneeForRapport,
     selectUTC,
+    FormatDateHeure,
+    chooseHistoriqueLongitude,
+    setchooseHistoriqueLongitude,
+    chooseHistoriqueLatitude,
+    setchooseHistoriqueLatitude,
+    histiriqueSelectedLocationIndex,
+    sethistiriqueSelectedLocationIndex,
   } = useContext(DataContext);
 
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
   const [typeDeVue, setTypeDeVue] = useState(false);
-  // const dataFusionee = [];
-  // const dataFusionee = donneeFusionneeForRapport;
+
   const dataFusionee = currentdataFusionnee;
-
-  // const dataFusionee =
-  //   searchdonneeFusionneeForRapport &&
-  //   searchdonneeFusionneeForRapport.length > 0
-  //     ? donneeFusionneeForRapport
-  //     : searchdonneeFusionneeForRapport;
-
-  // const dataFusionee = searchdonneeFusionneeForRapport;
-
-  // const dataFusionee = donneeFusionneeForRapport;
-
-  // const dataFusionee = currentdataFusionnee
-  //   ? Object.values(currentdataFusionnee)
-  //   : [];
-
-  // const dataFusionee = currentdataFusionnee
-  // ? Object.values(currentdataFusionnee)
-  // : [];
-  // const dataFusionee = mergedData ? Object.values(mergedData) : [];
-  // const vehiculeActive = dataFusionee.filter((vehicule) =>  !vehicule.vehiculeDetails || vehicule.vehiculeDetails.length === 0 )
 
   const vehiculeActive = dataFusionee?.filter(
     (vehicule) =>
@@ -71,31 +57,29 @@ function MapComponent({ mapType }) {
   const vehicleData = vehiculeActive.map((vehicule) => ({
     deviceID: vehicule.deviceID || "",
     description: vehicule.description || "Véhicule",
-    lastValidLatitude: vehicule.vehiculeDetails?.[0]?.latitude || "",
-    lastValidLongitude: vehicule.vehiculeDetails?.[0]?.longitude || "",
+    lastValidLatitude:
+      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+        ?.latitude || "",
+    lastValidLongitude:
+      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+        ?.longitude || "",
     address:
-      vehicule.vehiculeDetails?.[0]?.backupAddress ||
-      vehicule.vehiculeDetails?.[0]?.address ||
+      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+        ?.backupAddress ||
+      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+        ?.address ||
       "",
     imeiNumber: vehicule?.imeiNumber || "",
     isActive: vehicule?.isActive || "",
     licensePlate: vehicule?.licensePlate || "",
     simPhoneNumber: vehicule?.simPhoneNumber || "",
-    timestamp: vehicule.vehiculeDetails?.[0]?.timestamp || "",
-    speedKPH: vehicule.vehiculeDetails?.[0]?.speedKPH || 0,
+    timestamp:
+      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+        ?.timestamp || "",
+    speedKPH:
+      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+        ?.speedKPH || 0,
   }));
-
-  const handleVehicleClick = (vehicle) => {
-    setSelectedVehicle(vehicle.deviceID);
-    setShowVehiculeListe(!showVehiculeListe);
-  };
-
-  const showAllVehicles = () => {
-    setSelectedVehicle(null);
-  };
-
-  // const { mergedData, currentVehicule, selectedVehicle, setSelectedVehicle } =
-  // useContext(DataContext);
 
   // const [mapType, setMapType] = useState("streets");
   const mapRef = useRef(null);
@@ -133,6 +117,11 @@ function MapComponent({ mapType }) {
           const selectedVehicleData = vehicles.find(
             (vehicle) => vehicle.deviceID === selectedVehicle
           );
+          // if (chooseHistoriqueLongitude && chooseHistoriqueLatitude) {
+          //   const lastValidLatitude = chooseHistoriqueLatitude;
+          //   const lastValidLongitude = chooseHistoriqueLongitude;
+          //   mapRef.current.setView([lastValidLatitude, lastValidLongitude], 20);
+          // } else
           if (selectedVehicleData) {
             const { lastValidLatitude, lastValidLongitude } =
               selectedVehicleData;
@@ -227,11 +216,11 @@ function MapComponent({ mapType }) {
   }
 
   function formatTimestampToTimeWithTimezone(timestamp, offset) {
-    const date = convertToTimezone(timestamp, offset);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
+    // const date = convertToTimezone(timestamp, offset);
+    // const hours = date.getHours().toString().padStart(2, "0");
+    // const minutes = date.getMinutes().toString().padStart(2, "0");
+    // const seconds = date.getSeconds().toString().padStart(2, "0");
+    // return `${hours}:${minutes}:${seconds}`;
   }
 
   return (
@@ -250,98 +239,103 @@ function MapComponent({ mapType }) {
         <ScaleControl position="bottomright" />
         <AttributionControl position="bottomleft" />
 
-        {vehicles.map((vehicle, index) => (
-          <Marker
-            key={index}
-            position={[
-              vehicle.lastValidLatitude || 0,
-              vehicle.lastValidLongitude || 0,
-            ]}
-            icon={L.icon({
-              iconUrl: getMarkerIcon(vehicle.speedKPH),
-              iconSize: [25, 41],
-              iconAnchor: [12, 41],
-              popupAnchor: [1, -34],
-              shadowUrl:
-                "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-              shadowSize: [41, 41],
-            })}
-          >
-            <Popup>
-              <div className="w-[70vw] max-w-[20rem]">
-                <p className="font-bold text-[1rem]">
-                  <span>Description :</span>{" "}
-                  {vehicle.description || "Non disponible"}
-                </p>
-                {/* <p className="font-bold text-[1rem]">
+        {vehicles.map((vehicle, index) => {
+          const FormatDateHeureTimestamp = FormatDateHeure(vehicle.timestamp);
+          return (
+            <Marker
+              key={index}
+              position={[
+                vehicle.lastValidLatitude || 0,
+                vehicle.lastValidLongitude || 0,
+              ]}
+              icon={L.icon({
+                iconUrl: getMarkerIcon(vehicle.speedKPH),
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowUrl:
+                  "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+                shadowSize: [41, 41],
+              })}
+            >
+              <Popup>
+                <div className="w-[70vw] max-w-[20rem]">
+                  <p className="font-bold text-[1rem]">
+                    <span>Description :</span>{" "}
+                    {vehicle.description || "Non disponible"}
+                  </p>
+                  {/* <p className="font-bold text-[1rem]">
                         <span>Description :</span>{" "}
                         {description || "Non disponible"}
                       </p> */}
-                <p>
-                  <strong>Adresse :</strong>{" "}
-                  {vehicle.address || "Non disponible"}
-                </p>
-                <p>
-                  <strong>IMEI Number :</strong>{" "}
-                  {vehicle.imeiNumber || "Chargement..."}
-                </p>
-                <p>
-                  <strong>Vitesse :</strong>{" "}
-                  {/* {vehicle.speedKPH || "Non disponible"} Km/h */}
-                  {vehicle.speedKPH && !isNaN(Number(vehicle.speedKPH))
-                    ? Number(vehicle.speedKPH).toFixed(0) + " km"
-                    : "Non disponible"}
-                </p>
+                  <p>
+                    <strong>Adresse :</strong>{" "}
+                    {vehicle.address || "Non disponible"}
+                  </p>
+                  {/* <p>
+                    <strong>IMEI Number :</strong>{" "}
+                    {vehicle.imeiNumber || "Chargement..."}
+                  </p> */}
+                  <p>
+                    <strong>Vitesse :</strong>{" "}
+                    {/* {vehicle.speedKPH || "Non disponible"} Km/h */}
+                    {vehicle.speedKPH && !isNaN(Number(vehicle.speedKPH))
+                      ? Number(vehicle.speedKPH).toFixed(0) + " km"
+                      : "Non disponible"}
+                  </p>
 
-                {/* <p>
+                  {/* <p>
                   <strong>Date :</strong>{" "}
                   {vehicle.timestamp || "Non disponible"}
                 </p> */}
-                <p>
-                  <strong>Date :</strong>{" "}
-                  {vehicle.timestamp
-                    ? selectUTC
-                      ? formatTimestampToDateWithTimezone(
+                  <p>
+                    <strong>Date :</strong>{" "}
+                    {vehicle.timestamp
+                      ? FormatDateHeureTimestamp.date
+                      : //  selectUTC
+                        //   ? formatTimestampToDateWithTimezone(
+                        //       vehicle.timestamp,
+                        //       selectUTC
+                        //     )
+                        //   : formatTimestampToDate(vehicle.timestamp)
+                        "Pas de date disponible"}
+                    <span className="px-3">/</span>
+                    {/* {selectUTC
+                      ? formatTimestampToTimeWithTimezone(
                           vehicle.timestamp,
                           selectUTC
                         )
-                      : formatTimestampToDate(vehicle.timestamp)
-                    : "Pas de date disponible"}
-                  <span className="px-3">/</span>
-                  {selectUTC
-                    ? formatTimestampToTimeWithTimezone(
-                        vehicle.timestamp,
-                        selectUTC
+                      : formatTimestampToTime(vehicle.timestamp)} */}
+                    {FormatDateHeureTimestamp.time}
+                  </p>
+                  <p>
+                    <strong>Statut : </strong>
+                    {vehicle.speedKPH < 1 && "en arret"}
+                    {vehicle.speedKPH > 20 && "En mouvement rapide"}
+                    {vehicle.speedKPH >= 1 &&
+                      vehicle.speedKPH <= 20 &&
+                      "En mouvement lent"}
+                  </p>
+                  <p>
+                    <strong>Plaque d'immatriculation :</strong>{" "}
+                    {vehicle.licensePlate || "Chargement..."}
+                  </p>
+                  <button
+                    onClick={() =>
+                      openGoogleMaps(
+                        vehicle.lastValidLatitude,
+                        vehicle.lastValidLongitude
                       )
-                    : formatTimestampToTime(vehicle.timestamp)}
-                </p>
-                <p>
-                  <strong>Statut : </strong>
-                  {vehicle.speedKPH < 1 && "en arret"}
-                  {vehicle.speedKPH > 20 && "Vitesse normale (v > 20 km/h)"}
-                  {vehicle.speedKPH >= 1 &&
-                    vehicle.speedKPH <= 20 &&
-                    "Vitesse reduit (v <= 20 km/h)"}
-                </p>
-                <p>
-                  <strong>Plaque d'immatriculation :</strong>{" "}
-                  {vehicle.licensePlate || "Chargement..."}
-                </p>
-                <button
-                  onClick={() =>
-                    openGoogleMaps(
-                      vehicle.lastValidLatitude,
-                      vehicle.lastValidLongitude
-                    )
-                  }
-                  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md"
-                >
-                  Voir sur Google Maps
-                </button>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+                    }
+                    className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md"
+                  >
+                    Voir sur Google Maps
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );

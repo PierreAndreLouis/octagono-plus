@@ -170,7 +170,7 @@ function VehiculeActiveMaintenantComponent({
                             />
                           </div>
                           <span className="bg-green-300/20 ml-1 dark:text-green-300 text-green-800 pb-[.2rem] px-2 py-0 text-sm rounded-md">
-                            En déplacement
+                            En mouvement
                           </span>
                         </div>
 

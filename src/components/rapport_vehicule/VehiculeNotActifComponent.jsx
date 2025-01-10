@@ -21,6 +21,7 @@ function VehiculeNotActifComponent({
     setVehiclueHistoriqueDetails,
     setVehiclueHistoriqueRapportDetails,
     currentVehicule,
+    FormatDateHeure,
   } = useContext(DataContext);
 
   return (
@@ -101,9 +102,9 @@ function VehiculeNotActifComponent({
                             />
                             <h3 className="text-sm sm:text-sm md:text-md">
                               {vehicule?.vehiculeDetails[0]?.timestamp ? (
-                                formatTimestampToDate(
+                                FormatDateHeure(
                                   vehicule?.vehiculeDetails[0]?.timestamp
-                                )
+                                )?.date
                               ) : (
                                 <p>Pas de date disponible</p>
                               )}
@@ -116,9 +117,12 @@ function VehiculeNotActifComponent({
                                 className="text-gray-500/80 dark:text-gray-300 text-xl"
                               />
                               <h3 className="text-sm sm:text-sm md:text-md">
-                                {formatTimestampToTime(
-                                  vehicule.vehiculeDetails?.[0]?.timestamp || 0
-                                )}
+                                {
+                                  FormatDateHeure(
+                                    vehicule.vehiculeDetails?.[0]?.timestamp ||
+                                      0
+                                  )?.time
+                                }
                               </h3>
                             </div>
                           )}

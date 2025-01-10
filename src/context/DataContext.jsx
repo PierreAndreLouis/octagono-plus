@@ -166,6 +166,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Initialisation des états depuis localStorage
+
   const [timeZoneData, setTimeZoneData] = useState([]);
   const [timeZonesearchQuery, settimeZoneSearchQuery] = useState(""); // État pour la recherche
   const [selectedTimeZone, setSelectedTimeZone] = useState(() => {
@@ -178,14 +179,46 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const [selectTime, setselectTime] = useState(() => {
     return localStorage.getItem("selectTime") || "";
   });
+  const chooseTimeZone = selectUTC ? -selectUTC : 5;
+  // const chooseTimeZone = selectUTC + 1;
 
   // Charger les fuseaux horaires
   useEffect(() => {
-    const zones = moment.tz.names().map((zone) => {
-      const currentTime = moment().tz(zone).format("HH:mm");
-      const utcOffset = moment().tz(zone).format("Z");
-      return { region: zone, currentTime, utcOffset };
-    });
+    // const zones = moment.tz.names().map((zone) => {
+    //   const currentTime = moment().tz(zone).format("HH:mm");
+    //   const utcOffset = moment().tz(zone).format("Z");
+    //   return { region: zone, currentTime, utcOffset };
+    // });
+    const zones = [
+      { region: "GMT+12", currentTime: "12:00", utcOffset: 12 },
+      { region: "GMT+11", currentTime: "13:00", utcOffset: 11 },
+      { region: "GMT+10", currentTime: "14:00", utcOffset: 10 },
+      { region: "GMT+9", currentTime: "15:00", utcOffset: 9 },
+      { region: "GMT+8", currentTime: "16:00", utcOffset: 8 },
+      { region: "GMT+7", currentTime: "17:00", utcOffset: 7 },
+      { region: "GMT+6", currentTime: "18:00", utcOffset: 6 },
+      { region: "GMT+5", currentTime: "19:00", utcOffset: 5 },
+      { region: "GMT+4", currentTime: "20:00", utcOffset: 4 },
+      { region: "GMT+3", currentTime: "21:00", utcOffset: 3 },
+      { region: "GMT+2", currentTime: "22:00", utcOffset: 2 },
+      { region: "GMT+1", currentTime: "23:00", utcOffset: 1 },
+      { region: "GMT+0", currentTime: "00:00", utcOffset: 0 },
+      { region: "GMT-1", currentTime: "01:00", utcOffset: -1 },
+      { region: "GMT-2", currentTime: "02:00", utcOffset: -2 },
+      { region: "GMT-3", currentTime: "03:00", utcOffset: -3 },
+      { region: "GMT-4", currentTime: "04:00", utcOffset: -4 },
+      { region: "GMT-5", currentTime: "05:00", utcOffset: -5 },
+      { region: "GMT-6", currentTime: "06:00", utcOffset: -6 },
+      { region: "GMT-7", currentTime: "07:00", utcOffset: -7 },
+      { region: "GMT-8", currentTime: "08:00", utcOffset: -8 },
+      { region: "GMT-9", currentTime: "09:00", utcOffset: -9 },
+      { region: "GMT-10", currentTime: "10:00", utcOffset: -10 },
+      { region: "GMT-11", currentTime: "11:00", utcOffset: -11 },
+      { region: "GMT-12", currentTime: "12:00", utcOffset: -12 },
+      { region: "GMT-13", currentTime: "13:00", utcOffset: -13 },
+      { region: "GMT-14", currentTime: "14:00", utcOffset: -14 },
+    ];
+
     setTimeZoneData(zones);
   }, []);
 
@@ -457,6 +490,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       // ---------------------------------------------------------------------
 
       const now = new Date();
+      now.setHours(now.getHours() + chooseTimeZone); // ajouter 5 heures
+
       const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
         .toString()
         .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
@@ -467,9 +502,16 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         .toString()
         .padStart(2, "0")}`;
 
+      // Création d'une date représentant le début de la journée
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
+      // Ajouter 5 heures
+      startOfDay.setTime(
+        startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000
+      );
+
+      // Formatage de `TimeFrom`
       const TimeFrom = `${startOfDay.getFullYear()}-${(
         startOfDay.getMonth() + 1
       )
@@ -477,7 +519,29 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         .padStart(2, "0")}-${startOfDay
         .getDate()
         .toString()
-        .padStart(2, "0")} 00:00:00`;
+        .padStart(2, "0")} ${startOfDay
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${startOfDay
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}:${startOfDay
+        .getSeconds()
+        .toString()
+        .padStart(2, "0")}`;
+
+      // const startOfDay = new Date();
+      // startOfDay.setHours(0, 0, 0, 0);
+      // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+
+      // const TimeFrom = `${startOfDay.getFullYear()}-${(
+      //   startOfDay.getMonth() + 1
+      // )
+      //   .toString()
+      //   .padStart(2, "0")}-${startOfDay
+      //   .getDate()
+      //   .toString()
+      //   .padStart(2, "0")} 00:00:00`;
 
       if (vehicleData && vehicleData.length > 0) {
         vehicleData.forEach((vehicle) => {
@@ -637,6 +701,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     // console.log("start fffffffffffff........");
 
     const now = new Date();
+    ///////////////////////
+    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+    ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
@@ -647,15 +714,41 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       .toString()
       .padStart(2, "0")}`;
 
+    // Création d'une date représentant le début de la journée
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
+    // Ajouter 5 heures
+    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+
+    // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${startOfDay
       .getDate()
       .toString()
-      .padStart(2, "0")} 00:00:00`;
+      .padStart(2, "0")} ${startOfDay
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
+    // ///////////////////////////////////////
+    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // /////////////////////////////////
+
+    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+    //   .toString()
+    //   .padStart(2, "0")}-${startOfDay
+    //   .getDate()
+    //   .toString()
+    //   .padStart(2, "0")} 00:00:00`;
 
     if (vehicleData && vehicleData.length > 0) {
       vehicleData.forEach((vehicle) => {
@@ -1045,6 +1138,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
     // console.log("Start.........");
     const now = new Date();
+    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
@@ -1055,15 +1150,40 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       .toString()
       .padStart(2, "0")}`;
 
+    // Création d'une date représentant le début de la journée
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
+    // Ajouter 5 heures
+    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+
+    // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${startOfDay
       .getDate()
       .toString()
-      .padStart(2, "0")} 00:00:00`;
+      .padStart(2, "0")} ${startOfDay
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
+    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+
+    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+    //   .toString()
+    //   .padStart(2, "0")}-${startOfDay
+    //   .getDate()
+    //   .toString()
+    //   .padStart(2, "0")} 00:00:00`;
 
     if (vehicleData && vehicleData.length > 0) {
       vehicleData.forEach((vehicle) => {
@@ -1786,6 +1906,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
 
     const now = new Date();
+    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
@@ -1796,15 +1918,40 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       .toString()
       .padStart(2, "0")}`;
 
+    // Création d'une date représentant le début de la journée
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
+    // Ajouter 5 heures
+    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+
+    // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${startOfDay
       .getDate()
       .toString()
-      .padStart(2, "0")} 00:00:00`;
+      .padStart(2, "0")} ${startOfDay
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
+    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+
+    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+    //   .toString()
+    //   .padStart(2, "0")}-${startOfDay
+    //   .getDate()
+    //   .toString()
+    //   .padStart(2, "0")} 00:00:00`;
 
     fetchHistoriqueVehicleDetails(currentVehicule.deviceID, TimeFrom, TimeTo);
   };
@@ -2066,7 +2213,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     if (!isMobile) {
       setSmsError(
-        "L'envoi de SMS n'est pas pris en charge sur cette plateforme."
+        "Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité"
       );
       return;
     }
@@ -2082,7 +2229,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         if (window.location.href === smsLink) {
           // Si l'URL n'a pas changé, il y a probablement un problème
           setSmsError(
-            "Impossible d'ouvrir l'application de messagerie. Veuillez vérifier que votre appareil supporte les SMS."
+            "Impossible d'ouvrir l'application de messagerie. Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité."
           );
         }
       }, 3000); // Délai d'attente de 1 seconde (ajuster si nécessaire)
@@ -2134,7 +2281,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     if (!isMobile) {
       setSmsError(
-        "Les appels téléphoniques ne sont pas pris en charge sur cette plateforme."
+        "Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité"
       );
       return;
     }
@@ -2325,15 +2472,40 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       .toString()
       .padStart(2, "0")}`;
 
+    // Création d'une date représentant le début de la journée
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
+    // Ajouter 5 heures
+    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+
+    // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${startOfDay
       .getDate()
       .toString()
-      .padStart(2, "0")} 00:00:00`;
+      .padStart(2, "0")} ${startOfDay
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
+    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+
+    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+    //   .toString()
+    //   .padStart(2, "0")}-${startOfDay
+    //   .getDate()
+    //   .toString()
+    //   .padStart(2, "0")} 00:00:00`;
 
     console.log("xxxxxxxxxxxxx", mergedData);
     console.log(vehicleData);
@@ -2385,6 +2557,48 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setDateDebut(today); // Définit la date actuelle par défaut
   }, []);
 
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  function FormatDateHeure(timestamp) {
+    // Convertir le timestamp en millisecondes
+    const date = new Date(timestamp * 1000);
+
+    // Récupérer les informations nécessaires
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const period = hours >= 12 ? "PM" : "AM";
+
+    // Convertir en format 12 heures
+    hours = hours % 12 || 12;
+
+    // Formater la date et l'heure
+    const formattedDate = `${day}-${month}-${year}`;
+    const formattedTime = `${String(hours).padStart(
+      2,
+      "0"
+    )}:${minutes} ${period}`;
+
+    return {
+      date: formattedDate,
+      time: formattedTime,
+    };
+  }
+
+  const [chooseHistoriqueLongitude, setchooseHistoriqueLongitude] =
+    useState("");
+  const [chooseHistoriqueLatitude, setchooseHistoriqueLatitude] = useState("");
+  const [histiriqueSelectedLocationIndex, sethistiriqueSelectedLocationIndex] =
+    useState(0);
+
+  useEffect(() => {
+    console.log(chooseHistoriqueLongitude);
+    console.log(chooseHistoriqueLatitude);
+  }, [chooseHistoriqueLongitude, chooseHistoriqueLatitude]);
   return (
     <DataContext.Provider
       value={{
@@ -2513,6 +2727,14 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         setstatisticFilterText,
         dateDebut,
         setDateDebut,
+        /////////////////////////////////////////
+        FormatDateHeure,
+        chooseHistoriqueLongitude,
+        setchooseHistoriqueLongitude,
+        chooseHistoriqueLatitude,
+        setchooseHistoriqueLatitude,
+        histiriqueSelectedLocationIndex,
+        sethistiriqueSelectedLocationIndex,
       }}
     >
       {children}

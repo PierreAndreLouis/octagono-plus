@@ -21,6 +21,7 @@ function VehiculeActiveAjourdhuiComponent({
     setVehiclueHistoriqueDetails,
     setVehiclueHistoriqueRapportDetails,
     currentVehicule,
+    FormatDateHeure,
   } = useContext(DataContext);
 
   function convertToTimezone(timestamp, offset) {
@@ -43,13 +44,7 @@ function VehiculeActiveAjourdhuiComponent({
     return `${day}-${month}-${year}`;
   }
 
-  function formatTimestampToTimeWithTimezone(timestamp, offset) {
-    const date = convertToTimezone(timestamp, offset);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  }
+  function formatTimestampToTimeWithTimezone(timestamp, offset) {}
 
   return (
     <div>
@@ -128,14 +123,15 @@ function VehiculeActiveAjourdhuiComponent({
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )} */}
                               {vehicule.vehiculeDetails?.[0]?.timestamp
-                                ? selectUTC
-                                  ? formatTimestampToDateWithTimezone(
-                                      vehicule.vehiculeDetails[0].timestamp,
-                                      selectUTC
-                                    )
-                                  : formatTimestampToDate(
-                                      vehicule.vehiculeDetails?.[0]?.timestamp
-                                    )
+                                ? // selectUTC
+                                  //   ? formatTimestampToDateWithTimezone(
+                                  //       vehicule.vehiculeDetails[0].timestamp,
+                                  //       selectUTC
+                                  //     )
+                                  //   :
+                                  FormatDateHeure(
+                                    vehicule.vehiculeDetails?.[0]?.timestamp
+                                  )?.date
                                 : "Pas de date disponible"}
                             </h3>
                           </div>
@@ -148,14 +144,18 @@ function VehiculeActiveAjourdhuiComponent({
                               {/* {formatTimestampToTime(
                                 vehicule.vehiculeDetails?.[0]?.timestamp || 0
                               )} */}
-                              {selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehicule.vehiculeDetails[0].timestamp,
-                                    selectUTC
-                                  )
-                                : formatTimestampToTime(
-                                    vehicule.vehiculeDetails?.[0]?.timestamp
-                                  )}
+                              {
+                                // selectUTC
+                                //   ?
+                                //   formatTimestampToTimeWithTimezone(
+                                //       vehicule.vehiculeDetails[0].timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehicule.vehiculeDetails?.[0]?.timestamp
+                                )?.time
+                              }
                             </h3>
                           </div>
                         </div>

@@ -56,6 +56,7 @@ function RapportPageDetails() {
     dateDebut,
     setDateDebut,
     setSelectedVehicle,
+    FormatDateHeure,
   } = useContext(DataContext);
 
   const dataFusionee = mergedData ? Object.values(mergedData) : [];
@@ -373,8 +374,8 @@ function RapportPageDetails() {
   };
 
   const speedData = data.map((vehicle) => parseFloat(vehicle.speedKPH));
-  const timeData = data.map((vehicle) =>
-    formatTimestampToTime(vehicle.timestamp)
+  const timeData = data.map(
+    (vehicle) => FormatDateHeure(vehicle.timestamp)?.time
   );
   // const timeData = data.map((vehicle) => formatTimestamp(vehicle.timestamp));
 
@@ -442,13 +443,7 @@ function RapportPageDetails() {
     return `${hours}:${minutes}:${seconds}`;
   }
 
-  function formatTimestampToTimeWithTimezone(timestamp, offset) {
-    const date = convertToTimezone(timestamp, offset);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  }
+  function formatTimestampToTimeWithTimezone(timestamp, offset) {}
 
   const filteredList = currentVehicule?.vehiculeDetails?.filter(
     (item) => parseFloat(item.speedKPH) > 0
@@ -515,8 +510,8 @@ function RapportPageDetails() {
 
         results.push({
           description,
-          startTime: formatTimestampToTime(parseInt(startTimestamp.timestamp)),
-          endTime: formatTimestampToTime(parseInt(endTimestamp.timestamp)),
+          startTime: FormatDateHeure(parseInt(startTimestamp.timestamp)?.time),
+          endTime: FormatDateHeure(parseInt(endTimestamp.timestamp)?.time),
         });
       } else {
         results.push({
@@ -1302,33 +1297,7 @@ function RapportPageDetails() {
     setShowChooseDate(false);
     setRapportDataLoading(true);
     setShowDatePicker2(false);
-    console.log("okk");
-    console.log("vehiculeDate", dataFusionee);
 
-    // setpageSection("search");
-
-    // Fonction pour convertir une date au format dd/MM/yyyy
-    // const formatDate = (date) => {
-    //   // Vérifiez si c'est déjà une chaîne, sinon, convertissez-la en format "dd/MM/yyyy"
-    //   if (typeof date === "string") {
-    //     const [day, month, year] = date.split("/"); // Sépare le jour, le mois et l'année
-    //     return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
-    //   } else if (date instanceof Date) {
-    //     // Si c'est un objet Date, formatez-le en "dd/MM/yyyy"
-    //     const day = ("0" + date.getDate()).slice(-2);
-    //     const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    //     const year = date.getFullYear();
-    //     return `${year}-${month}-${day}`;
-    //   }
-    //   return date; // Retourne la date telle quelle si elle n'est ni string ni Date
-    // };
-
-    // const formatDateToISO = (date) => {
-    //   const adjustedDate = new Date(
-    //     date.getTime() - date.getTimezoneOffset() * 60000
-    //   );
-    //   return adjustedDate.toISOString().split("T")[0];
-    // };
     const formatDateToISO = (date) => {
       if (!(date instanceof Date)) {
         date = new Date(date); // Convertir en objet Date si nécessaire
@@ -1343,34 +1312,76 @@ function RapportPageDetails() {
     const formattedStartDate = formatDateToISO(selectedDate);
     const formattedEndDate = formatDateToISO(selectedDate);
 
-    // Conversion des variables startDate et endDate
-    // const formattedStartDate = formatDate(selectedDate);
-    // const formattedEndDate = formatDate(selectedDate);
-
     const startTime = "00:00:00";
     const endTime = "23:59:59";
 
-    // Combine les dates formatées avec les heures
-    const timeFrom = `${formattedStartDate} ${startTime}`;
-    const timeTo = `${formattedEndDate} ${endTime}`;
+    ///////////////////////////////////////////////////////////////////////////////////
 
-    // const timeFrom = `${selectedDate} ${startTime}`;
-    // const timeTo = `${selectedDate} ${endTime}`;
+    // Combine les dates formatées avec les heures
+    const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
+    const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
+
+    // Ajout de 5 heures
+    const adjustedTimeFrom = new Date(
+      baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+    );
+    const adjustedTimeTo = new Date(
+      baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+    );
+
+    // Formatage en chaîne pour les heures ajustées
+    const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
+      adjustedTimeFrom.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeFrom
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeFrom
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    const timeTo = `${adjustedTimeTo.getFullYear()}-${(
+      adjustedTimeTo.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeTo
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeTo
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
 
     console.log("timeFrom", timeFrom);
     console.log("timeTo", timeTo);
-    // console.log("timeFrom", timeFrom)
-    // console.log("timeFrom", timeFrom)
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    // // Combine les dates formatées avec les heures
+    // const timeFrom = `${formattedStartDate} ${startTime}`;
+    // const timeTo = `${formattedEndDate} ${endTime}`;
+
+    // console.log("timeFrom", timeFrom);
+    // console.log("timeTo", timeTo);
 
     if (dataFusionee && dataFusionee.length > 0) {
       dataFusionee?.forEach((vehicle) => {
-        // console.log("Readyyyyyyyyyyyyyyyy");
         fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
-        // fetSearchRapportchVehicleDetails(
-        //   vehicle.deviceID,
-        //   "2024-12-24 00:00:00",
-        //   "2024-12-26 00:00:00"
-        // );
+
         setStartDateToDisplay(selectedDate);
         setStartTimeToDisplay(startTime);
         setEndDateToDisplay(selectedDate);
@@ -1383,14 +1394,6 @@ function RapportPageDetails() {
 
   const handleApply2 = (e) => {
     e.preventDefault();
-
-    // Fonction pour formater une date en 'YYYY-MM-DD'
-    // const formatDateToISO = (date) => {
-    //   const adjustedDate = new Date(
-    //     date.getTime() - date.getTimezoneOffset() * 60000
-    //   );
-    //   return adjustedDate.toISOString().split("T")[0];
-    // };
 
     const formatDateToISO = (date) => {
       if (!(date instanceof Date)) {
@@ -1406,12 +1409,66 @@ function RapportPageDetails() {
     const formattedStartDate = formatDateToISO(startDate);
     const formattedEndDate = formatDateToISO(endDate);
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+
     // Combine les dates formatées avec les heures
-    const timeFrom = `${formattedStartDate} ${startTime}:00`;
-    const timeTo = `${formattedEndDate} ${endTime}:00`;
+    const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}:00`);
+    const baseTimeTo = new Date(`${formattedEndDate}T${endTime}:00`);
+
+    // Ajout de 5 heures
+    const adjustedTimeFrom = new Date(
+      baseTimeFrom.getTime() + 5 * 60 * 60 * 1000
+    );
+    const adjustedTimeTo = new Date(baseTimeTo.getTime() + 5 * 60 * 60 * 1000);
+
+    // Formatage en chaîne pour les heures ajustées
+    const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
+      adjustedTimeFrom.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeFrom
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeFrom
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    const timeTo = `${adjustedTimeTo.getFullYear()}-${(
+      adjustedTimeTo.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeTo
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeTo
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
 
     console.log("timeFrom+++++++++++++", timeFrom);
     console.log("timeTo+++++++++++++++", timeTo);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Combine les dates formatées avec les heures
+    // const timeFrom = `${formattedStartDate} ${startTime}:00`;
+    // const timeTo = `${formattedEndDate} ${endTime}:00`;
+
+    // console.log("timeFrom+++++++++++++", timeFrom);
+    // console.log("timeTo+++++++++++++++", timeTo);
 
     // handleDateChange(timeFrom, timeTo);
     if (dataFusionee && dataFusionee.length > 0) {
@@ -1427,9 +1484,8 @@ function RapportPageDetails() {
 
     setShowDatePicker2(false);
     setRapportDataLoading(true);
-
-    // setLoadingHistoriqueFilter(true);
   };
+
   return (
     <div
       className={`${

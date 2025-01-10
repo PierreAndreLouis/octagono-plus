@@ -49,6 +49,7 @@ function Liste() {
     statisticFilter,
     setstatisticFilter,
     statisticFilterText,
+    FormatDateHeure,
   } = useContext(DataContext);
 
   const dataFusionee = statisticFilter ? Object.values(statisticFilter) : [];
@@ -59,6 +60,12 @@ function Liste() {
     ? (statisticFilterText ? dataFusionee : dataFusionee2).filter(
         (vehicle) =>
           vehicle?.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          vehicle?.imeiNumber
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          vehicle?.simPhoneNumber
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
           (vehicle.vehiculeDetails?.[0]?.address &&
@@ -147,13 +154,7 @@ function Liste() {
     return `${day}-${month}-${year}`;
   }
 
-  function formatTimestampToTimeWithTimezone(timestamp, offset) {
-    const date = convertToTimezone(timestamp, offset);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  }
+  function formatTimestampToTimeWithTimezone(timestamp, offset) {}
 
   const reloadVehiculeDetails = () => {
     const now = new Date();
@@ -334,7 +335,7 @@ function Liste() {
             speed <= 20
           ) {
             main_text_color = "text-[#555b03] dark:text-yellow-300";
-            statut = "En ralenti";
+            statut = "En mouvement lent";
             lite_bg_color =
               "bg-[#ffff001b] dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-yellow-400/80  shadow-lg shadow-gray-950/20";
             activeTextColor = "text-[#555b03] dark:text-yellow-100";
@@ -350,7 +351,7 @@ function Liste() {
             speed > 20
           ) {
             main_text_color = "text-green-700 dark:text-green-400";
-            statut = "En marche";
+            statut = "En mouvement rapide";
             lite_bg_color =
               "bg-green-100/50 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
             activeTextColor = "text-green-800 dark:text-green-200";
@@ -360,6 +361,10 @@ function Liste() {
             border_top =
               "border-t border-t-green-200 dark:border-t-green-600/30 ";
           }
+
+          const FormatDateHeureTimestamp = FormatDateHeure(
+            vehicle?.vehiculeDetails?.[0]?.timestamp
+          );
 
           return (
             <div className="bg-white dark:bg-gray-800">
@@ -402,15 +407,17 @@ function Liste() {
                           <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300" />
                           <h3 className="text-sm sm:text-sm md:text-[1rem]  lg:text-lg--">
                             {vehicle?.vehiculeDetails?.[0]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToDateWithTimezone(
-                                    vehicle?.vehiculeDetails[0].timestamp,
-                                    selectUTC
-                                  )
-                                : formatTimestampToDate(
-                                    vehicle?.vehiculeDetails?.[0]?.timestamp
-                                  )
-                              : "Pas de date disponible"}
+                              ? FormatDateHeureTimestamp.date
+                              : // ? selectUTC
+                                //   ? formatTimestampToDateWithTimezone(
+                                //       vehicle?.vehiculeDetails[0].timestamp,
+                                //       selectUTC
+                                //     )
+                                //   : formatTimestampToDate(
+                                //       vehicle?.vehiculeDetails?.[0]?.timestamp
+                                //     )
+
+                                "Pas de date disponible"}
                           </h3>
                         </div>
 
@@ -418,14 +425,15 @@ function Liste() {
                           <div className="flex items-center gap-1">
                             <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl" />
                             <h3 className="text-sm sm:text-sm md:text-[1rem] lg:text-lg--">
-                              {selectUTC
+                              {/* {selectUTC
                                 ? formatTimestampToTimeWithTimezone(
                                     vehicle.vehiculeDetails[0]?.timestamp,
                                     selectUTC
                                   )
                                 : formatTimestampToTime(
                                     vehicle.vehiculeDetails?.[0]?.timestamp
-                                  )}
+                                  )} */}
+                              {FormatDateHeureTimestamp?.time}
                             </h3>
                           </div>
                         ) : (

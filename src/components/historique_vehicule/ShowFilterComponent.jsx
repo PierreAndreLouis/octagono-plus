@@ -153,7 +153,7 @@ function ShowFilterComponent({
                     htmlFor="en_marche"
                     className="text-gray-800 dark:text-gray-200"
                   >
-                    En marche
+                    En mouvement rapide
                   </label>
                 </div>
                 <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
@@ -168,7 +168,7 @@ function ShowFilterComponent({
                     htmlFor="en_ralenti"
                     className="text-gray-800 dark:text-gray-200"
                   >
-                    En ralenti
+                    En mouvement lent
                   </label>
                 </div>
                 <div className="flex flex-row mb-1.5 gap-4 ml-0.5">

@@ -29,7 +29,7 @@ function TrajetVehicule({
   showHistoriqueInMap,
   openGoogleMaps,
 }) {
-  const { selectUTC } = useContext(DataContext);
+  const { selectUTC, FormatDateHeure } = useContext(DataContext);
   function formatTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000);
     let hours = date.getUTCHours();
@@ -170,6 +170,8 @@ function TrajetVehicule({
                 });
               }
 
+              const FormatDateHeureTimestamp = FormatDateHeure(timestamp);
+
               return (
                 <Marker
                   key={index}
@@ -198,10 +200,10 @@ function TrajetVehicule({
                       <p>
                         <strong>Adresse :</strong> {address || "Non disponible"}
                       </p>
-                      <p>
+                      {/* <p>
                         <strong>IMEI Number :</strong>{" "}
                         {imeiNumber || "loading..."}
-                      </p>
+                      </p> */}
                       <p>
                         <strong>Vitesse :</strong>{" "}
                         {speedKPH && !isNaN(Number(speedKPH))
@@ -213,29 +215,29 @@ function TrajetVehicule({
                       <p>
                         <strong>Date :</strong>{" "}
                         {timestamp
-                          ? selectUTC
-                            ? formatTimestampToDateWithTimezone(
-                                timestamp,
-                                selectUTC
-                              )
-                            : formatTimestampToDate(timestamp)
-                          : "Pas de date disponible"}
+                          ? FormatDateHeureTimestamp?.date
+                          : // ? selectUTC
+                            //   ? formatTimestampToDateWithTimezone(
+                            //       timestamp,
+                            //       selectUTC
+                            //     )
+                            //   : formatTimestampToDate(timestamp)
+                            "Pas de date disponible"}
                         <span className="px-3">/</span>
-                        {selectUTC
+                        {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               timestamp,
                               selectUTC
                             )
-                          : formatTimestampToTime(timestamp)}
+                          : formatTimestampToTime(timestamp)} */}
+                        {FormatDateHeureTimestamp?.time}
                       </p>
 
                       <p>
                         <strong>Statut : </strong>
                         {speedKPH < 1 && "en arret"}
-                        {speedKPH > 20 && "Vitesse normale (v <= 20 km/h)"}
-                        {speedKPH >= 1 &&
-                          speedKPH <= 20 &&
-                          "Vitesse reduit (v <= 20 km/h)"}
+                        {speedKPH > 20 && "En mouvement rapide"}
+                        {speedKPH >= 1 && speedKPH <= 20 && "En mouvement lent"}
                       </p>
                       <p>
                         <strong>License Plate :</strong>{" "}

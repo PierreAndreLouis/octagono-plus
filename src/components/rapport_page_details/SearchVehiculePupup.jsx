@@ -12,7 +12,8 @@ function SearchVehiculePupup({
   currentVehicule,
   isMapcomponent,
 }) {
-  const { currentdataFusionnee, selectedVehicle } = useContext(DataContext);
+  const { currentdataFusionnee, selectedVehicle, setSelectedVehicle } =
+    useContext(DataContext);
 
   const foundVehicle = currentdataFusionnee.find(
     (v) => v.deviceID === selectedVehicle
@@ -76,6 +77,7 @@ function SearchVehiculePupup({
                   onClick={() => {
                     handleClick(vehicule);
                     setShowOptions(false);
+                    setSelectedVehicle(vehicule.deviceID);
                   }}
                   className={`${
                     vehicule.description ===

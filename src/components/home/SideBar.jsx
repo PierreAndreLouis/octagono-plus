@@ -22,6 +22,7 @@ function SideBar() {
     handleTabClick,
     tab,
     username,
+    sethistiriqueSelectedLocationIndex,
   } = useContext(DataContext);
 
   return (
@@ -103,6 +104,7 @@ function SideBar() {
         <Link
           to="/Groupe_vehicule_location?tab=localisation"
           onClick={() => {
+            sethistiriqueSelectedLocationIndex(0);
             setShowSideBar(true);
             handleTabClick("localisation");
           }}

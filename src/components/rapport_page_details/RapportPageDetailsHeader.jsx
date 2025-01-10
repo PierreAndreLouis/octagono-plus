@@ -122,8 +122,13 @@ function RapportPageDetailsHeader({
     setSearchQuery(e.target.value);
   };
 
-  const filteredVehicles = currentdataFusionnee?.filter((vehicule) =>
-    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehicles = currentdataFusionnee?.filter(
+    (vehicule) =>
+      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   ///////////////////////////////////////////////////////////////////////////////

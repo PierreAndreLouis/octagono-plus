@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { DataContext } from "../../context/DataContext";
 
 function VehiculeDetailInformationComponent({
   currentVehicule,
   setShowVehiculeListe,
 }) {
+  const { FormatDateHeure } = useContext(DataContext);
   const creationDateTime = (creationTime) => {
     // Convertir le timestamp en millisecondes
     const date = new Date(creationTime * 1000);
@@ -26,7 +28,12 @@ function VehiculeDetailInformationComponent({
     return { date: formattedDate, time: formattedTime };
   };
 
-  const { date, time } = creationDateTime(currentVehicule?.creationTime);
+  const FormatDateHeureTimestamp = FormatDateHeure(
+    currentVehicule?.creationTime
+  );
+
+  const { date } = creationDateTime(currentVehicule?.creationTime);
+  const { time } = FormatDateHeureTimestamp;
 
   return (
     <>
@@ -61,14 +68,14 @@ function VehiculeDetailInformationComponent({
             </p>
           </div>
 
-          <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
+          {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
               IMEI
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVehicule?.imeiNumber || ""}
             </p>
-          </div>
+          </div> */}
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">

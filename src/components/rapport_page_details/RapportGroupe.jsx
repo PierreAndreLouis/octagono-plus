@@ -72,6 +72,7 @@ function RapportGroupe({
     // currentVehicule,
     setdonneeFusionneeForRapport,
     setCurrentVehicule,
+    FormatDateHeure,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const [voirPlus, setvoirPlus] = useState(false);
@@ -983,11 +984,11 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp && (
                             <span className="px-3">/</span>
@@ -1000,18 +1001,18 @@ function RapportGroupe({
                                   ]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[
                                     vehicule?.vehiculeDetails.length - 1
                                   ]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp && (
                             <span className="px-3">/</span>
@@ -1022,9 +1023,9 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails[0]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[0]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1118,11 +1119,11 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
                             ? selectUTC
@@ -1132,11 +1133,11 @@ function RapportGroupe({
                                   ]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[
                                     vehicule?.vehiculeDetails.length - 1
                                   ]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
@@ -1146,9 +1147,9 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails[0]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[0]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1243,11 +1244,11 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
                             ? selectUTC
@@ -1257,11 +1258,11 @@ function RapportGroupe({
                                   ]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[
                                     vehicule?.vehiculeDetails.length - 1
                                   ]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
@@ -1271,9 +1272,9 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails[0]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[0]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1378,11 +1379,11 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
                             ? selectUTC
@@ -1392,11 +1393,11 @@ function RapportGroupe({
                                   ]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[
                                     vehicule?.vehiculeDetails.length - 1
                                   ]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
@@ -1406,9 +1407,9 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails[0]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[0]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1807,13 +1808,13 @@ function RapportGroupe({
                                     ]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiculeMouvementOrdered[0]
                                       ?.vehiculeDetails[
                                       vehiculeMouvementOrdered[0]
                                         ?.vehiculeDetails.length - 1
                                     ]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -1829,10 +1830,10 @@ function RapportGroupe({
                                       ?.vehiculeDetails[0]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiculeMouvementOrdered[0]
                                       ?.vehiculeDetails[0]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -1865,12 +1866,12 @@ function RapportGroupe({
                             ]?.timestamp,
                             selectUTC
                           )
-                        : formatTimestampToTime(
+                        : FormatDateHeure(
                             vehiculeMouvementOrdered[0]?.vehiculeDetails[
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                          )
+                          )?.time
                       : " "}{" "}
                   </span>
                 </p>
@@ -2009,12 +2010,12 @@ function RapportGroupe({
                                     ]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiclesByDistance[0]?.vehiculeDetails[
                                       vehiclesByDistance[0]?.vehiculeDetails
                                         .length - 1
                                     ]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -2030,10 +2031,10 @@ function RapportGroupe({
                                       ?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiclesByDistance[0]?.vehiculeDetails[0]
                                       ?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -2201,13 +2202,13 @@ function RapportGroupe({
                                     ]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiclesByMovingDuration[0]
                                       ?.vehiculeDetails[
                                       vehiclesByMovingDuration[0]
                                         ?.vehiculeDetails.length - 1
                                     ]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -2223,10 +2224,10 @@ function RapportGroupe({
                                       ?.vehiculeDetails[0]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiclesByMovingDuration[0]
                                       ?.vehiculeDetails[0]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -2399,13 +2400,13 @@ function RapportGroupe({
                                     ]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiculeMouvementOrdered[0]
                                       ?.vehiculeDetails[
                                       vehiculeMouvementOrdered[0]
                                         ?.vehiculeDetails.length - 1
                                     ]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -2421,10 +2422,10 @@ function RapportGroupe({
                                       ?.vehiculeDetails[0]?.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(
+                                : FormatDateHeure(
                                     vehiculeMouvementOrdered[0]
                                       ?.vehiculeDetails[0]?.timestamp
-                                  )
+                                  )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -3026,11 +3027,11 @@ function RapportGroupe({
                         {/*  */}
                         <td className="border py-3 px-2   dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp && (
                             <span className="px-2">/</span>
@@ -3043,18 +3044,18 @@ function RapportGroupe({
                                   ]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[
                                     vehicule?.vehiculeDetails.length - 1
                                   ]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? formatTimestampToDate(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
-                              )
+                              )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp && (
                             <span className="px-2">/</span>
@@ -3065,9 +3066,9 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails[0]?.timestamp,
                                   selectUTC
                                 )
-                              : formatTimestampToTime(
+                              : FormatDateHeure(
                                   vehicule?.vehiculeDetails[0]?.timestamp
-                                )
+                                )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 

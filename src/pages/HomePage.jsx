@@ -16,6 +16,7 @@ const Home = () => {
     setIsLoading,
     setShowListOption,
     mergedData,
+    FormatDateHeure,
   } = useContext(DataContext);
 
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -113,28 +114,6 @@ const Home = () => {
 
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  function formatTimestampToTime(timestamp) {
-    const date = new Date(timestamp * 1000);
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-    const period = hours >= 12 ? "PM" : "AM";
-
-    // Convert to 12-hour format
-    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
-    hours = hours.toString().padStart(2, "0");
-
-    return `${hours}:${minutes}  ${period}`;
-    // return `${hours}:${minutes}:${seconds} ${period}`;
-  }
-
-  function formatTimestampToDate(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`;
-  }
   function getMostRecentTimestamp(data) {
     // Filtrer les entrées avec un tableau vehiculeDetails valide et non vide
     const validTimestamps = data
@@ -152,11 +131,7 @@ const Home = () => {
     // Trouver le timestamp le plus récent
     const mostRecentTimestamp = Math.max(...validTimestamps);
 
-    // Conversion en date et heure
-    const mostRecentDate = formatTimestampToDate(mostRecentTimestamp);
-    const mostRecentTime = formatTimestampToTime(mostRecentTimestamp);
-
-    return { mostRecentTimestamp, mostRecentDate, mostRecentTime };
+    return { mostRecentTimestamp };
   }
   const dataFusionee2 = mergedData ? Object.values(mergedData) : [];
 
@@ -169,13 +144,20 @@ const Home = () => {
     // Mettre à jour le timestamp le plus récent lorsque "data" change
     const result = getMostRecentTimestamp(dataFusionee2);
     console.log("Most Recent Timestamp:", result.mostRecentTimestamp);
-    console.log("Date:", result.mostRecentDate);
-    console.log("Time:", result.mostRecentTime);
+    // console.log("Date:", result.mostRecentDate);
+    // console.log("Time:", result.mostRecentTime);
     setderniereUpdate(result);
     // } catch (error) {
     //   console.error(error.message);
     // }    setMostRecent(result);
   }, [mergedData]);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+  const MiseAJourFormatDateHeure = FormatDateHeure(
+    derniereUpdate?.mostRecentTimestamp
+  );
 
   return (
     <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-screen">
@@ -204,9 +186,9 @@ const Home = () => {
             <p className="text-start font-bold  text-[.85rem] xs:text-[.91rem] dark:text-gray-100 text-gray-700 ">
               {" "}
               {/* {formatTime(time)} */}
-              {derniereUpdate?.mostRecentDate}
+              {MiseAJourFormatDateHeure?.date}
               {" / "}
-              {derniereUpdate?.mostRecentTime}
+              {MiseAJourFormatDateHeure?.time}
             </p>
           </div>
         </div>

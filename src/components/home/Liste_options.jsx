@@ -35,11 +35,13 @@ function Liste_options({}) {
     setCallError,
     lancerAppel,
     username,
+    sethistiriqueSelectedLocationIndex,
   } = useContext(DataContext); // fetchVehicleDetails importée du contexte
 
   const [showAccessCode, setAccessCode] = useState(false);
   // <h1 className="px-3">Toyota Land Cruser Prada</h1>;
   const [showControlePupup, setshowControlePupup] = useState(false);
+  const [showNotezBienPupup, setshowNotezBienPupup] = useState(false);
 
   const handleClick = () => {
     setShowListOption(false);
@@ -70,6 +72,7 @@ function Liste_options({}) {
 
     if (inputPassword === password) {
       setshowControlePupup(true);
+      setshowNotezBienPupup(true);
       setshowVehiculeControle(false);
       setInputPassword("");
       setErrorMessage("");
@@ -103,9 +106,9 @@ function Liste_options({}) {
 
   // Fonction pour fermer le tooltip si on clique en dehors du composant
   const handleClickOutside = (event) => {
-    if (containerRef.current && !containerRef.current.contains(event.target)) {
-      setshowControlePupup(false); // Désactive l'état "isOffline" si on clique en dehors
-    }
+    // if (containerRef.current && !containerRef.current.contains(event.target)) {
+    //   setshowControlePupup(false); // Désactive l'état "isOffline" si on clique en dehors
+    // }
   };
 
   // Ajouter l'event listener quand le composant est monté et le nettoyer à la destruction
@@ -189,6 +192,28 @@ function Liste_options({}) {
         </div>
       )}
 
+      {showNotezBienPupup && (
+        <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
+          <div className="relative w-[70vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+            <IoMdClose
+              onClick={() => setshowNotezBienPupup(false)}
+              className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
+            />
+            <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
+              <h1 className="px-3 mt-8 mb-2 text-center dark:text-gray-50">
+                Notez Bien !
+              </h1>
+            </div>
+            <div className="p-4 flex flex-col gap-4 py-6 pb-10">
+              {/* callError, setCallError, lancerAppel, */}
+              <p className="text-center dark:text-gray-300">
+                Vous devez disposer soit de crédits, soit de minutes et SMS
+                disponibles sur votre téléphone pour cette fonctionalité.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/*  */}
 
       <div className="border min-w-[90vw] sm:min-w-[30rem] bg-white dark:border-gray-50/10 dark:shadow-lg dark:shadow-gray-900 dark:shadow-lg-- dark:bg-gray-800 mx-4 rounded-xl overflow-hidden">
@@ -229,6 +254,7 @@ function Liste_options({}) {
             <Link
               onClick={() => {
                 setShowListOption(false);
+                sethistiriqueSelectedLocationIndex(0);
               }}
               to="/Groupe_vehicule_location"
               className=" dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg col-span-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"

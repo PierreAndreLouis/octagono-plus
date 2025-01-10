@@ -27,9 +27,14 @@ function DetailsVehiculePage() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredVehicles = dataFusionee?.filter((vehicule) =>
-    // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehicles = dataFusionee?.filter(
+    (vehicule) =>
+      // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

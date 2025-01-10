@@ -9,7 +9,8 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdLocationPin } from "react-icons/md";
 
 function NavigationBar() {
-  const { handleTabClick, tab, username } = useContext(DataContext);
+  const { handleTabClick, tab, username, sethistiriqueSelectedLocationIndex } =
+    useContext(DataContext);
 
   return (
     <div className="bg-red fixed bottom-0 left-0 right-0 dark:bg-slate-800 lg:hidden z-[1] ">
@@ -68,7 +69,10 @@ function NavigationBar() {
           <div className="flex justify-center items-center">
             <Link
               to="/Groupe_vehicule_location?tab=location"
-              onClick={() => handleTabClick("location")}
+              onClick={() => {
+                handleTabClick("location");
+                sethistiriqueSelectedLocationIndex(0);
+              }}
               className="min-w-14 h-14 cursor-pointer -translate-y-3 border-4 border-gray-200 dark:border-slate-800 bg-orange-500 dark:bg-orange-600 flex justify-center items-center rounded-full"
             >
               <MdLocationPin className="text-white text-[1.7rem]" />

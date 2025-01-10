@@ -87,6 +87,7 @@ function RapportPersonnel({
     setShowListOption,
     vehiclueHistoriqueDetails,
     setVehiclueHistoriqueDetails,
+    FormatDateHeure,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -637,7 +638,7 @@ function RapportPersonnel({
                             heureActiveDebut.timestamp,
                             selectUTC
                           )
-                        : formatTimestampToTime(heureActiveDebut.timestamp)
+                        : FormatDateHeure(heureActiveDebut.timestamp)?.time
                       : "Pas de mouvement"}{" "}
                   </span>
                 </p>
@@ -650,7 +651,7 @@ function RapportPersonnel({
                             heureActiveFin.timestamp,
                             selectUTC
                           )
-                        : formatTimestampToTime(heureActiveFin.timestamp)
+                        : FormatDateHeure(heureActiveFin.timestamp)?.time
                       : "Pas de mouvement"}{" "}
                   </span>
                 </p>
@@ -1033,7 +1034,7 @@ function RapportPersonnel({
                     {/*  */}
                     {/*  */}
                     {/*  */}
-                    <div
+                    {/* <div
                       onClick={() => {
                         setlieuxFrequentePupup(false);
                         setshowHistoriquePupup(true);
@@ -1043,7 +1044,7 @@ function RapportPersonnel({
                       <IoStatsChart className="text-orange-500 text-xl" />
 
                       <h4 className="dark:text-gray-200">Voir l'Histoirque</h4>
-                    </div>
+                    </div> */}
                     {/*  */}
                     {/*  */}
                     {/*  */}
@@ -1269,12 +1270,13 @@ function RapportPersonnel({
                             <p>
                               <span className="font-bold">Date : </span>
                               {item.timestamp
-                                ? selectUTC
-                                  ? formatTimestampToDateWithTimezone(
-                                      item.timestamp,
-                                      selectUTC
-                                    )
-                                  : formatTimestampToDate(item.timestamp)
+                                ? // selectUTC
+                                  //   ? formatTimestampToDateWithTimezone(
+                                  //       item.timestamp,
+                                  //       selectUTC
+                                  //     )
+                                  // :
+                                  FormatDateHeure(item.timestamp)?.date
                                 : "Pas de date disponible"}{" "}
                             </p>
                             <p>
@@ -1284,7 +1286,7 @@ function RapportPersonnel({
                                     item.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(item.timestamp)}{" "}
+                                : FormatDateHeure(item.timestamp)?.time}{" "}
                             </p>
                           </div>
                           <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
@@ -1299,8 +1301,8 @@ function RapportPersonnel({
                               {item.speedKPH <= 0 && "en arret"}
                               {item.speedKPH >= 1 &&
                                 item.speedKPH < 20 &&
-                                "en ralentit"}
-                              {item.speedKPH >= 20 && "en deplacement"}
+                                "En mouvement lent"}
+                              {item.speedKPH >= 20 && "En mouvement rapide"}
                             </p>
                           </div>
                         </div>
@@ -1336,12 +1338,13 @@ function RapportPersonnel({
                                 Date :{" "}
                               </span>
                               {item.timestamp
-                                ? selectUTC
-                                  ? formatTimestampToDateWithTimezone(
-                                      item.timestamp,
-                                      selectUTC
-                                    )
-                                  : formatTimestampToDate(item.timestamp)
+                                ? // selectUTC
+                                  //   ? formatTimestampToDateWithTimezone(
+                                  //       item.timestamp,
+                                  //       selectUTC
+                                  //     )
+                                  //   :
+                                  FormatDateHeure(item.timestamp)?.date
                                 : "Pas de date disponible"}{" "}
                             </p>
                             <p>
@@ -1353,7 +1356,7 @@ function RapportPersonnel({
                                     item.timestamp,
                                     selectUTC
                                   )
-                                : formatTimestampToTime(item.timestamp)}{" "}
+                                : FormatDateHeure(item.timestamp)?.time}{" "}
                             </p>
                           </div>
                           <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
@@ -1372,8 +1375,8 @@ function RapportPersonnel({
                               {item.speedKPH <= 0 && "en arret"}
                               {item.speedKPH >= 1 &&
                                 item.speedKPH < 20 &&
-                                "en ralentit"}
-                              {item.speedKPH >= 20 && "en deplacement"}
+                                "En mouvement lent"}
+                              {item.speedKPH >= 20 && "En mouvement rapide"}
                             </p>
                           </div>
                         </div>

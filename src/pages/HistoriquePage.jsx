@@ -211,9 +211,14 @@ function HistoriquePage() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredVehiclesPupup = dataFusionee?.filter((vehicule) =>
-    // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVehiclesPupup = dataFusionee?.filter(
+    (vehicule) =>
+      // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Récupérer les positions successives pour les lignes rouges
@@ -249,22 +254,6 @@ function HistoriquePage() {
   const handleApply = (e) => {
     e.preventDefault();
 
-    // Fonction pour convertir une date au format dd/MM/yyyy
-    // const formatDate = (date) => {
-    //   // Vérifiez si c'est déjà une chaîne, sinon, convertissez-la en format "dd/MM/yyyy"
-    //   if (typeof date === "string") {
-    //     const [day, month, year] = date.split("-"); // Sépare le jour, le mois et l'année
-    //     return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
-    //   } else if (date instanceof Date) {
-    //     // Si c'est un objet Date, formatez-le en "dd/MM/yyyy"
-    //     const day = ("0" + date.getDate()).slice(-2);
-    //     const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    //     const year = date.getFullYear();
-    //     return `${year}-${month}-${day}`;
-    //   }
-    //   return date; // Retourne la date telle quelle si elle n'est ni string ni Date
-    // };
-
     const formatDateToISO = (date) => {
       if (!(date instanceof Date)) {
         date = new Date(date); // Convertir en objet Date si nécessaire
@@ -276,18 +265,65 @@ function HistoriquePage() {
     };
 
     // Conversion des variables startDate et endDate
-    // const formattedStartDate = formatDateToISO(startDate || today);
-    // const formattedEndDate = formatDateToISO(endDate || today);
-
-    // Conversion des variables startDate et endDate
     const formattedStartDate = formatDateToISO(startDate);
     const formattedEndDate = formatDateToISO(endDate);
 
-    // const timeFrom = `${startDate} ${startTime}:00`;
-    // const timeTo = `${endDate} ${endTime}:00`;
+    /////////////////////////////////////////////////////////////////////////
+
     // Combine les dates formatées avec les heures
-    const timeFrom = `${formattedStartDate} ${startTime}:00`;
-    const timeTo = `${formattedEndDate} ${endTime}:00`;
+    const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}:00`);
+    const baseTimeTo = new Date(`${formattedEndDate}T${endTime}:00`);
+
+    // Ajout de 5 heures
+    const adjustedTimeFrom = new Date(
+      baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+    );
+    const adjustedTimeTo = new Date(
+      baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+    );
+
+    // Formatage en chaîne pour les heures ajustées
+    const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
+      adjustedTimeFrom.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeFrom
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeFrom
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    const timeTo = `${adjustedTimeTo.getFullYear()}-${(
+      adjustedTimeTo.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeTo
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeTo
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    ////////////////////////////////////////////////////////////////////////
+
+    // // Combine les dates formatées avec les heures
+    // const timeFrom = `${formattedStartDate} ${startTime}:00`;
+    // const timeTo = `${formattedEndDate} ${endTime}:00`;
 
     settimeFrom(timeFrom);
     settimeTo(timeTo);

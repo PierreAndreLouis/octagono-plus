@@ -20,11 +20,21 @@ function TimeZone({ setChangeTimeZone }) {
     userData,
   } = useContext(DataContext);
 
-  // Filtrer les données en fonction de la recherche
-  const filteredData = timeZoneData?.filter((zone) =>
-    [zone.region, zone.utcOffset, zone.currentTime].some((field) =>
-      field.toLowerCase().includes(timeZonesearchQuery.toLowerCase())
-    )
+  // // Filtrer les données en fonction de la recherche
+  // const filteredData = timeZoneData?.filter((zone) =>
+  //   [zone.region, zone.utcOffset, zone.currentTime].some((field) =>
+  //     field.toLowerCase().includes(timeZonesearchQuery.toLowerCase())
+  //   )
+
+  // );
+
+  const filteredData = timeZoneData?.filter(
+    (zone) =>
+      zone?.utcOffset
+        ?.toString()
+        .toLowerCase()
+        .includes(timeZonesearchQuery.toLowerCase()) ||
+      zone?.region?.toLowerCase().includes(timeZonesearchQuery.toLowerCase())
   );
 
   return (
@@ -76,8 +86,9 @@ function TimeZone({ setChangeTimeZone }) {
                 {selectedTimeZone || "Aucun fuseau horaire sélectionné"}
               </p>
               <p className="text-gray-500 dark:text-gray-400">
-                {selectUTC || "--"}
-                 {/* / {selectTime || "--"} */}
+                {/* {selectUTC || "--"} */}
+                {/* / 
+                {selectTime || "--"} */}
               </p>
             </div>
           </div>
@@ -107,7 +118,8 @@ function TimeZone({ setChangeTimeZone }) {
               <div>
                 <h3 className="text-gray-600 dark:text-gray-300">
                   {/* {item.currentTime} */}
-                  UTC {item.utcOffset}
+                  {item.utcOffset >= 0 && "+"}
+                  {item.utcOffset}:00
                 </h3>
               </div>
             </div>

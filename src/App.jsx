@@ -71,6 +71,7 @@ function App() {
         {/* <SideBar />
         <Header />
         <HomePage /> */}
+        {/* <Login2 /> */}
 
         <Routes>
           <Route

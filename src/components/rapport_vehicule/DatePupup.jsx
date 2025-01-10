@@ -38,7 +38,7 @@ function DatePupup({
             />
 
             <h2 className="font-semibold dark:text-gray-200 text-lg p-3 pb-0 text-gray-700">
-              Recherche Detaillee
+              Recherche par intervalle de date
             </h2>
             <p
               onClick={() => {
@@ -47,7 +47,7 @@ function DatePupup({
               }}
               className="mx-3 shadow-lg-- shadow-gray-300/40 cursor-pointer bg-orange-100 p-2  mb-3 mt-2 rounded-lg"
             >
-              Choisis une date plus precise
+              Selectionner une intervalle de date
             </p>
             {/*  */}
             {/*  */}
@@ -84,7 +84,7 @@ function DatePupup({
                 id="date"
                 className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border- p-2 rounded-lg w-full bg-orange-100- dark:bg-gray-400--  dark:border-gray-600- dark:text-gray-200--"
                 dateFormat="dd/MM/yyyy"
-                placeholderText="Choisissez une date"
+                placeholderText="Selectionner une date"
                 required
                 selected={selectedDate} // Passer directement l'objet Date
                 onChange={(date) => {

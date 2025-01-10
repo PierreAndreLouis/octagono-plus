@@ -14,7 +14,7 @@ function ShowVehiculeListeComponent({
   filteredVehiclesPupup,
   handleVehicleClick,
 }) {
-  const { currentVehicule } = useContext(DataContext);
+  const { currentVehicule,FormatDateHeure  } = useContext(DataContext);
   return (
     <>
       {showVehiculeListe && (

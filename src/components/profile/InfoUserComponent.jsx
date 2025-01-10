@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
+import LanguageComponent from "../home/LanguageComponent";
+import GoogleTranslate from "../home/GoogleTranslate";
+import GoogleTranslate2 from "../home/GoogleTranslate2";
+import LanguageSwitcher from "../home/LanguageSwitcher";
 
 function InfoUserComponent({
   account,
@@ -9,6 +13,7 @@ function InfoUserComponent({
   setShowChangePasswordPupup,
   setLogOut,
   selectUTC,
+  SelectedTimeZone,
   setChangeTimeZone,
 }) {
   const { setUsername } = useContext(DataContext);
@@ -73,7 +78,9 @@ function InfoUserComponent({
           <div className="flex justify-between items-center w-full">
             <p className="pl-3 text-gray-500 dark:text-gray-300">
               {/* {userData?.timeZone || "-----"} */}
-              {selectUTC ? selectUTC : userData?.timeZone || "-----"}
+              {selectUTC
+                ? "GMT" + (selectUTC >= 0 ? "+" : "") + selectUTC
+                : userData?.timeZone || "-----"}
             </p>
             <p
               onClick={() => {
@@ -94,6 +101,11 @@ function InfoUserComponent({
           <p className="pl-3 text-gray-500 dark:text-gray-300">
             {userData?.addressCity || "-----"}
           </p>
+        </div>
+
+        <div>
+          <GoogleTranslate />
+          {/* <LanguageSwitcher /> */}
         </div>
       </div>
 
