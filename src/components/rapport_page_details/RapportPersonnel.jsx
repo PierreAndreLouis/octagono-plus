@@ -956,8 +956,8 @@ function RapportPersonnel({
           {/*  */}
           {showHistoriquePupup && (
             <div className="fixed hidden- z-[10000000000] inset-0 bg-black/50 flex justify-center items-center">
-              <div className="relative mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
-                <div className="absolute z-[111111111111111111111] bg-white dark:bg-gray-900 p-4 top-0 left-0 right-0 flex flex-col justify-center items-center">
+              <div className="relative min-w-[80vw] mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+                <div className="absolute z-[11] bg-white dark:bg-gray-900 p-4 top-0 left-0 right-0 flex flex-col justify-center items-center">
                   <IoClose
                     onClick={() => {
                       setshowHistoriquePupup(false);
@@ -1005,19 +1005,30 @@ function RapportPersonnel({
                       : `Tous les lieux Stationnés (${filteredAddresses?.length})`}{" "}
                   </h2>
 
-                  {lieuxFrequentePupup ? (
-                    <IoClose
-                      onClick={() => setlieuxFrequentePupup(false)}
-                      className="text-2xl text-red-500"
-                    />
-                  ) : (
-                    <IoChevronDownCircleOutline
-                      onClick={() => {
-                        setlieuxFrequentePupup(true);
-                      }}
-                      className="text-2xl text-gray-500"
-                    />
-                  )}
+                  <div
+                    onClick={() => {
+                      setlieuxFrequentePupup(!lieuxFrequentePupup);
+                    }}
+                    className="flex items-center gap-3 "
+                  >
+                    <p className="font-semibold text-lg text-orange-500 mb-0.5">
+                      Filtrer
+                    </p>
+
+                    {lieuxFrequentePupup ? (
+                      <IoClose
+                        // onClick={() => setlieuxFrequentePupup(false)}
+                        className="text-2xl text-red-500"
+                      />
+                    ) : (
+                      <IoChevronDownCircleOutline
+                        onClick={() => {
+                          // setlieuxFrequentePupup(true);
+                        }}
+                        className="text-2xl text-orange-500"
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {lieuxFrequentePupup && (
@@ -1037,7 +1048,7 @@ function RapportPersonnel({
                     {/*  */}
                     {/*  */}
                     {/*  */}
-                    {/* <div
+                    <div
                       onClick={() => {
                         setlieuxFrequentePupup(false);
                         setshowHistoriquePupup(true);
@@ -1047,7 +1058,7 @@ function RapportPersonnel({
                       <IoStatsChart className="text-orange-500 text-xl" />
 
                       <h4 className="dark:text-gray-200">Voir l'Histoirque</h4>
-                    </div> */}
+                    </div>
                     {/*  */}
                     {/*  */}
                     {/*  */}

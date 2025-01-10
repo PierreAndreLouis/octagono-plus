@@ -314,7 +314,7 @@ function Liste() {
             activeTextColor = "text-purple-900 dark:text-purple-200";
             active_bg_color = "bg-purple-200/50 dark:bg-purple-600/50";
             vitess_img = "/img/home_icon/payer.png";
-            imgClass = "w-14 sm:w-16 md:w-24";
+            imgClass = "w-14  h-auto sm:w-16 md:w-24";
             border_top =
               "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
           } else if (hasDetails && speed < 1 && isActive) {
@@ -325,7 +325,7 @@ function Liste() {
             activeTextColor = "text-red-900 dark:text-red-200";
             active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
             vitess_img = "img/cars/orange_vitess.png";
-            imgClass = "w-14 sm:w-16 md:w-24";
+            imgClass = "w-14  h-auto sm:w-16 md:w-24";
             border_top = "border-t border-t-red-200 dark:border-t-red-600/30 ";
           } else if (
             hasDetails &&
@@ -341,7 +341,7 @@ function Liste() {
             activeTextColor = "text-[#555b03] dark:text-yellow-100";
             active_bg_color = "bg-yellow-400/20 dark:bg-yellow-600/20";
             vitess_img = "img/cars/yellow_vitess.png";
-            imgClass = "w-12 sm:w-14 md:w-20";
+            imgClass = "w-12  h-auto sm:w-14 md:w-20";
             border_top =
               "border-t border-t-yellow-200 dark:border-t-yellow-600/30 ";
           } else if (
@@ -357,7 +357,7 @@ function Liste() {
             activeTextColor = "text-green-800 dark:text-green-200";
             active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
             vitess_img = "img/cars/green_vitess.png";
-            imgClass = "w-12 sm:w-14 md:w-20";
+            imgClass = "w-12  h-auto sm:w-14 md:w-20";
             border_top =
               "border-t border-t-green-200 dark:border-t-green-600/30 ";
           }
@@ -400,7 +400,9 @@ function Liste() {
                       <h2
                         className={`${activeTextColor} text-gray-800 dark:text-gray-100 font-semibold text-md md:text-xl mb-2 `}
                       >
-                        {vehicle?.description || "---"}
+                        {vehicle?.description
+                          ? vehicle?.description
+                          : "Nom du vehicule"}
                       </h2>
                       <div className="flex mb-2 gap-4 text-gray-600 text-md dark:text-gray-300">
                         <div className="flex gap-3 items-center">

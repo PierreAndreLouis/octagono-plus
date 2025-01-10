@@ -758,6 +758,69 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   }, [vehicleData]);
 
+  const homePageReload = () => {
+    const now = new Date();
+    ///////////////////////
+    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+    ///////////////////////////
+    const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    // Création d'une date représentant le début de la journée
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    // Ajouter 5 heures
+    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+
+    // Formatage de `TimeFrom`
+    const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${startOfDay
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${startOfDay
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${startOfDay
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+    // const startOfDay = new Date();
+    // startOfDay.setHours(0, 0, 0, 0);
+    // ///////////////////////////////////////
+    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // /////////////////////////////////
+
+    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+    //   .toString()
+    //   .padStart(2, "0")}-${startOfDay
+    //   .getDate()
+    //   .toString()
+    //   .padStart(2, "0")} 00:00:00`;
+    console.log("refraich 1");
+    if (vehicleData && vehicleData.length > 0) {
+      vehicleData.forEach((vehicle) => {
+        console.log("refraich 2");
+
+        fetchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
+        fetRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
+        console.log("refraich 3");
+      });
+    }
+    console.log("refraich 4");
+  };
+
   // Pour fusionnee les donnes des fonctions fetchVehicleData et fetchVehicleDetails
   // const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
   //   const dataFusionne = {};
@@ -2735,6 +2798,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         setchooseHistoriqueLatitude,
         histiriqueSelectedLocationIndex,
         sethistiriqueSelectedLocationIndex,
+        homePageReload,
       }}
     >
       {children}

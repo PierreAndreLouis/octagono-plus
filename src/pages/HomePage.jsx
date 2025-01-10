@@ -17,6 +17,7 @@ const Home = () => {
     setShowListOption,
     mergedData,
     FormatDateHeure,
+    homePageReload,
   } = useContext(DataContext);
 
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -159,6 +160,27 @@ const Home = () => {
     derniereUpdate?.mostRecentTimestamp
   );
 
+  window.addEventListener("beforeunload", () => {
+    if (webSocket.readyState === WebSocket.OPEN) {
+      webSocket.close();
+    }
+  });
+
+  ///////////////////////////////////////////////////////
+
+  const [isLoading2, setIsLoading2] = useState(false);
+  useEffect(() => {
+    console.log(isLoading2);
+  }, [isLoading2]);
+
+  const handleClick = () => {
+    setIsLoading2(true);
+    // Simuler un délai de 10 secondes
+    setTimeout(() => {
+      setIsLoading2(false);
+    }, 10000);
+  };
+
   return (
     <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-screen">
       {/* Statistic component */}
@@ -177,8 +199,21 @@ const Home = () => {
       )}
 
       {derniereUpdate?.mostRecentTimestamp !== -Infinity && (
-        <div className="shadow-md dark:bg-red-900/40 dark:shadow-gray-900  flex gap-4 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100">
-          <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" />
+        <div
+          onClick={() => {
+            handleClick();
+            homePageReload();
+          }}
+          className="shadow-md cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-4 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100"
+        >
+          <div
+            className={`${
+              isLoading2 ? "animate-spin" : ""
+            }  text-red-700 dark:text-gray-200 text-2xl `}
+          >
+            <MdUpdate />
+          </div>
+          {/* <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" /> */}
           <div className=" xs:flex items-center gap-4 ">
             <h3 className="text-red-700 text-start  dark:text-red-100">
               Dernière mise à jour :{" "}
@@ -193,6 +228,37 @@ const Home = () => {
           </div>
         </div>
       )}
+
+      {/* {derniereUpdate?.mostRecentTimestamp !== -Infinity && (
+        <div
+          onClick={handleClick}
+          className="shadow-md dark:bg-red-900/40 dark:shadow-gray-900 flex gap-4 justify-between md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100 cursor-pointer"
+        >
+          {isLoading2 ? (
+            <div className="flex items-center">
+              <div className="animate-spin text-red-700 dark:text-gray-200 text-2xl">
+                <MdUpdate />
+              </div>
+              <p className="text-red-700 dark:text-gray-100 ml-3">
+                Chargement en cours...
+              </p>
+            </div>
+          ) : (
+            <>
+              <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" />
+              <div className="xs:flex items-center gap-4">
+                <h3 className="text-red-700 text-start dark:text-red-100">
+                  Dernière mise à jour :{" "}
+                </h3>
+                <p className="text-start font-bold text-[.85rem] xs:text-[.91rem] dark:text-gray-100 text-gray-700">
+                  {MiseAJourFormatDateHeure?.date} /{" "}
+                  {MiseAJourFormatDateHeure?.time}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+      )} */}
 
       {/* Message quand il n y a pas d'internet */}
       {isOffline && (
