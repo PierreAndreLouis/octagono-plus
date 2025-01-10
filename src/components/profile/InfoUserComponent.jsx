@@ -103,10 +103,10 @@ function InfoUserComponent({
           </p>
         </div>
 
-        <div>
+        {/* <div>
           <GoogleTranslate />
-          {/* <LanguageSwitcher /> */}
-        </div>
+          <LanguageSwitcher />
+        </div> */}
       </div>
 
       {/* Boutons d'action */}

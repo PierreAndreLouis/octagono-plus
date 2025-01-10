@@ -994,18 +994,19 @@ function RapportGroupe({
                             <span className="px-3">/</span>
                           )}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[
+                              //         vehicule?.vehiculeDetails.length - 1
+                              //       ]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[
+                                  vehicule?.vehiculeDetails.length - 1
+                                ]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
@@ -1018,14 +1019,15 @@ function RapportGroupe({
                             <span className="px-3">/</span>
                           )}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[0]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[0]?.timestamp
-                                )?.time
+                            ? //  selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[0]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[0]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1126,30 +1128,33 @@ function RapportGroupe({
                               )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ?
+                              //    formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[
+                              //         vehicule?.vehiculeDetails.length - 1
+                              //       ]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[
+                                  vehicule?.vehiculeDetails.length - 1
+                                ]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[0]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[0]?.timestamp
-                                )?.time
+                            ? //  selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[0]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[0]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1251,30 +1256,32 @@ function RapportGroupe({
                               )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[
+                              //         vehicule?.vehiculeDetails.length - 1
+                              //       ]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[
+                                  vehicule?.vehiculeDetails.length - 1
+                                ]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[0]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[0]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[0]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[0]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1386,30 +1393,32 @@ function RapportGroupe({
                               )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[
+                              //         vehicule?.vehiculeDetails.length - 1
+                              //       ]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[
+                                  vehicule?.vehiculeDetails.length - 1
+                                ]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[0]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[0]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[0]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[0]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 
@@ -1799,22 +1808,22 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[
-                                      vehiculeMouvementOrdered[0]
-                                        ?.vehiculeDetails.length - 1
-                                    ]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[
-                                      vehiculeMouvementOrdered[0]
-                                        ?.vehiculeDetails.length - 1
-                                    ]?.timestamp
-                                  )?.time
+                              ? // selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiculeMouvementOrdered[0]
+                                //         ?.vehiculeDetails[
+                                //         vehiculeMouvementOrdered[0]
+                                //           ?.vehiculeDetails.length - 1
+                                //       ]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiculeMouvementOrdered[0]?.vehiculeDetails[
+                                    vehiculeMouvementOrdered[0]?.vehiculeDetails
+                                      .length - 1
+                                  ]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -1824,16 +1833,17 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[0]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[0]?.timestamp
-                                  )?.time
+                              ? //  selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiculeMouvementOrdered[0]
+                                //         ?.vehiculeDetails[0]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiculeMouvementOrdered[0]
+                                    ?.vehiculeDetails[0]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -1858,20 +1868,21 @@ function RapportGroupe({
                     {vehiculeMouvementOrdered[0]?.vehiculeDetails[
                       vehiculeMouvementOrdered[0]?.vehiculeDetails.length - 1
                     ]?.timestamp
-                      ? selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
-                                .length - 1
-                            ]?.timestamp,
-                            selectUTC
-                          )
-                        : FormatDateHeure(
-                            vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
-                                .length - 1
-                            ]?.timestamp
-                          )?.time
+                      ? // selectUTC
+                        //   ? formatTimestampToTimeWithTimezone(
+                        //       vehiculeMouvementOrdered[0]?.vehiculeDetails[
+                        //         vehiculeMouvementOrdered[0]?.vehiculeDetails
+                        //           .length - 1
+                        //       ]?.timestamp,
+                        //       selectUTC
+                        //     )
+                        //   :
+                        FormatDateHeure(
+                          vehiculeMouvementOrdered[0]?.vehiculeDetails[
+                            vehiculeMouvementOrdered[0]?.vehiculeDetails
+                              .length - 1
+                          ]?.timestamp
+                        )?.time
                       : " "}{" "}
                   </span>
                 </p>
@@ -2002,20 +2013,21 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiclesByDistance[0]?.vehiculeDetails[
-                                      vehiclesByDistance[0]?.vehiculeDetails
-                                        .length - 1
-                                    ]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiclesByDistance[0]?.vehiculeDetails[
-                                      vehiclesByDistance[0]?.vehiculeDetails
-                                        .length - 1
-                                    ]?.timestamp
-                                  )?.time
+                              ? // selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiclesByDistance[0]?.vehiculeDetails[
+                                //         vehiclesByDistance[0]?.vehiculeDetails
+                                //           .length - 1
+                                //       ]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiclesByDistance[0]?.vehiculeDetails[
+                                    vehiclesByDistance[0]?.vehiculeDetails
+                                      .length - 1
+                                  ]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -2025,16 +2037,17 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiclesByDistance[0]?.vehiculeDetails[0]
-                                      ?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiclesByDistance[0]?.vehiculeDetails[0]
-                                      ?.timestamp
-                                  )?.time
+                              ? //  selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiclesByDistance[0]?.vehiculeDetails[0]
+                                //         ?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiclesByDistance[0]?.vehiculeDetails[0]
+                                    ?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -2193,22 +2206,22 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiclesByMovingDuration[0]
-                                      ?.vehiculeDetails[
-                                      vehiclesByMovingDuration[0]
-                                        ?.vehiculeDetails.length - 1
-                                    ]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiclesByMovingDuration[0]
-                                      ?.vehiculeDetails[
-                                      vehiclesByMovingDuration[0]
-                                        ?.vehiculeDetails.length - 1
-                                    ]?.timestamp
-                                  )?.time
+                              ? // selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiclesByMovingDuration[0]
+                                //         ?.vehiculeDetails[
+                                //         vehiclesByMovingDuration[0]
+                                //           ?.vehiculeDetails.length - 1
+                                //       ]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiclesByMovingDuration[0]?.vehiculeDetails[
+                                    vehiclesByMovingDuration[0]?.vehiculeDetails
+                                      .length - 1
+                                  ]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -2218,16 +2231,17 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiclesByMovingDuration[0]
-                                      ?.vehiculeDetails[0]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiclesByMovingDuration[0]
-                                      ?.vehiculeDetails[0]?.timestamp
-                                  )?.time
+                              ? // selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiclesByMovingDuration[0]
+                                //         ?.vehiculeDetails[0]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiclesByMovingDuration[0]
+                                    ?.vehiculeDetails[0]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -2391,22 +2405,22 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[
-                                      vehiculeMouvementOrdered[0]
-                                        ?.vehiculeDetails.length - 1
-                                    ]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[
-                                      vehiculeMouvementOrdered[0]
-                                        ?.vehiculeDetails.length - 1
-                                    ]?.timestamp
-                                  )?.time
+                              ? // selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiculeMouvementOrdered[0]
+                                //         ?.vehiculeDetails[
+                                //         vehiculeMouvementOrdered[0]
+                                //           ?.vehiculeDetails.length - 1
+                                //       ]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiculeMouvementOrdered[0]?.vehiculeDetails[
+                                    vehiculeMouvementOrdered[0]?.vehiculeDetails
+                                      .length - 1
+                                  ]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>{" "}
                           a{" "}
@@ -2416,16 +2430,17 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[0]?.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(
-                                    vehiculeMouvementOrdered[0]
-                                      ?.vehiculeDetails[0]?.timestamp
-                                  )?.time
+                              ? //  selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       vehiculeMouvementOrdered[0]
+                                //         ?.vehiculeDetails[0]?.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(
+                                  vehiculeMouvementOrdered[0]
+                                    ?.vehiculeDetails[0]?.timestamp
+                                )?.time
                               : " "}{" "}
                           </span>
                         </p>
@@ -3037,18 +3052,19 @@ function RapportGroupe({
                             <span className="px-2">/</span>
                           )}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[
-                                    vehicule?.vehiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[
+                              //         vehicule?.vehiculeDetails.length - 1
+                              //       ]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[
+                                  vehicule?.vehiculeDetails.length - 1
+                                ]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
@@ -3061,14 +3077,15 @@ function RapportGroupe({
                             <span className="px-2">/</span>
                           )}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? selectUTC
-                              ? formatTimestampToTimeWithTimezone(
-                                  vehicule?.vehiculeDetails[0]?.timestamp,
-                                  selectUTC
-                                )
-                              : FormatDateHeure(
-                                  vehicule?.vehiculeDetails[0]?.timestamp
-                                )?.time
+                            ? // selectUTC
+                              //   ? formatTimestampToTimeWithTimezone(
+                              //       vehicule?.vehiculeDetails[0]?.timestamp,
+                              //       selectUTC
+                              //     )
+                              //   :
+                              FormatDateHeure(
+                                vehicule?.vehiculeDetails[0]?.timestamp
+                              )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
 

@@ -137,12 +137,12 @@ function Login2({ setShowLogin }) {
               {/* Installer l'application */}
             </p>
           </div>
-          {/* <div className="flex fixed top-10 right-6 items-center mx-auto gap-3 justify-center">
+          <div className="flex fixed top-10 right-6 items-center mx-auto gap-3 justify-center">
             <h3>Language</h3>
             <div className="h-[2.3rem]  w-[10rem] border rounded-lg overflow-hidden">
               <GoogleTranslate />
             </div>
-          </div> */}
+          </div>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

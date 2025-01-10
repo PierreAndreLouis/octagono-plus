@@ -633,12 +633,14 @@ function RapportPersonnel({
                   Heure de départ:{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveDebut
-                      ? selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            heureActiveDebut.timestamp,
-                            selectUTC
-                          )
-                        : FormatDateHeure(heureActiveDebut.timestamp)?.time
+                      ? // selectUTC
+                        // ? formatTimestampToTimeWithTimezone(
+                        //     heureActiveDebut.timestamp,
+                        //     selectUTC
+                        //   )
+                        //
+                        //  :
+                        FormatDateHeure(heureActiveDebut.timestamp)?.time
                       : "Pas de mouvement"}{" "}
                   </span>
                 </p>
@@ -646,12 +648,13 @@ function RapportPersonnel({
                   Heure d'arriver:{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin
-                      ? selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            heureActiveFin.timestamp,
-                            selectUTC
-                          )
-                        : FormatDateHeure(heureActiveFin.timestamp)?.time
+                      ? // selectUTC
+                        //   ? formatTimestampToTimeWithTimezone(
+                        //       heureActiveFin.timestamp,
+                        //       selectUTC
+                        //     )
+                        //   :
+                        FormatDateHeure(heureActiveFin.timestamp)?.time
                       : "Pas de mouvement"}{" "}
                   </span>
                 </p>
@@ -1281,12 +1284,16 @@ function RapportPersonnel({
                             </p>
                             <p>
                               <span className="font-bold">Heure : </span>
-                              {selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    item.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(item.timestamp)?.time}{" "}
+                              {
+                                // selectUTC
+                                //   ?
+                                //   formatTimestampToTimeWithTimezone(
+                                //       item.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(item.timestamp)?.time
+                              }{" "}
                             </p>
                           </div>
                           <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
@@ -1351,12 +1358,15 @@ function RapportPersonnel({
                               <span className="font-bold  dark:text-orange-400">
                                 Heure :{" "}
                               </span>
-                              {selectUTC
-                                ? formatTimestampToTimeWithTimezone(
-                                    item.timestamp,
-                                    selectUTC
-                                  )
-                                : FormatDateHeure(item.timestamp)?.time}{" "}
+                              {
+                                // selectUTC
+                                //   ? formatTimestampToTimeWithTimezone(
+                                //       item.timestamp,
+                                //       selectUTC
+                                //     )
+                                //   :
+                                FormatDateHeure(item.timestamp)?.time
+                              }{" "}
                             </p>
                           </div>
                           <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
