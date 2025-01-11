@@ -1167,12 +1167,12 @@ function RapportGroupe({
                             vehicule.vehiculeDetails[
                               vehicule.vehiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                       </tr>
                     ))}
@@ -1294,12 +1294,12 @@ function RapportGroupe({
                             vehicule.vehiculeDetails[
                               vehicule.vehiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800 dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                       </tr>
                     ))}
@@ -1421,12 +1421,12 @@ function RapportGroupe({
                             vehicule.vehiculeDetails[
                               vehicule.vehiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                       </tr>
                     ))}
@@ -1559,12 +1559,12 @@ function RapportGroupe({
                             vehicule.vehiculeDetails[
                               vehicule.vehiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de dépacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                       </tr>
                     ))}
@@ -1666,12 +1666,12 @@ function RapportGroupe({
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de deplacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de deplacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                       </tr>
                     ))}
@@ -3226,7 +3226,7 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : "Pas d'adresse disponible"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
@@ -3247,7 +3247,7 @@ function RapportGroupe({
                               FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : "Pas d'adresse disponible"}{" "}
                         </td>
 
                         {/* Vitesse moyenne */}
@@ -3286,14 +3286,14 @@ function RapportGroupe({
                             vehicule.vehiculeDetails[
                               vehicule.vehiculeDetails.length - 1
                             ]?.address ||
-                            "Pas de deplacement"}
+                            "Pas d'adresse disponible"}
                         </td>
 
                         {/* Addresse départ */}
                         <td className="border py-3 px-2     dark:border-gray-600">
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
-                            "Pas de deplacement"}
+                            "Pas d'adresse disponible"}
                         </td>
                       </tr>
                     );

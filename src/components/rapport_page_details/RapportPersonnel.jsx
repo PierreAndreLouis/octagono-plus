@@ -88,6 +88,7 @@ function RapportPersonnel({
     vehiclueHistoriqueDetails,
     setVehiclueHistoriqueDetails,
     FormatDateHeure,
+    setCurrentVehicule,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -212,6 +213,26 @@ function RapportPersonnel({
   // Convertir les heures
   const heureDebut = formatTo12Hour(startTime);
   const heureFin = formatTo12Hour(endTime);
+
+  //////////////////////////////////////////////////////////////////////////////////
+
+  const handleClick = () => {
+    const deviceID = currentVehicule.deviceID;
+
+    // Recherche du véhicule correspondant dans la liste
+    const foundVehicle = currentdataFusionnee.find(
+      (v) => v.deviceID === deviceID
+    );
+
+    if (foundVehicle) {
+      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+
+      setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
+      setSelectedVehicle(foundVehicle.deviceID); // Met à jour la sélection
+    } else {
+      console.error("Véhicule introuvable avec le deviceID :", deviceID);
+    }
+  };
 
   return (
     <>
@@ -1050,6 +1071,7 @@ function RapportPersonnel({
                     {/*  */}
                     <div
                       onClick={() => {
+                        handleClick();
                         setlieuxFrequentePupup(false);
                         setshowHistoriquePupup(true);
                       }}

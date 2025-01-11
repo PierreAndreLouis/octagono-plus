@@ -17,7 +17,7 @@ function VehiculeListeComponent({
     <>
       {showVehiculeListe && (
         <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-20 shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80">
-          <div className="pt-28 relative w-full max-w-[30rem] rounded-xl p-4 max-h-[70vh] overflow-hidden bg-white dark:bg-gray-800">
+          {/* <div className="pt-28 relative w-full max-w-[30rem] rounded-xl p-4 max-h-[70vh] overflow-hidden bg-white dark:bg-gray-800">
             <IoMdClose
               onClick={() => {
                 setShowVehiculeListe(!showVehiculeListe);
@@ -44,16 +44,7 @@ function VehiculeListeComponent({
             </div>
 
             <div className="overflow-y-auto overflow-x-hidden h-[80vh] max-h-[58vh] pb-20">
-              {/* {filteredVehicles?.map((vehicule) => (
-                <div
-                  key={vehicule.deviseID}
-                  onClick={() => handleVehicleClick(vehicule)}
-                  className="cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:border-gray-600 dark:hover:bg-orange-700"
-                >
-                  <FaCar className="text-orange-600/80 min-w-8 text-lg dark:text-orange-400" />
-                  <p className="dark:text-gray-200">{vehicule.description}</p>
-                </div>
-              ))} */}
+            
 
               {filteredVehicles.length > 0 ? (
                 filteredVehicles?.map((vehicule, index) => (
@@ -75,17 +66,17 @@ function VehiculeListeComponent({
                 <p className="text-center px-3 mt-10">Pas de resultat</p>
               )}
 
-              <SearchVehiculePupup
-                searchQuery={searchQuery}
-                handleSearchChange={handleSearchChange}
-                setShowOptions={setShowVehiculeListe}
-                filteredVehicles={filteredVehicles}
-                handleClick={handleVehicleClick}
-                currentVehicule={currentVehicule}
-                isMapcomponent="false"
-              />
             </div>
-          </div>
+          </div> */}
+          <SearchVehiculePupup
+            searchQuery={searchQuery}
+            handleSearchChange={handleSearchChange}
+            setShowOptions={setShowVehiculeListe}
+            filteredVehicles={filteredVehicles}
+            handleClick={handleVehicleClick}
+            currentVehicule={currentVehicule}
+            isMapcomponent="false"
+          />
         </div>
       )}
     </>
