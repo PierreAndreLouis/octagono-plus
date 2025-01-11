@@ -69,9 +69,9 @@ function Login2({ setShowLogin }) {
   return (
     <div>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 pb-12 lg:px-8 ">
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-4">
           <div className="flex  items-center mx-auto gap-3 justify-end w-full">
-            <h3>Language</h3>
+            {/* <h3>Language</h3> */}
             <div className="h-[2.5rem]  w-[10rem] border rounded-lg overflow-hidden">
               <GoogleTranslate />
             </div>
