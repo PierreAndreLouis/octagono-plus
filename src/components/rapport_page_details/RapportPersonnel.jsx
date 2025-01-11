@@ -1011,7 +1011,7 @@ function RapportPersonnel({
                     }}
                     className="flex items-center gap-3 "
                   >
-                    <p className="font-semibold text-lg text-orange-500 mb-0.5">
+                    <p className="font-semibold hidden xs:block text-lg text-orange-500 mb-0.5">
                       Filtrer
                     </p>
 

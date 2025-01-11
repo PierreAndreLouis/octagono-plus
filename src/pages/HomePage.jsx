@@ -204,12 +204,12 @@ const Home = () => {
             handleClick();
             homePageReload();
           }}
-          className="shadow-md cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-4 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100"
+          className="shadow-md cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-6 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100"
         >
           <div
             className={`${
               isLoading2 ? "animate-spin" : ""
-            }  text-red-700 dark:text-gray-200 text-2xl `}
+            }  text-red-700 min-w-12   flex justify-center items-center dark:text-gray-200 text-2xl `}
           >
             <MdUpdate />
           </div>
