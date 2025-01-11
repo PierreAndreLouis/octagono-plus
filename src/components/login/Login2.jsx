@@ -70,6 +70,12 @@ function Login2({ setShowLogin }) {
     <div>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 pb-12 lg:px-8 ">
         <div className="flex justify-end">
+          <div className="flex  items-center mx-auto gap-3 justify-end w-full">
+            <h3>Language</h3>
+            <div className="h-[2.5rem]  w-[10rem] border rounded-lg overflow-hidden">
+              <GoogleTranslate />
+            </div>
+          </div>
           <div className="relative inline-block text-left  mt-4  mb-12 md:mb-0">
             {/* <div>
               <button
@@ -137,12 +143,12 @@ function Login2({ setShowLogin }) {
               {/* Installer l'application */}
             </p>
           </div>
-          <div className="flex fixed top-10 right-6 items-center mx-auto gap-3 justify-center">
+          {/* <div className="flex fixed top-10 right-6 items-center mx-auto gap-3 justify-center">
             <h3>Language</h3>
             <div className="h-[2.3rem]  w-[10rem] border rounded-lg overflow-hidden">
               <GoogleTranslate />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

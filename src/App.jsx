@@ -64,14 +64,14 @@ function App() {
 
         {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
         <div className="absolute z-[100000000000000000000000000]">
-          {!shouldHideComponent && <Header />}
+          {/* {!shouldHideComponent && <Header />} */}
           {!shouldHideComponent && <Navigation_bar />}
           {!shouldHideComponent && <SideBar />}
         </div>
         {/* <SideBar />
         <Header />
         <HomePage /> */}
-        {/* <Login2 /> */}
+        <Login2 />
 
         <Routes>
           <Route
