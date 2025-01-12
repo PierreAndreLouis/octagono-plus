@@ -160,11 +160,11 @@ const Home = () => {
     derniereUpdate?.mostRecentTimestamp
   );
 
-  window.addEventListener("beforeunload", () => {
-    if (webSocket.readyState === WebSocket.OPEN) {
-      webSocket.close();
-    }
-  });
+  // window.addEventListener("beforeunload", () => {
+  //   if (webSocket.readyState === WebSocket.OPEN) {
+  //     webSocket.close();
+  //   }
+  // });
 
   ///////////////////////////////////////////////////////
 
