@@ -74,7 +74,10 @@ function RapportGroupe({
     setdonneeFusionneeForRapport,
     setCurrentVehicule,
     FormatDateHeure,
+    mergedData,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
+
+  const dataFusionneeHome = mergedData ? Object.values(mergedData) : [];
 
   const [voirPlus, setvoirPlus] = useState(false);
   const [voirDansLaCarte, setvoirDansLaCarte] = useState(false);
@@ -941,6 +944,10 @@ function RapportGroupe({
       (v) => v.deviceID === vehicule.deviceID
     );
 
+    const matchedVehicle2 = dataFusionneeHome.find(
+      (v) => v.deviceID === vehicule.deviceID
+    );
+
     // const isMoving = matchedVehicle.vehiculeDetails?.some(
     //   (detail) => detail.speedKPH >= 1
     // );
@@ -956,9 +963,9 @@ function RapportGroupe({
     const currentTime = Date.now(); // Heure actuelle en millisecondes
 
     const isSpeedActive =
-      matchedVehicle.vehiculeDetails &&
-      matchedVehicle.vehiculeDetails[0] &&
-      matchedVehicle.vehiculeDetails[0].speedKPH > 0;
+      matchedVehicle2.vehiculeDetails &&
+      matchedVehicle2.vehiculeDetails[0] &&
+      matchedVehicle2.vehiculeDetails[0].speedKPH > 0;
 
     const isMoving = matchedVehicle.vehiculeDetails?.some(
       (detail) => detail.speedKPH >= 1
