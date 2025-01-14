@@ -68,69 +68,17 @@ function Login2({ setShowLogin }) {
 
   return (
     <div>
-      <div className="flex mt-4  items-center mx-auto gap-3 justify-end w-full">
+      <div className="flex mt-4 mb-14 items-center mx-auto gap-3 justify-end w-full">
         {/* <h3>Language</h3> */}
-        <div className="h-[2.5rem] mr-4 w-[10.5rem] border rounded-lg overflow-hidden">
-          <div className="-translate-x-4">
+        <div className="h-[4rem] mx-4 w-[10.5rem]-- w-full border rounded-lg overflow-hidden">
+          <div className="-translate-x-4--">
             <GoogleTranslate />
             {/* asdfasf */}
           </div>
         </div>
       </div>
-      <div className="flex min-h-screen flex-1 flex-col justify-center px-6 pb-12 lg:px-8 ">
-        <div className="flex justify-end pt-4">
-          <div className="relative inline-block text-left  mt-4  mb-12 md:mb-0">
-            {/* <div>
-              <button
-                type="button"
-                onClick={toggleMenu} // Ouvre/ferme le menu
-                className="inline-flex justify-between w-full rounded-lg border dark:border-gray-600 border-gray-300 shadow-sm px-4 py-2 bg-white text-sm dark:bg-gray-900/30 dark:text-gray-50 font-medium text-gray-700 hover:bg-gray-50 -----focus:outline-none"
-              >
-                <div className="flex items-center space-x-2">
-                  <Flag
-                    code={
-                      languages.find((lang) => lang.code === selectedLang)
-                        .countryCode
-                    }
-                    className="w-6 h-4"
-                  />
-                  <span>
-                    {languages.find((lang) => lang.code === selectedLang).name}
-                  </span>
-                </div>
-                <svg
-                  className="w-5 h-5 text-gray-500"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  />
-                </svg>
-              </button>
-            </div> */}
-
-            {isOpen && ( // Affiche le menu si `isOpen` est vrai
-              <div className="origin-top-right  absolute right-0 mt-2 w-full rounded-lg shadow-lg bg-white dark:bg-gray-900/70 ring-1 ring-black ring-opacity-5 -----focus:outline-none z-10">
-                <div className="py-1">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => handleChangeLanguage(lang)} // Sélectionne la langue et ferme le menu
-                      className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100-- -----focus:bg-gray-200"
-                    >
-                      <Flag code={lang.countryCode} className="w-6 h-4" />
-                      <span className="dark:text-white">{lang.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="flex min-h-[90vh] flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <img
             alt="Your Company"
             src="/img/cars/logo.png"
@@ -146,15 +94,9 @@ function Login2({ setShowLogin }) {
               {/* Installer l'application */}
             </p>
           </div>
-          {/* <div className="flex fixed top-10 right-6 items-center mx-auto gap-3 justify-center">
-            <h3>Language</h3>
-            <div className="h-[2.3rem]  w-[10rem] border rounded-lg overflow-hidden">
-              <GoogleTranslate />
-            </div>
-          </div> */}
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-10   sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label

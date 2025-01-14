@@ -1374,10 +1374,12 @@ function RapportPersonnel({
                             className="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg  shadow-lg "
                             key={index}
                             onClick={() => {
-                              setvoirPositionSurCarte(true);
+                              setSelectedVehicle(currentVehicule.deviceID);
+
                               sethistiriqueSelectedLocationIndex(
                                 item.addressIndex
                               );
+                              setvoirPositionSurCarte(true);
                             }}
                           >
                             <p className="dark:text-gray-500 font-bold">
@@ -1473,10 +1475,12 @@ function RapportPersonnel({
                             className="bg-orange-50 dark:bg-gray-900/40 dark:text-gray-300 p-3 rounded-lg  shadow-lg  dark:shadow-gray-700"
                             key={index}
                             onClick={() => {
-                              setvoirPositionSurCarte(true);
+                              setSelectedVehicle(currentVehicule.deviceID);
                               sethistiriqueSelectedLocationIndex(
                                 item.addressIndex
                               );
+                              setvoirPositionSurCarte(true);
+                              console.log(item.addressIndex);
                             }}
                           >
                             <p className="dark:text-gray-200 font-bold pb-4">
