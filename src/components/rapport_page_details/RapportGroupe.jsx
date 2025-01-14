@@ -971,7 +971,8 @@ function RapportGroupe({
           <div className="fixed z-[9999999999] inset-0 px-2 flex justify-center items-center bg-black/50">
             <div className="bg-white dark:bg-gray-800 rounded-lg pt-3 w-[97vw]  px-2">
               <div className="flex justify-between items-center py-2">
-                <h3 className="font-bold text-gray-600 text-lg">
+                <p></p>
+                <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
                   {filter === "all" && "Tous les vehicules"}
                   {filter === "moving" && "Vehicules en mouvement"}
                   {filter === "parking" && "Vehicules en stationnement"}
