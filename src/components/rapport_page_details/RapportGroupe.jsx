@@ -1024,7 +1024,7 @@ function RapportGroupe({
                 <p></p>
                 <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
                   {filter === "all" && "Tous les véhicules"}
-                  {filter === "moving" && "Véhicules en mouvement"}
+                  {filter === "moving" && "Véhicules déplacés"}
                   {filter === "movingNow" &&
                     "Véhicules en mouvement actuellement"}
                   {filter === "parking" && "Véhicules en stationnement"}
