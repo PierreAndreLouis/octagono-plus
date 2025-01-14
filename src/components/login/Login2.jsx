@@ -70,7 +70,7 @@ function Login2({ setShowLogin }) {
     <div>
       <div className="flex mt-4 mb-14 items-center mx-auto gap-3 justify-end w-full">
         {/* <h3>Language</h3> */}
-        <div className="h-[4rem] mx-4 w-[10.5rem]-- w-full border rounded-lg overflow-hidden">
+        <div className="h-[4rem] mx-4 md:mx-auto max-w-[25rem] w-[10.5rem]-- w-full border rounded-lg overflow-hidden">
           <div className="-translate-x-4--">
             <GoogleTranslate />
             {/* asdfasf */}
