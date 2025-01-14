@@ -313,7 +313,7 @@ function MapComponent({ mapType }) {
                   </p>
                   <p>
                     <strong>Statut : </strong>
-                    {vehicle.speedKPH < 1 && "en arret"}
+                    {vehicle.speedKPH < 1 && "En stationnement"}
                     {vehicle.speedKPH > 20 && "En mouvement rapide"}
                     {vehicle.speedKPH >= 1 &&
                       vehicle.speedKPH <= 20 &&

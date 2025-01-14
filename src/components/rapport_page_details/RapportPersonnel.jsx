@@ -3,6 +3,8 @@ import { MdCenterFocusStrong } from "react-icons/md";
 import { TfiMapAlt } from "react-icons/tfi";
 import { FaCar } from "react-icons/fa";
 import { Chart, registerables } from "chart.js";
+import Tooltip from "@mui/material/Tooltip";
+
 import { IoTimeOutline } from "react-icons/io5";
 import { GiPathDistance } from "react-icons/gi";
 import { IoMdInformationCircleOutline } from "react-icons/io";
@@ -35,6 +37,7 @@ import { SlSpeedometer } from "react-icons/sl";
 import TrajetVehicule from "../historique_vehicule/TrajetVehicule";
 import { DataContext } from "../../context/DataContext";
 import HistoriqueMainComponent from "../historique_vehicule/HistoriqueMainComponent";
+import MapComponent from "../location_vehicule/MapComponent";
 
 function RapportPersonnel({
   currentVehicule,
@@ -91,6 +94,7 @@ function RapportPersonnel({
     setCurrentVehicule,
     currentdataFusionnee,
     setSelectedVehicle,
+    sethistiriqueSelectedLocationIndex,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -258,12 +262,18 @@ function RapportPersonnel({
   const vitesseMoyenne = calculateAverageSpeed(currentVehicule);
   // console.log(`Vitesse moyenne : ${averageSpeed} km/h`);
 
+  const [voirPositionSurCarte, setvoirPositionSurCarte] = useState(false);
+  // const [mapType, setMapType] = useState("streets");
+
   return (
     <>
       {currentVehicule ? (
         <div className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full">
-          <h1 className="text-center mb-16 font-semibold text-xl my-16 dark:text-gray-300">
+          <h1 className="text-center mb-2 font-semibold text-xl mt-16 dark:text-gray-300">
             Rapport détaillé du véhicule
+          </h1>
+          <h1 className="text-center mb-16 text-orange-600  text-xl my-2 dark:text-gray-300">
+            {currentVehicule?.description || ""}
           </h1>
 
           <div className="mb-12 shadow-md dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
@@ -453,7 +463,7 @@ function RapportPersonnel({
               <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <div>
                 <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                  Informations sur le trajet du vehicule
+                  Informations sur le trajet du véhicule
                 </h2>
               </div>
             </div>
@@ -690,7 +700,7 @@ function RapportPersonnel({
                   </span>
                 </p>
                 <p>
-                  Heure d'arriver:{" "}
+                  Heure d'arrivée:{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin
                       ? // selectUTC
@@ -1033,6 +1043,28 @@ function RapportPersonnel({
           {/*  */}
           {/*  */}
           {/*  */}
+
+          {voirPositionSurCarte && (
+            <div className="z-[9999999999999999999999999999999999999999999999999999999999999] fixed bg-black/50 inset-0 pt-20 px-4">
+              <div className="relative    h-[80vh] min-w-[90vw] my-20 rounded-lg mt-3 overflow-hidden">
+                <button
+                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
+                  // onClick={centerOnFirstMarker}
+                  onClick={() => {
+                    setvoirPositionSurCarte(false);
+                  }}
+                >
+                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                    <IoClose className="text-red-500 text-[1.62rem]" />
+                  </div>
+                </button>
+
+                <div className=" -translate-y-[10rem]">
+                  <MapComponent mapType={mapType} />
+                </div>
+              </div>
+            </div>
+          )}
           {/*  */}
           {/*  */}
           {/*  */}
@@ -1307,7 +1339,7 @@ function RapportPersonnel({
             {/*  */}
             {/*  */}
             {/*  */}
-
+            {/*  */}
             <div>
               <div className="text-gray-600  flex flex-col gap-4">
                 {ordreCroissant ? (
@@ -1316,65 +1348,94 @@ function RapportPersonnel({
                       const numero = filteredAddresses.length - index;
 
                       return (
-                        <div
-                          className="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg  shadow-lg "
-                          key={index}
+                        <Tooltip
+                          title="Voir cette position sur la carte
+"
+                          PopperProps={{
+                            modifiers: [
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, -15], // Décalage horizontal et vertical
+                                },
+                              },
+                              {
+                                name: "zIndex",
+                                enabled: true,
+                                phase: "write",
+                                fn: ({ state }) => {
+                                  state.styles.popper.zIndex = 11; // Niveau très élevé
+                                },
+                              },
+                            ],
+                          }}
                         >
-                          <p className="dark:text-gray-500">
-                            <span className="font-bold dark:text-orange-500 text-black mr-3">
-                              {numero} {") "}
-                            </span>
-                            {item.address}
-                          </p>
-                          <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
-                            <p>
-                              <span className="font-bold">Date : </span>
-                              {item.timestamp
-                                ? // selectUTC
-                                  //   ? formatTimestampToDateWithTimezone(
+                          <div
+                            className="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg  shadow-lg "
+                            key={index}
+                            onClick={() => {
+                              setvoirPositionSurCarte(true);
+                              sethistiriqueSelectedLocationIndex(
+                                item.addressIndex
+                              );
+                            }}
+                          >
+                            <p className="dark:text-gray-500 font-bold">
+                              <span className="font-bold dark:text-orange-500 text-black mr-3">
+                                {numero} {") "}
+                              </span>
+                              {item.address}
+                            </p>
+                            <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
+                              <p>
+                                <span className="font-bold">Date : </span>
+                                {item.timestamp
+                                  ? // selectUTC
+                                    //   ? formatTimestampToDateWithTimezone(
+                                    //       item.timestamp,
+                                    //       selectUTC
+                                    //     )
+                                    // :
+                                    FormatDateHeure(item.timestamp)?.date
+                                  : "Pas de date disponible"}{" "}
+                              </p>
+                              <p>
+                                <span className="font-bold">Heure : </span>
+                                {
+                                  // selectUTC
+                                  //   ?
+                                  //   formatTimestampToTimeWithTimezone(
                                   //       item.timestamp,
                                   //       selectUTC
                                   //     )
-                                  // :
-                                  FormatDateHeure(item.timestamp)?.date
-                                : "Pas de date disponible"}{" "}
-                            </p>
-                            <p>
-                              <span className="font-bold">Heure : </span>
-                              {
-                                // selectUTC
-                                //   ?
-                                //   formatTimestampToTimeWithTimezone(
-                                //       item.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(item.timestamp)?.time
-                              }{" "}
-                            </p>
+                                  //   :
+                                  FormatDateHeure(item.timestamp)?.time
+                                }{" "}
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
+                              <p>
+                                <span className="font-bold">Vitesse : </span>
+                                {item.speedKPH && !isNaN(Number(item.speedKPH))
+                                  ? Number(item.speedKPH).toFixed(0) + " km/h"
+                                  : "Non disponible"}
+                              </p>
+                              <p>
+                                <span className="font-bold">Statut : </span>
+                                {item.speedKPH <= 0 && "En stationnement"}
+                                {item.speedKPH >= 1 &&
+                                  item.speedKPH < 20 &&
+                                  "En mouvement lent"}
+                                {item.speedKPH >= 20 && "En mouvement rapide"}
+                              </p>
+                            </div>
                           </div>
-                          <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
-                            <p>
-                              <span className="font-bold">Vitesse : </span>
-                              {item.speedKPH && !isNaN(Number(item.speedKPH))
-                                ? Number(item.speedKPH).toFixed(0) + " km"
-                                : "Non disponible"}
-                            </p>
-                            <p>
-                              <span className="font-bold">Statut : </span>
-                              {item.speedKPH <= 0 && "en arret"}
-                              {item.speedKPH >= 1 &&
-                                item.speedKPH < 20 &&
-                                "En mouvement lent"}
-                              {item.speedKPH >= 20 && "En mouvement rapide"}
-                            </p>
-                          </div>
-                        </div>
+                        </Tooltip>
                       );
                     })
                   ) : (
                     <p className="px-4 dark:text-gray-200 dark:bg-gray-800 text-center py-10">
-                      Pas de Resultat
+                      Pas de Résultat
                     </p>
                   )
                 ) : filteredAddresses?.length > 0 ? (
@@ -1386,71 +1447,100 @@ function RapportPersonnel({
                       const numero = filteredAddresses.length - index;
 
                       return (
-                        <div
-                          className="bg-orange-50 dark:bg-gray-900/40 dark:text-gray-300 p-3 rounded-lg  shadow-lg  dark:shadow-gray-700"
-                          key={index}
+                        <Tooltip
+                          title="Voir cette position sur la carte
+                        "
+                          PopperProps={{
+                            modifiers: [
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, -15], // Décalage horizontal et vertical
+                                },
+                              },
+                              {
+                                name: "zIndex",
+                                enabled: true,
+                                phase: "write",
+                                fn: ({ state }) => {
+                                  state.styles.popper.zIndex = 11; // Niveau très élevé
+                                },
+                              },
+                            ],
+                          }}
                         >
-                          <p className="dark:text-gray-200 pb-4">
-                            <span className="font-bold dark:text-orange-500 text-black mr-3">
-                              {index + 1} {") "}
-                            </span>
-                            {item.address}
-                          </p>
-                          <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
-                            <p>
-                              <span className="font-bold dark:text-orange-400">
-                                Date :{" "}
+                          <div
+                            className="bg-orange-50 dark:bg-gray-900/40 dark:text-gray-300 p-3 rounded-lg  shadow-lg  dark:shadow-gray-700"
+                            key={index}
+                            onClick={() => {
+                              setvoirPositionSurCarte(true);
+                              sethistiriqueSelectedLocationIndex(
+                                item.addressIndex
+                              );
+                            }}
+                          >
+                            <p className="dark:text-gray-200 font-bold pb-4">
+                              <span className="font-bold dark:text-orange-500 text-black mr-3">
+                                {index + 1} {") "}
                               </span>
-                              {item.timestamp
-                                ? // selectUTC
-                                  //   ? formatTimestampToDateWithTimezone(
+                              {item.address}
+                            </p>
+                            <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
+                              <p>
+                                <span className="font-bold dark:text-orange-400">
+                                  Date :{" "}
+                                </span>
+                                {item.timestamp
+                                  ? // selectUTC
+                                    //   ? formatTimestampToDateWithTimezone(
+                                    //       item.timestamp,
+                                    //       selectUTC
+                                    //     )
+                                    //   :
+                                    FormatDateHeure(item.timestamp)?.date
+                                  : "Pas de date disponible"}{" "}
+                              </p>
+                              <p>
+                                <span className="font-bold  dark:text-orange-400">
+                                  Heure :{" "}
+                                </span>
+                                {
+                                  // selectUTC
+                                  //   ? formatTimestampToTimeWithTimezone(
                                   //       item.timestamp,
                                   //       selectUTC
                                   //     )
                                   //   :
-                                  FormatDateHeure(item.timestamp)?.date
-                                : "Pas de date disponible"}{" "}
-                            </p>
-                            <p>
-                              <span className="font-bold  dark:text-orange-400">
-                                Heure :{" "}
-                              </span>
-                              {
-                                // selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       item.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(item.timestamp)?.time
-                              }{" "}
-                            </p>
+                                  FormatDateHeure(item.timestamp)?.time
+                                }{" "}
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
+                              <p>
+                                <span className="font-bold  dark:text-orange-400">
+                                  Vitesse :{" "}
+                                </span>
+                                {item.speedKPH && !isNaN(Number(item.speedKPH))
+                                  ? Number(item.speedKPH).toFixed(0) + " km/h"
+                                  : "Non disponible"}
+                              </p>
+                              <p>
+                                <span className="font-bold  dark:text-orange-400">
+                                  Statut :{" "}
+                                </span>
+                                {item.speedKPH <= 0 && "En stationnement"}
+                                {item.speedKPH >= 1 &&
+                                  item.speedKPH < 20 &&
+                                  "En mouvement lent"}
+                                {item.speedKPH >= 20 && "En mouvement rapide"}
+                              </p>
+                            </div>
                           </div>
-                          <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
-                            <p>
-                              <span className="font-bold  dark:text-orange-400">
-                                Vitesse :{" "}
-                              </span>
-                              {item.speedKPH && !isNaN(Number(item.speedKPH))
-                                ? Number(item.speedKPH).toFixed(0) + " km"
-                                : "Non disponible"}
-                            </p>
-                            <p>
-                              <span className="font-bold  dark:text-orange-400">
-                                Statut :{" "}
-                              </span>
-                              {item.speedKPH <= 0 && "en arret"}
-                              {item.speedKPH >= 1 &&
-                                item.speedKPH < 20 &&
-                                "En mouvement lent"}
-                              {item.speedKPH >= 20 && "En mouvement rapide"}
-                            </p>
-                          </div>
-                        </div>
+                        </Tooltip>
                       );
                     })
                 ) : (
-                  <p className="px-4 text-center py-10">Pas de Resultat</p>
+                  <p className="px-4 text-center py-10">Pas de Résultat</p>
                 )}
               </div>
             </div>
@@ -1560,7 +1650,7 @@ function RapportPersonnel({
             }}
             className="bg-orange-100  px-4 py-1 mt-5 cursor-pointer rounded-lg"
           >
-            Choisissez un vehicule
+            Choisissez un véhicule
           </button>
         </div>
       )}

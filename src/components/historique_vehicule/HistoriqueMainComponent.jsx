@@ -67,27 +67,14 @@ function HistoriqueMainComponent({
                 // onClick={centerOnFirstMarker}
                 onClick={() => {
                   setvoirPositionSurCarte(false);
-                  // setzoomPosition(true);
-                  // setSelectedVehicle(null);
-                  console.log(tab);
-                  console.log(chooseHistoriqueLongitude);
-                  console.log(chooseHistoriqueLatitude);
+              
                 }}
               >
                 <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
                   <IoClose className="text-red-500 text-[1.62rem]" />
                 </div>
               </button>
-              {/* <button
-              className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[5rem] right-[1rem]"
-              onClick={() => {
-                
-              }}
-            >
-              <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-                <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
-              </div>
-            </button> */}
+           
               <div className=" -translate-y-[10rem]">
                 <MapComponent mapType={mapType} />
               </div>

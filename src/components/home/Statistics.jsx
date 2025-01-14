@@ -33,7 +33,7 @@ function Statistics() {
   //     vehicle.vehiculeDetails[0].speedKPH > 0
   // );
 
-  const twentyHoursInMs = 20 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
 
   const activeVehicleCount = vehicleArray.filter((vehicle) => {

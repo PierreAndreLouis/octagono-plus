@@ -1046,13 +1046,14 @@ function RapportPageDetails() {
     // Utiliser un Map pour conserver les informations uniques par adresse
     const uniqueMap = new Map();
 
-    dataList.forEach((item) => {
+    dataList.forEach((item, index) => {
       const address = item.backupAddress || item.address;
       if (address && !uniqueMap.has(address)) {
         uniqueMap.set(address, {
           address,
           speedKPH: item.speedKPH || 0, // Ajouter la vitesse (0 par défaut si manquante)
           timestamp: item.timestamp || 0, // Ajouter le timestamp (0 par défaut si manquant)
+          addressIndex: index,
         });
       }
     });

@@ -255,7 +255,7 @@ function TrajetVehicule({
 
                         <p>
                           <strong>Statut : </strong>
-                          {speedKPH < 1 && "en arret"}
+                          {speedKPH < 1 && "En stationnement"}
                           {speedKPH > 20 && "En mouvement rapide"}
                           {speedKPH >= 1 &&
                             speedKPH <= 20 &&
