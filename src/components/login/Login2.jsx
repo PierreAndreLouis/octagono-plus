@@ -68,15 +68,14 @@ function Login2({ setShowLogin }) {
 
   return (
     <div>
-      <div className="flex mt-4 mb-14 items-center mx-auto gap-3 justify-end w-full">
-        {/* <h3>Language</h3> */}
+      {/* <div className="flex mt-4 mb-14 items-center mx-auto gap-3 justify-end w-full">
         <div className="h-[4rem] mx-4 md:mx-auto max-w-[25rem] w-[10.5rem]-- w-full border rounded-lg overflow-hidden">
           <div className="-translate-x-4--">
             <GoogleTranslate />
-            {/* asdfasf */}
-          </div>
-        </div>
-      </div>
+            </div>
+            </div>
+            </div> */}
+      <GoogleTranslate />
       <div className="flex min-h-[90vh] flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <img

@@ -52,15 +52,22 @@ const GoogleTranslate = () => {
   }, [isOnline]);
 
   return (
-    <div>
+    <div className="">
       {isOnline ? (
-        <div
-          id="google_translate_element"
-          className="w-full text-4xl border-- rounded-lg px-4 border-gray-500 bg-gray-50"
-        ></div>
+        <div className="flex  mt-4 px-4 mb-14 items-center mx-auto gap-3 justify-end w-full">
+          <div className="h-[4rem]  mx-auto max-w-[25rem] w-[10.5rem]-- w-full border rounded-lg overflow-hidden">
+            <div className="-translate-x-4--">
+              {/* <GoogleTranslate /> */}
+              <div
+                id="google_translate_element"
+                className="w-full text-4xl border-- rounded-lg px-4 border-gray-500 bg-gray-50"
+              ></div>
+            </div>
+          </div>
+        </div>
       ) : (
-        <p className="text-red-500 text-xl">
-          Le service de traduction n'est pas disponible hors ligne.
+        <p className="min-h-20">
+          {/* Le service de traduction n'est pas disponible hors ligne. */}
         </p>
       )}
     </div>
