@@ -7,6 +7,7 @@ import { MdLocationPin } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import customMarkerIcon from "/img/cars/localisation.png";
+import { FaCar } from "react-icons/fa";
 
 import { IoClose } from "react-icons/io5";
 import { MdOutlineFullscreen } from "react-icons/md";
@@ -243,13 +244,22 @@ function RapportGroupe({
         (detail) => parseFloat(detail.speedKPH) >= 1
       );
 
+      // const lastValidIndex =
+      //   vehiculeDetails.length -
+      //   1 -
+      //   vehiculeDetails
+      //     .slice()
+      //     .reverse()
+      //     .findIndex((detail) => parseFloat(detail.speedKPH) >= 1);
+
       const lastValidIndex =
         vehiculeDetails.length -
         1 -
         vehiculeDetails
           .slice()
           .reverse()
-          .findIndex((detail) => parseFloat(detail.speedKPH) >= 1);
+          .findIndex((detail) => parseFloat(detail.speedKPH) >= 1) +
+        1;
 
       if (
         firstValidIndex === -1 ||
@@ -636,12 +646,20 @@ function RapportGroupe({
     ...vehiculeMouvementOrdered.map((vehicle) => vehicle.maxSpeed)
   );
 
+  // // Calcul de la vitesse moyenne totale
+  // const totalavgSpeed =
+  //   vehiculeMouvementOrdered.reduce(
+  //     (sum, vehicle) => sum + vehicle.avgSpeed,
+  //     0
+  //   ) / vehiculeMouvementOrdered.length;
+
   // Calcul de la vitesse moyenne totale
-  const totalavgSpeed =
-    vehiculeMouvementOrdered.reduce(
-      (sum, vehicle) => sum + vehicle.avgSpeed,
-      0
-    ) / vehiculeMouvementOrdered.length;
+  const totalAvgSpeed = vehiculeMouvementOrdered
+    .filter((vehicle) => vehicle.avgSpeed > 0) // Filtrer les véhicules avec avgSpeed > 0
+    .reduce((sum, vehicle, _, filteredArray) => {
+      const count = filteredArray.length; // Nombre de véhicules avec avgSpeed > 0
+      return sum + vehicle.avgSpeed / count; // Ajouter à la somme en divisant directement par le nombre
+    }, 0);
 
   // Filtrer les éléments avec minSpeed > 0, puis trouver le minimum
   const filteredSpeeds = (vehiculeMouvementOrdered || [])
@@ -899,13 +917,66 @@ function RapportGroupe({
   // console.log("Vitesse minimale :", speeds.minSpeed.toFixed(2), "KPH");
   // console.log("Vitesse maximale :", speeds.maxSpeed.toFixed(2), "KPH");
   // console.log("Vitesse moyenne :", speeds.avgSpeed.toFixed(2), "KPH");
+  const [filter, setFilter] = useState("all");
+
+  // Fonction pour filtrer les véhicules
+  const filteredVehiclesListe = vehiclesByDepartureTime?.filter((vehicule) => {
+    const matchedVehicle = currentdataFusionnee.find(
+      (v) => v.deviceID === vehicule.deviceID
+    );
+
+    // const isMoving = matchedVehicle.vehiculeDetails?.some(
+    //   (detail) => detail.speedKPH >= 1
+    // );
+    // const noSpeed = matchedVehicle.vehiculeDetails?.every(
+    //   (detail) => detail.speedKPH <= 0
+    // );
+    // const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+    //   ? matchedVehicle.lastUpdateTime * 1000
+    //   : 0;
+    // const isActive = Date.now() - lastUpdateTimeMs < 24 * 60 * 60 * 1000;
+
+    const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+    const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+    const isMoving = matchedVehicle.vehiculeDetails?.some(
+      (detail) => detail.speedKPH >= 1
+    );
+
+    const hasDetails =
+      matchedVehicle.vehiculeDetails &&
+      matchedVehicle.vehiculeDetails.length > 0;
+
+    const noSpeed = matchedVehicle.vehiculeDetails?.every(
+      (detail) => detail.speedKPH <= 0
+    );
+
+    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+    const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+      ? matchedVehicle.lastUpdateTime * 1000
+      : 0;
+    const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    if (filter === "moving") return hasDetails && isMoving;
+    if (filter === "parking") return hasDetails && noSpeed && isActive;
+    if (filter === "inactive") return !hasDetails || !isActive;
+    return true; // "all" : tous les véhicules
+  });
+
   return (
     <>
       <div className=" px-4 pb-20 md:max-w-[80vw] w-full">
+        {/* yyyyyyyyyyyyyyyyyyyyyy */}
         {voirVehiculeListePupup && (
           <div className="fixed z-[9999999999] inset-0 px-2 flex justify-center items-center bg-black/50">
             <div className="bg-white dark:bg-gray-800 rounded-lg pt-3 w-[97vw]  px-2">
-              <div className="flex justify-end ">
+              <div className="flex justify-between items-center py-2">
+                <h3 className="font-bold text-gray-600 text-lg">
+                  {filter === "all" && "Tous les vehicules"}
+                  {filter === "moving" && "Vehicules en mouvement"}
+                  {filter === "parking" && "Vehicules en stationnement"}
+                  {filter === "inactive" && "Vehicules hors service"}
+                </h3>
                 <IoClose
                   onClick={() => {
                     setvoirVehiculeListePupup(false);
@@ -913,8 +984,371 @@ function RapportGroupe({
                   className="cursor-pointer text-3xl text-red-500"
                 />
               </div>
-              <div className="relative h-[80vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
-                {defineVehiculeListePupup === "active" && (
+              <div className="relative flex flex-col gap-4 h-[80vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
+                {filteredVehiclesListe?.map((vehicule, index) => {
+                  // Trouver le véhicule correspondant dans updateData
+                  const matchedVehicle = currentdataFusionnee.find(
+                    (v) => v.deviceID === vehicule.deviceID
+                  );
+
+                  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+                  const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+                  const isMoving = matchedVehicle.vehiculeDetails?.some(
+                    (detail) => detail.speedKPH >= 1
+                  );
+
+                  const hasDetails =
+                    matchedVehicle.vehiculeDetails &&
+                    matchedVehicle.vehiculeDetails.length > 0;
+
+                  const noSpeed = matchedVehicle.vehiculeDetails?.every(
+                    (detail) => detail.speedKPH <= 0
+                  );
+
+                  // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                  const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+                    ? matchedVehicle.lastUpdateTime * 1000
+                    : 0;
+                  const isActive =
+                    currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+                  ///////////////////////////////////////////////////////////////////////////
+
+                  ////////////////////////////x////////////////////////////////////////
+
+                  let main_text_color = "text-red-900 dark:text-red-300";
+                  let statut = "";
+                  let lite_bg_color =
+                    "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-950/20";
+                  let activeTextColor = "text-red-900 dark:text-red-200";
+                  let active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+                  let vitess_img = "img/cars/orange_vitess.png";
+                  let vitess_img_dark = "img/cars/orange_vitess.png";
+
+                  let imgClass = "w-14 sm:w-16 md:w-24";
+                  let imgBg = "bg-green-200/40";
+                  let border_top =
+                    "border-t border-t-red-200 dark:border-t-red-600/30 ";
+
+                  if (hasDetails && isMoving) {
+                    main_text_color = "text-green-700 dark:text-green-400";
+                    statut = "En mouvement rapide";
+                    lite_bg_color =
+                      "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+                    activeTextColor = "text-green-800 dark:text-green-200";
+                    active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+                    vitess_img = "/img/home_icon/active.png";
+                    vitess_img_dark = "/img/home_icon/rapport_active.png";
+                    imgClass = "w-12  h-auto sm:w-14 md:w-20";
+                    imgBg =
+                      "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+                    border_top =
+                      "border-t border-t-green-200 dark:border-t-green-600/30 ";
+                  }
+                  //
+                  else if (hasDetails && noSpeed && isActive) {
+                    main_text_color = "text-red-900 dark:text-red-300";
+                    statut = "En Stationnement";
+                    lite_bg_color =
+                      "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+                    activeTextColor = "text-red-900 dark:text-red-200";
+                    active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+                    vitess_img = "/img/home_icon/rapport_parking2.png";
+                    vitess_img_dark = "/img/home_icon/rapport_parking.png";
+
+                    imgClass = "w-14  h-auto sm:w-16 md:w-24";
+                    imgBg =
+                      "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+                    border_top =
+                      "border-t border-t-red-200 dark:border-t-red-600/30 ";
+                  }
+                  //
+                  else if (!hasDetails || !isActive) {
+                    main_text_color = "text-purple-900 dark:text-purple-300 ";
+                    statut = "Hors service";
+                    lite_bg_color =
+                      "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+                    activeTextColor = "text-purple-900 dark:text-purple-200";
+                    active_bg_color = "bg-purple-200/50 dark:bg-purple-600/50";
+                    vitess_img = "/img/home_icon/payer.png";
+                    vitess_img_dark = "/img/home_icon/rapport_not_active.png";
+
+                    imgClass = "w-14  h-auto sm:w-16 md:w-24";
+                    imgBg =
+                      "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
+                    border_top =
+                      "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
+                  }
+
+                  return (
+                    <div>
+                      {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+                      <div
+                        onClick={() => {
+                          handleClick(vehicule);
+                        }}
+                        key={index}
+                        className="bg-white relative rounded-lg dark:bg-gray-800 dark:shadow-gray-600"
+                      >
+                        <div
+                          className={`${active_bg_color} ${main_text_color} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-4 pb-4 font-bold text-lg `}
+                        >
+                          {index + 1}
+                        </div>
+                        <div
+                          className={` py-6 ${lite_bg_color} dark:border-l-[.5rem] dark:border-green-800 dark:bg-gray-900/50 dark:shadow-gray-700 shadow-md rounded-lg p-3`}
+                        >
+                          <div className="flex items-stretch relative gap-3 md:py-6--">
+                            <div
+                              className={`${imgBg} flex max-w-[4rem] md:max-w-[5rem] justify-center border-2 md:pt-6 md:pb-8  rounded-md p-2 flex-col items-center sm:min-w-36 `}
+                            >
+                              <div>
+                                <img
+                                  className="dark:hidden px-4 md:px-2 scale-110  --min-w-[4.5rem] max-w-[4.5rem]  sm:max-w-[6.5rem]"
+                                  src={vitess_img}
+                                  alt=""
+                                />
+                                <img
+                                  className="hidden px-4 md:px-4 dark:block  scale-110  min-w-[4.5rem] max-w-[4.5rem]  sm:max-w-[6.5rem]"
+                                  src={vitess_img_dark}
+                                  alt=""
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <h2
+                                className={`${main_text_color} dark:text-green-200 text-gray-800-- font-semibold text-md md:text-xl mb-2`}
+                              >
+                                {vehicule?.description || "non disponible"}
+                              </h2>
+
+                              <div className="sm:flex flex-col gap-1">
+                                <div
+                                  id="statut-box"
+                                  className="flex sm:hidden gap-2 items-center "
+                                >
+                                  <div>
+                                    <IoMdTime
+                                      // FaCar
+                                      id="car-icon"
+                                      className="text-gray-500 dark:text-gray-300"
+                                    />
+                                  </div>
+                                  <p className="text-[.95rem] font-semibold dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-lg">
+                                    {vehicule?.totalMovingDuration}
+                                  </p>
+                                </div>
+
+                                {/* ///////////////////////////////// */}
+
+                                <div
+                                  id="statut-box"
+                                  className="hidden sm:flex gap-2 items-center "
+                                >
+                                  <div>
+                                    <p
+                                      className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
+                                    >
+                                      Duree{" "}
+                                    </p>
+                                  </div>
+                                  <p className="text-[.95rem] font-semibold dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
+                                    {vehicule?.totalMovingDuration}
+                                  </p>
+                                </div>
+                                <div
+                                  id="statut-box"
+                                  className="hidden sm:flex gap-2 items-center "
+                                >
+                                  <div>
+                                    <p
+                                      className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
+                                    >
+                                      Depart{" "}
+                                    </p>
+                                  </div>
+                                  <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
+                                    {vehicule?.vehiculeDetails[0]?.timestamp
+                                      ? FormatDateHeure(
+                                          vehicule?.vehiculeDetails[
+                                            vehicule?.vehiculeDetails.length - 1
+                                          ]?.timestamp
+                                        )?.date
+                                      : ""}{" "}
+                                    {vehicule?.vehiculeDetails[0]
+                                      ?.timestamp && (
+                                      <span className="px-2"> / </span>
+                                    )}{" "}
+                                    <span className="font-bold">
+                                      {vehicule?.vehiculeDetails[0]?.timestamp
+                                        ? FormatDateHeure(
+                                            vehicule?.vehiculeDetails[
+                                              vehicule?.vehiculeDetails.length -
+                                                1
+                                            ]?.timestamp
+                                          )?.time
+                                        : "Pas d'adresse disponible"}{" "}
+                                    </span>
+                                  </p>
+                                </div>
+                                <div
+                                  id="statut-box"
+                                  className="hidden sm:flex gap-2 items-center "
+                                >
+                                  <div>
+                                    <p
+                                      className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
+                                    >
+                                      Arrive{" "}
+                                    </p>
+                                  </div>
+                                  <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
+                                    {vehicule?.vehiculeDetails[0]?.timestamp
+                                      ? FormatDateHeure(
+                                          vehicule?.vehiculeDetails[0]
+                                            ?.timestamp
+                                        )?.date
+                                      : ""}{" "}
+                                    {vehicule?.vehiculeDetails[0]
+                                      ?.timestamp && (
+                                      <span className="px-2">/</span>
+                                    )}{" "}
+                                    <span className="font-bold">
+                                      {vehicule?.vehiculeDetails[0]?.timestamp
+                                        ? FormatDateHeure(
+                                            vehicule?.vehiculeDetails[0]
+                                              ?.timestamp
+                                          )?.time
+                                        : "Pas d'adresse disponible"}{" "}
+                                    </span>
+                                  </p>
+                                </div>
+
+                                <div className="flex flex-wrap gap-x-14">
+                                  <div
+                                    id="statut-box"
+                                    className="hidden sm:flex gap-2 items-center "
+                                  >
+                                    <div>
+                                      <p
+                                        className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
+                                      >
+                                        Vitesse{" "}
+                                      </p>
+                                    </div>
+                                    <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
+                                      {vehicule?.avgSpeed + " Km/h"}
+                                    </p>
+                                  </div>
+                                  <div
+                                    id="statut-box"
+                                    className="hidden sm:flex gap-2 items-center "
+                                  >
+                                    <div>
+                                      <p
+                                        className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
+                                      >
+                                        Distance{" "}
+                                      </p>
+                                    </div>
+                                    <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
+                                      {vehicule.totalDistance.toFixed(0)} km
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* ///////////////////////////////////////////////////////////////////////////// */}
+                          {/* ///////////////////////////////////////////////////////////////////////////// */}
+                          <div className="flex flex-col gap-1 sm:hidden">
+                            <div className="flex">
+                              <p
+                                className={` ${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  mt-2 md:text-lg   font-bold dark:text-green-200`}
+                              >
+                                Depart{" "}
+                              </p>
+                              <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 mt-2 md:text-lg">
+                                {vehicule?.vehiculeDetails[0]?.timestamp
+                                  ? FormatDateHeure(
+                                      vehicule?.vehiculeDetails[
+                                        vehicule?.vehiculeDetails.length - 1
+                                      ]?.timestamp
+                                    )?.date
+                                  : ""}{" "}
+                                {vehicule?.vehiculeDetails[0]?.timestamp && (
+                                  <span className="px-2"> / </span>
+                                )}{" "}
+                                <span className="font-bold">
+                                  {vehicule?.vehiculeDetails[0]?.timestamp
+                                    ? FormatDateHeure(
+                                        vehicule?.vehiculeDetails[
+                                          vehicule?.vehiculeDetails.length - 1
+                                        ]?.timestamp
+                                      )?.time
+                                    : "Pas d'adresse disponible"}{" "}
+                                </span>
+                              </p>
+                            </div>
+                            <div className="flex">
+                              <p
+                                className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex md:text-lg text-green-700  font-bold dark:text-green-200`}
+                              >
+                                Arrive{" "}
+                              </p>
+                              <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
+                                {vehicule?.vehiculeDetails[0]?.timestamp
+                                  ? FormatDateHeure(
+                                      vehicule?.vehiculeDetails[0]?.timestamp
+                                    )?.date
+                                  : ""}{" "}
+                                {vehicule?.vehiculeDetails[0]?.timestamp && (
+                                  <span className="px-2">/</span>
+                                )}{" "}
+                                <span className="font-bold">
+                                  {vehicule?.vehiculeDetails[0]?.timestamp
+                                    ? FormatDateHeure(
+                                        vehicule?.vehiculeDetails[0]?.timestamp
+                                      )?.time
+                                    : "Pas d'adresse disponible"}{" "}
+                                </span>
+                              </p>
+                            </div>
+                            <div className="flex gap-x-8 flex-wrap ">
+                              <div className="flex">
+                                <p
+                                  className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex md:text-lg text-green-700  font-bold dark:text-green-200`}
+                                >
+                                  {" "}
+                                  Vitesse{" "}
+                                </p>
+                                <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
+                                  {vehicule?.avgSpeed + " Km/h"}
+                                </p>
+                              </div>
+
+                              <div className="flex">
+                                <p
+                                  className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex md:text-lg text-green-700  font-bold dark:text-green-200`}
+                                >
+                                  {" "}
+                                  Distance{" "}
+                                </p>
+                                <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
+                                  {vehicule.totalDistance.toFixed(0)} km
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>{" "}
+                    </div>
+                  );
+                })}
+
+                {/* {defineVehiculeListePupup === "active" && (
                   <VehiculeActiveAjourdhuiComponent
                     showActiveVehicule={showActiveVehicule}
                     setshowActiveVehicule={setshowActiveVehicule}
@@ -925,9 +1359,9 @@ function RapportGroupe({
                     handleClick={handleClick}
                     selectUTC={selectUTC}
                   />
-                )}
+                )} */}
                 {/*  */}
-                {defineVehiculeListePupup === "notactive" && (
+                {/* {defineVehiculeListePupup === "notactive" && (
                   <VehiculeNotActiveAjourdhuiComponent
                     showParkingVehicule={showParkingVehicule}
                     setshowParkingVehicule={setshowParkingVehicule}
@@ -938,9 +1372,9 @@ function RapportGroupe({
                     handleClick={handleClick}
                     selectUTC={selectUTC}
                   />
-                )}
+                )} */}
                 {/* ----------------------------------- */}
-                {defineVehiculeListePupup === "hors_service" && (
+                {/* {defineVehiculeListePupup === "hors_service" && (
                   <VehiculeNotActifComponent
                     showInactiveVehicule={showInactiveVehicule}
                     setshowInactiveVehicule={setshowInactiveVehicule}
@@ -950,8 +1384,8 @@ function RapportGroupe({
                     formatTimestampToTime={formatTimestampToTime}
                     handleClick={handleClick}
                   />
-                )}
-                {defineVehiculeListePupup === "tous" && (
+                )} */}
+                {/* {defineVehiculeListePupup === "tous" && (
                   <div>
                     <VehiculeActiveAjourdhuiComponent
                       showActiveVehicule={showActiveVehicule}
@@ -983,7 +1417,7 @@ function RapportGroupe({
                       handleClick={handleClick}
                     />
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -1509,10 +1943,7 @@ function RapportGroupe({
                           {vehicule?.minSpeed.toFixed(0) + " Km/h"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {(
-                            (vehicule?.maxSpeed + vehicule?.minSpeed) /
-                            2
-                          ).toFixed(0) + " Km/h"}
+                          {vehicule?.avgSpeed + " Km/h"}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
@@ -1794,6 +2225,7 @@ function RapportGroupe({
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
                   setdefineVehiculeListePupup("tous");
+                  setFilter("all");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -1802,7 +2234,7 @@ function RapportGroupe({
             </div>
             <div className="flex justify-between items-center pr-3">
               <p>
-                Véhicules actifs aujourd'hui :{" "}
+                Véhicules en mouvement aujourd'hui :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {vehiculeActiveAjourdhui?.length || "0"}
                 </span>
@@ -1811,6 +2243,7 @@ function RapportGroupe({
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
                   setdefineVehiculeListePupup("active");
+                  setFilter("moving");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -1828,6 +2261,7 @@ function RapportGroupe({
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
                   setdefineVehiculeListePupup("notactive");
+                  setFilter("parking");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -1845,6 +2279,7 @@ function RapportGroupe({
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
                   setdefineVehiculeListePupup("hors_service");
+                  setFilter("inactive");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -2884,9 +3319,10 @@ function RapportGroupe({
                         2
                       ).toFixed(0) + " km/h "
                     : " 0.00 km/h"} */}
-                  {speeds.avgSpeed
+                  {/* {speeds.avgSpeed
                     ? speeds.avgSpeed.toFixed(0) + " Km/h"
-                    : "0 Km/h"}
+                    : "0 Km/h"} */}
+                  {totalAvgSpeed.toFixed(0) + " Km/h"}
                 </span>
               </p>
             </div>
@@ -3151,27 +3587,36 @@ function RapportGroupe({
               <tbody className="border-2-- border-red-500  max-w-20">
                 {(tableSortBy || vehiclesByDepartureTime)?.map(
                   (vehicule, index) => {
+                    // Trouver le véhicule correspondant dans updateData
+                    const matchedVehicle = currentdataFusionnee.find(
+                      (v) => v.deviceID === vehicule.deviceID
+                    );
+
                     const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
                     const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-                    const isMoving = vehicule.vehiculeDetails?.some(
+                    const isMoving = matchedVehicle.vehiculeDetails?.some(
                       (detail) => detail.speedKPH >= 1
                     );
 
                     const hasDetails =
-                      vehicule.vehiculeDetails &&
-                      vehicule.vehiculeDetails.length > 0;
+                      matchedVehicle.vehiculeDetails &&
+                      matchedVehicle.vehiculeDetails.length > 0;
 
-                    const noSpeed = vehicule.vehiculeDetails?.every(
+                    const noSpeed = matchedVehicle.vehiculeDetails?.every(
                       (detail) => detail.speedKPH <= 0
                     );
 
                     // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-                    const lastUpdateTimeMs = vehicule.lastUpdateTime
-                      ? vehicule.lastUpdateTime * 1000
+                    const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+                      ? matchedVehicle.lastUpdateTime * 1000
                       : 0;
                     const isActive =
                       currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+                    ///////////////////////////////////////////////////////////////////////////
+
+                    ////////////////////////////////////////////////////////////////////
 
                     let iconBg = "text-red-500 dark:text-red-500";
 
@@ -3183,8 +3628,13 @@ function RapportGroupe({
                         "text-red-500 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
                     } else if (!hasDetails || !isActive) {
                       iconBg =
-                        "text-gray-800 dark:text-gray-100 border-l-gray-300 dark:border-l-gray-600";
+                        "text-purple-800 dark:text-purple-100 border-l-purple-500 dark:border-l-purple-600";
                     }
+                    {
+                      /* yyyyyyyyyyyyyyyyyyyyyy */
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////
                     return (
                       <tr key={index} className="border dark:border-gray-600">
                         <td
@@ -3213,15 +3663,7 @@ function RapportGroupe({
                             <span className="px-2">/</span>
                           )}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[
-                              //         vehicule?.vehiculeDetails.length - 1
-                              //       ]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
@@ -3238,13 +3680,7 @@ function RapportGroupe({
                             <span className="px-2">/</span>
                           )}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[0]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas d'adresse disponible"}{" "}
@@ -3252,10 +3688,7 @@ function RapportGroupe({
 
                         {/* Vitesse moyenne */}
                         <td className="border py-3 px-2 dark:border-gray-600">
-                          {(
-                            (vehicule?.maxSpeed + vehicule?.minSpeed) /
-                            2
-                          ).toFixed(0) + " Km/h"}
+                          {vehicule?.avgSpeed + " Km/h"}
                         </td>
                         {/* max speed */}
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">

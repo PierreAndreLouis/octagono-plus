@@ -89,6 +89,8 @@ function RapportPersonnel({
     setVehiclueHistoriqueDetails,
     FormatDateHeure,
     setCurrentVehicule,
+    currentdataFusionnee,
+    setSelectedVehicle,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -233,6 +235,28 @@ function RapportPersonnel({
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
   };
+
+  const calculateAverageSpeed = (data) => {
+    // Extraire les détails du véhicule
+    const details = data?.vehiculeDetails;
+
+    // Filtrer les vitesses supérieures à 0
+    const validSpeeds = details
+      ?.map((detail) => parseFloat(detail.speedKPH)) // Convertir en nombres
+      ?.filter((speed) => speed > 0); // Garder uniquement les vitesses > 0
+
+    // Calculer la somme des vitesses
+    const totalSpeed = validSpeeds?.reduce((sum, speed) => sum + speed, 0);
+
+    // Calculer la vitesse moyenne
+    const averageSpeed =
+      validSpeeds?.length > 0 ? totalSpeed / validSpeeds?.length : 0;
+
+    return averageSpeed.toFixed(2); // Arrondir à 2 décimales
+  };
+
+  const vitesseMoyenne = calculateAverageSpeed(currentVehicule);
+  // console.log(`Vitesse moyenne : ${averageSpeed} km/h`);
 
   return (
     <>
@@ -776,7 +800,7 @@ function RapportPersonnel({
                   Vitesse moyenne:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/ */}
-                    {((maxSpeed + minSpeed) / 2).toFixed(0) || 0} Km/h
+                    {vitesseMoyenne || 0} Km/h
                   </span>
                 </p>
               </div>

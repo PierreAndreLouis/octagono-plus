@@ -76,13 +76,6 @@ function VehiculeActiveAjourdhuiComponent({
                   to="/rapport_page_details"
                   onClick={() => {
                     handleClick(vehicule);
-                    // setVehiclueHistoriqueDetails(
-                    //   currentVehicule?.vehiculeDetails
-                    // );
-                    // setVehiclueHistoriqueRapportDetails(
-                    //   currentVehicule?.vehiculeDetails
-                    // );
-                    // setshowRapportPupup(true);
                   }}
                   key={index}
                   className="bg-white rounded-lg dark:bg-gray-800 dark:shadow-gray-600"
@@ -119,17 +112,8 @@ function VehiculeActiveAjourdhuiComponent({
                               className="text-gray-500/80 dark:text-gray-300"
                             />
                             <h3 className="text-sm sm:text-sm md:text-md">
-                              {/* {formatTimestampToDate(
-                                vehicule?.vehiculeDetails[0]?.timestamp
-                              )} */}
                               {vehicule.vehiculeDetails?.[0]?.timestamp
-                                ? // selectUTC
-                                  //   ? formatTimestampToDateWithTimezone(
-                                  //       vehicule.vehiculeDetails[0].timestamp,
-                                  //       selectUTC
-                                  //     )
-                                  //   :
-                                  FormatDateHeure(
+                                ? FormatDateHeure(
                                     vehicule.vehiculeDetails?.[0]?.timestamp
                                   )?.date
                                 : "Pas de date disponible"}
@@ -141,17 +125,7 @@ function VehiculeActiveAjourdhuiComponent({
                               className="text-gray-500/80 dark:text-gray-300 text-xl"
                             />
                             <h3 className="text-sm sm:text-sm md:text-md">
-                              {/* {formatTimestampToTime(
-                                vehicule.vehiculeDetails?.[0]?.timestamp || 0
-                              )} */}
                               {
-                                // selectUTC
-                                //   ?
-                                //   formatTimestampToTimeWithTimezone(
-                                //       vehicule.vehiculeDetails[0].timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
                                 FormatDateHeure(
                                   vehicule.vehiculeDetails?.[0]?.timestamp
                                 )?.time

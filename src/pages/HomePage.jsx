@@ -7,6 +7,7 @@ import { DataContext } from "../context/DataContext";
 import { RiWifiOffLine } from "react-icons/ri";
 import { MdUpdate } from "react-icons/md";
 import InstallationPWA from "./InstallationPWA";
+import GoogleTranslate from "./GoogleTranslate";
 
 const Home = () => {
   const {
@@ -269,6 +270,8 @@ const Home = () => {
           </h3>
         </div>
       )}
+
+      {/* <GoogleTranslate /> */}
 
       {/* Liste des vehicules */}
       <Liste setShowListOption={setShowListOption} />

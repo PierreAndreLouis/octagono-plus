@@ -5,7 +5,7 @@ function VehiculeDetailInformationComponent({
   currentVehicule,
   setShowVehiculeListe,
 }) {
-  const { FormatDateHeure } = useContext(DataContext);
+  const { FormatDateHeure, username } = useContext(DataContext);
   const creationDateTime = (creationTime) => {
     // Convertir le timestamp en millisecondes
     const date = new Date(creationTime * 1000);
@@ -68,14 +68,16 @@ function VehiculeDetailInformationComponent({
             </p>
           </div>
 
-          {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
-            <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              IMEI
-            </h3>
-            <p className="pl-3 text-gray-500 dark:text-gray-400">
-              {currentVehicule?.imeiNumber || ""}
-            </p>
-          </div> */}
+          {username === "admin" && (
+            <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
+              <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
+                IMEI
+              </h3>
+              <p className="pl-3 text-gray-500 dark:text-gray-400">
+                {currentVehicule?.imeiNumber || ""}
+              </p>
+            </div>
+          )}
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
@@ -113,7 +115,7 @@ function VehiculeDetailInformationComponent({
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVehicule?.vehiculeDetails[0]?.speedKPH >= 1
                 ? "En Deplacememt"
-                : "En arrêt" || ""}
+                : "En Stationnement" || ""}
             </p>
           </div>
 

@@ -130,7 +130,7 @@ function Liste_options({}) {
           ref={containerRef}
           className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70"
         >
-          <div className="relative w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+          <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setshowControlePupup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
@@ -194,22 +194,30 @@ function Liste_options({}) {
 
       {showNotezBienPupup && (
         <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
-          <div className="relative w-[70vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+          <div className="relative w-[90vw] sm:w-[75vw] max-w-[35rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setshowNotezBienPupup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
-              <h1 className="px-3 mt-8 mb-2 text-center dark:text-gray-50">
-                Notez Bien !
+              <h1 className="px-3 mt-8 mb-2 text-2xl text-center text-red-600 dark:text-gray-50--">
+                Attention !
               </h1>
             </div>
-            <div className="p-4 flex flex-col gap-4 py-6 pb-10">
+            <div className="p-4 flex flex-col gap-4 py-6  pb-10--">
               {/* callError, setCallError, lancerAppel, */}
-              <p className="text-center dark:text-gray-300">
+              <p className="text-center dark:text-gray-300 text-red-500">
                 Vous devez disposer soit de crédits, soit de minutes et SMS
                 disponibles sur votre téléphone pour cette fonctionalité.
               </p>
+            </div>
+            <div className="flex justify-center pb-6">
+              <button
+                onClick={() => setshowNotezBienPupup(false)}
+                className="py-1 px-8 rounded-lg text-white bg-red-500 mx-auto"
+              >
+                Ok
+              </button>
             </div>
           </div>
         </div>

@@ -41,6 +41,7 @@ function MapComponent({ mapType }) {
     setchooseHistoriqueLatitude,
     histiriqueSelectedLocationIndex,
     sethistiriqueSelectedLocationIndex,
+    username,
   } = useContext(DataContext);
 
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
@@ -272,10 +273,12 @@ function MapComponent({ mapType }) {
                     <strong>Adresse :</strong>{" "}
                     {vehicle.address || "Non disponible"}
                   </p>
-                  {/* <p>
-                    <strong>IMEI Number :</strong>{" "}
-                    {vehicle.imeiNumber || "Chargement..."}
-                  </p> */}
+                  {username === "admin" && (
+                    <p>
+                      <strong>IMEI Number :</strong>{" "}
+                      {vehicle.imeiNumber || "Chargement..."}
+                    </p>
+                  )}
                   <p>
                     <strong>Vitesse :</strong>{" "}
                     {/* {vehicle.speedKPH || "Non disponible"} Km/h */}

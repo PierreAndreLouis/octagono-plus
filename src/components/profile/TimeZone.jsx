@@ -18,6 +18,7 @@ function TimeZone({ setChangeTimeZone }) {
     setselectTime,
     handleSelectTimeZone,
     userData,
+    homePageReload,
   } = useContext(DataContext);
 
   // // Filtrer les données en fonction de la recherche

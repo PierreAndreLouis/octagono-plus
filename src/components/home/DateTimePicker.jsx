@@ -19,25 +19,16 @@ const DateTimePicker = ({
   endDate,
   endTime,
 }) => {
-  const {
-    handleDateChange,
-    fetchVehicleDetails,
-    // fetchHistoriqueVehicleDetails,
-    currentVehicule,
-    setLoadingHistoriqueFilter,
-    dateDebut,
-    setDateDebut,
-  } = useContext(DataContext);
+  const {} = useContext(DataContext);
 
   const today = new Date(); // La date actuelle
 
-  // Fonction pour formater une date en 'YYYY-MM-DD'
-  const formatDateToISO = (date) => {
-    const adjustedDate = new Date(
-      date.getTime() - date.getTimezoneOffset() * 60000
-    );
-    return adjustedDate.toISOString().split("T")[0];
-  };
+  useEffect(() => {
+    console.log(startDate);
+    console.log(endDate);
+    console.log(startTime);
+    console.log(endTime);
+  }, [startDate, endDate, startTime, endTime]);
 
   return (
     <div className="fixed inset-0 z-10 flex justify-center items-center bg-black/50 dark:bg-black/80">
@@ -141,14 +132,6 @@ const DateTimePicker = ({
             >
               Appliquer
             </button>
-            {/* <p
-              onClick={() => {
-                console.log("StartDate", endDate2);
-              }}
-              className="py-2 px-12 bg-orange-500 rounded-lg mt-3 text-white dark:bg-orange-600 dark:hover:bg-orange-500"
-            >
-              test
-            </p> */}
           </div>
         </div>
       </form>

@@ -373,20 +373,72 @@ function RapportPageDetails() {
     return `${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
   };
 
-  const speedData = data.map((vehicle) => parseFloat(vehicle.speedKPH));
+  // const speedData = data.map((vehicle) => parseFloat(vehicle.speedKPH));
+  const speedData = data.map((vehicle) => {
+    const speed = parseFloat(vehicle.speedKPH);
+    return !isNaN(speed) ? speed.toFixed(0) : null;
+  });
   const timeData = data.map(
     (vehicle) => FormatDateHeure(vehicle.timestamp)?.time
   );
   // const timeData = data.map((vehicle) => formatTimestamp(vehicle.timestamp));
 
+  // const options = {
+  //   // title: {
+  //   //   // text: "",
+  //   //   // text: "Vitesse des véhicules",
+  //   // },
+  //   tooltip: {
+  //     trigger: "axis",
+  //   },
+  //   xAxis: {
+  //     type: "category",
+  //     data: timeData, // Heure sur l'axe des X
+  //     boundaryGap: false,
+  //   },
+  //   yAxis: {
+  //     type: "value",
+  //     name: "Vitesse (KPH)",
+  //     // min: 0, // Vous pouvez ajuster la valeur minimale selon vos besoins
+  //     // max: 20, // Définissez une valeur maximale qui n'est pas trop éloignée des valeurs de votre vitesse
+  //     // interval: 1, // Définit un intervalle précis entre les valeurs
+  //   },
+  //   series: [
+  //     {
+  //       data: speedData, // Vitesses sur l'axe des Y
+  //       type: "line",
+  //       smooth: true,
+  //       lineStyle: {
+  //         color: "rgba(75, 192, 192, 0.8)",
+  //       },
+  //     },
+  //   ],
+  // };
+
   const options = {
-    // title: {
-    //   // text: "",
-    //   // text: "Vitesse des véhicules",
-    // },
     tooltip: {
       trigger: "axis",
+      formatter: function (params) {
+        // La première entrée contient les informations de l'axe X (temps)
+        const time = params[0].axisValue;
+        const details = params
+          .map((item) => {
+            return `${item.marker} ${item.seriesName}: ${item.value} km/h`;
+          })
+          .join("<br />");
+        return `Heure: ${time}<br />${details}`;
+      },
     },
+    // tooltip: {
+    //   trigger: "axis",
+    //   formatter: function (params) {
+    //     return params
+    //       .map((item) => {
+    //         return `${item.marker} ${item.seriesName}: ${item.value} km/h`;
+    //       })
+    //       .join("<br />");
+    //   },
+    // },
     xAxis: {
       type: "category",
       data: timeData, // Heure sur l'axe des X
@@ -394,13 +446,11 @@ function RapportPageDetails() {
     },
     yAxis: {
       type: "value",
-      name: "Vitesse (KPH)",
-      // min: 0, // Vous pouvez ajuster la valeur minimale selon vos besoins
-      // max: 20, // Définissez une valeur maximale qui n'est pas trop éloignée des valeurs de votre vitesse
-      // interval: 1, // Définit un intervalle précis entre les valeurs
+      name: "Vitesse (km/h)",
     },
     series: [
       {
+        name: "Vitesse",
         data: speedData, // Vitesses sur l'axe des Y
         type: "line",
         smooth: true,

@@ -229,6 +229,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     localStorage.setItem("selectedTimeZone", item.region);
     localStorage.setItem("selectUTC", item.utcOffset);
     localStorage.setItem("selectTime", item.currentTime);
+    homePageReload();
   };
 
   useEffect(() => {

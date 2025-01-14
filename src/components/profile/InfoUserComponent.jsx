@@ -16,7 +16,7 @@ function InfoUserComponent({
   SelectedTimeZone,
   setChangeTimeZone,
 }) {
-  const { setUsername } = useContext(DataContext);
+  const { setUsername, homePageReload } = useContext(DataContext);
   // setUsername
   return (
     <div>

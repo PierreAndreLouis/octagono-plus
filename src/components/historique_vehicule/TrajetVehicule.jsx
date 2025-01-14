@@ -29,7 +29,7 @@ function TrajetVehicule({
   showHistoriqueInMap,
   openGoogleMaps,
 }) {
-  const { selectUTC, FormatDateHeure } = useContext(DataContext);
+  const { selectUTC, FormatDateHeure, username } = useContext(DataContext);
   function formatTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000);
     let hours = date.getUTCHours();
@@ -141,12 +141,14 @@ function TrajetVehicule({
                   iconUrl: "/pin/start.png", // Remplacez par le chemin de votre icône
                   iconSize: [50, 60], // Taille plus grande
                   iconAnchor: [47, 61], // Point d'ancrage
+                  popupAnchor: [0, -55],
                 });
 
                 const lastMarkerIcon = L.icon({
                   iconUrl: "/pin/end.png", // Remplacez par le chemin de votre icône
                   iconSize: [50, 60],
                   iconAnchor: [4, 61],
+                  popupAnchor: [0, -55],
                 });
 
                 let markerIcon;
@@ -178,7 +180,7 @@ function TrajetVehicule({
                     iconUrl: getMarkerIcon(vehicule),
                     iconSize: [17, 25],
                     iconAnchor: [9, 25],
-                    popupAnchor: [-1, -30],
+                    popupAnchor: [-1, -20],
                     shadowUrl:
                       "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
                     shadowSize: [5, 5],
@@ -216,10 +218,12 @@ function TrajetVehicule({
                           <strong>Adresse :</strong>{" "}
                           {address || "Non disponible"}
                         </p>
-                        {/* <p>
-                        <strong>IMEI Number :</strong>{" "}
-                        {imeiNumber || "loading..."}
-                      </p> */}
+                        {username === "admin" && (
+                          <p>
+                            <strong>IMEI Number :</strong>{" "}
+                            {imeiNumber || "loading..."}
+                          </p>
+                        )}
                         <p>
                           <strong>Vitesse :</strong>{" "}
                           {speedKPH && !isNaN(Number(speedKPH))

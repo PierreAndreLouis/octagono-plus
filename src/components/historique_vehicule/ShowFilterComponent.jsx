@@ -26,6 +26,7 @@ function ShowFilterComponent({
   endTime,
   showVehiculeListe,
   setShowVehiculeListe,
+  handleApply,
 }) {
   const {
     vehiclueHistoriqueDetails,
@@ -80,14 +81,19 @@ function ShowFilterComponent({
     return `${day}-${month}-${year}`; // Format "DD-MM-YYYY"
   };
 
-  // const formatDate = (dateDebut) => {
-  //   const [day, month, year] = dateDebut?.split("/"); // Sépare le jour, le mois et l'année
-  //   return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
-  // };
+  // function convertTo12HourFormat(time) {
+  //   const [hours, minutes, seconds] = time.split(":").map(Number);
+  //   const period = hours >= 12 ? "PM" : "AM";
+  //   const adjustedHours = hours % 12 || 12; // Convertit 0 ou 12 en 12
+  //   return `${adjustedHours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${period}`;
+  // }
 
-  // // Conversion des variables startDate et endDate
-  // const formattedStartDate = formatDate(dateDebut);
-  // const formattedStartDate = "asfasdfs";
+  function convertTo12HourFormat(time) {
+    const [hours, minutes] = time.split(":").map(Number);
+    const period = hours >= 12 ? "PM" : "AM";
+    const adjustedHours = hours % 12 || 12; // Convertit 0 ou 12 en 12
+    return `${adjustedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+  }
 
   return (
     <>
@@ -186,41 +192,25 @@ function ShowFilterComponent({
                     En arrêt
                   </label>
                 </div>
-
-                {/* <div className="pt-4">
-                  <hr className="dark:border-gray-600" />
-
-                  <Link
-                    onClick={() => {
-                      updateRapportVehiculeDetails();
-                    }}
-                    to="/rapport_page_details"
-                    // className="flex pt-4 mb-4 items-center gap-3"
-                    className="flex my-3 p-2 rounded-md hover:bg-orange-100/50 cursor-pointer items-center gap-3 dark:hover:bg-gray-700"
-                  >
-                    <MdOutlineStickyNote2 className="text-xl text-orange-600/90 dark:text-orange-400" />
-                    <h3 className="text-gray-800 dark:text-gray-200">
-                      Rapport du Vehicule
-                    </h3>
-                  </Link>
-                </div> */}
               </div>
             </form>
 
             <hr className="dark:border-gray-600" />
 
             <div className="py-3 pl-2">
-              <div className="font-semibold dark:text-gray-50 ">
-                Date et heure de Depart:{"  "}
-                <span className="ml-4 font-normal dark:text-orange-500">
-                  {formatDateToDDMMYYYY(startDate)} - {startTime}:00
-                </span>
+              <div className="font-semibold flex flex-wrap dark:text-gray-50 ">
+                <p>Date et heure de Depart:{"  "}</p>
+                <p className="ml-4 font-normal dark:text-orange-500">
+                  {formatDateToDDMMYYYY(startDate)} -{" "}
+                  {convertTo12HourFormat(startTime)}
+                </p>
               </div>
-              <div className="font-semibold mt-1 dark:text-gray-50 ">
-                Date et heure de d'arrivée:{"  "}
-                <span className="ml-4 font-normal dark:text-orange-500">
-                  {formatDateToDDMMYYYY(endDate)} - {endTime}:00
-                </span>
+              <div className="font-semibold flex flex-wrap mt-1 dark:text-gray-50 ">
+                <p>Date et heure de d'arrivée:{"  "}</p>
+                <p className="ml-4 font-normal dark:text-orange-500">
+                  {formatDateToDDMMYYYY(endDate)} -{" "}
+                  {convertTo12HourFormat(endTime)}
+                </p>
               </div>
             </div>
             <hr className="dark:border-gray-600" />
@@ -240,8 +230,11 @@ function ShowFilterComponent({
             ) : (
               <p
                 onClick={() => {
+                  // if (timeFrom && timeTo) {
+                  handleApply();
                   applyFilter();
                   setshowFilter(false);
+                  // }
                 }}
                 className="border cursor-pointer border-orange-500 text-center text-orange-600 font-semibold rounded-md pt-1 pb-1.5 px-6 mt-5 dark:text-orange-400 dark:border-orange-400"
               >

@@ -251,103 +251,113 @@ function HistoriquePage() {
   const [timeFrom, settimeFrom] = useState();
   const [timeTo, settimeTo] = useState();
 
+  useEffect(() => {
+    console.log(startDate);
+    console.log(endDate);
+    console.log(startTime);
+    console.log(endTime);
+    console.log(timeFrom);
+    console.log(timeTo);
+  }, [startDate, endDate, startTime, endTime, timeFrom, timeTo]);
+
+  const formatDateToISO = (date) => {
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Convertir en objet Date si nécessaire
+    }
+    const adjustedDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
+    return adjustedDate.toISOString().split("T")[0];
+  };
+
+  // Conversion des variables startDate et endDate
+  const formattedStartDate = formatDateToISO(startDate);
+  const formattedEndDate = formatDateToISO(endDate);
+
+  /////////////////////////////////////////////////////////////////////////
+
+  // Combine les dates formatées avec les heures
+  const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}:00`);
+  const baseTimeTo = new Date(`${formattedEndDate}T${endTime}:00`);
+
+  // Ajout de 5 heures
+  const adjustedTimeFrom = new Date(
+    baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+  );
+  const adjustedTimeTo = new Date(
+    baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+  );
+
+  // Formatage en chaîne pour les heures ajustées
+  const timeFromFetch = `${adjustedTimeFrom.getFullYear()}-${(
+    adjustedTimeFrom.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}-${adjustedTimeFrom
+    .getDate()
+    .toString()
+    .padStart(2, "0")} ${adjustedTimeFrom
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${adjustedTimeFrom
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}:${adjustedTimeFrom
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}`;
+
+  const timeToFetch = `${adjustedTimeTo.getFullYear()}-${(
+    adjustedTimeTo.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}-${adjustedTimeTo
+    .getDate()
+    .toString()
+    .padStart(2, "0")} ${adjustedTimeTo
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${adjustedTimeTo
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}:${adjustedTimeTo
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}`;
+
+  ////////////////////////////////////////////////////////////////////////
   const handleApply = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    if (e) e.preventDefault(); // Vérifie si `e` existe avant d'appeler preventDefault()
 
-    const formatDateToISO = (date) => {
-      if (!(date instanceof Date)) {
-        date = new Date(date); // Convertir en objet Date si nécessaire
-      }
-      const adjustedDate = new Date(
-        date.getTime() - date.getTimezoneOffset() * 60000
-      );
-      return adjustedDate.toISOString().split("T")[0];
-    };
+    settimeFrom(timeFromFetch);
+    settimeTo(timeToFetch);
 
-    // Conversion des variables startDate et endDate
-    const formattedStartDate = formatDateToISO(startDate);
-    const formattedEndDate = formatDateToISO(endDate);
-
-    /////////////////////////////////////////////////////////////////////////
-
-    // Combine les dates formatées avec les heures
-    const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}:00`);
-    const baseTimeTo = new Date(`${formattedEndDate}T${endTime}:00`);
-
-    // Ajout de 5 heures
-    const adjustedTimeFrom = new Date(
-      baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-    );
-    const adjustedTimeTo = new Date(
-      baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-    );
-
-    // Formatage en chaîne pour les heures ajustées
-    const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
-      adjustedTimeFrom.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${adjustedTimeFrom
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${adjustedTimeFrom
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${adjustedTimeFrom
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${adjustedTimeFrom
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    const timeTo = `${adjustedTimeTo.getFullYear()}-${(
-      adjustedTimeTo.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${adjustedTimeTo
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${adjustedTimeTo
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${adjustedTimeTo
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${adjustedTimeTo
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    ////////////////////////////////////////////////////////////////////////
-
-    // // Combine les dates formatées avec les heures
-    // const timeFrom = `${formattedStartDate} ${startTime}:00`;
-    // const timeTo = `${formattedEndDate} ${endTime}:00`;
-
-    settimeFrom(timeFrom);
-    settimeTo(timeTo);
-
-    console.log("timeFrom:", timeFrom);
-    console.log("timeToo:", timeTo);
-    // console.log("startDate:", startDate);
-    // console.log("endDate:", endDate);
-    // console.log("formattedStartDate:", formattedStartDate);
-    // console.log("formattedEndDate:", formattedEndDate);
-
-    //
-    // handleDateChange(timeFrom, timeTo);
-    // fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
+    console.log("timeFrom:", timeFromFetch);
+    console.log("timeToo:", timeToFetch);
 
     setShowDatePicker(false);
-    // setLoadingHistoriqueFilter(true);
   };
 
   // Fonction pour appliquer les filtres
 
   const applyFilter = () => {
-    fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
-    setAppliedCheckboxes(checkboxes);
+    console.log(timeFrom);
+    console.log("////////////");
+    console.log(timeTo);
+    handleApply();
+
+    if (timeFrom && timeTo) {
+      fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
+      setAppliedCheckboxes(checkboxes);
+    } else {
+      fetchHistoriqueVehicleDetails(
+        currentVehicule.deviceID,
+        timeFromFetch,
+        timeToFetch
+      );
+      setAppliedCheckboxes(checkboxes);
+    }
   };
 
   return (
@@ -423,6 +433,7 @@ function HistoriquePage() {
             endTime={endTime}
             showVehiculeListe={showVehiculeListe}
             setShowVehiculeListe={setShowVehiculeListe}
+            handleApply={handleApply}
           />
         </div>
       </div>
