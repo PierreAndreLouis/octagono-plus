@@ -374,7 +374,7 @@ function Liste() {
                 className={` ${lite_bg_color} shadow-md relative rounded-lg p-3 border-2-- border-red-500--`}
               >
                 <div
-                  className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-4 pb-4 font-bold text-lg `}
+                  className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
                 >
                   {index + 1}
                 </div>

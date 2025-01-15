@@ -67,14 +67,13 @@ function HistoriqueMainComponent({
                 // onClick={centerOnFirstMarker}
                 onClick={() => {
                   setvoirPositionSurCarte(false);
-              
                 }}
               >
                 <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
                   <IoClose className="text-red-500 text-[1.62rem]" />
                 </div>
               </button>
-           
+
               <div className=" -translate-y-[10rem]">
                 <MapComponent mapType={mapType} />
               </div>
@@ -199,7 +198,7 @@ function HistoriqueMainComponent({
                           className={`${lite_bg_color} shadow-md relative rounded-lg p-3`}
                         >
                           <div
-                            className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-4 pb-4 font-bold text-lg `}
+                            className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
                           >
                             {/* {index + 1} */}
                             {numero}

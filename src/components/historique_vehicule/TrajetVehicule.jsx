@@ -141,14 +141,14 @@ function TrajetVehicule({
                   iconUrl: "/pin/start.png", // Remplacez par le chemin de votre icône
                   iconSize: [50, 60], // Taille plus grande
                   iconAnchor: [47, 61], // Point d'ancrage
-                  popupAnchor: [0, -55],
+                  popupAnchor: [-22, -51],
                 });
 
                 const lastMarkerIcon = L.icon({
                   iconUrl: "/pin/end.png", // Remplacez par le chemin de votre icône
                   iconSize: [50, 60],
                   iconAnchor: [4, 61],
-                  popupAnchor: [0, -55],
+                  popupAnchor: [25, -51],
                 });
 
                 let markerIcon;

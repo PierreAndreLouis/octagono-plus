@@ -1309,7 +1309,7 @@ function RapportPageDetails() {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [showDatePicker2, setShowDatePicker2] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(""); // Date sélectionnée
+  const [selectedDate, setSelectedDate] = useState(new Date()); // Date sélectionnée
 
   ////////////////////////////////////////////////////////////////////////////c/cvv
   ////////////////////////////////////////////////////////////////////////////c/cvv

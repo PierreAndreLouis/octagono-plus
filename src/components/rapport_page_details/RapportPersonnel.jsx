@@ -275,7 +275,7 @@ function RapportPersonnel({
           <h1 className="text-center mb-2 font-semibold text-xl mt-16 dark:text-gray-300">
             Rapport détaillé du véhicule
           </h1>
-          <h1 className="text-center mb-16 text-orange-600  text-xl my-2 dark:text-gray-300">
+          <h1 className="text-center mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
             {currentVehicule?.description || ""}
           </h1>
 
@@ -1017,7 +1017,7 @@ function RapportPersonnel({
           {showHistoriquePupup && (
             <div className="fixed hidden- z-[10000000000] inset-0 bg-black/50 flex justify-center items-center">
               <div className="relative min-w-[80vw] mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
-                <div className="absolute z-[11] bg-white dark:bg-gray-900 p-4 top-0 left-0 right-0 flex flex-col justify-center items-center">
+                <div className="absolute z-[11] bg-white dark:bg-gray-900 p-4 py-6 top-0 left-0 right-0 flex flex-col justify-center items-center">
                   <IoClose
                     onClick={() => {
                       setshowHistoriquePupup(false);
@@ -1025,7 +1025,7 @@ function RapportPersonnel({
                     className="absolute z-[22222222222] top-3 right-4 cursor-pointer text-2xl text-red-500"
                   />
                   <h3 className="text-orange-500">Historique</h3>
-                  <h2 className="text-gray-700 dark:text-gray-200">
+                  <h2 className="text-gray-700 dark:text-gray-200 text-center">
                     {currentVehicule?.description || ""}
                   </h2>
                 </div>
