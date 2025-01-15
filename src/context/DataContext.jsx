@@ -1481,6 +1481,34 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //  Pour filtrer les donnees dans la page rapport
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+  const getTodayTimestamp = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Minuit
+    return Math.floor(now.getTime() / 1000); // Convertir en secondes
+  };
+
+  useEffect(() => {
+    const todayTimestamp = getTodayTimestamp();
+
+    // Filtrer les données
+    const filteredData = donneeFusionneeForRapport?.map((item) => ({
+      ...item,
+      vehiculeDetails: item.vehiculeDetails.filter(
+        (detail) => parseInt(detail.timestamp, 10) >= todayTimestamp
+      ),
+    }));
+
+    // Mettre à jour les données filtrées
+    setdonneeFusionneeForRapport(filteredData);
+
+    // Sauvegarder dans le localStorage
+    localStorage.setItem(
+      "donneeFusionneeForRapport",
+      JSON.stringify(filteredData)
+    );
+  }, []); // Se déclenche uniquement une fois, au montage
+
   let currentdataFusionnee =
     searchdonneeFusionneeForRapport.length > 0
       ? searchdonneeFusionneeForRapport
