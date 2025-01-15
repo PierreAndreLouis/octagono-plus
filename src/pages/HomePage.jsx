@@ -126,10 +126,6 @@ const Home = () => {
       )
       .map((vehicle) => parseInt(vehicle.vehiculeDetails[0].timestamp));
 
-    // if (validTimestamps.length === 0) {
-    //   throw new Error("Aucun timestamp valide trouvé dans les données.");
-    // }
-
     // Trouver le timestamp le plus récent
     const mostRecentTimestamp = Math.max(...validTimestamps);
 

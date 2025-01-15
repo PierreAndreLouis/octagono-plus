@@ -90,11 +90,11 @@ function RapportPersonnel({
     setShowListOption,
     vehiclueHistoriqueDetails,
     setVehiclueHistoriqueDetails,
-    FormatDateHeure,
     setCurrentVehicule,
     currentdataFusionnee,
     setSelectedVehicle,
     sethistiriqueSelectedLocationIndex,
+    FormatDateHeure,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -114,18 +114,21 @@ function RapportPersonnel({
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
+  const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
+  const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
   const timestampInSecondsFin = currentVehicule?.vehiculeDetails[1]?.timestamp;
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
-  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+  const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
+  const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+
+  const heureDebut = FormatDateHeure(timestampInSecondsDebut)?.time;
+  const heureFin = FormatDateHeure(timestampInSecondsFin)?.time;
 
   const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
   const [ordreCroissant, setordreCroissant] = useState(false);
@@ -201,12 +204,12 @@ function RapportPersonnel({
     return { day, month, year };
   };
 
-  const {
-    day: jourDebut,
-    month: moisDebut,
-    year: anneeDebut,
-  } = formatDate(startDate);
-  const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
+  // const {
+  //   day: jourDebut,
+  //   month: moisDebut,
+  //   year: anneeDebut,
+  // } = formatDate(startDate);
+  // const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
 
   const formatTo12Hour = (time) => {
     let [hours, minutes] = time?.split(":").map(Number);
@@ -217,8 +220,8 @@ function RapportPersonnel({
   };
 
   // Convertir les heures
-  const heureDebut = formatTo12Hour(startTime);
-  const heureFin = formatTo12Hour(endTime);
+  // const heureDebut = formatTo12Hour(startTime);
+  // const heureFin = formatTo12Hour(endTime);
 
   //////////////////////////////////////////////////////////////////////////////////
 
@@ -358,9 +361,9 @@ function RapportPersonnel({
 
             <div>
               <div className="text-gray-700 font-bold flex flex-col gap-2 dark:text-gray-300">
-                <p>
-                  Date recherchée :
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                <div className="flex flex-wrap">
+                  <p>Date de recherche trouvée :</p>
+                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-5">
                     {jourDebut ? (
                       // true ||
                       // jourDebut === jourFin &&
@@ -389,14 +392,15 @@ function RapportPersonnel({
                       <span>Pas de date disonible</span>
                     )}
                   </span>
-                </p>
+                </div>
 
-                <p>
-                  Heure du Recherche :
+                {/*  */}
+                <div className="flex flex-wrap">
+                  <p>Heure de recherche trouvée :</p>
                   {currentVehicule?.vehiculeDetails[
                     currentVehicule?.vehiculeDetails?.length - 1
                   ]?.timestamp ? (
-                    <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                    <span className="font-normal dark:text-orange-500 text-gray-700 pl-5">
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                         {heureDebut}
@@ -413,7 +417,7 @@ function RapportPersonnel({
                               ]?.timestamp
                             )} */}
                       </span>{" "}
-                      a{" "}
+                      à{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                         {heureFin}{" "}
                         {/* {selectUTC
@@ -427,12 +431,12 @@ function RapportPersonnel({
                       </span>{" "}
                     </span>
                   ) : (
-                    <span className="font-normal ml-2 dark:text-orange-500">
+                    <span className="font-normal ml-5 dark:text-orange-500">
                       {" "}
                       Pas d'heure disponible
                     </span>
                   )}
-                </p>
+                </div>
 
                 <p>
                   Nom du Véhicule :{" "}
@@ -535,7 +539,7 @@ function RapportPersonnel({
             <div>
               <div className="text-gray-700 flex flex-col gap-2 dark:text-gray-300">
                 {/* <p>
-                  Date recherchée :
+                  Date de recherche trouvée :
                   <span className="font-semibold dark:text-orange-500 text-gray-700 pl-3">
                     {
                       // true ||
@@ -566,7 +570,7 @@ function RapportPersonnel({
                 </p>
 
                 <p>
-                  Heure du Recherche :
+                  Heure de recherche trouvée :
                   <span className="font-normal-- font-semibold dark:text-orange-500 text-gray-700 pl-3">
                     De{" "}
                     <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
@@ -603,9 +607,9 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <p>
-                  Date recherchée :
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                <div className="flex flex-wrap">
+                  <p>Date de recherche trouvée :</p>
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
                     {jourDebut ? (
                       // true ||
                       // jourDebut === jourFin &&
@@ -620,12 +624,12 @@ function RapportPersonnel({
                       // ) : (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                         Du{" "}
-                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-700">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
                         au{" "}
-                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-700">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
@@ -634,16 +638,17 @@ function RapportPersonnel({
                       <span>Pas de date disonible</span>
                     )}
                   </span>
-                </p>
-                <p>
-                  Heure du Recherche :
+                </div>
+                {/*  */}
+                <div className="flex flex-wrap">
+                  <p>Heure de recherche trouvée :</p>
                   {currentVehicule?.vehiculeDetails[
                     currentVehicule?.vehiculeDetails?.length - 1
                   ]?.timestamp ? (
-                    <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
                       De{" "}
-                      <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                        {heureDebut}{" "}
+                      <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-700">
+                        {heureDebut}
                         {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
                               currentVehicule?.vehiculeDetails[
@@ -657,8 +662,8 @@ function RapportPersonnel({
                               ]?.timestamp
                             )} */}
                       </span>{" "}
-                      a{" "}
-                      <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                      à{" "}
+                      <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-700">
                         {heureFin}{" "}
                         {/* {selectUTC
                           ? formatTimestampToTimeWithTimezone(
@@ -671,12 +676,12 @@ function RapportPersonnel({
                       </span>{" "}
                     </span>
                   ) : (
-                    <span className="font-normal ml-2 dark:text-orange-500">
+                    <span className="font-bold ml-5 dark:text-orange-500">
                       {" "}
                       Pas d'heure disponible
                     </span>
                   )}
-                </p>
+                </div>
                 {/*  */}
                 {/*  */}
                 {/*  */}
@@ -1310,7 +1315,7 @@ function RapportPersonnel({
                               ]?.timestamp
                             )} */}
                       </span>{" "}
-                      a{" "}
+                      à{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
                         {heureFin}
 
