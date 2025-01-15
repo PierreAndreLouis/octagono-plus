@@ -75,6 +75,7 @@ function RapportGroupe({
     setCurrentVehicule,
     FormatDateHeure,
     mergedData,
+    searchdonneeFusionneeForRapport,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const dataFusionneeHome = mergedData ? Object.values(mergedData) : [];
@@ -819,17 +820,6 @@ function RapportGroupe({
       (v) => v.deviceID === vehicule.deviceID
     );
 
-    // const isMoving = matchedVehicle.vehiculeDetails?.some(
-    //   (detail) => detail.speedKPH >= 1
-    // );
-    // const noSpeed = matchedVehicle.vehiculeDetails?.every(
-    //   (detail) => detail.speedKPH <= 0
-    // );
-    // const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
-    //   ? matchedVehicle.lastUpdateTime * 1000
-    //   : 0;
-    // const isActive = Date.now() - lastUpdateTimeMs < 24 * 60 * 60 * 1000;
-
     const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
     const currentTime = Date.now(); // Heure actuelle en millisecondes
 
@@ -837,6 +827,11 @@ function RapportGroupe({
       matchedVehicle2.vehiculeDetails &&
       matchedVehicle2.vehiculeDetails[0] &&
       matchedVehicle2.vehiculeDetails[0].speedKPH > 0;
+
+    const isNotSpeedActive =
+      matchedVehicle2.vehiculeDetails &&
+      matchedVehicle2.vehiculeDetails[0] &&
+      matchedVehicle2.vehiculeDetails[0].speedKPH <= 0;
 
     const isMoving = matchedVehicle.vehiculeDetails?.some(
       (detail) => detail.speedKPH >= 1
@@ -857,7 +852,9 @@ function RapportGroupe({
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    if (filter === "movingNow") return isSpeedActive;
+    if (filter === "movingNow") return isSpeedActive && hasDetails && isActive;
+    if (filter === "notMovingNow")
+      return isNotSpeedActive && hasDetails && isActive;
     if (filter === "moving") return hasDetails && isMoving;
     if (filter === "parking") return hasDetails && noSpeed && isActive;
     if (filter === "inactive") return !hasDetails || !isActive;
@@ -873,6 +870,23 @@ function RapportGroupe({
       vehicle.vehiculeDetails &&
       vehicle.vehiculeDetails[0] &&
       vehicle.vehiculeDetails[0].speedKPH > 0;
+
+    // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
+    const lastUpdateTimeMs = vehicle.lastUpdateTime
+      ? vehicle.lastUpdateTime * 1000
+      : 0;
+    const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    // Le véhicule doit être actif selon la vitesse et la mise à jour
+    return isSpeedActive && isRecentlyUpdated;
+  });
+
+  const notActiveVehicleCount = currentdataFusionnee?.filter((vehicle) => {
+    // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
+    const isSpeedActive =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].speedKPH <= 0;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
     const lastUpdateTimeMs = vehicle.lastUpdateTime
@@ -966,11 +980,14 @@ function RapportGroupe({
                 <p></p>
                 <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
                   {filter === "all" && "Tous les véhicules"}
-                  {filter === "moving" && "Véhicules déplacés"}
+                  {filter === "moving" && "Véhicules déplacés aujourd'hui"}
+                  {filter === "notMovingNow" &&
+                    "Véhicules en stationnement actuellement"}
+
                   {filter === "movingNow" &&
                     "Véhicules en mouvement actuellement"}
-                  {filter === "parking" && "Véhicules en stationnement"}
-                  {filter === "inactive" && "Véhicules hors service"}
+                  {filter === "parking" && "Véhicules non déplacés aujourd'hui"}
+                  {filter === "inactive" && "Véhicules hors service "}
                 </h3>
                 <IoClose
                   onClick={() => {
@@ -987,8 +1004,22 @@ function RapportGroupe({
                       (v) => v.deviceID === vehicule.deviceID
                     );
 
+                    const matchedVehicle2 = dataFusionneeHome.find(
+                      (v) => v.deviceID === vehicule.deviceID
+                    );
+
                     const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
                     const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+                    const isSpeedActive =
+                      matchedVehicle2.vehiculeDetails &&
+                      matchedVehicle2.vehiculeDetails[0] &&
+                      matchedVehicle2.vehiculeDetails[0].speedKPH > 0;
+
+                    const isNotSpeedActive =
+                      matchedVehicle2.vehiculeDetails &&
+                      matchedVehicle2.vehiculeDetails[0] &&
+                      matchedVehicle2.vehiculeDetails[0].speedKPH <= 0;
 
                     const isMoving = matchedVehicle.vehiculeDetails?.some(
                       (detail) => detail.speedKPH >= 1
@@ -1027,7 +1058,7 @@ function RapportGroupe({
                     let border_top =
                       "border-t border-t-red-200 dark:border-t-red-600/30 ";
 
-                    if (hasDetails && isMoving) {
+                    if (hasDetails && isMoving && isActive) {
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = "En mouvement rapide";
                       lite_bg_color =
@@ -1041,9 +1072,7 @@ function RapportGroupe({
                         "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
                       border_top =
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
-                    }
-                    //
-                    else if (hasDetails && noSpeed && isActive) {
+                    } else if (hasDetails && noSpeed && isActive) {
                       main_text_color = "text-red-900 dark:text-red-300";
                       statut = "En Stationnement";
                       lite_bg_color =
@@ -1077,6 +1106,31 @@ function RapportGroupe({
                       border_top =
                         "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
                     }
+                    //
+                    //
+                    //
+                    if (
+                      isNotSpeedActive &&
+                      hasDetails &&
+                      isActive &&
+                      filter === "notMovingNow"
+                    ) {
+                      main_text_color = "text-red-900 dark:text-red-300";
+                      statut = "En Stationnement";
+                      lite_bg_color =
+                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+                      activeTextColor = "text-red-900 dark:text-red-200";
+                      active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+                      vitess_img = "/img/home_icon/rapport_parking2.png";
+                      vitess_img_dark = "/img/home_icon/rapport_parking.png";
+
+                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
+                      imgBg =
+                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+                      border_top =
+                        "border-t border-t-red-200 dark:border-t-red-600/30 ";
+                    }
+                    //
 
                     return (
                       <div>
@@ -2029,7 +2083,6 @@ function RapportGroupe({
                 )}
               </span>
             </div>
-
             <div className="flex flex-wrap">
               <p>Heure de recherche trouvée :</p>
               <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
@@ -2043,7 +2096,6 @@ function RapportGroupe({
                 </span>{" "}
               </span>
             </div>
-
             {/*  */}
             {/*  */}
             {/*  */}
@@ -2051,7 +2103,11 @@ function RapportGroupe({
             {/*  */}
             {/*  */}
             {/*  */}
-
+            {searchdonneeFusionneeForRapport.length <= 0 && (
+              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+                * Informations Actuellement
+              </h2>
+            )}
             <div className="flex justify-between items-center pr-3">
               <p>
                 Nombre total de véhicules :{" "}
@@ -2070,6 +2126,80 @@ function RapportGroupe({
                 voir
               </p>
             </div>
+            {searchdonneeFusionneeForRapport.length <= 0 && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  Véhicule en mouvement :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {activeVehicleCount?.length || "0"}
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    // setdefineVehiculeListePupup("notactive");
+                    setFilter("movingNow");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  voir
+                </p>
+              </div>
+            )}
+            {searchdonneeFusionneeForRapport.length <= 0 && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  Véhicule en stationnement :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {notActiveVehicleCount?.length || "0"}
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setdefineVehiculeListePupup("notactive");
+                    setFilter("notMovingNow");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  voir
+                </p>
+              </div>
+            )}
+            {searchdonneeFusionneeForRapport.length <= 0 && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  Véhicule hors service :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {vehiculeNotActif?.length || "0"}
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setdefineVehiculeListePupup("hors_service");
+                    setFilter("inactive");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  voir
+                </p>
+              </div>
+            )}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {searchdonneeFusionneeForRapport.length <= 0 && (
+              <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+            )}{" "}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {searchdonneeFusionneeForRapport.length <= 0 && (
+              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+                * Pour la journée d'aujourd'hui
+              </h2>
+            )}
             <div className="flex justify-between items-center pr-3">
               <p>
                 Véhicules déplacés :{" "}
@@ -2088,63 +2218,18 @@ function RapportGroupe({
                 voir
               </p>
             </div>
-
             <div className="flex justify-between items-center pr-3">
               <p>
-                Véhicule hors service :{" "}
+                Véhicules non déplacés :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {vehiculeNotActif?.length || "0"}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  setdefineVehiculeListePupup("hors_service");
-                  setFilter("inactive");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                voir
-              </p>
-            </div>
-
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
-            {/*  */}
-            {/*  */}
-            {/*  */}
-
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                Véhicule en mouvement actuellement :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {activeVehicleCount?.length || "0"}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  // setdefineVehiculeListePupup("notactive");
-                  setFilter("movingNow");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                voir
-              </p>
-            </div>
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                Véhicule en stationnement actuellement :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                  {/* {vehiculeActiveAjourdhui?.length || "0"} */}
                   {vehiculeNotActiveAjourdhui?.length || "0"}
                 </span>
               </p>
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setdefineVehiculeListePupup("notactive");
+                  setdefineVehiculeListePupup("active");
                   setFilter("parking");
                 }}
                 className="text-orange-400 underline cursor-pointer"
@@ -2152,7 +2237,26 @@ function RapportGroupe({
                 voir
               </p>
             </div>
-
+            {searchdonneeFusionneeForRapport.length > 0 && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  Véhicule hors service :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {vehiculeNotActif?.length || "0"}
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setdefineVehiculeListePupup("hors_service");
+                    setFilter("inactive");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  voir
+                </p>
+              </div>
+            )}
             {/* ////////////////////////////////////////////////////////////////////////////// */}
             {!voirPlus && (
               <div>

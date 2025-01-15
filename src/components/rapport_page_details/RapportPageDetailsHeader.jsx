@@ -178,13 +178,13 @@ function RapportPageDetailsHeader({
   const heureDebut = formatTo12Hour(startTime);
   const heureFin = formatTo12Hour(endTime);
 
-  console.log("Jour Début:", jourDebut);
-  console.log("Mois Début:", moisDebut);
-  console.log("Année Début:", anneeDebut);
+  // console.log("Jour Début:", jourDebut);
+  // console.log("Mois Début:", moisDebut);
+  // console.log("Année Début:", anneeDebut);
 
-  console.log("Jour Fin:", jourFin);
-  console.log("Mois Fin:", moisFin);
-  console.log("Année Fin:", anneeFin);
+  // console.log("Jour Fin:", jourFin);
+  // console.log("Mois Fin:", moisFin);
+  // console.log("Année Fin:", anneeFin);
 
   return (
     <div className=" shadow-md shadow-gray-400/20 pb-2">
@@ -321,10 +321,10 @@ function RapportPageDetailsHeader({
               <div className="flex gap-0 items-center">
                 <FaRegCalendarAlt
                   onClick={() => {
-                    console.log("startDate", startDate);
-                    console.log("startTime", startTime);
-                    console.log("endDate", endDate);
-                    console.log("endTime", endTime);
+                    // console.log("startDate", startDate);
+                    // console.log("startTime", startTime);
+                    // console.log("endDate", endDate);
+                    // console.log("endTime", endTime);
                   }}
                   className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5"
                 />
