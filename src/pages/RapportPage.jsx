@@ -111,15 +111,6 @@ function RapportPage({
     vehiculeNotActif,
   ]);
 
-  // Fonctions pour formater le temps et la date
-  // function formatTimestampToTime(timestamp) {
-  //   const date = new Date(timestamp * 1000);
-  //   const hours = date.getUTCHours().toString().padStart(2, "0");
-  //   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-  //   const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-  //   return `${hours}:${minutes}:${seconds}`;
-  // }
-
   function formatTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000);
     let hours = date.getUTCHours();
@@ -208,15 +199,6 @@ function RapportPage({
 
   //////////////////////////////////////////////////////////////////
 
-  // const donneeVehiculeDetails = currentdataFusionnee?.find(
-  //   (vehicule) =>
-  //     vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
-  // )?.vehiculeDetails;
-
-  // const premierDetail =
-  //   donneeVehiculeDetails[donneeVehiculeDetails?.length - 1]?.timestamp;
-  // const dernierDetails = donneeVehiculeDetails[0]?.timestamp;
-
   const donneeVehiculeDetails = currentdataFusionnee?.find(
     (vehicule) =>
       vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
@@ -245,11 +227,6 @@ function RapportPage({
   const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
   const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
   const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
-
-  // const date = new Date(timestampInSecondsDebut * 1000);
-  // const day = date.getUTCDate();
-  // const month = date.toLocaleString("fr", { month: "long" }); // Mois en toutes lettres en français
-  // const year = date.getUTCFullYear();
 
   // Trouver la date du rapport
   const timestampInSecondsFin = dernierDetails;
@@ -319,17 +296,6 @@ function RapportPage({
                 {/* {formatDate(selectedDate)} */}
                 {
                   jourDebut ? (
-                    // true ||
-                    // jourDebut === jourFin &&
-                    // moisDebut === moisFin &&
-                    // anneeDebut === anneeFin ? (
-                    //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                    //     <span className="dark:text-orange-400 dark:font-normal font-semibold- text-gray-950">
-                    //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                    //       {anneeDebut || ""}
-                    //     </span>{" "}
-                    //   </span>
-                    // ) : (
                     <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                       Du{" "}
                       <span className="dark:text-gray-50 dark:font-normal font-semibold- text-gray-950">

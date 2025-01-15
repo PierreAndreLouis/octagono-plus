@@ -22,9 +22,6 @@ import { FaArrowUp91 } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
 import { IoSearchSharp } from "react-icons/io5";
 
-// import { CgChevronDownO } from "react-icons/lu";
-// asdfasdf;
-// Enregistrement des composants nécessaires
 Chart.register(...registerables);
 import ReactECharts from "echarts-for-react";
 
@@ -152,13 +149,6 @@ function RapportPersonnel({
     return `${day}-${month}-${year}`;
   }
 
-  function formatTimestampToDateWithTimezone(timestamp, offset) {
-    const date = convertToTimezone(timestamp, offset);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filtrer les adresses en fonction du terme de recherche
@@ -170,10 +160,6 @@ function RapportPersonnel({
   const [croissantOrDecroissant, setcroissantOrDecroissant] =
     useState("croissant");
 
-  // let filteredAddresses = uniqueAddresses?.filter((item) =>
-  //   item?.address?.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
   let filteredAddresses;
   if (addressType) {
     filteredAddresses = uniqueAddresses?.filter((item) =>
@@ -184,44 +170,6 @@ function RapportPersonnel({
       item?.address?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
-
-  // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-
-    const day = date.getDate(); // Jour du mois en chiffre
-
-    const month = date.toLocaleDateString("fr-FR", { month: "long" });
-    const year = date.getFullYear();
-
-    return { day, month, year };
-  };
-
-  // const {
-  //   day: jourDebut,
-  //   month: moisDebut,
-  //   year: anneeDebut,
-  // } = formatDate(startDate);
-  // const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
-
-  const formatTo12Hour = (time) => {
-    let [hours, minutes] = time?.split(":").map(Number);
-    const isAM = hours < 12;
-    hours = hours % 12 || 12; // Convertir l'heure 0 à 12 (minuit) en 12 AM
-    const period = isAM ? "AM" : "PM";
-    return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
-  };
-
-  // Convertir les heures
-  // const heureDebut = formatTo12Hour(startTime);
-  // const heureFin = formatTo12Hour(endTime);
 
   //////////////////////////////////////////////////////////////////////////////////
 
@@ -280,84 +228,14 @@ function RapportPersonnel({
           </h1>
 
           <div className="mb-12 shadow-md dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
-            {/* <div className="flex gap-4 items-center-- border-b-- border-orange-600/30 dark:border-gray-600 pb-1 mb---">
-            <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-            <div>
-              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Informations sur le véhicule
-              </h2>
-            </div>
-          </div> */}
-
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
                 Informations sur le véhicule
               </h2>
             </div>
-            {/* <div className="flex mb-1 gap-4 text-gray-600 text-md dark:text-gray-300 ml-2">
-            <div className="flex gap-2 items-center">
-              <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 mr-4" />
 
-              {jourDebut === jourFin &&
-              moisDebut === moisFin &&
-              anneeDebut === anneeFin ? (
-                <h3 className="text-[.85rem] sm:text-sm md:text-[1rem]  lg:text-lg--">
-                  <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                    Le {jourDebut || ""} {moisDebut || ""} {anneeDebut || ""}
-                  </span>{" "}
-                </h3>
-              ) : (
-                <h3 className="text-[.85rem] sm:text-sm md:text-[1rem]  lg:text-lg--">
-                  Du{" "}
-                  <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                    {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
-                    {anneeDebut === anneeFin ? "" : anneeDebut}
-                  </span>{" "}
-                  au{" "}
-                  <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                    {jourFin} {moisFin} {anneeFin}
-                  </span>
-                </h3>
-              )}
-            </div>
-          </div> */}
             {/* ///////////////////////////// */}
-            {/* <div className="flex mb-4 gap-4 text-gray-600 text-md dark:text-gray-300 border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3-- ml-1.5">
-            <div className="flex items-center gap-1">
-              <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4" />
-              <h3 className="text-[.85rem] sm:text-sm md:text-[1rem] lg:text-lg-- ml-0.5">
-                De{" "}
-                <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                  {" "}
-                  {selectUTC
-                    ? formatTimestampToTimeWithTimezone(
-                        currentVehicule?.vehiculeDetails[
-                          currentVehicule?.vehiculeDetails?.length - 1
-                        ]?.timestamp,
-                        selectUTC
-                      )
-                    : formatTimestampToTime(
-                        currentVehicule?.vehiculeDetails?.[
-                          currentVehicule?.vehiculeDetails?.length - 1
-                        ]?.timestamp
-                      )}{" "}
-                </span>{" "}
-                a{" "}
-                <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                  {" "}
-                  {selectUTC
-                    ? formatTimestampToTimeWithTimezone(
-                        currentVehicule?.vehiculeDetails[0]?.timestamp,
-                        selectUTC
-                      )
-                    : formatTimestampToTime(
-                        currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                      )}{" "}
-                </span>
-              </h3>
-            </div>
-          </div> */}
 
             <div>
               <div className="text-gray-700 font-bold flex flex-col gap-2 dark:text-gray-300">
@@ -365,17 +243,6 @@ function RapportPersonnel({
                   <p>Date de recherche trouvée :</p>
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5">
                     {jourDebut ? (
-                      // true ||
-                      // jourDebut === jourFin &&
-                      // moisDebut === moisFin &&
-                      // anneeDebut === anneeFin ? (
-                      //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                      //     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                      //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                      //       {anneeDebut || ""}
-                      //     </span>{" "}
-                      //   </span>
-                      // ) : (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                         Du{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
@@ -404,30 +271,10 @@ function RapportPersonnel({
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                         {heureDebut}
-                        {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp
-                            )} */}
                       </span>{" "}
                       à{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                         {heureFin}{" "}
-                        {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[0]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )} */}
                       </span>{" "}
                     </span>
                   ) : (
@@ -456,13 +303,6 @@ function RapportPersonnel({
           </div>
 
           <div className="shadow-md mt-4 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
-            {/* <div className="flex gap-4 items-center border-b-- border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
-            <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Informations sur le trajet du vehicule
-            </h2>
-          </div> */}
-
             <div className="flex gap-4 items-center-- border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <div>
@@ -472,138 +312,11 @@ function RapportPersonnel({
               </div>
             </div>
 
-            {/* <div className="flex mb-1 gap-4 text-gray-600 text-md dark:text-gray-300 ml-2">
-            <div className="flex gap-2 items-center">
-              <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 mr-4" />
-
-              {jourDebut === jourFin &&
-              moisDebut === moisFin &&
-              anneeDebut === anneeFin ? (
-                <h3 className="text-[.9rem] sm:text-sm md:text-[1rem]  lg:text-lg--">
-                  <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                    Le {jourDebut || ""} {moisDebut || ""} {anneeDebut || ""}
-                  </span>{" "}
-                </h3>
-              ) : (
-                <h3 className="text-[.9rem] sm:text-sm md:text-[1rem]  lg:text-lg--">
-                  Du{" "}
-                  <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                    {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
-                    {anneeDebut === anneeFin ? "" : anneeDebut}
-                  </span>{" "}
-                  au{" "}
-                  <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                    {jourFin} {moisFin} {anneeFin}
-                  </span>
-                </h3>
-              )}
-            </div>
-          </div> */}
-            {/* ///////////////////////////// */}
-            {/* <div className="flex mb-4 gap-4 text-gray-600 text-md dark:text-gray-300 border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3-- ml-1.5">
-            <div className="flex items-center gap-1">
-              <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4" />
-              <h3 className="text-[.9rem] sm:text-sm md:text-[1rem] lg:text-lg-- ml-0.5">
-                De{" "}
-                <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                  {" "}
-                  {selectUTC
-                    ? formatTimestampToTimeWithTimezone(
-                        currentVehicule?.vehiculeDetails[
-                          currentVehicule?.vehiculeDetails?.length - 1
-                        ]?.timestamp,
-                        selectUTC
-                      )
-                    : formatTimestampToTime(
-                        currentVehicule?.vehiculeDetails?.[
-                          currentVehicule?.vehiculeDetails?.length - 1
-                        ]?.timestamp
-                      )}{" "}
-                </span>{" "}
-                a{" "}
-                <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                  {" "}
-                  {selectUTC
-                    ? formatTimestampToTimeWithTimezone(
-                        currentVehicule?.vehiculeDetails[0]?.timestamp,
-                        selectUTC
-                      )
-                    : formatTimestampToTime(
-                        currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                      )}{" "}
-                </span>
-              </h3>
-            </div>
-          </div> */}
-
             <div>
               <div className="text-gray-700 flex flex-col gap-2 dark:text-gray-300">
-                {/* <p>
-                  Date de recherche trouvée :
-                  <span className="font-semibold dark:text-orange-500 text-gray-700 pl-3">
-                    {
-                      // true ||
-                      jourDebut === jourFin &&
-                      moisDebut === moisFin &&
-                      anneeDebut === anneeFin ? (
-                        <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                          <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                            Le {jourDebut || ""} {moisDebut || ""}{" "}
-                            {anneeDebut || ""}
-                          </span>{" "}
-                        </span>
-                      ) : (
-                        <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                          Du{" "}
-                          <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                            {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
-                            {anneeDebut === anneeFin ? "" : anneeDebut}
-                          </span>{" "}
-                          au{" "}
-                          <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                            {jourFin} {moisFin} {anneeFin}
-                          </span>
-                        </span>
-                      )
-                    }
-                  </span>
-                </p>
-
-                <p>
-                  Heure de recherche trouvée :
-                  <span className="font-normal-- font-semibold dark:text-orange-500 text-gray-700 pl-3">
-                    De{" "}
-                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp
-                          )}
-                    </span>{" "}
-                    a{" "}
-                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[0]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                          )}
-                    </span>{" "}
-                  </span>
-                </p> */}
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                {/* <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" /> */}
                 {/*  */}
                 {/*  */}
                 {/*  */}
@@ -611,17 +324,6 @@ function RapportPersonnel({
                   <p>Date de recherche trouvée :</p>
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
                     {jourDebut ? (
-                      // true ||
-                      // jourDebut === jourFin &&
-                      // moisDebut === moisFin &&
-                      // anneeDebut === anneeFin ? (
-                      //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                      //     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                      //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                      //       {anneeDebut || ""}
-                      //     </span>{" "}
-                      //   </span>
-                      // ) : (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                         Du{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-700">
@@ -649,30 +351,10 @@ function RapportPersonnel({
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-700">
                         {heureDebut}
-                        {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp
-                            )} */}
                       </span>{" "}
                       à{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-700">
                         {heureFin}{" "}
-                        {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[0]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )} */}
                       </span>{" "}
                     </span>
                   ) : (
@@ -693,14 +375,7 @@ function RapportPersonnel({
                   Heure de départ:{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveDebut
-                      ? // selectUTC
-                        // ? formatTimestampToTimeWithTimezone(
-                        //     heureActiveDebut.timestamp,
-                        //     selectUTC
-                        //   )
-                        //
-                        //  :
-                        FormatDateHeure(heureActiveDebut.timestamp)?.time
+                      ? FormatDateHeure(heureActiveDebut.timestamp)?.time
                       : "Pas de mouvement"}{" "}
                   </span>
                 </p>
@@ -708,13 +383,7 @@ function RapportPersonnel({
                   Heure d'arrivée:{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin
-                      ? // selectUTC
-                        //   ? formatTimestampToTimeWithTimezone(
-                        //       heureActiveFin.timestamp,
-                        //       selectUTC
-                        //     )
-                        //   :
-                        FormatDateHeure(heureActiveFin.timestamp)?.time
+                      ? FormatDateHeure(heureActiveFin.timestamp)?.time
                       : "Pas de mouvement"}{" "}
                   </span>
                 </p>
@@ -728,8 +397,6 @@ function RapportPersonnel({
                 <p>
                   Durée total en mouvement :{" "}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {totalMovingHours || "0"}h {totalMovingMinutes || "0"}m{" "}
-                  {totalMovingSeconds || "0"}s */}
                     {formatTime(
                       totalMovingHours,
                       totalMovingMinutes,
@@ -740,21 +407,6 @@ function RapportPersonnel({
                 <p>
                   Durée des arrêts lors du deplacement :
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {(() => {
-                    if (
-                      totalStopHours > 0 ||
-                      totalStopMinutes > 0 ||
-                      totalStopSeconds > 0
-                    ) {
-                      return `${
-                        totalStopHours > 0 ? totalStopHours + "h " : ""
-                      }${totalStopMinutes > 0 ? totalStopMinutes + "m " : ""}${
-                        totalStopSeconds > 0 ? totalStopSeconds + "s" : ""
-                      }`;
-                    }
-                    return "0s";
-                  })()} */}
-
                     {formatTime(
                       totalStopHours,
                       totalStopMinutes,
@@ -765,9 +417,6 @@ function RapportPersonnel({
                 <p>
                   Duree de l’arrêts le plus long :
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {`${longestHours || "0"}h ${longestMinutes || "0"}mn ${
-                    longestSeconds || "0"
-                  }s`}{" "} */}
                     {formatTime(longestHours, longestMinutes, longestSeconds)}
                   </span>
                 </p>
@@ -821,61 +470,6 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
-
-          {/* <div className="shadow-md mt-4  dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
-          <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
-            <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Distance
-            </h2>
-          </div>
-
-          <div>
-            <div className="text-gray-600 flex flex-col gap-2 dark:text-gray-300">
-              <p>
-                Distance totale parcourue:
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {calculateTotalDistance(
-                    currentVehicule?.vehiculeDetails
-                  ).toFixed(2)}
-                  Km{" "}
-                </span>
-              </p>
-              <p>
-                Nombre total d’arrêts :
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {nombreArret || "0"}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div> */}
-
-          {/* <div className="shadow-md mt-4  dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
-          <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
-            <SlSpeedometer className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Vitesse
-            </h2>
-          </div>
-
-          <div>
-            <div className="text-gray-600 flex flex-col gap-2 dark:text-gray-300">
-              <p>
-                Vitesse moyenne:
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/
-                </span>
-              </p>
-              <p>
-                Vitesse maximale:
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {(maxSpeed && maxSpeed.toFixed(2)) || "0"} Km/h
-                </span>
-              </p>
-            </div>
-          </div>
-        </div> */}
 
           <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
             <GiPathDistance className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -987,14 +581,7 @@ function RapportPersonnel({
           </div>
 
           {/* ///////////////////////////////////////// */}
-          {/* <div className="transition-all w-full h-[30rem] bg-gray-100 rounded-lg dark:bg-gray-900 dark:text-gray-100">
-            <div className=" h-[30rem]">
-              <canvas
-                className="w-full transition-all dark:bg-gray-900 rounded-lg  h-[30rem] border"
-                id="myChart"
-              ></canvas>
-            </div>
-          </div> */}
+
           {/* ///////////////////////////////////////// */}
           <div className="overflow-auto max-w-[100vw]">
             <div className="w-[200rem]-- max-h-[30rem] ">
@@ -1260,17 +847,6 @@ function RapportPersonnel({
                 <p className="text-[.9rem]">
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                     {jourDebut ? (
-                      // true ||
-                      // jourDebut === jourFin &&
-                      // moisDebut === moisFin &&
-                      // anneeDebut === anneeFin ? (
-                      //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                      //     <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                      //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                      //       {anneeDebut || ""}
-                      //     </span>{" "}
-                      //   </span>
-                      // ) : (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                         Du{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
@@ -1302,31 +878,10 @@ function RapportPersonnel({
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
                         {heureDebut}
-                        {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp
-                            )} */}
                       </span>{" "}
                       à{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
                         {heureFin}
-
-                        {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[0]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )} */}
                       </span>{" "}
                     </span>
                   </p>
@@ -1397,27 +952,12 @@ function RapportPersonnel({
                               <p>
                                 <span className="font-bold">Date : </span>
                                 {item.timestamp
-                                  ? // selectUTC
-                                    //   ? formatTimestampToDateWithTimezone(
-                                    //       item.timestamp,
-                                    //       selectUTC
-                                    //     )
-                                    // :
-                                    FormatDateHeure(item.timestamp)?.date
+                                  ? FormatDateHeure(item.timestamp)?.date
                                   : "Pas de date disponible"}{" "}
                               </p>
                               <p>
                                 <span className="font-bold">Heure : </span>
-                                {
-                                  // selectUTC
-                                  //   ?
-                                  //   formatTimestampToTimeWithTimezone(
-                                  //       item.timestamp,
-                                  //       selectUTC
-                                  //     )
-                                  //   :
-                                  FormatDateHeure(item.timestamp)?.time
-                                }{" "}
+                                {FormatDateHeure(item.timestamp)?.time}{" "}
                               </p>
                             </div>
                             <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
@@ -1500,28 +1040,14 @@ function RapportPersonnel({
                                   Date :{" "}
                                 </span>
                                 {item.timestamp
-                                  ? // selectUTC
-                                    //   ? formatTimestampToDateWithTimezone(
-                                    //       item.timestamp,
-                                    //       selectUTC
-                                    //     )
-                                    //   :
-                                    FormatDateHeure(item.timestamp)?.date
+                                  ? FormatDateHeure(item.timestamp)?.date
                                   : "Pas de date disponible"}{" "}
                               </p>
                               <p>
                                 <span className="font-bold  dark:text-orange-400">
                                   Heure :{" "}
                                 </span>
-                                {
-                                  // selectUTC
-                                  //   ? formatTimestampToTimeWithTimezone(
-                                  //       item.timestamp,
-                                  //       selectUTC
-                                  //     )
-                                  //   :
-                                  FormatDateHeure(item.timestamp)?.time
-                                }{" "}
+                                {FormatDateHeure(item.timestamp)?.time}{" "}
                               </p>
                             </div>
                             <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
@@ -1554,102 +1080,6 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
-
-          {/* <div className="shadow-md mt-4 cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4 hover:bg-orange-100/70-- bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
-            <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
-              <FaCar className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-
-              <h2 className="font-semibold dark:text-orange-500 text-orange-900">
-                Tous les lieux Stationnés
-              </h2>
-            </div>
-
-            <div className="sm:flex gap-10">
-              <div className="flex gap-0 items-center">
-                <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
-                <p className="text-[.9rem]">
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    {
-                      // true ||
-                      jourDebut === jourFin &&
-                      moisDebut === moisFin &&
-                      anneeDebut === anneeFin ? (
-                        <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                          <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                            Le {jourDebut || ""} {moisDebut || ""}{" "}
-                            {anneeDebut || ""}
-                          </span>{" "}
-                        </span>
-                      ) : (
-                        <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                          Du{" "}
-                          <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                            {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
-                            {anneeDebut === anneeFin ? "" : anneeDebut}
-                          </span>{" "}
-                          au{" "}
-                          <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                            {jourFin} {moisFin} {anneeFin}
-                          </span>
-                        </span>
-                      )
-                    }
-                  </span>
-                </p>
-              </div>
-
-              <div className="flex gap-0 items-center">
-                <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
-
-                <p className="text-[.9rem]">
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    De{" "}
-                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[
-                              currentVehicule?.vehiculeDetails?.length - 1
-                            ]?.timestamp
-                          )}
-                    </span>{" "}
-                    a{" "}
-                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
-                      {selectUTC
-                        ? formatTimestampToTimeWithTimezone(
-                            currentVehicule?.vehiculeDetails[0]?.timestamp,
-                            selectUTC
-                          )
-                        : formatTimestampToTime(
-                            currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                          )}
-                    </span>{" "}
-                  </span>
-                </p>
-              </div>
-            </div>
-         
-
-            <div>
-              <div className="text-gray-600 flex flex-col gap-3">
-                {uniqueAddressesZerroSpeed?.map((add, index) => {
-                  return (
-                    <p className="dark:text-gray-300" key={index}>
-                      <span className="font-bold dark:text-orange-500 text-black mr-3">
-                        {index + 1} {") "}
-                      </span>
-                      {add}
-                    </p>
-                  );
-                })}
-              </div>
-            </div>
-          </div> */}
         </div>
       ) : (
         <div className="w-full h-screen-- pt-20 flex flex-col justify-center items-center">

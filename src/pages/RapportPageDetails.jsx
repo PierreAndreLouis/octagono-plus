@@ -211,147 +211,7 @@ function RapportPageDetails() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  // section du diagrame de vitesse
-  // useEffect(() => {
-  //   const canvas = document.getElementById("myChart");
-  //   if (!canvas) {
-  //     console.error("L'élément canvas avec l'ID 'myChart' n'existe pas.");
-  //     return;
-  //   }
-
-  //   // Vérifiez si un graphique existe déjà, et détruisez-le
-  //   const existingChart = Chart.getChart("myChart"); // Récupérer le graphique existant par ID
-  //   if (existingChart) {
-  //     existingChart.destroy(); // Détruire le graphique existant
-  //   }
-  //   const ctx = canvas.getContext("2d");
-
-  //   // const data = sortedData || [];
-  //   const data = filteredVehicles || [];
-
-  //   // const timestamps = data?.map((item) =>
-  //   //   new Date(item.timestamp * 1000).toLocaleTimeString()
-  //   // );
-  //   // const speeds = data?.map((item) => parseFloat(item.speedKPH));
-
-  //   const timestamps = data
-  //     ?.map((item) => new Date(item.timestamp * 1000).toLocaleTimeString())
-  //     .reverse(); // Inverser l'ordre des timestamps
-
-  //   const speeds = data?.map((item) => parseFloat(item.speedKPH)).reverse(); // Inverser l'ordre des vitesses
-
-  //   // Créer un nouveau graphique
-  //   new Chart(ctx, {
-  //     type: "line", // Type de graphique
-  //     // type: "polarArea", // Type de graphique
-  //     // type: "radar", // Type de graphique
-  //     // type: "bar", // Type de graphique
-  //     fill: true, // Ajoutez cette propriété pour un graphique en aires
-
-  //     data: {
-  //       labels: timestamps, // Échelle X
-  //       datasets: [
-  //         {
-  //           label: "Vitesse (km/h)",
-  //           data: speeds,
-  //           borderColor: "rgba(75, 192, 192, 1)",
-  //           backgroundColor: "rgba(75, 192, 192, 0.2)",
-  //           borderWidth: 2,
-  //         },
-  //       ],
-  //     },
-  //     options: {
-  //       responsive: true,
-  //       plugins: {
-  //         legend: { display: true },
-  //       },
-  //       scales: {
-  //         x: {
-  //           type: "category", // Type de l'échelle X
-  //           title: {
-  //             display: true,
-  //             text: "Heures",
-  //           },
-  //         },
-  //         y: {
-  //           title: {
-  //             display: true,
-  //             text: "Vitesse (km/h)",
-  //           },
-  //           ticks: {
-  //             stepSize: 1, // Augmente l'écart entre les valeurs de l'axe Y
-  //           },
-  //         },
-  //       },
-  //     },
-  //   });
-  // }, []); // Exécuter une seule fois au montage du composant
-
-  // const sortedData = [...(filteredVehicles || [])].sort((a, b) => {
-  //   // Remplace "key" par la clé par laquelle tu veux trier
-  //   if (a.key > b.key) return -1;
-  //   if (a.key < b.key) return 1;
-  //   return 0;
-  // });
-  // const data = sortedData || [];
-  // const data = filteredVehicles || [];
-
-  // const timestamps = data
-  //   ?.map((item) => new Date(item.timestamp * 1000).toLocaleTimeString())
-  //   .reverse(); // Inverser l'ordre des timestamps
-
-  // const speeds = data?.map((item) => parseFloat(item.speedKPH)).reverse(); // Inverser l'ordre des vitesses
-
-  // const options = {
-  //   title: {
-  //     // text: "Diagramme des vitesses",
-  //     text: "",
-  //     left: "center",
-  //     textStyle: {
-  //       fontSize: 16, // Taille de la police pour le titre
-  //       fontWeight: "bold",
-  //     },
-  //   },
-  //   tooltip: {
-  //     trigger: "axis",
-  //   },
-  //   xAxis: {
-  //     type: "category",
-  //     data: timestamps,
-  //     name: "Heures",
-  //     nameLocation: "middle",
-  //     nameTextStyle: {
-  //       fontSize: 14, // Taille du texte pour le nom
-  //       padding: 20, // Espace autour du texte
-  //     },
-  //   },
-  //   yAxis: {
-  //     type: "value",
-  //     name: "Vitesse (km/h)", // Nom de l'axe Y
-  //     nameLocation: "middle", // Place le nom au milieu de l'axe
-  //     nameTextStyle: {
-  //       fontSize: 14, // Taille de la police pour le nom
-  //       padding: 40, // Distance entre le texte et l'axe
-  //     },
-  //     axisLabel: {
-  //       fontSize: 12, // Taille des étiquettes des graduations
-  //     },
-  //   },
-  //   series: [
-  //     {
-  //       data: speeds,
-  //       // type: "bar", // Type de graphique (ligne)
-  //       type: "line", // Type de graphique (ligne)
-  //       itemStyle: {
-  //         color: "rgba(75, 192, 192, 0.8)", // Couleur des lignes ou barres
-  //       },
-  //       lineStyle: {
-  //         width: 2, // Épaisseur de la ligne
-  //       },
-  //     },
-  //   ],
-  // };
+  ///
 
   function formatTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000);
@@ -381,39 +241,6 @@ function RapportPageDetails() {
   const timeData = data.map(
     (vehicle) => FormatDateHeure(vehicle.timestamp)?.time
   );
-  // const timeData = data.map((vehicle) => formatTimestamp(vehicle.timestamp));
-
-  // const options = {
-  //   // title: {
-  //   //   // text: "",
-  //   //   // text: "Vitesse des véhicules",
-  //   // },
-  //   tooltip: {
-  //     trigger: "axis",
-  //   },
-  //   xAxis: {
-  //     type: "category",
-  //     data: timeData, // Heure sur l'axe des X
-  //     boundaryGap: false,
-  //   },
-  //   yAxis: {
-  //     type: "value",
-  //     name: "Vitesse (KPH)",
-  //     // min: 0, // Vous pouvez ajuster la valeur minimale selon vos besoins
-  //     // max: 20, // Définissez une valeur maximale qui n'est pas trop éloignée des valeurs de votre vitesse
-  //     // interval: 1, // Définit un intervalle précis entre les valeurs
-  //   },
-  //   series: [
-  //     {
-  //       data: speedData, // Vitesses sur l'axe des Y
-  //       type: "line",
-  //       smooth: true,
-  //       lineStyle: {
-  //         color: "rgba(75, 192, 192, 0.8)",
-  //       },
-  //     },
-  //   ],
-  // };
 
   const options = {
     tooltip: {
@@ -511,14 +338,6 @@ function RapportPageDetails() {
       ? currentItem
       : maxItem;
   }, filteredList[0]);
-
-  // function formatTimestampToTime(timestamp) {
-  //   const date = new Date(timestamp * 1000);
-  //   const hours = date.getUTCHours().toString().padStart(2, "0");
-  //   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-  //   const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-  //   return `${hours}:${minutes}:${seconds}`;
-  // }
 
   function formatTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000);
@@ -622,7 +441,6 @@ function RapportPageDetails() {
     return totalDistance; // Distance totale en kilomètres
   }
 
-  // Fonction pour calculer la distance totale pour tous les véhicules
   // Fonction pour calculer la distance totale pour tous les véhicules
   function calculateDistancesForAllVehicles(vehicles) {
     if (vehicles && vehicles.length > 0) {
@@ -1023,21 +841,6 @@ function RapportPageDetails() {
   ////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////
-  // section pour savoir tous les lieux frequentes et stationnes
-
-  // function getUniqueAddresses(dataList) {
-  //   // Extraire toutes les adresses de la liste
-  //   const addresses = dataList?.map(
-  //     (item) => item.backupAddress || item.address
-  //   );
-
-  //   // Utiliser un Set pour éliminer les doublons
-  //   const uniqueAddresses = [...new Set(addresses)];
-
-  //   return uniqueAddresses;
-  // }
-
-  // const uniqueAddresses = getUniqueAddresses(currentVehicule?.vehiculeDetails);
 
   function getUniqueAddresses(dataList) {
     // Vérifier si dataList est défini
@@ -1063,51 +866,6 @@ function RapportPageDetails() {
   }
 
   const uniqueAddresses = getUniqueAddresses(currentVehicule?.vehiculeDetails);
-  // console.log("Unique addresssssssssss", uniqueAddresses);
-
-  // function getUniqueAddressesWhenSpeedZeroOrLess(dataList) {
-  //   // Filtrer les éléments où la vitesse est <= 0
-  //   const filteredData = dataList?.filter(
-  //     (item) => parseFloat(item.speedKPH) <= 0
-  //   );
-
-  //   // Extraire les adresses de ces éléments filtrés
-  //   const addresses = filteredData?.map(
-  //     (item) => item.backupAddress || item.address
-  //   );
-
-  //   // Utiliser un Set pour éliminer les doublons
-  //   const uniqueAddresses = [...new Set(addresses)];
-
-  //   return uniqueAddresses;
-  // }
-
-  // function getUniqueAddressesWhenSpeedZeroOrLess(dataList) {
-  //   // Vérifier si dataList est défini
-  //   if (!dataList) return [];
-
-  //   // Utiliser un Map pour conserver les informations uniques par adresse
-  //   const uniqueMap = new Map();
-
-  //   // Filtrer les éléments où la vitesse est <= 0
-  //   const filteredData = dataList.filter(
-  //     (item) => parseFloat(item.speedKPH) <= 0
-  //   );
-
-  //   filteredData.forEach((item) => {
-  //     const address = item.backupAddress || item.address;
-  //     if (address && !uniqueMap.has(address)) {
-  //       uniqueMap.set(address, {
-  //         address,
-  //         speedKPH: item.speedKPH || 0, // Ajouter la vitesse (0 par défaut si manquante)
-  //         timestamp: item.timestamp || 0, // Ajouter le timestamp (0 par défaut si manquant)
-  //       });
-  //     }
-  //   });
-
-  //   // Retourner un tableau des valeurs uniques
-  //   return Array.from(uniqueMap.values());
-  // }
 
   function getUniqueAddressesWhenSpeedZeroOrLess(dataList) {
     // Vérifier si dataList est défini
@@ -1306,7 +1064,6 @@ function RapportPageDetails() {
   const result = calculateDurationsForAllVehicles(currentdataFusionnee); // Remplacez "allVehicles" par votre liste de véhicules
 
   const [showChooseDate, setShowChooseDate] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [showDatePicker2, setShowDatePicker2] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date()); // Date sélectionnée
@@ -1316,7 +1073,6 @@ function RapportPageDetails() {
   ////////////////////////////////////////////////////////////////////////////c/cvv
   ////////////////////////////////////////////////////////////////////////////c/cvv
   // Formatage de la date actuelle
-  const getCurrentDate = () => new Date().toISOString().split("T")[0];
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
   const today = new Date(); // La date actuelle
 
@@ -1417,17 +1173,7 @@ function RapportPageDetails() {
       .toString()
       .padStart(2, "0")}`;
 
-    console.log("timeFrom", timeFrom);
-    console.log("timeTo", timeTo);
-
     ///////////////////////////////////////////////////////////////////////////////////////
-
-    // // Combine les dates formatées avec les heures
-    // const timeFrom = `${formattedStartDate} ${startTime}`;
-    // const timeTo = `${formattedEndDate} ${endTime}`;
-
-    // console.log("timeFrom", timeFrom);
-    // console.log("timeTo", timeTo);
 
     if (dataFusionee && dataFusionee.length > 0) {
       dataFusionee?.forEach((vehicle) => {
@@ -1509,17 +1255,7 @@ function RapportPageDetails() {
       .toString()
       .padStart(2, "0")}`;
 
-    console.log("timeFrom+++++++++++++", timeFrom);
-    console.log("timeTo+++++++++++++++", timeTo);
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Combine les dates formatées avec les heures
-    // const timeFrom = `${formattedStartDate} ${startTime}:00`;
-    // const timeTo = `${formattedEndDate} ${endTime}:00`;
-
-    // console.log("timeFrom+++++++++++++", timeFrom);
-    // console.log("timeTo+++++++++++++++", timeTo);
 
     // handleDateChange(timeFrom, timeTo);
     if (dataFusionee && dataFusionee.length > 0) {
@@ -1624,27 +1360,11 @@ function RapportPageDetails() {
               startTime={startTimeToDisplay}
               endDate={endDateToDisplay}
               endTime={endTimeToDisplay}
-              // startDate={startDate}
-              // startTime={startTime}
-              // endDate={endDate}
-              // endTime={endTime}
             />
           </div>
           {/* )} */}
         </div>
       </div>
-      {/* <RapportPageDetailsOptions
-        setPersonnelDetails={setPersonnelDetails}
-        personnelDetails={personnelDetails}
-        setShowListOption={setShowListOption}
-        setVehiclueHistoriqueDetails={setVehiclueHistoriqueDetails}
-        currentVehicule={currentVehicule}
-        formatTimestampToTimeWithTimezone={formatTimestampToTimeWithTimezone}
-        formatTimestampToTime={formatTimestampToTime}
-        pageSection={pageSection}
-        setpageSection={setpageSection}
-      /> */}
-      {/* categorie Personnelle , groupe, et options */}
 
       {/* Personnelle */}
       {pageSection === "unite" && (
@@ -1693,10 +1413,6 @@ function RapportPageDetails() {
           startTime={startTimeToDisplay}
           endDate={endDateToDisplay}
           endTime={endTimeToDisplay}
-          // startDate={startDate}
-          // startTime={startTime}
-          // endDate={endDate}
-          // endTime={endTime}
         />
       )}
 
@@ -1731,7 +1447,6 @@ function RapportPageDetails() {
           tileLayers={tileLayers}
           getMarkerIcon={getMarkerIcon}
           currentLocation={currentLocation}
-          // customMarkerIcon={customMarkerIcon}
           positions={positions}
           centerOnFirstMarker={centerOnFirstMarker}
           showHistoriqueInMap={showHistoriqueInMap}
@@ -1742,10 +1457,6 @@ function RapportPageDetails() {
           startTime={startTimeToDisplay}
           endDate={endDateToDisplay}
           endTime={endTimeToDisplay}
-          // startDate={startDate}
-          // startTime={startTime}
-          // endDate={endDate}
-          // endTime={endTime}
         />
       )}
 

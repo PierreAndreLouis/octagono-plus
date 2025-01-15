@@ -91,14 +91,6 @@ function RapportGroupe({
     return "0s";
   };
 
-  // const donneeVehiculeDetails = currentdataFusionnee.find(
-  //   (vehicule) =>
-  //     vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
-  // )?.vehiculeDetails;
-
-  // const premierDetail =
-  //   donneeVehiculeDetails[donneeVehiculeDetails.length - 1]?.timestamp;
-  // const dernierDetails = donneeVehiculeDetails[0]?.timestamp;
   const donneeVehiculeDetails = currentdataFusionnee?.find(
     (vehicule) =>
       vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
@@ -110,25 +102,14 @@ function RapportGroupe({
   const dernierDetails = donneeVehiculeDetails?.[0]?.timestamp;
 
   // Trouver la date du rapport
-  // Trouver la date du rapport
   const timestampInSecondsDebut = premierDetail;
 
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
-
-  // Récupérer le jour, le mois et l'année séparément
-  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
   const timestampInSecondsFin = dernierDetails;
 
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
-
-  // Récupérer le jour, le mois et l'année séparément
-  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
   //////////////////////////////////////////////////////////////////
 
@@ -151,13 +132,6 @@ function RapportGroupe({
     return { day, month, year };
   };
 
-  // const {
-  //   day: jourDebut,
-  //   month: moisDebut,
-  //   year: anneeDebut,
-  // } = formatDate(startDate);
-  // const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
-
   const formatTo12Hour = (time) => {
     let [hours, minutes] = time.split(":").map(Number);
     const isAM = hours < 12;
@@ -166,40 +140,11 @@ function RapportGroupe({
     return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
   };
 
-  // Convertir les heures
-  // const heureDebut = formatTo12Hour(startTime);
-  // const heureFin = formatTo12Hour(endTime);
-
-  // console.log("Jour Début:", jourDebut);
-  // console.log("Mois Début:", moisDebut);
-  // console.log("Année Début:", anneeDebut);
-
-  // console.log("Jour Fin:", jourFin);
-  // console.log("Mois Fin:", moisFin);
-  // console.log("Année Fin:", anneeFin);
-
   ///////////////////////////////////////////////////////////
 
-  const [showActiveVehicule, setshowActiveVehicule] = useState(true);
-  const [showParkingVehicule, setshowParkingVehicule] = useState(true);
-  const [showInactiveVehicule, setshowInactiveVehicule] = useState(true);
   const [voirVehiculeListePupup, setvoirVehiculeListePupup] = useState(false);
   const [defineVehiculeListePupup, setdefineVehiculeListePupup] =
     useState("tous");
-
-  const [nothing, setnothing] = useState(false);
-
-  function formatTimestampToDate(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`;
-  }
-
-  const doNothing = () => {
-    console.log("");
-  };
 
   const [trajetVehiculePupup, settrajetVehiculePupup] = useState(false);
   const [tableDeplacement, settableDeplacement] = useState(false);
@@ -246,14 +191,6 @@ function RapportGroupe({
       const firstValidIndex = vehiculeDetails.findIndex(
         (detail) => parseFloat(detail.speedKPH) >= 1
       );
-
-      // const lastValidIndex =
-      //   vehiculeDetails.length -
-      //   1 -
-      //   vehiculeDetails
-      //     .slice()
-      //     .reverse()
-      //     .findIndex((detail) => parseFloat(detail.speedKPH) >= 1);
 
       const lastValidIndex =
         vehiculeDetails.length -
@@ -489,51 +426,6 @@ function RapportGroupe({
       .sort((a, b) => b.maxSpeed - a.maxSpeed);
   };
 
-  // const sortVehiclesByFirstMovement = (filteredData) => {
-  //   return filteredData
-  //     .map((item) => {
-  //       const vehiculeDetails = item.vehiculeDetails;
-
-  //       // Trouver le premier index où speedKPH >= 1
-  //       const firstValidIndex = vehiculeDetails.findLastIndex(
-  //         (detail) => parseFloat(detail.speedKPH) >= 1
-  //       );
-
-  //       // Si aucun mouvement n'est trouvé, ignorer ce véhicule
-  //       if (firstValidIndex === -1) {
-  //         return null;
-  //       }
-
-  //       // Obtenir le timestamp du premier mouvement
-  //       const firstMovementTimestamp =
-  //         vehiculeDetails[firstValidIndex].timestamp;
-
-  //       return {
-  //         ...item,
-  //         firstMovementTimestamp, // Ajouter le timestamp du premier mouvement
-  //         description: item.description,
-  //         deviceID: item.deviceID,
-  //         totalDistance: item.totalDistance, // Inclure la distance parcourue
-  //         totalDuration: item.totalDuration, // Inclure la durée totale
-  //         totalPauseDuration: item.totalPauseDuration, // Inclure la durée totale des pauses
-  //         totalMovingDuration: item.totalMovingDuration, // Inclure la durée totale en mouvement
-  //         minSpeed: item.minSpeed || 0,
-  //         maxSpeed: item.maxSpeed || 0,
-  //         avgSpeed: item.avgSpeed || 0,
-  //         stopCount: item.stopCount, // Ajouter le nombre d'arrêts
-  //         totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
-  //         vehiculeDetails: item.vehiculeDetails,
-  //       };
-  //     })
-  //     .filter((item) => item !== null) // Filtrer les véhicules sans mouvement
-
-  //     .sort((a, b) => a.firstMovementTimestamp - b.firstMovementTimestamp);
-  // };
-
-  // Exemple d'utilisation avec tes données
-  // const vehiculeMouvementOrderedByFirstMovement =
-  //   sortVehiclesByFirstMovement(filteredData);
-
   const sortVehiclesByFirstMovement = (filteredData) => {
     return filteredData
       .map((item) => {
@@ -589,18 +481,6 @@ function RapportGroupe({
   // Appliquer le filtre par heure de départ
   const vehiclesByDepartureTime = sortVehiclesByFirstMovement(filteredData);
 
-  // console.log("Vehicles sorted by total distance:", vehiclesByDistance);
-  // console.log(
-  //   "Vehicles sorted by total moving duration:",
-  //   vehiclesByMovingDuration
-  // );
-  // console.log("Vehicles sorted by max speed:", vehiclesByMaxSpeed);
-
-  // console.log(
-  //   "Final filtered data with total distances, durations, and pauses:",
-  //   filteredData
-  // );
-  // console.log("Vehicles sorted by last speedKPH:", vehiculeMouvementOrdered);
   ////////////////////////////////////////////////////////
   const totalDistanceSum = vehiculeMouvementOrdered.reduce(
     (sum, vehicle) => sum + vehicle.totalDistance,
@@ -648,13 +528,6 @@ function RapportGroupe({
   const totalmaxSpeed = Math.max(
     ...vehiculeMouvementOrdered.map((vehicle) => vehicle.maxSpeed)
   );
-
-  // // Calcul de la vitesse moyenne totale
-  // const totalavgSpeed =
-  //   vehiculeMouvementOrdered.reduce(
-  //     (sum, vehicle) => sum + vehicle.avgSpeed,
-  //     0
-  //   ) / vehiculeMouvementOrdered.length;
 
   // Calcul de la vitesse moyenne totale
   const totalAvgSpeed = vehiculeMouvementOrdered
@@ -843,8 +716,6 @@ function RapportGroupe({
         filteredVehicles.push(details);
       }
     });
-  // const filteredVehicles = vehiclueHistoriqueDetails;
-  // const filteredVehicles = currentVehicule?.vehiculeDetails;
 
   const historiqueInMap = filteredVehicles
     ? Object.values(filteredVehicles)
@@ -1066,11 +937,6 @@ function RapportGroupe({
   const mostOldTimestamp =
     getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
 
-  // Trouver la date du rapport
-  // const timestampInSecondsDebut =
-  // currentVehicule?.vehiculeDetails[
-  //   currentVehicule?.vehiculeDetails.length - 1
-  // ]?.timestamp;
   const dataObjectDebut = new Date(mostOldTimestamp * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
@@ -1079,7 +945,6 @@ function RapportGroupe({
   const anneeDebut = dataObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
-  // const timestampInSecondsFin = currentVehicule?.vehiculeDetails[1]?.timestamp;
   const dataObjectFin = new Date(mostRecentTimestamp * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
@@ -1486,77 +1351,6 @@ function RapportGroupe({
                     Pas de Resultat
                   </p>
                 )}
-
-                {/* {defineVehiculeListePupup === "active" && (
-                  <VehiculeActiveAjourdhuiComponent
-                    showActiveVehicule={showActiveVehicule}
-                    setshowActiveVehicule={setshowActiveVehicule}
-                    vehiculeActiveAjourdhui={vehiculeActiveAjourdhui}
-                    setshowRapportPupup={setnothing}
-                    formatTimestampToDate={formatTimestampToDate}
-                    formatTimestampToTime={formatTimestampToTime}
-                    handleClick={handleClick}
-                    selectUTC={selectUTC}
-                  />
-                )} */}
-                {/*  */}
-                {/* {defineVehiculeListePupup === "notactive" && (
-                  <VehiculeNotActiveAjourdhuiComponent
-                    showParkingVehicule={showParkingVehicule}
-                    setshowParkingVehicule={setshowParkingVehicule}
-                    vehiculeNotActiveAjourdhui={vehiculeNotActiveAjourdhui}
-                    setshowRapportPupup={setnothing}
-                    formatTimestampToDate={formatTimestampToDate}
-                    formatTimestampToTime={formatTimestampToTime}
-                    handleClick={handleClick}
-                    selectUTC={selectUTC}
-                  />
-                )} */}
-                {/* ----------------------------------- */}
-                {/* {defineVehiculeListePupup === "hors_service" && (
-                  <VehiculeNotActifComponent
-                    showInactiveVehicule={showInactiveVehicule}
-                    setshowInactiveVehicule={setshowInactiveVehicule}
-                    vehiculeNotActif={vehiculeNotActif}
-                    setshowRapportPupup={setnothing}
-                    formatTimestampToDate={formatTimestampToDate}
-                    formatTimestampToTime={formatTimestampToTime}
-                    handleClick={handleClick}
-                  />
-                )} */}
-                {/* {defineVehiculeListePupup === "tous" && (
-                  <div>
-                    <VehiculeActiveAjourdhuiComponent
-                      showActiveVehicule={showActiveVehicule}
-                      setshowActiveVehicule={setshowActiveVehicule}
-                      vehiculeActiveAjourdhui={vehiculeActiveAjourdhui}
-                      setshowRapportPupup={setnothing}
-                      formatTimestampToDate={formatTimestampToDate}
-                      formatTimestampToTime={formatTimestampToTime}
-                      handleClick={handleClick}
-                      selectUTC={selectUTC}
-                    />
-                    <VehiculeNotActiveAjourdhuiComponent
-                      showParkingVehicule={showParkingVehicule}
-                      setshowParkingVehicule={setshowParkingVehicule}
-                      vehiculeNotActiveAjourdhui={vehiculeNotActiveAjourdhui}
-                      setshowRapportPupup={setnothing}
-                      formatTimestampToDate={formatTimestampToDate}
-                      formatTimestampToTime={formatTimestampToTime}
-                      handleClick={handleClick}
-                      selectUTC={selectUTC}
-                    />
-                    <VehiculeNotActifComponent
-                      showInactiveVehicule={showInactiveVehicule}
-                      setshowInactiveVehicule={setshowInactiveVehicule}
-                      vehiculeNotActif={vehiculeNotActif}
-                      setshowRapportPupup={setnothing}
-                      formatTimestampToDate={formatTimestampToDate}
-                      formatTimestampToTime={formatTimestampToTime}
-                      handleClick={handleClick}
-                    />
-                  </div>
-                )} */}
               </div>
             </div>
           </div>
@@ -1696,15 +1490,7 @@ function RapportGroupe({
                             <span className="px-3">/</span>
                           )}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[
-                              //         vehicule?.vehiculeDetails.length - 1
-                              //       ]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
@@ -1721,13 +1507,7 @@ function RapportGroupe({
                             <span className="px-3">/</span>
                           )}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? //  selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[0]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
@@ -1830,16 +1610,7 @@ function RapportGroupe({
                               )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ?
-                              //    formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[
-                              //         vehicule?.vehiculeDetails.length - 1
-                              //       ]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
@@ -1848,13 +1619,7 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? //  selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[0]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
@@ -1958,15 +1723,7 @@ function RapportGroupe({
                               )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[
-                              //         vehicule?.vehiculeDetails.length - 1
-                              //       ]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
@@ -1975,13 +1732,7 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[0]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
@@ -2093,15 +1844,7 @@ function RapportGroupe({
                               )?.date
                             : ""}{" "}
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[
-                              //         vehicule?.vehiculeDetails.length - 1
-                              //       ]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
@@ -2110,13 +1853,7 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
-                            ? // selectUTC
-                              //   ? formatTimestampToTimeWithTimezone(
-                              //       vehicule?.vehiculeDetails[0]?.timestamp,
-                              //       selectUTC
-                              //     )
-                              //   :
-                              FormatDateHeure(
+                            ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
@@ -2179,9 +1916,7 @@ function RapportGroupe({
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
                         temps d'inactivite
                       </th>
-                      {/* <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        duree totale des pause
-                      </th> */}
+
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
                         distance parcourue
                       </th>
@@ -2278,17 +2013,6 @@ function RapportGroupe({
               <p>Date de recherche trouvée : </p>
               <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
                 {jourDebut ? (
-                  // true ||
-                  // jourDebut === jourFin &&
-                  // moisDebut === moisFin &&
-                  // anneeDebut === anneeFin ? (
-                  //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                  //     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                  //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                  //       {anneeDebut || ""}
-                  //     </span>{" "}
-                  //   </span>
-                  // ) : (
                   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                     Du{" "}
                     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
@@ -2312,30 +2036,10 @@ function RapportGroupe({
                 De{" "}
                 <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                   {heureDebut}
-                  {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp
-                            )} */}
                 </span>{" "}
                 à{" "}
                 <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                   {heureFin}{" "}
-                  {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[0]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )} */}
                 </span>{" "}
               </span>
             </div>
@@ -2538,17 +2242,7 @@ function RapportGroupe({
                               vehiclesByDepartureTime[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? // selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiclesByDepartureTime[0]
-                                //         ?.vehiculeDetails[
-                                //         vehiclesByDepartureTime[0]
-                                //           ?.vehiculeDetails.length - 1
-                                //       ]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiclesByDepartureTime[0]?.vehiculeDetails[
                                     vehiclesByDepartureTime[0]?.vehiculeDetails
                                       .length - 1
@@ -2563,14 +2257,7 @@ function RapportGroupe({
                               vehiclesByDepartureTime[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? //  selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiclesByDepartureTime[0]
-                                //         ?.vehiculeDetails[0]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiclesByDepartureTime[0]?.vehiculeDetails[0]
                                     ?.timestamp
                                 )?.time
@@ -2598,16 +2285,7 @@ function RapportGroupe({
                     {vehiclesByDepartureTime[0]?.vehiculeDetails[
                       vehiclesByDepartureTime[0]?.vehiculeDetails.length - 1
                     ]?.timestamp
-                      ? // selectUTC
-                        //   ? formatTimestampToTimeWithTimezone(
-                        //       vehiclesByDepartureTime[0]?.vehiculeDetails[
-                        //         vehiclesByDepartureTime[0]?.vehiculeDetails
-                        //           .length - 1
-                        //       ]?.timestamp,
-                        //       selectUTC
-                        //     )
-                        //   :
-                        FormatDateHeure(
+                      ? FormatDateHeure(
                           vehiclesByDepartureTime[0]?.vehiculeDetails[
                             vehiclesByDepartureTime[0]?.vehiculeDetails.length -
                               1
@@ -2619,7 +2297,6 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                {/* <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" /> */}
                 {/*  */}
                 {/*  */}
                 {/*  */}
@@ -2697,17 +2374,6 @@ function RapportGroupe({
                         <p className="text-[1rem]  dark:text-gray-300">
                           <span className="font-normal dark:text-gray-300 text-gray-700 pl-3">
                             {
-                              // true ||
-                              // jourDebut === jourFin &&
-                              // moisDebut === moisFin &&
-                              // anneeDebut === anneeFin ? (
-                              //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                              //     <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                              //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                              //       {anneeDebut || ""}
-                              //     </span>{" "}
-                              //   </span>
-                              // ) : (
                               <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                                 Du{" "}
                                 <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
@@ -2743,16 +2409,7 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? // selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiclesByDistance[0]?.vehiculeDetails[
-                                //         vehiclesByDistance[0]?.vehiculeDetails
-                                //           .length - 1
-                                //       ]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiclesByDistance[0]?.vehiculeDetails[
                                     vehiclesByDistance[0]?.vehiculeDetails
                                       .length - 1
@@ -2767,14 +2424,7 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? //  selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiclesByDistance[0]?.vehiculeDetails[0]
-                                //         ?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiclesByDistance[0]?.vehiculeDetails[0]
                                     ?.timestamp
                                 )?.time
@@ -2807,7 +2457,6 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                {/* <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" /> */}
                 {/*  */}
                 {/*  */}
                 {/*  */}
@@ -2887,17 +2536,6 @@ function RapportGroupe({
                         <p className="text-[.9rem]">
                           <span className="font-normal dark:text-gray-300 text-gray-700 pl-3">
                             {
-                              // true ||
-                              // jourDebut === jourFin &&
-                              // moisDebut === moisFin &&
-                              // anneeDebut === anneeFin ? (
-                              //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                              //     <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                              //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                              //       {anneeDebut || ""}
-                              //     </span>{" "}
-                              //   </span>
-                              // ) : (
                               <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                                 Du{" "}
                                 <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
@@ -2936,17 +2574,7 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? // selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiclesByMovingDuration[0]
-                                //         ?.vehiculeDetails[
-                                //         vehiclesByMovingDuration[0]
-                                //           ?.vehiculeDetails.length - 1
-                                //       ]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiclesByMovingDuration[0]?.vehiculeDetails[
                                     vehiclesByMovingDuration[0]?.vehiculeDetails
                                       .length - 1
@@ -2961,14 +2589,7 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? // selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiclesByMovingDuration[0]
-                                //         ?.vehiculeDetails[0]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiclesByMovingDuration[0]
                                     ?.vehiculeDetails[0]?.timestamp
                                 )?.time
@@ -3002,7 +2623,6 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                {/* <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" /> */}
                 {/*  */}
                 {/*  */}
                 {/*  */}
@@ -3086,17 +2706,6 @@ function RapportGroupe({
                         <p className="text-[.9rem]">
                           <span className="font-normal dark:text-gray-300 text-gray-700 pl-3">
                             {
-                              // true ||
-                              // jourDebut === jourFin &&
-                              // moisDebut === moisFin &&
-                              // anneeDebut === anneeFin ? (
-                              //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                              //     <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
-                              //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                              //       {anneeDebut || ""}
-                              //     </span>{" "}
-                              //   </span>
-                              // ) : (
                               <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                                 Du{" "}
                                 <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
@@ -3135,17 +2744,7 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? // selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiculeMouvementOrdered[0]
-                                //         ?.vehiculeDetails[
-                                //         vehiculeMouvementOrdered[0]
-                                //           ?.vehiculeDetails.length - 1
-                                //       ]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiculeMouvementOrdered[0]?.vehiculeDetails[
                                     vehiculeMouvementOrdered[0]?.vehiculeDetails
                                       .length - 1
@@ -3160,14 +2759,7 @@ function RapportGroupe({
                               vehiculeMouvementOrdered[0]?.vehiculeDetails
                                 .length - 1
                             ]?.timestamp
-                              ? //  selectUTC
-                                //   ? formatTimestampToTimeWithTimezone(
-                                //       vehiculeMouvementOrdered[0]
-                                //         ?.vehiculeDetails[0]?.timestamp,
-                                //       selectUTC
-                                //     )
-                                //   :
-                                FormatDateHeure(
+                              ? FormatDateHeure(
                                   vehiculeMouvementOrdered[0]
                                     ?.vehiculeDetails[0]?.timestamp
                                 )?.time
@@ -3295,17 +2887,6 @@ function RapportGroupe({
                 <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
                   {
                     jourDebut ? (
-                      // true ||
-                      // jourDebut === jourFin &&
-                      // moisDebut === moisFin &&
-                      // anneeDebut === anneeFin ? (
-                      //   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                      //     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
-                      //       Le {jourDebut || ""} {moisDebut || ""}{" "}
-                      //       {anneeDebut || ""}
-                      //     </span>{" "}
-                      //   </span>
-                      // ) : (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                         Du{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
@@ -3331,30 +2912,10 @@ function RapportGroupe({
                   De{" "}
                   <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                     {heureDebut}
-                    {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[
-                                currentVehicule?.vehiculeDetails?.length - 1
-                              ]?.timestamp
-                            )} */}
                   </span>{" "}
                   à{" "}
                   <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                     {heureFin}{" "}
-                    {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              currentVehicule?.vehiculeDetails[0]?.timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(
-                              currentVehicule?.vehiculeDetails?.[0]?.timestamp
-                            )} */}
                   </span>{" "}
                 </span>
               </div>
@@ -3371,11 +2932,6 @@ function RapportGroupe({
                 <p>
                   Temps d'activité total :
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {formatTime(
-                      result?.totalMovingTime.hours,
-                      result?.totalMovingTime.minutes,
-                      result?.totalMovingTime.seconds
-                    )} */}
                     {totalMovingDuration || "Pas de deplacement"}
                   </span>
                 </p>
@@ -3392,24 +2948,11 @@ function RapportGroupe({
               <p>
                 Distance totale parcourue:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {/* {result2?.totalDistanceAllVehicles.toFixed(2) || "0"} km{" "} */}
                   {totalDistanceSum.toFixed(0) + " km" || "Pas de mouvement"}
                 </span>
               </p>
-              {/* <p>
-                Duree des arrêt lors du deplacement :
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                 
-                  {formatTime(
-                    result?.totalStopTime.hours,
-                    result?.totalStopTime.minutes,
-                    result?.totalStopTime.seconds
-                  )}
-                </span>
-              </p> */}
 
               {/*  */}
-              {/* <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" /> */}
               {/*  */}
               {/*  */}
               {/*  */}
@@ -3417,7 +2960,6 @@ function RapportGroupe({
               <p>
                 Nombre total d’arrêts :
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {/* {result3?.totalStopsAllVehicles} */}
                   {nombreTotaleArret > 0
                     ? nombreTotaleArret + " arrêts"
                     : " 0 arrêt"}
@@ -3434,9 +2976,6 @@ function RapportGroupe({
                 <p>
                   Vitesse minimale:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {result5?.globalStats.minSpeed.toFixed(2) || "---"} Km/h */}
-                    {/* {totalminSpeed || "0 km/h"} */}
-                    {/* {smallestMinSpeed.toFixed(0) + " Km/h" || "0 Km/h"} */}
                     {speeds.minSpeed != "Infinity"
                       ? speeds.minSpeed.toFixed(0) + " Km/h"
                       : "0 Km/h"}
@@ -3454,11 +2993,6 @@ function RapportGroupe({
               <p>
                 Vitesse maximale:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {/* {result5?.globalStats.maxSpeed.toFixed(2) || "---"} Km/h */}
-                  {/* {totalmaxSpeed.toFixed(2) + " km" || "0 km/h"} */}
-                  {/* {vehiclesByMaxSpeed[0]?.maxSpeed
-                    ? vehiclesByMaxSpeed[0]?.maxSpeed.toFixed(0) + " Km/h"
-                    : "0.00 Km/h"} */}
                   {speeds.maxSpeed != "-Infinity"
                     ? speeds.maxSpeed.toFixed(0) + " Km/h"
                     : "0 Km/h"}
@@ -3467,17 +3001,6 @@ function RapportGroupe({
               <p>
                 Vitesse moyenne:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {/* {result5?.globalStats.averageSpeed.toFixed(2) || "---"} Km/h */}
-                  {/* {(totalminSpeed + totalmaxSpeed) / 2 + " km/h " || "0 km/h"} */}
-                  {/* {vehiclesByMaxSpeed[0]?.maxSpeed
-                    ? (
-                        (smallestMinSpeed + vehiclesByMaxSpeed[0]?.maxSpeed) /
-                        2
-                      ).toFixed(0) + " km/h "
-                    : " 0.00 km/h"} */}
-                  {/* {speeds.avgSpeed
-                    ? speeds.avgSpeed.toFixed(0) + " Km/h"
-                    : "0 Km/h"} */}
                   {totalAvgSpeed.toFixed(0) + " Km/h"}
                 </span>
               </p>
@@ -3567,11 +3090,6 @@ function RapportGroupe({
                       settableSortBy(vehiclesByDepartureTime);
                       settableSortByColorBg("vehiclesByDepartureTime");
                       setshowsortfilterpupup(false);
-
-                      // console.log(
-                      //   "xxxxxxxxxxxxxxxxxxxxxxx",
-                      //   tableSortByColorBg
-                      // );
                     }}
                     className={`${
                       tableSortByColorBg ===
@@ -3581,25 +3099,6 @@ function RapportGroupe({
                   >
                     Heure de départ
                   </p>
-                  {/* <p
-                    onClick={() => {
-                      settableSortBy(vehiculeMouvementOrdered);
-                      settableSortByColorBg("vehiculeMouvementOrdered");
-                      setshowsortfilterpupup(false);
-
-                      // console.log(
-                      //   "xxxxxxxxxxxxxxxxxxxxxxx",
-                      //   tableSortByColorBg
-                      // );
-                    }}
-                    className={`${
-                      tableSortByColorBg ===
-                        ("vehiculeMouvementOrdered" || "") &&
-                      "bg-orange-50 dark:bg-gray-800"
-                    } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
-                  >
-                    Vitesse maximale
-                  </p> */}
 
                   <p
                     onClick={() => {
