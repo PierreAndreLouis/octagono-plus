@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import DatePicker from "react-datepicker";
@@ -21,6 +21,9 @@ function DatePupup({
   // Conversion des variables startDate et endDate
   // const formattedStartDate = formatDate(dateDebut);
   const today = new Date(); // La date actuelle
+  useEffect(() => {
+    console.log(selectedDate);
+  }, [selectedDate]);
 
   return (
     <>

@@ -284,6 +284,7 @@ function HistoriquePage() {
   const adjustedTimeFrom = new Date(
     baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
   );
+
   const adjustedTimeTo = new Date(
     baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
   );

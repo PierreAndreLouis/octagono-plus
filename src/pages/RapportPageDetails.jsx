@@ -1065,8 +1065,9 @@ function RapportPageDetails() {
 
   const [showChooseDate, setShowChooseDate] = useState(false);
 
+  const today = new Date(); // La date actuelle
   const [showDatePicker2, setShowDatePicker2] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Date sélectionnée
+  const [selectedDate, setSelectedDate] = useState(today); // Date sélectionnée
 
   ////////////////////////////////////////////////////////////////////////////c/cvv
   ////////////////////////////////////////////////////////////////////////////c/cvv
@@ -1074,7 +1075,6 @@ function RapportPageDetails() {
   ////////////////////////////////////////////////////////////////////////////c/cvv
   // Formatage de la date actuelle
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
-  const today = new Date(); // La date actuelle
 
   const [startDate, setStartDate] = useState(today);
   const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
@@ -1102,7 +1102,6 @@ function RapportPageDetails() {
   const handleApply = (e) => {
     e.preventDefault();
     setShowChooseDate(false);
-    setRapportDataLoading(true);
     setShowDatePicker2(false);
 
     const formatDateToISO = (date) => {
@@ -1122,16 +1121,15 @@ function RapportPageDetails() {
     const startTime = "00:00:00";
     const endTime = "23:59:59";
 
-    ///////////////////////////////////////////////////////////////////////////////////
-
     // Combine les dates formatées avec les heures
     const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
     const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
 
-    // Ajout de 5 heures
+    // Ajout de l'ajustement UTC
     const adjustedTimeFrom = new Date(
       baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
     );
+    // const adjustedTimeTo = baseTimeTo;
     const adjustedTimeTo = new Date(
       baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
     );
@@ -1173,11 +1171,13 @@ function RapportPageDetails() {
       .toString()
       .padStart(2, "0")}`;
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-
     if (dataFusionee && dataFusionee.length > 0) {
-      dataFusionee?.forEach((vehicle) => {
+      dataFusionee.forEach((vehicle) => {
         fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+        setRapportDataLoading(true);
+
+        console.log("TimeFrom---------", timeFrom);
+        console.log("TimeTo------", timeTo);
 
         setStartDateToDisplay(selectedDate);
         setStartTimeToDisplay(startTime);
@@ -1186,6 +1186,185 @@ function RapportPageDetails() {
       });
     }
   };
+
+  // Gestion de la soumission
+  // const handleApply = (e) => {
+  //   e.preventDefault();
+  //   setShowChooseDate(false);
+  //   setRapportDataLoading(true);
+  //   setShowDatePicker2(false);
+
+  //   const formatDateToISO = (date) => {
+  //     if (!(date instanceof Date)) {
+  //       date = new Date(date); // Convertir en objet Date si nécessaire
+  //     }
+  //     const adjustedDate = new Date(
+  //       date.getTime() - date.getTimezoneOffset() * 60000
+  //     );
+  //     return adjustedDate.toISOString().split("T")[0];
+  //   };
+
+  //   // Conversion des variables startDate et endDate
+  //   const formattedStartDate = formatDateToISO(selectedDate);
+  //   const formattedEndDate = formatDateToISO(selectedDate);
+
+  //   const startTime = "00:00:00";
+  //   const endTime = "23:59:59";
+
+  //   // Combine les dates formatées avec les heures
+  //   const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
+  //   const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
+
+  //   // Ajout de 5 heures
+  //   const adjustedTimeFrom = new Date(
+  //     baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+  //   );
+  //   const adjustedTimeTo = baseTimeTo;
+  //   // const adjustedTimeTo = new Date();
+  //   // baseTimeTo.getTime();
+  //   // + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+
+  //   // Formatage en chaîne pour les heures ajustées
+  //   const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
+  //     adjustedTimeFrom.getMonth() + 1
+  //   )
+  //     .toString()
+  //     .padStart(2, "0")}-${adjustedTimeFrom
+  //     .getDate()
+  //     .toString()
+  //     .padStart(2, "0")} ${adjustedTimeFrom
+  //     .getHours()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeFrom
+  //     .getMinutes()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeFrom
+  //     .getSeconds()
+  //     .toString()
+  //     .padStart(2, "0")}`;
+
+  //   const timeTo = `${adjustedTimeTo.getFullYear()}-${(
+  //     adjustedTimeTo.getMonth() + 1
+  //   )
+  //     .toString()
+  //     .padStart(2, "0")}-${adjustedTimeTo
+  //     .getDate()
+  //     .toString()
+  //     .padStart(2, "0")} ${adjustedTimeTo
+  //     .getHours()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeTo
+  //     .getMinutes()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeTo
+  //     .getSeconds()
+  //     .toString()
+  //     .padStart(2, "0")}`;
+
+  //   if (dataFusionee && dataFusionee.length > 0) {
+  //     dataFusionee?.forEach((vehicle) => {
+  //       // fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+
+  //       console.log("TimeFrom---------", timeFrom);
+  //       console.log("TimeTo------", timeTo);
+
+  //       setStartDateToDisplay(selectedDate);
+  //       setStartTimeToDisplay(startTime);
+  //       setEndDateToDisplay(selectedDate);
+  //       setEndTimeToDisplay(endTime);
+  //     });
+  //   }
+  // };
+
+  // // Gestion de la soumission
+  // const handleApply = (e) => {
+  //   e.preventDefault();
+  //   setShowChooseDate(false);
+  //   setRapportDataLoading(true);
+  //   setShowDatePicker2(false);
+
+  //   const formatDateToISO = (date) => {
+  //     if (!(date instanceof Date)) {
+  //       date = new Date(date); // Convertir en objet Date si nécessaire
+  //     }
+  //     const adjustedDate = new Date(
+  //       date.getTime() - date.getTimezoneOffset() * 60000
+  //     );
+  //     return adjustedDate.toISOString().split("T")[0];
+  //   };
+
+  //   // Conversion des variables startDate et endDate
+  //   const formattedStartDate = formatDateToISO(selectedDate);
+  //   const formattedEndDate = formatDateToISO(selectedDate);
+
+  //   const startTime = "00:00:00";
+  //   const endTime = "23:59:59";
+  //   // yyyyyyyyyyyyyyyyyyyyyyyyyyy
+  //   ///////////////////////////////////////////////////////////////////////////////////
+
+  //   // Combine les dates formatées avec les heures
+  //   const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
+  //   const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
+
+  //   // Ajout de 5 heures
+  //   const adjustedTimeFrom = new Date(
+  //     baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+  //   );
+  //   const adjustedTimeTo = new Date();
+  //   baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000;
+
+  //   // Formatage en chaîne pour les heures ajustées
+  //   const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
+  //     adjustedTimeFrom.getMonth() + 1
+  //   )
+  //     .toString()
+  //     .padStart(2, "0")}-${adjustedTimeFrom
+  //     .getDate()
+  //     .toString()
+  //     .padStart(2, "0")} ${adjustedTimeFrom
+  //     .getHours()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeFrom
+  //     .getMinutes()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeFrom
+  //     .getSeconds()
+  //     .toString()
+  //     .padStart(2, "0")}`;
+
+  //   const timeTo = `${adjustedTimeTo.getFullYear()}-${(
+  //     adjustedTimeTo.getMonth() + 1
+  //   )
+  //     .toString()
+  //     .padStart(2, "0")}-${adjustedTimeTo
+  //     .getDate()
+  //     .toString()
+  //     .padStart(2, "0")} ${adjustedTimeTo
+  //     .getHours()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeTo
+  //     .getMinutes()
+  //     .toString()
+  //     .padStart(2, "0")}:${adjustedTimeTo
+  //     .getSeconds()
+  //     .toString()
+  //     .padStart(2, "0")}`;
+
+  //   ///////////////////////////////////////////////////////////////////////////////////////
+
+  //   if (dataFusionee && dataFusionee.length > 0) {
+  //     dataFusionee?.forEach((vehicle) => {
+  //       // fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+  //       console.log("TimeFrom---------", timeFrom);
+  //       console.log("TimeTo------", timeTo);
+
+  //       setStartDateToDisplay(selectedDate);
+  //       setStartTimeToDisplay(startTime);
+  //       setEndDateToDisplay(selectedDate);
+  //       setEndTimeToDisplay(endTime);
+  //     });
+  //   }
+  // };
 
   // Initialisation de la date et de l'heure actuelles par défaut
 
@@ -1214,9 +1393,13 @@ function RapportPageDetails() {
 
     // Ajout de 5 heures
     const adjustedTimeFrom = new Date(
-      baseTimeFrom.getTime() + 5 * 60 * 60 * 1000
+      baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+      //  + 5 * 60 * 60 * 1000
     );
-    const adjustedTimeTo = new Date(baseTimeTo.getTime() + 5 * 60 * 60 * 1000);
+    const adjustedTimeTo = new Date(
+      baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+      //  + 5 * 60 * 60 * 1000
+    );
 
     // Formatage en chaîne pour les heures ajustées
     const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
@@ -1261,6 +1444,9 @@ function RapportPageDetails() {
     if (dataFusionee && dataFusionee.length > 0) {
       dataFusionee.forEach((vehicle) => {
         fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+        setRapportDataLoading(true);
+        console.log("TimeFrom---------", timeFrom);
+        console.log("TimeTo------", timeTo);
 
         setStartDateToDisplay(startDate);
         setStartTimeToDisplay(startTime);
@@ -1270,7 +1456,6 @@ function RapportPageDetails() {
     }
 
     setShowDatePicker2(false);
-    setRapportDataLoading(true);
   };
 
   return (

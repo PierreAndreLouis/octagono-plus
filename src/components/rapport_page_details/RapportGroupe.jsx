@@ -979,11 +979,21 @@ function RapportGroupe({
       lastUpdateTimestampMs &&
       currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
 
+    const hasBeenMoving =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
     // Le véhicule doit être actif selon la vitesse et la mise à jour
     // return noSpeed && isRecentlyUpdated;
     return (
-      isRecentlyUpdated && (noSpeed || (isSpeedActive && isNotStillSpeedActive))
+      isRecentlyUpdated &&
+      (isNotSpeedActive || (isSpeedActive && !isNotStillSpeedActive))
     );
+    // return (
+    //   hasDetails &&
+    //   isActive &&
+    //   (isNotSpeedActive || (hasBeenMoving && !isNotStillSpeedActive))
+    // );
   });
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -1036,24 +1046,55 @@ function RapportGroupe({
 
     return { mostOldTimestamp };
   }
-  const mostOldTimestamp =
-    getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
 
-  const dataObjectDebut = new Date(mostOldTimestamp * 1000);
+//////////////////////////////////////////////////////////////
 
-  // Récupérer le jour, le mois et l'année séparément
-  const jourDebut = dataObjectDebut.getUTCDate(); // Obtenir le jour
-  const moisDebut = dataObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeDebut = dataObjectDebut.getFullYear(); // Obtenir l'année
+// Tableau des mois en toutes lettres
+const moisEnLettres = [
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+];
 
-  // Trouver la date du rapport
-  const dataObjectFin = new Date(mostRecentTimestamp * 1000);
+// Récupérer le timestamp le plus ancien
+const mostOldTimestamp =
+  getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
 
-  // Récupérer le jour, le mois et l'année séparément
-  const jourFin = dataObjectFin.getUTCDate(); // Obtenir le jour
-  const moisFin = dataObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeFin = dataObjectFin.getFullYear(); // Obtenir l'année
+const dataObjectDebut = new Date(mostOldTimestamp * 1000);
 
+// Récupérer le jour, le mois et l'année séparément pour la date de début
+const jourDebut = dataObjectDebut.getUTCDate();
+const moisDebut = moisEnLettres[dataObjectDebut.getUTCMonth()];
+const anneeDebut = dataObjectDebut.getUTCFullYear();
+
+// Récupérer le timestamp le plus récent
+const dataObjectFin = new Date(mostRecentTimestamp * 1000);
+
+// Récupérer le jour, le mois et l'année séparément pour la date de fin
+const jourFin = dataObjectFin.getUTCDate();
+const moisFin = moisEnLettres[dataObjectFin.getUTCMonth()];
+const anneeFin = dataObjectFin.getUTCFullYear();
+
+  // const mostOldTimestamp =
+  //   getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
+
+  // const dataObjectDebut = new Date(mostOldTimestamp * 1000);
+
+  // // Récupérer le jour, le mois et l'année séparément
+  // const jourDebut = dataObjectDebut.getUTCDate(); // Obtenir le jour
+  // const moisDebut = dataObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeDebut = dataObjectDebut.getFullYear(); // Obtenir l'année
+
+  // // Trouver la date du rapport
+  // const dataObjectFin = new Date(mostRecentTimestamp * 1000);
+
+  // // Récupérer le jour, le mois et l'année séparément
+  // const jourFin = dataObjectFin.getUTCDate(); // Obtenir le jour
+  // const moisFin = dataObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  // const anneeFin = dataObjectFin.getFullYear(); // Obtenir l'année
+
+
+
+  //////////////////////////////////////
   const heureDebut = FormatDateHeure(mostOldTimestamp)?.time;
   const heureFin = FormatDateHeure(mostRecentTimestamp)?.time;
 

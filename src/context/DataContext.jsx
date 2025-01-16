@@ -1039,33 +1039,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         details.backupAddress = "";
 
-        // Ajout du backupAddress pour chaque enregistrement
-        // const latitude = -23.4797785;
-        // const longitude = -46.76839450000001;
-        const latitude = details.latitude;
-        const longitude = details.longitude;
-        // if (newVehicleDetails.length > 0) {
-        //   if (latitude && longitude) {
-        //     // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-        //     const url = `/other-api/nominatim/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
-        //     // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.4797785&lon=-46.76839450000001`;
-        //     try {
-        //       const addressResponse = await fetch(url);
-        //       const addressData = await addressResponse.json();
-        //       details.backupAddress =
-        //         addressData?.display_name || "Adresse introuvable";
-        //     } catch (error) {
-        //       console.error(
-        //         "Erreur lors de la récupération de l'adresse :",
-        //         error
-        //       );
-        //       details.backupAddress = "";
-        //     }
-        //   } else {
-        //     details.backupAddress = "Coordonnées non disponibles";
-        //   }
-        // }
-
         newVehicleDetails.push(details);
       }
 
@@ -1087,23 +1060,13 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         ...uniqueVehicleDetails,
       ]);
 
-      // setrapportVehicleDetails((prevDetails) => [
-      //   ...prevDetails.filter((detail) => detail.Device !== Device),
-      //   ...newVehicleDetails,
-      // ]);
-
-      // console.log("...............newVehicleDetails", newVehicleDetails);
-      // console.log("...............newVehicleDetails", newVehicleDetails);
-      // console.log(
-      //   "...............rapportvehicleDetails",
-      //   rapportvehicleDetails
-      // );
-      // console.log("...............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      // console.log("...............End.....");
-
-      setTimeout(() => {
+      if (uniqueVehicleDetails.length > 0) {
         setRapportDataLoading(false);
-      }, 15000); // 10 000 millisecondes = 10 secondes
+      }
+
+      // setTimeout(() => {
+      //   setRapportDataLoading(false);
+      // }, 15000); // 10 000 millisecondes = 10 secondes
     } catch (error) {
       setRapportDataLoading(false);
       setError("Erreur lors de la récupération des détails du véhicule.");
@@ -1181,11 +1144,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       }
     }
 
-    setTimeout(() => {
-      setRapportDataLoading(false);
-    }, 15000); // 10 000 millisecondes = 10 secondes
+    // setTimeout(() => {
+    //   setRapportDataLoading(false);
+    // }, 15000); // 10 000 millisecondes = 10 secondes
 
-    setRapportDataLoading(false);
+    // setRapportDataLoading(false);
 
     return dataFusionnee;
   };
@@ -1343,30 +1306,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         details.backupAddress = "";
 
-        // Ajout de backupAddress
-        const latitude = details.latitude;
-        const longitude = details.longitude;
-        // if (newVehicleDetails.length > 0) {
-        //   if (latitude && longitude) {
-        //     const url = `/other-api/nominatim/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
-        //     try {
-        //       const addressResponse = await fetch(url);
-        //       const addressData = await addressResponse.json();
-        //       details.backupAddress =
-        //         addressData?.display_name || "Adresse introuvable";
-        //     } catch (error) {
-        //       console.error(
-        //         "Erreur lors de la récupération de l'adresse :",
-        //         error
-        //       );
-        //       details.backupAddress = "";
-        //     }
-        //   } else {
-        //     details.backupAddress = "Coordonnées non disponibles";
-        //   }
-        // }
-        // console.log("555555555555555");
-
         newVehicleDetails.push(details);
       }
       // console.log("66666666666666");
@@ -1396,9 +1335,12 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       // console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.");
       // console.log("uniqueVehicleDetails.");
 
-      setTimeout(() => {
+      // setTimeout(() => {
+      //   setRapportDataLoading(false);
+      // }, 15000); // 10 000 millisecondes = 10 secondes
+      if (uniqueVehicleDetails.length > 0) {
         setRapportDataLoading(false);
-      }, 15000); // 10 000 millisecondes = 10 secondes
+      }
     } catch (error) {
       setRapportDataLoading(false);
       setError("Erreur lors de la récupération des détails du véhicule.");
@@ -1437,7 +1379,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // 1. Met à jour l'état avec toutes les données fusionnées
     setSearchdonneeFusionneeForRapport(dataFusionnee);
-    setRapportDataLoading(false);
+    // setRapportDataLoading(false);
 
     // 2. Met à jour le chargement uniquement lorsque toutes les données sont traitées
     if (allVehiclesProcessed) {

@@ -103,6 +103,20 @@ function RapportPersonnel({
     return "0s";
   };
 
+  const moisEnLettres = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+  ];
   // Trouver la date du rapport
   const timestampInSecondsDebut =
     currentVehicule?.vehiculeDetails[
@@ -112,7 +126,9 @@ function RapportPersonnel({
 
   // Récupérer le jour, le mois et l'année séparément
   const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  const moisDebut = moisEnLettres[dateObjectDebut.getUTCMonth()];
+
+  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
   const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
@@ -121,7 +137,9 @@ function RapportPersonnel({
 
   // Récupérer le jour, le mois et l'année séparément
   const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
+  const moisFin = moisEnLettres[dateObjectFin.getUTCMonth()];
+
+  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
   const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
   const heureDebut = FormatDateHeure(timestampInSecondsDebut)?.time;
