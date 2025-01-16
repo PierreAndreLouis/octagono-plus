@@ -1458,6 +1458,10 @@ function RapportPageDetails() {
     setShowDatePicker2(false);
   };
 
+  useEffect(() => {
+    console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
+  }, [rapportDataLoading]);
+
   return (
     <div
       className={`${

@@ -1059,16 +1059,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...uniqueVehicleDetails,
       ]);
-
-      if (uniqueVehicleDetails.length > 0) {
-        setRapportDataLoading(false);
-      }
-
-      // setTimeout(() => {
-      //   setRapportDataLoading(false);
-      // }, 15000); // 10 000 millisecondes = 10 secondes
     } catch (error) {
-      setRapportDataLoading(false);
       setError("Erreur lors de la récupération des détails du véhicule.");
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -1143,12 +1134,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         console.error("Erreur de stockage : ", error);
       }
     }
-
-    // setTimeout(() => {
-    //   setRapportDataLoading(false);
-    // }, 15000); // 10 000 millisecondes = 10 secondes
-
-    // setRapportDataLoading(false);
 
     return dataFusionnee;
   };
@@ -1334,15 +1319,12 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       console.log("end fetching.................");
       // console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.");
       // console.log("uniqueVehicleDetails.");
-
-      // setTimeout(() => {
-      //   setRapportDataLoading(false);
-      // }, 15000); // 10 000 millisecondes = 10 secondes
-      if (uniqueVehicleDetails.length > 0) {
-        setRapportDataLoading(false);
-      }
     } catch (error) {
       setRapportDataLoading(false);
+      console.log(
+        "Set loading to false >>>>>>>>>>>>>>>>>>>",
+        rapportDataLoading
+      );
       setError("Erreur lors de la récupération des détails du véhicule.");
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -1360,17 +1342,28 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         (detail) => detail.Device === vehicle.deviceID
       );
 
-      // Si les nouveaux détails sont vides, ne pas mettre à jour les détails actuels
-      // if (!events || events.length === 0) {
-      //   return vehicle;
-      // }
-
       // Mettre à jour les informations du véhicule si les nouveaux détails ne sont pas vides
       return {
         ...vehicle,
         vehiculeDetails: events,
       };
     });
+
+    const oneVehicleProcessed = dataFusionnee.some(
+      (vehicle) => vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0
+    );
+
+    if (oneVehicleProcessed) {
+      setRapportDataLoading(false);
+      console.log(
+        "Set loading to false >>>>>>>>>>>>>>>>>>>",
+        rapportDataLoading
+      );
+
+      console.log("Au moins un véhicule a ses détails mis à jour !");
+    } else {
+      console.log("Aucun véhicule n'a encore ses détails.");
+    }
 
     // Vérifiez si chaque véhicule a ses détails ajoutés
     const allVehiclesProcessed = dataFusionnee.every(
@@ -1379,7 +1372,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // 1. Met à jour l'état avec toutes les données fusionnées
     setSearchdonneeFusionneeForRapport(dataFusionnee);
-    // setRapportDataLoading(false);
 
     // 2. Met à jour le chargement uniquement lorsque toutes les données sont traitées
     if (allVehiclesProcessed) {
@@ -1406,6 +1398,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       rapportSearchfusionnerDonnees();
     }
   }, [searchrapportvehicleDetails, vehicleData]);
+
+  useEffect(() => {
+    console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
+  }, [rapportDataLoading]);
 
   //
   //
