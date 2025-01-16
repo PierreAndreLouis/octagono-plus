@@ -1049,6 +1049,9 @@ function RapportGroupe({
     return { mostOldTimestamp };
   }
 
+  // Récupérer le timestamp le plus ancien
+  const mostOldTimestamp =
+    getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
   //////////////////////////////////////////////////////////////
 
   // Tableau des mois en toutes lettres
@@ -1067,24 +1070,29 @@ function RapportGroupe({
     "décembre",
   ];
 
-  // Récupérer le timestamp le plus ancien
-  const mostOldTimestamp =
-    getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
-
   const dataObjectDebut = new Date(mostOldTimestamp * 1000);
+  const dataObjectFin = new Date(mostRecentTimestamp * 1000);
+  // const dataObjectDebut = new Date(1736485243 * 1000);
+  // const dataObjectFin = new Date(1736571515 * 1000);
+
+  // Récupérer le jour, le mois et l'année séparément pour la date de début en local
+  const jourDebut = dataObjectDebut.getDate(); // Jour local
+  const moisDebut = moisEnLettres[dataObjectDebut.getMonth()]; // Mois local
+  const anneeDebut = dataObjectDebut.getFullYear(); // Année locale
+
+  // Récupérer le jour, le mois et l'année séparément pour la date de fin en local
+  const jourFin = dataObjectFin.getDate(); // Jour local
+  const moisFin = moisEnLettres[dataObjectFin.getMonth()]; // Mois local
+  const anneeFin = dataObjectFin.getFullYear(); // Année locale
 
   // Récupérer le jour, le mois et l'année séparément pour la date de début
-  const jourDebut = dataObjectDebut.getUTCDate();
-  const moisDebut = moisEnLettres[dataObjectDebut.getUTCMonth()];
-  const anneeDebut = dataObjectDebut.getUTCFullYear();
+  // const jourDebut = dataObjectDebut.getUTCDate();
+  // const moisDebut = moisEnLettres[dataObjectDebut.getUTCMonth()];
+  // const anneeDebut = dataObjectDebut.getUTCFullYear();
 
-  // Récupérer le timestamp le plus récent
-  const dataObjectFin = new Date(mostRecentTimestamp * 1000);
-
-  // Récupérer le jour, le mois et l'année séparément pour la date de fin
-  const jourFin = dataObjectFin.getUTCDate();
-  const moisFin = moisEnLettres[dataObjectFin.getUTCMonth()];
-  const anneeFin = dataObjectFin.getUTCFullYear();
+  // const jourFin = dataObjectFin.getUTCDate();
+  // const moisFin = moisEnLettres[dataObjectFin.getUTCMonth()];
+  // const anneeFin = dataObjectFin.getUTCFullYear();
 
   // const mostOldTimestamp =
   //   getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
@@ -2292,7 +2300,15 @@ function RapportGroupe({
               "mostRecentTimestamp",
               mostRecentTimestamp.mostRecentTimestamp
             );
+            console.log("mostRecentTimestamp", mostRecentTimestamp);
             console.log("mostOldTimestamp", mostOldTimestamp.mostOldTimestamp);
+            console.log("mostOldTimestamp", mostOldTimestamp);
+            console.log("xxxxxxxxxxxxxxxxxxxxx");
+            console.log(dataObjectDebut.toUTCString()); // UTC
+            console.log(dataObjectFin.toUTCString()); // UTC
+
+            console.log(dataObjectDebut.toString()); // Locale
+            console.log(dataObjectFin.toString()); // Locale
           }}
           className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300"
         >

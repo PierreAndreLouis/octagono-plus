@@ -124,23 +124,29 @@ function RapportPersonnel({
     ]?.timestamp;
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
-  // Récupérer le jour, le mois et l'année séparément
-  const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  const moisDebut = moisEnLettres[dateObjectDebut.getUTCMonth()];
-
-  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
-
   // Trouver la date du rapport
   const timestampInSecondsFin = currentVehicule?.vehiculeDetails[1]?.timestamp;
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
-  // Récupérer le jour, le mois et l'année séparément
-  const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  const moisFin = moisEnLettres[dateObjectFin.getUTCMonth()];
+  // Récupérer le jour, le mois et l'année séparément pour la date de début en local
+  const jourDebut = dateObjectDebut.getDate(); // Jour local
+  const moisDebut = moisEnLettres[dateObjectDebut.getMonth()]; // Mois local
+  const anneeDebut = dateObjectDebut.getFullYear(); // Année locale
 
-  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
+  // Récupérer le jour, le mois et l'année séparément pour la date de fin en local
+  const jourFin = dateObjectFin.getDate(); // Jour local
+  const moisFin = moisEnLettres[dateObjectFin.getMonth()]; // Mois local
+  const anneeFin = dateObjectFin.getFullYear(); // Année locale
+
+  // // Récupérer le jour, le mois et l'année séparément
+  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
+  // const moisDebut = moisEnLettres[dateObjectDebut.getUTCMonth()];
+  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
+
+  // // Récupérer le jour, le mois et l'année séparément
+  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
+  // const moisFin = moisEnLettres[dateObjectFin.getUTCMonth()];
+  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
   const heureDebut = FormatDateHeure(timestampInSecondsDebut)?.time;
   const heureFin = FormatDateHeure(timestampInSecondsFin)?.time;
