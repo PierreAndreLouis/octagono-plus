@@ -852,14 +852,70 @@ function RapportGroupe({
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    if (filter === "movingNow") return isSpeedActive && hasDetails && isActive;
-    if (filter === "notMovingNow")
-      return isNotSpeedActive && hasDetails && isActive;
-    if (filter === "moving") return hasDetails && isMoving;
-    if (filter === "parking") return hasDetails && noSpeed && isActive;
-    if (filter === "inactive") return !hasDetails || !isActive;
-    return true; // "all" : tous les véhicules
+    const isSearching = searchdonneeFusionneeForRapport?.length > 0;
+
+    ////////////////////////////////////////////////////
+    // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+    const getTodayTimestamp = () => {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // Minuit
+      return Math.floor(now.getTime() / 1000); // Convertir en secondes
+    };
+    const todayTimestamp = getTodayTimestamp() * 1000;
+
+    // Fonction pour obtenir le timestamp actuel en millisecondes
+    const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+    const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+    const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+
+    const hasBeenMoving =
+      matchedVehicle.vehiculeDetails &&
+      matchedVehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
+    const lastUpdateTimestampMs =
+      matchedVehicle.vehiculeDetails &&
+      matchedVehicle.vehiculeDetails[0] &&
+      matchedVehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+
+    const isNotStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+
+    if (!isSearching) {
+      if (filter === "movingNow")
+        return isSpeedActive && hasDetails && isActive && isNotStillSpeedActive;
+      if (filter === "notMovingNow")
+        // return isNotSpeedActive && hasDetails && isActive;
+        return (
+          hasDetails &&
+          isActive &&
+          (isNotSpeedActive || (hasBeenMoving && !isNotStillSpeedActive))
+        );
+      if (filter === "moving") return hasDetails && isMoving && isToday;
+
+      if (filter === "parking")
+        // return hasDetails && noSpeed && isActive;
+        return (
+          hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
+        );
+      if (filter === "inactive") return !hasDetails || !isActive;
+      return true; // "all" : tous les véhicules
+    } else {
+      if (filter === "inactive") return !hasDetails;
+      if (filter === "parking") return hasDetails && noSpeed;
+      if (filter === "moving") return hasDetails && isMoving;
+      return true; // "all" : tous les véhicules
+    }
   });
+
+  // Fonction pour obtenir le timestamp actuel en millisecondes
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -877,16 +933,31 @@ function RapportGroupe({
       : 0;
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+    const lastUpdateTimestampMs =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
+    // Vérifie si la mise à jour est récente (moins de 30 minutes)
+    const isStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+
     // Le véhicule doit être actif selon la vitesse et la mise à jour
-    return isSpeedActive && isRecentlyUpdated;
+    return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
   });
 
   const notActiveVehicleCount = currentdataFusionnee?.filter((vehicle) => {
     // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
-    const isSpeedActive =
+    const isNotSpeedActive =
       vehicle.vehiculeDetails &&
       vehicle.vehiculeDetails[0] &&
       vehicle.vehiculeDetails[0].speedKPH <= 0;
+
+    const noSpeed =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails?.every((detail) => detail.speedKPH <= 0);
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
     const lastUpdateTimeMs = vehicle.lastUpdateTime
@@ -894,8 +965,25 @@ function RapportGroupe({
       : 0;
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+    const isSpeedActive =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].speedKPH > 0;
+
+    const lastUpdateTimestampMs =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    const isNotStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+
     // Le véhicule doit être actif selon la vitesse et la mise à jour
-    return isSpeedActive && isRecentlyUpdated;
+    // return noSpeed && isRecentlyUpdated;
+    return (
+      isRecentlyUpdated && (noSpeed || (isSpeedActive && isNotStillSpeedActive))
+    );
   });
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -969,24 +1057,34 @@ function RapportGroupe({
   const heureDebut = FormatDateHeure(mostOldTimestamp)?.time;
   const heureFin = FormatDateHeure(mostRecentTimestamp)?.time;
 
+  const isSearching = searchdonneeFusionneeForRapport?.length > 0;
+
   return (
     <>
       <div className=" px-4 pb-20 md:max-w-[80vw] w-full">
         {/* yyyyyyyyyyyyyyyyyyyyyy */}
         {voirVehiculeListePupup && (
           <div className="fixed z-[9999999999] inset-0 px-2 flex justify-center items-center bg-black/50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg pt-3 w-[97vw]  px-2">
+            <div className="bg-white  dark:bg-gray-800 rounded-lg pt-3 w-[97vw]  px-2">
               <div className="flex justify-between items-center py-2">
                 <p></p>
                 <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
                   {filter === "all" && "Tous les véhicules"}
-                  {filter === "moving" && "Véhicules déplacés aujourd'hui"}
+                  {filter === "moving" &&
+                    `Véhicules déplacés  ${isSearching ? "" : "aujourd'hui"} `}
                   {filter === "notMovingNow" &&
-                    "Véhicules en stationnement actuellement"}
+                    `Véhicules en stationnement  ${
+                      isSearching ? "" : "actuellement"
+                    }`}
 
                   {filter === "movingNow" &&
-                    "Véhicules en mouvement actuellement"}
-                  {filter === "parking" && "Véhicules non déplacés aujourd'hui"}
+                    `Véhicules en mouvement ${
+                      isSearching ? "" : " actuellement"
+                    }`}
+                  {filter === "parking" &&
+                    ` Véhicules non déplacés  ${
+                      isSearching ? "" : " aujourd'hui"
+                    }  `}
                   {filter === "inactive" && "Véhicules hors service "}
                 </h3>
                 <IoClose
@@ -996,7 +1094,7 @@ function RapportGroupe({
                   className="cursor-pointer text-3xl text-red-500"
                 />
               </div>
-              <div className="relative flex flex-col gap-4 h-[80vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
+              <div className="relative pb-20 flex flex-col gap-4 h-[80vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
                 {filteredVehiclesListe.length > 0 ? (
                   filteredVehiclesListe?.map((vehicule, index) => {
                     // Trouver le véhicule correspondant dans updateData
@@ -1040,7 +1138,41 @@ function RapportGroupe({
                     const isActive =
                       currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+                    const isSearching =
+                      searchdonneeFusionneeForRapport?.length > 0;
                     ///////////////////////////////////////////////////////////////////////////
+
+                    ////////////////////////////////////////////////////
+                    // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+                    const getTodayTimestamp = () => {
+                      const now = new Date();
+                      now.setHours(0, 0, 0, 0); // Minuit
+                      return Math.floor(now.getTime() / 1000); // Convertir en secondes
+                    };
+                    const todayTimestamp = getTodayTimestamp() * 1000;
+
+                    // Fonction pour obtenir le timestamp actuel en millisecondes
+                    const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+                    const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+                    const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+
+                    const hasBeenMoving =
+                      matchedVehicle.vehiculeDetails &&
+                      matchedVehicle.vehiculeDetails?.some(
+                        (detail) => detail.speedKPH >= 1
+                      );
+
+                    const lastUpdateTimestampMs =
+                      matchedVehicle.vehiculeDetails &&
+                      matchedVehicle.vehiculeDetails[0] &&
+                      matchedVehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+                    const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+
+                    const isNotStillSpeedActive =
+                      lastUpdateTimestampMs &&
+                      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
 
                     ////////////////////////////x////////////////////////////////////////
 
@@ -1058,7 +1190,13 @@ function RapportGroupe({
                     let border_top =
                       "border-t border-t-red-200 dark:border-t-red-600/30 ";
 
-                    if (hasDetails && isMoving && isActive) {
+                    if (
+                      !isSearching &&
+                      hasDetails &&
+                      isMoving &&
+                      isActive &&
+                      isToday
+                    ) {
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = "En mouvement rapide";
                       lite_bg_color =
@@ -1072,7 +1210,12 @@ function RapportGroupe({
                         "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
                       border_top =
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
-                    } else if (hasDetails && noSpeed && isActive) {
+                    } else if (
+                      !isSearching &&
+                      hasDetails &&
+                      isActive &&
+                      (noSpeed || (isMoving && !isToday))
+                    ) {
                       main_text_color = "text-red-900 dark:text-red-300";
                       statut = "En Stationnement";
                       lite_bg_color =
@@ -1089,7 +1232,7 @@ function RapportGroupe({
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
                     //
-                    else if (!hasDetails || !isActive) {
+                    else if ((!isSearching && !hasDetails) || !isActive) {
                       main_text_color = "text-purple-900 dark:text-purple-300 ";
                       statut = "Hors service";
                       lite_bg_color =
@@ -1110,6 +1253,7 @@ function RapportGroupe({
                     //
                     //
                     if (
+                      !isSearching &&
                       isNotSpeedActive &&
                       hasDetails &&
                       isActive &&
@@ -1131,6 +1275,55 @@ function RapportGroupe({
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
                     //
+
+                    if (isSearching && hasDetails && isMoving) {
+                      main_text_color = "text-green-700 dark:text-green-400";
+                      statut = "En mouvement rapide";
+                      lite_bg_color =
+                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+                      activeTextColor = "text-green-800 dark:text-green-200";
+                      active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+                      vitess_img = "/img/home_icon/active.png";
+                      vitess_img_dark = "/img/home_icon/rapport_active.png";
+                      imgClass = "w-12  h-auto sm:w-14 md:w-20";
+                      imgBg =
+                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+                      border_top =
+                        "border-t border-t-green-200 dark:border-t-green-600/30 ";
+                    } else if (isSearching && hasDetails && noSpeed) {
+                      main_text_color = "text-red-900 dark:text-red-300";
+                      statut = "En Stationnement";
+                      lite_bg_color =
+                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+                      activeTextColor = "text-red-900 dark:text-red-200";
+                      active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+                      vitess_img = "/img/home_icon/rapport_parking2.png";
+                      vitess_img_dark = "/img/home_icon/rapport_parking.png";
+
+                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
+                      imgBg =
+                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+                      border_top =
+                        "border-t border-t-red-200 dark:border-t-red-600/30 ";
+                    }
+                    //
+                    else if ((isSearching && !hasDetails) || !isActive) {
+                      main_text_color = "text-purple-900 dark:text-purple-300 ";
+                      statut = "Hors service";
+                      lite_bg_color =
+                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+                      activeTextColor = "text-purple-900 dark:text-purple-200";
+                      active_bg_color =
+                        "bg-purple-200/50 dark:bg-purple-600/50";
+                      vitess_img = "/img/home_icon/payer.png";
+                      vitess_img_dark = "/img/home_icon/rapport_not_active.png";
+
+                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
+                      imgBg =
+                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
+                      border_top =
+                        "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
+                    }
 
                     return (
                       <div>
@@ -2085,16 +2278,22 @@ function RapportGroupe({
             </div>
             <div className="flex flex-wrap">
               <p>Heure de recherche trouvée :</p>
-              <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                De{" "}
-                <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                  {heureDebut}
-                </span>{" "}
-                à{" "}
-                <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                  {heureFin}{" "}
-                </span>{" "}
-              </span>
+              {jourDebut ? (
+                <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                  De{" "}
+                  <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                    {heureDebut}
+                  </span>{" "}
+                  à{" "}
+                  <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                    {heureFin}{" "}
+                  </span>{" "}
+                </span>
+              ) : (
+                <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                  Pas de date disponible
+                </span>
+              )}
             </div>
             {/*  */}
             {/*  */}
@@ -3012,16 +3211,22 @@ function RapportGroupe({
 
               <div className="flex flex-wrap">
                 <p>Heure de recherche trouvée :</p>
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                  De{" "}
-                  <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
-                    {heureDebut}
-                  </span>{" "}
-                  à{" "}
-                  <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
-                    {heureFin}{" "}
-                  </span>{" "}
-                </span>
+                {jourDebut ? (
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                    De{" "}
+                    <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                      {heureDebut}
+                    </span>{" "}
+                    à{" "}
+                    <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                      {heureFin}{" "}
+                    </span>{" "}
+                  </span>
+                ) : (
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                    Pas de date disponible
+                  </span>
+                )}
               </div>
 
               {/*  */}

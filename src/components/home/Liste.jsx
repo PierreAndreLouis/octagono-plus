@@ -296,6 +296,29 @@ function Liste() {
             : 0;
           const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+          /////////////////////////////////////////////
+
+          // Fonction pour obtenir le timestamp actuel en millisecondes
+          const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+          const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+          const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+
+          const lastUpdateTimestampMs =
+            vehicle.vehiculeDetails &&
+            vehicle.vehiculeDetails[0] &&
+            vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+          const isSpeedActive =
+            vehicle.vehiculeDetails &&
+            vehicle.vehiculeDetails[0] &&
+            vehicle.vehiculeDetails[0].speedKPH > 0;
+          // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
+          // Vérifie si la mise à jour est récente (moins de 30 minutes)
+          const isStillSpeedActive =
+            lastUpdateTimestampMs &&
+            currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+
           let iconBg = "text-red-500 dark:text-red-500";
 
           if (hasDetails && isMoving) {
@@ -317,7 +340,13 @@ function Liste() {
             imgClass = "w-14  h-auto sm:w-16 md:w-24";
             border_top =
               "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
-          } else if (hasDetails && speed < 1 && isActive) {
+          } else if (
+            hasDetails &&
+            isActive &&
+            (speed < 1 || (isSpeedActive && !isStillSpeedActive))
+          ) {
+            // if
+            // (hasDetails  && isActive &&  (  speed < 1 || (isSpeedActive && isStillSpeedActive))
             main_text_color = "text-red-900 dark:text-red-300";
             statut = "En Stationnement";
             lite_bg_color =
@@ -332,7 +361,8 @@ function Liste() {
             // isMoving &&
             isActive &&
             speed >= 1 &&
-            speed <= 20
+            speed <= 20 &&
+            isStillSpeedActive
           ) {
             main_text_color = "text-[#555b03] dark:text-yellow-300";
             statut = "En mouvement lent";
@@ -348,7 +378,8 @@ function Liste() {
             hasDetails &&
             //  isMoving &&
             isActive &&
-            speed > 20
+            speed > 20 &&
+            isStillSpeedActive
           ) {
             main_text_color = "text-green-700 dark:text-green-400";
             statut = "En mouvement rapide";

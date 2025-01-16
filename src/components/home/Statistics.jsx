@@ -33,6 +33,26 @@ function Statistics() {
   //     vehicle.vehiculeDetails[0].speedKPH > 0
   // );
 
+  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+  const getTodayTimestamp = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Minuit
+    return Math.floor(now.getTime() / 1000); // Convertir en secondes
+  };
+
+  // Fonction pour obtenir le timestamp actuel
+  // const getCurrentTimestamp = () => {
+  //   const now = new Date();
+  //   return Math.floor(now.getTime() / 1000); // Convertir en secondes
+  // };
+  // const todayTimestamp = getCurrentTimestamp();
+
+  // Fonction pour obtenir le timestamp actuel en millisecondes
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
 
@@ -43,6 +63,22 @@ function Statistics() {
       vehicle.vehiculeDetails[0] &&
       vehicle.vehiculeDetails[0].speedKPH > 0;
 
+    // const lastTimeStamp =
+    //   vehicle.vehiculeDetails &&
+    //   vehicle.vehiculeDetails[0] &&
+    //   vehicle.vehiculeDetails[0].timestamp * 1000;
+    // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
+    const lastUpdateTimestampMs =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
+    // Vérifie si la mise à jour est récente (moins de 30 minutes)
+    const isStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
     const lastUpdateTimeMs = vehicle.lastUpdateTime
       ? vehicle.lastUpdateTime * 1000
@@ -50,7 +86,7 @@ function Statistics() {
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     // Le véhicule doit être actif selon la vitesse et la mise à jour
-    return isSpeedActive && isRecentlyUpdated;
+    return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
   });
 
   // console.log(activeVehicleCount); // Affiche la liste des véhicules actifs
@@ -81,7 +117,6 @@ function Statistics() {
       vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0;
 
     // Vérifie la vitesse (noSpeed)
-    // const noSpeed = vehicle.vehiculeDetails?.[0]?.speedKPH <= 1;
     const noSpeed = vehicle.vehiculeDetails?.every(
       (detail) => detail.speedKPH <= 0
     );
@@ -92,9 +127,30 @@ function Statistics() {
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+    const lastUpdateTimestampMs =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    const isSpeedActive =
+      vehicle.vehiculeDetails &&
+      vehicle.vehiculeDetails[0] &&
+      vehicle.vehiculeDetails[0].speedKPH > 0;
+
+    const isNotStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+
     // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
-    return hasDetails && noSpeed && isActive;
-    // return hasDetails && isActive && noSpeed;
+    // return hasDetails && noSpeed && isActive;
+    // Inclure les véhicules :
+    // - Soit ils ont noSpeed et sont actifs
+    // - Soit ils sont isSpeedActive mais isNotStillSpeedActive
+    return (
+      hasDetails &&
+      isActive &&
+      (noSpeed || (isSpeedActive && isNotStillSpeedActive))
+    );
   });
 
   // Nombre de véhicules inactifs

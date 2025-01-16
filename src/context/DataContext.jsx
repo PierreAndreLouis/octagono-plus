@@ -1488,26 +1488,48 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     return Math.floor(now.getTime() / 1000); // Convertir en secondes
   };
 
-  useEffect(() => {
-    const todayTimestamp = getTodayTimestamp();
+  ///////////////////////////////////////////////////////////////////////////////////////////
 
-    // Filtrer les données
-    const filteredData = donneeFusionneeForRapport?.map((item) => ({
-      ...item,
-      vehiculeDetails: item.vehiculeDetails.filter(
-        (detail) => parseInt(detail.timestamp, 10) >= todayTimestamp
-      ),
-    }));
+  function getMostRecentTimestamp(data) {
+    // Filtrer les entrées avec un tableau vehiculeDetails valide et non vide
+    const validTimestamps = data
+      .filter(
+        (vehicle) =>
+          Array.isArray(vehicle.vehiculeDetails) &&
+          vehicle.vehiculeDetails.length > 0
+      )
+      .map((vehicle) => parseInt(vehicle.vehiculeDetails[0].timestamp));
 
-    // Mettre à jour les données filtrées
-    setdonneeFusionneeForRapport(filteredData);
+    // Trouver le timestamp le plus récent
+    const mostRecentTimestamp = Math.max(...validTimestamps);
 
-    // Sauvegarder dans le localStorage
-    localStorage.setItem(
-      "donneeFusionneeForRapport",
-      JSON.stringify(filteredData)
-    );
-  }, []); // Se déclenche uniquement une fois, au montage
+    return { mostRecentTimestamp };
+  }
+  const dataFusionee2 = mergedData ? Object.values(mergedData) : [];
+
+  // useEffect(() => {
+  //   const todayTimestamp = getTodayTimestamp();
+  //   const lastTimestampUpdate = getMostRecentTimestamp(dataFusionee2);
+
+  //   if (lastTimestampUpdate >  todayTimestamp) {
+  //   // Filtrer les données
+  //   const filteredData = donneeFusionneeForRapport?.map((item) => ({
+  //     ...item,
+  //     vehiculeDetails: item.vehiculeDetails.filter(
+  //       (detail) => parseInt(detail.timestamp, 10) >= todayTimestamp
+  //     ),
+  //   }));
+
+  //     // Mettre à jour les données filtrées
+  //     setdonneeFusionneeForRapport(filteredData);
+
+  //     // Sauvegarder dans le localStorage
+  //     localStorage.setItem(
+  //       "donneeFusionneeForRapport",
+  //       JSON.stringify(filteredData)
+  //     );
+  //   }
+  // }, []); // Se déclenche uniquement une fois, au montage
 
   let currentdataFusionnee =
     searchdonneeFusionneeForRapport.length > 0
@@ -1657,66 +1679,37 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       //   }
       // );
 
-      const vehiculeActiveAjourdhui = currentdataFusionnee?.filter((vehicle) =>
-        vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
+      // Fonction pour obtenir le timestamp actuel
+      // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+      const getTodayTimestamp = () => {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // Minuit
+        return Math.floor(now.getTime() / 1000); // Convertir en secondes
+      };
+      const todayTimestamp = getTodayTimestamp() * 1000;
+
+      const vehiculeActiveAjourdhui = currentdataFusionnee?.filter(
+        (vehicle) => {
+          const hasBeenMoving =
+            vehicle.vehiculeDetails &&
+            vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
+          const lastUpdateTimestampMs =
+            vehicle.vehiculeDetails &&
+            vehicle.vehiculeDetails[0] &&
+            vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+          const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+
+          return hasBeenMoving && isToday;
+        }
       );
-
-      // const vehiculeActiveAjourdhui = filteredVehicles?.filter((vehicle) =>
-      //   vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
-      // );
-
-      // const vehiculeActiveAjourdhui2 = filteredVehicles?.filter((vehicle) =>
-      //   vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
-      // );
 
       setVehiculeActiveAjourdhui(vehiculeActiveAjourdhui);
 
-      // 3. Met à jour l'état avec tous les véhicules n'ayant aucun événement avec `speedKPH >= 1`
-
-      // const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-      // const currentTime = Date.now(); // Heure actuelle en millisecondes
-
-      // const vehiculeNotActiveAjourdhui = currentdataFusionnee.filter(
-      //   (vehicle) => {
-      //     // Vérifie si le véhicule a des détails
-      //     const hasDetails =
-      //       vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0;
-
-      //     // Vérifie la vitesse (noSpeed)
-      //     const noSpeed = vehicle.vehiculeDetails?.[0]?.speedKPH < 1;
-
-      //     // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-      //     const lastUpdateTimeMs = vehicle.lastUpdateTime
-      //       ? vehicle.lastUpdateTime * 1000
-      //       : 0;
-      //     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-      //     // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
-      //     return hasDetails && isActive && noSpeed;
-      //   }
-      // );
-
-      // const vehiculeNotActiveAjourdhui = currentdataFusionnee.filter(
-      //   (vehicle) => {
-      //     // Vérifie si le véhicule a des détails
-      //     const hasDetails = vehicle.vehiculeDetails?.length > 0;
-
-      //     // Vérifie si la vitesse est inférieure ou égale à 0
-      //     // const noSpeed = vehicle.vehiculeDetails?.[0]?.speedKPH <= 0;
-      //     const noSpeed = vehicle.vehiculeDetails?.filter(
-      //       (detail) => detail.speedKPH >= 1
-      //     );
-
-      //     // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-      //     const lastUpdateTimeMs = vehicle.lastUpdateTime
-      //       ? vehicle.lastUpdateTime * 1000
-      //       : 0;
-      //     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-      //     // Retourne les véhicules qui remplissent toutes les conditions
-      //     return hasDetails && isActive && noSpeed;
-      //   }
-      // );
+      /////////////////////////////////////////////////////
+      /////////////////////////////////////////////////////
+      /////////////////////////////////////////////////////
 
       const vehiculeNotActiveAjourdhui = currentdataFusionnee.filter(
         (vehicle) => {
@@ -1728,18 +1721,45 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
             (detail) => detail.speedKPH <= 0
           );
 
+          const hasBeenMoving =
+            vehicle.vehiculeDetails &&
+            vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
           // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
           const lastUpdateTimeMs = vehicle.lastUpdateTime
             ? vehicle.lastUpdateTime * 1000
             : 0;
           const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+          const lastUpdateTimestampMs =
+            vehicle.vehiculeDetails &&
+            vehicle.vehiculeDetails[0] &&
+            vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+          const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+
           // Retourne les véhicules qui remplissent toutes les conditions
-          return hasDetails && noSpeed && isActive;
+          // return hasDetails && noSpeed && isActive;
+
+          return (
+            hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
+          );
         }
       );
 
       setVehiculeNotActiveAjourdhui(vehiculeNotActiveAjourdhui);
+
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
 
       // 4. Met à jour l'état avec tous les véhicules dont `vehiculeDetails[0].speedKPH >= 1`
       const vehiculeActiveMaintenant = currentdataFusionnee?.filter(
