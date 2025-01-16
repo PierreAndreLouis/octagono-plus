@@ -886,13 +886,15 @@ function RapportGroupe({
 
     if (!isSearching) {
       if (filter === "movingNow")
-        return isSpeedActive && hasDetails && isActive && isNotStillSpeedActive;
+        return (
+          isSpeedActive && hasDetails && isActive && !isNotStillSpeedActive
+        );
       if (filter === "notMovingNow")
         // return isNotSpeedActive && hasDetails && isActive;
         return (
           hasDetails &&
           isActive &&
-          (isNotSpeedActive || (hasBeenMoving && !isNotStillSpeedActive))
+          (isNotSpeedActive || (hasBeenMoving && isNotStillSpeedActive))
         );
       if (filter === "moving") return hasDetails && isMoving && isToday;
 
@@ -987,7 +989,7 @@ function RapportGroupe({
     // return noSpeed && isRecentlyUpdated;
     return (
       isRecentlyUpdated &&
-      (isNotSpeedActive || (isSpeedActive && !isNotStillSpeedActive))
+      (isNotSpeedActive || (isSpeedActive && isNotStillSpeedActive))
     );
     // return (
     //   hasDetails &&
@@ -1047,32 +1049,42 @@ function RapportGroupe({
     return { mostOldTimestamp };
   }
 
-//////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////
 
-// Tableau des mois en toutes lettres
-const moisEnLettres = [
-  "janvier", "février", "mars", "avril", "mai", "juin",
-  "juillet", "août", "septembre", "octobre", "novembre", "décembre"
-];
+  // Tableau des mois en toutes lettres
+  const moisEnLettres = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+  ];
 
-// Récupérer le timestamp le plus ancien
-const mostOldTimestamp =
-  getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
+  // Récupérer le timestamp le plus ancien
+  const mostOldTimestamp =
+    getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
 
-const dataObjectDebut = new Date(mostOldTimestamp * 1000);
+  const dataObjectDebut = new Date(mostOldTimestamp * 1000);
 
-// Récupérer le jour, le mois et l'année séparément pour la date de début
-const jourDebut = dataObjectDebut.getUTCDate();
-const moisDebut = moisEnLettres[dataObjectDebut.getUTCMonth()];
-const anneeDebut = dataObjectDebut.getUTCFullYear();
+  // Récupérer le jour, le mois et l'année séparément pour la date de début
+  const jourDebut = dataObjectDebut.getUTCDate();
+  const moisDebut = moisEnLettres[dataObjectDebut.getUTCMonth()];
+  const anneeDebut = dataObjectDebut.getUTCFullYear();
 
-// Récupérer le timestamp le plus récent
-const dataObjectFin = new Date(mostRecentTimestamp * 1000);
+  // Récupérer le timestamp le plus récent
+  const dataObjectFin = new Date(mostRecentTimestamp * 1000);
 
-// Récupérer le jour, le mois et l'année séparément pour la date de fin
-const jourFin = dataObjectFin.getUTCDate();
-const moisFin = moisEnLettres[dataObjectFin.getUTCMonth()];
-const anneeFin = dataObjectFin.getUTCFullYear();
+  // Récupérer le jour, le mois et l'année séparément pour la date de fin
+  const jourFin = dataObjectFin.getUTCDate();
+  const moisFin = moisEnLettres[dataObjectFin.getUTCMonth()];
+  const anneeFin = dataObjectFin.getUTCFullYear();
 
   // const mostOldTimestamp =
   //   getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
@@ -1091,8 +1103,6 @@ const anneeFin = dataObjectFin.getUTCFullYear();
   // const jourFin = dataObjectFin.getUTCDate(); // Obtenir le jour
   // const moisFin = dataObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
   // const anneeFin = dataObjectFin.getFullYear(); // Obtenir l'année
-
-
 
   //////////////////////////////////////
   const heureDebut = FormatDateHeure(mostOldTimestamp)?.time;
