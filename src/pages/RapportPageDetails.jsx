@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 
+import * as XLSX from "xlsx";
+
 import { Chart, registerables } from "chart.js";
 
 // Enregistrement des composants nécessaires
@@ -18,6 +20,7 @@ import RapportPersonnel from "../components/rapport_page_details/RapportPersonne
 import RapportPage from "./RapportPage";
 import DatePupup from "../components/rapport_vehicule/DatePupup";
 import DateTimePicker from "../components/home/DateTimePicker";
+import { FaBullseye } from "react-icons/fa";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -31,6 +34,22 @@ function RapportPageDetails() {
   const [typeDeVue, setTypeDeVue] = useState(false);
   const [zoomCart, setzoomCart] = useState(false);
   const [zoomPosition, setzoomPosition] = useState(false);
+
+  const [downloadExelPDF, setdownloadExelPDF] = useState(false);
+  useEffect(() => {
+    console.log("downloadExelPDF :", downloadExelPDF);
+  }, [downloadExelPDF]);
+
+  const fonctiondownloadExelPDF = () => {
+    setdownloadExelPDF(true);
+
+    // Vérifier après un délai si l'action a échoué
+    setTimeout(() => {
+      // if (downloadExelPDF) {
+      setdownloadExelPDF(false);
+      // }
+    }, 2000); // Délai d'attente de 3 secondes
+  };
 
   const {
     currentVehicule,
@@ -1549,6 +1568,7 @@ function RapportPageDetails() {
               startTime={startTimeToDisplay}
               endDate={endDateToDisplay}
               endTime={endTimeToDisplay}
+              fonctiondownloadExelPDF={fonctiondownloadExelPDF}
             />
           </div>
           {/* )} */}
@@ -1646,6 +1666,7 @@ function RapportPageDetails() {
           startTime={startTimeToDisplay}
           endDate={endDateToDisplay}
           endTime={endTimeToDisplay}
+          downloadExelPDF={downloadExelPDF}
         />
       )}
 

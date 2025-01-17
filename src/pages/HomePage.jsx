@@ -8,6 +8,7 @@ import { RiWifiOffLine } from "react-icons/ri";
 import { MdUpdate } from "react-icons/md";
 import InstallationPWA from "./InstallationPWA";
 import GoogleTranslate from "./GoogleTranslate";
+import PdfDownloadSave from "./PdfDownloadSave";
 
 const Home = () => {
   const {
@@ -266,6 +267,8 @@ const Home = () => {
           </h3>
         </div>
       )}
+
+      {/* <PdfDownloadSave /> */}
 
       {/* <GoogleTranslate /> */}
 

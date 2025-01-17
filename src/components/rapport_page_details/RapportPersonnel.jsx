@@ -92,6 +92,7 @@ function RapportPersonnel({
     setSelectedVehicle,
     sethistiriqueSelectedLocationIndex,
     FormatDateHeure,
+    rapportPersonnelPDFtRef,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -242,8 +243,15 @@ function RapportPersonnel({
 
   return (
     <>
+      {/* <div ref={rapportPersonnelPDFtRef}>
+        <h1>Mon contenu à exporter</h1>
+        <p>Voici un exemple de texte dans le PDF.</p>
+      </div> */}
       {currentVehicule ? (
-        <div className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full">
+        <div
+          ref={rapportPersonnelPDFtRef}
+          className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full"
+        >
           <h1 className="text-center mb-2 font-semibold text-xl mt-16 dark:text-gray-300">
             Rapport détaillé du véhicule
           </h1>

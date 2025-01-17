@@ -189,7 +189,7 @@ function ShowFilterComponent({
                     htmlFor="en_arret"
                     className="text-gray-800 dark:text-gray-200"
                   >
-                    En arrêt
+                    En stationnement
                   </label>
                 </div>
               </div>

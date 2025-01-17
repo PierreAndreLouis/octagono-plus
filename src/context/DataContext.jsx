@@ -1,5 +1,5 @@
 // DataContextProvider.js
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 
@@ -285,6 +285,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       });
 
       const data = await response.text();
+
+      console.log("data User XML: >>>>>>>>>>>>>>>>>>>>>.. ", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -2649,6 +2651,13 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     console.log(chooseHistoriqueLongitude);
     console.log(chooseHistoriqueLatitude);
   }, [chooseHistoriqueLongitude, chooseHistoriqueLatitude]);
+
+  // pour la fonction export exel dans la page rapport
+  const tableRef = useRef(null);
+  // conversion page en pdf rapport
+  const rapportPersonnelPDFtRef = useRef(); // Crée une référence pour l'élément
+  const rapportGroupePDFtRef = useRef(); // Crée une référence pour l'élément
+
   return (
     <DataContext.Provider
       value={{
@@ -2786,6 +2795,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         histiriqueSelectedLocationIndex,
         sethistiriqueSelectedLocationIndex,
         homePageReload,
+        tableRef,
+        rapportPersonnelPDFtRef,
+        rapportGroupePDFtRef,
       }}
     >
       {children}

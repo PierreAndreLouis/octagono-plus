@@ -34,6 +34,7 @@ function InfoUserComponent({
       <h1
         onClick={() => {
           // setUsername("admin");
+          console.log(userData);
         }}
         className="text-center font-bold text-xl mt-4 text-gray-700 dark:text-gray-100"
       >

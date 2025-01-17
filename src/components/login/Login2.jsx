@@ -76,7 +76,7 @@ function Login2({ setShowLogin }) {
             </div>
             </div> */}
       <GoogleTranslate />
-      <div className="flex min-h-[90vh] flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
+      <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <img
             alt="Your Company"

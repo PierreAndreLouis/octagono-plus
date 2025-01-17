@@ -68,9 +68,7 @@ function App() {
           {!shouldHideComponent && <Navigation_bar />}
           {!shouldHideComponent && <SideBar />}
         </div>
-        {/* <SideBar />
-        <Header />
-        <HomePage /> */}
+
         {/* <Login2 /> */}
 
         <Routes>
@@ -85,7 +83,7 @@ function App() {
             }
           />
           <Route path="/login" element={<Login2 />} />
-          {/* ///////////////////////////////////////////////////// */}
+
           <Route
             path="/home"
             element={<PrivateRoute element={<HomePage />} />}
@@ -108,7 +106,7 @@ function App() {
             path="/User_Profile"
             element={<PrivateRoute element={<ProfilUserPage />} />}
           />
-          {/* //////////////////////////////////////////////////////////// */}
+
           <Route
             path="/paiement"
             element={<PrivateRoute element={<Paiement_methode />} />}
