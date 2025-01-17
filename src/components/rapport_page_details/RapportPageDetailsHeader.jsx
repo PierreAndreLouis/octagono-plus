@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import html2pdf from "html2pdf.js";
 
 import { FaRegFilePdf } from "react-icons/fa6";
+import { LuFileDown } from "react-icons/lu";
 
 import { Chart, registerables } from "chart.js";
 import { FaCar } from "react-icons/fa";
@@ -311,7 +312,7 @@ function RapportPageDetailsHeader({
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <div className="relative">
                 {(currentVehicule || pageSection === "groupe") && (
                   <Tooltip
@@ -333,7 +334,7 @@ function RapportPageDetailsHeader({
                         },
                       ],
                     }}
-                    title="Telecherger en PDF"
+                    title="Telecharger en PDF"
                   >
                     <div
                       onClick={() => {
@@ -341,7 +342,7 @@ function RapportPageDetailsHeader({
                       }}
                       className="flex gap-2 items-center cursor-pointer"
                     >
-                      <FaRegFilePdf className="text-xl mt-2- text-orange-500" />
+                      <LuFileDown className="text-[1.3rem] mt-2- text-orange-500" />
                     </div>
                   </Tooltip>
                 )}
@@ -359,34 +360,49 @@ function RapportPageDetailsHeader({
                       <IoMdClose className=" text-xl text-red-500 cursor-pointer" />
                     </div>
                     {pageSection === "unite" && (
-                      <p
+                      <div
                         onClick={() => {
                           generatePersonelPDF();
                         }}
-                        className="border-b pb-2 font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        PDF Rapport Unite
-                      </p>
+                        <p>Telecharger le rapport en PDF</p>
+                        <img
+                          className="w-[2rem]"
+                          src="/img/pdf_download.png"
+                          alt=""
+                        />
+                      </div>
                     )}
                     {pageSection !== "unite" && (
-                      <p
+                      <div
                         onClick={() => {
                           generateGroupePDF();
                         }}
-                        className="border-b pb-2 font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        PDF Rapport Groupe
-                      </p>
+                        <p>Telecharger le rapport en PDF</p>
+                        <img
+                          className="w-[2rem]"
+                          src="/img/pdf_download.png"
+                          alt=""
+                        />
+                      </div>
                     )}
                     {pageSection !== "unite" && (
-                      <p
+                      <div
                         onClick={() => {
                           exportToExcel();
                         }}
-                        className="border-b pb-2 font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        Export la table en Exel
-                      </p>
+                        <p>Telecharger le rapport en Exel</p>
+                        <img
+                          className="w-[2rem]"
+                          src="/img/exel_download.png"
+                          alt=""
+                        />
+                      </div>
                     )}
                   </div>
                 )}

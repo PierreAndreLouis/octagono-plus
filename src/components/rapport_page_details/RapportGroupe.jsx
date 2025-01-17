@@ -3696,13 +3696,27 @@ function RapportGroupe({
             </div>
           </div>
 
+          <div
+            onClick={() => {
+              exportToExcel();
+            }}
+            className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
+          >
+            <p>Telecharger</p>
+            <img
+              className="w-[2rem] mr-3"
+              src="/img/exel_download.png"
+              alt=""
+            />
+          </div>
+
           <p
             onClick={() => {
               exportToExcel();
             }}
-            className="border cursor-pointer border-orange-300 font-semibold rounded-lg text-orange-500 py-1 px-4"
+            className=" lg:hidden cursor-pointer     py-1 px-4"
           >
-            Telecherger
+            <img className="w-[2.6rem]" src="/img/exel_download.png" alt="" />
           </p>
         </div>
 
@@ -3860,7 +3874,11 @@ function RapportGroupe({
                     let vehiculeBG =
                       "bg-red-50/50-- hover:bg-red-100 dark:hover:bg-gray-700";
 
-                    if (hasDetails && isMoving && isToday) {
+                    if (
+                      hasDetails &&
+                      isMoving &&
+                      (isToday || (isSearching && !isToday))
+                    ) {
                       iconBg =
                         "text-green-500 bg-green-50/50  dark:text-green-500 border-l-green-600 dark:border-l-green-600";
                       vehiculeBG =
