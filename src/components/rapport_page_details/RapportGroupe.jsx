@@ -1575,7 +1575,7 @@ function RapportGroupe({
                                                   .length - 1
                                               ]?.timestamp
                                             )?.time
-                                          : "Pas d'adresse disponible"}{" "}
+                                          : "Pas de date disponible"}{" "}
                                       </span>
                                     </p>
                                   </div>
@@ -1607,7 +1607,7 @@ function RapportGroupe({
                                               vehicule?.vehiculeDetails[0]
                                                 ?.timestamp
                                             )?.time
-                                          : "Pas d'adresse disponible"}{" "}
+                                          : "Pas de date disponible"}{" "}
                                       </span>
                                     </p>
                                   </div>
@@ -1674,7 +1674,7 @@ function RapportGroupe({
                                             vehicule?.vehiculeDetails.length - 1
                                           ]?.timestamp
                                         )?.time
-                                      : "Pas d'adresse disponible"}{" "}
+                                      : "Pas de date disponible"}{" "}
                                   </span>
                                 </p>
                               </div>
@@ -1699,7 +1699,7 @@ function RapportGroupe({
                                           vehicule?.vehiculeDetails[0]
                                             ?.timestamp
                                         )?.time
-                                      : "Pas d'adresse disponible"}{" "}
+                                      : "Pas de date disponible"}{" "}
                                   </span>
                                 </p>
                               </div>
@@ -2401,6 +2401,7 @@ function RapportGroupe({
         >
           Rapport détaillé en groupe
         </h1>
+        {preparationDownloadPDF && <p className="min-h-[4rem]"></p>}
         <div className="shadow-md dark:bg-gray-800 dark:shadow-gray-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
           <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
             <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -2771,28 +2772,30 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <div className="flex gap-6">
-                  {vehiclesByDepartureTime[0]?.vehiculeDetails.length > 0 && (
+                {!preparationDownloadPDF && (
+                  <div className="flex gap-6">
+                    {vehiclesByDepartureTime[0]?.vehiculeDetails.length > 0 && (
+                      <button
+                        onClick={() => {
+                          // settrajetVehiculePupup(true);
+                          positionDansCarte(vehiclesByDepartureTime[0]);
+                          setvoirDansLaCarte(true);
+                        }}
+                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      >
+                        Voir sur la carte
+                      </button>
+                    )}
                     <button
                       onClick={() => {
-                        // settrajetVehiculePupup(true);
-                        positionDansCarte(vehiclesByDepartureTime[0]);
-                        setvoirDansLaCarte(true);
+                        settableDeplacement(true);
                       }}
-                      className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Voir sur la carte
+                      Plus d'info
                     </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      settableDeplacement(true);
-                    }}
-                    className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
-                  >
-                    Plus d'info
-                  </button>
-                </div>
+                  </div>
+                )}
 
                 {/* //////////////////////////////// */}
                 {/*  */}
@@ -2931,29 +2934,32 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <div className="flex gap-6">
-                  {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && (
+                {!preparationDownloadPDF && (
+                  <div className="flex gap-6">
+                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length >
+                      0 && (
+                      <button
+                        onClick={() => {
+                          // settrajetVehiculePupup(true);
+                          positionDansCarte(vehiclesByDistance[0]);
+
+                          setvoirDansLaCarte(true);
+                        }}
+                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      >
+                        Voir sur la carte
+                      </button>
+                    )}
                     <button
                       onClick={() => {
-                        // settrajetVehiculePupup(true);
-                        positionDansCarte(vehiclesByDistance[0]);
-
-                        setvoirDansLaCarte(true);
+                        settableDistance(true);
                       }}
-                      className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Voir sur la carte
+                      Plus d'info
                     </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      settableDistance(true);
-                    }}
-                    className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
-                  >
-                    Plus d'info
-                  </button>
-                </div>
+                  </div>
+                )}
 
                 {/* //////////////////////////////// */}
                 {/*  */}
@@ -3097,29 +3103,32 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <div className="flex gap-6">
-                  {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && (
+                {!preparationDownloadPDF && (
+                  <div className="flex gap-6">
+                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length >
+                      0 && (
+                      <button
+                        onClick={() => {
+                          // settrajetVehiculePupup(true);
+                          positionDansCarte(vehiclesByMovingDuration[0]);
+
+                          setvoirDansLaCarte(true);
+                        }}
+                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      >
+                        Voir sur la carte
+                      </button>
+                    )}
                     <button
                       onClick={() => {
-                        // settrajetVehiculePupup(true);
-                        positionDansCarte(vehiclesByMovingDuration[0]);
-
-                        setvoirDansLaCarte(true);
+                        settableActivite(true);
                       }}
-                      className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Voir sur la carte
+                      Plus d'info
                     </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      settableActivite(true);
-                    }}
-                    className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
-                  >
-                    Plus d'info
-                  </button>
-                </div>
+                  </div>
+                )}
 
                 {/* //////////////////////////////// */}
                 {/*  */}
@@ -3266,28 +3275,31 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <div className="flex gap-6">
-                  {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && (
+                {!preparationDownloadPDF && (
+                  <div className="flex gap-6">
+                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length >
+                      0 && (
+                      <button
+                        onClick={() => {
+                          // settrajetVehiculePupup(true);
+                          positionDansCarte(vehiclesByMaxSpeed[0]);
+                          setvoirDansLaCarte(true);
+                        }}
+                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      >
+                        Voir sur la carte
+                      </button>
+                    )}
                     <button
                       onClick={() => {
-                        // settrajetVehiculePupup(true);
-                        positionDansCarte(vehiclesByMaxSpeed[0]);
-                        setvoirDansLaCarte(true);
+                        settablevitesse(true);
                       }}
-                      className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Voir sur la carte
+                      Plus d'info
                     </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      settablevitesse(true);
-                    }}
-                    className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
-                  >
-                    Plus d'info
-                  </button>
-                </div>
+                  </div>
+                )}
 
                 {/* //////////////////////////////// */}
                 {/*  */}
@@ -3301,7 +3313,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/*  */}
-          {voirPlus && (
+          {voirPlus && !preparationDownloadPDF && (
             <div
               onClick={() => {
                 setvoirPlus(false);
@@ -3476,6 +3488,7 @@ function RapportGroupe({
             </div>
           </div>
         </div>
+        {preparationDownloadPDF && <p className="min-h-[11rem]"></p>}
 
         <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
           <MdLocationPin className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -3696,28 +3709,32 @@ function RapportGroupe({
             </div>
           </div>
 
-          <div
-            onClick={() => {
-              exportToExcel();
-            }}
-            className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
-          >
-            <p>Telecharger</p>
-            <img
-              className="w-[2rem] mr-3"
-              src="/img/exel_download.png"
-              alt=""
-            />
-          </div>
+          {!preparationDownloadPDF && (
+            <div
+              onClick={() => {
+                exportToExcel();
+              }}
+              className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
+            >
+              <p>Telecharger</p>
+              <img
+                className="w-[2rem] mr-3--"
+                src="/img/exel_download.png"
+                alt=""
+              />
+            </div>
+          )}
 
-          <p
-            onClick={() => {
-              exportToExcel();
-            }}
-            className=" lg:hidden cursor-pointer     py-1 px-4"
-          >
-            <img className="w-[2.6rem]" src="/img/exel_download.png" alt="" />
-          </p>
+          {preparationDownloadPDF && (
+            <p
+              onClick={() => {
+                exportToExcel();
+              }}
+              className=" lg:hidden cursor-pointer     py-1 px-4"
+            >
+              <img className="w-[2.6rem]" src="/img/exel_download.png" alt="" />
+            </p>
+          )}
         </div>
 
         <div className="mt-4  flex items-center gap-2">
@@ -3741,11 +3758,12 @@ function RapportGroupe({
           <thead>
             <div className="h-auto-  w-full- overflow-y-scroll--">
               <tr className="bg-orange-50  relative z-20 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-                <th className="text-start border-l-4   border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem] max-w-[4rem]">
+                <th className="border border-l-4  border-l-orange-200  min-w-[0rem] max-w-[0rem]"></th>
+                <th className="text-start border-l-4--   border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem] max-w-[4rem]">
                   #
                 </th>
 
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[17.13rem] max-w-[18rem]">
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[18rem] max-w-[18rem]">
                   Véhicule
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2  min-w-[13rem] max-w-[13rem]">
@@ -3791,11 +3809,12 @@ function RapportGroupe({
             >
               <thead>
                 <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-                  <th className="border border-l-4  border-l-red-600 dark:border-gray-600 py-3 px-2  min-w-[4rem] max-w-[4rem]">
+                  <th className="border border-l-4  border-l-red-600  min-w-[0rem] max-w-[0rem]"></th>
+                  <th className="border border-l-4--  border-l-red-600 dark:border-gray-600 py-3 px-2  min-w-[4rem] max-w-[4rem]">
                     #
                   </th>
 
-                  <th className="border dark:border-gray-600 py-3 px-2  min-w-[17rem] max-w-[17rem]">
+                  <th className="border dark:border-gray-600 py-3 px-2  min-w-[18rem] max-w-[18rem]">
                     Véhicule
                   </th>
                   <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
@@ -3906,7 +3925,10 @@ function RapportGroupe({
                     return (
                       <tr key={index} className="border dark:border-gray-600">
                         <td
-                          className={`${iconBg}   border font-semibold text-lg border-l-4  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600`}
+                          className={`${iconBg}   border font-semibold text-lg border-l-4  dark:bg-gray-900/70  dark:border-gray-600`}
+                        ></td>
+                        <td
+                          className={`${iconBg}   border font-semibold text-lg border-l-4--  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600`}
                         >
                           {index + 1 || "---"}
                         </td>
@@ -3942,7 +3964,7 @@ function RapportGroupe({
                                   vehicule?.vehiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
-                            : "Pas d'adresse disponible"}{" "}
+                            : "Pas de date disponible"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                           {vehicule?.vehiculeDetails[0]?.timestamp
@@ -3957,7 +3979,7 @@ function RapportGroupe({
                             ? FormatDateHeure(
                                 vehicule?.vehiculeDetails[0]?.timestamp
                               )?.time
-                            : "Pas d'adresse disponible"}{" "}
+                            : "Pas de date disponible"}{" "}
                         </td>
 
                         {/* Vitesse moyenne */}

@@ -80,10 +80,14 @@ function RapportPageDetailsHeader({
   // };
 
   const generatePersonelPDF = () => {
-    const element = rapportPersonnelPDFtRef.current; // Cible l'élément avec useRef
-    html2pdf()
-      .from(element)
-      .save(`Rapport personnel (${currentVehicule?.description}) .pdf`);
+    fonctiondownloadExelPDF();
+
+    setTimeout(() => {
+      const element = rapportPersonnelPDFtRef.current; // Cible l'élément avec useRef
+      html2pdf()
+        .from(element)
+        .save(`Rapport personnel (${currentVehicule?.description}) .pdf`);
+    }, 1000); // Délai d'attente de 2 secondes
   };
 
   const generateGroupePDF = () => {
@@ -348,21 +352,28 @@ function RapportPageDetailsHeader({
                 )}
                 {pdfDownloadPupup && (
                   <div
-                    onClick={() => {
-                      setPdfDownloadPupup(false);
-                    }}
+                    // onClick={() => {
+                    //   setPdfDownloadPupup(false);
+                    // }}
                     className="absolute rounded-lg flex flex-col gap-0 bg-white top-8 border -right-10 z-[1111111111111111100000000000000000] shadow-lg shadow-gray-300 min-w-[20rem] p-4 pt-0"
                   >
                     <div className="flex justify-between mx-2 mt-4 mb-3">
                       <p className="font-semibold text-orange-500 text-lg">
-                        Telecharger
+                        Telecharger{" "}
+                        {pageSection === "unite" ? "(Unite)" : "(Groupe)"}
                       </p>
-                      <IoMdClose className=" text-xl text-red-500 cursor-pointer" />
+                      <IoMdClose
+                        onClick={() => {
+                          setPdfDownloadPupup(false);
+                        }}
+                        className=" text-xl text-red-500 cursor-pointer"
+                      />
                     </div>
                     {pageSection === "unite" && (
                       <div
                         onClick={() => {
                           generatePersonelPDF();
+                          setPdfDownloadPupup(false);
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
@@ -378,6 +389,7 @@ function RapportPageDetailsHeader({
                       <div
                         onClick={() => {
                           generateGroupePDF();
+                          setPdfDownloadPupup(false);
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
@@ -393,6 +405,7 @@ function RapportPageDetailsHeader({
                       <div
                         onClick={() => {
                           exportToExcel();
+                          setPdfDownloadPupup(false);
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >

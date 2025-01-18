@@ -1622,6 +1622,7 @@ function RapportPageDetails() {
           startTime={startTimeToDisplay}
           endDate={endDateToDisplay}
           endTime={endTimeToDisplay}
+          downloadExelPDF={downloadExelPDF}
         />
       )}
 

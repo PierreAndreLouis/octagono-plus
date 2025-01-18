@@ -179,7 +179,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const [selectTime, setselectTime] = useState(() => {
     return localStorage.getItem("selectTime") || "";
   });
-  const chooseTimeZone = selectUTC ? -selectUTC : 5;
+  const chooseTimeZone = selectUTC ? selectUTC : -5;
   // const chooseTimeZone = selectUTC + 1;
 
   // Charger les fuseaux horaires
@@ -299,7 +299,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         for (let i = 0; i < fields.length; i++) {
           const fieldName = fields[i].getAttribute("name");
-          const fieldValue = fields[i].textContent;
+          let fieldValue = fields[i].textContent;
           userData[fieldName] = fieldValue;
         }
 
@@ -478,7 +478,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         for (let j = 0; j < fields.length; j++) {
           const fieldName = fields[j].getAttribute("name");
-          const fieldValue = fields[j].textContent;
+          let fieldValue = fields[j].textContent;
           vehicleRecord[fieldName] = fieldValue;
         }
 
@@ -487,13 +487,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       setVehicleData(vehicleData);
 
-      // localStorage.setItem("vehicleData", JSON.stringify(vehicleData));
-
-      // console.log("******** Données des véhicules ********** ", vehicleData);
-      // ---------------------------------------------------------------------
-
       const now = new Date();
-      now.setHours(now.getHours() + chooseTimeZone); // ajouter 5 heures
+      now.setHours(now.getHours() - chooseTimeZone); // ajouter 5 heures
 
       const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
         .toString()
@@ -511,7 +506,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       // Ajouter 5 heures
       startOfDay.setTime(
-        startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000
+        startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000
       );
 
       // Formatage de `TimeFrom`
@@ -535,7 +530,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       // const startOfDay = new Date();
       // startOfDay.setHours(0, 0, 0, 0);
-      // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+      // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
 
       // const TimeFrom = `${startOfDay.getFullYear()}-${(
       //   startOfDay.getMonth() + 1
@@ -622,42 +617,21 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         for (let j = 0; j < fields.length; j++) {
           const fieldName = fields[j].getAttribute("name");
-          const fieldValue = fields[j].textContent;
+          let fieldValue = fields[j].textContent;
+
+          // Si le champ est un timestamp, ajoute 4 heures
+          if (fieldName === "timestamp") {
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue =
+                parseInt(fieldValue, 10) - (chooseTimeZone - 5) * 60 * 60;
+            }
+          }
           details[fieldName] = fieldValue;
         }
 
         details.backupAddress = "";
 
-        // Ajout du backupAddress pour chaque enregistrement
-        // const latitude = -23.4797785;
-        // const longitude = -46.76839450000001;
-        const latitude = details.latitude;
-        const longitude = details.longitude;
-
-        // if (newVehicleDetails.length > 0) {
-        //   if (latitude && longitude) {
-        //     // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-        //     const url = `/other-api/nominatim/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
-        //     // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.4797785&lon=-46.76839450000001`;
-        //     try {
-        //       // const addressResponse = await fetch(url);
-        //       const addressResponse = await fetch(url);
-        //       const addressData = await addressResponse.json();
-        //       const responseText = await addressResponse.text(); // Récupère la réponse brute
-        //       console.log("Raw response from Nominatim:", responseText);
-        //       details.backupAddress =
-        //         addressData?.display_name || "Adresse introuvable";
-        //     } catch (error) {
-        //       console.error(
-        //         "Erreur lors de la récupération de l'adresse :",
-        //         error
-        //       );
-        //       details.backupAddress = "";
-        //     }
-        //   } else {
-        //     details.backupAddress = "Coordonnées non disponibles";
-        //   }
-        // }
         newVehicleDetails.push(details);
       }
 
@@ -705,7 +679,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -722,7 +696,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -743,7 +717,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
     // ///////////////////////////////////////
-    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
     // /////////////////////////////////
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -764,7 +738,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const homePageReload = () => {
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -781,7 +755,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -802,7 +776,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
     // ///////////////////////////////////////
-    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
     // /////////////////////////////////
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -1035,7 +1009,16 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         for (let j = 0; j < fields.length; j++) {
           const fieldName = fields[j].getAttribute("name");
-          const fieldValue = fields[j].textContent;
+          let fieldValue = fields[j].textContent;
+
+          // Si le champ est un timestamp, ajoute 4 heures
+          if (fieldName === "timestamp") {
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue =
+                parseInt(fieldValue, 10) - (chooseTimeZone - 5) * 60 * 60;
+            }
+          }
           details[fieldName] = fieldValue;
         }
 
@@ -1152,7 +1135,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
     // console.log("Start.........");
     const now = new Date();
-    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -1169,7 +1152,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -1190,7 +1173,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
     //   .toString()
@@ -1286,7 +1269,17 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         for (let j = 0; j < fields.length; j++) {
           const fieldName = fields[j].getAttribute("name");
-          const fieldValue = fields[j].textContent;
+          let fieldValue = fields[j].textContent;
+
+          // Si le champ est un timestamp, ajoute 4 heures
+          if (fieldName === "timestamp") {
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue =
+                parseInt(fieldValue, 10) - (chooseTimeZone - 5) * 60 * 60;
+            }
+          }
+
           details[fieldName] = fieldValue;
         }
         // console.log("4444444444444");
@@ -1852,7 +1845,17 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         for (let j = 0; j < fields.length; j++) {
           const fieldName = fields[j].getAttribute("name");
-          const fieldValue = fields[j].textContent;
+          let fieldValue = fields[j].textContent;
+
+          // Si le champ est un timestamp, ajoute 4 heures
+          if (fieldName === "timestamp") {
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue =
+                parseInt(fieldValue, 10) - (chooseTimeZone - 5) * 60 * 60;
+            }
+          }
+
           details[fieldName] = fieldValue;
         }
 
@@ -1958,7 +1961,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
 
     const now = new Date();
-    now.setHours(now.getHours() + chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -1975,7 +1978,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -1996,7 +1999,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
     //   .toString()
@@ -2529,7 +2532,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() + chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -2550,7 +2553,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() + chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
     //   .toString()

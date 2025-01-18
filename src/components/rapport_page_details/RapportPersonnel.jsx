@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdCenterFocusStrong } from "react-icons/md";
 import { TfiMapAlt } from "react-icons/tfi";
 import { FaCar } from "react-icons/fa";
@@ -81,6 +81,7 @@ function RapportPersonnel({
   startTime,
   endDate,
   endTime,
+  downloadExelPDF,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -241,6 +242,19 @@ function RapportPersonnel({
   const [voirPositionSurCarte, setvoirPositionSurCarte] = useState(false);
   // const [mapType, setMapType] = useState("streets");
 
+  // gggggggggggggggggggggggggg
+  const [preparationDownloadPDF, setPreparationDownloadPDF] = useState(false);
+  useEffect(() => {
+    console.log(preparationDownloadPDF);
+  }, [preparationDownloadPDF]);
+
+  useEffect(() => {
+    if (downloadExelPDF) {
+      setPreparationDownloadPDF(true);
+    } else {
+      setPreparationDownloadPDF(false);
+    }
+  }, [downloadExelPDF]);
   return (
     <>
       {/* <div ref={rapportPersonnelPDFtRef}>
@@ -502,6 +516,7 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
+          {preparationDownloadPDF && <p className="min-h-[10rem]"></p>}
 
           <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
             <GiPathDistance className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -615,7 +630,12 @@ function RapportPersonnel({
           {/* ///////////////////////////////////////// */}
 
           {/* ///////////////////////////////////////// */}
-          <div className="overflow-auto max-w-[100vw]">
+          {/* preparationDownloadPDF */}
+          <div
+            className={`${
+              preparationDownloadPDF ? "min-w-[47.5rem]" : ""
+            } overflow-auto  max-w-[100vw] `}
+          >
             <div className="w-[200rem]-- max-h-[30rem] ">
               <div className="dark:bg-gray-100 w-[100%] h-[20rem]  md:h-[25rem] pt-5 border  rounded-lg">
                 <ReactECharts
@@ -633,6 +653,9 @@ function RapportPersonnel({
           {/*  */}
           {/*  */}
           {/*  */}
+
+          {preparationDownloadPDF && <p className="min-h-[13rem]"></p>}
+
           {showHistoriquePupup && (
             <div className="fixed hidden- z-[10000000000] inset-0 bg-black/50 flex justify-center items-center">
               <div className="relative min-w-[80vw] mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
