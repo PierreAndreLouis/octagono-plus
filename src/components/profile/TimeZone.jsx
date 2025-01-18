@@ -4,7 +4,7 @@ import { IoSearch } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 
-function TimeZone({ setChangeTimeZone }) {
+function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
   const {
     timeZoneData,
     setTimeZoneData,
@@ -76,6 +76,7 @@ function TimeZone({ setChangeTimeZone }) {
                   setselectUTC("");
                   setselectTime("");
                   setChangeTimeZone(false);
+                  setChangeTimeZoneMessage(true);
                 }}
                 className="text-orange-600 dark:text-orange-400 cursor-pointer"
               >
@@ -101,6 +102,7 @@ function TimeZone({ setChangeTimeZone }) {
               onClick={() => {
                 handleSelectTimeZone(item);
                 setChangeTimeZone(false);
+                setChangeTimeZoneMessage(true);
               }}
               className={`flex justify-between border-b py-3 my-2 cursor-pointer rounded-lg px-2 ${
                 selectedTimeZone === item.region

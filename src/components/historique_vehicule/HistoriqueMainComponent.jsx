@@ -18,7 +18,7 @@ function HistoriqueMainComponent({
   setShowListOption,
   formatTimestampToDate,
   formatTimestampToTime,
-  selectUTC,
+  // selectUTC,
 }) {
   const {
     FormatDateHeure,
@@ -30,6 +30,7 @@ function HistoriqueMainComponent({
     histiriqueSelectedLocationIndex,
     sethistiriqueSelectedLocationIndex,
     setSelectedVehicle,
+    selectUTC,
   } = useContext(DataContext);
   function convertToTimezone(timestamp, offset) {
     const date = new Date(timestamp * 1000); // Convertir le timestamp en millisecondes
@@ -81,7 +82,15 @@ function HistoriqueMainComponent({
           </div>
         )}
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
-          <h2 className="text-xl md:text-4xl md:mb-4 text-orange-600">
+          <h2
+            onClick={() => {
+              console.log(
+                "selectUTC ==>",
+                isNaN(Number(selectUTC)) ? -5 : Number(selectUTC)
+              );
+            }}
+            className="text-xl md:text-4xl md:mb-4 text-orange-600"
+          >
             Historique
           </h2>
           <h2 className="text-gray-800 mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
@@ -151,9 +160,18 @@ function HistoriqueMainComponent({
                       imgClass = "w-12 sm:w-14 md:w-20";
                     }
 
+                    const timeStampGMT = (
+                      parseInt(vehicle.timestamp, 10) +
+                      (selectUTC + 5) * 60 * 60
+                    ).toString();
+
                     const FormatDateHeureTimestamp = FormatDateHeure(
                       vehicle.timestamp
+                      // timeStampGMT
                     );
+
+                    // const FormatDateHeureTimestamp =
+                    //   FormatDateHeure(timeStampData);
                     return (
                       <Tooltip
                         title="Voir cette position sur la carte
@@ -198,6 +216,10 @@ function HistoriqueMainComponent({
                           className={`${lite_bg_color} shadow-md relative rounded-lg p-3`}
                         >
                           <div
+                            onClick={() => {
+                              console.log(vehicle.timestamp);
+                              console.log(vehicle);
+                            }}
                             className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
                           >
                             {/* {index + 1} */}
@@ -271,7 +293,7 @@ function HistoriqueMainComponent({
                                   <p className="text-md flex text-gray-600 dark:text-gray-300 mt-2 md:text-lg">
                                     {vehicle?.backupAddress ||
                                       vehicle.address ||
-                                      "Adresse non disponible"}
+                                      "Adresse non disponible"}{" "}
                                   </p>
                                 </div>
                               </div>

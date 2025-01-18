@@ -1146,13 +1146,12 @@ function RapportPageDetails() {
 
     // Ajout de l'ajustement UTC
     const adjustedTimeFrom = new Date(
-      baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+      baseTimeFrom.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
     );
     // const adjustedTimeTo = baseTimeTo;
     const adjustedTimeTo = new Date(
-      baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+      baseTimeTo.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
     );
-
     // Formatage en chaîne pour les heures ajustées
     const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
       adjustedTimeFrom.getMonth() + 1
@@ -1412,14 +1411,11 @@ function RapportPageDetails() {
 
     // Ajout de 5 heures
     const adjustedTimeFrom = new Date(
-      baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-      //  + 5 * 60 * 60 * 1000
+      baseTimeFrom.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
     );
     const adjustedTimeTo = new Date(
-      baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-      //  + 5 * 60 * 60 * 1000
+      baseTimeTo.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
     );
-
     // Formatage en chaîne pour les heures ajustées
     const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
       adjustedTimeFrom.getMonth() + 1

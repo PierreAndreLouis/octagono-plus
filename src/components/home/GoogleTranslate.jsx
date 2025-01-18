@@ -52,15 +52,15 @@ const GoogleTranslate = () => {
   }, [isOnline]);
 
   return (
-    <div className=" fixed top-0 left-0 right-0 z-20">
+    <div className=" fixed top-0 bg-white dark:bg-gray-700 left-0 right-0 z-20">
       {isOnline ? (
-        <div className="flex  mt-4 px-4 items-center mx-auto gap-3 justify-end w-full">
-          <div className="h-[4rem]  mx-auto max-w-[25rem] w-[10.5rem]-- w-full border-- rounded-lg overflow-hidden">
+        <div className="flex   mt-4 px-4 items-center-- mx-auto gap-3 justify-start w-full">
+          <div className="h-[4rem] border--   mx-auto max-w-[25rem] w-[10.5rem]-- w-full border-- rounded-lg overflow-hidden">
             <div className="-translate-x-4--">
               {/* <GoogleTranslate /> */}
               <div
                 id="google_translate_element"
-                className="w-full text-4xl border rounded-lg px-4 border-gray-200 bg-gray-50"
+                className="w-full text-4xl border-- rounded-lg px-4 border-gray-200 bg-gray-50"
               ></div>
             </div>
           </div>

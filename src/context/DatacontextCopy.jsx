@@ -179,8 +179,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const [selectTime, setselectTime] = useState(() => {
     return localStorage.getItem("selectTime") || "";
   });
-  const chooseTimeZone = isNaN(Number(selectUTC)) ? -5 : Number(selectUTC);
-  // const chooseTimeZone = selectUTC + 1;
 
   // Charger les fuseaux horaires
   useEffect(() => {
@@ -389,7 +387,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setSelectedTimeZone("");
 
     localStorage.removeItem("selectUTC");
-    // setselectUTC("");
+    setselectUTC("");
 
     localStorage.removeItem("selectTime");
     setselectTime("");
@@ -488,7 +486,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       setVehicleData(vehicleData);
 
       const now = new Date();
-      now.setHours(now.getHours() - chooseTimeZone); // ajouter 5 heures
+      now.setHours(
+        now.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+      ); // ajouter 5 heures
 
       const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
         .toString()
@@ -506,7 +506,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       // Ajouter 5 heures
       startOfDay.setTime(
-        startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000
+        startOfDay.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
       );
 
       // Formatage de `TimeFrom`
@@ -530,7 +530,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       // const startOfDay = new Date();
       // startOfDay.setHours(0, 0, 0, 0);
-      // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
+      // startOfDay.setHours(startOfDay.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000); // Ajouter 5 heures
 
       // const TimeFrom = `${startOfDay.getFullYear()}-${(
       //   startOfDay.getMonth() + 1
@@ -616,10 +616,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
           // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
-            // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
-            let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
-            fieldValue = timestamp.toString(); // Reconvertir en chaîne
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue = parseInt(fieldValue, 10) + (selectUTC + 5) * 60 * 60;
+            }
           }
           details[fieldName] = fieldValue;
         }
@@ -673,7 +673,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(
+      now.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    ); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -690,7 +692,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(
+      startOfDay.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    );
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -720,7 +724,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const homePageReload = () => {
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(
+      now.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    ); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -737,7 +743,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(
+      startOfDay.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    );
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -758,7 +766,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
     // ///////////////////////////////////////
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000); // Ajouter 5 heures
     // /////////////////////////////////
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -995,10 +1003,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
           // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
-            // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
-            let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
-            fieldValue = timestamp.toString(); // Reconvertir en chaîne
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue = parseInt(fieldValue, 10) + (selectUTC + 5) * 60 * 60;
+            }
           }
           details[fieldName] = fieldValue;
         }
@@ -1116,7 +1124,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
     // console.log("Start.........");
     const now = new Date();
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(
+      now.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    ); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -1133,7 +1143,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(
+      startOfDay.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    );
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -1154,7 +1166,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000); // Ajouter 5 heures
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
     //   .toString()
@@ -1254,10 +1266,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
           // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
-            // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
-            let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
-            fieldValue = timestamp.toString(); // Reconvertir en chaîne
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue = parseInt(fieldValue, 10) + (selectUTC + 5) * 60 * 60;
+            }
           }
 
           details[fieldName] = fieldValue;
@@ -1828,19 +1840,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           let fieldValue = fields[j].textContent;
 
           // Si le champ est un timestamp, ajoute 4 heures
-          // if (fieldName === "timestamp") {
-          //   if (!isNaN(fieldValue)) {
-          //     // Vérifie si la valeur est un nombre ou une chaîne convertible
-          //     fieldValue =
-          //       parseInt(fieldValue, 10) + (chooseTimeZone + 5) * 60 * 60;
-          //   }
-
-          // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
-            // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
-            let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
-            fieldValue = timestamp.toString(); // Reconvertir en chaîne
+            if (!isNaN(fieldValue)) {
+              // Vérifie si la valeur est un nombre ou une chaîne convertible
+              fieldValue = parseInt(fieldValue, 10) + (selectUTC + 5) * 60 * 60;
+            }
           }
 
           details[fieldName] = fieldValue;
@@ -1948,7 +1952,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
 
     const now = new Date();
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(
+      now.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    ); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -1965,7 +1971,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(
+      startOfDay.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    );
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -1986,7 +1994,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000); // Ajouter 5 heures
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
     //   .toString()
@@ -2519,7 +2527,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(
+      startOfDay.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
+    );
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -2540,7 +2550,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     // const startOfDay = new Date();
     // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
+    // startOfDay.setHours(startOfDay.getHours() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000); // Ajouter 5 heures
 
     // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
     //   .toString()

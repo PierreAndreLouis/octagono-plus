@@ -281,12 +281,18 @@ function HistoriquePage() {
   const baseTimeTo = new Date(`${formattedEndDate}T${endTime}:00`);
 
   // Ajout de 5 heures
+  // const adjustedTimeFrom = new Date(
+  //   baseTimeFrom.getTime() + 6 * 60 * 60 * 1000
+  // );
+
+  // const adjustedTimeTo = new Date(baseTimeTo.getTime() + 6 * 60 * 60 * 1000);
+
   const adjustedTimeFrom = new Date(
-    baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-  );
+    baseTimeFrom.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000 );
+ 
 
   const adjustedTimeTo = new Date(
-    baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
+    baseTimeTo.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
   );
 
   // Formatage en chaîne pour les heures ajustées
