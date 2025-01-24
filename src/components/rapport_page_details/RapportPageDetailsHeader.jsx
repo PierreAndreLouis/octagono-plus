@@ -355,7 +355,7 @@ function RapportPageDetailsHeader({
                     // onClick={() => {
                     //   setPdfDownloadPupup(false);
                     // }}
-                    className="absolute rounded-lg flex flex-col gap-0 bg-white top-8 border -right-10 z-[1111111111111111100000000000000000] shadow-lg shadow-gray-300 min-w-[20rem] p-4 pt-0"
+                    className="absolute rounded-lg flex flex-col gap-0 bg-white top-8 border -right-10 z-[1111] shadow-lg shadow-gray-300 w-[80vw] max-w-[30rem] p-4 pt-0"
                   >
                     <div className="flex justify-between mx-2 mt-4 mb-3">
                       <p className="font-semibold text-orange-500 text-lg">
@@ -409,7 +409,7 @@ function RapportPageDetailsHeader({
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        <p>Telecharger le rapport en Exel</p>
+                        <p>Telecharger le tableau recapitulatif en Exel</p>
                         <img
                           className="w-[2rem]"
                           src="/img/exel_download.png"

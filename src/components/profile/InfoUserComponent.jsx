@@ -79,7 +79,7 @@ function InfoUserComponent({
           <div className="flex justify-between items-center w-full">
             <p className="pl-3 text-gray-500 dark:text-gray-300">
               {/* {userData?.timeZone || "-----"} */}
-              {selectUTC
+              {selectUTC !== ""
                 ? "GMT" + (selectUTC >= 0 ? "+" : "") + selectUTC
                 : userData?.timeZone || "-----"}
             </p>

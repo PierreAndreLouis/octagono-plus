@@ -1743,7 +1743,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {voirDansLaCarte && (
           <div className=" fixed inset-0 z-[999999999999999999] p-2 md:p-4 lg:px-10 bg-black/50">
             <div className="relative  rounded-lg  mt-3-- h-[100vh]  overflow-hidden w-full">
@@ -1784,9 +1783,7 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {/* <RapportOptions /> */}
-
         {trajetVehiculePupup && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white  rounded-lg p-3--">
@@ -1807,7 +1804,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {tableDeplacement && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -1923,7 +1919,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {tableDistance && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2035,7 +2030,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {tableActivite && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2148,7 +2142,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {tablevitesse && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2269,7 +2262,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {tableTrajet && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2374,7 +2366,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         <h1
           onClick={() => {
             // setdonneeFusionneeForRapport([]);
@@ -2640,7 +2631,6 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
         </div>
-
         {/* ////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////// */}
         {/* ////////////////////////////////////////////////////// */}
@@ -2980,6 +2970,9 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/*  */}
+
+          {/* {preparationDownloadPDF && <p className="min-h-[13rem]"></p>} */}
+
           {/*  */}
           {/*  */}
           {/*  */}
@@ -3339,7 +3332,6 @@ function RapportGroupe({
         {/*  */}
         {/*  */}
         {/*  */}
-
         {/*  */}
         {/*  */}
         {/*  */}
@@ -3488,60 +3480,62 @@ function RapportGroupe({
             </div>
           </div>
         </div>
-        {preparationDownloadPDF && <p className="min-h-[11rem]"></p>}
-
-        <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
-          <MdLocationPin className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-          <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-            Position des véhicules{" "}
-          </h2>
-        </div>
-
-        {zoomPosition ? (
-          <div className="fixed inset-0 z-[9999999999999999999999] bg-black/50">
-            <div className="relative  h-[100vh]  rounded-lg mt-3-- overflow-hidden">
-              <button
-                className="absolute z-[999] top-[1rem] right-[1rem]"
-                // onClick={centerOnFirstMarker}
-                onClick={() => {
-                  setzoomPosition(false);
-                }}
-              >
-                <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
-                  <IoClose className="text-white text-[1.52rem]" />
-                </div>
-              </button>
-              <div className=" -translate-y-[10rem]---">
-                <MapComponent mapType={mapType} />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
-            <button
-              className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
-              // onClick={centerOnFirstMarker}
-              onClick={() => {
-                setzoomPosition(true);
-                setSelectedVehicle(null);
-              }}
-            >
-              <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-                <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
-              </div>
-            </button>
-            <div className=" -translate-y-[10rem]">
-              <MapComponent mapType={mapType} />
-            </div>
+        {/* {preparationDownloadPDF && <p className="min-h-[11rem]"></p>} */}
+        {!preparationDownloadPDF && (
+          <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
+            <MdLocationPin className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
+            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+              Position des véhicules{" "}
+            </h2>
           </div>
         )}
-
+        {!preparationDownloadPDF && (
+          <div>
+            {zoomPosition ? (
+              <div className="fixed inset-0 z-[9999999999999999999999] bg-black/50">
+                <div className="relative  h-[100vh]  rounded-lg mt-3-- overflow-hidden">
+                  <button
+                    className="absolute z-[999] top-[1rem] right-[1rem]"
+                    // onClick={centerOnFirstMarker}
+                    onClick={() => {
+                      setzoomPosition(false);
+                    }}
+                  >
+                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
+                      <IoClose className="text-white text-[1.52rem]" />
+                    </div>
+                  </button>
+                  <div className=" -translate-y-[10rem]---">
+                    <MapComponent mapType={mapType} />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
+                <button
+                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
+                  // onClick={centerOnFirstMarker}
+                  onClick={() => {
+                    setzoomPosition(true);
+                    setSelectedVehicle(null);
+                  }}
+                >
+                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                    <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
+                  </div>
+                </button>
+                <div className=" -translate-y-[10rem]">
+                  <MapComponent mapType={mapType} />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         {/* zoomPosition */}
-
         {/* <button onClick={() => exportToExcel()}>
           Exporter la table en Excel
         </button> */}
-
+        {preparationDownloadPDF && <p className="min-h-[13rem]">.</p>}
         <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
           <BsTable className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
           <div className="flex justify-between items-center  w-full">
@@ -3666,7 +3660,6 @@ function RapportGroupe({
             </div>
           </div>
         </div>
-
         <div className="flex justify-between  mt-4  items-center ">
           <div className="sm:flex w-full gap-10 max-w-[50rem] mx-4-- justify-start items-center ">
             <div className="flex gap-0 items-center">
@@ -3736,7 +3729,6 @@ function RapportGroupe({
             </p>
           )}
         </div>
-
         <div className="mt-4  flex items-center gap-2">
           <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
             Véhicules déplacés
@@ -3748,7 +3740,6 @@ function RapportGroupe({
             Véhicules hors service
           </p>
         </div>
-
         <div
           className={`${
             preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "

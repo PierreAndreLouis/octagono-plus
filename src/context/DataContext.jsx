@@ -202,7 +202,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       { region: "GMT+3", currentTime: "21:00", utcOffset: 3 },
       { region: "GMT+2", currentTime: "22:00", utcOffset: 2 },
       { region: "GMT+1", currentTime: "23:00", utcOffset: 1 },
-      // { region: "GMT+0", currentTime: "00:00", utcOffset: 0 },
+      { region: "GMT+0", currentTime: "00:00", utcOffset: 0 },
       { region: "GMT-1", currentTime: "01:00", utcOffset: -1 },
       { region: "GMT-2", currentTime: "02:00", utcOffset: -2 },
       { region: "GMT-3", currentTime: "03:00", utcOffset: -3 },
@@ -488,7 +488,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       setVehicleData(vehicleData);
 
       const now = new Date();
-      now.setHours(now.getHours() - chooseTimeZone); // ajouter 5 heures
+      now.setHours(now.getHours() - 0); // ajouter 5 heures
+      // now.setHours(now.getHours() - chooseTimeZone); // ajouter 5 heures
 
       const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
         .toString()
@@ -506,7 +507,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       // Ajouter 5 heures
       startOfDay.setTime(
-        startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000
+        startOfDay.getTime() - 0 * 60 * 60 * 1000
+        // startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000
       );
 
       // Formatage de `TimeFrom`
@@ -562,13 +564,32 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     if (!userData) return;
 
+    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    // Ajuste les heures de TimeFrom et TimeTo
+    const adjustTime = (time, hours) => {
+      const date = new Date(time);
+      date.setHours(date.getHours() + hours);
+      return date.toISOString().replace("T", " ").split(".")[0];
+    };
+
+    let addHoursFrom = 0;
+    let addHoursTo = 0;
+    if (selectUTC > -5 && selectUTC <= 0) {
+      addHoursFrom = 7;
+    } else if (selectUTC > 0) {
+      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
+    }
+
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
         <Device>${Device}</Device>
-        <TimeFrom timezone="GMT">${TimeFrom}</TimeFrom>
-        <TimeTo timezone="GMT">${TimeTo}</TimeTo>
+        <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+        <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
 
         <GPSRequired>false</GPSRequired>
         <StatusCode>false</StatusCode>
@@ -614,11 +635,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           const fieldName = fields[j].getAttribute("name");
           let fieldValue = fields[j].textContent;
 
-          // Si le champ est un timestamp, ajoute 4 heures
+          // // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
           details[fieldName] = fieldValue;
@@ -629,11 +650,23 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         newVehicleDetails.push(details);
       }
 
+      // Filtrage des timestamps
+      const timeFromTimestamp = new Date(TimeFrom).getTime();
+      const timeToTimestamp = new Date(TimeTo).getTime();
+
+      const filteredVehicleDetails = newVehicleDetails.filter((detail) => {
+        const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
+        return (
+          recordTimestamp >= timeFromTimestamp &&
+          recordTimestamp <= timeToTimestamp
+        );
+      });
+
       setVehicleDetails((prevDetails) => {
         const updatedDetails = prevDetails?.map((detail) => {
           if (detail.Device === Device) {
-            return newVehicleDetails.length > 0
-              ? { ...detail, vehiculeDetails: [...newVehicleDetails] }
+            return filteredVehicleDetails.length > 0
+              ? { ...detail, vehiculeDetails: [...filteredVehicleDetails] }
               : detail;
           }
           return detail;
@@ -643,7 +676,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         if (!updatedDetails.some((detail) => detail.Device === Device)) {
           updatedDetails.push({
             Device,
-            vehiculeDetails: [...newVehicleDetails],
+            vehiculeDetails: [...filteredVehicleDetails],
           });
         }
 
@@ -673,7 +706,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -690,7 +724,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
+    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -720,7 +755,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const homePageReload = () => {
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -737,7 +773,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
+    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -928,20 +965,37 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Rapport page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  // yyyyyyyyyyyyyyyyyyyyyyyyyy
   // Repuette pour rechercher les details des vehicule dans la page rapport
   const fetRapportchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
+    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    // Ajuste les heures de TimeFrom et TimeTo
+    const adjustTime = (time, hours) => {
+      const date = new Date(time);
+      date.setHours(date.getHours() + hours);
+      return date.toISOString().replace("T", " ").split(".")[0];
+    };
+
+    let addHoursFrom = 0;
+    let addHoursTo = 0;
+    if (selectUTC > -5 && selectUTC <= 0) {
+      addHoursFrom = 7;
+    } else if (selectUTC > 0) {
+      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
+    }
+
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+
     if (!userData) return;
-    // setRapportDataLoading(true);
-    // console.log("Rapport start fetching............");
 
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
         <Device>${Device}</Device>
-        <TimeFrom timezone="GMT">${TimeFrom}</TimeFrom>
-        <TimeTo timezone="GMT">${TimeTo}</TimeTo>
+        <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+        <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
 
 
         <GPSRequired>false</GPSRequired>
@@ -993,11 +1047,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           const fieldName = fields[j].getAttribute("name");
           let fieldValue = fields[j].textContent;
 
-          // Si le champ est un timestamp, ajoute 4 heures
+          // // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
           details[fieldName] = fieldValue;
@@ -1021,9 +1075,21 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           )
       );
 
+      // Filtrage des timestamps
+      const timeFromTimestamp = new Date(TimeFrom).getTime();
+      const timeToTimestamp = new Date(TimeTo).getTime();
+
+      const filteredVehicleDetails = uniqueVehicleDetails.filter((detail) => {
+        const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
+        return (
+          recordTimestamp >= timeFromTimestamp &&
+          recordTimestamp <= timeToTimestamp
+        );
+      });
+
       setrapportVehicleDetails((prevDetails) => [
         ...prevDetails.filter((detail) => detail.Device !== Device),
-        ...uniqueVehicleDetails,
+        ...filteredVehicleDetails,
       ]);
     } catch (error) {
       setError("Erreur lors de la récupération des détails du véhicule.");
@@ -1116,7 +1182,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
     // console.log("Start.........");
     const now = new Date();
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -1133,7 +1200,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
+    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -1197,6 +1265,25 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
   // Repuette pour la recherche par date de details des vehicule dans la page rapport
   const fetSearchRapportchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
+    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    // Ajuste les heures de TimeFrom et TimeTo
+    const adjustTime = (time, hours) => {
+      const date = new Date(time);
+      date.setHours(date.getHours() + hours);
+      return date.toISOString().replace("T", " ").split(".")[0];
+    };
+
+    let addHoursFrom = 0;
+    let addHoursTo = 0;
+    if (selectUTC > -5 && selectUTC <= 0) {
+      addHoursFrom = 7;
+    } else if (selectUTC > 0) {
+      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
+    }
+
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+
     if (!userData) return;
     // setRapportDataLoading(true);
     console.log("starttttttttttttt..............");
@@ -1206,8 +1293,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
         <Device>${Device}</Device>
-        <TimeFrom timezone="GMT">${TimeFrom}</TimeFrom>
-        <TimeTo timezone="GMT">${TimeTo}</TimeTo>
+        <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+        <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
         <GPSRequired>false</GPSRequired>
         <StatusCode>false</StatusCode>
         <Limit type="last">20000</Limit>
@@ -1252,11 +1339,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           const fieldName = fields[j].getAttribute("name");
           let fieldValue = fields[j].textContent;
 
-          // Si le champ est un timestamp, ajoute 4 heures
+          // // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
 
@@ -1284,9 +1371,21 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       );
       // console.log("7777777777777777");
 
+      // Filtrage des timestamps
+      const timeFromTimestamp = new Date(TimeFrom).getTime();
+      const timeToTimestamp = new Date(TimeTo).getTime();
+
+      const filteredVehicleDetails = uniqueVehicleDetails.filter((detail) => {
+        const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
+        return (
+          recordTimestamp >= timeFromTimestamp &&
+          recordTimestamp <= timeToTimestamp
+        );
+      });
+
       setSearchrapportVehicleDetails((prevDetails) => [
         ...prevDetails.filter((detail) => detail.Device !== Device),
-        ...uniqueVehicleDetails,
+        ...filteredVehicleDetails,
       ]);
 
       // console.log("888888888888888888");
@@ -1772,6 +1871,25 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
   // pour afficher les detail d'hun vehicule dans Historique page (utilise pour les recherche)
   const fetchHistoriqueVehicleDetails = async (Device, TimeFrom, TimeTo) => {
+    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    // Ajuste les heures de TimeFrom et TimeTo
+    const adjustTime = (time, hours) => {
+      const date = new Date(time);
+      date.setHours(date.getHours() + hours);
+      return date.toISOString().replace("T", " ").split(".")[0];
+    };
+
+    let addHoursFrom = 0;
+    let addHoursTo = 0;
+    if (selectUTC > -5 && selectUTC <= 0) {
+      addHoursFrom = 7;
+    } else if (selectUTC > 0) {
+      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
+    }
+
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+
     console.log("Start fetching.........");
     setLoadingHistoriqueFilter(true);
 
@@ -1782,8 +1900,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
         <Device>${Device}</Device>
-        <TimeFrom timezone="GMT">${TimeFrom}</TimeFrom>
-        <TimeTo timezone="GMT">${TimeTo}</TimeTo>
+        <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+        <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
         <GPSRequired>false</GPSRequired>
         <StatusCode>false</StatusCode>
         <Limit type="last">20000</Limit>
@@ -1816,8 +1934,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
 
-      // console.log("Data brut:", data);
-
       const newVehicleDetails = [];
       for (let i = 0; i < records.length; i++) {
         const fields = records[i].getElementsByTagName("Field");
@@ -1827,53 +1943,17 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           const fieldName = fields[j].getAttribute("name");
           let fieldValue = fields[j].textContent;
 
-          // Si le champ est un timestamp, ajoute 4 heures
-          // if (fieldName === "timestamp") {
-          //   if (!isNaN(fieldValue)) {
-          //     // Vérifie si la valeur est un nombre ou une chaîne convertible
-          //     fieldValue =
-          //       parseInt(fieldValue, 10) + (chooseTimeZone + 5) * 60 * 60;
-          //   }
-
-          // Si le champ est un timestamp, ajoute 4 heures
+          // // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (chooseTimeZone + 5) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
-
           details[fieldName] = fieldValue;
         }
 
         details.backupAddress = "";
-
-        // Ajout du backupAddress pour chaque enregistrement
-        // const latitude = -23.4797785;
-        // const longitude = -46.76839450000001;
-        const latitude = details.latitude;
-        const longitude = details.longitude;
-
-        // if (latitude && longitude) {
-        //   // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-        //   const url = `/other-api/nominatim/reverse.php?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
-        //   // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.4797785&lon=-46.76839450000001`;
-        //   try {
-        //     const addressResponse = await fetch(url);
-        //     const addressData = await addressResponse.json();
-        //     details.backupAddress =
-        //       addressData?.display_name || "Adresse introuvable";
-        //   } catch (error) {
-        //     console.error(
-        //       "Erreur lors de la récupération de l'adresse :",
-        //       error
-        //     );
-        //     details.backupAddress = "";
-        //   }
-        // } else {
-        //   details.backupAddress = "Coordonnées non disponibles";
-        // }
-
         newVehicleDetails.push(details);
       }
 
@@ -1890,17 +1970,21 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           )
       );
 
-      setVehiclueHistoriqueDetails(uniqueVehicleDetails);
+      // Filtrage des timestamps
+      const timeFromTimestamp = new Date(TimeFrom).getTime();
+      const timeToTimestamp = new Date(TimeTo).getTime();
 
-      // setVehiclueHistoriqueDetails(newVehicleDetails);
-      // setVehiclueHistoriqueRapportDetails(newVehicleDetails);
+      const filteredVehicleDetails = uniqueVehicleDetails.filter((detail) => {
+        const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
+        return (
+          recordTimestamp >= timeFromTimestamp &&
+          recordTimestamp <= timeToTimestamp
+        );
+      });
 
-      // console.log("newVehicleDetails.......>>>", newVehicleDetails);
-      // console.log(
-      //   "newVehicleDetails.lenght.......>>>",
-      //   newVehicleDetails.length
-      // );
-      // console.log("End fetching.........");
+      setVehiclueHistoriqueDetails(filteredVehicleDetails);
+
+      // setVehiclueHistoriqueDetails(uniqueVehicleDetails);
 
       setLoadingHistoriqueFilter(false);
       setTimeout(() => {
@@ -1914,9 +1998,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       );
     }
   };
+
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // Pour la rehcerhce de donnee dans Historique page apres avoir choisi une date
   const handleDateChange = (TimeFrom, TimeTo) => {
@@ -1948,7 +2034,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
 
     const now = new Date();
-    now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
+    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -1965,7 +2052,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
+    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
@@ -2519,7 +2607,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     startOfDay.setHours(0, 0, 0, 0);
 
     // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
+    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
+    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
 
     // Formatage de `TimeFrom`
     const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)

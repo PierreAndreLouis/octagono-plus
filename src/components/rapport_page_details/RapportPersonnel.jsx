@@ -94,6 +94,7 @@ function RapportPersonnel({
     sethistiriqueSelectedLocationIndex,
     FormatDateHeure,
     rapportPersonnelPDFtRef,
+    searchdonneeFusionneeForRapport,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
@@ -255,6 +256,9 @@ function RapportPersonnel({
       setPreparationDownloadPDF(false);
     }
   }, [downloadExelPDF]);
+
+  const isSearching = searchdonneeFusionneeForRapport?.length > 0;
+
   return (
     <>
       {/* <div ref={rapportPersonnelPDFtRef}>
@@ -272,7 +276,6 @@ function RapportPersonnel({
           <h1 className="text-center mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
             {currentVehicule?.description || ""}
           </h1>
-
           <div className="mb-12 shadow-md dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -347,7 +350,6 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
-
           <div className="shadow-md mt-4 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
             <div className="flex gap-4 items-center-- border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -419,7 +421,13 @@ function RapportPersonnel({
                 {/*  */}
                 <p>
                   Heure de départ:{" "}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                  <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    {heureActiveDebut &&
+                      isSearching &&
+                      FormatDateHeure(heureActiveDebut.timestamp)?.date}{" "}
+                  </span>
+                  {isSearching && <span className="mx-1"> /</span>}
+                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
                     {heureActiveDebut
                       ? FormatDateHeure(heureActiveDebut.timestamp)?.time
                       : "Pas de mouvement"}{" "}
@@ -427,6 +435,12 @@ function RapportPersonnel({
                 </p>
                 <p>
                   Heure d'arrivée:{" "}
+                  <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    {heureActiveFin &&
+                      isSearching &&
+                      FormatDateHeure(heureActiveFin.timestamp)?.date}{" "}
+                  </span>
+                  {isSearching && <span className="mx-1"> /</span>}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin
                       ? FormatDateHeure(heureActiveFin.timestamp)?.time
@@ -516,97 +530,100 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
-          {preparationDownloadPDF && <p className="min-h-[10rem]"></p>}
-
-          <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
-            <GiPathDistance className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Trajet du véhicule{" "}
-            </h2>
-          </div>
-
-          {zoomCart ? (
-            <div className=" fixed inset-0 z-[999999999999999999] bg-black/50">
-              <div className="relative  rounded-lg  mt-3-- h-[100vh]  overflow-hidden w-full">
-                <button
-                  className="absolute z-[999] top-[1rem] right-[1rem]"
-                  // onClick={centerOnFirstMarker}
-                  onClick={() => {
-                    setzoomCart(false);
-                  }}
-                >
-                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
-                    <IoClose className="text-white text-[1.52rem]" />
-                  </div>
-                </button>
-                <div className="absolute-- -top-[11rem]-- rounded-lg  w-full ">
-                  <div>
-                    <TrajetVehicule
-                      typeDeVue={typeDeVue}
-                      setTypeDeVue={setTypeDeVue}
-                      mapType={mapType}
-                      handleMapTypeChange={handleMapTypeChange}
-                      vehicles={vehicles}
-                      mapRef={mapRef}
-                      tileLayers={tileLayers}
-                      getMarkerIcon={getMarkerIcon}
-                      currentLocation={currentLocation}
-                      customMarkerIcon={customMarkerIcon}
-                      positions={positions}
-                      centerOnFirstMarker={centerOnFirstMarker}
-                      showHistoriqueInMap={showHistoriqueInMap}
-                      openGoogleMaps={openGoogleMaps}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="relative  rounded-lg  mt-3 h-[40vh] md:h-[60vh] overflow-hidden w-full">
-              <button
-                className="absolute z-[999] top-[1rem] right-[1rem]"
-                // onClick={centerOnFirstMarker}
-                onClick={() => {
-                  setzoomCart(true);
-                }}
-              >
-                <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-                  <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
-                </div>
-              </button>
-              <button
-                className="absolute z-[999] top-[4rem] right-[1rem]"
-                onClick={centerOnFirstMarker}
-              >
-                <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-                  <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
-                </div>
-              </button>
-              <div className="absolute -top-[11rem] rounded-lg  w-full ">
-                <div>
-                  <TrajetVehicule
-                    typeDeVue={typeDeVue}
-                    setTypeDeVue={setTypeDeVue}
-                    mapType={mapType}
-                    handleMapTypeChange={handleMapTypeChange}
-                    vehicles={vehicles}
-                    mapRef={mapRef}
-                    tileLayers={tileLayers}
-                    getMarkerIcon={getMarkerIcon}
-                    currentLocation={currentLocation}
-                    customMarkerIcon={customMarkerIcon}
-                    positions={positions}
-                    centerOnFirstMarker={centerOnFirstMarker}
-                    showHistoriqueInMap={showHistoriqueInMap}
-                    openGoogleMaps={openGoogleMaps}
-                  />
-                </div>
-              </div>
+          {/* {preparationDownloadPDF && <p className="min-h-[10rem]"></p>} */}
+          {!preparationDownloadPDF && (
+            <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
+              <GiPathDistance className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
+              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+                Trajet du véhicule{" "}
+              </h2>
             </div>
           )}
 
+          {!preparationDownloadPDF && (
+            <div>
+              {zoomCart ? (
+                <div className=" fixed inset-0 z-[999999999999999999] bg-black/50">
+                  <div className="relative  rounded-lg  mt-3-- h-[100vh]  overflow-hidden w-full">
+                    <button
+                      className="absolute z-[999] top-[1rem] right-[1rem]"
+                      // onClick={centerOnFirstMarker}
+                      onClick={() => {
+                        setzoomCart(false);
+                      }}
+                    >
+                      <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
+                        <IoClose className="text-white text-[1.52rem]" />
+                      </div>
+                    </button>
+                    <div className="absolute-- -top-[11rem]-- rounded-lg  w-full ">
+                      <div>
+                        <TrajetVehicule
+                          typeDeVue={typeDeVue}
+                          setTypeDeVue={setTypeDeVue}
+                          mapType={mapType}
+                          handleMapTypeChange={handleMapTypeChange}
+                          vehicles={vehicles}
+                          mapRef={mapRef}
+                          tileLayers={tileLayers}
+                          getMarkerIcon={getMarkerIcon}
+                          currentLocation={currentLocation}
+                          customMarkerIcon={customMarkerIcon}
+                          positions={positions}
+                          centerOnFirstMarker={centerOnFirstMarker}
+                          showHistoriqueInMap={showHistoriqueInMap}
+                          openGoogleMaps={openGoogleMaps}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative  rounded-lg  mt-3 h-[40vh] md:h-[60vh] overflow-hidden w-full">
+                  <button
+                    className="absolute z-[999] top-[1rem] right-[1rem]"
+                    // onClick={centerOnFirstMarker}
+                    onClick={() => {
+                      setzoomCart(true);
+                    }}
+                  >
+                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                      <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
+                    </div>
+                  </button>
+                  <button
+                    className="absolute z-[999] top-[4rem] right-[1rem]"
+                    onClick={centerOnFirstMarker}
+                  >
+                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                      <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
+                    </div>
+                  </button>
+                  <div className="absolute -top-[11rem] rounded-lg  w-full ">
+                    <div>
+                      <TrajetVehicule
+                        typeDeVue={typeDeVue}
+                        setTypeDeVue={setTypeDeVue}
+                        mapType={mapType}
+                        handleMapTypeChange={handleMapTypeChange}
+                        vehicles={vehicles}
+                        mapRef={mapRef}
+                        tileLayers={tileLayers}
+                        getMarkerIcon={getMarkerIcon}
+                        currentLocation={currentLocation}
+                        customMarkerIcon={customMarkerIcon}
+                        positions={positions}
+                        centerOnFirstMarker={centerOnFirstMarker}
+                        showHistoriqueInMap={showHistoriqueInMap}
+                        openGoogleMaps={openGoogleMaps}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}{" "}
+            </div>
+          )}
           {/* {zoomCart && ( */}
-
           {/* )} */}
           {/*  */}
           {/*  */}
@@ -620,6 +637,8 @@ function RapportPersonnel({
           {/*  */}
           {/*  */}
           {/*  */}
+          {preparationDownloadPDF && <p className="min-h-[5rem]">.</p>}
+
           <div className="shadow-md mt-20 mb-2  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
             <SlSpeedometer className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -628,13 +647,14 @@ function RapportPersonnel({
           </div>
 
           {/* ///////////////////////////////////////// */}
-
           {/* ///////////////////////////////////////// */}
           {/* preparationDownloadPDF */}
           <div
             className={`${
-              preparationDownloadPDF ? "min-w-[47.5rem]" : ""
-            } overflow-auto  max-w-[100vw] `}
+              preparationDownloadPDF
+                ? "min-w-[47.5rem] max-w-[47.5rem] lg:min-w-[2rem]"
+                : ""
+            } overflow-auto  max-w-[100vw]--- `}
           >
             <div className="w-[200rem]-- max-h-[30rem] ">
               <div className="dark:bg-gray-100 w-[100%] h-[20rem]  md:h-[25rem] pt-5 border  rounded-lg">
@@ -646,16 +666,14 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
-
           {/*  */}
           {/*  */}
           {/*  */}
           {/*  */}
           {/*  */}
           {/*  */}
-
-          {preparationDownloadPDF && <p className="min-h-[13rem]"></p>}
-
+          {/* {preparationDownloadPDF && <p className="min-h-[13rem]"></p>} */}
+          {/* xxxxxxxxx */}
           {showHistoriquePupup && (
             <div className="fixed hidden- z-[10000000000] inset-0 bg-black/50 flex justify-center items-center">
               <div className="relative min-w-[80vw] mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
@@ -686,11 +704,9 @@ function RapportPersonnel({
               </div>
             </div>
           )}
-
           {/*  */}
           {/*  */}
           {/*  */}
-
           {voirPositionSurCarte && (
             <div className="z-[9999999999999999999999999999999999999999999999999999999999999] fixed bg-black/50 inset-0 pt-20 px-4">
               <div className="relative    h-[80vh] min-w-[90vw] my-20 rounded-lg mt-3 overflow-hidden">
@@ -716,7 +732,6 @@ function RapportPersonnel({
           {/*  */}
           {/*  */}
           {/*  */}
-
           <div className="shadow-md-- relative mt-20 pb-[10rem] cursor-pointer dark:bg-gray-800-- dark:shadow-lg-- dark:shadow-gray-700 py-4 hover:bg-orange-100/70-- bg-orange-50-- p-2- rounded-md flex--- items-start gap-4">
             <div className="flex dark:bg-gray-800 bg-orange-50 flex-col border-b-- border-orange-600/30 dark:border-gray-600 p-3 rounded-lg mb-3 pb-2-- mb-3--">
               <div className="flex gap-4 items-center border-b-- border-orange-600/30 dark:border-gray-600 pb-2-- mb-3--">
