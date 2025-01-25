@@ -182,6 +182,19 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const chooseTimeZone = isNaN(Number(selectUTC)) ? -5 : Number(selectUTC);
   // const chooseTimeZone = selectUTC + 1;
 
+  let addHoursFrom = -17;
+  let addHoursTo = 0;
+  if (selectUTC > -5 && selectUTC <= 0) {
+    addHoursFrom = -7;
+  } else if (selectUTC > 0) {
+    addHoursFrom = -(Number(selectUTC) + 7);
+  }
+
+  let addSearchHoursFin = 0;
+  if (selectUTC > -5) {
+    addSearchHoursFin = Number(selectUTC) + 5;
+  }
+
   // Charger les fuseaux horaires
   useEffect(() => {
     // const zones = moment.tz.names().map((zone) => {
@@ -488,7 +501,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       setVehicleData(vehicleData);
 
       const now = new Date();
-      now.setHours(now.getHours() - 0); // ajouter 5 heures
+      now.setHours(now.getHours() + addSearchHoursFin); // ajouter 5 heures
       // now.setHours(now.getHours() - chooseTimeZone); // ajouter 5 heures
 
       const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
@@ -571,14 +584,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       date.setHours(date.getHours() + hours);
       return date.toISOString().replace("T", " ").split(".")[0];
     };
-
-    let addHoursFrom = 0;
-    let addHoursTo = 0;
-    if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = -7;
-    } else if (selectUTC > 0) {
-      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
-    }
 
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
@@ -706,7 +711,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
     // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
@@ -755,7 +760,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const homePageReload = () => {
     const now = new Date();
     ///////////////////////
-    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
     // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
     ///////////////////////////
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
@@ -976,14 +981,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       return date.toISOString().replace("T", " ").split(".")[0];
     };
 
-    let addHoursFrom = 0;
-    let addHoursTo = 0;
-    if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = -7;
-    } else if (selectUTC > 0) {
-      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
-    }
-
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
 
@@ -1182,7 +1179,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
     // console.log("Start.........");
     const now = new Date();
-    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
     // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
@@ -1272,14 +1269,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       date.setHours(date.getHours() + hours);
       return date.toISOString().replace("T", " ").split(".")[0];
     };
-
-    let addHoursFrom = 0;
-    let addHoursTo = 0;
-    if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = -7;
-    } else if (selectUTC > 0) {
-      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
-    }
 
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
@@ -1879,14 +1868,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       return date.toISOString().replace("T", " ").split(".")[0];
     };
 
-    let addHoursFrom = 0;
-    let addHoursTo = 0;
-    if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = -7;
-    } else if (selectUTC > 0) {
-      addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
-    }
-
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
 
@@ -2034,7 +2015,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setShowListOption(false);
 
     const now = new Date();
-    now.setHours(now.getHours() - 0); // Ajouter 5 heures
+    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
     // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
 
     const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)

@@ -96,8 +96,16 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
 
   let newHours = (Number(selectUTC) + 5 || 0) * 60 * 60;
 
-  if (selectUTC > 0) {
-  }
+  // if (selectUTC > 0) {
+  // }
+
+  // let addHoursFrom = -17;
+  // let addHoursTo = 0;
+  // if (selectUTC > -5 && selectUTC <= 0) {
+  //   addHoursFrom = -7;
+  // } else if (selectUTC > 0) {
+  //   addHoursFrom = -(Number(selectUTC) + 7);
+  // }
 
   return (
     <div className="fixed inset-0 z-40 flex justify-center items-center bg-black/50 dark:bg-black/70">
@@ -106,6 +114,7 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
           <div className="flex gap-3 items-center">
             <h2 className="md:min-w-24 font-semibold text-gray-500 dark:text-gray-300">
               TimeZone
+              {/* // {selectUTC} + 7 = {addHoursFrom} */}
             </h2>
             <div className="flex w-full items-center border rounded-lg px-3 dark:border-gray-600">
               <input
