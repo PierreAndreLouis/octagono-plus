@@ -161,19 +161,14 @@ function TrajetVehicule({
                   .pop();
 
                 if (!lastVehicle && index === vehicles.length - 1) {
-                  // Première position
                   markerIcon = firstMarkerIcon;
                 } else if (!firstVehicle && index === 0) {
-                  // Dernière position
                   markerIcon = lastMarkerIcon;
                 } else if (vehicule === firstVehicle) {
-                  // Premier véhicule avec speedKPH > 0
-                  // markerIcon = firstMarkerIcon;
+              
                   markerIcon = lastMarkerIcon;
                 } else if (vehicule === lastVehicle) {
-                  // Dernier véhicule avec speedKPH > 0
                   markerIcon = firstMarkerIcon;
-                  // markerIcon = lastMarkerIcon;
                 } else {
                   // Autres positions
                   markerIcon = L.icon({
@@ -195,18 +190,7 @@ function TrajetVehicule({
                     position={[lastValidLatitude || 0, lastValidLongitude || 0]}
                     icon={markerIcon}
 
-                    // icon={L.icon({
-                    //   iconUrl: markerIcon, // Utiliser l'icône basée sur la vitesse
-                    //   iconSize: [17, 25],
-                    //   // iconSize: [22, 35],
-                    //   // iconSize: [25, 41],
-                    //   iconAnchor: [9, 25],
-                    //   // iconAnchor: [12, 35],
-                    //   popupAnchor: [-1, -30],
-                    //   shadowUrl:
-                    //     "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-                    //   shadowSize: [5, 5],
-                    // })}
+                 
                   >
                     <Popup className="">
                       <div className="--w-[70vw] ---max-w-[20rem]">
@@ -236,20 +220,10 @@ function TrajetVehicule({
                           <strong>Date :</strong>{" "}
                           {timestamp
                             ? FormatDateHeureTimestamp?.date
-                            : // ? selectUTC
-                              //   ? formatTimestampToDateWithTimezone(
-                              //       timestamp,
-                              //       selectUTC
-                              //     )
-                              //   : formatTimestampToDate(timestamp)
+                            : 
                               "Pas de date disponible"}
                           <span className="px-3">/</span>
-                          {/* {selectUTC
-                          ? formatTimestampToTimeWithTimezone(
-                              timestamp,
-                              selectUTC
-                            )
-                          : formatTimestampToTime(timestamp)} */}
+                      
                           {FormatDateHeureTimestamp?.time}
                         </p>
 
