@@ -575,7 +575,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     let addHoursFrom = 0;
     let addHoursTo = 0;
     if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = 7;
+      addHoursFrom = -7;
     } else if (selectUTC > 0) {
       addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
     }
@@ -639,7 +639,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
           details[fieldName] = fieldValue;
@@ -979,7 +979,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     let addHoursFrom = 0;
     let addHoursTo = 0;
     if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = 7;
+      addHoursFrom = -7;
     } else if (selectUTC > 0) {
       addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
     }
@@ -1051,7 +1051,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
           details[fieldName] = fieldValue;
@@ -1276,7 +1276,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     let addHoursFrom = 0;
     let addHoursTo = 0;
     if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = 7;
+      addHoursFrom = -7;
     } else if (selectUTC > 0) {
       addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
     }
@@ -1343,7 +1343,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
 
@@ -1882,7 +1882,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     let addHoursFrom = 0;
     let addHoursTo = 0;
     if (selectUTC > -5 && selectUTC <= 0) {
-      addHoursFrom = 7;
+      addHoursFrom = -7;
     } else if (selectUTC > 0) {
       addHoursFrom = Math.abs(Number(selectUTC)) + 7 * -1;
     }
@@ -1947,7 +1947,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           if (fieldName === "timestamp") {
             // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + (Number(selectUTC) + 5 || 0) * 60 * 60; // Ajouter 4 heures
+            timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
             fieldValue = timestamp.toString(); // Reconvertir en chaîne
           }
           details[fieldName] = fieldValue;
