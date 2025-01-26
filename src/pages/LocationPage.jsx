@@ -76,16 +76,23 @@ const LocationPage = () => {
     ? vehicleData.filter((v) => v.deviceID === selectedVehicle)
     : vehicleData;
   const tileLayers = {
+    terrain: {
+      url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
+      attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>',
+    },
+
+    satelite: {
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+    },
+
     streets: {
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        '&copy; <a href="https://www.opentopomap.org">OpenTopoMap</a> contributors',
     },
-    dark: {
-      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="https://www.carto.com/attributions">CARTO</a>',
-    },
+
     humanitarian: {
       url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
       attribution:
@@ -209,6 +216,24 @@ const LocationPage = () => {
                 Vue normale
               </p>
               <p
+                className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                  mapType === "satelite"
+                    ? "bg-gray-200 dark:bg-gray-800/70"
+                    : ""
+                }`}
+                onClick={() => handleMapTypeChange("satelite")}
+              >
+                Vue Satelite
+              </p>
+              <p
+                className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                  mapType === "terrain" ? "bg-gray-200 dark:bg-gray-800/70" : ""
+                }`}
+                onClick={() => handleMapTypeChange("terrain")}
+              >
+                Vue terrain
+              </p>
+              <p
                 className={`cursor-pointer dark:text-gray-50 dark:hover:bg-gray-800/40 py-1 px-3 rounded-md ${
                   mapType === "humanitarian"
                     ? "bg-gray-200 dark:bg-gray-800/50"
@@ -228,14 +253,14 @@ const LocationPage = () => {
               >
                 Vue claire
               </p>
-              <p
+              {/* <p
                 className={`cursor-pointer dark:text-gray-50 dark:hover:bg-gray-800/40 py-1 px-3 rounded-md ${
                   mapType === "dark" ? "bg-gray-200 dark:bg-gray-800/50" : ""
                 }`}
                 onClick={() => handleMapTypeChange("dark")}
               >
                 Vue sombre
-              </p>
+              </p> */}
             </div>
           </div>
         )}

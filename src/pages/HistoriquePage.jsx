@@ -104,7 +104,7 @@ function HistoriquePage() {
 
   const vehicles = vehicleData;
 
-  const [mapType, setMapType] = useState("terrain");
+  const [mapType, setMapType] = useState("streets");
   const [currentLocation, setCurrentLocation] = useState(null);
 
   const tileLayers = {

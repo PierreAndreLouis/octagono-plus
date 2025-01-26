@@ -168,16 +168,23 @@ function RapportPageDetails() {
   const vehicles = vehicleData;
 
   const tileLayers = {
+    terrain: {
+      url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
+      attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>',
+    },
+
+    satelite: {
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+    },
+
     streets: {
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        '&copy; <a href="https://www.opentopomap.org">OpenTopoMap</a> contributors',
     },
-    dark: {
-      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="https://www.carto.com/attributions">CARTO</a>',
-    },
+
     humanitarian: {
       url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
       attribution:

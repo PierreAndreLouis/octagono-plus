@@ -165,6 +165,7 @@ function TrajetVehicule({
                 } else if (!firstVehicle && index === 0) {
                   markerIcon = lastMarkerIcon;
                 } else if (vehicule === firstVehicle) {
+              
                   markerIcon = lastMarkerIcon;
                 } else if (vehicule === lastVehicle) {
                   markerIcon = firstMarkerIcon;
@@ -188,6 +189,8 @@ function TrajetVehicule({
                     key={index}
                     position={[lastValidLatitude || 0, lastValidLongitude || 0]}
                     icon={markerIcon}
+
+                 
                   >
                     <Popup className="">
                       <div className="--w-[70vw] ---max-w-[20rem]">
@@ -217,8 +220,10 @@ function TrajetVehicule({
                           <strong>Date :</strong>{" "}
                           {timestamp
                             ? FormatDateHeureTimestamp?.date
-                            : "Pas de date disponible"}
+                            : 
+                              "Pas de date disponible"}
                           <span className="px-3">/</span>
+                      
                           {FormatDateHeureTimestamp?.time}
                         </p>
 
