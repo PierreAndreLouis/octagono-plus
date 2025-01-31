@@ -22,6 +22,7 @@ import VehiculeActiveAjourdhuiComponent from "../rapport_vehicule/VehiculeActive
 import VehiculeNotActiveAjourdhuiComponent from "../rapport_vehicule/VehiculeNotActiveAjourdhuiComponent";
 import VehiculeNotActifComponent from "../rapport_vehicule/VehiculeNotActifComponent";
 import TrajetVehicule from "../historique_vehicule/TrajetVehicule";
+import Tooltip from "@mui/material/Tooltip";
 
 function RapportGroupe({
   formattedDate, // Date formatée pour l'affichage
@@ -81,6 +82,7 @@ function RapportGroupe({
     searchdonneeFusionneeForRapport,
     tableRef,
     rapportGroupePDFtRef,
+    sethistiriqueSelectedLocationIndex,
   } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
 
   const dataFusionneeHome = mergedData ? Object.values(mergedData) : [];
@@ -1146,11 +1148,9 @@ function RapportGroupe({
 
   // Fonction d'exportation
   const exportToExcel = () => {
-    console.log("start execl");
     const table = document.getElementById("myTable"); // ID du tableau HTML
     const workbook = XLSX.utils.table_to_book(table);
     XLSX.writeFile(workbook, "Rapport des vehicules.xlsx"); // Nom du fichier
-    console.log("finish execl");
   };
 
   // gggggggggggggggggggggggggg
@@ -1172,6 +1172,13 @@ function RapportGroupe({
       }
     }
   }, [downloadExelPDF]);
+
+  const afficherPositionTableauEnCarte = (vehicule, index) => {
+    setSelectedVehicle(vehicule.deviceID);
+    sethistiriqueSelectedLocationIndex(index);
+    // setvoirDansLaCarte(true);
+    setzoomPosition(true);
+  };
   return (
     <>
       <div
@@ -1210,7 +1217,68 @@ function RapportGroupe({
                   className="cursor-pointer text-3xl text-red-500"
                 />
               </div>
-              <div className="relative pb-20 flex flex-col gap-4 h-[80vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
+              {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+
+              <div className="mx-auto  md:w-[75vw]">
+                <div className="flex flex-wrap">
+                  <p>Date : </p>
+                  <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
+                    {jourDebut ? (
+                      <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
+                        Du{" "}
+                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                          {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
+                          {anneeDebut === anneeFin ? "" : anneeDebut}
+                        </span>{" "}
+                        au{" "}
+                        <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
+                          {jourFin} {moisFin} {anneeFin}
+                        </span>
+                      </span>
+                    ) : (
+                      <span>Pas de date disponible</span>
+                    )}
+                  </span>
+                </div>
+                {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+                <div className="flex flex-wrap">
+                  <p>Heure :</p>
+                  {jourDebut ? (
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                      De{" "}
+                      <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
+                        {heureDebut}
+                      </span>{" "}
+                      à{" "}
+                      <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
+                        {heureFin}{" "}
+                      </span>{" "}
+                    </span>
+                  ) : (
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                      Pas de date disponible
+                    </span>
+                  )}
+                </div>
+                {filter === "all" && (
+                  <div className="mt-4 mb-4 flex items-center gap-2">
+                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
+                      {isSearching
+                        ? "Véhicules déplacés"
+                        : "Véhicules en mouvement"}
+                    </p>
+                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
+                      {isSearching
+                        ? "Véhicules non déplacés"
+                        : "Véhicules en stationnement"}
+                    </p>
+                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
+                      Véhicules hors service
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="relative pb-20 flex flex-col gap-4 h-[70vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
                 {filteredVehiclesListe.length > 0 ? (
                   filteredVehiclesListe?.map((vehicule, index) => {
                     // Trouver le véhicule correspondant dans updateData
@@ -1897,7 +1965,15 @@ function RapportGroupe({
                             : "Pas de dépacement"}{" "}
                         </td>
 
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(
+                              vehicule,
+                              vehicule.vehiculeDetails.length - 1
+                            );
+                          }}
+                          className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[
                             vehicule.vehiculeDetails?.length - 1
                           ]?.backupAddress ||
@@ -1906,7 +1982,12 @@ function RapportGroupe({
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(vehicule, 0);
+                          }}
+                          className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
@@ -2008,7 +2089,15 @@ function RapportGroupe({
                             : "Pas de dépacement"}{" "}
                         </td>
 
-                        <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(
+                              vehicule,
+                              vehicule.vehiculeDetails.length - 1
+                            );
+                          }}
+                          className="border py-3 px-2  cursor-pointer  dark:bg-gray-800  dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[
                             vehicule.vehiculeDetails?.length - 1
                           ]?.backupAddress ||
@@ -2017,7 +2106,12 @@ function RapportGroupe({
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
-                        <td className="border py-3 px-2    dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(vehicule, 0);
+                          }}
+                          className="border py-3 px-2  cursor-pointer  dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
@@ -2120,7 +2214,15 @@ function RapportGroupe({
                             : "Pas de dépacement"}{" "}
                         </td>
 
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(
+                              vehicule,
+                              vehicule.vehiculeDetails.length - 1
+                            );
+                          }}
+                          className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[
                             vehicule.vehiculeDetails?.length - 1
                           ]?.backupAddress ||
@@ -2129,7 +2231,12 @@ function RapportGroupe({
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(vehicule, 0);
+                          }}
+                          className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
@@ -2169,13 +2276,13 @@ function RapportGroupe({
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        vitesse maximale
+                        Vitesse maximale
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        vitesse nimimale
+                        Vitesse minimale
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        vitesse moyenne
+                        Vitesse moyenne
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
                         Date et Heure de départ
@@ -2240,7 +2347,15 @@ function RapportGroupe({
                             : "Pas de dépacement"}{" "}
                         </td>
 
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(
+                              vehicule,
+                              vehicule.vehiculeDetails.length - 1
+                            );
+                          }}
+                          className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[
                             vehicule.vehiculeDetails?.length - 1
                           ]?.backupAddress ||
@@ -2249,7 +2364,12 @@ function RapportGroupe({
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(vehicule, 0);
+                          }}
+                          className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
@@ -2291,17 +2411,17 @@ function RapportGroupe({
                         Duree du trajet
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        temps d'activite
+                        Temps d'activité
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        temps d'inactivite
+                        Temps d'inactivité
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        distance parcourue
+                        Distance parcourue
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        nombre d'arrêt
+                        Nombre d'arrêt
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
@@ -2348,12 +2468,28 @@ function RapportGroupe({
                             : "0 arrêt"}
                         </td>
 
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(
+                              vehicule,
+                              vehicule.vehiculeDetails.length - 1
+                            );
+                          }}
+                          className="border py-3 px-2  cursor-pointer bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
+                        <td
+                          onClick={() => {
+                            afficherPositionTableauEnCarte(
+                              vehicule,
+                              vehicule.vehiculeDetails.length - 1
+                            );
+                          }}
+                          className="border py-3 px-2 cursor-pointer  bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                        >
                           {vehicule.vehiculeDetails[0]?.backupAddress ||
                             vehicule.vehiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
@@ -2383,10 +2519,11 @@ function RapportGroupe({
             // console.log(dataObjectDebut.toString()); // Locale
             // console.log(dataObjectFin.toString()); // Locale
 
-            console.log(
-              "from title rapport groupe downloadExelPDF :",
-              downloadExelPDF
-            );
+            // console.log(
+            //   "from title rapport groupe downloadExelPDF :",
+            //   downloadExelPDF
+            // );
+            console.log(vehiclesByDistance);
           }}
           className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300"
         >
@@ -3499,6 +3636,7 @@ function RapportGroupe({
                     // onClick={centerOnFirstMarker}
                     onClick={() => {
                       setzoomPosition(false);
+                      setSelectedVehicle(null);
                     }}
                   >
                     <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
@@ -3734,7 +3872,7 @@ function RapportGroupe({
             Véhicules déplacés
           </p>
           <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
-            Véhicules en stationnement
+            Véhicules non déplacés
           </p>
           <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
             Véhicules hors service
@@ -4017,22 +4155,81 @@ function RapportGroupe({
                         </td>
 
                         {/* Addresse départ */}
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                          {vehicule.vehiculeDetails[
-                            vehicule.vehiculeDetails.length - 1
-                          ]?.backupAddress ||
-                            vehicule.vehiculeDetails[
+                        <Tooltip
+                          title="Voir cette adresse sur la carte
+                         "
+                          PopperProps={{
+                            modifiers: [
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, -30], // Décalage horizontal et vertical
+                                },
+                              },
+                              {
+                                name: "zIndex",
+                                enabled: true,
+                                phase: "write",
+                                fn: ({ state }) => {
+                                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                },
+                              },
+                            ],
+                          }}
+                        >
+                          <td
+                            onClick={() => {
+                              afficherPositionTableauEnCarte(
+                                vehicule,
+                                vehicule.vehiculeDetails.length - 1
+                              );
+                            }}
+                            className="border py-3 px-2  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
+                          >
+                            {vehicule.vehiculeDetails[
                               vehicule.vehiculeDetails.length - 1
-                            ]?.address ||
-                            "Pas d'adresse disponible"}
-                        </td>
+                            ]?.backupAddress ||
+                              vehicule.vehiculeDetails[
+                                vehicule.vehiculeDetails.length - 1
+                              ]?.address ||
+                              "Pas d'adresse disponible"}
+                          </td>
+                        </Tooltip>
 
                         {/* Addresse départ */}
-                        <td className="border py-3 px-2     dark:border-gray-600">
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
-                            "Pas d'adresse disponible"}
-                        </td>
+                        <Tooltip
+                          title="Voir cette adresse sur la carte
+                         "
+                          PopperProps={{
+                            modifiers: [
+                              {
+                                name: "offset",
+                                options: {
+                                  offset: [0, -30], // Décalage horizontal et vertical
+                                },
+                              },
+                              {
+                                name: "zIndex",
+                                enabled: true,
+                                phase: "write",
+                                fn: ({ state }) => {
+                                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                },
+                              },
+                            ],
+                          }}
+                        >
+                          <td
+                            onClick={() => {
+                              afficherPositionTableauEnCarte(vehicule, 0);
+                            }}
+                            className="border py-3 px-2  cursor-pointer   dark:border-gray-600"
+                          >
+                            {vehicule.vehiculeDetails[0]?.backupAddress ||
+                              vehicule.vehiculeDetails[0]?.address ||
+                              "Pas d'adresse disponible"}
+                          </td>
+                        </Tooltip>
                       </tr>
                     );
                   }
@@ -4047,3 +4244,5 @@ function RapportGroupe({
 }
 
 export default RapportGroupe;
+
+// close= setSelectedVehicle(null)

@@ -142,7 +142,7 @@ const Home = () => {
   useEffect(() => {
     // Mettre à jour le timestamp le plus récent lorsque "data" change
     const result = getMostRecentTimestamp(dataFusionee2);
-    console.log("Most Recent Timestamp:", result.mostRecentTimestamp);
+    // console.log("Most Recent Timestamp:", result.mostRecentTimestamp);
     // console.log("Date:", result.mostRecentDate);
     // console.log("Time:", result.mostRecentTime);
     setderniereUpdate(result);
@@ -179,10 +179,75 @@ const Home = () => {
     }, 10000);
   };
 
+  const [test, settest] = useState("xx");
+
+  // useEffect(() => {
+  //   console.log("test in useefect :");
+  // }, [test]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      settest((prevText) => prevText);
+      console.log("Mise à jour de test: ", test);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Pas de dépendances, exécution régulière
+
   return (
     <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-screen">
       {/* Statistic component */}
       <Statistics />
+      {/* <div className="flex gap-5">
+        <p
+          onClick={() => {
+            console.log("Mise à jour de test: ", test);
+          }}
+        >
+          Console log
+        </p>
+        <p>---{test}---</p>
+        <button
+          onClick={() => {
+            settest("a");
+            console.log("test:", test);
+          }}
+        >
+          a
+        </button>
+        <button
+          onClick={() => {
+            settest("b");
+            console.log("test:", test);
+          }}
+        >
+          b
+        </button>
+        <button
+          onClick={() => {
+            settest("c");
+            console.log("test:", test);
+          }}
+        >
+          c
+        </button>
+        <button
+          onClick={() => {
+            settest("d");
+            console.log("test:", test);
+          }}
+        >
+          d
+        </button>
+        <button
+          onClick={() => {
+            settest("e");
+            console.log("test:", test);
+          }}
+        >
+          e
+        </button>
+      </div> */}
 
       {/* <InstallationPWA /> */}
 

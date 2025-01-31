@@ -83,14 +83,14 @@ function InfoUserComponent({
                 ? "GMT" + (selectUTC >= 0 ? "+" : "") + selectUTC
                 : userData?.timeZone || "-----"}
             </p>
-            <p
+            {/* <p
               onClick={() => {
                 setChangeTimeZone(true);
               }}
               className="pl-3 text-orange-500 cursor-pointer dark:text-orange-500"
             >
               Modifier
-            </p>
+            </p> */}
           </div>
         </div>
 

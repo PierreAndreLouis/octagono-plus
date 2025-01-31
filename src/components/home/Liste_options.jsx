@@ -236,71 +236,43 @@ function Liste_options({}) {
             className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500"
           />
         </div>
-
-        <div className="grid text-gray-600 grid-cols-2 gap-4  p-4 py-8">
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
-                  },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                  },
-                },
-              ],
-            }}
-            title="Voir la position géographique du véhicule"
-          >
-            <Link
-              onClick={() => {
-                setShowListOption(false);
-                sethistiriqueSelectedLocationIndex(0);
-              }}
-              to="/Groupe_vehicule_location"
-              className=" dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg col-span-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
-            >
-              <FaLocationDot className="text-4xl" />
-              <h3>Localisation</h3>
-            </Link>
-          </Tooltip>
-
-          {/* ------------------------------- */}
-
-          {username === "admin" ? (
+        <div className=" text-gray-600   p-4 py-8">
+          <div className="grid text-gray-600 grid-cols-2 gap-4  p-4-- py-8--">
             <Tooltip
               PopperProps={{
                 modifiers: [
                   {
                     name: "offset",
                     options: {
-                      offset: [0, -40], // Décalage horizontal et vertical
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
                     },
                   },
                 ],
               }}
-              title="Modifier des informations ou supprimer le véhicule"
+              title="Voir la position géographique du véhicule"
             >
               <Link
-                to="/modifier_vehicule"
                 onClick={() => {
                   setShowListOption(false);
+                  sethistiriqueSelectedLocationIndex(0);
                 }}
-                className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+                to="/Groupe_vehicule_location"
+                className=" dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg col-span-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
-                <FaEdit className="text-3xl" />
-                {/* GiPathDistance */}
-                <h3>Modifier</h3>
+                <FaLocationDot className="text-4xl" />
+                <h3>Localisation</h3>
               </Link>
             </Tooltip>
-          ) : (
+
+            {/* {username === "admin" ? (    ) : (     )} */}
             <Tooltip
               PopperProps={{
                 modifiers: [
@@ -337,140 +309,176 @@ function Liste_options({}) {
                 <h3>Trajet</h3>
               </Link>
             </Tooltip>
-          )}
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
-                  },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                  },
-                },
-              ],
-            }}
-            title="Bloquer ou débloquer le véhicule"
-          >
-            <div
-              onClick={() => {
-                setshowVehiculeControle(true);
-              }}
-              className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2---- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
-            >
-              <RiShutDownLine className="text-3xl" />
-              <h3>Contrôle</h3>
-            </div>
-          </Tooltip>
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
-                  },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                  },
-                },
-              ],
-            }}
-            title="Voir tous les détails sur le déplacement d'un véhicule"
-          >
-            <Link
-              onClick={() => {
-                // setAccessCode(true);
-                setShowListOption(false);
-                rapportFonction();
-              }}
-              to="/rapport_page_details"
-              className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
-            >
-              <MdOutlineStickyNote2 className="text-3xl" />
-              <h3>Rapport</h3>
-            </Link>
-          </Tooltip>
 
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
                   },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
                   },
-                },
-              ],
-            }}
-            title="Voir un historique sur l'état du véhicule"
-          >
-            <Link
-              onClick={() => {
-                {
-                  handleClick();
-                  setShowHistoriqueInMap(false);
-                }
+                ],
               }}
-              to="/voiture_historique"
-              className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-3---- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              title="Voir un historique sur l'état du véhicule"
             >
-              <IoStatsChartSharp className="text-3xl" />
-              <h3>Historique</h3>
-            </Link>
-          </Tooltip>
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
+              <Link
+                onClick={() => {
+                  {
+                    handleClick();
+                    setShowHistoriqueInMap(false);
+                  }
+                }}
+                to="/voiture_historique"
+                className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-3---- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              >
+                <IoStatsChartSharp className="text-3xl" />
+                <h3>Historique</h3>
+              </Link>
+            </Tooltip>
+
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
                   },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
                   },
-                },
-              ],
-            }}
-            title="Voir les informations personnelles du véhicule"
-          >
-            <Link
-              onClick={() => {
-                setShowListOption(false);
+                ],
               }}
-              to="/voiture_details"
-              className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-3--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              title="Voir tous les détails sur le déplacement d'un véhicule"
             >
-              <FaInfoCircle className="text-3xl" />
-              <h3>Informations</h3>
-            </Link>
-          </Tooltip>
+              <Link
+                onClick={() => {
+                  // setAccessCode(true);
+                  setShowListOption(false);
+                  rapportFonction();
+                }}
+                to="/rapport_page_details"
+                className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              >
+                <MdOutlineStickyNote2 className="text-3xl" />
+                <h3>Rapport</h3>
+              </Link>
+            </Tooltip>
+
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Bloquer ou débloquer le véhicule"
+            >
+              <div
+                onClick={() => {
+                  setshowVehiculeControle(true);
+                }}
+                className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2---- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              >
+                <RiShutDownLine className="text-3xl" />
+                <h3>Contrôle</h3>
+              </div>
+            </Tooltip>
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Voir les informations personnelles du véhicule"
+            >
+              <Link
+                onClick={() => {
+                  setShowListOption(false);
+                }}
+                to="/voiture_details"
+                className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-3--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              >
+                <FaInfoCircle className="text-3xl" />
+                <h3>Informations</h3>
+              </Link>
+            </Tooltip>
+          </div>
+          {username === "admin" && (
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 99999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Modifier des informations ou supprimer le véhicule"
+            >
+              <Link
+                to="/modifier_vehicule"
+                onClick={() => {
+                  setShowListOption(false);
+                }}
+                className="dark:text-gray-100 mt-4 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
+              >
+                <FaEdit className="text-3xl" />
+                <h3>Modifier ou supprimer le vehicule</h3>
+              </Link>
+            </Tooltip>
+          )}
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { DataContext } from "../../context/DataContext";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
@@ -21,6 +21,16 @@ function Statistics() {
     setstatisticFilterText,
     statisticFilterText,
   } = useContext(DataContext);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setstatisticFilterText((prevText) => prevText); // Pas de changement inutile
+      setstatisticFilter((prevFilter) => prevFilter);
+      console.log("mise a jour de Statistic header to : ", statisticFilterText);
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Dépendances nécessaires
 
   const vehicleArray = mergedData ? Object.values(mergedData) : [];
 

@@ -7,10 +7,34 @@ import { DataContext } from "../../context/DataContext";
 import { MdOutlineStickyNote2 } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdLocationPin } from "react-icons/md";
+import { GiPathDistance } from "react-icons/gi";
 
 function NavigationBar() {
-  const { handleTabClick, tab, username, sethistiriqueSelectedLocationIndex } =
-    useContext(DataContext);
+  const {
+    handleTabClick,
+    tab,
+    username,
+    sethistiriqueSelectedLocationIndex,
+    setShowHistoriqueInMap,
+    currentVehicule,
+    setCurrentVehicule,
+    currentdataFusionnee,
+    setVehiclueHistoriqueDetails,
+    vehiculeNotActiveAjourdhui,
+  } = useContext(DataContext);
+
+  const chooseFirstVehicule = () => {
+    if (
+      !currentVehicule &&
+      vehiculeNotActiveAjourdhui &&
+      vehiculeNotActiveAjourdhui.length > 0
+    ) {
+      setCurrentVehicule(vehiculeNotActiveAjourdhui[0]);
+      setVehiclueHistoriqueDetails(
+        vehiculeNotActiveAjourdhui[0].vehiculeDetails
+      );
+    }
+  };
 
   return (
     <div className="bg-red fixed bottom-0 left-0 right-0 dark:bg-slate-800 lg:hidden z-[1] ">
@@ -42,16 +66,21 @@ function NavigationBar() {
           </Link>
         ) : (
           <Link
-            to="/voiture_details?tab=voiture_details"
-            onClick={() => handleTabClick("voiture_details")}
+            to="/voiture_historique"
+            onClick={() => {
+              handleTabClick("trajet_Vehicule");
+              chooseFirstVehicule();
+              setShowHistoriqueInMap(true);
+            }}
             className={`${
-              tab === "voiture_details"
+              tab === "trajet_Vehicule"
                 ? "text-orange-500 dark:text-orange-300"
                 : "text-gray-600 dark:text-gray-400"
             } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
           >
-            <FaCar className="text-xl" />
-            <h3 className="text-sm">Details</h3>
+            <GiPathDistance className="text-xl" />
+            {/* <FaCar className="text-xl" /> */}
+            <h3 className="text-sm">Trajet</h3>
           </Link>
         )}
 

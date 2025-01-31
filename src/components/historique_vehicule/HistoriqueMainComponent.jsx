@@ -31,7 +31,25 @@ function HistoriqueMainComponent({
     sethistiriqueSelectedLocationIndex,
     setSelectedVehicle,
     selectUTC,
+    currentdataFusionnee,
   } = useContext(DataContext);
+  const targetDeviceID = "864893039477131";
+
+  const vehicle = currentdataFusionnee.find(
+    (vehicle) => vehicle.deviceID === targetDeviceID
+  );
+
+  if (vehicle) {
+    console.log("Véhicule trouvé :", vehicle);
+    console.log("VéhiculeDetails trouvé :", vehicle.vehiculeDetails);
+    console.log(
+      "VéhiculeDetails Length trouvé :",
+      vehicle.vehiculeDetails.length
+    );
+  } else {
+    console.log("Aucun véhicule trouvé avec ce deviceID.");
+  }
+
   function convertToTimezone(timestamp, offset) {
     const date = new Date(timestamp * 1000); // Convertir le timestamp en millisecondes
     const [sign, hours, minutes] = offset
@@ -84,14 +102,15 @@ function HistoriqueMainComponent({
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
           <h2
             onClick={() => {
-              console.log(
-                "selectUTC ==>",
-                isNaN(Number(selectUTC)) ? -5 : Number(selectUTC)
-              );
+              // console.log("Véhicule trouvé :", vehicle);
+              // console.log("VéhiculeDetails trouvé :", vehicle.vehiculeDetails);
             }}
             className="text-xl md:text-4xl md:mb-4 text-orange-600"
           >
-            Historique
+            Historique{" "}
+            {/* <span className="text-sm">
+              {currentVehicule?.vehiculeDetails.length}
+            </span> */}
           </h2>
           <h2 className="text-gray-800 mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
             {currentVehicule?.description || "Pas de véhicule sélectionné"}
@@ -198,13 +217,6 @@ function HistoriqueMainComponent({
                       >
                         <div
                           onClick={() => {
-                            // setShowListOption(true);
-                            // setchooseHistoriqueLongitudeLatitude(
-                            //   vehicle.longitude,
-                            //   vehicle.latitude
-                            // );
-                            // setchooseHistoriqueLongitude(vehicle.longitude);
-                            // setchooseHistoriqueLatitude(vehicle.latitude);
                             setSelectedVehicle(currentVehicule?.deviceID);
 
                             sethistiriqueSelectedLocationIndex(index);

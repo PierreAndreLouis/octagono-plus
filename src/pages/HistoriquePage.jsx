@@ -39,7 +39,24 @@ function HistoriquePage() {
     setVehiclueHistoriqueDetails,
     selectUTC,
     fetchHistoriqueVehicleDetails,
+    currentdataFusionnee,
+    setSelectedVehicle,
   } = useContext(DataContext);
+
+  useEffect(() => {
+    if (currentVehicule) {
+      const deviceID = currentVehicule?.deviceID;
+
+      const foundVehicle = currentdataFusionnee?.find(
+        (v) => v.deviceID === deviceID
+      );
+
+      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+
+      setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
+      setSelectedVehicle(foundVehicle.deviceID); // Met à jour la sélection
+    }
+  }, [currentdataFusionnee]);
 
   const [checkboxes, setCheckboxes] = useState({
     en_marche: true,
@@ -102,7 +119,12 @@ function HistoriquePage() {
     heading: vehicule?.heading || "",
   }));
 
-  const vehicles = vehicleData;
+  // const vehicles = vehicleData;
+  const [vehicles, setvehicles] = useState(vehicleData);
+
+  useEffect(() => {
+    setvehicles(vehicleData);
+  }, [vehiclueHistoriqueDetails]);
 
   const [mapType, setMapType] = useState("streets");
   const [currentLocation, setCurrentLocation] = useState(null);

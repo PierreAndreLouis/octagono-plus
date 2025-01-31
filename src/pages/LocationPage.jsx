@@ -53,8 +53,6 @@ const LocationPage = () => {
   }));
 
   const handleVehicleClick = (vehicle) => {
-    console.log("iiiiiiiiii", selectedVehicle);
-    console.log("vvvvvvv", vehicle.deviceID);
     setSelectedVehicle(vehicle.deviceID);
     setShowVehiculeListe(!showVehiculeListe);
   };

@@ -120,6 +120,23 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   const [statisticFilter, setstatisticFilter] = useState();
   const [statisticFilterText, setstatisticFilterText] = useState("");
 
+  useEffect(() => {
+    console.log(statisticFilter);
+    console.log(statisticFilterText);
+    setstatisticFilterText(statisticFilterText);
+    setstatisticFilter(statisticFilter);
+  }, [statisticFilter, statisticFilterText]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setstatisticFilterText((prevText) => prevText); // Pas de changement inutile
+      setstatisticFilter((prevFilter) => prevFilter);
+      console.log("mise a jour de Statistic header to : ", statisticFilterText);
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Dépendances nécessaires
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Pupup
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +168,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     []
   );
 
+  useEffect(() => {
+    console.log(vehiclueHistoriqueDetails);
+  }, [vehiclueHistoriqueDetails]);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Statistic  page
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -332,10 +352,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         setUserData(userData);
         navigate("/home");
-        // if (!statisticFilter) {
-        //   // setstatisticFilter(mergedData);
-        //   setstatisticFilterText("tout");
-        // }
 
         // Stocker les informations de connexion en local
         localStorage.setItem("account", account);
@@ -809,66 +825,14 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     //   .getDate()
     //   .toString()
     //   .padStart(2, "0")} 00:00:00`;
-    console.log("refraich 1");
+    console.log("refraich HomePage");
     if (vehicleData && vehicleData.length > 0) {
       vehicleData.forEach((vehicle) => {
-        console.log("refraich 2");
-
         fetchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
         fetRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-        console.log("refraich 3");
       });
     }
-    console.log("refraich 4");
   };
-
-  // Pour fusionnee les donnes des fonctions fetchVehicleData et fetchVehicleDetails
-  // const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
-  //   const dataFusionne = {};
-  //   const seenEvents = new Set();
-
-  //   vehicleData.forEach((vehicle) => {
-  //     const { deviceID } = vehicle;
-  //     dataFusionne[deviceID] = {
-  //       ...vehicle,
-  //       vehiculeDetails:
-  //         vehicleDetails.find((v) => v.Device === deviceID)?.vehiculeDetails ||
-  //         [],
-  //     };
-  //   });
-
-  //   eventData.forEach((event) => {
-  //     const { deviceID, timestamp, ...eventDetails } = event;
-  //     const eventKey = `${deviceID}-${timestamp}`;
-
-  //     if (!seenEvents.has(eventKey)) {
-  //       seenEvents.add(eventKey);
-
-  //       if (dataFusionne[deviceID]) {
-  //         if (Object.keys(eventDetails).length > 0) {
-  //           dataFusionne[deviceID].vehiculeDetails.push({
-  //             timestamp,
-  //             ...eventDetails,
-  //           });
-  //         }
-  //       }
-  //     }
-  //   });
-
-  //   localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
-  //   setMergedData(dataFusionne);
-  //   setIsLoading(false);
-  //   if (!statisticFilter) {
-  //     setstatisticFilter(mergedData);
-  //     setstatisticFilterText("tout");
-  //   }
-
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 15000); // 10 000 millisecondes = 10 secondes
-
-  //   return dataFusionne;
-  // };
 
   const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
     const dataFusionne = {};
@@ -925,10 +889,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
     setMergedData(dataFusionne);
     setIsLoading(false);
-    // if (!statisticFilter) {
-    //   // setstatisticFilter(mergedData);
-    //   setstatisticFilterText("tout");
-    // }
 
     setTimeout(() => {
       setIsLoading(false);
@@ -952,6 +912,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       vehicleData.length > 0
     ) {
       mergeVehicleDataWithEvents();
+      homePageReload();
     }
   }, [vehicleData, vehicleDetails]);
 
@@ -1237,14 +1198,16 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   };
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     firstCallRapportData();
-  //     console.log("okkkkkkkkkk");
-  //   }, 60000);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // reloadHomePage();
+      homePageReload();
 
-  //   return () => clearInterval(intervalId);
-  // }, []);
+      console.log("mise ajour des donnees");
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   //
   //
@@ -1965,8 +1928,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       setVehiclueHistoriqueDetails(filteredVehicleDetails);
 
-      // setVehiclueHistoriqueDetails(uniqueVehicleDetails);
-
       setLoadingHistoriqueFilter(false);
       setTimeout(() => {
         setLoadingHistoriqueFilter(false);
@@ -2053,19 +2014,28 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       .toString()
       .padStart(2, "0")}`;
 
-    // const startOfDay = new Date();
-    // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
-
-    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-    //   .toString()
-    //   .padStart(2, "0")}-${startOfDay
-    //   .getDate()
-    //   .toString()
-    //   .padStart(2, "0")} 00:00:00`;
-
     fetchHistoriqueVehicleDetails(currentVehicule.deviceID, TimeFrom, TimeTo);
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (currentVehicule) {
+        console.log("mise a jour vehicule Details");
+
+        const deviceID = currentVehicule?.deviceID;
+
+        const foundVehicle = currentdataFusionnee?.find(
+          (v) => v.deviceID === deviceID
+        );
+
+        setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+        setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
+        setSelectedVehicle(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
+      }
+    }, 15000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Pas de dépendances, exécution régulière
   //
   //
   //

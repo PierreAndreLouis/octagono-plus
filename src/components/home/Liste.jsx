@@ -50,10 +50,32 @@ function Liste() {
     setstatisticFilter,
     statisticFilterText,
     FormatDateHeure,
+    setstatisticFilterText,
   } = useContext(DataContext);
+
+  useEffect(() => {
+    // console.log("MergeDate a ete modifier.....XXXXXXx");
+    console.log(mergedData);
+  }, [mergedData]);
+
+  useEffect(() => {
+    console.log(statisticFilter);
+    console.log(statisticFilterText);
+  }, [statisticFilter, statisticFilterText]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setstatisticFilterText((prevText) => prevText); // Pas de changement inutile
+      setstatisticFilter((prevFilter) => prevFilter);
+      console.log("mise a jour de Statistic header to : ", statisticFilterText);
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Dépendances nécessaires
 
   const dataFusionee = statisticFilter ? Object.values(statisticFilter) : [];
   const dataFusionee2 = mergedData ? Object.values(mergedData) : [];
+  // const dataFusionee = mergedData ? Object.values(mergedData) : [];
 
   // Filtrer les données selon la recherche
   const filteredData = searchQuery

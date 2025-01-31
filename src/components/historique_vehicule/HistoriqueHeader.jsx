@@ -124,13 +124,13 @@ function HistoriqueHeader({
               className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
                  px-3 py-2 bg-orange-50 shadow-xl text-center"
             >
-              <p
+              {/* <p
                 // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
                 className="md:hidden"
               >
                 Choisis un véhicule
-              </p>
-              <p className="hidden md:block">
+              </p> */}
+              <p className="hidden-- md:block">
                 {currentVehicule?.description || "Choisir un vehicule"}
               </p>
               <FaChevronDown className="mt-1" />
