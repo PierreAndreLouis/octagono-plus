@@ -1,66 +1,80 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../context/DataContext";
-import ShowConfirModifyVehiculePupup from "../components/modifier_vehicule/ShowConfirModifyVehiculePupup";
-import ShowConfirmDeletePupupComponent from "../components/modifier_vehicule/ShowConfirmDeletePupupComponent";
-import SuccessModifiervehiculePupupComponent from "../components/modifier_vehicule/SuccessModifiervehiculePupupComponent";
-import SuccessDeletevehiculePupupComponent from "../components/modifier_vehicule/SuccessDeletevehiculePupupComponent";
-import ErrorModifiervehiculePupupComponent from "../components/modifier_vehicule/ErrorModifiervehiculePupupComponent";
-// import ErrorDeletevehiculePupupComponent from "../components/modifier_vehicule/errorDeletevehiculePupupComponent";
-import VehiculeListeComponent from "../components/modifier_vehicule/VehiculeListeComponent";
 import FormModifierVehicule from "../components/modifier_vehicule/FormModifierVehicule";
-import ErreurDeleteVehiculePupupComponent from "../components/modifier_vehicule/ErreurDeleteVehiculePupupComponent";
-
-// import { FaCar } from "react-icons/fa";
+import ConfirmationPassword from "../components/Reutilisable/ConfirmationPassword";
+import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 
 function Modifier() {
   const {
     updateVehicle,
-    currentVehicule,
+    currentVéhicule,
     error,
     setError,
     deleteVehicle,
     password,
     mergedData,
-    setCurrentVehicule,
-    crud_loading,
+    setCurrentVéhicule,
+    createVéhiculeLoading,
     username,
-
-    successDeletevehiculePupup,
-    setsuccessDeletevehiculePupup,
-    errorDeletevehiculePupup,
-    seterrorDeletevehiculePupup,
-
-    successModifiervehiculePupup,
-    setsuccessModifiervehiculePupup,
-    errorModifiervehiculePupup,
-    seterrorModifiervehiculePupup,
+    successDeleteVéhiculePopup,
+    setSuccessDeleteVéhiculePopup,
+    errorDeleteVéhiculePopup,
+    setErrorDeleteVéhiculePopup,
+    successModifierVéhiculePopup,
+    setSuccessModifierVéhiculePopup,
+    errorModifierVéhiculePopup,
+    setErrorModifierVéhiculePopup,
   } = useContext(DataContext);
-  const [showConfirmAddVehiculePupup, setshowConfirmAddVehiculePupup] =
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+  x;
+  // Pour confirmer le mot de pass avant l'ajout...
+  const [showConfirmAddVéhiculePopup, setShowConfirmAddVéhiculePopup] =
     useState(false);
+
+  // Pour confirmer le mot de pass avant la suppression
   const [showConfirmDeletePupup, setshowConfirmDeletePupup] = useState(false);
 
+  // Pour stocker le mot de passe entrer
   const [inputPassword, setInputPassword] = useState("");
+
+  // Pour afficher une message d'erreur en cas de mauvaise password
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Pour afficher la liste des véhicules
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
-  const dataFusionee = mergedData ? Object.values(mergedData) : [];
+  // Le data des véhicules
+  const dataFusionné = mergedData ? Object.values(mergedData) : [];
 
-  // error
   // État pour chaque champ du formulaire
-  const [addvehicleData, setAddVehicleData] = useState({
-    deviceID: currentVehicule?.deviceID || "",
-    description: currentVehicule?.description || "",
-    equipmentType: currentVehicule?.equipmentType || "",
-    uniqueIdentifier: currentVehicule?.uniqueID || "---",
-    imeiNumber: currentVehicule?.imeiNumber || "",
-    licensePlate: currentVehicule?.licensePlate || "",
-    simPhoneNumber: currentVehicule?.simPhoneNumber || "",
-    displayName: currentVehicule?.displayName || "",
+  const [addVéhiculeData, setAddVehicleData] = useState({
+    deviceID: currentVéhicule?.deviceID || "",
+    description: currentVéhicule?.description || "",
+    equipmentType: currentVéhicule?.equipmentType || "",
+    uniqueIdentifier: currentVéhicule?.uniqueID || "---",
+    imeiNumber: currentVéhicule?.imeiNumber || "",
+    licensePlate: currentVéhicule?.licensePlate || "",
+    simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
+    displayName: currentVéhicule?.displayName || "",
   });
 
-  const [errorID, setErrorID] = useState(""); // État pour le message d'erreur
-  const [errorImei, setErrorImei] = useState(""); // État pour le message d'erreur
+  // État pour le message d'erreur de deviseID
+  const [errorID, setErrorID] = useState("");
+
+  // État pour le message d'erreur de IMEI
+  const [errorImei, setErrorImei] = useState("");
 
   // Gestion de la modification des champs
   const handleChange = (e) => {
@@ -78,24 +92,25 @@ function Modifier() {
     setError("");
 
     // Validation du numéro SIM
-    if (isNaN(addvehicleData.simPhoneNumber)) {
+    if (isNaN(addVéhiculeData.simPhoneNumber)) {
       setErrorID("Le numéro de la carte SIM doit être un nombre.");
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
-    if (isNaN(addvehicleData.imeiNumber)) {
+    if (isNaN(addVéhiculeData.imeiNumber)) {
       setErrorID("L'IMEI doit être un nombre.");
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
-    setshowConfirmAddVehiculePupup(true);
+    setShowConfirmAddVéhiculePopup(true);
   };
 
+  // Pour verifier le mot de passe avant le lancement de la requête
   const handleDeletePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === password) {
-      deleteVehicle(currentVehicule?.deviceID || "");
+      deleteVehicle(currentVéhicule?.deviceID || "");
 
       setshowConfirmDeletePupup(false);
       setErrorMessage("");
@@ -105,20 +120,21 @@ function Modifier() {
     }
   };
 
+  // Pour verifier le mot de passe avant le lancement de la requête
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === password) {
       // const deviceID = "undefined";
-      const deviceID = addvehicleData.deviceID;
+      const deviceID = addVéhiculeData.deviceID;
 
-      const imeiNumber = addvehicleData.imeiNumber;
-      const uniqueIdentifier = addvehicleData.uniqueIdentifier;
-      const description = addvehicleData.description;
-      const displayName = addvehicleData.displayName;
-      const licensePlate = addvehicleData.licensePlate;
-      const equipmentType = addvehicleData.equipmentType;
-      const simPhoneNumber = addvehicleData.simPhoneNumber;
+      const imeiNumber = addVéhiculeData.imeiNumber;
+      const uniqueIdentifier = addVéhiculeData.uniqueIdentifier;
+      const description = addVéhiculeData.description;
+      const displayName = addVéhiculeData.displayName;
+      const licensePlate = addVéhiculeData.licensePlate;
+      const equipmentType = addVéhiculeData.equipmentType;
+      const simPhoneNumber = addVéhiculeData.simPhoneNumber;
 
       updateVehicle(
         deviceID,
@@ -131,7 +147,7 @@ function Modifier() {
         simPhoneNumber
       );
 
-      setshowConfirmAddVehiculePupup(false);
+      setShowConfirmAddVéhiculePopup(false);
       setErrorMessage("");
       setInputPassword("");
     } else {
@@ -143,47 +159,54 @@ function Modifier() {
     setshowConfirmDeletePupup(true);
   };
 
-  const handleVehicleClick = (vehicule) => {
-    setCurrentVehicule(vehicule);
+  // Pour choisir un véhicule dans la liste
+  const handleVehicleClick = (véhicule) => {
+    setCurrentVéhicule(véhicule);
     setShowVehiculeListe(!showVehiculeListe);
-
-    // firstCallHistoriqueData();
   };
 
+  // Pour mettre a jour les nouvelle donnee du véhicule a modifier
   useEffect(() => {
-    if (currentVehicule) {
+    if (currentVéhicule) {
       setAddVehicleData({
-        deviceID: currentVehicule.deviceID || "",
-        description: currentVehicule.description || "",
-        equipmentType: currentVehicule.equipmentType || "",
-        uniqueIdentifier: currentVehicule.uniqueID || "---",
-        imeiNumber: currentVehicule.imeiNumber || "",
-        licensePlate: currentVehicule.licensePlate || "",
-        simPhoneNumber: currentVehicule.simPhoneNumber || "",
-        displayName: currentVehicule.displayName || "",
+        deviceID: currentVéhicule.deviceID || "",
+        description: currentVéhicule.description || "",
+        equipmentType: currentVéhicule.equipmentType || "",
+        uniqueIdentifier: currentVéhicule.uniqueID || "---",
+        imeiNumber: currentVéhicule.imeiNumber || "",
+        licensePlate: currentVéhicule.licensePlate || "",
+        simPhoneNumber: currentVéhicule.simPhoneNumber || "",
+        displayName: currentVéhicule.displayName || "",
       });
     }
-  }, [currentVehicule]);
+  }, [currentVéhicule]);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // Pour stocker le terme de recherche
+  const [searchQueryModifyPage, setSearchQueryModifyPage] = useState("");
 
+  // Pour enregistrer le text écrit
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQueryModifyPage(e.target.value);
   };
 
-  const filteredVehicles = dataFusionee?.filter(
-    (vehicule) =>
-      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule?.simPhoneNumber
+  // Pour filtrer les véhicules de la liste
+  const filteredVehicles = dataFusionné?.filter(
+    (véhicule) =>
+      véhicule?.imeiNumber
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+        .includes(searchQueryModifyPage.toLowerCase()) ||
+      véhicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQueryModifyPage.toLowerCase()) ||
+      véhicule.description
+        .toLowerCase()
+        .includes(searchQueryModifyPage.toLowerCase())
   );
 
   return (
     <div className="px-3">
       {/* Loading */}
-      {crud_loading && (
+      {createVéhiculeLoading && (
         <div className="fixed z-30 inset-0 bg-gray-200/50">
           <div className="w-full h-full flex justify-center items-center">
             <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
@@ -191,49 +214,60 @@ function Modifier() {
         </div>
       )}
 
-      <ShowConfirModifyVehiculePupup
-        showConfirmAddVehiculePupup={showConfirmAddVehiculePupup}
+      {/* Popup pour la confirmation du mot de passe pour ajouter un appareil */}
+      <ConfirmationPassword
+        showConfirmPassword={showConfirmAddVéhiculePopup}
         handlePasswordCheck={handlePasswordCheck}
+        setShowConfirmPassword={setShowConfirmAddVéhiculePopup}
         inputPassword={inputPassword}
         setInputPassword={setInputPassword}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
-        setshowConfirmAddVehiculePupup={setshowConfirmAddVehiculePupup}
+        setIsPasswordConfirmed={setShowConfirmAddVéhiculePopup}
       />
 
-      <ShowConfirmDeletePupupComponent
-        showConfirmDeletePupup={showConfirmDeletePupup}
-        handleDeletePasswordCheck={handleDeletePasswordCheck}
+      {/* Popup pour la confirmation du mot de passe pour supprimer un appareil */}
+      <ConfirmationPassword
+        showConfirmPassword={showConfirmDeletePupup}
+        handlePasswordCheck={handleDeletePasswordCheck}
         setInputPassword={setInputPassword}
+        setShowConfirmPassword={setshowConfirmDeletePupup}
+        inputPassword={inputPassword}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
-        setshowConfirmDeletePupup={setshowConfirmDeletePupup}
-        inputPassword={inputPassword}
+        setIsPasswordConfirmed={setshowConfirmDeletePupup}
       />
 
-      <SuccessModifiervehiculePupupComponent
-        successModifiervehiculePupup={successModifiervehiculePupup}
-        addvehicleData={addvehicleData}
-        setsuccessModifiervehiculePupup={setsuccessModifiervehiculePupup}
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={successModifierVéhiculePopup}
+        setMessage={setSuccessModifierVéhiculePopup}
+        véhiculeData={addVéhiculeData}
+        composant_from={"succès modification de véhicule"}
       />
 
-      <SuccessDeletevehiculePupupComponent
-        successDeletevehiculePupup={successDeletevehiculePupup}
-        addvehicleData={addvehicleData}
-        setsuccessDeletevehiculePupup={setsuccessDeletevehiculePupup}
-        setCurrentVehicule={setCurrentVehicule}
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={successDeleteVéhiculePopup}
+        setMessage={setSuccessDeleteVéhiculePopup}
+        véhiculeData={addVéhiculeData}
+        composant_from={"succès suppression de véhicule"}
       />
 
-      <ErrorModifiervehiculePupupComponent
-        errorModifiervehiculePupup={errorModifiervehiculePupup}
-        seterrorModifiervehiculePupup={seterrorModifiervehiculePupup}
-        addvehicleData={addvehicleData}
+      {/* Popup pour Message de échec */}
+      <SuccèsÉchecMessagePopup
+        message={errorModifierVéhiculePopup}
+        setMessage={setErrorModifierVéhiculePopup}
+        véhiculeData={addVéhiculeData}
+        composant_from={"échec modification de véhicule"}
       />
 
-      <ErreurDeleteVehiculePupupComponent
-        errorDeletevehiculePupup={errorDeletevehiculePupup}
-        addvehicleData={addvehicleData}
-        seterrorDeletevehiculePupup={seterrorDeletevehiculePupup}
+      {/* Popup pour Message de échec */}
+      <SuccèsÉchecMessagePopup
+        message={errorDeleteVéhiculePopup}
+        setMessage={setErrorDeleteVéhiculePopup}
+        véhiculeData={addVéhiculeData}
+        composant_from={"échec suppression de véhicule"}
       />
 
       <div className="flex w-full justify-center h-full mt-16 pb-2 md:mt-20">
@@ -246,7 +280,6 @@ function Modifier() {
               </h3>
             </div>
 
-            {/* <h2 className="text-orange-600 ml-4 mb-2">Chosis un appareil</h2> */}
             <div
               onClick={() => {
                 setShowVehiculeListe(true);
@@ -258,32 +291,36 @@ function Modifier() {
                  px-3 py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-500  dark:text-gray-300 text-center"
               >
                 <p className="text-start w-[90%] overflow-hidden whitespace-nowrap text-ellipsis">
-                  {
-                    // currentVehicule?.displayName ||
-                    currentVehicule?.description || "Choisis un Véhicule"
-                  }
+                  {currentVéhicule?.description || "Choisis un Véhicule"}
                 </p>
                 <FaChevronDown className="mt-1" />
               </div>
             </div>
 
-            <VehiculeListeComponent
-              showVehiculeListe={showVehiculeListe}
-              setShowVehiculeListe={setShowVehiculeListe}
-              searchQuery={searchQuery}
-              handleSearchChange={handleSearchChange}
-              filteredVehicles={filteredVehicles}
-              handleVehicleClick={handleVehicleClick}
-            />
+            {/* Pour afficher le popup de la liste des véhicules */}
+            {showVehiculeListe && (
+              <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-20 shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80">
+                <SearchVehiculePupup
+                  searchQueryListPopup={searchQueryModifyPage}
+                  handleSearchChange={handleSearchChange}
+                  setShowOptions={setShowVehiculeListe}
+                  filteredVehicles={filteredVehicles}
+                  handleClick={handleVehicleClick}
+                  currentVéhicule={currentVéhicule}
+                  isMapcomponent="false"
+                />
+              </div>
+            )}
 
+            {/* La form a modifier ou a supprimer */}
             <FormModifierVehicule
               handleSubmit={handleSubmit}
-              addvehicleData={addvehicleData}
+              addVéhiculeData={addVéhiculeData}
               handleChange={handleChange}
               error={error}
               errorID={errorID}
               errorImei={errorImei}
-              currentVehicule={currentVehicule}
+              currentVéhicule={currentVéhicule}
               setError={setError}
               delVehicule={delVehicule}
               username={username}

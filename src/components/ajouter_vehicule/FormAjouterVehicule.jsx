@@ -4,11 +4,10 @@ import { MdErrorOutline } from "react-icons/md";
 
 function FormAjouterVehicule({
   handleSubmit,
-  addvehicleData,
+  addVéhiculeData,
   handleChange,
   errorID,
   errorImei,
-  error,
   username,
   setError,
 }) {
@@ -66,7 +65,7 @@ function FormAjouterVehicule({
               name={field.id}
               type="text"
               placeholder={field.placeholder}
-              value={addvehicleData[field.id]}
+              value={addVéhiculeData[field.id]}
               onChange={handleChange}
               required
               className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
@@ -74,10 +73,6 @@ function FormAjouterVehicule({
           </div>
         ))}
 
-        {/* Gestion des erreurs */}
-        {/* {error && (
-          <p className="text-red-500 text-sm mt-1 dark:text-red-400">{error}</p>
-        )} */}
         {errorImei && (
           <p className="flex items-start gap-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 text-md translate-y-4 px-4 py-1 rounded-md text-center">
             <MdErrorOutline className="text-2xl mt-0.5" />

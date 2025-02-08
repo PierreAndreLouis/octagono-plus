@@ -1,17 +1,17 @@
 import React from "react";
 
 function ShowConfirModifyVehiculePupup({
-  showConfirmAddVehiculePupup,
+  showConfirmAddVéhiculePopup,
   handlePasswordCheck,
   inputPassword,
   setInputPassword,
   errorMessage,
-  setshowConfirmAddVehiculePupup,
+  setShowConfirmAddVéhiculePopup,
   setErrorMessage,
 }) {
   return (
     <>
-      {showConfirmAddVehiculePupup && (
+      {showConfirmAddVéhiculePopup && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
@@ -51,7 +51,7 @@ function ShowConfirModifyVehiculePupup({
                 onClick={() => {
                   setErrorMessage("");
                   setInputPassword("");
-                  setshowConfirmAddVehiculePupup(false);
+                  setShowConfirmAddVéhiculePopup(false);
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-orange-500 dark:text-orange-400 rounded-lg font-semibold border border-orange-500 dark:border-orange-400"
               >

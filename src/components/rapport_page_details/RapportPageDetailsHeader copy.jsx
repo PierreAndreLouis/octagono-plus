@@ -13,12 +13,12 @@ import { IoMdClose } from "react-icons/io";
 function RapportPageDetailsHeader({
   setShowOptions,
   showOptions,
-  currentVehicule,
+  currentVéhicule,
   setPersonnelDetails,
-  vehiculeActiveAjourdhui,
+  véhiculeActiveToday,
   handleClick,
-  vehiculeNotActiveAjourdhui,
-  vehiculeNotActif,
+  véhiculeNotActiveToday,
+  véhiculeHorsService,
   personnelDetails,
   formatTimestampToTimeWithTimezone,
   formatTimestampToTime,
@@ -26,7 +26,7 @@ function RapportPageDetailsHeader({
   setShowChooseDate,
   pageSection,
 }) {
-  const { selectUTC, currentdataFusionnee } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
+  const { selectUTC, currentDataFusionné } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   const formatTime = (hours, minutes, seconds) => {
     if (hours > 0 || minutes > 0 || seconds > 0) {
       return `${hours > 0 ? hours + "h " : ""}${
@@ -38,23 +38,23 @@ function RapportPageDetailsHeader({
 
   // Trouver la date du rapport
   // const timestampInSecondsDebut =
-  //   currentVehicule?.vehiculeDetails[
-  //     currentVehicule?.vehiculeDetails.length - 1
+  //   currentVéhicule?.véhiculeDetails[
+  //     currentVéhicule?.véhiculeDetails.length - 1
   //   ]?.timestamp;
 
-  // const donneeVehiculeDetails = currentdataFusionnee?.find(
-  //   (vehicule) =>
-  //     vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
-  // )?.vehiculeDetails;
+  // const donneeVehiculeDetails = currentDataFusionné?.find(
+  //   (véhicule) =>
+  //     véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
+  // )?.véhiculeDetails;
 
   // const premierDetail =
   //   donneeVehiculeDetails[donneeVehiculeDetails?.length - 1]?.timestamp;
   // const dernierDetails = donneeVehiculeDetails[0]?.timestamp;
 
-  const donneeVehiculeDetails = currentdataFusionnee?.find(
-    (vehicule) =>
-      vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
-  )?.vehiculeDetails;
+  const donneeVehiculeDetails = currentDataFusionné?.find(
+    (véhicule) =>
+      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
+  )?.véhiculeDetails;
 
   const premierDetail =
     donneeVehiculeDetails?.[donneeVehiculeDetails.length - 1]?.timestamp;
@@ -70,7 +70,7 @@ function RapportPageDetailsHeader({
   const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
 
   // Trouver la date du rapport
-  // const timestampInSecondsFin = currentVehicule?.vehiculeDetails[0]?.timestamp;
+  // const timestampInSecondsFin = currentVéhicule?.véhiculeDetails[0]?.timestamp;
   const timestampInSecondsFin = dernierDetails;
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
@@ -119,10 +119,10 @@ function RapportPageDetailsHeader({
           <div className="flex justify-between cursor-pointer border rounded-md px-3 py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-500 dark:text-gray-300 text-center">
             <p className="text-start w-[90%] dark:text-gray-200 overflow-hidden whitespace-nowrap text-ellipsis">
               {personnelDetails &&
-                !currentVehicule?.description &&
+                !currentVéhicule?.description &&
                 "Choisissez un véhicule"}
 
-              {personnelDetails && currentVehicule?.description}
+              {personnelDetails && currentVéhicule?.description}
 
               {!personnelDetails && "Rapport en groupe"}
             </p>
@@ -170,13 +170,13 @@ function RapportPageDetailsHeader({
               <h3 className="dark:text-gray-200">Rapport de groupe</h3>
             </div> */}
 
-              {vehiculeActiveAjourdhui &&
-                vehiculeActiveAjourdhui.map((vehicule, index) => {
+              {véhiculeActiveToday &&
+                véhiculeActiveToday.map((véhicule, index) => {
                   return (
                     <div
                       onClick={() => {
                         setShowOptions(!showOptions);
-                        handleClick(vehicule);
+                        handleClick(véhicule);
                       }}
                       className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
                     >
@@ -189,20 +189,20 @@ function RapportPageDetailsHeader({
                       </div>
                       <h3 className="dark:text-gray-200">
                         {/* {!personnelDetails || "Rapport en groupe"}
-                      {(personnelDetails && vehicule.description) || "---"} */}
-                        {vehicule.description || "---"}
+                      {(personnelDetails && véhicule.description) || "---"} */}
+                        {véhicule.description || "---"}
                       </h3>
                     </div>
                   );
                 })}
 
-              {vehiculeNotActiveAjourdhui &&
-                vehiculeNotActiveAjourdhui.map((vehicule, index) => {
+              {véhiculeNotActiveToday &&
+                véhiculeNotActiveToday.map((véhicule, index) => {
                   return (
                     <div
                       onClick={() => {
                         setShowOptions(!showOptions);
-                        handleClick(vehicule);
+                        handleClick(véhicule);
                       }}
                       className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
                     >
@@ -214,19 +214,19 @@ function RapportPageDetailsHeader({
                         />
                       </div>
                       <h3 className="dark:text-gray-200">
-                        {vehicule.description || "---"}
+                        {véhicule.description || "---"}
                       </h3>
                     </div>
                   );
                 })}
 
-              {vehiculeNotActif &&
-                vehiculeNotActif.map((vehicule, index) => {
+              {véhiculeHorsService &&
+                véhiculeHorsService.map((véhicule, index) => {
                   return (
                     <div
                       onClick={() => {
                         setShowOptions(!showOptions);
-                        handleClick(vehicule);
+                        handleClick(véhicule);
                       }}
                       className="border-b rounded-lg mt-1 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-800 flex gap-5 items-center border-gray-300 py-3"
                     >
@@ -238,7 +238,7 @@ function RapportPageDetailsHeader({
                         />
                       </div>
                       <h3 className="dark:text-gray-200">
-                        {vehicule.description || "---"}
+                        {véhicule.description || "---"}
                       </h3>
                     </div>
                   );
@@ -247,7 +247,7 @@ function RapportPageDetailsHeader({
           </div>
         )}
       </div>
-      {currentdataFusionnee.length > 0 &&
+      {currentDataFusionné.length > 0 &&
         (pageSection === "unite" || pageSection === "groupe") && (
           <div className="flex justify-between gap-3 px-4 ">
             <div className="sm:flex w-full   gap-10 max-w-[50rem] mx-4-- justify-start items-center ">
@@ -293,30 +293,30 @@ function RapportPageDetailsHeader({
                     <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
                       {selectUTC
                         ? formatTimestampToTimeWithTimezone(
-                            vehiculeActiveAjourdhui[0]?.vehiculeDetails[
-                              vehiculeActiveAjourdhui[0]?.vehiculeDetails
-                                .length - 1
+                            véhiculeActiveToday[0]?.véhiculeDetails[
+                              véhiculeActiveToday[0]?.véhiculeDetails.length - 1
                             ]?.timestamp ||
-                              vehiculeNotActiveAjourdhui[0]?.vehiculeDetails[
-                                vehiculeNotActiveAjourdhui[0]?.vehiculeDetails
+                              véhiculeNotActiveToday[0]?.véhiculeDetails[
+                                véhiculeNotActiveToday[0]?.véhiculeDetails
                                   .length - 1
                               ]?.timestamp ||
-                              vehiculeNotActif[0]?.vehiculeDetails[
-                                vehiculeNotActif[0]?.vehiculeDetails.length - 1
+                              véhiculeHorsService[0]?.véhiculeDetails[
+                                véhiculeHorsService[0]?.véhiculeDetails.length -
+                                  1
                               ]?.timestamp,
                             selectUTC
                           )
                         : formatTimestampToTime(
-                            vehiculeActiveAjourdhui[0]?.vehiculeDetails[
-                              vehiculeActiveAjourdhui[0]?.vehiculeDetails
-                                .length - 1
+                            véhiculeActiveToday[0]?.véhiculeDetails[
+                              véhiculeActiveToday[0]?.véhiculeDetails.length - 1
                             ]?.timestamp ||
-                              vehiculeNotActiveAjourdhui[0]?.vehiculeDetails[
-                                vehiculeNotActiveAjourdhui[0]?.vehiculeDetails
+                              véhiculeNotActiveToday[0]?.véhiculeDetails[
+                                véhiculeNotActiveToday[0]?.véhiculeDetails
                                   .length - 1
                               ]?.timestamp ||
-                              vehiculeNotActif[0]?.vehiculeDetails[
-                                vehiculeNotActif[0]?.vehiculeDetails.length - 1
+                              véhiculeHorsService[0]?.véhiculeDetails[
+                                véhiculeHorsService[0]?.véhiculeDetails.length -
+                                  1
                               ]?.timestamp
                           )}
                     </span>{" "}
@@ -324,20 +324,21 @@ function RapportPageDetailsHeader({
                     <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
                       {selectUTC
                         ? formatTimestampToTimeWithTimezone(
-                            vehiculeActiveAjourdhui[0]?.vehiculeDetails[0]
+                            véhiculeActiveToday[0]?.véhiculeDetails[0]
                               ?.timestamp ||
-                              vehiculeNotActiveAjourdhui[0]?.vehiculeDetails[0]
+                              véhiculeNotActiveToday[0]?.véhiculeDetails[0]
                                 ?.timestamp ||
-                              vehiculeNotActif[0]?.vehiculeDetails[0]
+                              véhiculeHorsService[0]?.véhiculeDetails[0]
                                 ?.timestamp,
                             selectUTC
                           )
                         : formatTimestampToTime(
-                            vehiculeActiveAjourdhui[0]?.vehiculeDetails[0]
+                            véhiculeActiveToday[0]?.véhiculeDetails[0]
                               ?.timestamp ||
-                              vehiculeNotActiveAjourdhui[0]?.vehiculeDetails[0]
+                              véhiculeNotActiveToday[0]?.véhiculeDetails[0]
                                 ?.timestamp ||
-                              vehiculeNotActif[0]?.vehiculeDetails[0]?.timestamp
+                              véhiculeHorsService[0]?.véhiculeDetails[0]
+                                ?.timestamp
                           )}
                     </span>{" "}
                   </span>

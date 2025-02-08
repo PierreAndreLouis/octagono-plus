@@ -11,15 +11,9 @@ function DatePupup({
   selectedDate,
   setSelectedDate,
 }) {
-  const { dateDebut } = useContext(DataContext);
+  const {  } = useContext(DataContext);
 
-  // const formatDate = (dateString) => {
-  //   const [day, month, year] = dateString.split("/"); // Sépare le jour, le mois et l'année
-  //   return `${year}-${month}-${day}`; // Recombine en format 'YYYY-MM-DD'
-  // };
-
-  // Conversion des variables startDate et endDate
-  // const formattedStartDate = formatDate(dateDebut);
+ 
   const today = new Date(); // La date actuelle
   useEffect(() => {
     console.log(selectedDate);

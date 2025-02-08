@@ -4,38 +4,68 @@ import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../context/DataContext";
 import ListeVehicule from "../components/vehicule_details/ListeVehicule";
 import VehiculeDetailInformationComponent from "../components/vehicule_details/VehiculeDetailInformationComponent";
+import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 
 function DetailsVehiculePage() {
-  const { currentVehicule, mergedData, setCurrentVehicule } =
+  const { currentVéhicule, mergedData, setCurrentVéhicule } =
     useContext(DataContext); // fetchVehicleDetails importée du contexte
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Pour voir la liste des véhicule
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
-  const dataFusionee = mergedData ? Object.values(mergedData) : [];
+  // Le data a utiliser
+  const dataFusionné = mergedData ? Object.values(mergedData) : [];
 
-  const handleVehicleClick = (vehicule) => {
-    setCurrentVehicule(vehicule);
+  // Pour définir le véhicule actuel
+  const handleVehicleClick = (véhicule) => {
+    setCurrentVéhicule(véhicule);
     setShowVehiculeListe(!showVehiculeListe);
   };
 
+  // Pour mettre a jour le véhicules actuel
   useEffect(() => {
-    console.log("Véhicule mis à jour", currentVehicule);
-  }, [currentVehicule]);
+    console.log("Véhicule mis à jour", currentVéhicule);
+  }, [currentVéhicule]);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // Pour la recherche d'autre véhicules
+  const [searchQueryDetailsVéhiculePage, setSearchQueryDetailsVéhiculePage] =
+    useState("");
 
+  // Pour enregistrer le terme de recherche
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQueryDetailsVéhiculePage(e.target.value);
   };
 
-  const filteredVehicles = dataFusionee?.filter(
-    (vehicule) =>
-      // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule?.simPhoneNumber
+  // Pour filtrer la recherche des véhicules
+  const filteredVehicles = dataFusionné?.filter(
+    (véhicule) =>
+      // véhicule.displayName.toLowerCase().includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
+      véhicule?.imeiNumber
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+        .includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
+      véhicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
+      véhicule.description
+        .toLowerCase()
+        .includes(searchQueryDetailsVéhiculePage.toLowerCase())
   );
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   return (
     <div className="px-4 mt-20 pb-20 min-h-screen">
@@ -52,27 +82,26 @@ function DetailsVehiculePage() {
           >
             <p
               onClick={() => {
-                console.log(currentVehicule);
+                console.log(currentVéhicule);
               }}
               className="text-start w-[90%] overflow-hidden whitespace-nowrap text-ellipsis"
             >
-              {
-                // currentVehicule?.displayName ||
-                currentVehicule?.description || "Choisis un véhicule"
-              }
+              {currentVéhicule?.description || "Choisis un véhicule"}
             </p>
             <FaChevronDown className="mt-1" />
           </div>
         </div>
 
-        <ListeVehicule
-          showVehiculeListe={showVehiculeListe}
-          setShowVehiculeListe={setShowVehiculeListe}
-          searchQuery={searchQuery}
-          handleSearchChange={handleSearchChange}
-          filteredVehicles={filteredVehicles}
-          handleVehicleClick={handleVehicleClick}
-        />
+        {showVehiculeListe && (
+          <SearchVehiculePupup
+            handleSearchChange={handleSearchChange}
+            setShowOptions={setShowVehiculeListe}
+            filteredVehicles={filteredVehicles}
+            handleClick={handleVehicleClick}
+            currentVéhicule={currentVéhicule}
+            isMapcomponent="false"
+          />
+        )}
 
         <div className="flex justify-center items-center">
           <img
@@ -81,11 +110,11 @@ function DetailsVehiculePage() {
           />
         </div>
         <h1 className="text-center dark:text-gray-200 font-bold text-xl mt-8 text-gray-600">
-          {currentVehicule?.description || ""}
+          {currentVéhicule?.description || ""}
         </h1>
 
         <VehiculeDetailInformationComponent
-          currentVehicule={currentVehicule}
+          currentVéhicule={currentVéhicule}
           setShowVehiculeListe={setShowVehiculeListe}
         />
       </div>

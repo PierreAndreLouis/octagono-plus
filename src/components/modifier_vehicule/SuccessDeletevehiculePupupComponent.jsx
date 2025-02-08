@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function SuccessDeletevehiculePupupComponent({
-  successDeletevehiculePupup,
-  addvehicleData,
-  setsuccessDeletevehiculePupup,
-  setCurrentVehicule,
+  successDeleteVéhiculePopup,
+  addVéhiculeData,
+  setSuccessDeleteVéhiculePopup,
+  setCurrentVéhicule,
 }) {
   return (
     <>
-      {successDeletevehiculePupup && (
+      {successDeleteVéhiculePopup && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
           <div className="bg-green-50 max-w-[25rem] p-6 rounded-xl w-[80vw]">
             <div>
@@ -17,15 +17,15 @@ function SuccessDeletevehiculePupupComponent({
                 Vous avez supprimé le véhicule avec succès.{" "}
               </h3>
               <h4 className="text-center text-lg text-gray-600">
-                {addvehicleData.description}
+                {addVéhiculeData.description}
               </h4>
             </div>
             <div className="flex justify-center gap-2 mt-5">
               <Link
                 onClick={() => {
                   {
-                    setsuccessDeletevehiculePupup(false);
-                    setCurrentVehicule(null);
+                    setSuccessDeleteVéhiculePopup(false);
+                    setCurrentVéhicule(null);
                   }
                 }}
                 to="/home?tab=acceuil"

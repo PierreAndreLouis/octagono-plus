@@ -7,22 +7,22 @@ import SearchVehiculePupup from "../rapport_page_details/SearchVehiculePupup";
 function ListeVehicule({
   showVehiculeListe,
   setShowVehiculeListe,
-  searchQuery,
+  searchQueryForHeader,
   handleSearchChange,
   filteredVehicles,
   handleVehicleClick,
 }) {
-  const { currentVehicule } = useContext(DataContext);
+  const { currentVéhicule } = useContext(DataContext);
   return (
     <>
       {showVehiculeListe && (
         <SearchVehiculePupup
-          searchQuery={searchQuery}
+          searchQueryForHeader={searchQueryForHeader}
           handleSearchChange={handleSearchChange}
           setShowOptions={setShowVehiculeListe}
           filteredVehicles={filteredVehicles}
           handleClick={handleVehicleClick}
-          currentVehicule={currentVehicule}
+          currentVéhicule={currentVéhicule}
           isMapcomponent="false"
         />
       )}

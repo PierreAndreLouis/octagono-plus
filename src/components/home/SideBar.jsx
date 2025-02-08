@@ -10,20 +10,32 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logout from "../login/Logout";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaCar } from "react-icons/fa";
-import { GrInstallOption } from "react-icons/gr";
 import InstallationPWA from "../../pages/InstallationPWA";
 
 function SideBar() {
   const {
     showSideBar,
     setShowSideBar,
-    logOut,
-    setLogOut,
+    logOutPopup,
+    setLogOutPopup,
     handleTabClick,
     tab,
     username,
-    sethistiriqueSelectedLocationIndex,
+    setHistoriqueSelectedLocationIndex,
   } = useContext(DataContext);
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   return (
     <div
@@ -32,15 +44,29 @@ function SideBar() {
       } md:hidden--- transition-all bg-black/50-- fixed z-10 inset-0`}
     >
       <div className="overflow-auto transition-all pt-20 relative px-8 max-w-[25rem] h-screen z-20 bg-white shadow-2xl dark:bg-gray-800">
-        {logOut && (
+        {/* Popup pour se déconnecter */}
+        {logOutPopup && (
           <div className="z-40">
-            <Logout setLogOut={setLogOut} />
+            <Logout setLogOutPopup={setLogOutPopup} />
           </div>
         )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
+        {/* Close icon */}
         <IoCloseSharp
           onClick={() => setShowSideBar(true)}
           className="absolute top-20 right-5 text-2xl text-red-500 cursor-pointer"
         />
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <Link
           to="/home?tab=acceuil"
           onClick={() => {
@@ -55,6 +81,11 @@ function SideBar() {
           <h3>Accueil</h3>
         </Link>
 
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <Link
           to="/User_Profile?tab=profile"
           onClick={() => {
@@ -68,6 +99,11 @@ function SideBar() {
           <FaRegUser />
           <h3>Mon profil</h3>
         </Link>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
 
         {username === "admin" && (
           <Link
@@ -85,6 +121,11 @@ function SideBar() {
           </Link>
         )}
 
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         {username === "admin" && (
           <Link
             to="/modifier_vehicule?tab=modifier"
@@ -101,10 +142,15 @@ function SideBar() {
           </Link>
         )}
 
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <Link
           to="/Groupe_vehicule_location?tab=localisation"
           onClick={() => {
-            sethistiriqueSelectedLocationIndex(0);
+            setHistoriqueSelectedLocationIndex(0);
             setShowSideBar(true);
             handleTabClick("localisation");
           }}
@@ -115,6 +161,11 @@ function SideBar() {
           <LuMapPin />
           <h3>Localisation des véhicules</h3>
         </Link>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
 
         <Link
           to="/rapport_page_details?tab=rapport"
@@ -130,21 +181,34 @@ function SideBar() {
           <h3>Rapport des véhicules</h3>
         </Link>
 
-        <div
-        // className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
-        >
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
+        <div>
           <InstallationPWA />
         </div>
 
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <div
           onClick={() => {
-            setLogOut(true);
+            setLogOutPopup(true);
           }}
           className="flex text-red-600 font-semibold border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center dark:text-red-400 dark:border-gray-600 dark:hover:text-orange-400"
         >
           <MdLogout />
           <h3>Déconnexion</h3>
         </div>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
       </div>
     </div>
   );

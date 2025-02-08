@@ -20,10 +20,10 @@ import VehiculeNotActifComponent from "../rapport_vehicule/VehiculeNotActifCompo
 
 function RapportGroupe({
   formattedDate, // Date formatée pour l'affichage
-  currentdataFusionnee, // Liste des véhicules
-  vehiculeActiveAjourdhui, // Véhicules actifs aujourd'hui
-  vehiculeNotActiveAjourdhui, // Véhicules en stationnement aujourd'hui
-  vehiculeNotActif, // Véhicules hors service
+  currentDataFusionné, // Liste des véhicules
+  véhiculeActiveToday, // Véhicules actifs aujourd'hui
+  véhiculeNotActiveToday, // Véhicules en stationnement aujourd'hui
+  véhiculeHorsService, // Véhicules hors service
   earliestVehicle, // Premier véhicule en mouvement
   latestVehicle, // Dernier véhicule en mouvement
   selectUTC, // Option pour formater l'heure en UTC
@@ -41,10 +41,10 @@ function RapportGroupe({
   const {
     loadingHistoriqueFilter,
     setShowListOption,
-    vehiclueHistoriqueDetails,
-    setVehiclueHistoriqueDetails,
-    currentVehicule,
-  } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
+    véhiculeHistoriqueDetails,
+    setVéhiculeHistoriqueDetails,
+    currentVéhicule,
+  } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   const [voirPlus, setvoirPlus] = useState(false);
 
@@ -57,10 +57,10 @@ function RapportGroupe({
     return "0s";
   };
 
-  const donneeVehiculeDetails = currentdataFusionnee.find(
-    (vehicule) =>
-      vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
-  )?.vehiculeDetails;
+  const donneeVehiculeDetails = currentDataFusionné.find(
+    (véhicule) =>
+      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
+  )?.véhiculeDetails;
 
   const premierDetail =
     donneeVehiculeDetails[donneeVehiculeDetails.length - 1].timestamp;
@@ -125,7 +125,7 @@ function RapportGroupe({
                   <VehiculeActiveAjourdhuiComponent
                     showActiveVehicule={showActiveVehicule}
                     setshowActiveVehicule={setshowActiveVehicule}
-                    vehiculeActiveAjourdhui={vehiculeActiveAjourdhui}
+                    véhiculeActiveToday={véhiculeActiveToday}
                     setshowRapportPupup={setnothing}
                     formatTimestampToDate={formatTimestampToDate}
                     formatTimestampToTime={formatTimestampToTime}
@@ -138,7 +138,7 @@ function RapportGroupe({
                   <VehiculeNotActiveAjourdhuiComponent
                     showParkingVehicule={showParkingVehicule}
                     setshowParkingVehicule={setshowParkingVehicule}
-                    vehiculeNotActiveAjourdhui={vehiculeNotActiveAjourdhui}
+                    véhiculeNotActiveToday={véhiculeNotActiveToday}
                     setshowRapportPupup={setnothing}
                     formatTimestampToDate={formatTimestampToDate}
                     formatTimestampToTime={formatTimestampToTime}
@@ -151,7 +151,7 @@ function RapportGroupe({
                   <VehiculeNotActifComponent
                     showInactiveVehicule={showInactiveVehicule}
                     setshowInactiveVehicule={setshowInactiveVehicule}
-                    vehiculeNotActif={vehiculeNotActif}
+                    véhiculeHorsService={véhiculeHorsService}
                     setshowRapportPupup={setnothing}
                     formatTimestampToDate={formatTimestampToDate}
                     formatTimestampToTime={formatTimestampToTime}
@@ -163,7 +163,7 @@ function RapportGroupe({
                     <VehiculeActiveAjourdhuiComponent
                       showActiveVehicule={showActiveVehicule}
                       setshowActiveVehicule={setshowActiveVehicule}
-                      vehiculeActiveAjourdhui={vehiculeActiveAjourdhui}
+                      véhiculeActiveToday={véhiculeActiveToday}
                       setshowRapportPupup={setnothing}
                       formatTimestampToDate={formatTimestampToDate}
                       formatTimestampToTime={formatTimestampToTime}
@@ -173,7 +173,7 @@ function RapportGroupe({
                     <VehiculeNotActiveAjourdhuiComponent
                       showParkingVehicule={showParkingVehicule}
                       setshowParkingVehicule={setshowParkingVehicule}
-                      vehiculeNotActiveAjourdhui={vehiculeNotActiveAjourdhui}
+                      véhiculeNotActiveToday={véhiculeNotActiveToday}
                       setshowRapportPupup={setnothing}
                       formatTimestampToDate={formatTimestampToDate}
                       formatTimestampToTime={formatTimestampToTime}
@@ -183,7 +183,7 @@ function RapportGroupe({
                     <VehiculeNotActifComponent
                       showInactiveVehicule={showInactiveVehicule}
                       setshowInactiveVehicule={setshowInactiveVehicule}
-                      vehiculeNotActif={vehiculeNotActif}
+                      véhiculeHorsService={véhiculeHorsService}
                       setshowRapportPupup={setnothing}
                       formatTimestampToDate={formatTimestampToDate}
                       formatTimestampToTime={formatTimestampToTime}
@@ -256,14 +256,14 @@ function RapportGroupe({
                   <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                     {selectUTC
                       ? formatTimestampToTimeWithTimezone(
-                          currentVehicule?.vehiculeDetails[
-                            currentVehicule?.vehiculeDetails?.length - 1
+                          currentVéhicule?.véhiculeDetails[
+                            currentVéhicule?.véhiculeDetails?.length - 1
                           ]?.timestamp,
                           selectUTC
                         )
                       : formatTimestampToTime(
-                          currentVehicule?.vehiculeDetails?.[
-                            currentVehicule?.vehiculeDetails?.length - 1
+                          currentVéhicule?.véhiculeDetails?.[
+                            currentVéhicule?.véhiculeDetails?.length - 1
                           ]?.timestamp
                         )}
                   </span>{" "}
@@ -271,11 +271,11 @@ function RapportGroupe({
                   <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                     {selectUTC
                       ? formatTimestampToTimeWithTimezone(
-                          currentVehicule?.vehiculeDetails[0]?.timestamp,
+                          currentVéhicule?.véhiculeDetails[0]?.timestamp,
                           selectUTC
                         )
                       : formatTimestampToTime(
-                          currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                          currentVéhicule?.véhiculeDetails?.[0]?.timestamp
                         )}
                   </span>{" "}
                 </span>
@@ -284,7 +284,7 @@ function RapportGroupe({
                 <p>
                   Nombre total de véhicules :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {currentdataFusionnee?.length || "0"}
+                    {currentDataFusionné?.length || "0"}
                   </span>
                 </p>
                 <p
@@ -301,7 +301,7 @@ function RapportGroupe({
                 <p>
                   Véhicules actifs aujourd'hui :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiculeActiveAjourdhui?.length || "0"}
+                    {véhiculeActiveToday?.length || "0"}
                   </span>
                 </p>
                 <p
@@ -318,7 +318,7 @@ function RapportGroupe({
                 <p>
                   Véhicule en stationnement :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiculeNotActiveAjourdhui?.length || "0"}
+                    {véhiculeNotActiveToday?.length || "0"}
                   </span>
                 </p>
                 <p
@@ -335,7 +335,7 @@ function RapportGroupe({
                 <p>
                   Véhicule hors service :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiculeNotActif?.length || "0"}
+                    {véhiculeHorsService?.length || "0"}
                   </span>
                 </p>
                 <p
@@ -376,20 +376,20 @@ function RapportGroupe({
                           </span>
                           <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                             ({" "}
-                            {earliestVehicle?.vehiculeDetails[
-                              earliestVehicle?.vehiculeDetails.length - 1
+                            {earliestVehicle?.véhiculeDetails[
+                              earliestVehicle?.véhiculeDetails.length - 1
                             ].timestamp
                               ? selectUTC
                                 ? formatTimestampToTimeWithTimezone(
-                                    earliestVehicle?.vehiculeDetails[
-                                      earliestVehicle?.vehiculeDetails.length -
+                                    earliestVehicle?.véhiculeDetails[
+                                      earliestVehicle?.véhiculeDetails.length -
                                         1
                                     ].timestamp,
                                     selectUTC
                                   )
                                 : formatTimestampToTime(
-                                    earliestVehicle?.vehiculeDetails[
-                                      earliestVehicle?.vehiculeDetails.length -
+                                    earliestVehicle?.véhiculeDetails[
+                                      earliestVehicle?.véhiculeDetails.length -
                                         1
                                     ].timestamp
                                   )
@@ -423,19 +423,19 @@ function RapportGroupe({
                         </span>
                         <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                           ({" "}
-                          {latestVehicle?.vehiculeDetails[
-                            latestVehicle?.vehiculeDetails.length - 1
+                          {latestVehicle?.véhiculeDetails[
+                            latestVehicle?.véhiculeDetails.length - 1
                           ].timestamp
                             ? selectUTC
                               ? formatTimestampToTimeWithTimezone(
-                                  latestVehicle?.vehiculeDetails[
-                                    latestVehicle?.vehiculeDetails.length - 1
+                                  latestVehicle?.véhiculeDetails[
+                                    latestVehicle?.véhiculeDetails.length - 1
                                   ].timestamp,
                                   selectUTC
                                 )
                               : formatTimestampToTime(
-                                  latestVehicle?.vehiculeDetails[
-                                    latestVehicle?.vehiculeDetails.length - 1
+                                  latestVehicle?.véhiculeDetails[
+                                    latestVehicle?.véhiculeDetails.length - 1
                                   ].timestamp
                                 )
                             : "---"}{" "}
@@ -455,19 +455,19 @@ function RapportGroupe({
                         {(earliestVehicle?.displayName && " a ") ||
                           (earliestVehicle?.description && " a ")}
                         <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
-                          {earliestVehicle?.vehiculeDetails[
-                            earliestVehicle?.vehiculeDetails.length - 1
+                          {earliestVehicle?.véhiculeDetails[
+                            earliestVehicle?.véhiculeDetails.length - 1
                           ].timestamp
                             ? selectUTC
                               ? formatTimestampToTimeWithTimezone(
-                                  earliestVehicle?.vehiculeDetails[
-                                    earliestVehicle?.vehiculeDetails.length - 1
+                                  earliestVehicle?.véhiculeDetails[
+                                    earliestVehicle?.véhiculeDetails.length - 1
                                   ].timestamp,
                                   selectUTC
                                 )
                               : formatTimestampToTime(
-                                  earliestVehicle?.vehiculeDetails[
-                                    earliestVehicle?.vehiculeDetails.length - 1
+                                  earliestVehicle?.véhiculeDetails[
+                                    earliestVehicle?.véhiculeDetails.length - 1
                                   ].timestamp
                                 )
                             : " "}{" "}
@@ -517,15 +517,15 @@ function RapportGroupe({
                               <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
                                 {selectUTC
                                   ? formatTimestampToTimeWithTimezone(
-                                      currentVehicule?.vehiculeDetails[
-                                        currentVehicule?.vehiculeDetails
+                                      currentVéhicule?.véhiculeDetails[
+                                        currentVéhicule?.véhiculeDetails
                                           ?.length - 1
                                       ]?.timestamp,
                                       selectUTC
                                     )
                                   : formatTimestampToTime(
-                                      currentVehicule?.vehiculeDetails?.[
-                                        currentVehicule?.vehiculeDetails
+                                      currentVéhicule?.véhiculeDetails?.[
+                                        currentVéhicule?.véhiculeDetails
                                           ?.length - 1
                                       ]?.timestamp
                                     )}
@@ -534,12 +534,12 @@ function RapportGroupe({
                               <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
                                 {selectUTC
                                   ? formatTimestampToTimeWithTimezone(
-                                      currentVehicule?.vehiculeDetails[0]
+                                      currentVéhicule?.véhiculeDetails[0]
                                         ?.timestamp,
                                       selectUTC
                                     )
                                   : formatTimestampToTime(
-                                      currentVehicule?.vehiculeDetails?.[0]
+                                      currentVéhicule?.véhiculeDetails?.[0]
                                         ?.timestamp
                                     )}
                               </span>{" "}
@@ -594,7 +594,7 @@ function RapportGroupe({
                   Véhicule en mouvement le plus longtemps :
                   <br />
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                    {result.vehicleWithLongestMoving || "Pas de vehicule"}{" "}
+                    {result.vehicleWithLongestMoving || "Pas de véhicule"}{" "}
                   </span>
                 </p>
                 {/*  */}
@@ -608,7 +608,7 @@ function RapportGroupe({
                   Véhicule avec le plus grand arrêt:
                   <br />
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                    {result.vehicleWithLongestStop || "Pas de vehicule"} ({" "}
+                    {result.vehicleWithLongestStop || "Pas de véhicule"} ({" "}
                     {formatTime(
                       result?.longestStopTime.hours,
                       result?.longestStopTime.minutes,
@@ -652,7 +652,7 @@ function RapportGroupe({
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
                     {result5?.maxSpeedVehicle?.displayName ||
                       result5?.maxSpeedVehicle?.description ||
-                      "Pas de vehicule"}{" "}
+                      "Pas de véhicule"}{" "}
                   </span>
                   {result5?.maxSpeedVehicle?.displayName ||
                   result5?.maxSpeedVehicle?.description ? (
@@ -771,14 +771,14 @@ function RapportGroupe({
                   <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                     {selectUTC
                       ? formatTimestampToTimeWithTimezone(
-                          currentVehicule?.vehiculeDetails[
-                            currentVehicule?.vehiculeDetails?.length - 1
+                          currentVéhicule?.véhiculeDetails[
+                            currentVéhicule?.véhiculeDetails?.length - 1
                           ]?.timestamp,
                           selectUTC
                         )
                       : formatTimestampToTime(
-                          currentVehicule?.vehiculeDetails?.[
-                            currentVehicule?.vehiculeDetails?.length - 1
+                          currentVéhicule?.véhiculeDetails?.[
+                            currentVéhicule?.véhiculeDetails?.length - 1
                           ]?.timestamp
                         )}
                   </span>{" "}
@@ -786,11 +786,11 @@ function RapportGroupe({
                   <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                     {selectUTC
                       ? formatTimestampToTimeWithTimezone(
-                          currentVehicule?.vehiculeDetails[0]?.timestamp,
+                          currentVéhicule?.véhiculeDetails[0]?.timestamp,
                           selectUTC
                         )
                       : formatTimestampToTime(
-                          currentVehicule?.vehiculeDetails?.[0]?.timestamp
+                          currentVéhicule?.véhiculeDetails?.[0]?.timestamp
                         )}
                   </span>{" "}
                 </span>
@@ -1002,10 +1002,10 @@ function RapportGroupe({
               </tr>
             </thead>
             <tbody>
-              {currentdataFusionnee?.map((vehicule, index) => (
+              {currentDataFusionné?.map((véhicule, index) => (
                 <tr key={index} className="border dark:border-gray-600">
                   <td className="border py-3 px-2 dark:border-gray-600">
-                    {vehicule?.displayName || vehicule?.description || "---"}
+                    {véhicule?.displayName || véhicule?.description || "---"}
                   </td>
                   <td className="border py-3 px-2 dark:border-gray-600">
                     {activePeriods[index]?.startTime
@@ -1023,7 +1023,7 @@ function RapportGroupe({
                   </td>
                   <td
                     onClick={() => {
-                      console.log(vehicule.vehiculeDetails[0]?.address);
+                      console.log(véhicule.véhiculeDetails[0]?.address);
                     }}
                     className="border py-3 px-2 dark:border-gray-600"
                   >
@@ -1059,8 +1059,8 @@ function RapportGroupe({
                     )}
                   </td>
                   <td className="border py-3 px-2 dark:border-gray-600">
-                    {vehicule.vehiculeDetails[0]?.backupAddress ||
-                      vehicule.vehiculeDetails[0]?.address ||
+                    {véhicule.véhiculeDetails[0]?.backupAddress ||
+                      véhicule.véhiculeDetails[0]?.address ||
                       "---"}
                   </td>
                 </tr>

@@ -11,7 +11,6 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import Paiement_methode from "./components/paiement/Paiement_methode";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Page_404 from "./components/page_404/Page_404";
 import { DataContext } from "./context/DataContext";
@@ -26,10 +25,8 @@ import ModifierPage from "./pages/ModifierPage";
 import AjouterPage from "./pages/AjouterPage";
 import ProfilUserPage from "./pages/ProfilUserPage";
 import DetailsVehiculePage from "./pages/DetailsVehiculePage";
-import RapportPage from "./pages/RapportPage";
 import LocationPage from "./pages/LocationPage";
 import HistoriquePage from "./pages/HistoriquePage";
-import StatisticPage from "./pages/StatisticPage";
 import RapportPageDetails from "./pages/RapportPageDetails";
 
 function App() {
@@ -56,7 +53,7 @@ function App() {
   return (
     <div className="dark:bg-gray-700 min-h-screen">
       <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800">
-        {/* Pupup qui Permet a l'utilisateur de refraich la page quand il y a mise a jour */}
+        {/* Popup qui Permet a l'utilisateur de reload la page quand il y a mise a jour */}
         <div className="z-50 ">{/* <ReloadPrompt /> */}</div>
 
         {/* Composant pour faire défiler vers le haut */}
@@ -98,20 +95,11 @@ function App() {
           />
 
           <Route
-            path="/rapport_vehicule"
-            element={<PrivateRoute element={<RapportPage />} />}
-          />
-
-          <Route
             path="/User_Profile"
             element={<PrivateRoute element={<ProfilUserPage />} />}
           />
 
-          <Route
-            path="/paiement"
-            element={<PrivateRoute element={<Paiement_methode />} />}
-          />
-
+       
           <Route
             path="/Groupe_vehicule_location"
             element={<PrivateRoute element={<LocationPage />} />}
@@ -134,8 +122,6 @@ function App() {
             path="/Change_Password"
             element={<ProtectedChangePassword />}
           />
-
-          <Route path="/Statistics_Page" element={<StatisticPage />} />
 
           <Route path="*" element={<Page_404 />} />
         </Routes>

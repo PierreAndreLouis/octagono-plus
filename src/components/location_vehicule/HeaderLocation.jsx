@@ -5,23 +5,16 @@ import Tooltip from "@mui/material/Tooltip";
 
 function HeaderLocation({
   setShowVehiculeListe,
-  selectedVehicle,
-  vehicleData,
+  selectedVehicleToShowInMap,
+  véhiculeData,
   setTypeDeVue,
   showAllVehicles,
 }) {
-  const {
-    mergedData,
-    currentVehicule,
-    // selectedVehicle,
-    setSelectedVehicle,
-    currentdataFusionnee,
-    searchdonneeFusionneeForRapport,
-    donneeFusionneeForRapport,
-  } = useContext(DataContext);
+  const {} = useContext(DataContext);
   return (
     <>
       <div className="fixed bg-white dark:bg-gray-800 md:bg-white/0 top-12  left-0 right-0 z-[1200] flex flex-col gap-2 p-4">
+        {/* Pour choisir un véhicule */}
         <Tooltip
           PopperProps={{
             modifiers: [
@@ -51,11 +44,12 @@ function HeaderLocation({
             className="flex justify-between items-center border py-2 px-5 rounded-md w-full max-w-[40rem] mx-auto cursor-pointer bg-orange-50 dark:bg-gray-900/50 dark:text-gray-100 dark:border-gray-300/40 md:bg-white md:border md:border-gray-300  md:shadow-xl"
           >
             <p className="w-[90%] overflow-hidden whitespace-nowrap text-ellipsis">
-              {selectedVehicle
-                ? vehicleData?.find(
-                    (vehicle) => vehicle.deviceID === selectedVehicle
+              {selectedVehicleToShowInMap
+                ? véhiculeData?.find(
+                    (véhicule) =>
+                      véhicule.deviceID === selectedVehicleToShowInMap
                   )?.description || "Véhicule non disponible"
-                : "Tous les véhicules"}
+                : "Choisir un véhicule"}
             </p>
             <span>
               <FaChevronDown />
@@ -64,6 +58,7 @@ function HeaderLocation({
         </Tooltip>
 
         <div className="grid  gap-3 w-full max-w-[40rem] mx-auto grid-cols-2 items-center justify-between">
+          {/* Changer le type de vue sur la carte */}
           <Tooltip
             PopperProps={{
               modifiers: [
@@ -95,6 +90,8 @@ function HeaderLocation({
               <FaChevronDown />
             </div>
           </Tooltip>
+
+          {/* Voir la position géographique de tous les véhicules */}
           <Tooltip
             PopperProps={{
               modifiers: [

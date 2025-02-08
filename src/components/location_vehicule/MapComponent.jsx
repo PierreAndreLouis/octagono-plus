@@ -14,7 +14,6 @@ import iconLowSpeed from "/pin/ping_red.png";
 import iconMediumSpeed from "/pin/ping_yellow.png";
 import iconHighSpeed from "/pin/ping_green.png";
 import { DataContext } from "../../context/DataContext";
-// import { DataContext } from "../../context/DataContext";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -26,67 +25,57 @@ L.Icon.Default.mergeOptions({
 
 function MapComponent({ mapType }) {
   const {
-    mergedData,
-    currentVehicule,
-    selectedVehicle,
-    setSelectedVehicle,
-    currentdataFusionnee,
-    searchdonneeFusionneeForRapport,
-    donneeFusionneeForRapport,
-    selectUTC,
+    selectedVehicleToShowInMap,
+    currentDataFusionné,
     FormatDateHeure,
-    chooseHistoriqueLongitude,
-    setchooseHistoriqueLongitude,
-    chooseHistoriqueLatitude,
-    setchooseHistoriqueLatitude,
-    histiriqueSelectedLocationIndex,
-    sethistiriqueSelectedLocationIndex,
+    historiqueSelectedLocationIndex,
     username,
   } = useContext(DataContext);
 
-  const [showVehiculeListe, setShowVehiculeListe] = useState(false);
+  // le data a utiliser
+  const dataFusionné = currentDataFusionné;
 
-  const [typeDeVue, setTypeDeVue] = useState(false);
-
-  const dataFusionee = currentdataFusionnee;
-
-  const vehiculeActive = dataFusionee?.filter(
-    (vehicule) =>
-      vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
+  // filtrer pour avoir seulement les véhicules avec ces details
+  const vehiculeActive = dataFusionné?.filter(
+    (véhicule) =>
+      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
   );
 
-  const vehicleData = vehiculeActive.map((vehicule) => ({
-    deviceID: vehicule.deviceID || "",
-    description: vehicule.description || "Véhicule",
+  // Formatage des donnee pour la  carte
+  const véhiculeData = vehiculeActive.map((véhicule) => ({
+    deviceID: véhicule.deviceID || "",
+    description: véhicule.description || "Véhicule",
     lastValidLatitude:
-      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+      véhicule.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.latitude || "",
     lastValidLongitude:
-      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+      véhicule.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.longitude || "",
     address:
-      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+      véhicule.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.backupAddress ||
-      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+      véhicule.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.address ||
       "",
-    imeiNumber: vehicule?.imeiNumber || "",
-    isActive: vehicule?.isActive || "",
-    licensePlate: vehicule?.licensePlate || "",
-    simPhoneNumber: vehicule?.simPhoneNumber || "",
+    imeiNumber: véhicule?.imeiNumber || "",
+    isActive: véhicule?.isActive || "",
+    licensePlate: véhicule?.licensePlate || "",
+    simPhoneNumber: véhicule?.simPhoneNumber || "",
     timestamp:
-      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+      véhicule.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.timestamp || "",
     speedKPH:
-      vehicule.vehiculeDetails?.[histiriqueSelectedLocationIndex || 0]
+      véhicule.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.speedKPH || 0,
   }));
 
-  // const [mapType, setMapType] = useState("streets");
+  // une reference pour la carte
   const mapRef = useRef(null);
-  const vehicles = selectedVehicle
-    ? vehicleData.filter((v) => v.deviceID === selectedVehicle)
-    : vehicleData;
+
+  // Définir le véhicule a afficher sur la carte
+  const vehicles = selectedVehicleToShowInMap
+    ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
+    : véhiculeData;
   const tileLayers = {
     terrain: {
       url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
@@ -120,16 +109,12 @@ function MapComponent({ mapType }) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (mapRef.current && vehicles.length) {
-        if (selectedVehicle) {
+        if (selectedVehicleToShowInMap) {
           // Si un véhicule est sélectionné, centrer sur lui
           const selectedVehicleData = vehicles.find(
-            (vehicle) => vehicle.deviceID === selectedVehicle
+            (véhicule) => véhicule.deviceID === selectedVehicleToShowInMap
           );
-          // if (chooseHistoriqueLongitude && chooseHistoriqueLatitude) {
-          //   const lastValidLatitude = chooseHistoriqueLatitude;
-          //   const lastValidLongitude = chooseHistoriqueLongitude;
-          //   mapRef.current.setView([lastValidLatitude, lastValidLongitude], 20);
-          // } else
+
           if (selectedVehicleData) {
             const { lastValidLatitude, lastValidLongitude } =
               selectedVehicleData;
@@ -138,9 +123,9 @@ function MapComponent({ mapType }) {
         } else {
           // Sinon, ajuster pour inclure tous les véhicules
           const bounds = L.latLngBounds(
-            vehicles.map((vehicle) => [
-              vehicle.lastValidLatitude,
-              vehicle.lastValidLongitude,
+            vehicles.map((véhicule) => [
+              véhicule.lastValidLatitude,
+              véhicule.lastValidLongitude,
             ])
           );
           mapRef.current.fitBounds(bounds);
@@ -149,12 +134,7 @@ function MapComponent({ mapType }) {
     }, 500);
 
     return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
-  }, [selectedVehicle, vehicles]);
-
-  // const handleMapTypeChange = (type) => {
-  //   setMapType(type);
-  //   setTypeDeVue(false);
-  // };
+  }, [selectedVehicleToShowInMap, vehicles]);
 
   const getMarkerIcon = (speedKPH) => {
     if (speedKPH < 1) return iconLowSpeed;
@@ -166,70 +146,6 @@ function MapComponent({ mapType }) {
     const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
     window.open(googleMapsUrl, "_blank");
   };
-
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // const vehiculeActive = dataFusionee.filter((vehicule) =>  vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0 )
-  // const vehiculeActive = dataFusionee.filter((vehicule) =>  !vehicule.vehiculeDetails || vehicule.vehiculeDetails.length === 0 )
-
-  const filteredVehicles = vehiculeActive?.filter((vehicule) =>
-    vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  function formatTimestampToTime(timestamp) {
-    const date = new Date(timestamp * 1000);
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-    const period = hours >= 12 ? "PM" : "AM";
-
-    // Convert to 12-hour format
-    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
-    hours = hours.toString().padStart(2, "0");
-
-    return `${hours}:${minutes}  ${period}`;
-    // return `${hours}:${minutes}:${seconds} ${period}`;
-  }
-
-  function formatTimestampToDate(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`;
-  }
-
-  function convertToTimezone(timestamp, offset) {
-    const date = new Date(timestamp * 1000); // Convertir le timestamp en millisecondes
-    const [sign, hours, minutes] = offset
-      .match(/([+-])(\d{2}):(\d{2})/)
-      .slice(1);
-    const totalOffsetMinutes =
-      (parseInt(hours) * 60 + parseInt(minutes)) * (sign === "+" ? 1 : -1);
-
-    date.setMinutes(date.getMinutes() + totalOffsetMinutes); // Appliquer le décalage
-    return date;
-  }
-
-  function formatTimestampToDateWithTimezone(timestamp, offset) {
-    const date = convertToTimezone(timestamp, offset);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
-
-  function formatTimestampToTimeWithTimezone(timestamp, offset) {
-    // const date = convertToTimezone(timestamp, offset);
-    // const hours = date.getHours().toString().padStart(2, "0");
-    // const minutes = date.getMinutes().toString().padStart(2, "0");
-    // const seconds = date.getSeconds().toString().padStart(2, "0");
-    // return `${hours}:${minutes}:${seconds}`;
-  }
 
   return (
     <div>
@@ -247,17 +163,17 @@ function MapComponent({ mapType }) {
         <ScaleControl position="bottomright" />
         <AttributionControl position="bottomleft" />
 
-        {vehicles.map((vehicle, index) => {
-          const FormatDateHeureTimestamp = FormatDateHeure(vehicle.timestamp);
+        {vehicles.map((véhicule, index) => {
+          const FormatDateHeureTimestamp = FormatDateHeure(véhicule.timestamp);
           return (
             <Marker
               key={index}
               position={[
-                vehicle.lastValidLatitude || 0,
-                vehicle.lastValidLongitude || 0,
+                véhicule.lastValidLatitude || 0,
+                véhicule.lastValidLongitude || 0,
               ]}
               icon={L.icon({
-                iconUrl: getMarkerIcon(vehicle.speedKPH),
+                iconUrl: getMarkerIcon(véhicule.speedKPH),
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],
@@ -270,71 +186,51 @@ function MapComponent({ mapType }) {
                 <div className="w-[70vw] max-w-[20rem]">
                   <p className="font-bold text-[1rem]">
                     <span>Description :</span>{" "}
-                    {vehicle.description || "Non disponible"}
+                    {véhicule.description || "Non disponible"}
                   </p>
-                  {/* <p className="font-bold text-[1rem]">
-                        <span>Description :</span>{" "}
-                        {description || "Non disponible"}
-                      </p> */}
+
                   <p>
                     <strong>Adresse :</strong>{" "}
-                    {vehicle.address || "Non disponible"}
+                    {véhicule.address || "Non disponible"}
                   </p>
                   {username === "admin" && (
                     <p>
                       <strong>IMEI Number :</strong>{" "}
-                      {vehicle.imeiNumber || "Chargement..."}
+                      {véhicule.imeiNumber || "Chargement..."}
                     </p>
                   )}
                   <p>
                     <strong>Vitesse :</strong>{" "}
-                    {/* {vehicle.speedKPH || "Non disponible"} Km/h */}
-                    {vehicle.speedKPH && !isNaN(Number(vehicle.speedKPH))
-                      ? Number(vehicle.speedKPH).toFixed(0) + " km/h"
+                    {véhicule.speedKPH && !isNaN(Number(véhicule.speedKPH))
+                      ? Number(véhicule.speedKPH).toFixed(0) + " km/h"
                       : "Non disponible"}
                   </p>
 
-                  {/* <p>
-                  <strong>Date :</strong>{" "}
-                  {vehicle.timestamp || "Non disponible"}
-                </p> */}
                   <p>
                     <strong>Date :</strong>{" "}
-                    {vehicle.timestamp
+                    {véhicule.timestamp
                       ? FormatDateHeureTimestamp.date
-                      : //  selectUTC
-                        //   ? formatTimestampToDateWithTimezone(
-                        //       vehicle.timestamp,
-                        //       selectUTC
-                        //     )
-                        //   : formatTimestampToDate(vehicle.timestamp)
-                        "Pas de date disponible"}
+                      : "Pas de date disponible"}
                     <span className="px-3">/</span>
-                    {/* {selectUTC
-                      ? formatTimestampToTimeWithTimezone(
-                          vehicle.timestamp,
-                          selectUTC
-                        )
-                      : formatTimestampToTime(vehicle.timestamp)} */}
                     {FormatDateHeureTimestamp.time}
                   </p>
                   <p>
                     <strong>Statut : </strong>
-                    {vehicle.speedKPH < 1 && "En stationnement"}
-                    {vehicle.speedKPH > 20 && "En mouvement rapide"}
-                    {vehicle.speedKPH >= 1 &&
-                      vehicle.speedKPH <= 20 &&
+                    {véhicule.speedKPH < 1 && "En stationnement"}
+                    {véhicule.speedKPH > 20 && "En mouvement rapide"}
+                    {véhicule.speedKPH >= 1 &&
+                      véhicule.speedKPH <= 20 &&
                       "En mouvement lent"}
                   </p>
                   <p>
                     <strong>Plaque d'immatriculation :</strong>{" "}
-                    {vehicle.licensePlate || "Chargement..."}
+                    {véhicule.licensePlate || "Chargement..."}
                   </p>
                   <button
                     onClick={() =>
                       openGoogleMaps(
-                        vehicle.lastValidLatitude,
-                        vehicle.lastValidLongitude
+                        véhicule.lastValidLatitude,
+                        véhicule.lastValidLongitude
                       )
                     }
                     className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md"

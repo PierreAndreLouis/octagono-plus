@@ -17,7 +17,6 @@ import RapportPageDetailsHeader from "../components/rapport_page_details/Rapport
 import RapportGroupe from "../components/rapport_page_details/RapportGroupe";
 import RapportPageDetailsOptions from "../components/rapport_page_details/RapportPageDetailsOptions";
 import RapportPersonnel from "../components/rapport_page_details/RapportPersonnel";
-import RapportPage from "./RapportPage";
 import DatePupup from "../components/rapport_vehicule/DatePupup";
 import DateTimePicker from "../components/home/DateTimePicker";
 import { FaBullseye } from "react-icons/fa";
@@ -31,75 +30,86 @@ L.Icon.Default.mergeOptions({
 });
 
 function RapportPageDetails() {
+  const {
+    currentVéhicule,
+    véhiculeHistoriqueDetails,
+    vehiclueHistoriqueRapportDetails,
+    showHistoriqueInMap,
+    selectUTC,
+    donneeFusionnéForRapport,
+    véhiculeActiveToday,
+    véhiculeNotActiveToday,
+    véhiculeHorsService,
+    currentDataFusionné,
+    searchDonneeFusionnéForRapport,
+    showListeOption,
+    setShowListOption,
+    setCurrentVéhicule,
+    setVéhiculeHistoriqueDetails,
+    rapportDataLoading,
+    fetchSearchRapportVehicleDetails,
+    setRapportDataLoading,
+    mergedData,
+    setSelectedVehicleToShowInMap,
+    FormatDateHeure,
+  } = useContext(DataContext);
+
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Pour afficher le popup du type de vue afin de choisir
   const [typeDeVue, setTypeDeVue] = useState(false);
+
+  // Pour voir le trajet du véhicules sur grand écran
   const [zoomCart, setzoomCart] = useState(false);
+
+  // pour voir la position des véhicules sur grand écran
   const [zoomPosition, setzoomPosition] = useState(false);
 
+  // Pour télécharger la table récapitulatif en excel
   const [downloadExelPDF, setdownloadExelPDF] = useState(false);
   useEffect(() => {
     console.log("downloadExelPDF :", downloadExelPDF);
   }, [downloadExelPDF]);
 
+  // Pour donnee un signale de téléchargement
   const fonctiondownloadExelPDF = () => {
     setdownloadExelPDF(true);
-
     // Vérifier après un délai si l'action a échoué
     setTimeout(() => {
-      // if (downloadExelPDF) {
       setdownloadExelPDF(false);
-      // }
     }, 2000); // Délai d'attente de 3 secondes
   };
 
-  const {
-    currentVehicule,
+  const dataFusionné = mergedData ? Object.values(mergedData) : [];
 
-    vehiclueHistoriqueDetails,
-    vehiclueHistoriqueRapportDetails,
-    showHistoriqueInMap,
-    selectUTC,
-    donneeFusionneeForRapport,
-    vehiculeActiveAjourdhui,
-    vehiculeNotActiveAjourdhui,
-    vehiculeNotActif,
-    currentdataFusionnee,
-    searchdonneeFusionneeForRapport,
-    showListeOption,
-    setShowListOption,
-    setCurrentVehicule,
-    setVehiclueHistoriqueDetails,
-    rapportDataLoading,
-    fetSearchRapportchVehicleDetails,
-    setRapportDataLoading,
-    mergedData,
-    dateDebut,
-    setDateDebut,
-    setSelectedVehicle,
-    FormatDateHeure,
-  } = useContext(DataContext);
-
-  const dataFusionee = mergedData ? Object.values(mergedData) : [];
-
-  const mapRef = useRef(); // Référence de la carte
+  // Référence de la carte
+  const mapRef = useRef();
 
   const [showOptions, setShowOptions] = useState(false);
 
   const [pageSection, setpageSection] = useState("unite");
 
-  const handleClick = (vehicle) => {
-    // setCurrentVehicule(vehicle);
-
-    const deviceID = vehicle.deviceID;
+  const handleClick = (véhicule) => {
+    const deviceID = véhicule.deviceID;
 
     // // Recherche du véhicule correspondant dans la liste
-    const foundVehicle = currentdataFusionnee.find(
+    const foundVehicle = currentDataFusionné.find(
       (v) => v.deviceID === deviceID
     );
 
     if (foundVehicle) {
-      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
       setPersonnelDetails(true);
-      setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
+      setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
       setpageSection("unite");
       window.scrollTo({
         top: 0,
@@ -117,7 +127,7 @@ function RapportPageDetails() {
   ////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////
-  // Section carte, pour afficher le trajet du vehicule
+  // Section carte, pour afficher le trajet du véhicule
 
   const [mapType, setMapType] = useState("streets");
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -127,7 +137,7 @@ function RapportPageDetails() {
   const filteredVehicles = [];
   let lastZeroSpeedTimestamp = null;
 
-  currentVehicule?.vehiculeDetails
+  currentVéhicule?.véhiculeDetails
     .sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
     .forEach((details) => {
       const timestamp = parseInt(details.timestamp);
@@ -145,27 +155,25 @@ function RapportPageDetails() {
         filteredVehicles.push(details);
       }
     });
-  // const filteredVehicles = vehiclueHistoriqueDetails;
-  // const filteredVehicles = currentVehicule?.vehiculeDetails;
 
   const historiqueInMap = filteredVehicles
     ? Object.values(filteredVehicles)
     : [];
-  const vehicleData = historiqueInMap?.map((vehicule) => ({
-    description: currentVehicule?.description || "Véhicule",
-    lastValidLatitude: vehicule?.latitude || "",
-    lastValidLongitude: vehicule?.longitude || "",
-    address: vehicule?.backupAddress || vehicule?.address || "",
-    imeiNumber: currentVehicule?.imeiNumber || "",
-    isActive: currentVehicule?.isActive || "",
-    licensePlate: currentVehicule?.licensePlate || "",
-    simPhoneNumber: currentVehicule?.simPhoneNumber || "",
-    timestamp: vehicule?.timestamp || "",
-    speedKPH: vehicule?.speedKPH || 0, // Ajout de la vitesse
-    heading: vehicule?.heading || "",
+  const véhiculeData = historiqueInMap?.map((véhicule) => ({
+    description: currentVéhicule?.description || "Véhicule",
+    lastValidLatitude: véhicule?.latitude || "",
+    lastValidLongitude: véhicule?.longitude || "",
+    address: véhicule?.backupAddress || véhicule?.address || "",
+    imeiNumber: currentVéhicule?.imeiNumber || "",
+    isActive: currentVéhicule?.isActive || "",
+    licensePlate: currentVéhicule?.licensePlate || "",
+    simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
+    timestamp: véhicule?.timestamp || "",
+    speedKPH: véhicule?.speedKPH || 0, // Ajout de la vitesse
+    heading: véhicule?.heading || "",
   }));
 
-  const vehicles = vehicleData;
+  const vehicles = véhiculeData;
 
   const tileLayers = {
     terrain: {
@@ -197,9 +205,9 @@ function RapportPageDetails() {
     },
   };
 
-  const getMarkerIcon = (vehicule) => {
-    const speed = parseFloat(vehicule.speedKPH);
-    const direction = Math.round(vehicule.heading / 45.0) % 8;
+  const getMarkerIcon = (véhicule) => {
+    const speed = parseFloat(véhicule.speedKPH);
+    const direction = Math.round(véhicule.heading / 45.0) % 8;
 
     if (speed <= 0) return "/pin/ping_red.png";
     else if (speed > 0 && speed <= 20)
@@ -212,15 +220,16 @@ function RapportPageDetails() {
     window.open(googleMapsUrl, "_blank"); // Ouvrir dans un nouvel onglet
   };
 
+  //
   const handleMapTypeChange = (type) => {
     setMapType(type);
     setTypeDeVue(false);
   };
 
   // Récupérer les positions successives pour les lignes rouges
-  const positions = vehicles?.map((vehicle) => [
-    vehicle.lastValidLatitude,
-    vehicle.lastValidLongitude,
+  const positions = vehicles?.map((véhicule) => [
+    véhicule.lastValidLatitude,
+    véhicule.lastValidLongitude,
   ]);
 
   // Fonction pour centrer la carte sur le premier marqueur
@@ -231,41 +240,32 @@ function RapportPageDetails() {
     }
   };
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  ///
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  function formatTimestampToTime(timestamp) {
-    const date = new Date(timestamp * 1000);
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const period = hours >= 12 ? "PM" : "AM";
-
-    // Convert to 12-hour format
-    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
-    hours = hours.toString().padStart(2, "0");
-
-    return `${hours}:${minutes} ${period}`;
-  }
-
+  // Graphe des vitesse
   const data = filteredVehicles.reverse() || [];
 
-  const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp * 1000); // Convertir le timestamp en millisecondes
-    return `${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
-  };
-
-  // const speedData = data.map((vehicle) => parseFloat(vehicle.speedKPH));
-  const speedData = data.map((vehicle) => {
-    const speed = parseFloat(vehicle.speedKPH);
+  // const speedData = data.map((véhicule) => parseFloat(véhicule.speedKPH));
+  const speedData = data.map((véhicule) => {
+    const speed = parseFloat(véhicule.speedKPH);
     return !isNaN(speed) ? speed.toFixed(0) : null;
   });
   const timeData = data.map(
-    (vehicle) => FormatDateHeure(vehicle.timestamp)?.time
+    (véhicule) => FormatDateHeure(véhicule.timestamp)?.time
   );
 
   const options = {
@@ -282,16 +282,7 @@ function RapportPageDetails() {
         return `Heure: ${time}<br />${details}`;
       },
     },
-    // tooltip: {
-    //   trigger: "axis",
-    //   formatter: function (params) {
-    //     return params
-    //       .map((item) => {
-    //         return `${item.marker} ${item.seriesName}: ${item.value} km/h`;
-    //       })
-    //       .join("<br />");
-    //   },
-    // },
+
     xAxis: {
       type: "category",
       data: timeData, // Heure sur l'axe des X
@@ -314,122 +305,53 @@ function RapportPageDetails() {
     ],
   };
 
-  //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // section pour trouver l'heure du debut et l'heure de la fin dur parcoure du véhicule
 
-  // Trouver la date du rapport//  exemple  Résultat : Date : 23 novembre 2024
-  const timestampInSeconds = currentVehicule?.vehiculeDetails[0]?.timestamp;
-  const dateObject = new Date(timestampInSeconds * 1000);
-
-  // Formater la date
-  const formattedDate = dateObject.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // section pour trouver l'heure du debut et l'heure de la fin dur parcoure du vehicule
-
-  // Fonctions pour formater le temps et la date
-  function formatTimestampToTime(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  }
-
-  function formatTimestampToTimeWithTimezone(timestamp, offset) {}
-
-  const filteredList = currentVehicule?.vehiculeDetails?.filter(
+  const filteredList = currentVéhicule?.véhiculeDetails?.filter(
     (item) => parseFloat(item.speedKPH) > 0
   );
 
-  // Trouve l'élément avec le timestamp minimum
+  // heure de fin
   const heureActiveDebut = filteredList?.reduce((minItem, currentItem) => {
     return parseInt(currentItem.timestamp) < parseInt(minItem.timestamp)
       ? currentItem
       : minItem;
   }, filteredList[0]);
-
+  // Heure d'arrive
   const heureActiveFin = filteredList?.reduce((maxItem, currentItem) => {
     return parseInt(currentItem.timestamp) > parseInt(maxItem.timestamp)
       ? currentItem
       : maxItem;
   }, filteredList[0]);
 
-  function formatTimestampToTime(timestamp) {
-    const date = new Date(timestamp * 1000);
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-    const period = hours >= 12 ? "PM" : "AM";
-
-    // Convert to 12-hour format
-    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
-    hours = hours.toString().padStart(2, "0");
-
-    return `${hours}:${minutes}  ${period}`;
-    // return `${hours}:${minutes}:${seconds} ${period}`;
-  }
-
-  function calculateActivePeriodsForAllVehicles(vehicleData) {
-    const results = [];
-
-    vehicleData.forEach((vehicle) => {
-      const { description, vehiculeDetails } = vehicle;
-
-      const filteredList = vehiculeDetails?.filter(
-        (item) => parseFloat(item.speedKPH) > 0
-      );
-
-      if (filteredList && filteredList.length > 0) {
-        const startTimestamp = filteredList.reduce((minItem, currentItem) => {
-          return parseInt(currentItem.timestamp) < parseInt(minItem.timestamp)
-            ? currentItem
-            : minItem;
-        }, filteredList[0]);
-
-        const endTimestamp = filteredList.reduce((maxItem, currentItem) => {
-          return parseInt(currentItem.timestamp) > parseInt(maxItem.timestamp)
-            ? currentItem
-            : maxItem;
-        }, filteredList[0]);
-
-        results.push({
-          description,
-          startTime: FormatDateHeure(parseInt(startTimestamp.timestamp)?.time),
-          endTime: FormatDateHeure(parseInt(endTimestamp.timestamp)?.time),
-        });
-      } else {
-        results.push({
-          description,
-          startTime: null,
-          endTime: null,
-        });
-      }
-    });
-
-    return results;
-  }
-
-  const activePeriods =
-    calculateActivePeriodsForAllVehicles(currentdataFusionnee);
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // section pour calculer la distance totale parcourrue par le vehicule
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // section pour calculer la distance totale parcourrue par le véhicule
 
   function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Rayon de la Terre en kilomètres
@@ -467,49 +389,26 @@ function RapportPageDetails() {
     return totalDistance; // Distance totale en kilomètres
   }
 
-  // Fonction pour calculer la distance totale pour tous les véhicules
-  function calculateDistancesForAllVehicles(vehicles) {
-    if (vehicles && vehicles.length > 0) {
-      let distancesByVehicle = {}; // Stocker la distance totale pour chaque véhicule
-      let totalDistanceAllVehicles = 0; // Stocker la distance totale pour tous les véhicules
-      let maxDistance = 0; // Distance maximale parcourue
-      let maxDistanceVehicle = ""; // Nom du véhicule ayant parcouru la plus grande distance
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-      vehicles.forEach((vehicle) => {
-        const data = filterVehicleData(vehicle?.vehiculeDetails); // Appliquer le filtrage si nécessaire
-
-        const totalDistance = calculateTotalDistance(data); // Calculer la distance pour ce véhicule
-        distancesByVehicle[vehicle.description] = totalDistance; // Nom du véhicule + distance
-
-        totalDistanceAllVehicles += totalDistance; // Ajouter la distance au total global
-
-        // Vérifier si ce véhicule a la plus grande distance
-        if (totalDistance > maxDistance) {
-          maxDistance = totalDistance;
-          maxDistanceVehicle = vehicle.description;
-        }
-      });
-
-      return {
-        distancesByVehicle, // Distance par véhicule
-        totalDistanceAllVehicles, // Distance totale pour tous les véhicules
-        maxDistanceVehicle, // Nom du véhicule ayant parcouru la plus grande distance
-        maxDistance, // Distance la plus grande
-      };
-    }
-  }
-
-  // Exemple d'utilisation :
-  const result2 = calculateDistancesForAllVehicles(currentdataFusionnee); // Remplacez "allVehicles" par votre liste
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // Fonction pour compter les arrêts totale du vehicule
+  // Fonction pour compter les arrêts totale du véhicule
 
   const countStops = (vehiculedetails) => {
     let stopCount = 0;
@@ -525,41 +424,32 @@ function RapportPageDetails() {
   };
 
   // Calculer le nombre d'arrêts
-  const nombreArret = countStops(currentVehicule?.vehiculeDetails);
+  const nombreArret = countStops(currentVéhicule?.véhiculeDetails);
 
-  // Fonction pour calculer le nombre total d'arrêts pour tous les véhicules
-  function countStopsForAllVehicles(vehicles) {
-    if (vehicles && vehicles.length > 0) {
-      let stopsByVehicle = {}; // Stocker le nombre d'arrêts pour chaque véhicule
-      let totalStopsAllVehicles = 0; // Stocker le nombre total d'arrêts pour tous les véhicules
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
 
-      vehicles.forEach((vehicle) => {
-        const data = filterVehicleData(vehicle?.vehiculeDetails); // Appliquer le filtrage si nécessaire
-
-        const stopCount = countStops(data); // Nombre d'arrêts pour ce véhicule
-        stopsByVehicle[vehicle.description] = stopCount; // Nom du véhicule + nombre d'arrêts
-
-        totalStopsAllVehicles += stopCount; // Ajouter le nombre d'arrêts au total global
-      });
-
-      return {
-        stopsByVehicle, // Nombre d'arrêts par véhicule
-        totalStopsAllVehicles, // Nombre total d'arrêts pour tous les véhicules
-      };
-    }
-  }
-
-  // Exemple d'utilisation :
-  const result3 = countStopsForAllVehicles(currentdataFusionnee); // Remplacez "allVehicles" par votre liste
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // calcule de la vitesse ninimal, maximal et moyenne du vehicule
-
+  // calcule de la vitesse ninimal, maximal et moyenne du véhicule
   function calculateSpeedStats(dataList) {
     // Filtre pour ne garder que les vitesses supérieures à 0
     const speeds = dataList
@@ -593,81 +483,29 @@ function RapportPageDetails() {
   }
 
   const { minSpeed, maxSpeed, averageSpeed } = calculateSpeedStats(
-    currentVehicule?.vehiculeDetails
+    currentVéhicule?.véhiculeDetails
   );
 
-  function calculateSpeedStatsForAllVehicles(vehicles) {
-    if (vehicles && vehicles.length > 0) {
-      let allSpeeds = []; // Stocker toutes les vitesses de tous les véhicules
-      let statsByVehicle = {}; // Stocker les statistiques par véhicule
-      let maxSpeedVehicle = { description: null, maxSpeed: 0 }; // Véhicule avec la vitesse maximale la plus élevée
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-      vehicles.forEach((vehicle) => {
-        const data = vehicle?.vehiculeDetails || []; // Récupérer les détails du véhicule
-        const stats = calculateSpeedStats(data); // Calculer les stats pour ce véhicule
-
-        statsByVehicle[vehicle.description] = stats; // Ajouter les stats de ce véhicule
-
-        // Vérifier si ce véhicule a la vitesse maximale la plus élevée
-        if (stats.maxSpeed > maxSpeedVehicle.maxSpeed) {
-          maxSpeedVehicle = {
-            description: vehicle.description,
-            maxSpeed: stats.maxSpeed,
-          };
-        }
-
-        // Ajouter les vitesses du véhicule aux vitesses globales
-        allSpeeds = [
-          ...allSpeeds,
-          ...data
-            .map((item) => parseFloat(item.speedKPH))
-            .filter((speed) => speed > 0),
-        ];
-      });
-
-      // Calcul des statistiques globales pour tous les véhicules
-      const globalStats = calculateGlobalSpeedStats(allSpeeds);
-
-      return {
-        statsByVehicle, // Statistiques par véhicule
-        globalStats, // Statistiques globales
-        maxSpeedVehicle, // Véhicule avec la vitesse maximale la plus élevée
-      };
-    }
-  }
-
-  // Fonction pour calculer les statistiques globales pour toutes les vitesses
-  function calculateGlobalSpeedStats(allSpeeds) {
-    if (allSpeeds.length === 0) {
-      return {
-        minSpeed: 0,
-        maxSpeed: 0,
-        averageSpeed: 0,
-      };
-    }
-
-    const minSpeed = Math.min(...allSpeeds);
-    const maxSpeed = Math.max(...allSpeeds);
-    const averageSpeed =
-      allSpeeds.reduce((sum, speed) => sum + speed, 0) / allSpeeds.length;
-
-    return {
-      minSpeed,
-      maxSpeed,
-      averageSpeed,
-    };
-  }
-
-  // Exemple d'utilisation :
-  const result5 = calculateSpeedStatsForAllVehicles(currentdataFusionnee); // Remplacez "allVehicles" par votre liste
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
   // calcule de la duree total en mouvement, duree total en arret et le plus longue arret
 
   function filterVehicleData(data) {
@@ -695,7 +533,7 @@ function RapportPageDetails() {
   }
 
   // Appliquer la fonction de filtrage
-  const filteredData = filterVehicleData(currentVehicule?.vehiculeDetails);
+  const filteredData = filterVehicleData(currentVéhicule?.véhiculeDetails);
 
   const [longestHours, setLongestHours] = useState(0);
   const [longestMinutes, setLongestMinutes] = useState(0);
@@ -808,66 +646,28 @@ function RapportPageDetails() {
     countStopsAndShowData(filteredData);
   }, [filteredData]);
 
-  ////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  function calculateTotalMovingTimePerVehicle(vehicleData) {
-    // Initialiser un tableau pour stocker les résultats
-    const results = [];
-
-    vehicleData.forEach((vehicle) => {
-      const { description, vehiculeDetails } = vehicle; // Nom et détails du véhicule
-      let totalMovingDuration = 0; // Durée totale en mouvement pour ce véhicule
-
-      vehiculeDetails.forEach((data, index) => {
-        const speedKPH = parseFloat(data.speedKPH);
-        if (speedKPH > 0 && index > 0) {
-          const currentTimestamp = parseInt(data.timestamp) * 1000; // Convertir en millisecondes
-          const prevTimestamp =
-            parseInt(vehiculeDetails[index - 1].timestamp) * 1000; // Convertir en millisecondes
-
-          totalMovingDuration += Math.abs(currentTimestamp - prevTimestamp); // Ajouter la durée en mouvement
-        }
-      });
-
-      // Convertir la durée totale en heures, minutes et secondes
-      const movingHours = Math.floor(totalMovingDuration / (1000 * 60 * 60));
-      const movingMinutes = Math.floor(
-        (totalMovingDuration % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      const movingSeconds = Math.floor(
-        (totalMovingDuration % (1000 * 60)) / 1000
-      );
-
-      // Ajouter le résultat pour ce véhicule
-      results.push({
-        description,
-        totalMovingDuration: {
-          hours: movingHours,
-          minutes: movingMinutes,
-          seconds: movingSeconds,
-        },
-      });
-    });
-
-    return results;
-  }
-
-  const movingTimes = calculateTotalMovingTimePerVehicle(currentdataFusionnee);
-
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////
-
+  // Tous les lieux fréquentes par le véhicules
   function getUniqueAddresses(dataList) {
     // Vérifier si dataList est défini
     if (!dataList) return [];
@@ -891,8 +691,26 @@ function RapportPageDetails() {
     return Array.from(uniqueMap.values());
   }
 
-  const uniqueAddresses = getUniqueAddresses(currentVehicule?.vehiculeDetails);
+  const uniqueAddresses = getUniqueAddresses(currentVéhicule?.véhiculeDetails);
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Pour trouver tous les lieux en stationnent
   function getUniqueAddressesWhenSpeedZeroOrLess(dataList) {
     // Vérifier si dataList est défini
     if (!dataList) return [];
@@ -920,185 +738,36 @@ function RapportPageDetails() {
   }
 
   const uniqueAddressesZerroSpeed = getUniqueAddressesWhenSpeedZeroOrLess(
-    currentVehicule?.vehiculeDetails
+    currentVéhicule?.véhiculeDetails
   );
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
-
-  //  section pour savoir le vehicule en mouvement en premier et en dernier
-
-  function processVehicleData(vehicleData) {
-    if (!vehicleData || vehicleData.length === 0) {
-      return {
-        filteredData: [],
-        earliestVehicle: null,
-        latestVehicle: null,
-      };
-    }
-
-    // Filtrer les vehiculeDetails avec speedKPH >= 1
-    const filteredData = vehicleData.map((vehicle) => ({
-      ...vehicle,
-      vehiculeDetails: vehicle.vehiculeDetails?.filter(
-        (detail) => parseFloat(detail.speedKPH) >= 1
-      ),
-    }));
-
-    // Trouver le véhicule avec le timestamp le plus tôt et le plus tard
-    let earliestVehicle = null;
-    let latestVehicle = null;
-    let earliestTimestamp = Infinity;
-    let latestTimestamp = -Infinity;
-
-    filteredData.forEach((vehicle) => {
-      const lastDetail =
-        vehicle.vehiculeDetails?.[vehicle.vehiculeDetails?.length - 1];
-
-      if (lastDetail) {
-        const timestamp = parseInt(lastDetail.timestamp, 10);
-
-        if (timestamp < earliestTimestamp) {
-          earliestTimestamp = timestamp;
-          earliestVehicle = vehicle;
-        }
-
-        if (timestamp > latestTimestamp) {
-          latestTimestamp = timestamp;
-          latestVehicle = vehicle;
-        }
-      }
-    });
-
-    return {
-      filteredData,
-      earliestVehicle,
-      latestVehicle,
-    };
-  }
-
-  const data2 = currentdataFusionnee;
-
-  const { filteredData2, earliestVehicle, latestVehicle } =
-    processVehicleData(data2);
-
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
-
-  function calculateDurationsForAllVehicles(vehicles) {
-    if (vehicles && vehicles.length > 0) {
-      let totalMovingDuration = 0;
-      let totalStopDuration = 0;
-      let longestStopDuration = 0;
-      let vehicleWithLongestStop = null;
-      let longestMovingDuration = 0;
-      let vehicleWithLongestMoving = null;
-
-      vehicles.forEach((vehicle) => {
-        const data = filterVehicleData(vehicle?.vehiculeDetails); // Appliquer le filtrage
-        let stopSequences = [];
-        let vehicleMovingDuration = 0;
-        let vehicleStopDuration = 0;
-        let vehicleLongestStop = 0;
-        let inStopSequence = false;
-
-        for (let i = 0; i < data?.length; i++) {
-          const speedKPH = parseFloat(data[i].speedKPH);
-
-          if (speedKPH <= 0) {
-            if (!inStopSequence) {
-              inStopSequence = true;
-              stopSequences.push([data[i]]);
-            } else {
-              stopSequences[stopSequences.length - 1].push(data[i]);
-            }
-          } else if (speedKPH >= 1 && inStopSequence) {
-            inStopSequence = false;
-          }
-
-          if (speedKPH > 0 && i > 0) {
-            const currentTimestamp = parseInt(data[i].timestamp) * 1000;
-            const prevTimestamp = parseInt(data[i - 1].timestamp) * 1000;
-            vehicleMovingDuration += Math.abs(currentTimestamp - prevTimestamp);
-          }
-        }
-
-        stopSequences.forEach((sequence) => {
-          const firstTimestamp = sequence[0].timestamp;
-          const lastTimestamp = sequence[sequence.length - 1].timestamp;
-
-          const firstMillis = parseInt(firstTimestamp) * 1000;
-          const lastMillis = parseInt(lastTimestamp) * 1000;
-          const differenceInMillis = Math.abs(lastMillis - firstMillis);
-
-          vehicleStopDuration += differenceInMillis;
-
-          if (differenceInMillis > vehicleLongestStop) {
-            vehicleLongestStop = differenceInMillis;
-          }
-        });
-
-        // Ajouter les durées de ce véhicule aux totaux
-        totalMovingDuration += vehicleMovingDuration;
-        totalStopDuration += vehicleStopDuration;
-
-        // Vérifier si ce véhicule a le plus long arrêt
-        if (vehicleLongestStop > longestStopDuration) {
-          longestStopDuration = vehicleLongestStop;
-          vehicleWithLongestStop = vehicle.description; // Supposez que le nom du véhicule est dans `vehicle.description`
-        }
-
-        // Vérifier si ce véhicule a été en mouvement le plus longtemps
-        if (vehicleMovingDuration > longestMovingDuration) {
-          longestMovingDuration = vehicleMovingDuration;
-          vehicleWithLongestMoving = vehicle.description;
-        }
-      });
-
-      // Convertir les résultats finaux en heures, minutes et secondes
-      const convertMillisToTime = (millis) => {
-        const hours = Math.floor(millis / (1000 * 60 * 60));
-        const minutes = Math.floor((millis % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((millis % (1000 * 60)) / 1000);
-        return { hours, minutes, seconds };
-      };
-
-      const totalMovingTime = convertMillisToTime(totalMovingDuration);
-      const totalStopTime = convertMillisToTime(totalStopDuration);
-      const longestStopTime = convertMillisToTime(longestStopDuration);
-      const longestMovingTime = convertMillisToTime(longestMovingDuration);
-
-      return {
-        totalMovingTime,
-        totalStopTime,
-        longestStopTime,
-        longestMovingTime,
-        vehicleWithLongestStop, // Nom du véhicule avec le plus long arrêt
-        vehicleWithLongestMoving, // Nom du véhicule ayant été en mouvement le plus longtemps
-      };
-    }
-  }
-  // Exemple d'utilisation :
-  const result = calculateDurationsForAllVehicles(currentdataFusionnee); // Remplacez "allVehicles" par votre liste de véhicules
-
+  // Variables pour choisir les dates
   const [showChooseDate, setShowChooseDate] = useState(false);
+  const [showDatePicker2, setShowDatePicker2] = useState(false);
 
   const today = new Date(); // La date actuelle
-  const [showDatePicker2, setShowDatePicker2] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today); // Date sélectionnée
 
-  ////////////////////////////////////////////////////////////////////////////c/cvv
-  ////////////////////////////////////////////////////////////////////////////c/cvv
-  ////////////////////////////////////////////////////////////////////////////c/cvv
-  ////////////////////////////////////////////////////////////////////////////c/cvv
   // Formatage de la date actuelle
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
 
@@ -1123,8 +792,20 @@ function RapportPageDetails() {
     endDateToDisplay,
     endTimeToDisplay,
   ]);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  // Gestion de la soumission
+  // Pour lancer une recherche pour une journée
   const handleApply = (e) => {
     e.preventDefault();
     setShowChooseDate(false);
@@ -1154,13 +835,8 @@ function RapportPageDetails() {
     // Ajout de l'ajustement UTC
     const adjustedTimeFrom = baseTimeFrom;
 
-    // const adjustedTimeFrom = new Date(
-    //   baseTimeFrom.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
-    // );
     const adjustedTimeTo = baseTimeTo;
-    // const adjustedTimeTo = new Date(
-    //   baseTimeTo.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
-    // );
+
     // Formatage en chaîne pour les heures ajustées
     const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
       adjustedTimeFrom.getMonth() + 1
@@ -1198,9 +874,9 @@ function RapportPageDetails() {
       .toString()
       .padStart(2, "0")}`;
 
-    if (dataFusionee && dataFusionee.length > 0) {
-      dataFusionee.forEach((vehicle) => {
-        fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+    if (dataFusionné && dataFusionné.length > 0) {
+      dataFusionné.forEach((véhicule) => {
+        fetchSearchRapportVehicleDetails(véhicule.deviceID, timeFrom, timeTo);
         setRapportDataLoading(true);
 
         console.log("TimeFrom---------", timeFrom);
@@ -1214,187 +890,19 @@ function RapportPageDetails() {
     }
   };
 
-  // Gestion de la soumission
-  // const handleApply = (e) => {
-  //   e.preventDefault();
-  //   setShowChooseDate(false);
-  //   setRapportDataLoading(true);
-  //   setShowDatePicker2(false);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  //   const formatDateToISO = (date) => {
-  //     if (!(date instanceof Date)) {
-  //       date = new Date(date); // Convertir en objet Date si nécessaire
-  //     }
-  //     const adjustedDate = new Date(
-  //       date.getTime() - date.getTimezoneOffset() * 60000
-  //     );
-  //     return adjustedDate.toISOString().split("T")[0];
-  //   };
-
-  //   // Conversion des variables startDate et endDate
-  //   const formattedStartDate = formatDateToISO(selectedDate);
-  //   const formattedEndDate = formatDateToISO(selectedDate);
-
-  //   const startTime = "00:00:00";
-  //   const endTime = "23:59:59";
-
-  //   // Combine les dates formatées avec les heures
-  //   const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
-  //   const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
-
-  //   // Ajout de 5 heures
-  //   const adjustedTimeFrom = new Date(
-  //     baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-  //   );
-  //   const adjustedTimeTo = baseTimeTo;
-  //   // const adjustedTimeTo = new Date();
-  //   // baseTimeTo.getTime();
-  //   // + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-
-  //   // Formatage en chaîne pour les heures ajustées
-  //   const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
-  //     adjustedTimeFrom.getMonth() + 1
-  //   )
-  //     .toString()
-  //     .padStart(2, "0")}-${adjustedTimeFrom
-  //     .getDate()
-  //     .toString()
-  //     .padStart(2, "0")} ${adjustedTimeFrom
-  //     .getHours()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeFrom
-  //     .getMinutes()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeFrom
-  //     .getSeconds()
-  //     .toString()
-  //     .padStart(2, "0")}`;
-
-  //   const timeTo = `${adjustedTimeTo.getFullYear()}-${(
-  //     adjustedTimeTo.getMonth() + 1
-  //   )
-  //     .toString()
-  //     .padStart(2, "0")}-${adjustedTimeTo
-  //     .getDate()
-  //     .toString()
-  //     .padStart(2, "0")} ${adjustedTimeTo
-  //     .getHours()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeTo
-  //     .getMinutes()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeTo
-  //     .getSeconds()
-  //     .toString()
-  //     .padStart(2, "0")}`;
-
-  //   if (dataFusionee && dataFusionee.length > 0) {
-  //     dataFusionee?.forEach((vehicle) => {
-  //       // fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
-
-  //       console.log("TimeFrom---------", timeFrom);
-  //       console.log("TimeTo------", timeTo);
-
-  //       setStartDateToDisplay(selectedDate);
-  //       setStartTimeToDisplay(startTime);
-  //       setEndDateToDisplay(selectedDate);
-  //       setEndTimeToDisplay(endTime);
-  //     });
-  //   }
-  // };
-
-  // // Gestion de la soumission
-  // const handleApply = (e) => {
-  //   e.preventDefault();
-  //   setShowChooseDate(false);
-  //   setRapportDataLoading(true);
-  //   setShowDatePicker2(false);
-
-  //   const formatDateToISO = (date) => {
-  //     if (!(date instanceof Date)) {
-  //       date = new Date(date); // Convertir en objet Date si nécessaire
-  //     }
-  //     const adjustedDate = new Date(
-  //       date.getTime() - date.getTimezoneOffset() * 60000
-  //     );
-  //     return adjustedDate.toISOString().split("T")[0];
-  //   };
-
-  //   // Conversion des variables startDate et endDate
-  //   const formattedStartDate = formatDateToISO(selectedDate);
-  //   const formattedEndDate = formatDateToISO(selectedDate);
-
-  //   const startTime = "00:00:00";
-  //   const endTime = "23:59:59";
-  //   // yyyyyyyyyyyyyyyyyyyyyyyyyyy
-  //   ///////////////////////////////////////////////////////////////////////////////////
-
-  //   // Combine les dates formatées avec les heures
-  //   const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
-  //   const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
-
-  //   // Ajout de 5 heures
-  //   const adjustedTimeFrom = new Date(
-  //     baseTimeFrom.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000
-  //   );
-  //   const adjustedTimeTo = new Date();
-  //   baseTimeTo.getTime() + (selectUTC ? -selectUTC : 5) * 60 * 60 * 1000;
-
-  //   // Formatage en chaîne pour les heures ajustées
-  //   const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
-  //     adjustedTimeFrom.getMonth() + 1
-  //   )
-  //     .toString()
-  //     .padStart(2, "0")}-${adjustedTimeFrom
-  //     .getDate()
-  //     .toString()
-  //     .padStart(2, "0")} ${adjustedTimeFrom
-  //     .getHours()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeFrom
-  //     .getMinutes()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeFrom
-  //     .getSeconds()
-  //     .toString()
-  //     .padStart(2, "0")}`;
-
-  //   const timeTo = `${adjustedTimeTo.getFullYear()}-${(
-  //     adjustedTimeTo.getMonth() + 1
-  //   )
-  //     .toString()
-  //     .padStart(2, "0")}-${adjustedTimeTo
-  //     .getDate()
-  //     .toString()
-  //     .padStart(2, "0")} ${adjustedTimeTo
-  //     .getHours()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeTo
-  //     .getMinutes()
-  //     .toString()
-  //     .padStart(2, "0")}:${adjustedTimeTo
-  //     .getSeconds()
-  //     .toString()
-  //     .padStart(2, "0")}`;
-
-  //   ///////////////////////////////////////////////////////////////////////////////////////
-
-  //   if (dataFusionee && dataFusionee.length > 0) {
-  //     dataFusionee?.forEach((vehicle) => {
-  //       // fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
-  //       console.log("TimeFrom---------", timeFrom);
-  //       console.log("TimeTo------", timeTo);
-
-  //       setStartDateToDisplay(selectedDate);
-  //       setStartTimeToDisplay(startTime);
-  //       setEndDateToDisplay(selectedDate);
-  //       setEndTimeToDisplay(endTime);
-  //     });
-  //   }
-  // };
-
-  // Initialisation de la date et de l'heure actuelles par défaut
-
+  // Pour lancer une recherche plus en détaille
   const handleApply2 = (e) => {
     e.preventDefault();
 
@@ -1422,13 +930,6 @@ function RapportPageDetails() {
     const adjustedTimeFrom = baseTimeFrom;
     const adjustedTimeTo = baseTimeTo;
 
-    // // Ajout de 5 heures
-    // const adjustedTimeFrom = new Date(
-    //   baseTimeFrom.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
-    // );
-    // const adjustedTimeTo = new Date(
-    //   baseTimeTo.getTime() - (selectUTC ? selectUTC : -5) * 60 * 60 * 1000
-    // );
     // Formatage en chaîne pour les heures ajustées
     const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
       adjustedTimeFrom.getMonth() + 1
@@ -1469,9 +970,9 @@ function RapportPageDetails() {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     // handleDateChange(timeFrom, timeTo);
-    if (dataFusionee && dataFusionee.length > 0) {
-      dataFusionee.forEach((vehicle) => {
-        fetSearchRapportchVehicleDetails(vehicle.deviceID, timeFrom, timeTo);
+    if (dataFusionné && dataFusionné.length > 0) {
+      dataFusionné.forEach((véhicule) => {
+        fetchSearchRapportVehicleDetails(véhicule.deviceID, timeFrom, timeTo);
         setRapportDataLoading(true);
         console.log("TimeFrom---------", timeFrom);
         console.log("TimeTo------", timeTo);
@@ -1485,10 +986,33 @@ function RapportPageDetails() {
 
     setShowDatePicker2(false);
   };
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   useEffect(() => {
     console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
   }, [rapportDataLoading]);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   return (
     <div
@@ -1511,7 +1035,7 @@ function RapportPageDetails() {
         <div className="absolute z-[99999909999999]">
           <DateTimePicker
             setShowDatePicker={setShowDatePicker2}
-            fetchHistoriqueVehicleDetails={fetSearchRapportchVehicleDetails}
+            fetchHistoriqueVehicleDetails={fetchSearchRapportVehicleDetails}
             handleApply={handleApply2}
             setStartDate={setStartDate}
             setStartTime={setStartTime}
@@ -1544,32 +1068,23 @@ function RapportPageDetails() {
               setPersonnelDetails={setPersonnelDetails}
               personnelDetails={personnelDetails}
               setShowListOption={setShowListOption}
-              setVehiclueHistoriqueDetails={setVehiclueHistoriqueDetails}
-              currentVehicule={currentVehicule}
-              formatTimestampToTimeWithTimezone={
-                formatTimestampToTimeWithTimezone
-              }
-              formatTimestampToTime={formatTimestampToTime}
+              setVéhiculeHistoriqueDetails={setVéhiculeHistoriqueDetails}
+              currentVéhicule={currentVéhicule}
               pageSection={pageSection}
               setpageSection={setpageSection}
               setShowOptions={setShowOptions}
-              showOptions={showOptions}
-              setSelectedVehicle={setSelectedVehicle}
+              setSelectedVehicleToShowInMap={setSelectedVehicleToShowInMap}
             />
             <RapportPageDetailsHeader
               setShowOptions={setShowOptions}
               showOptions={showOptions}
-              currentVehicule={currentVehicule}
+              currentVéhicule={currentVéhicule}
               setPersonnelDetails={setPersonnelDetails}
-              vehiculeActiveAjourdhui={vehiculeActiveAjourdhui}
+              véhiculeActiveToday={véhiculeActiveToday}
               handleClick={handleClick}
-              vehiculeNotActiveAjourdhui={vehiculeNotActiveAjourdhui}
-              vehiculeNotActif={vehiculeNotActif}
+              véhiculeNotActiveToday={véhiculeNotActiveToday}
+              véhiculeHorsService={véhiculeHorsService}
               personnelDetails={personnelDetails}
-              formatTimestampToTimeWithTimezone={
-                formatTimestampToTimeWithTimezone
-              }
-              formatTimestampToTime={formatTimestampToTime}
               pageSection={pageSection}
               setpageSection={setpageSection}
               setShowChooseDate={setShowChooseDate}
@@ -1587,13 +1102,10 @@ function RapportPageDetails() {
       {/* Personnelle */}
       {pageSection === "unite" && (
         <RapportPersonnel
-          currentVehicule={currentVehicule}
-          formattedDate={formattedDate}
+          currentVéhicule={currentVéhicule}
           heureActiveDebut={heureActiveDebut}
           heureActiveFin={heureActiveFin}
           selectUTC={selectUTC}
-          formatTimestampToTimeWithTimezone={formatTimestampToTimeWithTimezone}
-          formatTimestampToTime={formatTimestampToTime}
           totalMovingHours={totalMovingHours}
           totalMovingMinutes={totalMovingMinutes}
           totalMovingSeconds={totalMovingSeconds}
@@ -1639,24 +1151,13 @@ function RapportPageDetails() {
       {/* en groupe */}
       {pageSection === "groupe" && (
         <RapportGroupe
-          formattedDate={formattedDate}
-          currentdataFusionnee={currentdataFusionnee}
-          vehiculeActiveAjourdhui={vehiculeActiveAjourdhui}
-          vehiculeNotActiveAjourdhui={vehiculeNotActiveAjourdhui}
-          vehiculeNotActif={vehiculeNotActif}
-          earliestVehicle={earliestVehicle}
-          latestVehicle={latestVehicle}
+          currentDataFusionné={currentDataFusionné}
+          véhiculeActiveToday={véhiculeActiveToday}
+          véhiculeNotActiveToday={véhiculeNotActiveToday}
+          véhiculeHorsService={véhiculeHorsService}
           selectUTC={selectUTC}
-          formatTimestampToTime={formatTimestampToTime}
-          formatTimestampToTimeWithTimezone={formatTimestampToTimeWithTimezone}
-          result={result}
-          result2={result2}
-          result3={result3}
-          result5={result5}
           zoomPosition={zoomPosition}
           setzoomPosition={setzoomPosition}
-          activePeriods={activePeriods}
-          movingTimes={movingTimes}
           typeDeVue={typeDeVue}
           setTypeDeVue={setTypeDeVue}
           mapType={mapType}
@@ -1671,23 +1172,12 @@ function RapportPageDetails() {
           showHistoriqueInMap={showHistoriqueInMap}
           openGoogleMaps={openGoogleMaps}
           setpageSection={setpageSection}
-          setSelectedVehicle={setSelectedVehicle}
+          setSelectedVehicleToShowInMap={setSelectedVehicleToShowInMap}
           startDate={startDateToDisplay}
           startTime={startTimeToDisplay}
           endDate={endDateToDisplay}
           endTime={endTimeToDisplay}
           downloadExelPDF={downloadExelPDF}
-        />
-      )}
-
-      {pageSection === "search" && (
-        <RapportPage
-          setpageSection={setpageSection}
-          showChooseDate={showChooseDate}
-          setShowChooseDate={setShowChooseDate}
-          handleApply={handleApply}
-          showDatePicker2={showDatePicker2}
-          setShowDatePicker2={setShowDatePicker2}
         />
       )}
     </div>

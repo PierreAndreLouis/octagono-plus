@@ -4,12 +4,12 @@ import { MdErrorOutline } from "react-icons/md";
 
 function FormModifierVehicule({
   handleSubmit,
-  addvehicleData,
+  addVéhiculeData,
   handleChange,
   error,
   errorID,
   errorImei,
-  currentVehicule,
+  currentVéhicule,
   setError,
   delVehicule,
   username,
@@ -67,7 +67,7 @@ function FormModifierVehicule({
               name={field.id}
               type="text"
               placeholder={field.placeholder}
-              value={addvehicleData[field.id]}
+              value={addVéhiculeData[field.id]}
               onChange={handleChange}
               required
               className="block px-3 outline-none w-full border-b border-gray-200 pb-3 py-1.5 text-gray-700 shadow-sm dark:border-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800"
@@ -76,9 +76,7 @@ function FormModifierVehicule({
         ))}
 
         {/* Gestion des erreurs */}
-        {/* {error && (
-          <p className="text-red-500 text-sm mt-1 dark:text-red-400">{error}</p>
-        )} */}
+
         {errorID && (
           <p className="flex items-start gap-3 bg-red-100 text-red-700 text-md translate-y-4 px-4 py-1 rounded-md text-center dark:bg-red-900 dark:text-red-400">
             <span>
@@ -99,7 +97,7 @@ function FormModifierVehicule({
         {/* Actions pour l'utilisateur admin */}
         {username === "admin" ? (
           <div className="pt-10">
-            {!currentVehicule?.description && (
+            {!currentVéhicule?.description && (
               <p className="flex items-start gap-3 bg-red-100 text-red-700 text-lg px-4 py-1 rounded-md text-center dark:bg-red-900 dark:text-red-50">
                 <span>
                   <MdErrorOutline className="text-2xl mt-0.5" />
@@ -108,7 +106,7 @@ function FormModifierVehicule({
               </p>
             )}
             <div className="relative grid grid-cols-2 gap-2 pt-5 pb-8">
-              {!currentVehicule?.description && (
+              {!currentVéhicule?.description && (
                 <div className="absolute inset-0 bg-black/0 "></div>
               )}
               <button

@@ -37,8 +37,7 @@ import HistoriqueMainComponent from "../historique_vehicule/HistoriqueMainCompon
 import MapComponent from "../location_vehicule/MapComponent";
 
 function RapportPersonnel({
-  currentVehicule,
-  formattedDate,
+  currentVéhicule,
   heureActiveDebut,
   heureActiveFin,
   selectUTC,
@@ -86,16 +85,16 @@ function RapportPersonnel({
   const {
     loadingHistoriqueFilter,
     setShowListOption,
-    vehiclueHistoriqueDetails,
-    setVehiclueHistoriqueDetails,
-    setCurrentVehicule,
-    currentdataFusionnee,
-    setSelectedVehicle,
-    sethistiriqueSelectedLocationIndex,
+    véhiculeHistoriqueDetails,
+    setVéhiculeHistoriqueDetails,
+    setCurrentVéhicule,
+    currentDataFusionné,
+    setSelectedVehicleToShowInMap,
+    setHistoriqueSelectedLocationIndex,
     FormatDateHeure,
     rapportPersonnelPDFtRef,
-    searchdonneeFusionneeForRapport,
-  } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
+    searchDonneeFusionnéForRapport,
+  } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   const formatTime = (hours, minutes, seconds) => {
     if (hours > 0 || minutes > 0 || seconds > 0) {
@@ -122,13 +121,13 @@ function RapportPersonnel({
   ];
   // Trouver la date du rapport
   const timestampInSecondsDebut =
-    currentVehicule?.vehiculeDetails[
-      currentVehicule?.vehiculeDetails.length - 1
+    currentVéhicule?.véhiculeDetails[
+      currentVéhicule?.véhiculeDetails.length - 1
     ]?.timestamp;
   const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
   // Trouver la date du rapport
-  const timestampInSecondsFin = currentVehicule?.vehiculeDetails[1]?.timestamp;
+  const timestampInSecondsFin = currentVéhicule?.véhiculeDetails[1]?.timestamp;
   const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
   // Récupérer le jour, le mois et l'année séparément pour la date de début en local
@@ -140,16 +139,6 @@ function RapportPersonnel({
   const jourFin = dateObjectFin.getDate(); // Jour local
   const moisFin = moisEnLettres[dateObjectFin.getMonth()]; // Mois local
   const anneeFin = dateObjectFin.getFullYear(); // Année locale
-
-  // // Récupérer le jour, le mois et l'année séparément
-  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  // const moisDebut = moisEnLettres[dateObjectDebut.getUTCMonth()];
-  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
-
-  // // Récupérer le jour, le mois et l'année séparément
-  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  // const moisFin = moisEnLettres[dateObjectFin.getUTCMonth()];
-  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
   const heureDebut = FormatDateHeure(timestampInSecondsDebut)?.time;
   const heureFin = FormatDateHeure(timestampInSecondsFin)?.time;
@@ -201,18 +190,18 @@ function RapportPersonnel({
   //////////////////////////////////////////////////////////////////////////////////
 
   const handleClick = () => {
-    const deviceID = currentVehicule.deviceID;
+    const deviceID = currentVéhicule.deviceID;
 
     // Recherche du véhicule correspondant dans la liste
-    const foundVehicle = currentdataFusionnee.find(
+    const foundVehicle = currentDataFusionné.find(
       (v) => v.deviceID === deviceID
     );
 
     if (foundVehicle) {
-      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
 
-      setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
-      setSelectedVehicle(foundVehicle.deviceID); // Met à jour la sélection
+      setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+      setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection
     } else {
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
@@ -220,7 +209,7 @@ function RapportPersonnel({
 
   const calculateAverageSpeed = (data) => {
     // Extraire les détails du véhicule
-    const details = data?.vehiculeDetails;
+    const details = data?.véhiculeDetails;
 
     // Filtrer les vitesses supérieures à 0
     const validSpeeds = details
@@ -237,7 +226,7 @@ function RapportPersonnel({
     return averageSpeed.toFixed(2); // Arrondir à 2 décimales
   };
 
-  const vitesseMoyenne = calculateAverageSpeed(currentVehicule);
+  const vitesseMoyenne = calculateAverageSpeed(currentVéhicule);
   // console.log(`Vitesse moyenne : ${averageSpeed} km/h`);
 
   const [voirPositionSurCarte, setvoirPositionSurCarte] = useState(false);
@@ -257,7 +246,7 @@ function RapportPersonnel({
     }
   }, [downloadExelPDF]);
 
-  const isSearching = searchdonneeFusionneeForRapport?.length > 0;
+  const isSearching = searchDonneeFusionnéForRapport?.length > 0;
 
   return (
     <>
@@ -265,7 +254,7 @@ function RapportPersonnel({
         <h1>Mon contenu à exporter</h1>
         <p>Voici un exemple de texte dans le PDF.</p>
       </div> */}
-      {currentVehicule ? (
+      {currentVéhicule ? (
         <div
           ref={rapportPersonnelPDFtRef}
           className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full"
@@ -274,7 +263,7 @@ function RapportPersonnel({
             Rapport détaillé du véhicule
           </h1>
           <h1 className="text-center mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
-            {currentVehicule?.description || ""}
+            {currentVéhicule?.description || ""}
           </h1>
           <div className="mb-12 shadow-md dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
@@ -313,8 +302,8 @@ function RapportPersonnel({
                 {/*  */}
                 <div className="flex flex-wrap">
                   <p>Heure de recherche trouvée :</p>
-                  {currentVehicule?.vehiculeDetails[
-                    currentVehicule?.vehiculeDetails?.length - 1
+                  {currentVéhicule?.véhiculeDetails[
+                    currentVéhicule?.véhiculeDetails?.length - 1
                   ]?.timestamp ? (
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-5">
                       De{" "}
@@ -337,14 +326,14 @@ function RapportPersonnel({
                 <p>
                   Nom du Véhicule :{" "}
                   <span className=" dark:text-orange-500 font-normal text-gray-700 pl-3">
-                    {currentVehicule?.description || "---"}
+                    {currentVéhicule?.description || "---"}
                   </span>
                 </p>
 
                 <p>
                   Plaque d'immatriculation:{" "}
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                    {currentVehicule?.licensePlate || "---"}
+                    {currentVéhicule?.licensePlate || "---"}
                   </span>
                 </p>
               </div>
@@ -392,8 +381,8 @@ function RapportPersonnel({
                 {/*  */}
                 <div className="flex flex-wrap">
                   <p>Heure de recherche trouvée :</p>
-                  {currentVehicule?.vehiculeDetails[
-                    currentVehicule?.vehiculeDetails?.length - 1
+                  {currentVéhicule?.véhiculeDetails[
+                    currentVéhicule?.véhiculeDetails?.length - 1
                   ]?.timestamp ? (
                     <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
                       De{" "}
@@ -491,7 +480,7 @@ function RapportPersonnel({
                   Distance totale parcourue:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {calculateTotalDistance(
-                      currentVehicule?.vehiculeDetails
+                      currentVéhicule?.véhiculeDetails
                     ).toFixed(0)}
                     Km{" "}
                   </span>
@@ -686,14 +675,14 @@ function RapportPersonnel({
                   />
                   <h3 className="text-orange-500">Historique</h3>
                   <h2 className="text-gray-700 dark:text-gray-200 text-center">
-                    {currentVehicule?.description || ""}
+                    {currentVéhicule?.description || ""}
                   </h2>
                 </div>
                 <div className="relative  overflow-auto mx-1 w-full h-[90vh] p-1 mx-4- max-w-[90vw]">
                   <HistoriqueMainComponent
-                    currentVehicule={currentVehicule}
+                    currentVéhicule={currentVéhicule}
                     loadingHistoriqueFilter={loadingHistoriqueFilter}
-                    vehiclueHistoriqueDetails={vehiclueHistoriqueDetails}
+                    véhiculeHistoriqueDetails={véhiculeHistoriqueDetails}
                     appliedCheckboxes={appliedCheckboxes}
                     setShowListOption={setshowHistoriquePupup}
                     formatTimestampToDate={formatTimestampToDate}
@@ -940,8 +929,8 @@ function RapportPersonnel({
               <div className="flex gap-0 items-center">
                 <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
 
-                {currentVehicule?.vehiculeDetails[
-                  currentVehicule?.vehiculeDetails?.length - 1
+                {currentVéhicule?.véhiculeDetails[
+                  currentVéhicule?.véhiculeDetails?.length - 1
                 ]?.timestamp ? (
                   <p className="text-[.9rem]">
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
@@ -1004,9 +993,11 @@ function RapportPersonnel({
                             className="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg  shadow-lg "
                             key={index}
                             onClick={() => {
-                              setSelectedVehicle(currentVehicule.deviceID);
+                              setSelectedVehicleToShowInMap(
+                                currentVéhicule.deviceID
+                              );
 
-                              sethistiriqueSelectedLocationIndex(
+                              setHistoriqueSelectedLocationIndex(
                                 item.addressIndex
                               );
                               setvoirPositionSurCarte(true);
@@ -1090,8 +1081,10 @@ function RapportPersonnel({
                             className="bg-orange-50 dark:bg-gray-900/40 dark:text-gray-300 p-3 rounded-lg  shadow-lg  dark:shadow-gray-700"
                             key={index}
                             onClick={() => {
-                              setSelectedVehicle(currentVehicule.deviceID);
-                              sethistiriqueSelectedLocationIndex(
+                              setSelectedVehicleToShowInMap(
+                                currentVéhicule.deviceID
+                              );
+                              setHistoriqueSelectedLocationIndex(
                                 item.addressIndex
                               );
                               setvoirPositionSurCarte(true);

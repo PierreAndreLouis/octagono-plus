@@ -1,34 +1,41 @@
 import React, { useContext, useState } from "react";
 import { DataContext } from "../context/DataContext";
-import ShowConfirmAddVehiculePupupComponent from "../components/ajouter_vehicule/ShowConfirmAddVehiculePupupComponent";
-import ErrorAddvehiculePupupComponent from "../components/ajouter_vehicule/ErrorAddvehiculePupupComponent";
 import FormAjouterVehicule from "../components/ajouter_vehicule/FormAjouterVehicule";
-import SuccessAjoutervehiculePupupComponent from "../components/ajouter_vehicule/SuccessAjoutervehiculePupupComponent";
+import ConfirmationPassword from "../components/Reutilisable/ConfirmationPassword";
+import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function AjouterPage() {
   const {
     createVehicle,
     error,
     setError,
-    vehicleData,
+    véhiculeData,
     password,
-    successAddvehiculePupup,
-    errorAddvehiculePupup,
-    seterrorAddvehiculePupup,
-    setsuccessAddvehiculePupup,
-    crud_loading,
+    successAddVéhiculePopup,
+    errorAddVéhiculePopup,
+    setErrorAddVéhiculePopup,
+    setSuccessAddVéhiculePopup,
+    createVéhiculeLoading,
     username,
   } = useContext(DataContext);
 
-  const [showConfirmAddVehiculePupup, setshowConfirmAddVehiculePupup] =
+  // Pour afficher le popup de confirmation de password
+  const [showConfirmAddVéhiculePopup, setShowConfirmAddVéhiculePopup] =
     useState(false);
-
+  // Pour stocker le mot de passe de confirmation  de password
   const [inputPassword, setInputPassword] = useState("");
+
+  // Pour afficher un message de d'erreur lors de mauvais mot de passe
   const [errorMessage, setErrorMessage] = useState("");
 
-  // error
+  // État pour le message d'erreur de deviceID incorrect
+  const [errorID, setErrorID] = useState("");
+
+  // État pour le message d'erreur de IMEI
+  const [errorImei, setErrorImei] = useState("");
+
   // État pour chaque champ du formulaire
-  const [addvehicleData, setAddVehicleData] = useState({
+  const [addVéhiculeData, setAddVehicleData] = useState({
     deviceID: "",
     description: "",
     equipmentType: "",
@@ -38,9 +45,6 @@ function AjouterPage() {
     simPhoneNumber: "",
     displayName: "",
   });
-
-  const [errorID, setErrorID] = useState(""); // État pour le message d'erreur
-  const [errorImei, setErrorImei] = useState(""); // État pour le message d'erreur
 
   // Gestion de la modification des champs
   const handleChange = (e) => {
@@ -58,11 +62,11 @@ function AjouterPage() {
     setError("");
 
     // Si deviceID est unique, créer le véhicule
-    const deviceID = addvehicleData.deviceID;
+    const deviceID = addVéhiculeData.deviceID;
 
     // Vérification si deviceID existe déjà
-    const deviceExists = vehicleData.some(
-      (vehicle) => vehicle.deviceID === deviceID
+    const deviceExists = véhiculeData.some(
+      (véhicule) => véhicule.deviceID === deviceID
     );
 
     if (deviceExists) {
@@ -73,32 +77,33 @@ function AjouterPage() {
     }
 
     // Validation du numéro SIM
-    if (isNaN(addvehicleData.simPhoneNumber)) {
+    if (isNaN(addVéhiculeData.simPhoneNumber)) {
       setErrorID("Le numéro de la carte SIM doit être un nombre.");
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
     // Validation du numéro SIM
-    if (isNaN(addvehicleData.imeiNumber)) {
+    if (isNaN(addVéhiculeData.imeiNumber)) {
       setErrorID("L'IMEI doit être un nombre.");
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
-    setshowConfirmAddVehiculePupup(true);
+    setShowConfirmAddVéhiculePopup(true);
   };
 
+  // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === password) {
-      const deviceID = addvehicleData.deviceID;
-      const imeiNumber = addvehicleData.imeiNumber;
-      const uniqueIdentifier = addvehicleData.uniqueIdentifier;
-      const description = addvehicleData.description;
-      const displayName = addvehicleData.displayName;
-      const licensePlate = addvehicleData.licensePlate;
-      const equipmentType = addvehicleData.equipmentType;
-      const simPhoneNumber = addvehicleData.simPhoneNumber;
+      const deviceID = addVéhiculeData.deviceID;
+      const imeiNumber = addVéhiculeData.imeiNumber;
+      const uniqueIdentifier = addVéhiculeData.uniqueIdentifier;
+      const description = addVéhiculeData.description;
+      const displayName = addVéhiculeData.displayName;
+      const licensePlate = addVéhiculeData.licensePlate;
+      const equipmentType = addVéhiculeData.equipmentType;
+      const simPhoneNumber = addVéhiculeData.simPhoneNumber;
 
       createVehicle(
         deviceID,
@@ -111,7 +116,7 @@ function AjouterPage() {
         simPhoneNumber
       );
 
-      setshowConfirmAddVehiculePupup(false);
+      setShowConfirmAddVéhiculePopup(false);
       setErrorMessage("");
       setInputPassword("");
     } else {
@@ -121,7 +126,7 @@ function AjouterPage() {
 
   return (
     <div className="px-3">
-      {crud_loading && (
+      {createVéhiculeLoading && (
         <div className="fixed z-30 inset-0 bg-gray-200/50">
           <div className="w-full h-full flex justify-center items-center">
             <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
@@ -129,25 +134,33 @@ function AjouterPage() {
         </div>
       )}
 
-      <ShowConfirmAddVehiculePupupComponent
-        showConfirmAddVehiculePupup={showConfirmAddVehiculePupup}
-        handlePasswordCheck={handlePasswordCheck}
+      {/* Popup pour la confirmation du mot de passe */}
+      <ConfirmationPassword
+        showConfirmPassword={showConfirmAddVéhiculePopup}
+        setShowConfirmPassword={setShowConfirmAddVéhiculePopup}
+        inputPassword={inputPassword}
         setInputPassword={setInputPassword}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
-        setshowConfirmAddVehiculePupup={setshowConfirmAddVehiculePupup}
-        inputPassword={inputPassword}
-      />
-      <SuccessAjoutervehiculePupupComponent
-        successAddvehiculePupup={successAddvehiculePupup}
-        addvehicleData={addvehicleData}
-        setsuccessAddvehiculePupup={setsuccessAddvehiculePupup}
+        handlePasswordCheck={handlePasswordCheck}
+        setIsPasswordConfirmed={setShowConfirmAddVéhiculePopup}
+
       />
 
-      <ErrorAddvehiculePupupComponent
-        errorAddvehiculePupup={errorAddvehiculePupup}
-        addvehicleData={addvehicleData}
-        seterrorAddvehiculePupup={seterrorAddvehiculePupup}
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={successAddVéhiculePopup}
+        setMessage={setSuccessAddVéhiculePopup}
+        véhiculeData={addVéhiculeData}
+        composant_from={"succès ajout de véhicule"}
+      />
+
+      {/* Popup pour Message de échec */}
+      <SuccèsÉchecMessagePopup
+        message={errorAddVéhiculePopup}
+        setMessage={setErrorAddVéhiculePopup}
+        véhiculeData={addVéhiculeData}
+        composant_from={"échec ajout de véhicule"}
       />
 
       <div className="flex w-full justify-center h-full mt-10 md:mt-20 ">
@@ -162,7 +175,7 @@ function AjouterPage() {
 
             <FormAjouterVehicule
               handleSubmit={handleSubmit}
-              addvehicleData={addvehicleData}
+              addVéhiculeData={addVéhiculeData}
               handleChange={handleChange}
               errorID={errorID}
               errorImei={errorImei}

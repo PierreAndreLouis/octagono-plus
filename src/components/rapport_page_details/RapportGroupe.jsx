@@ -1,164 +1,119 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import * as XLSX from "xlsx";
 
-import { IoTimeOutline } from "react-icons/io5";
-import { GiPathDistance } from "react-icons/gi";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { MdLocationPin } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import customMarkerIcon from "/img/cars/localisation.png";
-import { FaCar } from "react-icons/fa";
-
 import { IoClose } from "react-icons/io5";
 import { MdOutlineFullscreen } from "react-icons/md";
 import { BsTable } from "react-icons/bs";
 import { RiPinDistanceLine } from "react-icons/ri";
-import { SlSpeedometer } from "react-icons/sl";
 import MapComponent from "../location_vehicule/MapComponent";
 import { DataContext } from "../../context/DataContext";
-import VehiculeActiveAjourdhuiComponent from "../rapport_vehicule/VehiculeActiveAjourdhuiComponent";
-import VehiculeNotActiveAjourdhuiComponent from "../rapport_vehicule/VehiculeNotActiveAjourdhuiComponent";
-import VehiculeNotActifComponent from "../rapport_vehicule/VehiculeNotActifComponent";
+
 import TrajetVehicule from "../historique_vehicule/TrajetVehicule";
 import Tooltip from "@mui/material/Tooltip";
 
 function RapportGroupe({
-  formattedDate, // Date formatée pour l'affichage
-  currentdataFusionnee, // Liste des véhicules
-  vehiculeActiveAjourdhui, // Véhicules actifs aujourd'hui
-  vehiculeNotActiveAjourdhui, // Véhicules en stationnement aujourd'hui
-  vehiculeNotActif, // Véhicules hors service
-  earliestVehicle, // Premier véhicule en mouvement
-  latestVehicle, // Dernier véhicule en mouvement
-  selectUTC, // Option pour formater l'heure en UTC
-  formatTimestampToTime, // Fonction pour formater le timestamp
-  formatTimestampToTimeWithTimezone, // Fonction pour formater avec timezone
-  result, // Résultats pour le temps d'activité
-  result2, // Résultats pour les distances parcourues
-  result3, // Résultats pour les arrêts
-  result5, // Résultats pour la vitesse
+  currentDataFusionné, // Liste des véhicules
+  véhiculeActiveToday, // Véhicules actifs aujourd'hui
+  véhiculeNotActiveToday, // Véhicules en stationnement aujourd'hui
+  véhiculeHorsService, // Véhicules hors service
   zoomPosition, // État pour la position zoomée de la carte
   setzoomPosition, // Fonctio
-  activePeriods,
-  movingTimes,
   typeDeVue,
   setTypeDeVue,
   mapType,
   handleMapTypeChange,
-  // vehicles,
   mapRef,
   tileLayers,
   getMarkerIcon,
-
   currentLocation,
   positions,
   centerOnFirstMarker,
   showHistoriqueInMap,
   openGoogleMaps,
-  options,
-  uniqueAddresses,
-  uniqueAddressesZerroSpeed,
-  setShowOptions,
   setpageSection,
-  setSelectedVehicle,
-  startDate,
-  startTime,
-  endDate,
-  endTime,
+  setSelectedVehicleToShowInMap,
   downloadExelPDF,
 }) {
   const {
-    loadingHistoriqueFilter,
-    setShowListOption,
-    vehiclueHistoriqueDetails,
-    setVehiclueHistoriqueDetails,
-    currentVehicule,
-    setdonneeFusionneeForRapport,
-    setCurrentVehicule,
+    currentVéhicule,
+    setCurrentVéhicule,
     FormatDateHeure,
     mergedData,
-    searchdonneeFusionneeForRapport,
+    searchDonneeFusionnéForRapport,
     tableRef,
     rapportGroupePDFtRef,
-    sethistiriqueSelectedLocationIndex,
-  } = useContext(DataContext); // const { currentVehicule } = useContext(DataContext);
+    setHistoriqueSelectedLocationIndex,
+  } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
+  let x;
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   const dataFusionneeHome = mergedData ? Object.values(mergedData) : [];
 
-  const [voirPlus, setvoirPlus] = useState(false);
-  const [voirDansLaCarte, setvoirDansLaCarte] = useState(false);
+  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
 
+  // Fonction pour obtenir le timestamp actuel en millisecondes
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // Pour voir plus de details
+  const [voirPlus, setvoirPlus] = useState(false);
+
+  // Pour voir le trajet d'un vehicules dans la carte dans la carte
+  const [voirTrajetDansLaCarte, setVoirTrajetDansLaCarte] = useState(false);
+
+  // Pour le filtrage du tableau en ordre croissant ou décroissant
   const [tableSortCroissant, setTableSortCroissant] = useState(true);
   useEffect(() => {
     console.log(tableSortCroissant);
   }, [tableSortCroissant]);
 
-  const formatTime = (hours, minutes, seconds) => {
-    if (hours > 0 || minutes > 0 || seconds > 0) {
-      return `${hours > 0 ? hours + "h " : ""}${
-        minutes > 0 ? minutes + "m " : ""
-      }${seconds > 0 ? seconds + "s" : ""}`;
-    }
-    return "0s";
-  };
-
-  const donneeVehiculeDetails = currentdataFusionnee?.find(
-    (vehicule) =>
-      vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
-  )?.vehiculeDetails;
-
-  const premierDetail =
-    donneeVehiculeDetails?.[donneeVehiculeDetails.length - 1]?.timestamp;
-
-  const dernierDetails = donneeVehiculeDetails?.[0]?.timestamp;
-
-  // Trouver la date du rapport
-  const timestampInSecondsDebut = premierDetail;
-
-  const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
-
-  // Trouver la date du rapport
-  const timestampInSecondsFin = dernierDetails;
-
-  const dateObjectFin = new Date(timestampInSecondsFin * 1000);
-
-  //////////////////////////////////////////////////////////////////
-
-  // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-
-    const day = date.getDate(); // Jour du mois en chiffre
-
-    const month = date.toLocaleDateString("fr-FR", { month: "long" });
-    const year = date.getFullYear();
-
-    return { day, month, year };
-  };
-
-  const formatTo12Hour = (time) => {
-    let [hours, minutes] = time.split(":").map(Number);
-    const isAM = hours < 12;
-    hours = hours % 12 || 12; // Convertir l'heure 0 à 12 (minuit) en 12 AM
-    const period = isAM ? "AM" : "PM";
-    return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
-  };
-
-  ///////////////////////////////////////////////////////////
-
   const [voirVehiculeListePupup, setvoirVehiculeListePupup] = useState(false);
-  const [defineVehiculeListePupup, setdefineVehiculeListePupup] =
-    useState("tous");
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   const [trajetVehiculePupup, settrajetVehiculePupup] = useState(false);
   const [tableDeplacement, settableDeplacement] = useState(false);
   const [tableDistance, settableDistance] = useState(false);
@@ -167,7 +122,31 @@ function RapportGroupe({
   const [tableTrajet, settableTrajet] = useState(false);
 
   ///////////////////////////////////////////////////////////////////////////
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   // Fonction pour calculer la distance entre deux points géographiques en kilomètres
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Rayon de la Terre en kilomètres
@@ -198,17 +177,17 @@ function RapportGroupe({
 
   const processVehicleData = (currentData) => {
     return currentData.map((item) => {
-      const vehiculeDetails = item.vehiculeDetails;
+      const véhiculeDetails = item.véhiculeDetails;
 
       // Trouver le premier et le dernier index où speedKPH >= 1
-      const firstValidIndex = vehiculeDetails.findIndex(
+      const firstValidIndex = véhiculeDetails.findIndex(
         (detail) => parseFloat(detail.speedKPH) >= 1
       );
 
       const lastValidIndex =
-        vehiculeDetails.length -
+        véhiculeDetails.length -
         1 -
-        vehiculeDetails
+        véhiculeDetails
           .slice()
           .reverse()
           .findIndex((detail) => parseFloat(detail.speedKPH) >= 1) +
@@ -221,7 +200,7 @@ function RapportGroupe({
       ) {
         return {
           ...item,
-          vehiculeDetails: [],
+          véhiculeDetails: [],
           totalDistance: 0, // Aucune distance calculée si aucun détail valide
           totalDuration: "0h 0m 0s", // Aucune durée calculée si aucun détail valide
           totalPauseDuration: "0h 0m 0s", // Aucune durée de pause calculée
@@ -234,7 +213,7 @@ function RapportGroupe({
         };
       }
 
-      const filteredVehiculeDetails = vehiculeDetails.slice(
+      const filteredVehiculeDetails = véhiculeDetails.slice(
         firstValidIndex,
         lastValidIndex + 1
       );
@@ -314,7 +293,7 @@ function RapportGroupe({
         // Si aucune vitesse n'est valide
         return {
           ...item,
-          vehiculeDetails: [],
+          véhiculeDetails: [],
           totalDistance: 0,
           totalDuration: "0h 0m 0s",
           totalPauseDuration: "0h 0m 0s",
@@ -329,7 +308,7 @@ function RapportGroupe({
 
       return {
         ...item,
-        vehiculeDetails: filteredVehiculeDetails,
+        véhiculeDetails: filteredVehiculeDetails,
         totalDistance: totalDistance, // Ajouter la distance parcourue
         totalDuration: formatDuration(totalDuration), // Ajouter la durée totale formatée
         totalPauseDuration: formatDuration(totalPauseDuration), // Ajouter la durée totale des pauses formatée
@@ -347,7 +326,7 @@ function RapportGroupe({
     return filteredData
       .map((item) => {
         const lastDetail =
-          item.vehiculeDetails[item.vehiculeDetails.length - 1];
+          item.véhiculeDetails[item.véhiculeDetails.length - 1];
         return {
           description: item.description,
           deviceID: item.deviceID,
@@ -361,7 +340,7 @@ function RapportGroupe({
           avgSpeed: item.avgSpeed || 0,
           stopCount: item.stopCount, // Ajouter le nombre d'arrêts
           totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
-          vehiculeDetails: item.vehiculeDetails,
+          véhiculeDetails: item.véhiculeDetails,
         };
       })
       .sort((a, b) =>
@@ -383,7 +362,7 @@ function RapportGroupe({
         avgSpeed: item.avgSpeed || 0,
         stopCount: item.stopCount, // Ajouter le nombre d'arrêts
         totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
-        vehiculeDetails: item.vehiculeDetails,
+        véhiculeDetails: item.véhiculeDetails,
       }))
       .sort((a, b) =>
         tableSortCroissant
@@ -406,7 +385,7 @@ function RapportGroupe({
         avgSpeed: item.avgSpeed || 0,
         stopCount: item.stopCount, // Ajouter le nombre d'arrêts
         totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
-        vehiculeDetails: item.vehiculeDetails,
+        véhiculeDetails: item.véhiculeDetails,
       }))
       .sort((a, b) => {
         // Convertir les durées en secondes pour les comparer
@@ -440,7 +419,7 @@ function RapportGroupe({
         avgSpeed: item.avgSpeed || 0,
         stopCount: item.stopCount, // Ajouter le nombre d'arrêts
         totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
-        vehiculeDetails: item.vehiculeDetails,
+        véhiculeDetails: item.véhiculeDetails,
       }))
       .sort((a, b) =>
         tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed
@@ -450,10 +429,10 @@ function RapportGroupe({
   const sortVehiclesByFirstMovement = (filteredData) => {
     return filteredData
       .map((item) => {
-        const vehiculeDetails = item.vehiculeDetails;
+        const véhiculeDetails = item.véhiculeDetails;
 
         // Trouver le dernier index où speedKPH >= 1
-        const lastValidIndex = vehiculeDetails.findLastIndex(
+        const lastValidIndex = véhiculeDetails.findLastIndex(
           (detail) => parseFloat(detail.speedKPH) >= 1
         );
 
@@ -461,7 +440,7 @@ function RapportGroupe({
         const firstMovementTimestamp =
           lastValidIndex === -1
             ? Number.MAX_SAFE_INTEGER
-            : vehiculeDetails[lastValidIndex].timestamp;
+            : véhiculeDetails[lastValidIndex].timestamp;
 
         return {
           ...item,
@@ -477,7 +456,7 @@ function RapportGroupe({
           avgSpeed: item.avgSpeed || 0,
           stopCount: item.stopCount,
           totalStopDuration: item.totalStopDuration,
-          vehiculeDetails: item.vehiculeDetails,
+          véhiculeDetails: item.véhiculeDetails,
         };
       })
       .sort((a, b) => {
@@ -488,7 +467,7 @@ function RapportGroupe({
       });
   };
 
-  const filteredData = processVehicleData(currentdataFusionnee);
+  const filteredData = processVehicleData(currentDataFusionné);
 
   const vehiculeMouvementOrdered = sortVehiclesBySpeed(filteredData);
 
@@ -503,19 +482,57 @@ function RapportGroupe({
 
   // Appliquer le filtre par heure de départ
   const vehiclesByDepartureTime = sortVehiclesByFirstMovement(filteredData);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   ////////////////////////////////////////////////////////
   const totalDistanceSum = vehiculeMouvementOrdered.reduce(
-    (sum, vehicle) => sum + vehicle.totalDistance,
+    (sum, véhicule) => sum + véhicule.totalDistance,
     0
   );
 
   const nombreTotaleArret = vehiculeMouvementOrdered.reduce(
-    (sum, vehicle) => sum + vehicle.stopCount,
+    (sum, véhicule) => sum + véhicule.stopCount,
     0
   );
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
   //////////////////////////////////////////////////
+
+  // distance totale parcouru par tous les vehicules
 
   // Fonction pour convertir "Xh Ym Zs" en secondes
   const durationToSeconds = (duration) => {
@@ -535,52 +552,61 @@ function RapportGroupe({
 
   // Calculer la somme des durées en secondes
   const totalMovingDurationInSeconds = vehiculeMouvementOrdered.reduce(
-    (sum, vehicle) => sum + durationToSeconds(vehicle.totalMovingDuration),
+    (sum, véhicule) => sum + durationToSeconds(véhicule.totalMovingDuration),
     0
   );
 
   // Convertir le résultat en "Xh Ym Zs"
   const totalMovingDuration = secondsToDuration(totalMovingDurationInSeconds);
-
-  // Calcul de la vitesse minimale
-  const totalminSpeed = Math.min(
-    ...vehiculeMouvementOrdered.map((vehicle) => vehicle.minSpeed)
-  );
-
-  // Calcul de la vitesse maximale
-  const totalmaxSpeed = Math.max(
-    ...vehiculeMouvementOrdered.map((vehicle) => vehicle.maxSpeed)
-  );
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   // Calcul de la vitesse moyenne totale
   const totalAvgSpeed = vehiculeMouvementOrdered
-    .filter((vehicle) => vehicle.avgSpeed > 0) // Filtrer les véhicules avec avgSpeed > 0
-    .reduce((sum, vehicle, _, filteredArray) => {
+    .filter((véhicule) => véhicule.avgSpeed > 0) // Filtrer les véhicules avec avgSpeed > 0
+    .reduce((sum, véhicule, _, filteredArray) => {
       const count = filteredArray.length; // Nombre de véhicules avec avgSpeed > 0
-      return sum + vehicle.avgSpeed / count; // Ajouter à la somme en divisant directement par le nombre
+      return sum + véhicule.avgSpeed / count; // Ajouter à la somme en divisant directement par le nombre
     }, 0);
 
-  // Filtrer les éléments avec minSpeed > 0, puis trouver le minimum
-  const filteredSpeeds = (vehiculeMouvementOrdered || [])
-    .map((item) => Number(item?.minSpeed) || 0)
-    .filter((speed) => speed > 0);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
 
-  const smallestMinSpeed =
-    filteredSpeeds.length > 0 ? Math.min(...filteredSpeeds) : 0;
-
-  // console.log("Smallest minSpeed > 0:", smallestMinSpeed);
-
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
+  // La date du Véhicule en mouvement en 1er
 
   const premierMovementDebut =
-    vehiculeMouvementOrdered[0]?.vehiculeDetails[
-      vehiculeMouvementOrdered[0]?.vehiculeDetails.length - 1
+    vehiculeMouvementOrdered[0]?.véhiculeDetails[
+      vehiculeMouvementOrdered[0]?.véhiculeDetails.length - 1
     ]?.timestamp;
 
   const datePemierMouvementDebut = new Date(premierMovementDebut * 1000);
@@ -593,17 +619,30 @@ function RapportGroupe({
   const anneePemierMouvement = datePemierMouvementDebut.getFullYear(); // Obtenir l'année
 
   //
-
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Date et Heure du Véhicule ayant parcouru la plus grande distance
 
   const premierdistanceDebut =
-    vehiclesByDistance[0]?.vehiculeDetails[
-      vehiclesByDistance[0]?.vehiculeDetails.length - 1
+    vehiclesByDistance[0]?.véhiculeDetails[
+      vehiclesByDistance[0]?.véhiculeDetails.length - 1
     ]?.timestamp;
 
   const datePemierDistanceDebut = new Date(premierdistanceDebut * 1000);
@@ -620,7 +659,7 @@ function RapportGroupe({
   //////////////////////////////////////////////////////////////////////
 
   const dernierdistanceDebut =
-    vehiclesByDistance[0]?.vehiculeDetails[0]?.timestamp;
+    vehiclesByDistance[0]?.véhiculeDetails[0]?.timestamp;
 
   const dateDernierDistanceDebut = new Date(dernierdistanceDebut * 1000);
 
@@ -632,27 +671,32 @@ function RapportGroupe({
   const anneeDernierDistance = dateDernierDistanceDebut.getFullYear(); // Obtenir l'année
 
   //
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-
   //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
+  // Date et heure du vehicule en mouvement le plus lonntemps
 
   const premierdistanceLontanDebut =
-    vehiclesByMovingDuration[0]?.vehiculeDetails[
-      vehiclesByMovingDuration[0]?.vehiculeDetails.length - 1
+    vehiclesByMovingDuration[0]?.véhiculeDetails[
+      vehiclesByMovingDuration[0]?.véhiculeDetails.length - 1
     ]?.timestamp;
 
   const datePemierDistanceLontanDebut = new Date(
@@ -674,7 +718,7 @@ function RapportGroupe({
   //////////////////////////////////////////////////////////////////////
 
   const dernierdistanceLontanDebut =
-    vehiclesByMovingDuration[0]?.vehiculeDetails[0]?.timestamp;
+    vehiclesByMovingDuration[0]?.véhiculeDetails[0]?.timestamp;
 
   const dateDernierDistanceLontanDebut = new Date(
     dernierdistanceLontanDebut * 1000
@@ -690,38 +734,78 @@ function RapportGroupe({
     dateDernierDistanceLontanDebut.getFullYear(); // Obtenir l'année
 
   //
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  // Afficher la position d'un vehicule dans la carte
 
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   const [currentVehiculeInCarte, setcurrentVehiculeInCarte] = useState(
     vehiculeMouvementOrdered[0]
   );
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  const positionDansCarte = (vehicule) => {
-    const deviceID = vehicule.deviceID;
+  const positionDansCarte = (véhicule) => {
+    const deviceID = véhicule.deviceID;
 
     // Recherche du véhicule correspondant dans la liste
-    const foundVehicle = currentdataFusionnee.find(
+    const foundVehicle = currentDataFusionné.find(
       (v) => v.deviceID === deviceID
     );
 
     if (foundVehicle) {
       setcurrentVehiculeInCarte(foundVehicle); // Définit le véhicule actuel
-      setCurrentVehicule(foundVehicle);
+      setCurrentVéhicule(foundVehicle);
     } else {
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
   };
 
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   useEffect(() => {
-    console.log("currentVehicule", currentVehiculeInCarte);
+    console.log("currentVéhicule", currentVehiculeInCarte);
   }, [currentVehiculeInCarte]);
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // afficher le trajer dans la carte
   // // Filtrage pour supprimer les doublons et respecter l'intervalle de 10 minutes
   const filteredVehicles = [];
   let lastZeroSpeedTimestamp = null;
 
-  currentVehicule?.vehiculeDetails
+  currentVéhicule?.véhiculeDetails
     .sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
     .forEach((details) => {
       const timestamp = parseInt(details.timestamp);
@@ -743,27 +827,50 @@ function RapportGroupe({
   const historiqueInMap = filteredVehicles
     ? Object.values(filteredVehicles)
     : [];
-  const vehicleData = historiqueInMap?.map((vehicule) => ({
-    description: currentVehicule?.description || "Véhicule",
-    lastValidLatitude: vehicule?.latitude || "",
-    lastValidLongitude: vehicule?.longitude || "",
-    address: vehicule?.backupAddress || vehicule?.address || "",
-    imeiNumber: currentVehicule?.imeiNumber || "",
-    isActive: currentVehicule?.isActive || "",
-    licensePlate: currentVehicule?.licensePlate || "",
-    simPhoneNumber: currentVehicule?.simPhoneNumber || "",
-    timestamp: vehicule?.timestamp || "",
-    speedKPH: vehicule?.speedKPH || 0, // Ajout de la vitesse
-    heading: vehicule?.heading || "",
+  const véhiculeData = historiqueInMap?.map((véhicule) => ({
+    description: currentVéhicule?.description || "Véhicule",
+    lastValidLatitude: véhicule?.latitude || "",
+    lastValidLongitude: véhicule?.longitude || "",
+    address: véhicule?.backupAddress || véhicule?.address || "",
+    imeiNumber: currentVéhicule?.imeiNumber || "",
+    isActive: currentVéhicule?.isActive || "",
+    licensePlate: currentVéhicule?.licensePlate || "",
+    simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
+    timestamp: véhicule?.timestamp || "",
+    speedKPH: véhicule?.speedKPH || 0, // Ajout de la vitesse
+    heading: véhicule?.heading || "",
   }));
 
-  const vehicles = vehicleData;
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////
+  const vehicles = véhiculeData;
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // Pour filtrer le tableau
   const [tableSortBy, settableSortBy] = useState();
   const [tableSortByColorBg, settableSortByColorBg] = useState("");
 
@@ -777,19 +884,36 @@ function RapportGroupe({
   useEffect(() => {
     settableSortBy();
   }, [tableSortCroissant]);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  const handleClick = (vehicle) => {
-    // setCurrentVehicule(vehicle);
+  // Pour choisir un vehicule de la liste.
+  const handleClick = (véhicule) => {
+    // setCurrentVéhicule(véhicule);
 
-    const deviceID = vehicle.deviceID;
+    const deviceID = véhicule.deviceID;
 
     // // Recherche du véhicule correspondant dans la liste
-    const foundVehicle = currentdataFusionnee.find(
+    const foundVehicle = currentDataFusionné.find(
       (v) => v.deviceID === deviceID
     );
 
     if (foundVehicle) {
-      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
+      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
       setpageSection("unite");
       window.scrollTo({
         top: 0,
@@ -801,40 +925,87 @@ function RapportGroupe({
     }
   };
 
-  /////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   // Calcul de la vitesse minimale, maximale et moyenne (véhicules actifs uniquement)
   const calculateSpeeds = (data) => {
     const activeVehicles = data.filter(
-      (vehicle) => vehicle.maxSpeed > 0 || vehicle.minSpeed > 0
+      (véhicule) => véhicule.maxSpeed > 0 || véhicule.minSpeed > 0
     );
 
     const totalVehicles = activeVehicles.length;
 
     const minSpeed = Math.min(
-      ...activeVehicles.map((vehicle) => vehicle.minSpeed)
+      ...activeVehicles.map((véhicule) => véhicule.minSpeed)
     );
     const maxSpeed = Math.max(
-      ...activeVehicles.map((vehicle) => vehicle.maxSpeed)
+      ...activeVehicles.map((véhicule) => véhicule.maxSpeed)
     );
     const avgSpeed =
-      activeVehicles.reduce((sum, vehicle) => sum + vehicle.maxSpeed, 0) /
+      activeVehicles.reduce((sum, véhicule) => sum + véhicule.maxSpeed, 0) /
       totalVehicles;
 
     return { minSpeed, maxSpeed, avgSpeed, totalVehicles };
   };
 
   const speeds = calculateSpeeds(vehiclesByDepartureTime);
-
-  // console.log("Nombre de véhicules actifs :", speeds.totalVehicles);
-  // console.log("Vitesse minimale :", speeds.minSpeed.toFixed(2), "KPH");
-  // console.log("Vitesse maximale :", speeds.maxSpeed.toFixed(2), "KPH");
-  // console.log("Vitesse moyenne :", speeds.avgSpeed.toFixed(2), "KPH");
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   const [filter, setFilter] = useState("all");
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   ////////////////////////////////////////////////////
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
@@ -845,38 +1016,37 @@ function RapportGroupe({
   };
   const todayTimestamp = getTodayTimestamp() * 1000;
 
+  //
+  //
   // Fonction pour filtrer les véhicules
-  const filteredVehiclesListe = vehiclesByDepartureTime?.filter((vehicule) => {
-    const matchedVehicle = currentdataFusionnee.find(
-      (v) => v.deviceID === vehicule.deviceID
+  const filteredVehiclesListe = vehiclesByDepartureTime?.filter((véhicule) => {
+    const matchedVehicle = currentDataFusionné.find(
+      (v) => v.deviceID === véhicule.deviceID
     );
 
     const matchedVehicle2 = dataFusionneeHome.find(
-      (v) => v.deviceID === vehicule.deviceID
+      (v) => v.deviceID === véhicule.deviceID
     );
 
-    const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-    const currentTime = Date.now(); // Heure actuelle en millisecondes
-
     const isSpeedActive =
-      matchedVehicle2.vehiculeDetails &&
-      matchedVehicle2.vehiculeDetails[0] &&
-      matchedVehicle2.vehiculeDetails[0].speedKPH > 0;
+      matchedVehicle2.véhiculeDetails &&
+      matchedVehicle2.véhiculeDetails[0] &&
+      matchedVehicle2.véhiculeDetails[0].speedKPH > 0;
 
     const isNotSpeedActive =
-      matchedVehicle2.vehiculeDetails &&
-      matchedVehicle2.vehiculeDetails[0] &&
-      matchedVehicle2.vehiculeDetails[0].speedKPH <= 0;
+      matchedVehicle2.véhiculeDetails &&
+      matchedVehicle2.véhiculeDetails[0] &&
+      matchedVehicle2.véhiculeDetails[0].speedKPH <= 0;
 
-    const isMoving = matchedVehicle.vehiculeDetails?.some(
+    const isMoving = matchedVehicle.véhiculeDetails?.some(
       (detail) => detail.speedKPH >= 1
     );
 
     const hasDetails =
-      matchedVehicle.vehiculeDetails &&
-      matchedVehicle.vehiculeDetails.length > 0;
+      matchedVehicle.véhiculeDetails &&
+      matchedVehicle.véhiculeDetails.length > 0;
 
-    const noSpeed = matchedVehicle.vehiculeDetails?.every(
+    const noSpeed = matchedVehicle.véhiculeDetails?.every(
       (detail) => detail.speedKPH <= 0
     );
     //
@@ -887,22 +1057,16 @@ function RapportGroupe({
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    const isSearching = searchdonneeFusionneeForRapport?.length > 0;
-
-    // Fonction pour obtenir le timestamp actuel en millisecondes
-    const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-
-    const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
-    const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+    const isSearching = searchDonneeFusionnéForRapport?.length > 0;
 
     const hasBeenMoving =
-      matchedVehicle.vehiculeDetails &&
-      matchedVehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+      matchedVehicle.véhiculeDetails &&
+      matchedVehicle.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
 
     const lastUpdateTimestampMs =
-      matchedVehicle.vehiculeDetails &&
-      matchedVehicle.vehiculeDetails[0] &&
-      matchedVehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      matchedVehicle.véhiculeDetails &&
+      matchedVehicle.véhiculeDetails[0] &&
+      matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
@@ -916,7 +1080,6 @@ function RapportGroupe({
           isSpeedActive && hasDetails && isActive && !isNotStillSpeedActive
         );
       if (filter === "notMovingNow")
-        // return isNotSpeedActive && hasDetails && isActive;
         return (
           hasDetails &&
           isActive &&
@@ -925,7 +1088,6 @@ function RapportGroupe({
       if (filter === "moving") return hasDetails && isMoving && isToday;
 
       if (filter === "parking")
-        // return hasDetails && noSpeed && isActive;
         return (
           hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
         );
@@ -939,32 +1101,41 @@ function RapportGroupe({
     }
   });
 
-  // Fonction pour obtenir le timestamp actuel en millisecondes
-  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-
-  const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
-  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
-
-  const activeVehicleCount = currentdataFusionnee?.filter((vehicle) => {
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Vehicule en mouvement actuellement
+  const activeVehicleCount = currentDataFusionné?.filter((véhicule) => {
     // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
     const isSpeedActive =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].speedKPH > 0;
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].speedKPH > 0;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
-    const lastUpdateTimeMs = vehicle.lastUpdateTime
-      ? vehicle.lastUpdateTime * 1000
+    const lastUpdateTimeMs = véhicule.lastUpdateTime
+      ? véhicule.lastUpdateTime * 1000
       : 0;
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     const lastUpdateTimestampMs =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
     // Vérifie si la mise à jour est récente (moins de 30 minutes)
@@ -976,40 +1147,57 @@ function RapportGroupe({
     return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
   });
 
-  const notActiveVehicleCount = currentdataFusionnee?.filter((vehicle) => {
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // Vehicule en stationnement actuellement
+  const notActiveVehicleCount = currentDataFusionné?.filter((véhicule) => {
     // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
     const isNotSpeedActive =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].speedKPH <= 0;
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].speedKPH <= 0;
 
     const noSpeed =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails?.every((detail) => detail.speedKPH <= 0);
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails?.every((detail) => detail.speedKPH <= 0);
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
-    const lastUpdateTimeMs = vehicle.lastUpdateTime
-      ? vehicle.lastUpdateTime * 1000
+    const lastUpdateTimeMs = véhicule.lastUpdateTime
+      ? véhicule.lastUpdateTime * 1000
       : 0;
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     const isSpeedActive =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].speedKPH > 0;
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].speedKPH > 0;
 
     const lastUpdateTimestampMs =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
       currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
 
     const hasBeenMoving =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
 
     // Le véhicule doit être actif selon la vitesse et la mise à jour
     // return noSpeed && isRecentlyUpdated;
@@ -1017,35 +1205,35 @@ function RapportGroupe({
       isRecentlyUpdated &&
       (isNotSpeedActive || (isSpeedActive && isNotStillSpeedActive))
     );
-    // return (
-    //   hasDetails &&
-    //   isActive &&
-    //   (isNotSpeedActive || (hasBeenMoving && !isNotStillSpeedActive))
-    // );
   });
 
   ///////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Fonction pour avoir le timestamp le plus recent
   function getMostRecentTimestamp(data) {
-    // Filtrer les entrées avec un tableau vehiculeDetails valide et non vide
+    // Filtrer les entrées avec un tableau véhiculeDetails valide et non vide
     const validTimestamps = data
       .filter(
-        (vehicle) =>
-          Array.isArray(vehicle.vehiculeDetails) &&
-          vehicle.vehiculeDetails.length > 0
+        (véhicule) =>
+          Array.isArray(véhicule.véhiculeDetails) &&
+          véhicule.véhiculeDetails.length > 0
       )
-      .map((vehicle) => parseInt(vehicle.vehiculeDetails[0].timestamp));
+      .map((véhicule) => parseInt(véhicule.véhiculeDetails[0].timestamp));
 
     // Trouver le timestamp le plus récent
     const mostRecentTimestamp = Math.max(...validTimestamps);
@@ -1053,19 +1241,35 @@ function RapportGroupe({
     return { mostRecentTimestamp };
   }
   const mostRecentTimestamp =
-    getMostRecentTimestamp(currentdataFusionnee)?.mostRecentTimestamp;
+    getMostRecentTimestamp(currentDataFusionné)?.mostRecentTimestamp;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
+  // Pour avoir le timestamp le plus ancien
   function getMostOldTimestamp(data) {
-    // Filtrer les entrées avec un tableau vehiculeDetails valide et non vide
+    // Filtrer les entrées avec un tableau véhiculeDetails valide et non vide
     const validTimestamps = data
       .filter(
-        (vehicle) =>
-          Array.isArray(vehicle.vehiculeDetails) &&
-          vehicle.vehiculeDetails.length > 0
+        (véhicule) =>
+          Array.isArray(véhicule.véhiculeDetails) &&
+          véhicule.véhiculeDetails.length > 0
       )
-      .map((vehicle) =>
+      .map((véhicule) =>
         parseInt(
-          vehicle.vehiculeDetails[vehicle.vehiculeDetails.length - 1].timestamp
+          véhicule.véhiculeDetails[véhicule.véhiculeDetails.length - 1]
+            .timestamp
         )
       );
 
@@ -1077,10 +1281,22 @@ function RapportGroupe({
 
   // Récupérer le timestamp le plus ancien
   const mostOldTimestamp =
-    getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
-  //////////////////////////////////////////////////////////////
-
-  // Tableau des mois en toutes lettres
+    getMostOldTimestamp(currentDataFusionné)?.mostOldTimestamp;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Pour savoir la date et heure /debut et fin
   const moisEnLettres = [
     "janvier",
     "février",
@@ -1098,8 +1314,6 @@ function RapportGroupe({
 
   const dataObjectDebut = new Date(mostOldTimestamp * 1000);
   const dataObjectFin = new Date(mostRecentTimestamp * 1000);
-  // const dataObjectDebut = new Date(1736485243 * 1000);
-  // const dataObjectFin = new Date(1736571515 * 1000);
 
   // Récupérer le jour, le mois et l'année séparément pour la date de début en local
   const jourDebut = dataObjectDebut.getDate(); // Jour local
@@ -1111,40 +1325,43 @@ function RapportGroupe({
   const moisFin = moisEnLettres[dataObjectFin.getMonth()]; // Mois local
   const anneeFin = dataObjectFin.getFullYear(); // Année locale
 
-  // Récupérer le jour, le mois et l'année séparément pour la date de début
-  // const jourDebut = dataObjectDebut.getUTCDate();
-  // const moisDebut = moisEnLettres[dataObjectDebut.getUTCMonth()];
-  // const anneeDebut = dataObjectDebut.getUTCFullYear();
-
-  // const jourFin = dataObjectFin.getUTCDate();
-  // const moisFin = moisEnLettres[dataObjectFin.getUTCMonth()];
-  // const anneeFin = dataObjectFin.getUTCFullYear();
-
-  // const mostOldTimestamp =
-  //   getMostOldTimestamp(currentdataFusionnee)?.mostOldTimestamp;
-
-  // const dataObjectDebut = new Date(mostOldTimestamp * 1000);
-
-  // // Récupérer le jour, le mois et l'année séparément
-  // const jourDebut = dataObjectDebut.getUTCDate(); // Obtenir le jour
-  // const moisDebut = dataObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeDebut = dataObjectDebut.getFullYear(); // Obtenir l'année
-
-  // // Trouver la date du rapport
-  // const dataObjectFin = new Date(mostRecentTimestamp * 1000);
-
-  // // Récupérer le jour, le mois et l'année séparément
-  // const jourFin = dataObjectFin.getUTCDate(); // Obtenir le jour
-  // const moisFin = dataObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeFin = dataObjectFin.getFullYear(); // Obtenir l'année
-
   //////////////////////////////////////
   const heureDebut = FormatDateHeure(mostOldTimestamp)?.time;
   const heureFin = FormatDateHeure(mostRecentTimestamp)?.time;
 
-  const isSearching = searchdonneeFusionneeForRapport?.length > 0;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  const isSearching = searchDonneeFusionnéForRapport?.length > 0;
 
   const isSearchingToday = mostOldTimestamp * 1000 >= todayTimestamp;
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   // Fonction d'exportation
   const exportToExcel = () => {
@@ -1153,7 +1370,7 @@ function RapportGroupe({
     XLSX.writeFile(workbook, "Rapport des vehicules.xlsx"); // Nom du fichier
   };
 
-  // gggggggggggggggggggggggggg
+  // preparation a l'exportation
   const [preparationDownloadPDF, setPreparationDownloadPDF] = useState(false);
   useEffect(() => {
     console.log(preparationDownloadPDF);
@@ -1173,19 +1390,58 @@ function RapportGroupe({
     }
   }, [downloadExelPDF]);
 
-  const afficherPositionTableauEnCarte = (vehicule, index) => {
-    setSelectedVehicle(vehicule.deviceID);
-    sethistiriqueSelectedLocationIndex(index);
-    // setvoirDansLaCarte(true);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // Pour afficher les position des tableu en carte
+  const afficherPositionTableauEnCarte = (véhicule, index) => {
+    setSelectedVehicleToShowInMap(véhicule.deviceID);
+    setHistoriqueSelectedLocationIndex(index);
     setzoomPosition(true);
   };
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
   return (
     <>
       <div
         ref={rapportGroupePDFtRef}
         className=" px-4 pb-20 md:max-w-[80vw] w-full"
       >
-        {/* yyyyyyyyyyyyyyyyyyyyyy */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* La liste des vehicule filtrer */}
         {voirVehiculeListePupup && (
           <div className="fixed z-[9999999999] inset-0 px-2 flex justify-center items-center bg-black/50">
             <div className="bg-white  dark:bg-gray-800 rounded-lg pt-3 w-[97vw]  px-2">
@@ -1280,38 +1536,35 @@ function RapportGroupe({
               </div>
               <div className="relative pb-20 flex flex-col gap-4 h-[70vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
                 {filteredVehiclesListe.length > 0 ? (
-                  filteredVehiclesListe?.map((vehicule, index) => {
+                  filteredVehiclesListe?.map((véhicule, index) => {
                     // Trouver le véhicule correspondant dans updateData
-                    const matchedVehicle = currentdataFusionnee.find(
-                      (v) => v.deviceID === vehicule.deviceID
+                    const matchedVehicle = currentDataFusionné.find(
+                      (v) => v.deviceID === véhicule.deviceID
                     );
 
                     const matchedVehicle2 = dataFusionneeHome.find(
-                      (v) => v.deviceID === vehicule.deviceID
+                      (v) => v.deviceID === véhicule.deviceID
                     );
 
-                    const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-                    const currentTime = Date.now(); // Heure actuelle en millisecondes
-
                     const isSpeedActive =
-                      matchedVehicle2.vehiculeDetails &&
-                      matchedVehicle2.vehiculeDetails[0] &&
-                      matchedVehicle2.vehiculeDetails[0].speedKPH > 0;
+                      matchedVehicle2.véhiculeDetails &&
+                      matchedVehicle2.véhiculeDetails[0] &&
+                      matchedVehicle2.véhiculeDetails[0].speedKPH > 0;
 
                     const isNotSpeedActive =
-                      matchedVehicle2.vehiculeDetails &&
-                      matchedVehicle2.vehiculeDetails[0] &&
-                      matchedVehicle2.vehiculeDetails[0].speedKPH <= 0;
+                      matchedVehicle2.véhiculeDetails &&
+                      matchedVehicle2.véhiculeDetails[0] &&
+                      matchedVehicle2.véhiculeDetails[0].speedKPH <= 0;
 
-                    const isMoving = matchedVehicle.vehiculeDetails?.some(
+                    const isMoving = matchedVehicle.véhiculeDetails?.some(
                       (detail) => detail.speedKPH >= 1
                     );
 
                     const hasDetails =
-                      matchedVehicle.vehiculeDetails &&
-                      matchedVehicle.vehiculeDetails.length > 0;
+                      matchedVehicle.véhiculeDetails &&
+                      matchedVehicle.véhiculeDetails.length > 0;
 
-                    const noSpeed = matchedVehicle.vehiculeDetails?.every(
+                    const noSpeed = matchedVehicle.véhiculeDetails?.every(
                       (detail) => detail.speedKPH <= 0
                     );
 
@@ -1323,7 +1576,7 @@ function RapportGroupe({
                       currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
                     const isSearching =
-                      searchdonneeFusionneeForRapport?.length > 0;
+                      searchDonneeFusionnéForRapport?.length > 0;
                     ///////////////////////////////////////////////////////////////////////////
 
                     ////////////////////////////////////////////////////
@@ -1335,22 +1588,16 @@ function RapportGroupe({
                     };
                     const todayTimestamp = getTodayTimestamp() * 1000;
 
-                    // Fonction pour obtenir le timestamp actuel en millisecondes
-                    const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-
-                    const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
-                    const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-
                     const hasBeenMoving =
-                      matchedVehicle.vehiculeDetails &&
-                      matchedVehicle.vehiculeDetails?.some(
+                      matchedVehicle.véhiculeDetails &&
+                      matchedVehicle.véhiculeDetails?.some(
                         (detail) => detail.speedKPH >= 1
                       );
 
                     const lastUpdateTimestampMs =
-                      matchedVehicle.vehiculeDetails &&
-                      matchedVehicle.vehiculeDetails[0] &&
-                      matchedVehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+                      matchedVehicle.véhiculeDetails &&
+                      matchedVehicle.véhiculeDetails[0] &&
+                      matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
                     const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
@@ -1539,7 +1786,7 @@ function RapportGroupe({
                         {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
                         <div
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           key={index}
                           className="bg-white relative rounded-lg dark:bg-gray-800 dark:shadow-gray-600"
@@ -1574,7 +1821,7 @@ function RapportGroupe({
                                 <h2
                                   className={`${main_text_color} dark:text-green-200 text-gray-800-- font-semibold text-md md:text-xl mb-2`}
                                 >
-                                  {vehicule?.description || "non disponible"}
+                                  {véhicule?.description || "non disponible"}
                                 </h2>
 
                                 <div className="sm:flex flex-col gap-1">
@@ -1590,7 +1837,7 @@ function RapportGroupe({
                                       />
                                     </div>
                                     <p className="text-[.95rem] font-semibold dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-lg">
-                                      {vehicule?.totalMovingDuration}
+                                      {véhicule?.totalMovingDuration}
                                     </p>
                                   </div>
 
@@ -1608,7 +1855,7 @@ function RapportGroupe({
                                       </p>
                                     </div>
                                     <p className="text-[.95rem] font-semibold dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
-                                      {vehicule?.totalMovingDuration}
+                                      {véhicule?.totalMovingDuration}
                                     </p>
                                   </div>
                                   <div
@@ -1623,23 +1870,23 @@ function RapportGroupe({
                                       </p>
                                     </div>
                                     <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
-                                      {vehicule?.vehiculeDetails[0]?.timestamp
+                                      {véhicule?.véhiculeDetails[0]?.timestamp
                                         ? FormatDateHeure(
-                                            vehicule?.vehiculeDetails[
-                                              vehicule?.vehiculeDetails.length -
+                                            véhicule?.véhiculeDetails[
+                                              véhicule?.véhiculeDetails.length -
                                                 1
                                             ]?.timestamp
                                           )?.date
                                         : ""}{" "}
-                                      {vehicule?.vehiculeDetails[0]
+                                      {véhicule?.véhiculeDetails[0]
                                         ?.timestamp && (
                                         <span className="px-2"> / </span>
                                       )}{" "}
                                       <span className="font-bold">
-                                        {vehicule?.vehiculeDetails[0]?.timestamp
+                                        {véhicule?.véhiculeDetails[0]?.timestamp
                                           ? FormatDateHeure(
-                                              vehicule?.vehiculeDetails[
-                                                vehicule?.vehiculeDetails
+                                              véhicule?.véhiculeDetails[
+                                                véhicule?.véhiculeDetails
                                                   .length - 1
                                               ]?.timestamp
                                             )?.time
@@ -1659,20 +1906,20 @@ function RapportGroupe({
                                       </p>
                                     </div>
                                     <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
-                                      {vehicule?.vehiculeDetails[0]?.timestamp
+                                      {véhicule?.véhiculeDetails[0]?.timestamp
                                         ? FormatDateHeure(
-                                            vehicule?.vehiculeDetails[0]
+                                            véhicule?.véhiculeDetails[0]
                                               ?.timestamp
                                           )?.date
                                         : ""}{" "}
-                                      {vehicule?.vehiculeDetails[0]
+                                      {véhicule?.véhiculeDetails[0]
                                         ?.timestamp && (
                                         <span className="px-2">/</span>
                                       )}{" "}
                                       <span className="font-bold">
-                                        {vehicule?.vehiculeDetails[0]?.timestamp
+                                        {véhicule?.véhiculeDetails[0]?.timestamp
                                           ? FormatDateHeure(
-                                              vehicule?.vehiculeDetails[0]
+                                              véhicule?.véhiculeDetails[0]
                                                 ?.timestamp
                                             )?.time
                                           : "Pas de date disponible"}{" "}
@@ -1693,7 +1940,7 @@ function RapportGroupe({
                                         </p>
                                       </div>
                                       <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
-                                        {vehicule?.avgSpeed + " Km/h"}
+                                        {véhicule?.avgSpeed + " Km/h"}
                                       </p>
                                     </div>
                                     <div
@@ -1708,7 +1955,7 @@ function RapportGroupe({
                                         </p>
                                       </div>
                                       <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
-                                        {vehicule.totalDistance.toFixed(0)} km
+                                        {véhicule.totalDistance.toFixed(0)} km
                                       </p>
                                     </div>
                                   </div>
@@ -1725,21 +1972,21 @@ function RapportGroupe({
                                   Départ{" "}
                                 </p>
                                 <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 mt-2 md:text-lg">
-                                  {vehicule?.vehiculeDetails[0]?.timestamp
+                                  {véhicule?.véhiculeDetails[0]?.timestamp
                                     ? FormatDateHeure(
-                                        vehicule?.vehiculeDetails[
-                                          vehicule?.vehiculeDetails.length - 1
+                                        véhicule?.véhiculeDetails[
+                                          véhicule?.véhiculeDetails.length - 1
                                         ]?.timestamp
                                       )?.date
                                     : ""}{" "}
-                                  {vehicule?.vehiculeDetails[0]?.timestamp && (
+                                  {véhicule?.véhiculeDetails[0]?.timestamp && (
                                     <span className="px-2"> / </span>
                                   )}{" "}
                                   <span className="font-bold">
-                                    {vehicule?.vehiculeDetails[0]?.timestamp
+                                    {véhicule?.véhiculeDetails[0]?.timestamp
                                       ? FormatDateHeure(
-                                          vehicule?.vehiculeDetails[
-                                            vehicule?.vehiculeDetails.length - 1
+                                          véhicule?.véhiculeDetails[
+                                            véhicule?.véhiculeDetails.length - 1
                                           ]?.timestamp
                                         )?.time
                                       : "Pas de date disponible"}{" "}
@@ -1753,18 +2000,18 @@ function RapportGroupe({
                                   Arrivé{" "}
                                 </p>
                                 <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
-                                  {vehicule?.vehiculeDetails[0]?.timestamp
+                                  {véhicule?.véhiculeDetails[0]?.timestamp
                                     ? FormatDateHeure(
-                                        vehicule?.vehiculeDetails[0]?.timestamp
+                                        véhicule?.véhiculeDetails[0]?.timestamp
                                       )?.date
                                     : ""}{" "}
-                                  {vehicule?.vehiculeDetails[0]?.timestamp && (
+                                  {véhicule?.véhiculeDetails[0]?.timestamp && (
                                     <span className="px-2">/</span>
                                   )}{" "}
                                   <span className="font-bold">
-                                    {vehicule?.vehiculeDetails[0]?.timestamp
+                                    {véhicule?.véhiculeDetails[0]?.timestamp
                                       ? FormatDateHeure(
-                                          vehicule?.vehiculeDetails[0]
+                                          véhicule?.véhiculeDetails[0]
                                             ?.timestamp
                                         )?.time
                                       : "Pas de date disponible"}{" "}
@@ -1780,7 +2027,7 @@ function RapportGroupe({
                                     Vitesse{" "}
                                   </p>
                                   <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
-                                    {vehicule?.avgSpeed + " Km/h"}
+                                    {véhicule?.avgSpeed + " Km/h"}
                                   </p>
                                 </div>
 
@@ -1792,7 +2039,7 @@ function RapportGroupe({
                                     Distance{" "}
                                   </p>
                                   <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
-                                    {vehicule.totalDistance.toFixed(0)} km
+                                    {véhicule.totalDistance.toFixed(0)} km
                                   </p>
                                 </div>
                               </div>
@@ -1811,15 +2058,22 @@ function RapportGroupe({
             </div>
           </div>
         )}
-        {voirDansLaCarte && (
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* Voir le trajet d'un vehicule sur la carte */}
+        {voirTrajetDansLaCarte && (
           <div className=" fixed inset-0 z-[999999999999999999] p-2 md:p-4 lg:px-10 bg-black/50">
             <div className="relative  rounded-lg  mt-3-- h-[100vh]  overflow-hidden w-full">
-              {/* <div className="bg-white p-3 py-6">Trajet du véhicule</div> */}
               <button
                 className="absolute z-[9999999999999999999999999] top-[1rem] right-[1rem]"
-                // onClick={centerOnFirstMarker}
                 onClick={() => {
-                  setvoirDansLaCarte(false);
+                  setVoirTrajetDansLaCarte(false);
                 }}
               >
                 <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
@@ -1851,7 +2105,19 @@ function RapportGroupe({
             </div>
           </div>
         )}
-        {/* <RapportOptions /> */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* Non utiliser/ a supprimer */}
         {trajetVehiculePupup && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white  rounded-lg p-3--">
@@ -1872,6 +2138,21 @@ function RapportGroupe({
             </div>
           </div>
         )}
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
+        {/*  Tableau des deplacements */}
         {tableDeplacement && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -1911,7 +2192,7 @@ function RapportGroupe({
                     </tr>
                   </thead>
                   <tbody>
-                    {vehiclesByDepartureTime?.map((vehicule, index) => (
+                    {vehiclesByDepartureTime?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {
@@ -1921,46 +2202,46 @@ function RapportGroupe({
                         </td>
                         <td
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {
                             //
-                            vehicule?.description || "---"
+                            véhicule?.description || "---"
                           }
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp && (
+                          {véhicule?.véhiculeDetails[0]?.timestamp && (
                             <span className="px-3">/</span>
                           )}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp && (
+                          {véhicule?.véhiculeDetails[0]?.timestamp && (
                             <span className="px-3">/</span>
                           )}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
@@ -1968,28 +2249,28 @@ function RapportGroupe({
                         <td
                           onClick={() => {
                             afficherPositionTableauEnCarte(
-                              vehicule,
-                              vehicule.vehiculeDetails.length - 1
+                              véhicule,
+                              véhicule.véhiculeDetails.length - 1
                             );
                           }}
                           className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[
-                            vehicule.vehiculeDetails?.length - 1
+                          {véhicule.véhiculeDetails[
+                            véhicule.véhiculeDetails?.length - 1
                           ]?.backupAddress ||
-                            vehicule.vehiculeDetails[
-                              vehicule.vehiculeDetails?.length - 1
+                            véhicule.véhiculeDetails[
+                              véhicule.véhiculeDetails?.length - 1
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                         <td
                           onClick={() => {
-                            afficherPositionTableauEnCarte(vehicule, 0);
+                            afficherPositionTableauEnCarte(véhicule, 0);
                           }}
                           className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
+                          {véhicule.véhiculeDetails[0]?.backupAddress ||
+                            véhicule.véhiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                       </tr>
@@ -2000,6 +2281,17 @@ function RapportGroupe({
             </div>
           </div>
         )}
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* Tableau des Distances */}
+
         {tableDistance && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2043,7 +2335,7 @@ function RapportGroupe({
                     </tr>
                   </thead>
                   <tbody>
-                    {vehiclesByDistance?.map((vehicule, index) => (
+                    {vehiclesByDistance?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {
@@ -2053,38 +2345,38 @@ function RapportGroupe({
                         </td>
                         <td
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2   dark:bg-gray-800  dark:border-gray-600"
                         >
                           {
                             //
-                            vehicule?.description || "---"
+                            véhicule?.description || "---"
                           }
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.totalDistance.toFixed(0) + " Km"}
+                          {véhicule?.totalDistance.toFixed(0) + " Km"}
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
@@ -2092,28 +2384,28 @@ function RapportGroupe({
                         <td
                           onClick={() => {
                             afficherPositionTableauEnCarte(
-                              vehicule,
-                              vehicule.vehiculeDetails.length - 1
+                              véhicule,
+                              véhicule.véhiculeDetails.length - 1
                             );
                           }}
                           className="border py-3 px-2  cursor-pointer  dark:bg-gray-800  dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[
-                            vehicule.vehiculeDetails?.length - 1
+                          {véhicule.véhiculeDetails[
+                            véhicule.véhiculeDetails?.length - 1
                           ]?.backupAddress ||
-                            vehicule.vehiculeDetails[
-                              vehicule.vehiculeDetails?.length - 1
+                            véhicule.véhiculeDetails[
+                              véhicule.véhiculeDetails?.length - 1
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                         <td
                           onClick={() => {
-                            afficherPositionTableauEnCarte(vehicule, 0);
+                            afficherPositionTableauEnCarte(véhicule, 0);
                           }}
                           className="border py-3 px-2  cursor-pointer  dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
+                          {véhicule.véhiculeDetails[0]?.backupAddress ||
+                            véhicule.véhiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                       </tr>
@@ -2124,6 +2416,19 @@ function RapportGroupe({
             </div>
           </div>
         )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* Tableau des activites */}
         {tableActivite && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2168,7 +2473,7 @@ function RapportGroupe({
                     </tr>
                   </thead>
                   <tbody>
-                    {vehiclesByMovingDuration?.map((vehicule, index) => (
+                    {vehiclesByMovingDuration?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {
@@ -2178,38 +2483,38 @@ function RapportGroupe({
                         </td>
                         <td
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {
                             //
-                            vehicule?.description || "---"
+                            véhicule?.description || "---"
                           }
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.totalMovingDuration}
+                          {véhicule?.totalMovingDuration}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
@@ -2217,28 +2522,28 @@ function RapportGroupe({
                         <td
                           onClick={() => {
                             afficherPositionTableauEnCarte(
-                              vehicule,
-                              vehicule.vehiculeDetails.length - 1
+                              véhicule,
+                              véhicule.véhiculeDetails.length - 1
                             );
                           }}
                           className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[
-                            vehicule.vehiculeDetails?.length - 1
+                          {véhicule.véhiculeDetails[
+                            véhicule.véhiculeDetails?.length - 1
                           ]?.backupAddress ||
-                            vehicule.vehiculeDetails[
-                              vehicule.vehiculeDetails?.length - 1
+                            véhicule.véhiculeDetails[
+                              véhicule.véhiculeDetails?.length - 1
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                         <td
                           onClick={() => {
-                            afficherPositionTableauEnCarte(vehicule, 0);
+                            afficherPositionTableauEnCarte(véhicule, 0);
                           }}
                           className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
+                          {véhicule.véhiculeDetails[0]?.backupAddress ||
+                            véhicule.véhiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                       </tr>
@@ -2249,6 +2554,19 @@ function RapportGroupe({
             </div>
           </div>
         )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* Tableau des vitesse */}
         {tablevitesse && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2300,49 +2618,49 @@ function RapportGroupe({
                     </tr>
                   </thead>
                   <tbody>
-                    {vehiclesByDistance?.map((vehicule, index) => (
+                    {vehiclesByDistance?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {index + 1 || "---"}
                         </td>
                         <td
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule?.description || "---"}
+                          {véhicule?.description || "---"}
                         </td>
 
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.maxSpeed.toFixed(0) + " Km/h"}
+                          {véhicule?.maxSpeed.toFixed(0) + " Km/h"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.minSpeed.toFixed(0) + " Km/h"}
+                          {véhicule?.minSpeed.toFixed(0) + " Km/h"}
                         </td>
                         <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule?.avgSpeed + " Km/h"}
+                          {véhicule?.avgSpeed + " Km/h"}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
@@ -2350,28 +2668,28 @@ function RapportGroupe({
                         <td
                           onClick={() => {
                             afficherPositionTableauEnCarte(
-                              vehicule,
-                              vehicule.vehiculeDetails.length - 1
+                              véhicule,
+                              véhicule.véhiculeDetails.length - 1
                             );
                           }}
                           className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[
-                            vehicule.vehiculeDetails?.length - 1
+                          {véhicule.véhiculeDetails[
+                            véhicule.véhiculeDetails?.length - 1
                           ]?.backupAddress ||
-                            vehicule.vehiculeDetails[
-                              vehicule.vehiculeDetails?.length - 1
+                            véhicule.véhiculeDetails[
+                              véhicule.véhiculeDetails?.length - 1
                             ]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                         <td
                           onClick={() => {
-                            afficherPositionTableauEnCarte(vehicule, 0);
+                            afficherPositionTableauEnCarte(véhicule, 0);
                           }}
                           className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
+                          {véhicule.véhiculeDetails[0]?.backupAddress ||
+                            véhicule.véhiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                       </tr>
@@ -2382,6 +2700,17 @@ function RapportGroupe({
             </div>
           </div>
         )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  Tableau du trajet */}
         {tableTrajet && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2433,65 +2762,65 @@ function RapportGroupe({
                     </tr>
                   </thead>
                   <tbody>
-                    {vehiculeMouvementOrdered?.map((vehicule, index) => (
+                    {vehiculeMouvementOrdered?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
                         <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
                           {index + 1 || "---"}
                         </td>
                         <td
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600"
                         >
-                          {vehicule?.description || "---"}
+                          {véhicule?.description || "---"}
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule.totalDuration || "0h 0m 0s "}
+                          {véhicule.totalDuration || "0h 0m 0s "}
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule.totalMovingDuration || "0h 0m 0s "}
+                          {véhicule.totalMovingDuration || "0h 0m 0s "}
                         </td>
                         <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
-                          {vehicule.totalPauseDuration || "0h 0m 0s"}
+                          {véhicule.totalPauseDuration || "0h 0m 0s"}
                         </td>
                         {/* <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           2h 22m 45s
                         </td> */}
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.totalDistance?.toFixed(0) + " km" ||
+                          {véhicule?.totalDistance?.toFixed(0) + " km" ||
                             " 0 km"}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
-                          {vehicule?.stopCount > 0
-                            ? vehicule?.stopCount + " arrêts"
+                          {véhicule?.stopCount > 0
+                            ? véhicule?.stopCount + " arrêts"
                             : "0 arrêt"}
                         </td>
 
                         <td
                           onClick={() => {
                             afficherPositionTableauEnCarte(
-                              vehicule,
-                              vehicule.vehiculeDetails.length - 1
+                              véhicule,
+                              véhicule.véhiculeDetails.length - 1
                             );
                           }}
                           className="border py-3 px-2  cursor-pointer bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
+                          {véhicule.véhiculeDetails[0]?.backupAddress ||
+                            véhicule.véhiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                         <td
                           onClick={() => {
                             afficherPositionTableauEnCarte(
-                              vehicule,
-                              vehicule.vehiculeDetails.length - 1
+                              véhicule,
+                              véhicule.véhiculeDetails.length - 1
                             );
                           }}
                           className="border py-3 px-2 cursor-pointer  bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
                         >
-                          {vehicule.vehiculeDetails[0]?.backupAddress ||
-                            vehicule.vehiculeDetails[0]?.address ||
+                          {véhicule.véhiculeDetails[0]?.backupAddress ||
+                            véhicule.véhiculeDetails[0]?.address ||
                             "Pas d'adresse disponible"}
                         </td>
                       </tr>
@@ -2502,27 +2831,17 @@ function RapportGroupe({
             </div>
           </div>
         )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
         <h1
           onClick={() => {
-            // setdonneeFusionneeForRapport([]);
-            // console.log(
-            //   "mostRecentTimestamp",
-            //   mostRecentTimestamp.mostRecentTimestamp
-            // );
-            // console.log("mostRecentTimestamp", mostRecentTimestamp);
-            // console.log("mostOldTimestamp", mostOldTimestamp.mostOldTimestamp);
-            // console.log("mostOldTimestamp", mostOldTimestamp);
-            // console.log("xxxxxxxxxxxxxxxxxxxxx");
-            // console.log(dataObjectDebut.toUTCString()); // UTC
-            // console.log(dataObjectFin.toUTCString()); // UTC
-
-            // console.log(dataObjectDebut.toString()); // Locale
-            // console.log(dataObjectFin.toString()); // Locale
-
-            // console.log(
-            //   "from title rapport groupe downloadExelPDF :",
-            //   downloadExelPDF
-            // );
             console.log(vehiclesByDistance);
           }}
           className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300"
@@ -2539,6 +2858,7 @@ function RapportGroupe({
           </div>
 
           <div className="text-gray-700 flex flex-col gap-2 dark:text-gray-300">
+            {/* Date et heure de recherche */}
             <div className="flex flex-wrap">
               <p>Date de recherche trouvée : </p>
               <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
@@ -2585,7 +2905,7 @@ function RapportGroupe({
             {/*  */}
             {/*  */}
             {/*  */}
-            {(searchdonneeFusionneeForRapport.length <= 0 ||
+            {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
                 * Informations Actuellement
@@ -2595,13 +2915,12 @@ function RapportGroupe({
               <p>
                 Nombre total de véhicules :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {currentdataFusionnee?.length || "0"}
+                  {currentDataFusionné?.length || "0"}
                 </span>
               </p>
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setdefineVehiculeListePupup("tous");
                   setFilter("all");
                 }}
                 className="text-orange-400 underline cursor-pointer"
@@ -2609,7 +2928,7 @@ function RapportGroupe({
                 voir
               </p>
             </div>
-            {(searchdonneeFusionneeForRapport.length <= 0 ||
+            {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <div className="flex justify-between items-center pr-3">
                 <p>
@@ -2621,7 +2940,6 @@ function RapportGroupe({
                 <p
                   onClick={() => {
                     setvoirVehiculeListePupup(true);
-                    // setdefineVehiculeListePupup("notactive");
                     setFilter("movingNow");
                   }}
                   className="text-orange-400 underline cursor-pointer"
@@ -2630,7 +2948,7 @@ function RapportGroupe({
                 </p>
               </div>
             )}
-            {(searchdonneeFusionneeForRapport.length <= 0 ||
+            {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <div className="flex justify-between items-center pr-3">
                 <p>
@@ -2642,7 +2960,6 @@ function RapportGroupe({
                 <p
                   onClick={() => {
                     setvoirVehiculeListePupup(true);
-                    setdefineVehiculeListePupup("notactive");
                     setFilter("notMovingNow");
                   }}
                   className="text-orange-400 underline cursor-pointer"
@@ -2651,19 +2968,18 @@ function RapportGroupe({
                 </p>
               </div>
             )}
-            {(searchdonneeFusionneeForRapport.length <= 0 ||
+            {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <div className="flex justify-between items-center pr-3">
                 <p>
                   Véhicule hors service :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiculeNotActif?.length || "0"}
+                    {véhiculeHorsService?.length || "0"}
                   </span>
                 </p>
                 <p
                   onClick={() => {
                     setvoirVehiculeListePupup(true);
-                    setdefineVehiculeListePupup("hors_service");
                     setFilter("inactive");
                   }}
                   className="text-orange-400 underline cursor-pointer"
@@ -2675,14 +2991,14 @@ function RapportGroupe({
             {/*  */}
             {/*  */}
             {/*  */}
-            {(searchdonneeFusionneeForRapport.length <= 0 ||
+            {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
             )}{" "}
             {/*  */}
             {/*  */}
             {/*  */}
-            {(searchdonneeFusionneeForRapport.length <= 0 ||
+            {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
                 * Pour la journée d'aujourd'hui
@@ -2692,13 +3008,12 @@ function RapportGroupe({
               <p>
                 Véhicules déplacés :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {vehiculeActiveAjourdhui?.length || "0"}
+                  {véhiculeActiveToday?.length || "0"}
                 </span>
               </p>
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setdefineVehiculeListePupup("active");
                   setFilter("moving");
                 }}
                 className="text-orange-400 underline cursor-pointer"
@@ -2710,14 +3025,13 @@ function RapportGroupe({
               <p>
                 Véhicules non déplacés :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {/* {vehiculeActiveAjourdhui?.length || "0"} */}
-                  {vehiculeNotActiveAjourdhui?.length || "0"}
+                  {/* {véhiculeActiveToday?.length || "0"} */}
+                  {véhiculeNotActiveToday?.length || "0"}
                 </span>
               </p>
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setdefineVehiculeListePupup("active");
                   setFilter("parking");
                 }}
                 className="text-orange-400 underline cursor-pointer"
@@ -2725,18 +3039,17 @@ function RapportGroupe({
                 voir
               </p>
             </div>
-            {searchdonneeFusionneeForRapport.length > 0 && (
+            {searchDonneeFusionnéForRapport.length > 0 && (
               <div className="flex justify-between items-center pr-3">
                 <p>
                   Véhicule hors service :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiculeNotActif?.length || "0"}
+                    {véhiculeHorsService?.length || "0"}
                   </span>
                 </p>
                 <p
                   onClick={() => {
                     setvoirVehiculeListePupup(true);
-                    setdefineVehiculeListePupup("hors_service");
                     setFilter("inactive");
                   }}
                   className="text-orange-400 underline cursor-pointer"
@@ -2793,7 +3106,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/* Vehicule en mouvement en premier */}
-          {/* {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && ( */}
+          {/* {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 && ( */}
           <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -2803,7 +3116,7 @@ function RapportGroupe({
 
             <div className="">
               <div className="py-2-">
-                {vehiclesByDepartureTime[0]?.vehiculeDetails.length > 0 && (
+                {vehiclesByDepartureTime[0]?.véhiculeDetails.length > 0 && (
                   <div>
                     <div className="sm:flex gap-10 mt-3-- px-2">
                       <div className="flex gap-0 items-center">
@@ -2829,13 +3142,13 @@ function RapportGroupe({
                           De{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiclesByDepartureTime[0]?.vehiculeDetails[
-                              vehiclesByDepartureTime[0]?.vehiculeDetails
+                            {vehiclesByDepartureTime[0]?.véhiculeDetails[
+                              vehiclesByDepartureTime[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
-                                  vehiclesByDepartureTime[0]?.vehiculeDetails[
-                                    vehiclesByDepartureTime[0]?.vehiculeDetails
+                                  vehiclesByDepartureTime[0]?.véhiculeDetails[
+                                    vehiclesByDepartureTime[0]?.véhiculeDetails
                                       .length - 1
                                   ]?.timestamp
                                 )?.time
@@ -2844,12 +3157,12 @@ function RapportGroupe({
                           à{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiclesByDepartureTime[0]?.vehiculeDetails[
-                              vehiclesByDepartureTime[0]?.vehiculeDetails
+                            {vehiclesByDepartureTime[0]?.véhiculeDetails[
+                              vehiclesByDepartureTime[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
-                                  vehiclesByDepartureTime[0]?.vehiculeDetails[0]
+                                  vehiclesByDepartureTime[0]?.véhiculeDetails[0]
                                     ?.timestamp
                                 )?.time
                               : " "}{" "}
@@ -2868,17 +3181,17 @@ function RapportGroupe({
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
-                    {vehiclesByDepartureTime[0]?.vehiculeDetails.length > 0
+                    {vehiclesByDepartureTime[0]?.véhiculeDetails.length > 0
                       ? vehiclesByDepartureTime[0]?.description + " a "
                       : "Pas de véhicule en mouvement"}
                   </span>
                   <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiclesByDepartureTime[0]?.vehiculeDetails[
-                      vehiclesByDepartureTime[0]?.vehiculeDetails.length - 1
+                    {vehiclesByDepartureTime[0]?.véhiculeDetails[
+                      vehiclesByDepartureTime[0]?.véhiculeDetails.length - 1
                     ]?.timestamp
                       ? FormatDateHeure(
-                          vehiclesByDepartureTime[0]?.vehiculeDetails[
-                            vehiclesByDepartureTime[0]?.vehiculeDetails.length -
+                          vehiclesByDepartureTime[0]?.véhiculeDetails[
+                            vehiclesByDepartureTime[0]?.véhiculeDetails.length -
                               1
                           ]?.timestamp
                         )?.time
@@ -2901,12 +3214,12 @@ function RapportGroupe({
                 {/*  */}
                 {!preparationDownloadPDF && (
                   <div className="flex gap-6">
-                    {vehiclesByDepartureTime[0]?.vehiculeDetails.length > 0 && (
+                    {vehiclesByDepartureTime[0]?.véhiculeDetails.length > 0 && (
                       <button
                         onClick={() => {
                           // settrajetVehiculePupup(true);
                           positionDansCarte(vehiclesByDepartureTime[0]);
-                          setvoirDansLaCarte(true);
+                          setVoirTrajetDansLaCarte(true);
                         }}
                         className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
@@ -2948,7 +3261,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/*  */}
-          {/* vehicule en mouvement en premier */}
+          {/* véhicule en mouvement en premier */}
           <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
@@ -2959,7 +3272,7 @@ function RapportGroupe({
 
             <div className="">
               <div className="py-2-">
-                {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && (
+                {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 && (
                   <div>
                     <div className="sm:flex gap-10 mt-3-- px-2">
                       <div className="flex gap-0 items-center">
@@ -2998,13 +3311,13 @@ function RapportGroupe({
                           De{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
+                            {vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                              vehiculeMouvementOrdered[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
-                                  vehiclesByDistance[0]?.vehiculeDetails[
-                                    vehiclesByDistance[0]?.vehiculeDetails
+                                  vehiclesByDistance[0]?.véhiculeDetails[
+                                    vehiclesByDistance[0]?.véhiculeDetails
                                       .length - 1
                                   ]?.timestamp
                                 )?.time
@@ -3013,12 +3326,12 @@ function RapportGroupe({
                           à{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
+                            {vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                              vehiculeMouvementOrdered[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
-                                  vehiclesByDistance[0]?.vehiculeDetails[0]
+                                  vehiclesByDistance[0]?.véhiculeDetails[0]
                                     ?.timestamp
                                 )?.time
                               : " "}{" "}
@@ -3038,11 +3351,11 @@ function RapportGroupe({
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByDistance[0]?.description + " "
                       : "Pas de véhicule en mouvement"}
                   </span>{" "}
-                  {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
+                  {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 &&
                     "( environ " +
                       vehiclesByDistance[0]?.totalDistance.toFixed(0) +
                       " Km )"}
@@ -3063,14 +3376,14 @@ function RapportGroupe({
                 {/*  */}
                 {!preparationDownloadPDF && (
                   <div className="flex gap-6">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length >
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length >
                       0 && (
                       <button
                         onClick={() => {
                           // settrajetVehiculePupup(true);
                           positionDansCarte(vehiclesByDistance[0]);
 
-                          setvoirDansLaCarte(true);
+                          setVoirTrajetDansLaCarte(true);
                         }}
                         className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
@@ -3116,7 +3429,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/*  */}
-          {/* vehicule en mouvement plus longtemps */}
+          {/* véhicule en mouvement plus longtemps */}
           <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
@@ -3127,7 +3440,7 @@ function RapportGroupe({
 
             <div className="">
               <div className="py-2-">
-                {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && (
+                {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 && (
                   <div>
                     <div className="sm:flex gap-10 mt-3-- px-2">
                       <div className="flex gap-0 items-center">
@@ -3169,13 +3482,13 @@ function RapportGroupe({
                           De{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
+                            {vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                              vehiculeMouvementOrdered[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
-                                  vehiclesByMovingDuration[0]?.vehiculeDetails[
-                                    vehiclesByMovingDuration[0]?.vehiculeDetails
+                                  vehiclesByMovingDuration[0]?.véhiculeDetails[
+                                    vehiclesByMovingDuration[0]?.véhiculeDetails
                                       .length - 1
                                   ]?.timestamp
                                 )?.time
@@ -3184,13 +3497,13 @@ function RapportGroupe({
                           à{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
+                            {vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                              vehiculeMouvementOrdered[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
                                   vehiclesByMovingDuration[0]
-                                    ?.vehiculeDetails[0]?.timestamp
+                                    ?.véhiculeDetails[0]?.timestamp
                                 )?.time
                               : " "}{" "}
                           </span>
@@ -3210,11 +3523,11 @@ function RapportGroupe({
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByMovingDuration[0]?.description
                       : "Pas de véhicule en mouvement"}
                   </span>
-                  {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
+                  {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 &&
                     "( environ " +
                       vehiclesByMovingDuration[0]?.totalMovingDuration +
                       " )"}
@@ -3235,14 +3548,14 @@ function RapportGroupe({
                 {/*  */}
                 {!preparationDownloadPDF && (
                   <div className="flex gap-6">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length >
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length >
                       0 && (
                       <button
                         onClick={() => {
                           // settrajetVehiculePupup(true);
                           positionDansCarte(vehiclesByMovingDuration[0]);
 
-                          setvoirDansLaCarte(true);
+                          setVoirTrajetDansLaCarte(true);
                         }}
                         className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
@@ -3289,7 +3602,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
 
-          {/* vehicule avec la vitesse maximale */}
+          {/* véhicule avec la vitesse maximale */}
           <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
@@ -3300,7 +3613,7 @@ function RapportGroupe({
 
             <div className="">
               <div className="py-2-">
-                {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 && (
+                {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 && (
                   <div>
                     <div className="sm:flex gap-10 mt-3-- px-2">
                       <div className="flex gap-0 items-center">
@@ -3342,13 +3655,13 @@ function RapportGroupe({
                           De{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
+                            {vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                              vehiculeMouvementOrdered[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
-                                  vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                                    vehiculeMouvementOrdered[0]?.vehiculeDetails
+                                  vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                                    vehiculeMouvementOrdered[0]?.véhiculeDetails
                                       .length - 1
                                   ]?.timestamp
                                 )?.time
@@ -3357,13 +3670,13 @@ function RapportGroupe({
                           à{" "}
                           <span className="font-semibold">
                             {" "}
-                            {vehiculeMouvementOrdered[0]?.vehiculeDetails[
-                              vehiculeMouvementOrdered[0]?.vehiculeDetails
+                            {vehiculeMouvementOrdered[0]?.véhiculeDetails[
+                              vehiculeMouvementOrdered[0]?.véhiculeDetails
                                 .length - 1
                             ]?.timestamp
                               ? FormatDateHeure(
                                   vehiculeMouvementOrdered[0]
-                                    ?.vehiculeDetails[0]?.timestamp
+                                    ?.véhiculeDetails[0]?.timestamp
                                 )?.time
                               : " "}{" "}
                           </span>
@@ -3383,12 +3696,12 @@ function RapportGroupe({
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByMaxSpeed[0]?.description
                       : "Pas de véhicule en mouvement"}
                   </span>
                   <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length > 0 &&
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 &&
                       "( " +
                         vehiclesByMaxSpeed[0]?.maxSpeed.toFixed(0) +
                         " km/h )"}{" "}
@@ -3407,13 +3720,13 @@ function RapportGroupe({
                 {/*  */}
                 {!preparationDownloadPDF && (
                   <div className="flex gap-6">
-                    {vehiculeMouvementOrdered[0]?.vehiculeDetails.length >
+                    {vehiculeMouvementOrdered[0]?.véhiculeDetails.length >
                       0 && (
                       <button
                         onClick={() => {
                           // settrajetVehiculePupup(true);
                           positionDansCarte(vehiclesByMaxSpeed[0]);
-                          setvoirDansLaCarte(true);
+                          setVoirTrajetDansLaCarte(true);
                         }}
                         className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
@@ -3636,7 +3949,7 @@ function RapportGroupe({
                     // onClick={centerOnFirstMarker}
                     onClick={() => {
                       setzoomPosition(false);
-                      setSelectedVehicle(null);
+                      setSelectedVehicleToShowInMap(null);
                     }}
                   >
                     <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
@@ -3655,7 +3968,7 @@ function RapportGroupe({
                   // onClick={centerOnFirstMarker}
                   onClick={() => {
                     setzoomPosition(true);
-                    setSelectedVehicle(null);
+                    setSelectedVehicleToShowInMap(null);
                   }}
                 >
                   <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
@@ -3978,24 +4291,21 @@ function RapportGroupe({
 
               <tbody className="  max-w-20">
                 {(tableSortBy || vehiclesByDepartureTime).map(
-                  (vehicule, index) => {
+                  (véhicule, index) => {
                     // Trouver le véhicule correspondant dans updateData
-                    const matchedVehicle = currentdataFusionnee.find(
-                      (v) => v.deviceID === vehicule.deviceID
+                    const matchedVehicle = currentDataFusionné.find(
+                      (v) => v.deviceID === véhicule.deviceID
                     );
 
-                    const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-                    const currentTime = Date.now(); // Heure actuelle en millisecondes
-
-                    const isMoving = matchedVehicle.vehiculeDetails?.some(
+                    const isMoving = matchedVehicle.véhiculeDetails?.some(
                       (detail) => detail.speedKPH >= 1
                     );
 
                     const hasDetails =
-                      matchedVehicle.vehiculeDetails &&
-                      matchedVehicle.vehiculeDetails.length > 0;
+                      matchedVehicle.véhiculeDetails &&
+                      matchedVehicle.véhiculeDetails.length > 0;
 
-                    const noSpeed = matchedVehicle.vehiculeDetails?.every(
+                    const noSpeed = matchedVehicle.véhiculeDetails?.every(
                       (detail) => detail.speedKPH <= 0
                     );
 
@@ -4010,9 +4320,9 @@ function RapportGroupe({
                     // iiiiiiiiiiiiiiiiiiiiiiiiiiii
 
                     const lastUpdateTimestampMs =
-                      matchedVehicle.vehiculeDetails &&
-                      matchedVehicle.vehiculeDetails[0] &&
-                      matchedVehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+                      matchedVehicle.véhiculeDetails &&
+                      matchedVehicle.véhiculeDetails[0] &&
+                      matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
                     const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
@@ -4063,11 +4373,11 @@ function RapportGroupe({
                         </td>
                         <td
                           onClick={() => {
-                            handleClick(vehicule);
+                            handleClick(véhicule);
                           }}
                           className={`${vehiculeBG} border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
                         >
-                          {vehicule?.description || "---"}
+                          {véhicule?.description || "---"}
                         </td>
                         {/*  */}
                         <td
@@ -4077,43 +4387,43 @@ function RapportGroupe({
                             "bg-orange-50 dark:bg-orange-950"
                           } border py-3 px-2   dark:border-gray-600`}
                         >
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp && (
+                          {véhicule?.véhiculeDetails[0]?.timestamp && (
                             <span className="px-2">/</span>
                           )}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[
-                                  vehicule?.vehiculeDetails.length - 1
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
                             : "Pas de date disponible"}{" "}
                         </td>
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.date
                             : ""}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp && (
+                          {véhicule?.véhiculeDetails[0]?.timestamp && (
                             <span className="px-2">/</span>
                           )}{" "}
-                          {vehicule?.vehiculeDetails[0]?.timestamp
+                          {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
-                                vehicule?.vehiculeDetails[0]?.timestamp
+                                véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
                             : "Pas de date disponible"}{" "}
                         </td>
 
                         {/* Vitesse moyenne */}
                         <td className="border py-3 px-2 dark:border-gray-600">
-                          {vehicule?.avgSpeed + " Km/h"}
+                          {véhicule?.avgSpeed + " Km/h"}
                         </td>
                         {/* max speed */}
                         <td
@@ -4123,7 +4433,7 @@ function RapportGroupe({
                             "bg-orange-50 dark:bg-orange-950"
                           } border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
                         >
-                          {(vehicule?.maxSpeed).toFixed(0) + " Km/h"}
+                          {(véhicule?.maxSpeed).toFixed(0) + " Km/h"}
                         </td>
 
                         {/* Distance totale */}
@@ -4134,13 +4444,13 @@ function RapportGroupe({
                             "bg-orange-50 dark:bg-orange-950"
                           } border py-3 px-2 dark:border-gray-600`}
                         >
-                          {vehicule.totalDistance.toFixed(0)} km
+                          {véhicule.totalDistance.toFixed(0)} km
                         </td>
 
                         {/* Nombre d'arret */}
                         <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                           {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
-                          {vehicule.stopCount + " arrêts"}
+                          {véhicule.stopCount + " arrêts"}
                         </td>
 
                         {/* Temps actifs */}
@@ -4151,7 +4461,7 @@ function RapportGroupe({
                             "bg-orange-50 dark:bg-orange-950"
                           } border py-3 px-2 dark:border-gray-600`}
                         >
-                          {vehicule?.totalMovingDuration}
+                          {véhicule?.totalMovingDuration}
                         </td>
 
                         {/* Addresse départ */}
@@ -4180,17 +4490,17 @@ function RapportGroupe({
                           <td
                             onClick={() => {
                               afficherPositionTableauEnCarte(
-                                vehicule,
-                                vehicule.vehiculeDetails.length - 1
+                                véhicule,
+                                véhicule.véhiculeDetails.length - 1
                               );
                             }}
                             className="border py-3 px-2  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
                           >
-                            {vehicule.vehiculeDetails[
-                              vehicule.vehiculeDetails.length - 1
+                            {véhicule.véhiculeDetails[
+                              véhicule.véhiculeDetails.length - 1
                             ]?.backupAddress ||
-                              vehicule.vehiculeDetails[
-                                vehicule.vehiculeDetails.length - 1
+                              véhicule.véhiculeDetails[
+                                véhicule.véhiculeDetails.length - 1
                               ]?.address ||
                               "Pas d'adresse disponible"}
                           </td>
@@ -4221,12 +4531,12 @@ function RapportGroupe({
                         >
                           <td
                             onClick={() => {
-                              afficherPositionTableauEnCarte(vehicule, 0);
+                              afficherPositionTableauEnCarte(véhicule, 0);
                             }}
                             className="border py-3 px-2  cursor-pointer   dark:border-gray-600"
                           >
-                            {vehicule.vehiculeDetails[0]?.backupAddress ||
-                              vehicule.vehiculeDetails[0]?.address ||
+                            {véhicule.véhiculeDetails[0]?.backupAddress ||
+                              véhicule.véhiculeDetails[0]?.address ||
                               "Pas d'adresse disponible"}
                           </td>
                         </Tooltip>
@@ -4244,5 +4554,3 @@ function RapportGroupe({
 }
 
 export default RapportGroupe;
-
-// close= setSelectedVehicle(null)

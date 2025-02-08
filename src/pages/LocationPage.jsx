@@ -3,16 +3,11 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/img/cars/localisation.png";
-import iconLowSpeed from "/pin/ping_red.png";
-import iconMediumSpeed from "/pin/ping_yellow.png";
-import iconHighSpeed from "/pin/ping_green.png";
-
 import { DataContext } from "../context/DataContext";
 import HeaderLocation from "../components/location_vehicule/HeaderLocation";
-import ShowVehiculeListeComponent from "../components/location_vehicule/ShowVehiculeListeComponent";
-import TypeDeVue from "../components/location_vehicule/TypeDeVue";
 import MapComponent from "../components/location_vehicule/MapComponent";
-import { IoClose } from "react-icons/io5";
+import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
+import TypeDeVue from "../components/historique_vehicule/TypeDeVue";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -23,56 +18,79 @@ L.Icon.Default.mergeOptions({
 });
 
 const LocationPage = () => {
-  const { mergedData, currentVehicule, selectedVehicle, setSelectedVehicle } =
-    useContext(DataContext);
-
+  const {
+    mergedData,
+    selectedVehicleToShowInMap,
+    setSelectedVehicleToShowInMap,
+    currentVéhicule,
+  } = useContext(DataContext);
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Pour voir la liste des
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
+  // Pour définir le type de vue
   const [typeDeVue, setTypeDeVue] = useState(false);
 
-  const dataFusionee = mergedData ? Object.values(mergedData) : [];
-  // const vehiculeActive = dataFusionee.filter((vehicule) =>  !vehicule.vehiculeDetails || vehicule.vehiculeDetails.length === 0 )
+  // Le data converti en Objet
+  const dataFusionné = mergedData ? Object.values(mergedData) : [];
 
-  const vehiculeActive = dataFusionee.filter(
-    (vehicule) =>
-      vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0
+  // filtrer la liste des véhicules pour avoir seulement les véhicules avec des details
+  const vehiculeActive = dataFusionné.filter(
+    (véhicule) =>
+      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
   );
 
-  const vehicleData = vehiculeActive.map((vehicule) => ({
-    // deviceID: 33333333333,
-    deviceID: vehicule.deviceID || "---",
-    description: vehicule.description || "Véhicule",
-    lastValidLatitude: vehicule.vehiculeDetails?.[0]?.latitude || "",
-    lastValidLongitude: vehicule.vehiculeDetails?.[0]?.longitude || "",
-    address: vehicule.vehiculeDetails?.[0]?.address || "",
-    imeiNumber: vehicule?.imeiNumber || "",
-    isActive: vehicule?.isActive || "",
-    licensePlate: vehicule?.licensePlate || "",
-    simPhoneNumber: vehicule?.simPhoneNumber || "",
-    speedKPH: vehicule.vehiculeDetails?.[0]?.speedKPH || 0,
+  // le formatage des véhicules afficher sur la carte
+  const véhiculeData = vehiculeActive.map((véhicule) => ({
+    deviceID: véhicule.deviceID || "---",
+    description: véhicule.description || "Véhicule",
+    lastValidLatitude: véhicule.véhiculeDetails?.[0]?.latitude || "",
+    lastValidLongitude: véhicule.véhiculeDetails?.[0]?.longitude || "",
+    address: véhicule.véhiculeDetails?.[0]?.address || "",
+    imeiNumber: véhicule?.imeiNumber || "",
+    isActive: véhicule?.isActive || "",
+    licensePlate: véhicule?.licensePlate || "",
+    simPhoneNumber: véhicule?.simPhoneNumber || "",
+    speedKPH: véhicule.véhiculeDetails?.[0]?.speedKPH || 0,
   }));
 
-  const handleVehicleClick = (vehicle) => {
-    setSelectedVehicle(vehicle.deviceID);
+  // Pour afficher une seule véhicule sur la carte
+  const handleVehicleClick = (véhicule) => {
+    setSelectedVehicleToShowInMap(véhicule.deviceID);
     setShowVehiculeListe(!showVehiculeListe);
   };
 
+  // Pour mettre a jour le véhicules choisis pour afficher sur la carte
   useEffect(() => {
-    console.log(selectedVehicle);
-  }, [selectedVehicle]);
+    console.log(selectedVehicleToShowInMap);
+  }, [selectedVehicleToShowInMap]);
 
+  // Pour afficher tous les véhicules en Generale sur la carte
   const showAllVehicles = () => {
-    setSelectedVehicle(null);
+    setSelectedVehicleToShowInMap(null);
   };
 
-  // const { mergedData, currentVehicule, selectedVehicle, setSelectedVehicle } =
-  // useContext(DataContext);
-
+  // Pour définir le type de carte
   const [mapType, setMapType] = useState("streets");
+
+  // Une reference pour la carte
   const mapRef = useRef(null);
-  const vehicles = selectedVehicle
-    ? vehicleData.filter((v) => v.deviceID === selectedVehicle)
-    : vehicleData;
+
+  // Pour trouver le véhicules a afficher parmi la liste
+  const vehicles = selectedVehicleToShowInMap
+    ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
+    : véhiculeData;
+
+  // Les type de carte disponibles
   const tileLayers = {
     terrain: {
       url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
@@ -103,13 +121,14 @@ const LocationPage = () => {
     },
   };
 
+  // Pour centrer une seule ou tous les véhicules
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (mapRef.current && vehicles.length) {
-        if (selectedVehicle) {
+        if (selectedVehicleToShowInMap) {
           // Si un véhicule est sélectionné, centrer sur lui
           const selectedVehicleData = vehicles.find(
-            (vehicle) => vehicle.deviceID === selectedVehicle
+            (véhicule) => véhicule.deviceID === selectedVehicleToShowInMap
           );
           if (selectedVehicleData) {
             const { lastValidLatitude, lastValidLongitude } =
@@ -119,9 +138,9 @@ const LocationPage = () => {
         } else {
           // Sinon, ajuster pour inclure tous les véhicules
           const bounds = L.latLngBounds(
-            vehicles.map((vehicle) => [
-              vehicle.lastValidLatitude,
-              vehicle.lastValidLongitude,
+            vehicles.map((véhicule) => [
+              véhicule.lastValidLatitude,
+              véhicule.lastValidLongitude,
             ])
           );
           mapRef.current.fitBounds(bounds);
@@ -130,65 +149,84 @@ const LocationPage = () => {
     }, 500);
 
     return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
-  }, [selectedVehicle, vehicles]);
+  }, [selectedVehicleToShowInMap, vehicles]);
 
+  // Pour changer de type de map
   const handleMapTypeChange = (type) => {
     setMapType(type);
     setTypeDeVue(false);
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // Pour la recherche d'un véhicule dans la liste
+  const [searchQueryLocationPage, setSearchQueryLocationPage] = useState("");
 
+  // Pour mettre a jour le terme de recherche
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQueryLocationPage(e.target.value);
   };
 
+  // Pour filtrer la recherche
   const filteredVehicles = vehiculeActive?.filter(
-    (vehicule) =>
-      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule?.simPhoneNumber
+    (véhicule) =>
+      véhicule?.imeiNumber
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+        .includes(searchQueryLocationPage.toLowerCase()) ||
+      véhicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQueryLocationPage.toLowerCase()) ||
+      véhicule.description
+        .toLowerCase()
+        .includes(searchQueryLocationPage.toLowerCase())
   );
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   return (
     <div className="relative">
-      {/* <div
-        onClick={() => {
-          console.log(mergedData);
-        }}
-        className="fixed top-[5rem] z-[99999999999999999999999] left-0"
-      >
-        asfasdfs
-      </div> */}
       <HeaderLocation
         setShowVehiculeListe={setShowVehiculeListe}
-        selectedVehicle={selectedVehicle}
-        vehicleData={vehicleData}
+        selectedVehicleToShowInMap={selectedVehicleToShowInMap}
+        véhiculeData={véhiculeData}
         setTypeDeVue={setTypeDeVue}
         showAllVehicles={showAllVehicles}
       />
 
-      <ShowVehiculeListeComponent
-        showVehiculeListe={showVehiculeListe}
-        setShowVehiculeListe={setShowVehiculeListe}
-        showAllVehicles={showAllVehicles}
-        searchQuery={searchQuery}
-        handleSearchChange={handleSearchChange}
-        filteredVehicles={filteredVehicles}
-        handleVehicleClick={handleVehicleClick}
-        selectedVehicle={selectedVehicle}
-      />
+      {showVehiculeListe && (
+        <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-[14124124124124] shadow-xl border-- border-gray-100 rounded-md p-3">
+          <SearchVehiculePupup
+            searchQueryListPopup={searchQueryLocationPage}
+            handleSearchChange={handleSearchChange}
+            setShowOptions={setShowVehiculeListe}
+            filteredVehicles={filteredVehicles}
+            handleClick={handleVehicleClick}
+            currentVéhicule={currentVéhicule}
+            isMapcomponent="true"
+          />
+        </div>
+      )}
 
       <div className="relative">
-        {/* <TypeDeVue
+        <TypeDeVue
           typeDeVue={typeDeVue}
           setTypeDeVue={setTypeDeVue}
           mapType={mapType}
           handleMapTypeChange={handleMapTypeChange}
-        /> */}
-        {typeDeVue && (
+        />
+        {/* {typeDeVue && (
           <div className="fixed z-[9999999999999999] inset-0 bg-black/50 flex justify-center items-center dark:bg-black/80">
             <div
               className="bg-white max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md dark:bg-gray-700 dark:border-gray-600"
@@ -251,17 +289,10 @@ const LocationPage = () => {
               >
                 Vue claire
               </p>
-              {/* <p
-                className={`cursor-pointer dark:text-gray-50 dark:hover:bg-gray-800/40 py-1 px-3 rounded-md ${
-                  mapType === "dark" ? "bg-gray-200 dark:bg-gray-800/50" : ""
-                }`}
-                onClick={() => handleMapTypeChange("dark")}
-              >
-                Vue sombre
-              </p> */}
+           
             </div>
           </div>
-        )}
+        )} */}
         <MapComponent mapType={mapType} tileLayers={tileLayers} />
       </div>
     </div>

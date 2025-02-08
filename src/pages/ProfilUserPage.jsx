@@ -3,29 +3,45 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logout from "../components/login/Logout";
 import { DataContext } from "../context/DataContext";
-import ConfirmPasswordComponent from "../components/profile/ConfirmPasswordComponent";
 import InfoUserComponent from "../components/profile/InfoUserComponent";
 import TimeZone from "../components/profile/TimeZone";
-import { IoMdClose } from "react-icons/io";
+import ConfirmationPassword from "../components/Reutilisable/ConfirmationPassword";
+import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function ProfilUserPage() {
   const {
-    currentVehicule,
     userData,
     account,
     username,
     password,
     setIsPasswordConfirmed,
-    showChangePasswordPupup,
-    setShowChangePasswordPupup,
+    showChangePasswordPopup,
+    setShowChangePasswordPopup,
     selectUTC,
-    setUsername,
   } = useContext(DataContext);
-  const [logOut, setLogOut] = useState(false);
-  const [inputPassword, setInputPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   const navigate = useNavigate();
+  // Pour afficher le popup de déconnexion
+  const [logOutPopup, setLogOutPopup] = useState(false);
+
+  // Pour stocker le mot de passe
+  const [inputPassword, setInputPassword] = useState("");
+
+  // Pour afficher un message d'erreur de mauvais mot de passe
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Pour la gestion du timezone
   const [changeTimeZone, setChangeTimeZone] = useState(false);
+
+  // Pour afficher le message de susses de modification du timezone
   const [changeTimeZoneMessage, setChangeTimeZoneMessage] = useState(false);
 
   // Redirection si le mot de passe est "password"
@@ -42,64 +58,57 @@ function ProfilUserPage() {
     if (inputPassword === password) {
       setIsPasswordConfirmed(true);
       navigate("/Change_Password");
-      setShowChangePasswordPupup(false);
+      setShowChangePasswordPopup(false);
     } else {
       setErrorMessage("Le mot de passe est incorrect. Veuillez réessayer.");
     }
   };
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   return (
     <div className="px-4 pb-20 min-h-screen">
-      {changeTimeZoneMessage && (
-        <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
-          <div className="relative w-[90vw] sm:w-[75vw] max-w-[32rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
-            <IoMdClose
-              onClick={() => setChangeTimeZoneMessage(false)}
-              className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
-            />
-            <div className="h-20--  bg-green-50 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
-              <h1 className="px-3 mt-8 mb-2 text-2xl text-center text-green-600 dark:text-gray-50--">
-                Mise à jour réussie
-              </h1>
-            </div>
-            <div className="p-4 flex flex-col gap-4 py-6  pb-10--">
-              {/* callError, setCallError, lancerAppel, */}
-              <p className="text-center font-semibold text-lg dark:text-gray-300 text-gray-700">
-                Le fuseau horaire prendra automatiquement effet lors de la
-                prochaine mise à jour des véhicules.
-              </p>
-            </div>
-            <div className="flex justify-center pb-6">
-              <button
-                onClick={() => setChangeTimeZoneMessage(false)}
-                className="py-1 px-8 rounded-lg text-white bg-green-500 mx-auto"
-              >
-                Ok
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {logOut && <Logout setLogOut={setLogOut} />}
-      <ConfirmPasswordComponent
-        showChangePasswordPupup={showChangePasswordPupup}
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={changeTimeZoneMessage}
+        setMessage={setChangeTimeZoneMessage}
+        véhiculeData={null}
+        composant_from={"succès modification timezone"}
+      />
+
+      {/* Log Out popup */}
+      {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />}
+
+      {/* Confirmation du mot de passe */}
+      <ConfirmationPassword
+        showConfirmPassword={showChangePasswordPopup}
         handlePasswordCheck={handlePasswordCheck}
         inputPassword={inputPassword}
         setInputPassword={setInputPassword}
         errorMessage={errorMessage}
-        setShowChangePasswordPupup={setShowChangePasswordPupup}
-        setIsPasswordConfirmed={setIsPasswordConfirmed}
+        setShowConfirmPassword={setShowChangePasswordPopup}
         setErrorMessage={setErrorMessage}
+        setIsPasswordConfirmed={setIsPasswordConfirmed}
       />
+
+      {/* Les info personnelle de l'utilisateur */}
       <InfoUserComponent
         account={account}
         username={username}
         userData={userData}
-        setShowChangePasswordPupup={setShowChangePasswordPupup}
-        setLogOut={setLogOut}
+        setShowChangePasswordPopup={setShowChangePasswordPopup}
+        setLogOutPopup={setLogOutPopup}
         selectUTC={selectUTC}
         setChangeTimeZone={setChangeTimeZone}
       />
+
+      {/* Popup de modification de timezone */}
       {changeTimeZone && (
         <TimeZone
           setChangeTimeZone={setChangeTimeZone}

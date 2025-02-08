@@ -8,19 +8,18 @@ function RapportPageDetailsOptions({
   setPersonnelDetails,
   personnelDetails,
   setShowListOption,
-  setVehiclueHistoriqueDetails,
-  currentVehicule,
+  setVéhiculeHistoriqueDetails,
+  currentVéhicule,
   formatTimestampToTimeWithTimezone,
   formatTimestampToTime,
   pageSection,
   setpageSection,
   setShowOptions,
-  showOptions,
-  setSelectedVehicle,
+  setSelectedVehicleToShowInMap,
   // formatTimestampToTimeWithTimezone,
   // formatTimestampToTime
 }) {
-  // const [setSelectedVehicle] = useContext(DataContext);
+  // const [setSelectedVehicleToShowInMap] = useContext(DataContext);
   return (
     <>
       <div className="flex px-4 mb-2 w-full gap-2 justify-between max-w-[40rem]-- mx-auto mt-6">
@@ -88,7 +87,7 @@ function RapportPageDetailsOptions({
             onClick={() => {
               setpageSection("groupe");
               setShowOptions(false);
-              setSelectedVehicle(null);
+              setSelectedVehicleToShowInMap(null);
               window.scrollTo({
                 top: 0,
                 behavior: "auto", // Défilement fluide
@@ -125,7 +124,7 @@ function RapportPageDetailsOptions({
         {/* <button
           onClick={() => {
             setShowListOption(true);
-            // setVehiclueHistoriqueDetails(currentVehicule?.vehiculeDetails);
+            // setVéhiculeHistoriqueDetails(currentVéhicule?.véhiculeDetails);
           }}
           className="border border-gray-100 dark:bg-gray-900/70 dark:text-gray-50 dark:border-gray-50/0 dark:shadow-gray-700 dark:shadow-lg rounded-lg bg-gray-100 shadow-lg-- shadow-gray-200 w-full py-1"
         >

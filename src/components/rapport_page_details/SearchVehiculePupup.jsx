@@ -4,19 +4,22 @@ import { FaCar } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 
 function SearchVehiculePupup({
-  searchQuery,
+  searchQueryListPopup,
   handleSearchChange,
   setShowOptions,
   filteredVehicles,
   handleClick,
-  currentVehicule,
+  currentVéhicule,
   isMapcomponent,
 }) {
-  const { currentdataFusionnee, selectedVehicle, setSelectedVehicle } =
-    useContext(DataContext);
+  const {
+    currentDataFusionné,
+    selectedVehicleToShowInMap,
+    setSelectedVehicleToShowInMap,
+  } = useContext(DataContext);
 
-  const foundVehicle = currentdataFusionnee.find(
-    (v) => v.deviceID === selectedVehicle
+  const foundVehicle = currentDataFusionné.find(
+    (v) => v.deviceID === selectedVehicleToShowInMap
   );
   return (
     <div>
@@ -26,7 +29,7 @@ function SearchVehiculePupup({
             className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
             type="text"
             placeholder="Recherche"
-            value={searchQuery}
+            value={searchQueryListPopup}
             onChange={handleSearchChange}
           />
         </div>
@@ -40,24 +43,24 @@ function SearchVehiculePupup({
         </div>
         <div className="overflow-auto h-[55vh]">
           {filteredVehicles?.length > 0 ? (
-            filteredVehicles?.map((vehicule, index) => {
+            filteredVehicles?.map((véhicule, index) => {
               const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
               const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-              const isMoving = vehicule.vehiculeDetails?.some(
+              const isMoving = véhicule.véhiculeDetails?.some(
                 (detail) => detail.speedKPH >= 1
               );
 
               const hasDetails =
-                vehicule.vehiculeDetails && vehicule.vehiculeDetails.length > 0;
+                véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0;
 
-              const noSpeed = vehicule.vehiculeDetails?.every(
+              const noSpeed = véhicule.véhiculeDetails?.every(
                 (detail) => detail.speedKPH <= 0
               );
 
               // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-              const lastUpdateTimeMs = vehicule.lastUpdateTime
-                ? vehicule.lastUpdateTime * 1000
+              const lastUpdateTimeMs = véhicule.lastUpdateTime
+                ? véhicule.lastUpdateTime * 1000
                 : 0;
               const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
@@ -73,17 +76,17 @@ function SearchVehiculePupup({
 
               return (
                 <div
-                  key={vehicule.deviseID}
+                  key={véhicule.deviseID}
                   onClick={() => {
-                    handleClick(vehicule);
+                    handleClick(véhicule);
                     setShowOptions(false);
-                    setSelectedVehicle(vehicule.deviceID);
+                    setSelectedVehicleToShowInMap(véhicule.deviceID);
                   }}
                   className={`${
-                    vehicule.description ===
+                    véhicule.description ===
                       (isMapcomponent === "true"
                         ? foundVehicle?.description
-                        : currentVehicule?.description) &&
+                        : currentVéhicule?.description) &&
                     "bg-orange-50 dark:bg-gray-800"
                   }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:bg-gray-600-- dark:hover:bg-gray-800`}
                 >
@@ -91,7 +94,7 @@ function SearchVehiculePupup({
                     className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg  `}
                   />
                   <p className="text-gray-700 dark:text-white">
-                    {index + 1} - {vehicule.description || "---"}
+                    {index + 1} - {véhicule.description || "---"}
                   </p>
                 </div>
               );

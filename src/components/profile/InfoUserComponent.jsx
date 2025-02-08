@@ -10,8 +10,8 @@ function InfoUserComponent({
   account,
   username,
   userData,
-  setShowChangePasswordPupup,
-  setLogOut,
+  setShowChangePasswordPopup,
+  setLogOutPopup,
   selectUTC,
   SelectedTimeZone,
   setChangeTimeZone,
@@ -115,7 +115,7 @@ function InfoUserComponent({
         {username === "admin" && (
           <div
             onClick={() => {
-              setShowChangePasswordPupup(true);
+              setShowChangePasswordPopup(true);
             }}
             className="text-orange-500 w-full dark:text-orange-400 cursor-pointer text-center rounded-lg px-3 border border-orange-500 dark:border-orange-400 py-2 hover:bg-orange-100 dark:hover:bg-orange-900"
           >
@@ -124,7 +124,7 @@ function InfoUserComponent({
         )}
         <button
           onClick={() => {
-            setLogOut(true);
+            setLogOutPopup(true);
           }}
           className="bg-orange-500 w-full dark:bg-orange-400 text-center rounded-lg px-3 text-white py-2 hover:bg-orange-600 dark:hover:bg-orange-500"
         >

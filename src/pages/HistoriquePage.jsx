@@ -11,7 +11,7 @@ import ShowFilterComponent from "../components/historique_vehicule/ShowFilterCom
 import HistoriqueMainComponent from "../components/historique_vehicule/HistoriqueMainComponent";
 import HistoriqueHeader from "../components/historique_vehicule/HistoriqueHeader";
 import TrajetVehicule from "../components/historique_vehicule/TrajetVehicule";
-// import ShowVehiculeListeComponent from "../components/location_vehicule/ShowVehiculeListeComponent";
+import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -27,52 +27,63 @@ function HistoriquePage() {
 
   const {
     mergedData,
-    currentVehicule,
+    currentVéhicule,
     loadingHistoriqueFilter,
     setShowListOption,
     showListeOption,
-    vehiclueHistoriqueDetails,
-    setCurrentVehicule,
+    véhiculeHistoriqueDetails,
+    setCurrentVéhicule,
     showHistoriqueInMap,
     setShowHistoriqueInMap,
-    donneeFusionneeForRapport,
-    setVehiclueHistoriqueDetails,
+    donneeFusionnéForRapport,
+    setVéhiculeHistoriqueDetails,
     selectUTC,
     fetchHistoriqueVehicleDetails,
-    currentdataFusionnee,
-    setSelectedVehicle,
+    currentDataFusionné,
+    setSelectedVehicleToShowInMap,
   } = useContext(DataContext);
 
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Pour mettre a jour le véhicules actuel
   useEffect(() => {
-    if (currentVehicule) {
-      const deviceID = currentVehicule?.deviceID;
+    if (currentVéhicule) {
+      const deviceID = currentVéhicule?.deviceID;
 
-      const foundVehicle = currentdataFusionnee?.find(
+      const foundVehicle = currentDataFusionné?.find(
         (v) => v.deviceID === deviceID
       );
 
-      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
-
-      setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
-      setSelectedVehicle(foundVehicle.deviceID); // Met à jour la sélection
+      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
+      setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+      setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection
     }
-  }, [currentdataFusionnee]);
+  }, [currentDataFusionné]);
 
+  // Pour filtrer par statut
   const [checkboxes, setCheckboxes] = useState({
     en_marche: true,
     en_ralenti: true,
     en_arret: true,
   });
 
+  // Une reference pour la carte
   const mapRef = useRef(); // Référence de la carte
 
+  // Pour enregistrer les valeur des checkboxes
   const [appliedCheckboxes, setAppliedCheckboxes] = useState(checkboxes);
 
   // // Filtrage pour supprimer les doublons et respecter l'intervalle de 10 minutes
   const ecar10minuteArret = [];
   let lastZeroSpeedTimestamp = null;
 
-  vehiclueHistoriqueDetails
+  véhiculeHistoriqueDetails
     ?.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
     .forEach((details) => {
       const timestamp = parseInt(details.timestamp);
@@ -81,7 +92,7 @@ function HistoriquePage() {
       if (speedKPH <= 0) {
         if (
           lastZeroSpeedTimestamp === null ||
-          lastZeroSpeedTimestamp - timestamp >= 600
+          lastZeroSpeedTimestamp - timestamp >= 60 * 10  // 10 minutes
         ) {
           ecar10minuteArret.push(details);
           lastZeroSpeedTimestamp = timestamp;
@@ -91,44 +102,48 @@ function HistoriquePage() {
       }
     });
 
+  // filtrer en fonction des statut choisis.
   const filteredVehicles = ecar10minuteArret?.filter(
-    (vehicle) =>
-      (appliedCheckboxes.en_marche && vehicle.speedKPH > 20) ||
+    (véhicule) =>
+      (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
       (appliedCheckboxes.en_ralenti &&
-        vehicle.speedKPH >= 1 &&
-        vehicle.speedKPH <= 20) ||
-      (appliedCheckboxes.en_arret && vehicle.speedKPH < 1)
+        véhicule.speedKPH >= 1 &&
+        véhicule.speedKPH <= 20) ||
+      (appliedCheckboxes.en_arret && véhicule.speedKPH < 1)
   );
 
+  // les donnees utiliser dans la carte
   const historiqueInMap = filteredVehicles
     ? Object.values(filteredVehicles)
     : [];
-  const vehicleData = historiqueInMap?.map((vehicule) => ({
+  const véhiculeData = historiqueInMap?.map((véhicule) => ({
     description:
-      // currentVehicule?.displayName ||
-      currentVehicule?.description || "Véhicule",
-    lastValidLatitude: vehicule?.latitude || "",
-    lastValidLongitude: vehicule?.longitude || "",
-    address: vehicule?.backupAddress || vehicule?.address || "",
-    imeiNumber: currentVehicule?.imeiNumber || "",
-    isActive: currentVehicule?.isActive || "",
-    licensePlate: currentVehicule?.licensePlate || "",
-    simPhoneNumber: currentVehicule?.simPhoneNumber || "",
-    speedKPH: vehicule?.speedKPH || 0, // Ajout de la vitesse
-    timestamp: vehicule?.timestamp || 0, // Ajout de la vitesse
-    heading: vehicule?.heading || "",
+      // currentVéhicule?.displayName ||
+      currentVéhicule?.description || "Véhicule",
+    lastValidLatitude: véhicule?.latitude || "",
+    lastValidLongitude: véhicule?.longitude || "",
+    address: véhicule?.backupAddress || véhicule?.address || "",
+    imeiNumber: currentVéhicule?.imeiNumber || "",
+    isActive: currentVéhicule?.isActive || "",
+    licensePlate: currentVéhicule?.licensePlate || "",
+    simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
+    speedKPH: véhicule?.speedKPH || 0, // Ajout de la vitesse
+    timestamp: véhicule?.timestamp || 0, // Ajout de la vitesse
+    heading: véhicule?.heading || "",
   }));
 
-  // const vehicles = vehicleData;
-  const [vehicles, setvehicles] = useState(vehicleData);
+  // les donnees pret a être utiliser apres formatage
+  const [vehicles, setvehicles] = useState(véhiculeData);
 
+  // Mettre a jour le data
   useEffect(() => {
-    setvehicles(vehicleData);
-  }, [vehiclueHistoriqueDetails]);
+    setvehicles(véhiculeData);
+  }, [véhiculeHistoriqueDetails]);
 
+  // type de carte
   const [mapType, setMapType] = useState("streets");
-  const [currentLocation, setCurrentLocation] = useState(null);
 
+  // les type de carte
   const tileLayers = {
     terrain: {
       url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
@@ -159,24 +174,10 @@ function HistoriquePage() {
     },
   };
 
-  // var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  //   attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-  // });
-
-  // var Stadia_AlidadeSatellite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
-  //   minZoom: 0,
-  //   maxZoom: 20,
-  //   attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  //   ext: 'jpg'
-  // });
-
-  // '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-
-  const getMarkerIcon = (vehicule) => {
-    // const speedKPH = vehicule.speedKPH;
-
-    const speed = parseFloat(vehicule.speedKPH);
-    const direction = Math.round(vehicule.heading / 45.0) % 8;
+  // les markers personnalisé
+  const getMarkerIcon = (véhicule) => {
+    const speed = parseFloat(véhicule.speedKPH);
+    const direction = Math.round(véhicule.heading / 45.0) % 8;
 
     if (speed <= 0) return "/pin/ping_red.png";
     else if (speed > 0 && speed <= 20)
@@ -189,50 +190,39 @@ function HistoriquePage() {
     window.open(googleMapsUrl, "_blank"); // Ouvrir dans un nouvel onglet
   };
 
-  const dataFusionee = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné = mergedData ? Object.values(mergedData) : [];
 
+  // Pour afficher la liste des véhicules
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
-  function formatTimestampToTime(timestamp) {
-    const date = new Date(timestamp * 1000);
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-    const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-    const period = hours >= 12 ? "PM" : "AM";
+  // Fonction pour centrer la carte sur le premier marqueur
+  const centerOnFirstMarker = () => {
+    if (mapRef.current && vehicles.length > 0) {
+      const { lastValidLatitude, lastValidLongitude } = vehicles[0];
+      mapRef.current.setView([lastValidLatitude, lastValidLongitude], 13);
+      console.log("centerOnFirstMarker.......................");
+    }
+  };
 
-    // Convert to 12-hour format
-    hours = hours % 12 || 12; // Convert 0 to 12 for midnight
-    hours = hours.toString().padStart(2, "0");
-
-    return `${hours}:${minutes}  ${period}`;
-    // return `${hours}:${minutes}:${seconds} ${period}`;
-  }
-
-  function formatTimestampToDate(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`;
-  }
-
-  const handleVehicleClick = (vehicule) => {
-    const deviceID = vehicule.deviceID;
-
-    // Recherche du véhicule correspondant dans la liste
-    const foundVehicle = donneeFusionneeForRapport.find(
+  // Recherche du véhicule correspondant dans la liste
+  const handleVehicleClick = (véhicule) => {
+    const deviceID = véhicule.deviceID;
+    const foundVehicle = donneeFusionnéForRapport.find(
       (v) => v.deviceID === deviceID
     );
 
     if (foundVehicle) {
-      setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
-
-      setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
+      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
+      setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
     } else {
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
-
     setShowVehiculeListe(!showVehiculeListe);
+    centerOnFirstMarker();
+    setTimeout(() => {
+      centerOnFirstMarker();
+    }, 1000); // 1 secondes
+    // ....................
   };
 
   const handleCheckboxChange = (name) => {
@@ -242,46 +232,54 @@ function HistoriquePage() {
     }));
   };
 
+  // Pour changer de type de carte
   const handleMapTypeChange = (type) => {
     setMapType(type);
     setTypeDeVue(false);
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // Pour la recherche d'une autre véhicules
+  const [searchQueryHistoriquePage, setSearchQueryHistoriquePage] =
+    useState("");
 
+  // Pour enregistrer le terme de recherche
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQueryHistoriquePage(e.target.value);
   };
 
-  const filteredVehiclesPupup = dataFusionee?.filter(
-    (vehicule) =>
-      // vehicule.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule?.imeiNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicule?.simPhoneNumber
+  // Pour filtrer le recherche
+  const filteredVehiclesPupup = dataFusionné?.filter(
+    (véhicule) =>
+      véhicule?.imeiNumber
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      vehicule.description.toLowerCase().includes(searchQuery.toLowerCase())
+        .includes(searchQueryHistoriquePage.toLowerCase()) ||
+      véhicule?.simPhoneNumber
+        .toLowerCase()
+        .includes(searchQueryHistoriquePage.toLowerCase()) ||
+      véhicule.description
+        .toLowerCase()
+        .includes(searchQueryHistoriquePage.toLowerCase())
   );
 
   // Récupérer les positions successives pour les lignes rouges
-  const positions = vehicles.map((vehicle) => [
-    vehicle.lastValidLatitude,
-    vehicle.lastValidLongitude,
+  const positions = vehicles.map((véhicule) => [
+    véhicule.lastValidLatitude,
+    véhicule.lastValidLongitude,
   ]);
 
-  // Fonction pour centrer la carte sur le premier marqueur
-  const centerOnFirstMarker = () => {
-    if (mapRef.current && vehicles.length > 0) {
-      const { lastValidLatitude, lastValidLongitude } = vehicles[0];
-      mapRef.current.setView([lastValidLatitude, lastValidLongitude], 15);
-    }
-  };
+  //   // Fonction pour centrer la carte sur le premier marqueur
+  // const centerOnFirstMarkerAnimation = () => {
+  //   if (mapRef.current && vehicles.length > 0) {
+  //     const { lastValidLatitude, lastValidLongitude } = vehicles[vehicles?.length - 1];
+  //     mapRef.current.setView([lastValidLatitude, lastValidLongitude], 14);
+  //   }
+  // };
 
+  // Pour afficher le popup du choix de la date
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   /////////////////////////////////////////////////////////////////////////
   // Formatage de la date actuelle
-  const getCurrentDate = () => new Date().toISOString().split("T")[0];
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
   const today = new Date(); // La date actuelle
 
@@ -322,16 +320,8 @@ function HistoriquePage() {
   const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}:00`);
   const baseTimeTo = new Date(`${formattedEndDate}T${endTime}:00`);
 
-  // Ajout de 5 heures
-
   const adjustedTimeFrom = baseTimeFrom;
-
-  // const adjustedTimeFrom = new Date(
-  //   baseTimeFrom.getTime() + 5 * 60 * 60 * 1000
-  // );
-
   const adjustedTimeTo = baseTimeTo;
-  // const adjustedTimeTo = new Date(baseTimeTo.getTime() + 5 * 60 * 60 * 1000);
 
   // Formatage en chaîne pour les heures ajustées
   const timeFromFetch = `${adjustedTimeFrom.getFullYear()}-${(
@@ -371,6 +361,7 @@ function HistoriquePage() {
     .padStart(2, "0")}`;
 
   ////////////////////////////////////////////////////////////////////////
+  // Pour appliquer la data choisis
   const handleApply = (e) => {
     // e.preventDefault();
     if (e) e.preventDefault(); // Vérifie si `e` existe avant d'appeler preventDefault()
@@ -385,7 +376,6 @@ function HistoriquePage() {
   };
 
   // Fonction pour appliquer les filtres
-
   const applyFilter = () => {
     console.log(timeFrom);
     console.log("////////////");
@@ -393,11 +383,11 @@ function HistoriquePage() {
     handleApply();
 
     if (timeFrom && timeTo) {
-      fetchHistoriqueVehicleDetails(currentVehicule.deviceID, timeFrom, timeTo);
+      fetchHistoriqueVehicleDetails(currentVéhicule.deviceID, timeFrom, timeTo);
       setAppliedCheckboxes(checkboxes);
     } else {
       fetchHistoriqueVehicleDetails(
-        currentVehicule.deviceID,
+        currentVéhicule.deviceID,
         timeFromFetch,
         timeToFetch
       );
@@ -405,14 +395,24 @@ function HistoriquePage() {
     }
   };
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
   return (
     <div className="p-4 min-h-screen flex flex-col gap-4 mt-16 mb-32 px-4 sm:px-12 md:px-20 lg:px-40">
       <div className="z-50"></div>
-      {showListeOption && (
-        <div className="absolute z-30">
-          <Liste_options />
-        </div>
-      )}
+
+      {/* Pour choisir une date */}
       {showDatePicker && (
         <div className="z-30">
           <DateTimePicker
@@ -431,6 +431,7 @@ function HistoriquePage() {
         </div>
       )}
 
+      {/* Animation Pour le chargement de la page */}
       {loadingHistoriqueFilter && (
         <div className="fixed z-30 inset-0 bg-gray-200/50 dark:bg-black/50">
           <div className="w-full h-full flex justify-center items-center">
@@ -439,6 +440,7 @@ function HistoriquePage() {
         </div>
       )}
 
+      {/* entête de page pour l'historique */}
       <div className="mb-6 mt-8 md:mt-16">
         <div className="fixed flex justify-center z-20 top-[3.5rem] bg-white dark:bg-gray-800 md:bg-white/0 py-2 pt-3 left-0 right-0">
           <HistoriqueHeader
@@ -447,19 +449,25 @@ function HistoriquePage() {
             centerOnFirstMarker={centerOnFirstMarker}
             setShowVehiculeListe={setShowVehiculeListe}
             showVehiculeListe={showVehiculeListe}
-            currentVehicule={currentVehicule}
+            currentVéhicule={currentVéhicule}
             setshowFilter={setshowFilter}
             showFilter={showFilter}
           />
 
-          <ShowVehiculeListeComponent
-            showVehiculeListe={showVehiculeListe}
-            setShowVehiculeListe={setShowVehiculeListe}
-            searchQuery={searchQuery}
-            handleSearchChange={handleSearchChange}
-            filteredVehiclesPupup={filteredVehiclesPupup}
-            handleVehicleClick={handleVehicleClick}
-          />
+          {/* La liste de véhicules a choisir */}
+          {showVehiculeListe && (
+            <div className="fixed z-[999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50  shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80 dark:border-gray-600">
+              <SearchVehiculePupup
+                searchQueryListPopup={searchQueryHistoriquePage}
+                handleSearchChange={handleSearchChange}
+                setShowOptions={setShowVehiculeListe}
+                filteredVehicles={filteredVehiclesPupup}
+                handleClick={handleVehicleClick}
+                currentVéhicule={currentVéhicule}
+                isMapcomponent="false"
+              />
+            </div>
+          )}
 
           <ShowFilterComponent
             showFilter={showFilter}
@@ -487,13 +495,11 @@ function HistoriquePage() {
         <div>
           {/* // histiorique section */}
           <HistoriqueMainComponent
-            currentVehicule={currentVehicule}
+            currentVéhicule={currentVéhicule}
             loadingHistoriqueFilter={loadingHistoriqueFilter}
-            vehiclueHistoriqueDetails={vehiclueHistoriqueDetails}
+            véhiculeHistoriqueDetails={véhiculeHistoriqueDetails}
             appliedCheckboxes={appliedCheckboxes}
             setShowListOption={setShowListOption}
-            formatTimestampToDate={formatTimestampToDate}
-            formatTimestampToTime={formatTimestampToTime}
             selectUTC={selectUTC}
           />
         </div>
@@ -510,7 +516,7 @@ function HistoriquePage() {
               mapRef={mapRef}
               tileLayers={tileLayers}
               getMarkerIcon={getMarkerIcon}
-              currentLocation={currentLocation}
+              // currentLocation={currentLocation}
               customMarkerIcon={customMarkerIcon}
               positions={positions}
               centerOnFirstMarker={centerOnFirstMarker}

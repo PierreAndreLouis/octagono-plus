@@ -1,18 +1,18 @@
 import React from "react";
 
 function ConfirmPasswordComponent({
-  showChangePasswordPupup,
+  showChangePasswordPopup,
   handlePasswordCheck,
   inputPassword,
   setInputPassword,
   errorMessage,
-  setShowChangePasswordPupup,
+  setShowChangePasswordPopup,
   setIsPasswordConfirmed,
   setErrorMessage,
 }) {
   return (
     <>
-      {showChangePasswordPupup && (
+      {showChangePasswordPopup && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50 dark:bg-black/70">
           <form
             onSubmit={handlePasswordCheck}
@@ -53,7 +53,7 @@ function ConfirmPasswordComponent({
 
               <div
                 onClick={() => {
-                  setShowChangePasswordPupup(false);
+                  setShowChangePasswordPopup(false);
                   setIsPasswordConfirmed(false);
                   setErrorMessage("");
                   setInputPassword("");

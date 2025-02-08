@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import { MdOutlineStickyNote2 } from "react-icons/md";
-import { FaLocationDot } from "react-icons/fa6";
 import { MdLocationPin } from "react-icons/md";
 import { GiPathDistance } from "react-icons/gi";
 
@@ -14,31 +13,58 @@ function NavigationBar() {
     handleTabClick,
     tab,
     username,
-    sethistiriqueSelectedLocationIndex,
+    setHistoriqueSelectedLocationIndex,
     setShowHistoriqueInMap,
-    currentVehicule,
-    setCurrentVehicule,
-    currentdataFusionnee,
-    setVehiclueHistoriqueDetails,
-    vehiculeNotActiveAjourdhui,
+    currentVéhicule,
+    setCurrentVéhicule,
+    setVéhiculeHistoriqueDetails,
+    véhiculeNotActiveToday,
   } = useContext(DataContext);
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  const chooseFirstVehicule = () => {
+  // Pour définir un véhicule par défaut
+  const chooseFirstVéhicule = () => {
     if (
-      !currentVehicule &&
-      vehiculeNotActiveAjourdhui &&
-      vehiculeNotActiveAjourdhui.length > 0
+      !currentVéhicule &&
+      véhiculeNotActiveToday &&
+      véhiculeNotActiveToday.length > 0
     ) {
-      setCurrentVehicule(vehiculeNotActiveAjourdhui[0]);
-      setVehiclueHistoriqueDetails(
-        vehiculeNotActiveAjourdhui[0].vehiculeDetails
-      );
+      setCurrentVéhicule(véhiculeNotActiveToday[0]);
+      setVéhiculeHistoriqueDetails(véhiculeNotActiveToday[0].véhiculeDetails);
     }
   };
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   return (
     <div className="bg-red fixed bottom-0 left-0 right-0 dark:bg-slate-800 lg:hidden z-[1] ">
       <div className="grid grid-cols-5 gap-4 justify-between px-4 bg-gray-200 dark:bg-gray-900/50 py-0 ">
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <Link
           to="/home?tab=acceuil"
           onClick={() => handleTabClick("acceuil")}
@@ -51,6 +77,14 @@ function NavigationBar() {
           <IoMdHome className="text-xl" />
           <h3 className="text-sm">Accueil</h3>
         </Link>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         {username === "admin" ? (
           <Link
             to="/modifier_vehicule?tab=modifier"
@@ -69,7 +103,7 @@ function NavigationBar() {
             to="/voiture_historique"
             onClick={() => {
               handleTabClick("trajet_Vehicule");
-              chooseFirstVehicule();
+              chooseFirstVéhicule();
               setShowHistoriqueInMap(true);
             }}
             className={`${
@@ -83,6 +117,13 @@ function NavigationBar() {
             <h3 className="text-sm">Trajet</h3>
           </Link>
         )}
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
 
         {username === "admin" ? (
           <div className="flex justify-center items-center">
@@ -100,7 +141,7 @@ function NavigationBar() {
               to="/Groupe_vehicule_location?tab=location"
               onClick={() => {
                 handleTabClick("location");
-                sethistiriqueSelectedLocationIndex(0);
+                setHistoriqueSelectedLocationIndex(0);
               }}
               className="min-w-14 h-14 cursor-pointer -translate-y-3 border-4 border-gray-200 dark:border-slate-800 bg-orange-500 dark:bg-orange-600 flex justify-center items-center rounded-full"
             >
@@ -108,6 +149,13 @@ function NavigationBar() {
             </Link>
           </div>
         )}
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
 
         <Link
           to="/rapport_page_details?tab=rapport"
@@ -124,6 +172,13 @@ function NavigationBar() {
           <h3 className="text-sm">Rapport</h3>
         </Link>
 
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <Link
           to="/User_Profile?tab=profile"
           onClick={() => handleTabClick("profile")}
@@ -136,6 +191,13 @@ function NavigationBar() {
           <FaRegCircleUser className="text-xl" />
           <h3 className="text-sm">Profil</h3>
         </Link>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
       </div>
     </div>
   );

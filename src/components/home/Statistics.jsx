@@ -1,87 +1,68 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { DataContext } from "../../context/DataContext";
-import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 
 function Statistics() {
   const {
     mergedData,
-    showCategorieListe,
-    setshowCategorieListe,
-    chooseActifs,
-    setchooseActifs,
-    chooseStationnement,
-    setchooseStationnement,
-    chooseInactifs,
-    setchooseInactifs,
-    chooseALl,
-    setchooseALl,
-    statisticFilter,
-    setstatisticFilter,
-    setstatisticFilterText,
-    statisticFilterText,
+    setStatisticFilterInHomePage,
+    setStatisticFilterTextInHomePage,
+    statisticFilterTextInHomePage,
   } = useContext(DataContext);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setstatisticFilterText((prevText) => prevText); // Pas de changement inutile
-      setstatisticFilter((prevFilter) => prevFilter);
-      console.log("mise a jour de Statistic header to : ", statisticFilterText);
-    }, 20000);
-
-    return () => clearInterval(intervalId);
-  }, []); // Dépendances nécessaires
-
   const vehicleArray = mergedData ? Object.values(mergedData) : [];
-
-  const totalVehicleCount = vehicleArray.length;
-
-  // const activeVehicleCount = vehicleArray.filter(
-  //   (vehicle) =>
-  //     vehicle.vehiculeDetails &&
-  //     vehicle.vehiculeDetails[0] &&
-  //     vehicle.vehiculeDetails[0].speedKPH > 0
-  // );
-
-  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
-  const getTodayTimestamp = () => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0); // Minuit
-    return Math.floor(now.getTime() / 1000); // Convertir en secondes
-  };
-
-  // Fonction pour obtenir le timestamp actuel
-  // const getCurrentTimestamp = () => {
-  //   const now = new Date();
-  //   return Math.floor(now.getTime() / 1000); // Convertir en secondes
-  // };
-  // const todayTimestamp = getCurrentTimestamp();
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   // Fonction pour obtenir le timestamp actuel en millisecondes
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-
   const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  const activeVehicleCount = vehicleArray.filter((vehicle) => {
+  // Pour stocker le nombre véhicules totale
+  const totalVehicleCount = vehicleArray.length;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // Liste des véhicules en mouvement actuellement
+  const activeVehicleCount = vehicleArray.filter((véhicule) => {
     // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
     const isSpeedActive =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].speedKPH > 0;
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].speedKPH > 0;
 
-    // const lastTimeStamp =
-    //   vehicle.vehiculeDetails &&
-    //   vehicle.vehiculeDetails[0] &&
-    //   vehicle.vehiculeDetails[0].timestamp * 1000;
     // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
     const lastUpdateTimestampMs =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
     // Vérifie si la mise à jour est récente (moins de 30 minutes)
@@ -90,62 +71,50 @@ function Statistics() {
       currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
-    const lastUpdateTimeMs = vehicle.lastUpdateTime
-      ? vehicle.lastUpdateTime * 1000
+    const lastUpdateTimeMs = véhicule.lastUpdateTime
+      ? véhicule.lastUpdateTime * 1000
       : 0;
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     // Le véhicule doit être actif selon la vitesse et la mise à jour
     return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
   });
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
-  // console.log(activeVehicleCount); // Affiche la liste des véhicules actifs
-
-  // retireer les vehicule avec plus de 24h de misae a jour
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  // Calculer les 20 heures en millisecondes
-  // const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  // const currentTime = Date.now(); // Heure actuelle en millisecondes
-
-  // Filtrer les véhicules correspondant aux nouvelles conditions
-  const filteredVehicles = vehicleArray.filter((vehicle) => {
+  // Liste des véhicules en stationnement actuellement
+  const filteredVehicles = vehicleArray.filter((véhicule) => {
     // Vérifie si le véhicule a des détails
     const hasDetails =
-      vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0;
+      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0;
 
     // Vérifie la vitesse (noSpeed)
-    const noSpeed = vehicle.vehiculeDetails?.every(
+    const noSpeed = véhicule.véhiculeDetails?.every(
       (detail) => detail.speedKPH <= 0
     );
 
     // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-    const lastUpdateTimeMs = vehicle.lastUpdateTime
-      ? vehicle.lastUpdateTime * 1000
+    const lastUpdateTimeMs = véhicule.lastUpdateTime
+      ? véhicule.lastUpdateTime * 1000
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     const lastUpdateTimestampMs =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     const isSpeedActive =
-      vehicle.vehiculeDetails &&
-      vehicle.vehiculeDetails[0] &&
-      vehicle.vehiculeDetails[0].speedKPH > 0;
+      véhicule.véhiculeDetails &&
+      véhicule.véhiculeDetails[0] &&
+      véhicule.véhiculeDetails[0].speedKPH > 0;
 
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
@@ -163,8 +132,7 @@ function Statistics() {
     );
   });
 
-  // Nombre de véhicules inactifs
-  // const inactiveVehicleCount = "0";
+  // Nombre de véhicule en stationnement actuellement
   const inactiveVehicleCount = filteredVehicles.length || "0";
   //
   //
@@ -173,39 +141,25 @@ function Statistics() {
   //
   //
   //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  // Calculer les 20 heures en millisecondes
-  // const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  // const currentTime = Date.now(); // Heure actuelle en millisecondes
+  x;
 
-  // Filtrer les véhicules sans détails ou inactifs
-  const filteredVehiclesInactifs = vehicleArray.filter((vehicle) => {
+  // Filtrer les véhicules sans détails ou inactifs  // hors services
+  const filteredVehiclesInactifs = vehicleArray.filter((véhicule) => {
     // Vérifier si le véhicule n'a pas de détails
     const noDetails =
-      !vehicle.vehiculeDetails || vehicle.vehiculeDetails.length === 0;
+      !véhicule.véhiculeDetails || véhicule.véhiculeDetails.length === 0;
 
     // Vérifier si le véhicule est inactif
-    const lastUpdateTime = vehicle?.lastUpdateTime;
+    const lastUpdateTime = véhicule?.lastUpdateTime;
     const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
     const isInactive =
       lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;
 
     // Retourne true si l'une des conditions est satisfaite
-    // return isInactive;
-    // return noDetails || isInactive;
     return noDetails || isInactive;
   });
 
-  // Nombre de véhicules filtrés
-  // const notActiveVehicleCount = "0";
+  // Nombre de véhicules hors services filtrés
   const notActiveVehicleCount = filteredVehiclesInactifs.length || "0";
   //
   //
@@ -217,23 +171,54 @@ function Statistics() {
   //
   //
   //
+  x;
+  // a supprimer
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  const [test, setTest] = useState("x");
+  const testRef = useRef(test);
+
+  // Met à jour la référence à chaque changement de test
+  useEffect(() => {
+    testRef.current = test;
+  }, [test]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // Met à jour l'état avec la dernière valeur choisie
+      setTest(testRef.current);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
   //
   //
   //
   //
   //
+  //
+  //
+  //
+  //
+  //
+  x;
+
   return (
     <div className="mt-2 ">
       {/* ------------------------------- */}
       {/* Début des statistiques */}
       <div className="p-2 grid grid-cols-2 gap-2 mt-4 md:mt-10">
+        {/* Nombre totale de véhicules */}
         <Tooltip
           PopperProps={{
             modifiers: [
               {
                 name: "offset",
                 options: {
-                  offset: [0, -40], // Décalage horizontal et vertical
+                  offset: [0, -20], // Décalage horizontal et vertical
                 },
               },
             ],
@@ -242,24 +227,18 @@ function Statistics() {
         >
           <div
             onClick={() => {
-              setstatisticFilter(vehicleArray);
-              setstatisticFilterText("tout");
-              // setchooseALl(true);
-              // setchooseActifs(false);
-              // setchooseStationnement(false);
-              // setchooseInactifs(false);
+              setStatisticFilterInHomePage(vehicleArray);
+              setStatisticFilterTextInHomePage("tout");
             }}
-            // to="/Statistics_Page"
-            className="bg-white dark:bg-gray-800 rounded-lg"
+            className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md p-3">
-              {/* <div className="border overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                     Total
                   </h3>
-                  {statisticFilterText === "tout" && (
+                  {statisticFilterTextInHomePage === "tout" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-blue-400"></div>
                   )}
                 </div>
@@ -282,14 +261,15 @@ function Statistics() {
             </div>
           </div>
         </Tooltip>
-        {/*  */}
+
+        {/* Nombre de véhicules en mouvement */}
         <Tooltip
           PopperProps={{
             modifiers: [
               {
                 name: "offset",
                 options: {
-                  offset: [0, -40], // Décalage horizontal et vertical
+                  offset: [0, -20], // Décalage horizontal et vertical
                 },
               },
             ],
@@ -298,25 +278,18 @@ function Statistics() {
         >
           <div
             onClick={() => {
-              setstatisticFilter(activeVehicleCount);
-              setstatisticFilterText("mouvement");
-
-              // setchooseALl(false);
-              // setchooseActifs(true);
-              // setchooseStationnement(false);
-              // setchooseInactifs(false);
+              setStatisticFilterInHomePage(activeVehicleCount);
+              setStatisticFilterTextInHomePage("mouvement");
             }}
-            // to="/Statistics_Page"
-            className="bg-white dark:bg-gray-800 rounded-lg"
+            className="bg-white  cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-600/40 flex justify-between items-start rounded-lg shadow-md p-3">
-              {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-700/30 flex justify-between items-start rounded-lg shadow-md p-3"> */}
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                     En Mouvement
                   </h3>
-                  {statisticFilterText === "mouvement" && (
+                  {statisticFilterTextInHomePage === "mouvement" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-green-400"></div>
                   )}
                 </div>
@@ -339,15 +312,15 @@ function Statistics() {
             </div>
           </div>
         </Tooltip>
-        {/*  */}
 
+        {/* Nombre de véhicules en stationnement  */}
         <Tooltip
           PopperProps={{
             modifiers: [
               {
                 name: "offset",
                 options: {
-                  offset: [0, -40], // Décalage horizontal et vertical
+                  offset: [0, -20], // Décalage horizontal et vertical
                 },
               },
             ],
@@ -356,25 +329,18 @@ function Statistics() {
         >
           <div
             onClick={() => {
-              setstatisticFilter(filteredVehicles);
-              setstatisticFilterText("parking");
-
-              // setchooseALl(false);
-              // setchooseActifs(false);
-              // setchooseStationnement(true);
-              // setchooseInactifs(false);
+              setStatisticFilterInHomePage(filteredVehicles);
+              setStatisticFilterTextInHomePage("parking");
             }}
-            // to="/Statistics_Page"
-            className="bg-white dark:bg-gray-800 rounded-lg"
+            className="bg-white  cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-800/50 flex justify-between items-start rounded-lg shadow-md p-3">
-              {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-900/40 flex justify-between items-start rounded-lg shadow-md p-3"> */}
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                     En Stationnement
                   </h3>
-                  {statisticFilterText === "parking" && (
+                  {statisticFilterTextInHomePage === "parking" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-red-400"></div>
                   )}
                 </div>
@@ -397,14 +363,15 @@ function Statistics() {
             </div>
           </div>
         </Tooltip>
-        {/*  */}
+
+        {/* Nombre de véhicules hors service  */}
         <Tooltip
           PopperProps={{
             modifiers: [
               {
                 name: "offset",
                 options: {
-                  offset: [0, -40], // Décalage horizontal et vertical
+                  offset: [0, -20], // Décalage horizontal et vertical
                 },
               },
             ],
@@ -413,25 +380,18 @@ function Statistics() {
         >
           <div
             onClick={() => {
-              setstatisticFilter(filteredVehiclesInactifs);
-              setstatisticFilterText("hors_service");
-
-              // setchooseALl(false);
-              // setchooseActifs(false);
-              // setchooseStationnement(false);
-              // setchooseInactifs(true);
+              setStatisticFilterInHomePage(filteredVehiclesInactifs);
+              setStatisticFilterTextInHomePage("hors_service");
             }}
-            // to="/Statistics_Page"
-            className="bg-white dark:bg-gray-400/10 rounded-lg"
+            className="bg-white  cursor-pointer dark:bg-gray-400/10 rounded-lg"
           >
             <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-700/30 flex justify-between items-start rounded-lg shadow-md p-3">
-              {/* <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-950/50 flex justify-between items-start rounded-lg shadow-md p-3"> */}
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
                     Hors Service
                   </h3>
-                  {statisticFilterText === "hors_service" && (
+                  {statisticFilterTextInHomePage === "hors_service" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-purple-400"></div>
                   )}
                 </div>
@@ -454,13 +414,7 @@ function Statistics() {
             </div>
           </div>
         </Tooltip>
-        {/* <button
-          onClick={() => {
-            console.log(vehicleArray);
-          }}
-        >
-          test
-        </button> */}
+
         {/*  */}
       </div>
       {/* Fin des statistiques */}

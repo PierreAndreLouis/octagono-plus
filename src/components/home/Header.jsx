@@ -11,8 +11,6 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 
-// ok
-
 function Header() {
   // Récupère des données utilisateur et des fonctions utiles via le contexte DataContext
   const {
@@ -20,48 +18,89 @@ function Header() {
     setShowSideBar,
     showSideBar,
     fetchVehicleData,
-    setSearchQuery,
+    setSearchQueryForHeader,
     tab,
     handleTabClick,
     username,
     account,
-    sethistiriqueSelectedLocationIndex,
+    setHistoriqueSelectedLocationIndex,
   } = useContext(DataContext);
 
+  let x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   const navigate = useNavigate();
-  const { theme } = useSelector((state) => state.theme); // Récupère l'état du thème (clair/sombre) depuis Redux
-  const dispatch = useDispatch(); // Permet de déclencher des actions Redux
-  const [logOut, setLogOut] = useState(false); // État pour afficher le composant de déconnexion
-  const [searchVehicule, setSearchVehicule] = useState(() => {
-    const savedValue = localStorage.getItem("searchVehicule");
-    return savedValue ? JSON.parse(savedValue) : false; // Charge la valeur de recherche enregistrée
+  // Récupère l'état du thème (clair/sombre) depuis Redux
+  const { theme } = useSelector((state) => state.theme);
+
+  // Permet de déclencher des actions Redux
+  const dispatch = useDispatch();
+
+  //  pour afficher le composant de déconnexion
+  const [logOutPopup, setLogOutPopup] = useState(false);
+
+  // Charge la valeur de recherche enregistrée
+  const [searchVéhicule, setSearchVéhicule] = useState(() => {
+    const savedValue = localStorage.getItem("searchVéhicule");
+    return savedValue ? JSON.parse(savedValue) : false;
   });
 
+  // Sauvegarde la recherche du véhicule dans le localStorage à chaque modification
   useEffect(() => {
-    // Sauvegarde la recherche du véhicule dans le localStorage à chaque modification
-    localStorage.setItem("searchVehicule", JSON.stringify(searchVehicule));
-  }, [searchVehicule]);
+    localStorage.setItem("searchVéhicule", JSON.stringify(searchVéhicule));
+  }, [searchVéhicule]);
 
-  const [searchTerm, setSearchTerm] = useState(""); // Gère le terme de recherche de véhicule
+  // Gère le terme de recherche de véhicule
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // Définit la requête de recherche
   const handleSearchSubmit = () => {
-    // Définit la requête de recherche
-    setSearchQuery(searchTerm);
+    setSearchQueryForHeader(searchTerm);
   };
 
+  // Déclenche la recherche lorsque le terme change
   useEffect(() => {
     if (searchTerm) {
-      // Déclenche la recherche lorsque le terme change
       handleSearchSubmit();
     }
   }, [searchTerm]);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
 
   return (
     // En-tête fixe avec barre de recherche conditionnelle et navigation utilisateur
     <div className="fixed   md:shadow-md md:py-1 md:px-20 z-50 bg-white dark:bg-gray-800 top-0 left-0 right-0 pb-2">
-      {logOut && <Logout setLogOut={setLogOut} />}{" "}
-      {/* Affiche le composant de déconnexion si logOut est vrai */}
-      {searchVehicule && (
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/* Popup de déconnexion  */}
+      {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/* Affiche le composant de déconnexion si logOutPopup est vrai */}
+      {searchVéhicule && (
         <form className="fixed flex justify-center items-center -top-2 left-0 lg:left-[15rem] lg:right-[15rem] right-0 bg-white lg:bg-white/0 dark:bg-gray-800 dark:text-white">
           <div className="mt-4 px-4 max-w-[34rem] w-full">
             <div className="border-2 bg-white dark:bg-gray-700 flex gap-3 justify-center items-center rounded-lg overflow-hidden">
@@ -80,9 +119,9 @@ function Header() {
               />
               <IoMdClose
                 onClick={() => {
-                  setSearchVehicule(false); // Ferme la barre de recherche
+                  setSearchVéhicule(false); // Ferme la barre de recherche
                   setSearchTerm(""); // Réinitialise le terme de recherche
-                  setSearchQuery("");
+                  setSearchQueryForHeader("");
                 }}
                 className="text-3xl text-red-500 dark:text-red-400 cursor-pointer mr-4"
               />
@@ -90,6 +129,11 @@ function Header() {
           </div>
         </form>
       )}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
       <div className="flex pt-2  justify-between px-4 py-1 items-center dark:text-white">
         <div className="flex items-center gap-4">
           <Link
@@ -111,6 +155,12 @@ function Header() {
           </div>
         </div>
         <div className="hidden lg:flex justify-center items-center gap-5 font-semibold text-gray-700 dark:text-gray-300">
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
           <Tooltip
             title="Page d'accueil
 "
@@ -143,6 +193,14 @@ function Header() {
               Accueil
             </Link>
           </Tooltip>
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
           {username === "admin" && (
             <Tooltip
               title="Enregistrer un nouveau véhicule
@@ -177,6 +235,14 @@ function Header() {
               </Link>
             </Tooltip>
           )}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
           {username === "admin" && (
             <Tooltip
               title="Modifier ou Supprimer un Véhicule
@@ -212,6 +278,14 @@ function Header() {
               </Link>
             </Tooltip>
           )}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
           <Tooltip
             title="Voir la position géographique des véhicules
 
@@ -239,7 +313,7 @@ function Header() {
               to="/Groupe_vehicule_location?tab=localisation"
               onClick={() => {
                 handleTabClick("localisation");
-                sethistiriqueSelectedLocationIndex(0);
+                setHistoriqueSelectedLocationIndex(0);
               }}
               className={`${
                 tab === "localisation" && "text-orange-500"
@@ -248,6 +322,14 @@ function Header() {
               Localisation
             </Link>
           </Tooltip>
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
           <Tooltip
             title="Voir tous les détails sur le déplacement d'un véhicule
 
@@ -281,7 +363,22 @@ function Header() {
               Rapport
             </Link>
           </Tooltip>
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
         </div>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         <div className="flex gap-4 items-center">
           <Tooltip
             title="Rechercher un véhicule"
@@ -307,7 +404,7 @@ function Header() {
             <button>
               <IoSearch
                 onClick={() => {
-                  setSearchVehicule(true); // Affiche la barre de recherche
+                  setSearchVéhicule(true); // Affiche la barre de recherche
                 }}
                 className="text-2xl cursor-pointer text-gray-500 dark:text-gray-200"
               />
@@ -405,6 +502,13 @@ function Header() {
             </div>
           </Tooltip>
         </div>
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
       </div>
     </div>
   );

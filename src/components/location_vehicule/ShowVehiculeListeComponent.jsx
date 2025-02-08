@@ -9,31 +9,26 @@ function ShowVehiculeListeComponent({
   showVehiculeListe,
   setShowVehiculeListe,
   showAllVehicles,
-  searchQuery,
+  searchQueryListPopup,
   handleSearchChange,
   filteredVehicles,
   handleVehicleClick,
-  selectedVehicle,
+  selectedVehicleToShowInMap,
 }) {
-  const { currentVehicule, currentdataFusionnee } = useContext(DataContext);
+  const { currentVéhicule, currentDataFusionné } = useContext(DataContext);
 
-  // const deviceID = currentVehicule.deviceID;
 
-  // Recherche du véhicule correspondant dans la liste
-  const foundVehicle = currentdataFusionnee.find(
-    (v) => v.deviceID === selectedVehicle
-  );
   return (
     <>
       {showVehiculeListe && (
         <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-[14124124124124] shadow-xl border-- border-gray-100 rounded-md p-3">
           <SearchVehiculePupup
-            searchQuery={searchQuery}
+            searchQueryListPopup={searchQueryListPopup}
             handleSearchChange={handleSearchChange}
             setShowOptions={setShowVehiculeListe}
             filteredVehicles={filteredVehicles}
             handleClick={handleVehicleClick}
-            currentVehicule={currentVehicule}
+            currentVéhicule={currentVéhicule}
             isMapcomponent="true"
           />
         </div>

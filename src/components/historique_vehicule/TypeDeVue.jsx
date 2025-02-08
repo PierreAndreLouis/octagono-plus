@@ -63,14 +63,7 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
             >
               Vue Claire
             </p>
-            {/* <p
-              className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                mapType === "dark" ? "bg-gray-200 dark:bg-gray-800/70" : ""
-              }`}
-              onClick={() => handleMapTypeChange("dark")}
-            >
-              Vue Sombre
-            </p> */}
+           
           </div>
         </div>
       )}

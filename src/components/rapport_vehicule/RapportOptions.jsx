@@ -22,27 +22,25 @@ import { DataContext } from "../../context/DataContext";
 
 function RapportOptions({
   setshowRapportPupup,
-  currentVehicule,
+  currentVéhicule,
   formatTimestampToTime,
   envoyerSMS,
   smsError,
-  firstCallHistoriqueData,
   setShowHistoriqueInMap,
-  setVehiclueHistoriqueDetails,
+  setVéhiculeHistoriqueDetails,
 }) {
   const {
     mergedData,
-    chooseStationnement,
-    setCurrentVehicule,
+    setCurrentVéhicule,
     setShowListOption,
     selectUTC,
     setVehiclueHistoriqueRapportDetails,
-    vehiclueHistoriqueDetails,
+    véhiculeHistoriqueDetails,
   } = useContext(DataContext);
   const [showStatisticOption, setshowStatisticOption] = useState(true);
   const [showSmsError, setshowSmsError] = useState(false);
 
-  const filteredList = currentVehicule?.vehiculeDetails?.filter(
+  const filteredList = currentVéhicule?.véhiculeDetails?.filter(
     (item) => parseFloat(item.speedKPH) > 0
   );
 
@@ -124,7 +122,7 @@ function RapportOptions({
   }
 
   const { minSpeed, maxSpeed, averageSpeed } = calculateSpeedStats(
-    currentVehicule.vehiculeDetails
+    currentVéhicule.véhiculeDetails
   );
 
   function getUniqueAddresses(dataList) {
@@ -137,7 +135,7 @@ function RapportOptions({
     return uniqueAddresses;
   }
 
-  const uniqueAddresses = getUniqueAddresses(currentVehicule?.vehiculeDetails);
+  const uniqueAddresses = getUniqueAddresses(currentVéhicule?.véhiculeDetails);
 
   function getUniqueAddressesWhenSpeedZeroOrLess(dataList) {
     // Filtrer les éléments où la vitesse est <= 0
@@ -154,7 +152,7 @@ function RapportOptions({
     return uniqueAddresses;
   }
   const uniqueAddressesZerroSpeed = getUniqueAddressesWhenSpeedZeroOrLess(
-    currentVehicule?.vehiculeDetails
+    currentVéhicule?.véhiculeDetails
   );
 
   function convertToTimezone(timestamp, offset) {
@@ -197,7 +195,7 @@ function RapportOptions({
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-red-100 bg-red-50 p-2 rounded-md flex items-center gap-4">
               <IoStatsChartSharp className="min-w-[2rem] text-[1.92rem] text-red-600 " />
               <h2 className="font-semibold dark:text-orange-50 text-red-700">
-                Historique du vehicule
+                Historique du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-red-100 bg-red-50 p-2 rounded-md flex items-center gap-4">
@@ -207,13 +205,13 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-red-700">
-                Trajet du vehicule
+                Trajet du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-red-100 bg-red-50 p-2 rounded-md flex items-center gap-4">
               <MdLocationPin className="text-[2rem] text-red-600 " />
               <h2 className="font-semibold dark:text-orange-50 text-red-700">
-                Position actuel du vehicule
+                Position actuel du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-red-100 bg-red-50 p-2 rounded-md flex items-center gap-4">
@@ -223,7 +221,7 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-red-700">
-                Tous les vehicule en deplacement
+                Tous les véhicule en deplacement
               </h2>
             </div>
           </div>
@@ -240,7 +238,7 @@ function RapportOptions({
             className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500"
           />
           <div className="h-16-- py-5 bg-orange-100 dark:bg-gray-800 dark:text-gray-50 dark:shadow-lg dark:shadow-gray-900 shadow-md text-gray-800 text-xl font-semibold text-center flex justify-center items-center p-2">
-            <h1 className="px-3">{currentVehicule?.description}</h1>
+            <h1 className="px-3">{currentVéhicule?.description}</h1>
           </div>
 
           {/*  */}
@@ -321,7 +319,7 @@ function RapportOptions({
                       Distance totale:
                       <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                         {calculateTotalDistance(
-                          currentVehicule?.vehiculeDetails
+                          currentVéhicule?.véhiculeDetails
                         ).toFixed(2)}
                         Km
                       </span>
@@ -370,15 +368,15 @@ function RapportOptions({
                       <span className="font-semibold text-gray-800 dark:text-orange-500 pr-3">
                         Adresse Début:
                       </span>
-                      {currentVehicule?.vehiculeDetails[0]?.address ||
+                      {currentVéhicule?.véhiculeDetails[0]?.address ||
                         "pas de resultat"}
                     </p>
                     <p>
                       <span className="font-semibold text-gray-800 dark:text-orange-500 pr-3">
                         Dernière position:
                       </span>
-                      {currentVehicule?.vehiculeDetails[
-                        currentVehicule?.vehiculeDetails.length - 1
+                      {currentVéhicule?.véhiculeDetails[
+                        currentVéhicule?.véhiculeDetails.length - 1
                       ]?.address || "pas de resultat"}
                     </p>
                   </div>
@@ -435,7 +433,7 @@ function RapportOptions({
               onClick={() => {
                 setShowHistoriqueInMap(false);
 
-                setVehiclueHistoriqueDetails(currentVehicule?.vehiculeDetails);
+                setVéhiculeHistoriqueDetails(currentVéhicule?.véhiculeDetails);
               }}
               className="shadow-md cursor-pointer py-4 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4"
             >
@@ -449,9 +447,9 @@ function RapportOptions({
               to="/voiture_historique"
               onClick={() => {
                 setShowHistoriqueInMap(true);
-                setVehiclueHistoriqueDetails(currentVehicule?.vehiculeDetails);
+                setVéhiculeHistoriqueDetails(currentVéhicule?.véhiculeDetails);
                 setVehiclueHistoriqueRapportDetails(
-                  currentVehicule?.vehiculeDetails
+                  currentVéhicule?.véhiculeDetails
                 );
               }}
               className="shadow-md cursor-pointer py-4 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4"
@@ -475,7 +473,7 @@ function RapportOptions({
               onClick={() => {
                 {
                   envoyerSMS(
-                    currentVehicule.simPhoneNumber,
+                    currentVéhicule.simPhoneNumber,
                     "Bonjour, ceci est un test de Déblocage"
                   );
                   setshowSmsError(!showSmsError);
@@ -494,7 +492,7 @@ function RapportOptions({
               onClick={() => {
                 {
                   envoyerSMS(
-                    currentVehicule.simPhoneNumber,
+                    currentVéhicule.simPhoneNumber,
                     "Bonjour, ceci est un test de Déblocage"
                   );
                   setshowSmsError(!showSmsError);
@@ -563,7 +561,7 @@ function RapportOptions({
             {/* <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 py-3 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4">
                 <IoStatsChartSharp className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
                 <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                  Position du vehicule
+                  Position du véhicule
                 </h2>
               </div> */}
           </div>
@@ -580,7 +578,7 @@ function RapportOptions({
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-green-100 bg-green-50 p-2 rounded-md flex items-center gap-4">
               <IoStatsChartSharp className="min-w-[2rem] text-[1.92rem] text-green-600 " />
               <h2 className="font-semibold dark:text-orange-50 text-green-700">
-                Historique du vehicule
+                Historique du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-green-100 bg-green-50 p-2 rounded-md flex items-center gap-4">
@@ -590,13 +588,13 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-green-700">
-                Trajet du vehicule
+                Trajet du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-green-100 bg-green-50 p-2 rounded-md flex items-center gap-4">
               <MdLocationPin className="text-[2rem] text-green-600 " />
               <h2 className="font-semibold dark:text-orange-50 text-green-700">
-                Position actuel du vehicule
+                Position actuel du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-green-100 bg-green-50 p-2 rounded-md flex items-center gap-4">
@@ -606,7 +604,7 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-green-700">
-                Tous les vehicule en deplacement
+                Tous les véhicule en deplacement
               </h2>
             </div>
           </div>
@@ -622,7 +620,7 @@ function RapportOptions({
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-purple-100 bg-purple-50 p-2 rounded-md flex items-center gap-4">
               <IoStatsChartSharp className="min-w-[2rem] text-[1.92rem] text-purple-600 " />
               <h2 className="font-semibold dark:text-orange-50 text-purple-900">
-                Historique du vehicule
+                Historique du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-purple-100 bg-purple-50 p-2 rounded-md flex items-center gap-4">
@@ -632,13 +630,13 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-purple-900">
-                Trajet du vehicule
+                Trajet du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-purple-100 bg-purple-50 p-2 rounded-md flex items-center gap-4">
               <MdLocationPin className="text-[2rem] text-purple-600 " />
               <h2 className="font-semibold dark:text-orange-50 text-purple-900">
-                Position actuel du vehicule
+                Position actuel du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-purple-100 bg-purple-50 p-2 rounded-md flex items-center gap-4">
@@ -648,7 +646,7 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-purple-900">
-                Tous les vehicule en deplacement
+                Tous les véhicule en deplacement
               </h2>
             </div>
           </div>
@@ -672,7 +670,7 @@ function RapportOptions({
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4">
               <IoStatsChartSharp className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Historique du vehicule
+                Historique du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4">
@@ -682,13 +680,13 @@ function RapportOptions({
                 alt=""
               />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Trajet du vehicule
+                Trajet du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4">
               <MdLocationPin className="text-[2rem] min-w-8 text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Position actuel du vehicule
+                Position actuel du véhicule
               </h2>
             </div>
             <div className="shadow-md cursor-pointer dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-900 py-4 hover:bg-orange-100/70 bg-orange-50 p-2 rounded-md flex items-center gap-4">

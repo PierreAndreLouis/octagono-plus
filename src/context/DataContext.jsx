@@ -5,203 +5,337 @@ import moment from "moment-timezone";
 
 export const DataContext = createContext();
 
-const DataContextProvider = ({ children, centerOnFirstMarker }) => {
+const DataContextProvider = ({ children }) => {
+  let x;
   const navigate = useNavigate();
 
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  const [error, setError] = useState(null);
-  const [search, setSearch] = useState(false);
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
-
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  //loading for Historique page
-  const [loadingHistoriqueFilter, setLoadingHistoriqueFilter] = useState(false);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Login / logout / security variables
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
 
-  // loading for create vehicule page
-  const [crud_loading, setCrud_loading] = useState(false);
-
-  // store login user data
+  // to store login user data  // account, username, password
   const [userData, setUserData] = useState(() => {
     const storedUserData = localStorage.getItem("userData");
     return storedUserData ? JSON.parse(storedUserData) : null;
   });
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Login / logout / security
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  // to know if the user is login or not
   const isAuthenticated = userData !== null;
 
+  // variable to store the user personal login info
   const [account, setAccount] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
 
-  // to show the log out pupup
-  const [logOut, setLogOut] = useState(false);
+  // to show the log out popup
+  const [logOutPopup, setLogOutPopup] = useState(false);
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // HOME PAGE
+  // HOME PAGE variables
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // loding pour la page home apres log in
-  const [isLoading, setIsLoading] = useState(false);
+  x;
 
-  // search data in the header
-  const [searchQuery, setSearchQuery] = useState(""); // État pour stocker le terme de recherche
+  // to show or display the search input in the header
+  const [search, setSearch] = useState(false);
+
+  // loading pour la page home apres login
+  const [isHomePageLoading, setIsHomePageLoading] = useState(false);
+
+  // État pour stocker le terme de recherche dans le header
+  const [searchQueryForHeader, setSearchQueryForHeader] = useState("");
 
   // to show the side bar
   const [showSideBar, setShowSideBar] = useState(true);
 
-  // vehicule data in home page
-  const [vehicleData, setVehicleData] = useState(() => {
-    const storedVehicleData = localStorage.getItem("vehicleData");
+  // véhicule data in home page
+  const [véhiculeData, setVehicleData] = useState(() => {
+    const storedVehicleData = localStorage.getItem("véhiculeData");
     return storedVehicleData ? JSON.parse(storedVehicleData) : null;
   });
 
-  // vehicule detail in home page
+  // véhicule detail in home page
   const [vehicleDetails, setVehicleDetails] = useState(() => {
-    const storedvehicleDetails = localStorage.getItem("vehicleDetails");
-    return storedvehicleDetails && storedvehicleDetails !== "undefined"
-      ? JSON.parse(storedvehicleDetails)
+    const storedVehicleDetails = localStorage.getItem("vehicleDetails");
+    return storedVehicleDetails && storedVehicleDetails !== "undefined"
+      ? JSON.parse(storedVehicleDetails)
       : [];
   });
 
-  // userdata and vehiculedata together
+  // véhiculeData and vehicleDetails together
   const [mergedData, setMergedData] = useState(() => {
-    const storedmergedData = localStorage.getItem("mergedData");
-    return storedmergedData ? JSON.parse(storedmergedData) : null;
+    const storedMergedData = localStorage.getItem("mergedData");
+    return storedMergedData ? JSON.parse(storedMergedData) : null;
   });
 
-  // vehicule actuelle
-  const [currentVehicule, setCurrentVehicule] = useState(null); // 1. Déclaration de currentVehicule
+  // véhicule actuelle
+  const [currentVéhicule, setCurrentVéhicule] = useState(null); // 1. Déclaration de currentVéhicule
 
-  // to show the vehicules options
+  // to show the véhicules options like in the homePage
   const [showListeOption, setShowListOption] = useState(false);
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Rapport page
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Pour filtrer les donnee dans la page d’accueil en cliquant sur les statistics
+  const [statisticFilterInHomePage, setStatisticFilterInHomePage] = useState();
 
-  // vehicule details in rapport page
-  const [rapportvehicleDetails, setrapportVehicleDetails] = useState([]);
+  //  Pour savoir le filtrer actuelle afin d'ajouter une indication // le petit point a droite du text
+  const [statisticFilterTextInHomePage, setStatisticFilterTextInHomePage] =
+    useState("");
 
-  //vehicule searh data in rapport page
-  const [searchrapportvehicleDetails, setSearchrapportVehicleDetails] =
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Rapport page variables
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
+  // véhicule details in rapport page
+
+  const [rapportVehicleDetails, setRapportVehicleDetails] = useState([]);
+
+  //véhicule search data in rapport page
+  const [searchRapportVehicleDetails, setSearchRapportVehicleDetails] =
     useState([]);
 
   // loading for the rapport page
   const [rapportDataLoading, setRapportDataLoading] = useState(false);
 
-  const [donneeFusionneeForRapport, setdonneeFusionneeForRapport] = useState(
+  // rapportVehicleDetails and véhiculeData together
+  const [donneeFusionnéForRapport, setDonneeFusionnéForRapport] = useState(
     () => {
-      const storeddonneeFusionneeForRapport = localStorage.getItem(
-        "donneeFusionneeForRapport"
+      const storedDonneeFusionnéForRapport = localStorage.getItem(
+        "donneeFusionnéForRapport"
       );
-      return storeddonneeFusionneeForRapport
-        ? JSON.parse(storeddonneeFusionneeForRapport)
+      return storedDonneeFusionnéForRapport
+        ? JSON.parse(storedDonneeFusionnéForRapport)
         : [];
     }
   );
 
-  const [vehiculeActiveAjourdhui, setVehiculeActiveAjourdhui] = useState([]);
-  const [vehiculeNotActiveAjourdhui, setVehiculeNotActiveAjourdhui] = useState(
-    []
-  );
+  // liste des véhicule ayant déplacer aujourd'hui
+  const [véhiculeActiveToday, setVéhiculeActiveToday] = useState([]);
 
-  const [vehiculeNotActif, setVehiculeNotActif] = useState([]);
-  const [vehiculeActiveMaintenant, setVehiculeActiveMaintenant] = useState([]);
+  // liste des vehicles en stationnement aujourd'hui
+  const [véhiculeNotActiveToday, setVéhiculeNotActiveToday] = useState([]);
 
-  const [searchdonneeFusionneeForRapport, setSearchdonneeFusionneeForRapport] =
+  // Vehicles sans details ou non mise a jour
+  const [véhiculeHorsService, setVéhiculeHorsService] = useState([]);
+
+  // véhicules en déplacement actuellement / maintenant
+  const [véhiculeEnMouvementMaintenant, setVéhiculeEnMouvementMaintenant] =
     useState([]);
 
-  const [statisticFilter, setstatisticFilter] = useState();
-  const [statisticFilterText, setstatisticFilterText] = useState("");
-
-  useEffect(() => {
-    console.log(statisticFilter);
-    console.log(statisticFilterText);
-    setstatisticFilterText(statisticFilterText);
-    setstatisticFilter(statisticFilter);
-  }, [statisticFilter, statisticFilterText]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setstatisticFilterText((prevText) => prevText); // Pas de changement inutile
-      setstatisticFilter((prevFilter) => prevFilter);
-      console.log("mise a jour de Statistic header to : ", statisticFilterText);
-    }, 20000);
-
-    return () => clearInterval(intervalId);
-  }, []); // Dépendances nécessaires
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Pupup
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Pour stocker les donnees de recherches /  rapportVehicleDetails and véhiculeData together
+  const [searchDonneeFusionnéForRapport, setSearchDonneeFusionnéForRapport] =
+    useState([]);
 
   //
-  const [successAddvehiculePupup, setsuccessAddvehiculePupup] = useState(false);
-  const [errorAddvehiculePupup, seterrorAddvehiculePupup] = useState(false);
   //
-  const [successModifiervehiculePupup, setsuccessModifiervehiculePupup] =
-    useState(false);
-  const [errorModifiervehiculePupup, seterrorModifiervehiculePupup] =
-    useState(false);
   //
-  const [successDeletevehiculePupup, setsuccessDeletevehiculePupup] =
-    useState(false);
-  const [errorDeletevehiculePupup, seterrorDeletevehiculePupup] =
-    useState(false);
-  // to show the confirm password pupup in user page
-  const [showChangePasswordPupup, setShowChangePasswordPupup] = useState(false);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Ajouter nouveau appareil variables
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
 
+  // loading for create véhicule page
+  const [createVéhiculeLoading, setCreateVéhiculeLoading] = useState(false);
+
+  // to display error for creating véhicule or login
+  const [error, setError] = useState(null);
+
+  // Pour afficher le popup succès apres ajoute d'un nouveau appareil
+  const [successAddVéhiculePopup, setSuccessAddVéhiculePopup] = useState(false);
+
+  // Pour afficher un popup d'erreur lors de L’échec de l'ajout d'un appareil
+  const [errorAddVéhiculePopup, setErrorAddVéhiculePopup] = useState(false);
+
+  // Pour afficher un popup succès apres ajoute d'un nouveau appareil
+  const [successModifierVéhiculePopup, setSuccessModifierVéhiculePopup] =
+    useState(false);
+
+  //  Pour afficher un popup d'erreur apres échec de modification d'un appareil
+  const [errorModifierVéhiculePopup, setErrorModifierVéhiculePopup] =
+    useState(false);
+
+  // Pour afficher un popup succès apres suppression d'un appareil
+  const [successDeleteVéhiculePopup, setSuccessDeleteVéhiculePopup] =
+    useState(false);
+
+  // Pour ajouter un popup échec apres échec de suppression d'un appareil
+  const [errorDeleteVéhiculePopup, setErrorDeleteVéhiculePopup] =
+    useState(false);
+
+  // to show the confirm password popup in user page
+  const [showChangePasswordPopup, setShowChangePasswordPopup] = useState(false);
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Historique page
+  // Historique page variables
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
+
+  // to choose the only véhicule to show in the map
+  const [selectedVehicleToShowInMap, setSelectedVehicleToShowInMap] =
+    useState(null);
+
+  //loading for Historique page
+  const [loadingHistoriqueFilter, setLoadingHistoriqueFilter] = useState(false);
 
   // to show the map in the historique page
   const [showHistoriqueInMap, setShowHistoriqueInMap] = useState(false);
 
-  const [vehiclueHistoriqueDetails, setVehiclueHistoriqueDetails] = useState(
+  // Pour stocker les donnee dans la page Historique
+  const [véhiculeHistoriqueDetails, setVéhiculeHistoriqueDetails] = useState(
     []
   );
 
+  const [historiqueSelectedLocationIndex, setHistoriqueSelectedLocationIndex] =
+    useState(0);
+
+  // Pour mettre a jour la variable apres changement.
   useEffect(() => {
-    console.log(vehiclueHistoriqueDetails);
-  }, [vehiclueHistoriqueDetails]);
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Statistic  page
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    console.log(véhiculeHistoriqueDetails);
+  }, [véhiculeHistoriqueDetails]);
 
-  const [showCategorieListe, setshowCategorieListe] = useState(false);
-  const [chooseActifs, setchooseActifs] = useState(false);
-  const [chooseStationnement, setchooseStationnement] = useState(false);
-  const [chooseInactifs, setchooseInactifs] = useState(false);
-  const [chooseALl, setchooseALl] = useState(false);
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // TimeZone  component
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Initialisation des états depuis localStorage
-
+  x;
+  // Pour stocker le data des timezones.
   const [timeZoneData, setTimeZoneData] = useState([]);
-  const [timeZonesearchQuery, settimeZoneSearchQuery] = useState(""); // État pour la recherche
+
+  // Pour stocker le terme de recherche de timezone.
+  const [timeZoneSearchQuery, setTimeZoneSearchQuery] = useState(""); // État pour la recherche
+
+  // Pour stocker les choix de timezones.
   const [selectedTimeZone, setSelectedTimeZone] = useState(() => {
     return localStorage.getItem("selectedTimeZone") || "";
   });
-  const [selectUTC, setselectUTC] = useState(() => {
+  const [selectUTC, setSelectUTC] = useState(() => {
     return localStorage.getItem("selectUTC") || "";
   });
-  // const [selectUTC, setselectUTC] = useState("");
-  const [selectTime, setselectTime] = useState(() => {
+  const [selectTime, setSelectTime] = useState(() => {
     return localStorage.getItem("selectTime") || "";
   });
-  const chooseTimeZone = isNaN(Number(selectUTC)) ? -5 : Number(selectUTC);
-  // const chooseTimeZone = selectUTC + 1;
 
+  // Pour le réglage des difference d'heure du timezone
   let addHoursFrom = -17;
   let addHoursTo = 0;
   if (selectUTC > -5 && selectUTC <= 0) {
@@ -209,19 +343,119 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   } else if (selectUTC > 0) {
     addHoursFrom = -(Number(selectUTC) + 7);
   }
-
   let addSearchHoursFin = 0;
   if (selectUTC > -5) {
     addSearchHoursFin = Number(selectUTC) + 5;
   }
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Time From and Time to...
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
+  const now = new Date();
+  now.setHours(now.getHours() + addSearchHoursFin); // Ajouter d'heures en plus.
 
-  // Charger les fuseaux horaires
+  const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}`;
+
+  // Création d'une date représentant le début de la journée
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  // Ajouter d'heures en plus.
+  startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
+
+  // Formatage de `TimeFrom`
+  const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${startOfDay
+    .getDate()
+    .toString()
+    .padStart(2, "0")} ${startOfDay
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${startOfDay
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}:${startOfDay.getSeconds().toString().padStart(2, "0")}`;
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Fuseaux Horaires
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
+
+  // Data pour mettre a jour les timezones
   useEffect(() => {
-    // const zones = moment.tz.names().map((zone) => {
-    //   const currentTime = moment().tz(zone).format("HH:mm");
-    //   const utcOffset = moment().tz(zone).format("Z");
-    //   return { region: zone, currentTime, utcOffset };
-    // });
     const zones = [
       { region: "GMT+12", currentTime: "12:00", utcOffset: 12 },
       { region: "GMT+11", currentTime: "13:00", utcOffset: 11 },
@@ -251,20 +485,21 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       { region: "GMT-13", currentTime: "13:00", utcOffset: -13 },
       { region: "GMT-14", currentTime: "14:00", utcOffset: -14 },
     ];
-
     setTimeZoneData(zones);
   }, []);
 
+  // fonction pour enregistrer les timezone choisis.
   const handleSelectTimeZone = (item) => {
     setSelectedTimeZone(item.region);
-    setselectUTC(item.utcOffset);
-    setselectTime(item.currentTime);
+    setSelectUTC(item.utcOffset);
+    setSelectTime(item.currentTime);
     localStorage.setItem("selectedTimeZone", item.region);
     localStorage.setItem("selectUTC", item.utcOffset);
     localStorage.setItem("selectTime", item.currentTime);
     homePageReload();
   };
 
+  // useEffect pour enregistrer les timezone choisis.
   useEffect(() => {
     if (selectedTimeZone) {
       localStorage.setItem("selectedTimeZone", selectedTimeZone);
@@ -277,29 +512,38 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   }, [selectedTimeZone, selectUTC, selectTime]);
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  /////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Log in, log out...
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Login, logout...
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
   // Fonction to log in
   const handleLogin = async (account, user, password) => {
-    // e.preventDefault();
-    setIsLoading(true);
+    setIsHomePageLoading(true);
     setError(null);
 
     const xmlData = `<GTSRequest command="dbget">
@@ -318,8 +562,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       });
 
       const data = await response.text();
-
-      console.log("data User XML: >>>>>>>>>>>>>>>>>>>>>.. ", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -335,8 +577,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           let fieldValue = fields[i].textContent;
           userData[fieldName] = fieldValue;
         }
-
-        // localStorage.setItem("userData", JSON.stringify(userData));
 
         try {
           localStorage.setItem("userData", JSON.stringify(userData));
@@ -361,23 +601,21 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         setAccount(localStorage.getItem("account") || "");
         setUsername(localStorage.getItem("username") || "");
         setPassword(localStorage.getItem("password") || "");
-        // console.log("user data --------", userData);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la connexion.");
-        // setIsLoading(false);
       }
     } catch (error) {
       setError("Erreur lors de la connexion à l'API.");
       console.error("Erreur lors de la connexion à l'API", error);
-      setIsLoading(false);
+      setIsHomePageLoading(false);
     } finally {
-      setIsLoading(false);
+      setIsHomePageLoading(false);
     }
   };
 
-  // pour stoquer les donnnes de l'utilisateur en local
+  // pour stoker les donnees de l'utilisateur en local
   useEffect(() => {
     // Récupérer les informations de localStorage
     setAccount(localStorage.getItem("account") || "");
@@ -385,15 +623,15 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     setPassword(localStorage.getItem("password") || "");
   }, []);
 
-  // Fonction pour se deconnecter de l'applicaton
+  // Fonction pour se déconnecter de l’application
   const handleLogout = () => {
     setShowSideBar(true);
-    setLogOut(false);
+    setLogOutPopup(false);
 
     localStorage.removeItem("userData");
     setUserData(null);
 
-    localStorage.removeItem("vehicleData");
+    localStorage.removeItem("véhiculeData");
     setVehicleData(null);
 
     localStorage.removeItem("vehicleDetails");
@@ -402,26 +640,26 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     localStorage.removeItem("mergedData");
     setMergedData(null);
 
-    localStorage.removeItem("donneeFusionneeForRapport");
-    setdonneeFusionneeForRapport([]);
+    localStorage.removeItem("donneeFusionnéForRapport");
+    setDonneeFusionnéForRapport([]);
 
-    setVehiculeActiveAjourdhui([]);
-    setVehiculeNotActiveAjourdhui([]);
-    setVehiculeNotActif([]);
-    setVehiculeActiveMaintenant([]);
-    setSearchdonneeFusionneeForRapport([]);
+    setVéhiculeActiveToday([]);
+    setVéhiculeNotActiveToday([]);
+    setVéhiculeHorsService([]);
+    setVéhiculeEnMouvementMaintenant([]);
+    setSearchDonneeFusionnéForRapport([]);
 
-    localStorage.removeItem("rapportvehicleDetails");
-    setrapportVehicleDetails([]);
+    localStorage.removeItem("rapportVehicleDetails");
+    setRapportVehicleDetails([]);
 
     localStorage.removeItem("selectedTimeZone");
     setSelectedTimeZone("");
 
     localStorage.removeItem("selectUTC");
-    // setselectUTC("");
+    // setSelectUTC("");
 
     localStorage.removeItem("selectTime");
-    setselectTime("");
+    setSelectTime("");
 
     localStorage.removeItem("account");
     setAccount("");
@@ -432,13 +670,22 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     localStorage.removeItem("password");
     setPassword("");
 
-    setstatisticFilter();
-    setstatisticFilterText("");
-    localStorage.clear();
-    currentdataFusionnee = [];
-    setCurrentVehicule(null);
+    setStatisticFilterInHomePage();
+    setStatisticFilterTextInHomePage("");
+    // localStorage.clear();
+    currentDataFusionné = [];
+    setCurrentVéhicule(null);
     navigate("/login");
   };
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //
   //
   //
@@ -453,8 +700,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Home page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Requette pour afficher tous les vehicule mais sans details
+  x;
+  // Requête pour afficher tous les véhicule mais sans details
   const fetchVehicleData = async () => {
     if (!userData) return;
 
@@ -499,7 +746,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
-      let vehicleData = [];
+      let véhiculeData = [];
 
       for (let i = 0; i < records.length; i++) {
         const fields = records[i].getElementsByTagName("Field");
@@ -511,77 +758,18 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           vehicleRecord[fieldName] = fieldValue;
         }
 
-        vehicleData.push(vehicleRecord);
+        véhiculeData.push(vehicleRecord);
       }
 
-      setVehicleData(vehicleData);
+      setVehicleData(véhiculeData);
 
-      const now = new Date();
-      now.setHours(now.getHours() + addSearchHoursFin); // ajouter 5 heures
-      // now.setHours(now.getHours() - chooseTimeZone); // ajouter 5 heures
-
-      const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-        .getHours()
-        .toString()
-        .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-        .getSeconds()
-        .toString()
-        .padStart(2, "0")}`;
-
-      // Création d'une date représentant le début de la journée
-      const startOfDay = new Date();
-      startOfDay.setHours(0, 0, 0, 0);
-
-      // Ajouter 5 heures
-      startOfDay.setTime(
-        startOfDay.getTime() - 0 * 60 * 60 * 1000
-        // startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000
-      );
-
-      // Formatage de `TimeFrom`
-      const TimeFrom = `${startOfDay.getFullYear()}-${(
-        startOfDay.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, "0")}-${startOfDay
-        .getDate()
-        .toString()
-        .padStart(2, "0")} ${startOfDay
-        .getHours()
-        .toString()
-        .padStart(2, "0")}:${startOfDay
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}:${startOfDay
-        .getSeconds()
-        .toString()
-        .padStart(2, "0")}`;
-
-      // const startOfDay = new Date();
-      // startOfDay.setHours(0, 0, 0, 0);
-      // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
-
-      // const TimeFrom = `${startOfDay.getFullYear()}-${(
-      //   startOfDay.getMonth() + 1
-      // )
-      //   .toString()
-      //   .padStart(2, "0")}-${startOfDay
-      //   .getDate()
-      //   .toString()
-      //   .padStart(2, "0")} 00:00:00`;
-
-      if (vehicleData && vehicleData.length > 0) {
-        vehicleData.forEach((vehicle) => {
-          fetchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-          fetRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-
-          // firstCallRapportData();
+      if (véhiculeData && véhiculeData.length > 0) {
+        véhiculeData.forEach((véhicule) => {
+          fetchVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
+          fetchRapportVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
         });
       }
     } catch (error) {
-      setError("Erreur lors de la récupération des données des véhicules.");
       console.error(
         "Erreur lors de la récupération des données des véhicules",
         error
@@ -589,11 +777,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   };
 
-  // Repuette pour rechercher les details des vehicule dans la page home
+  // Requête pour rechercher les details des véhicule dans la page home
   const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     if (!userData) return;
 
-    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -601,8 +788,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       return date.toISOString().replace("T", " ").split(".")[0];
     };
 
-    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
-    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
@@ -632,8 +819,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       </EventData>
     </GTSRequest>`;
-
-    // console.log("wait... 1");
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -687,7 +872,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         const updatedDetails = prevDetails?.map((detail) => {
           if (detail.Device === Device) {
             return filteredVehicleDetails.length > 0
-              ? { ...detail, vehiculeDetails: [...filteredVehicleDetails] }
+              ? { ...detail, véhiculeDetails: [...filteredVehicleDetails] }
               : detail;
           }
           return detail;
@@ -697,16 +882,13 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         if (!updatedDetails.some((detail) => detail.Device === Device)) {
           updatedDetails.push({
             Device,
-            vehiculeDetails: [...filteredVehicleDetails],
+            véhiculeDetails: [...filteredVehicleDetails],
           });
         }
 
         return [...updatedDetails];
       });
-
-      // console.log("xxxxxxxxxxxxxxxxxxxxxxx", newVehicleDetails);
     } catch (error) {
-      setError("Erreur lors de la récupération des détails du véhicule.");
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
         error
@@ -714,143 +896,24 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   };
 
-  // Pour lancer la requette de details des vehicules
-  useEffect(() => {
-    if (userData) {
-      fetchVehicleData();
-    }
-  }, [userData]);
-
-  // Premier appelle de donnee pour les detils de vehicule de la page home et rapport
-  useEffect(() => {
-    // console.log("start fffffffffffff........");
-
-    const now = new Date();
-    ///////////////////////
-    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
-    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
-    ///////////////////////////
-    const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // Création d'une date représentant le début de la journée
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
-    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
-
-    // Formatage de `TimeFrom`
-    const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${startOfDay
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${startOfDay
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    if (vehicleData && vehicleData.length > 0) {
-      vehicleData.forEach((vehicle) => {
-        fetchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-        fetRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-      });
-    }
-  }, [vehicleData]);
-
-  const homePageReload = () => {
-    const now = new Date();
-    ///////////////////////
-    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
-    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
-    ///////////////////////////
-    const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // Création d'une date représentant le début de la journée
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
-    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
-
-    // Formatage de `TimeFrom`
-    const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${startOfDay
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${startOfDay
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-    // const startOfDay = new Date();
-    // startOfDay.setHours(0, 0, 0, 0);
-    // ///////////////////////////////////////
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
-    // /////////////////////////////////
-
-    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-    //   .toString()
-    //   .padStart(2, "0")}-${startOfDay
-    //   .getDate()
-    //   .toString()
-    //   .padStart(2, "0")} 00:00:00`;
-    console.log("refraich HomePage");
-    if (vehicleData && vehicleData.length > 0) {
-      vehicleData.forEach((vehicle) => {
-        fetchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-        fetRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-      });
-    }
-  };
-
+  // Pour fusionnée les donnees pour la page home // véhiculeData et vehicleDetails
   const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
     const dataFusionne = {};
     const seenEvents = new Set();
 
-    // Vérifiez si deviceID existe bien dans vehicleData
-    vehicleData.forEach((vehicle) => {
-      const { deviceID } = vehicle;
+    // Vérifiez si deviceID existe bien dans véhiculeData
+    véhiculeData.forEach((véhicule) => {
+      const { deviceID } = véhicule;
       if (deviceID) {
         // Vérification de l'existence de deviceID
         dataFusionne[deviceID] = {
-          ...vehicle,
-          vehiculeDetails:
+          ...véhicule,
+          véhiculeDetails:
             vehicleDetails.find((v) => v.Device === deviceID)
-              ?.vehiculeDetails || [],
+              ?.véhiculeDetails || [],
         };
       } else {
-        console.warn("deviceID manquant dans vehicleData", vehicle);
+        // console.warn("deviceID manquant dans véhiculeData", véhicule);
       }
     });
 
@@ -863,19 +926,18 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
         if (dataFusionne[deviceID]) {
           if (Object.keys(eventDetails).length > 0) {
-            dataFusionne[deviceID].vehiculeDetails.push({
+            dataFusionne[deviceID].véhiculeDetails.push({
               timestamp,
               ...eventDetails,
             });
           }
         } else {
-          console.warn("deviceID manquant dans eventData", event);
+          // console.warn("deviceID manquant dans eventData", event);
         }
       }
     });
 
     try {
-      // localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
       localStorage.setItem("mergedData", JSON.stringify(dataFusionne));
     } catch (error) {
       if (error.name === "QuotaExceededError") {
@@ -888,34 +950,72 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
 
     setMergedData(dataFusionne);
-    setIsLoading(false);
+    setIsHomePageLoading(false);
 
     setTimeout(() => {
-      setIsLoading(false);
+      setIsHomePageLoading(false);
     }, 15000); // 15 secondes
 
     return dataFusionne;
   };
 
+  // Pour lancer la requête de details des véhicules
+  useEffect(() => {
+    if (userData) {
+      fetchVehicleData();
+    }
+  }, [userData]);
+
+  // Premier appelle de donnee pour les details de véhicule de la page home et rapport
+  useEffect(() => {
+    if (véhiculeData && véhiculeData.length > 0) {
+      véhiculeData.forEach((véhicule) => {
+        fetchVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
+        fetchRapportVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
+      });
+    }
+  }, [véhiculeData]);
+
+  // Pour mettre a jour les donnees
+  const homePageReload = () => {
+    console.log("reload HomePage");
+    if (véhiculeData && véhiculeData.length > 0) {
+      véhiculeData.forEach((véhicule) => {
+        fetchVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
+        fetchRapportVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
+      });
+    }
+  };
+
+  // Pour arrêter le loading pares 15 second de la page home apres login
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
-    }, 5000); // 10 000 millisecondes = 10 secondes
-  }, [isLoading]);
+      setIsHomePageLoading(false);
+    }, 15000); //  50 secondes
+  }, [isHomePageLoading]);
 
-  // Pour fusionner les donnes des vehicule dans la page Home
+  // Pour fusionner les donnes des véhicule dans la page Home
   useEffect(() => {
     if (
       vehicleDetails &&
       vehicleDetails.length > 0 &&
-      vehicleData &&
-      vehicleData.length > 0
+      véhiculeData &&
+      véhiculeData.length > 0
     ) {
       mergeVehicleDataWithEvents();
-      homePageReload();
     }
-  }, [vehicleData, vehicleDetails]);
+  }, [véhiculeData, vehicleDetails]);
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //
   //
   //
@@ -931,10 +1031,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Rapport page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // yyyyyyyyyyyyyyyyyyyyyyyyyy
-  // Repuette pour rechercher les details des vehicule dans la page rapport
-  const fetRapportchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  x;
+  // Requête pour rechercher les details des véhicule dans la page rapport
+  const fetchRapportVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -942,8 +1041,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       return date.toISOString().replace("T", " ").split(".")[0];
     };
 
-    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
-    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
     if (!userData) return;
 
@@ -979,22 +1078,17 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       </EventData>
     </GTSRequest>`;
 
-    // console.log("wait 1111.......");
-
     try {
       const response = await fetch("/api/track/Service", {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
       });
-      // console.log("wait 22222.......");
 
       const data = await response.text();
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
-
-      // console.log("Data brut rapport details.....", data);
 
       const newVehicleDetails = [];
       for (let i = 0; i < records.length; i++) {
@@ -1045,12 +1139,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         );
       });
 
-      setrapportVehicleDetails((prevDetails) => [
+      setRapportVehicleDetails((prevDetails) => [
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...filteredVehicleDetails,
       ]);
     } catch (error) {
-      setError("Erreur lors de la récupération des détails du véhicule.");
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
         error
@@ -1058,15 +1151,15 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   };
 
-  // Pour le fusionnement de donnee de la page rapport
-  const rapportfusionnerDonnees = () => {
-    if (!vehicleData || !rapportvehicleDetails) return [];
+  // Pour le fusionnement de donnee de la page rapport véhiculeData et rapportVehicleDetails
+  const rapportFusionnerDonnees = () => {
+    if (!véhiculeData || !rapportVehicleDetails) return [];
 
     // Récupérer les anciens détails depuis localStorage
     const previousData = (() => {
       try {
         const data = JSON.parse(
-          localStorage.getItem("donneeFusionneeForRapport")
+          localStorage.getItem("donneeFusionnéForRapport")
         );
         return Array.isArray(data) ? data : [];
       } catch (error) {
@@ -1078,16 +1171,16 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       }
     })();
 
-    const dataFusionnee = vehicleData.map((vehicle) => {
+    const dataFusionné = véhiculeData.map((véhicule) => {
       // Trouver les nouveaux détails pour le véhicule
-      const newDetails = rapportvehicleDetails?.filter(
-        (detail) => detail.Device === vehicle.deviceID
+      const newDetails = rapportVehicleDetails?.filter(
+        (detail) => detail.Device === véhicule.deviceID
       );
 
       // Récupérer les anciens détails depuis les données précédentes
       const previousDetails = previousData.find(
-        (prev) => prev.deviceID === vehicle.deviceID
-      )?.vehiculeDetails;
+        (prev) => prev.deviceID === véhicule.deviceID
+      )?.véhiculeDetails;
 
       // Conserver les anciens détails si aucun nouveau n'est trouvé
       const updatedDetails =
@@ -1096,119 +1189,55 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
           : previousDetails || [];
 
       return {
-        ...vehicle,
-        vehiculeDetails: updatedDetails,
+        ...véhicule,
+        véhiculeDetails: updatedDetails,
       };
     });
 
     // Met à jour l'état avec les données fusionnées
-    setdonneeFusionneeForRapport(dataFusionnee);
-
-    // Enregistrer les données fusionnées dans localStorage
-    // localStorage.setItem(
-    //   "donneeFusionneeForRapport",
-    //   JSON.stringify(dataFusionnee)
-    // );
+    setDonneeFusionnéForRapport(dataFusionné);
 
     try {
       localStorage.setItem(
-        "donneeFusionneeForRapport",
-        JSON.stringify(dataFusionnee)
+        "donneeFusionnéForRapport",
+        JSON.stringify(dataFusionné)
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
         console.error(
-          "Quota dépassé pour donneeFusionneeForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+          "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
         );
       } else {
         console.error("Erreur de stockage : ", error);
       }
     }
 
-    return dataFusionnee;
+    return dataFusionné;
   };
 
   // Pour lancer le fusionnement des donnees dans la page rapport
   useEffect(() => {
-    if (rapportvehicleDetails?.length > 0 && vehicleData?.length > 0) {
-      rapportfusionnerDonnees();
+    if (rapportVehicleDetails?.length > 0 && véhiculeData?.length > 0) {
+      rapportFusionnerDonnees();
     }
-  }, [rapportvehicleDetails, vehicleData]);
+  }, [rapportVehicleDetails, véhiculeData]);
 
-  // pour mettre a jour rapport data avec la date actuelle
-  const firstCallRapportData = () => {
-    setShowListOption(false);
-    // console.log("Start.........");
-    const now = new Date();
-    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
-    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
-
-    const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // Création d'une date représentant le début de la journée
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
-    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
-
-    // Formatage de `TimeFrom`
-    const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${startOfDay
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${startOfDay
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // const startOfDay = new Date();
-    // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
-
-    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-    //   .toString()
-    //   .padStart(2, "0")}-${startOfDay
-    //   .getDate()
-    //   .toString()
-    //   .padStart(2, "0")} 00:00:00`;
-
-    if (vehicleData && vehicleData.length > 0) {
-      vehicleData.forEach((vehicle) => {
-        fetRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-        // console.log("call the fonction.........");
-      });
-    }
-  };
-
-  // Mise a jour les donnee de rapport page tous les 1 minutes
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // reloadHomePage();
-      homePageReload();
-
-      console.log("mise ajour des donnees");
-    }, 20000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //
   //
   //
@@ -1222,10 +1251,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Rapport page recherche par date
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Repuette pour la recherche par date de details des vehicule dans la page rapport
-  const fetSearchRapportchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  x;
+  // Requête pour la recherche de details des véhicule dans la page rapport
+  const fetchSearchRapportVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -1233,12 +1261,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       return date.toISOString().replace("T", " ").split(".")[0];
     };
 
-    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
-    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
     if (!userData) return;
-    // setRapportDataLoading(true);
-    console.log("starttttttttttttt..............");
 
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
@@ -1267,15 +1293,12 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       </EventData>
     </GTSRequest>`;
 
-    // console.log("2222222222");
-
     try {
       const response = await fetch("/api/track/Service", {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
       });
-      // console.log("3333333333333");
 
       const data = await response.text();
       const parser = new DOMParser();
@@ -1301,13 +1324,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
           details[fieldName] = fieldValue;
         }
-        // console.log("4444444444444");
 
         details.backupAddress = "";
 
         newVehicleDetails.push(details);
       }
-      // console.log("66666666666666");
 
       // Suppression des doublons dans `newVehicleDetails`
       const uniqueVehicleDetails = newVehicleDetails.filter(
@@ -1321,7 +1342,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
               t.longitude === detail.longitude
           )
       );
-      // console.log("7777777777777777");
 
       // Filtrage des timestamps
       const timeFromTimestamp = new Date(TimeFrom).getTime();
@@ -1335,23 +1355,13 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         );
       });
 
-      setSearchrapportVehicleDetails((prevDetails) => [
+      setSearchRapportVehicleDetails((prevDetails) => [
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...filteredVehicleDetails,
       ]);
-
-      // console.log("888888888888888888");
-
-      console.log("end fetching.................");
-      // console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.");
-      // console.log("uniqueVehicleDetails.");
     } catch (error) {
       setRapportDataLoading(false);
-      console.log(
-        "Set loading to false >>>>>>>>>>>>>>>>>>>",
-        rapportDataLoading
-      );
-      setError("Erreur lors de la récupération des détails du véhicule.");
+
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
         error
@@ -1359,32 +1369,29 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   };
 
-  // Fonction pour fusionnee les donnee de recherce par date
-  const rapportSearchfusionnerDonnees = () => {
-    if (!vehicleData || !searchrapportvehicleDetails) return [];
+  // Fonction pour fusionnée les donnee de recherche par date
+  const rapportSearchFusionnerDonnees = () => {
+    if (!véhiculeData || !searchRapportVehicleDetails) return [];
 
-    const dataFusionnee = vehicleData.map((vehicle) => {
-      const events = searchrapportvehicleDetails?.filter(
-        (detail) => detail.Device === vehicle.deviceID
+    const dataFusionné = véhiculeData.map((véhicule) => {
+      const events = searchRapportVehicleDetails?.filter(
+        (detail) => detail.Device === véhicule.deviceID
       );
 
       // Mettre à jour les informations du véhicule si les nouveaux détails ne sont pas vides
       return {
-        ...vehicle,
-        vehiculeDetails: events,
+        ...véhicule,
+        véhiculeDetails: events,
       };
     });
 
-    const oneVehicleProcessed = dataFusionnee.some(
-      (vehicle) => vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0
+    const oneVehicleProcessed = dataFusionné.some(
+      (véhicule) =>
+        véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
     );
 
     if (oneVehicleProcessed) {
       setRapportDataLoading(false);
-      console.log(
-        "Set loading to false >>>>>>>>>>>>>>>>>>>",
-        rapportDataLoading
-      );
 
       console.log("Au moins un véhicule a ses détails mis à jour !");
     } else {
@@ -1392,39 +1399,41 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
 
     // Vérifiez si chaque véhicule a ses détails ajoutés
-    const allVehiclesProcessed = dataFusionnee.every(
-      (vehicle) => vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0
+    const allVehiclesProcessed = dataFusionné.every(
+      (véhicule) =>
+        véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
     );
 
     // 1. Met à jour l'état avec toutes les données fusionnées
-    setSearchdonneeFusionneeForRapport(dataFusionnee);
+    setSearchDonneeFusionnéForRapport(dataFusionné);
 
     // 2. Met à jour le chargement uniquement lorsque toutes les données sont traitées
     if (allVehiclesProcessed) {
       console.log("Tous les véhicules ont leurs détails mis à jour !");
-      setSearchdonneeFusionneeForRapport(dataFusionnee);
+      setSearchDonneeFusionnéForRapport(dataFusionné);
     } else {
       console.log("Certains véhicules n'ont pas encore leurs détails.");
     }
 
-    return dataFusionnee;
+    return dataFusionné;
   };
 
-  // Pour mettre a jour la variable searchdonneeFusionneeForRapport
+  // Pour mettre a jour la variable searchDonneeFusionnéForRapport
   useEffect(() => {
     console.log(
-      "Mise à jour de searchdonneeFusionneeForRapport:",
-      searchdonneeFusionneeForRapport
+      "Mise à jour de searchDonneeFusionnéForRapport:",
+      searchDonneeFusionnéForRapport
     );
-  }, [searchdonneeFusionneeForRapport]);
+  }, [searchDonneeFusionnéForRapport]);
 
-  // Pour lancer le fusionnement de donnee de recherche par date des fonctions fetSearchRapportchVehicleDetails et rapportSearchfusionnerDonnees
+  // Pour lancer le fusionnement de donnee de recherche par date des fonctions fetchSearchRapportVehicleDetails et rapportSearchFusionnerDonnees
   useEffect(() => {
-    if (searchrapportvehicleDetails.length > 0 && vehicleData?.length > 0) {
-      rapportSearchfusionnerDonnees();
+    if (searchRapportVehicleDetails.length > 0 && véhiculeData?.length > 0) {
+      rapportSearchFusionnerDonnees();
     }
-  }, [searchrapportvehicleDetails, vehicleData]);
+  }, [searchRapportVehicleDetails, véhiculeData]);
 
+  // Pour mettre a jour la variable rapportDataLoading
   useEffect(() => {
     console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
   }, [rapportDataLoading]);
@@ -1441,90 +1450,35 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //
   //
   //
+  //
+  //
+  //
+  //
+  //
+  //
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Pour filtrer les donnees dans la page rapport
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
-  const getTodayTimestamp = () => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0); // Minuit
-    return Math.floor(now.getTime() / 1000); // Convertir en secondes
-  };
-
-  ///////////////////////////////////////////////////////////////////////////////////////////
-
-  function getMostRecentTimestamp(data) {
-    // Filtrer les entrées avec un tableau vehiculeDetails valide et non vide
-    const validTimestamps = data
-      .filter(
-        (vehicle) =>
-          Array.isArray(vehicle.vehiculeDetails) &&
-          vehicle.vehiculeDetails.length > 0
-      )
-      .map((vehicle) => parseInt(vehicle.vehiculeDetails[0].timestamp));
-
-    // Trouver le timestamp le plus récent
-    const mostRecentTimestamp = Math.max(...validTimestamps);
-
-    return { mostRecentTimestamp };
-  }
-  const dataFusionee2 = mergedData ? Object.values(mergedData) : [];
-
-  // useEffect(() => {
-  //   const todayTimestamp = getTodayTimestamp();
-  //   const lastTimestampUpdate = getMostRecentTimestamp(dataFusionee2);
-
-  //   if (lastTimestampUpdate >  todayTimestamp) {
-  //   // Filtrer les données
-  //   const filteredData = donneeFusionneeForRapport?.map((item) => ({
-  //     ...item,
-  //     vehiculeDetails: item.vehiculeDetails.filter(
-  //       (detail) => parseInt(detail.timestamp, 10) >= todayTimestamp
-  //     ),
-  //   }));
-
-  //     // Mettre à jour les données filtrées
-  //     setdonneeFusionneeForRapport(filteredData);
-
-  //     // Sauvegarder dans le localStorage
-  //     localStorage.setItem(
-  //       "donneeFusionneeForRapport",
-  //       JSON.stringify(filteredData)
-  //     );
-  //   }
-  // }, []); // Se déclenche uniquement une fois, au montage
-
-  let currentdataFusionnee =
-    searchdonneeFusionneeForRapport.length > 0
-      ? searchdonneeFusionneeForRapport
-      : donneeFusionneeForRapport;
+  x;
+  let currentDataFusionné =
+    searchDonneeFusionnéForRapport.length > 0
+      ? searchDonneeFusionnéForRapport
+      : donneeFusionnéForRapport;
 
   //  Pour filtrer les donnees dans la page rapport
   useEffect(() => {
     if (
-      searchdonneeFusionneeForRapport.length > 0 &&
-      currentdataFusionnee &&
-      currentdataFusionnee?.length > 0
+      searchDonneeFusionnéForRapport.length > 0 &&
+      currentDataFusionné &&
+      currentDataFusionné?.length > 0
     ) {
       // 2. Met à jour l'état avec tous les véhicules ayant au moins un événement avec `speedKPH >= 1`
-      const vehiculeActiveAjourdhui = currentdataFusionnee?.filter((vehicle) =>
-        vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
+      const véhiculeActiveToday = currentDataFusionné?.filter((véhicule) =>
+        véhicule.véhiculeDetails?.some((detail) => detail.speedKPH >= 1)
       );
-      setVehiculeActiveAjourdhui(vehiculeActiveAjourdhui);
+      setVéhiculeActiveToday(véhiculeActiveToday);
 
-      // const now = new Date();
-      // const filteredVehicles = currentdataFusionnee?.filter((vehicle) => {
-      //   const lastUpdate = new Date(vehicle.lastUpdateTime);
-      //   const diffHeures = (now - lastUpdate) / (1000 * 60 * 60);
-      //   return diffHeures < 24; // Conserver uniquement les véhicules mis à jour il y a moins de 24 heures
-      // });
-
-      // const vehiculeActiveAjourdhui = filteredVehicles?.filter((vehicle) =>
-      //   vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
-      // );
-
-      // setVehiculeActiveAjourdhui(vehiculeActiveAjourdhui);
       //
       //
       //
@@ -1533,13 +1487,13 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       //
       //
       // 3. Met à jour l'état avec tous les véhicules n'ayant aucun événement avec `speedKPH >= 1`
-      const vehiculeNotActiveAjourdhui = currentdataFusionnee?.filter(
-        (vehicle) =>
-          vehicle.vehiculeDetails?.length > 0 && // Vérifie que des détails existent
-          vehicle.vehiculeDetails.every((detail) => detail.speedKPH <= 0) // Tous les détails doivent avoir speedKPH <= 0
+      const véhiculeNotActiveToday = currentDataFusionné?.filter(
+        (véhicule) =>
+          véhicule.véhiculeDetails?.length > 0 && // Vérifie que des détails existent
+          véhicule.véhiculeDetails.every((detail) => detail.speedKPH <= 0) // Tous les détails doivent avoir speedKPH <= 0
       );
 
-      setVehiculeNotActiveAjourdhui(vehiculeNotActiveAjourdhui);
+      setVéhiculeNotActiveToday(véhiculeNotActiveToday);
       //
       //
       //
@@ -1548,14 +1502,14 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       //
       //
       //
-      // 4. Met à jour l'état avec tous les véhicules dont `vehiculeDetails[0].speedKPH >= 1`
-      const vehiculeActiveMaintenant = currentdataFusionnee?.filter(
-        (vehicle) =>
-          vehicle?.vehiculeDetails &&
-          vehicle?.vehiculeDetails?.length &&
-          vehicle?.vehiculeDetails[0]?.speedKPH >= 1
+      // 4. Met à jour l'état avec tous les véhicules dont `véhiculeDetails[0].speedKPH >= 1`
+      const véhiculeEnMouvementMaintenant = currentDataFusionné?.filter(
+        (véhicule) =>
+          véhicule?.véhiculeDetails &&
+          véhicule?.véhiculeDetails?.length &&
+          véhicule?.véhiculeDetails[0]?.speedKPH >= 1
       );
-      setVehiculeActiveMaintenant(vehiculeActiveMaintenant);
+      setVéhiculeEnMouvementMaintenant(véhiculeEnMouvementMaintenant);
       //
       //
       //
@@ -1565,85 +1519,27 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       //
       //
       // 5. Met à jour l'état avec tous les véhicules dont `lastUpdateTime` est supérieur à 24h par rapport à l'heure actuelle
-      const vehiculeNotActif = currentdataFusionnee?.filter((vehicle) => {
-        const lastUpdate = new Date(vehicle.lastUpdateTime);
+      const véhiculeHorsService = currentDataFusionné?.filter((véhicule) => {
+        const lastUpdate = new Date(véhicule.lastUpdateTime);
         const now = new Date();
         const diffHeures = (now - lastUpdate) / (1000 * 60 * 60);
-        return vehicle.vehiculeDetails?.length <= 0 || diffHeures > 24;
+        return véhicule.véhiculeDetails?.length <= 0 || diffHeures > 24;
       });
 
-      setVehiculeNotActif(vehiculeNotActif);
+      setVéhiculeHorsService(véhiculeHorsService);
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     } else if (
-      searchdonneeFusionneeForRapport.length <= 0 &&
-      currentdataFusionnee &&
-      currentdataFusionnee?.length > 0
+      searchDonneeFusionnéForRapport.length <= 0 &&
+      currentDataFusionné &&
+      currentDataFusionné?.length > 0
     ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      // 2. Met à jour l'état avec tous les véhicules ayant au moins un événement avec `speedKPH >= 1`
-      // const vehiculeActiveAjourdhui = currentdataFusionnee?.filter((vehicle) =>
-      //   vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
-      // );
-      // setVehiculeActiveAjourdhui(vehiculeActiveAjourdhui);
-
-      // const now = new Date();
-      // const filteredVehicles = currentdataFusionnee?.filter((vehicle) => {
-      //   const lastUpdate = new Date(vehicle.lastUpdateTime);
-      //   const diffHeures = (now - lastUpdate) / (1000 * 60 * 60);
-      //   return diffHeures < 24; // Conserver uniquement les véhicules mis à jour il y a moins de 24 heures
-      // });
 
       const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
       const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-      // const vehiculeActiveAjourdhui = currentdataFusionnee?.filter(
-      //   (vehicle) => {
-      //     // Vérifier si le véhicule n'a pas de détails
-      //     const noDetails =
-      //       !vehicle.vehiculeDetails || vehicle.vehiculeDetails.length === 0;
-
-      //     // Vérifier si le véhicule est inactif
-      //     const lastUpdateTime = vehicle?.lastUpdateTime;
-      //     const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
-      //     const isInactive =
-      //       lastUpdateTimeMs > 0 &&
-      //       currentTime - lastUpdateTimeMs >= twentyHoursInMs;
-
-      //     const isRunningToday = currentdataFusionnee?.filter((vehicle) =>
-      //       vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1)
-      //     );
-
-      //     // Retourne true si l'une des conditions est satisfaite
-      //     return !noDetails && !isInactive && isRunningToday;
-      //   }
-      // );
-
-      // const vehiculeActiveAjourdhui = currentdataFusionnee?.filter(
-      //   (vehicle) => {
-      //     // Vérifier si le véhicule a des détails
-      //     const hasDetails =
-      //       vehicle.vehiculeDetails && vehicle.vehiculeDetails.length > 0;
-
-      //     // Vérifier si le véhicule est actif dans les dernières 24h
-      //     const lastUpdateTime = vehicle?.lastUpdateTime;
-      //     const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
-      //     const isActive =
-      //       lastUpdateTimeMs > 0 &&
-      //       currentTime - lastUpdateTimeMs < 24 * 60 * 60 * 1000; // Moins de 24h
-
-      //     // Vérifier si le véhicule a au moins un détail avec une vitesse > 0
-      //     const hasSpeed = vehicle.vehiculeDetails?.some(
-      //       (detail) => detail.speedKPH > 0
-      //     );
-
-      //     // Retourne true si toutes les conditions sont remplies
-      //     return hasDetails && isActive && hasSpeed;
-      //   }
-      // );
-
-      // Fonction pour obtenir le timestamp actuel
       // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
       const getTodayTimestamp = () => {
         const now = new Date();
@@ -1652,129 +1548,116 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       };
       const todayTimestamp = getTodayTimestamp() * 1000;
 
-      const vehiculeActiveAjourdhui = currentdataFusionnee?.filter(
-        (vehicle) => {
-          const hasBeenMoving =
-            vehicle.vehiculeDetails &&
-            vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
+      const véhiculeActiveToday = currentDataFusionné?.filter((véhicule) => {
+        const hasBeenMoving =
+          véhicule.véhiculeDetails &&
+          véhicule.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
 
-          const lastUpdateTimestampMs =
-            vehicle.vehiculeDetails &&
-            vehicle.vehiculeDetails[0] &&
-            vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+        const lastUpdateTimestampMs =
+          véhicule.véhiculeDetails &&
+          véhicule.véhiculeDetails[0] &&
+          véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-          const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+        const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
-          return hasBeenMoving && isToday;
-        }
+        return hasBeenMoving && isToday;
+      });
+
+      setVéhiculeActiveToday(véhiculeActiveToday);
+
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+
+      const véhiculeNotActiveToday = currentDataFusionné.filter((véhicule) => {
+        // Vérifie si le véhicule a des détails
+        const hasDetails = véhicule.véhiculeDetails?.length > 0;
+
+        // Vérifie que tous les objets de véhiculeDetails ont speedKPH <= 0
+        const noSpeed = véhicule.véhiculeDetails?.every(
+          (detail) => detail.speedKPH <= 0
+        );
+
+        const hasBeenMoving =
+          véhicule.véhiculeDetails &&
+          véhicule.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
+        // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+        const lastUpdateTimeMs = véhicule.lastUpdateTime
+          ? véhicule.lastUpdateTime * 1000
+          : 0;
+        const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+        const lastUpdateTimestampMs =
+          véhicule.véhiculeDetails &&
+          véhicule.véhiculeDetails[0] &&
+          véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+        const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+
+        // Retourne les véhicules qui remplissent toutes les conditions
+        // return hasDetails && noSpeed && isActive;
+
+        return (
+          hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
+        );
+      });
+
+      setVéhiculeNotActiveToday(véhiculeNotActiveToday);
+
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+
+      // 4. Met à jour l'état avec tous les véhicules dont `véhiculeDetails[0].speedKPH >= 1`
+      const véhiculeEnMouvementMaintenant = currentDataFusionné?.filter(
+        (véhicule) =>
+          véhicule?.véhiculeDetails &&
+          véhicule?.véhiculeDetails?.length &&
+          véhicule?.véhiculeDetails[0]?.speedKPH >= 1
       );
 
-      setVehiculeActiveAjourdhui(vehiculeActiveAjourdhui);
-
-      /////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////
-
-      const vehiculeNotActiveAjourdhui = currentdataFusionnee.filter(
-        (vehicle) => {
-          // Vérifie si le véhicule a des détails
-          const hasDetails = vehicle.vehiculeDetails?.length > 0;
-
-          // Vérifie que tous les objets de vehiculeDetails ont speedKPH <= 0
-          const noSpeed = vehicle.vehiculeDetails?.every(
-            (detail) => detail.speedKPH <= 0
-          );
-
-          const hasBeenMoving =
-            vehicle.vehiculeDetails &&
-            vehicle.vehiculeDetails?.some((detail) => detail.speedKPH >= 1);
-
-          // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-          const lastUpdateTimeMs = vehicle.lastUpdateTime
-            ? vehicle.lastUpdateTime * 1000
-            : 0;
-          const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-          const lastUpdateTimestampMs =
-            vehicle.vehiculeDetails &&
-            vehicle.vehiculeDetails[0] &&
-            vehicle.vehiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
-
-          const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
-
-          // Retourne les véhicules qui remplissent toutes les conditions
-          // return hasDetails && noSpeed && isActive;
-
-          return (
-            hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
-          );
-        }
-      );
-
-      setVehiculeNotActiveAjourdhui(vehiculeNotActiveAjourdhui);
-
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////////
-
-      // 4. Met à jour l'état avec tous les véhicules dont `vehiculeDetails[0].speedKPH >= 1`
-      const vehiculeActiveMaintenant = currentdataFusionnee?.filter(
-        (vehicle) =>
-          vehicle?.vehiculeDetails &&
-          vehicle?.vehiculeDetails?.length &&
-          vehicle?.vehiculeDetails[0]?.speedKPH >= 1
-      );
-
-      setVehiculeActiveMaintenant(vehiculeActiveMaintenant);
-
+      setVéhiculeEnMouvementMaintenant(véhiculeEnMouvementMaintenant);
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //
       // 5. Met à jour l'état avec tous les véhicules dont `lastUpdateTime` est supérieur à 24h par rapport à l'heure actuelle
 
       // Filtrer les véhicules sans détails ou inactifs
-      // const vehiculeNotActif = currentdataFusionnee?.filter((vehicle) => {
-      //   // Vérifier si le véhicule n'a pas de détails
-      //   const noDetails =
-      //     !vehicle.vehiculeDetails || vehicle.vehiculeDetails.length === 0;
-
-      //   // Vérifier si le véhicule est inactif
-      //   const lastUpdateTime = vehicle?.lastUpdateTime;
-      //   const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
-      //   const isInactive =
-      //     lastUpdateTimeMs > 0 &&
-      //     currentTime - lastUpdateTimeMs >= twentyHoursInMs;
-
-      //   const isActif = vehicle.vehiculeDetails?.some(
-      //     (detail) => detail.speedKPH >= 1
-      //   );
-
-      //   // Retourne true si l'une des conditions est satisfaite
-      //   return (noDetails || isInactive) && !isActif;
-      // });
-
-      // setVehiculeNotActif(vehiculeNotActif);
-
-      // Filtrer les véhicules sans détails ou inactifs
-      const vehiculeNotActif = currentdataFusionnee?.filter((vehicle) => {
+      const véhiculeHorsService = currentDataFusionné?.filter((véhicule) => {
         // Vérifier si le véhicule n'a pas de détails
         const noDetails =
-          !vehicle.vehiculeDetails || vehicle.vehiculeDetails.length === 0;
+          !véhicule.véhiculeDetails || véhicule.véhiculeDetails.length === 0;
 
         // Vérifier si le véhicule est inactif
-        const lastUpdateTime = vehicle?.lastUpdateTime;
+        const lastUpdateTime = véhicule?.lastUpdateTime;
         const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
         const isInactive =
           lastUpdateTimeMs > 0 &&
           currentTime - lastUpdateTimeMs >= twentyHoursInMs;
 
         // Vérifier si le véhicule est actif
-        const isActif = vehicle.vehiculeDetails?.some(
+        const isActif = véhicule.véhiculeDetails?.some(
           (detail) => detail.speedKPH >= 1
         );
 
@@ -1782,30 +1665,77 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         return (noDetails || isInactive) && !isActif;
       });
 
-      setVehiculeNotActif(vehiculeNotActif);
+      setVéhiculeHorsService(véhiculeHorsService);
     }
   }, [
-    currentdataFusionnee,
-    searchdonneeFusionneeForRapport,
-    donneeFusionneeForRapport,
+    currentDataFusionné,
+    searchDonneeFusionnéForRapport,
+    donneeFusionnéForRapport,
   ]);
 
   // Fonction pour mettre à jour le véhicule actuel
-  const updateCurrentVehicule = () => {
-    if (currentdataFusionnee.length > 0) {
-      const updatedVehicule = currentdataFusionnee.find(
-        (vehicule) => vehicule.deviceID === currentVehicule?.deviceID
+  const updateCurrentVéhicule = () => {
+    if (currentDataFusionné.length > 0) {
+      const updatedVéhicule = currentDataFusionné.find(
+        (véhicule) => véhicule.deviceID === currentVéhicule?.deviceID
       );
-      if (updatedVehicule) {
-        setCurrentVehicule(updatedVehicule);
+      if (updatedVéhicule) {
+        setCurrentVéhicule(updatedVéhicule);
+        setVéhiculeHistoriqueDetails(updatedVéhicule?.véhiculeDetails);
+        setSelectedVehicleToShowInMap(updatedVéhicule.deviceID);
       }
     }
   };
 
   // Utilisation d'un effet pour surveiller les mises à jour de data
+  // Pour mettre a jour le véhicule actuelle
+  // useEffect(() => {
+  //   console.log("current véhicule actuel mise a jour maintenant.....");
+  //   updateCurrentVéhicule();
+  // }, [currentDataFusionné]);
+
+  // Pour mettre a jour le véhicule actuelle
   useEffect(() => {
-    updateCurrentVehicule();
-  }, [currentdataFusionnee]);
+    const intervalId = setInterval(() => {
+      if (currentVéhicule) {
+        console.log("mise a jour véhicule Details");
+
+        const deviceID = currentVéhicule?.deviceID;
+
+        const foundVehicle = currentDataFusionné?.find(
+          (v) => v.deviceID === deviceID
+        );
+
+        setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
+        setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+        setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
+      }
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Pas de dépendances, exécution régulière
+
+  useEffect(() => {
+    console.log(currentVéhicule);
+    console.log(véhiculeHistoriqueDetails);
+    console.log(selectedVehicleToShowInMap);
+  }, [currentVéhicule, véhiculeHistoriqueDetails, selectedVehicleToShowInMap]);
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   //
   //
   //
@@ -1820,10 +1750,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Historique page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // pour afficher les detail d'hun vehicule dans Historique page (utilise pour les recherche)
+  x;
+  // pour afficher les detail d'hun véhicule dans Historique page (utilise pour les recherche)
   const fetchHistoriqueVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-    // yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -1831,8 +1760,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       return date.toISOString().replace("T", " ").split(".")[0];
     };
 
-    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire 5 heures
-    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute 5 heures
+    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
+    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
     console.log("Start fetching.........");
     setLoadingHistoriqueFilter(true);
@@ -1926,14 +1855,13 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         );
       });
 
-      setVehiclueHistoriqueDetails(filteredVehicleDetails);
+      setVéhiculeHistoriqueDetails(filteredVehicleDetails);
 
       setLoadingHistoriqueFilter(false);
       setTimeout(() => {
         setLoadingHistoriqueFilter(false);
       }, 15000); // 10 000 millisecondes = 10 secondes
     } catch (error) {
-      setError("Erreur lors de la récupération des détails du véhicule.");
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
         error
@@ -1941,16 +1869,11 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   };
 
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // Pour la rehcerhce de donnee dans Historique page apres avoir choisi une date
   const handleDateChange = (TimeFrom, TimeTo) => {
-    if (vehicleData && vehicleData.length > 0) {
-      vehicleData.forEach((vehicle) => {
-        fetchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
+    if (véhiculeData && véhiculeData.length > 0) {
+      véhiculeData.forEach((véhicule) => {
+        fetchVehicleDetails(véhicule.deviceID, TimeFrom, TimeTo);
       });
     }
   };
@@ -1960,82 +1883,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //
   //
   //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // pour lancer le premier fetch des donne de l'hitorique (N'est pas utiliser pour le moment)
-  const firstCallHistoriqueData = () => {
-    setShowListOption(false);
-
-    const now = new Date();
-    now.setHours(now.getHours() + addSearchHoursFin); // Ajouter 5 heures
-    // now.setHours(now.getHours() - chooseTimeZone); // Ajouter 5 heures
-
-    const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // Création d'une date représentant le début de la journée
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
-    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
-
-    // Formatage de `TimeFrom`
-    const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${startOfDay
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${startOfDay
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    fetchHistoriqueVehicleDetails(currentVehicule.deviceID, TimeFrom, TimeTo);
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (currentVehicule) {
-        console.log("mise a jour vehicule Details");
-
-        const deviceID = currentVehicule?.deviceID;
-
-        const foundVehicle = currentdataFusionnee?.find(
-          (v) => v.deviceID === deviceID
-        );
-
-        setCurrentVehicule(foundVehicle); // Définit le véhicule actuel
-        setVehiclueHistoriqueDetails(foundVehicle.vehiculeDetails);
-        setSelectedVehicle(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
-      }
-    }, 15000);
-
-    return () => clearInterval(intervalId);
-  }, []); // Pas de dépendances, exécution régulière
   //
   //
   //
@@ -2054,8 +1901,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Ajouter / Modifier / Supprimer
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Fonction pour ajouter un nouveau vehicule
+  x;
+  // Fonction pour ajouter un nouveau véhicule
   const createVehicle = async (
     deviceID,
     imeiNumber,
@@ -2070,7 +1917,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     if (!userData) return;
 
     setError("");
-    setCrud_loading(true);
+    setCreateVéhiculeLoading(true);
 
     // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbcreate">
@@ -2099,7 +1946,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       });
 
       const data = await response.text();
-      // console.log("data from add vehicule", data);
+      // console.log("data from add véhicule", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -2110,32 +1957,32 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setsuccessAddvehiculePupup(true);
+        setSuccessAddVéhiculePopup(true);
         setError("");
         fetchVehicleData();
-        setCrud_loading(false);
+        setCreateVéhiculeLoading(false);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la création du véhicule.");
         // console.log("errorrrrrrrrr");
-        seterrorAddvehiculePupup(true);
-        setCrud_loading(false);
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
       }
 
       // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      seterrorAddvehiculePupup(true);
-      setCrud_loading(false);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
     }
   };
 
-  // Fonction pour supprimer un vehicule
+  // Fonction pour supprimer un véhicule
   const deleteVehicle = async (deviceID) => {
     // console.log("Start Deleting.........");
-    setCrud_loading(true);
+    setCreateVéhiculeLoading(true);
 
     const requestBody =
       `<GTSRequest command="dbdel">` +
@@ -2161,19 +2008,19 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       if (response.ok) {
         setVehicleData((prevVehicles) =>
-          prevVehicles.filter((vehicle) => vehicle.deviceID !== deviceID)
+          prevVehicles.filter((véhicule) => véhicule.deviceID !== deviceID)
         );
         // console.log("Véhicule supprimé avec succès.");
         fetchVehicleData();
-        setsuccessDeletevehiculePupup(true);
-        setCrud_loading(false);
+        setSuccessDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
       } else {
         console.error(
           "Erreur lors de la suppression du véhicule:",
           response.statusText
         );
-        seterrorDeletevehiculePupup(true);
-        setCrud_loading(false);
+        setErrorDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
       }
 
       // console.log("finish Deleting.........");
@@ -2182,12 +2029,12 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         "Erreur de connexion lors de la suppression du véhicule:",
         error
       );
-      seterrorDeletevehiculePupup(true);
-      setCrud_loading(false);
+      setErrorDeleteVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
     }
   };
 
-  // Fonction pour modifier un vehicule
+  // Fonction pour modifier un véhicule
   const updateVehicle = async (
     deviceID,
     imeiNumber,
@@ -2199,7 +2046,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     simPhoneNumber
   ) => {
     // console.log("Start updating.....");
-    setCrud_loading(true);
+    setCreateVéhiculeLoading(true);
     const requestBody =
       `<GTSRequest command="dbput">` +
       `<Authorization account="${account}" user="${username}" password="${password}"/>` +
@@ -2231,10 +2078,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
 
       if (response.ok) {
         setVehicleData((prevVehicles) =>
-          prevVehicles.map((vehicle) =>
-            vehicle.deviceID === deviceID
+          prevVehicles.map((véhicule) =>
+            véhicule.deviceID === deviceID
               ? {
-                  ...vehicle,
+                  ...véhicule,
                   description,
                   equipmentType,
                   uniqueID,
@@ -2243,26 +2090,26 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
                   simPhoneNumber,
                   displayName,
                 }
-              : vehicle
+              : véhicule
           )
         );
         // console.log("Véhicule modifié avec succès.");
-        setsuccessModifiervehiculePupup(true);
+        setSuccessModifierVéhiculePopup(true);
         fetchVehicleData();
-        setCrud_loading(false);
+        setCreateVéhiculeLoading(false);
       } else {
         console.error(
           "Erreur lors de la modification du véhicule:",
           response.statusText
         );
-        seterrorModifiervehiculePupup(true);
-        setCrud_loading(false);
+        setErrorModifierVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
       }
 
       // console.log("finish updating.....");
     } catch (error) {
-      seterrorModifiervehiculePupup(true);
-      setCrud_loading(false);
+      setErrorModifierVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
 
       console.error(
         "Erreur de connexion lors de la modification du véhicule:",
@@ -2285,7 +2132,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Envoyer un SMS
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  x;
   const [smsError, setSmsError] = useState(""); // Utilisation du useState pour l'erreur
 
   // Fonction pour la gestion de l'envoie des sms
@@ -2320,43 +2167,8 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // const [callError, setCallError] = useState(""); // Utilisation du useState pour l'erreur
-
-  // Fonction pour la gestion des appels
-  // const lancerAppel = (numero) => {
-  //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // Vérification de la plateforme
-
-  //   if (!isMobile) {
-  //     setSmsError(
-  //       "Les appels téléphoniques ne sont pas pris en charge sur cette plateforme."
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     const callLink = `tel:${numero}`;
-
-  //     // Essayer de rediriger vers le lien d'appel
-  //     window.location.href = callLink;
-
-  //     // Vérifier après un délai si l'action a échoué
-  //     setTimeout(() => {
-  //       if (window.location.href === callLink) {
-  //         // Si l'URL n'a pas changé, il y a probablement un problème
-  //         setSmsError(
-  //           "Impossible d'ouvrir l'application d'appel. Veuillez vérifier que votre appareil supporte les appels."
-  //         );
-  //       }
-  //     }, 3000); // Délai d'attente de 3 secondes
-  //   } catch (error) {
-  //     setSmsError("Une erreur est survenue lors de la tentative d'appel.");
-  //   }
-  // };
-
+  // fonction pour lancer appelle
   const lancerAppel = (numero) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // Vérification de la plateforme
 
@@ -2410,10 +2222,9 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //
   //
   //
-
+  x;
   // Sauvegarde des données dans localStorage à chaque mise à jour des états
   useEffect(() => {
-    // localStorage.setItem("vehicleDetails", JSON.stringify(vehicleDetails));
     try {
       localStorage.setItem("vehicleDetails", JSON.stringify(vehicleDetails));
     } catch (error) {
@@ -2426,7 +2237,6 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       }
     }
 
-    // localStorage.setItem("mergedData", JSON.stringify(mergedData));
     try {
       localStorage.setItem("mergedData", JSON.stringify(mergedData));
     } catch (error) {
@@ -2439,49 +2249,46 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       }
     }
 
-    // localStorage.setItem(
-    //   "rapportvehicleDetails",
-    //   JSON.stringify(rapportvehicleDetails)
-    // );
     try {
       localStorage.setItem(
-        "rapportvehicleDetails",
-        JSON.stringify(rapportvehicleDetails)
+        "rapportVehicleDetails",
+        JSON.stringify(rapportVehicleDetails)
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
         console.error(
-          "Quota dépassé pour rapportvehicleDetails : essayez de réduire la taille des données ou de nettoyer localStorage."
+          "Quota dépassé pour rapportVehicleDetails : essayez de réduire la taille des données ou de nettoyer localStorage."
         );
       } else {
         console.error("Erreur de stockage : ", error);
       }
     }
 
-    // localStorage.setItem(
-    //   "donneeFusionneeForRapport",
-    //   JSON.stringify(donneeFusionneeForRapport)
-    // );
     try {
       localStorage.setItem(
-        "donneeFusionneeForRapport",
-        JSON.stringify(donneeFusionneeForRapport)
+        "donneeFusionnéForRapport",
+        JSON.stringify(donneeFusionnéForRapport)
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
         console.error(
-          "Quota dépassé pour donneeFusionneeForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+          "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
         );
       } else {
         console.error("Erreur de stockage : ", error);
       }
     }
   }, [
-    donneeFusionneeForRapport,
+    donneeFusionnéForRapport,
     vehicleDetails,
-    rapportvehicleDetails,
+    rapportVehicleDetails,
     mergedData,
   ]);
+
+  // Pour mettre a jour mergedData
+  useEffect(() => {
+    console.log();
+  }, [mergedData]);
 
   //
   //
@@ -2491,8 +2298,10 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //
   //
   //
-  //
-  // Pour definir les boutton active en fonction du lien dans le navigateur
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Pour définir les bouton active en fonction du lien dans le navigateur
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
   const location = useLocation();
   const [tab, setTab] = useState("");
 
@@ -2505,6 +2314,7 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
     }
   }, [location]); // Réagit aux changements d'URL
 
+  // fonction pour changer le text dans le tab
   const handleTabClick = (tabName) => {
     setTab(tabName);
     navigate(`/home?tab=${tabName}`);
@@ -2538,110 +2348,14 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
   //
   //
   //
-
-  const fonctionTest = () => {
-    console.log("Start test11111111.....................");
-
-    const now = new Date();
-    const TimeTo = `${now.getFullYear()}-${(now.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")} ${now
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // Création d'une date représentant le début de la journée
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    // Ajouter 5 heures
-    startOfDay.setTime(startOfDay.getTime() - 0 * 60 * 60 * 1000);
-    // startOfDay.setTime(startOfDay.getTime() - chooseTimeZone * 60 * 60 * 1000);
-
-    // Formatage de `TimeFrom`
-    const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${startOfDay
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${startOfDay
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${startOfDay
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}`;
-
-    // const startOfDay = new Date();
-    // startOfDay.setHours(0, 0, 0, 0);
-    // startOfDay.setHours(startOfDay.getHours() - chooseTimeZone); // Ajouter 5 heures
-
-    // const TimeFrom = `${startOfDay.getFullYear()}-${(startOfDay.getMonth() + 1)
-    //   .toString()
-    //   .padStart(2, "0")}-${startOfDay
-    //   .getDate()
-    //   .toString()
-    //   .padStart(2, "0")} 00:00:00`;
-
-    console.log("xxxxxxxxxxxxx", mergedData);
-    console.log(vehicleData);
-    console.log(vehicleDetails);
-
-    if (vehicleData && vehicleData.length > 0) {
-      vehicleData.forEach((vehicle) => {
-        // fetRapportchVehicleDetails(
-        //   vehicle.deviceID,
-        //   "2024-11-30 00:00:00",
-        //   "2024-11-30 23:40:45"
-        //   /////////////////////////
-        //   // "2024-10-01 00:00:00",
-        //   // "2024-10-01 23:40:45"
-        // );
-        // fetchVehicleDetails()
-        // fetSearchRapportchVehicleDetails(vehicle.deviceID, TimeFrom, TimeTo);
-      });
-    }
-  };
-  const fonctionTest2 = () => {
-    console.log("Start test222222222222.....................");
-
-    //     timeFrom: 2024-11-30 00:00:00
-    // DataContext.jsx:1526 timeTo: 2024-11-30 14:40:45
-
-    if (vehicleData && vehicleData.length > 0) {
-      vehicleData.forEach((vehicle) => {
-        console.log("...............................");
-
-        // fetchVehicleDetails(
-        fetRapportchVehicleDetails(
-          vehicle.deviceID,
-          // "2024-11-30 00:00:00",
-          // "2024-11-30 23:40:45"
-          /////////////////////////
-          "2024-10-01 00:00:00",
-          "2024-10-01 23:40:45"
-        );
-      });
-    }
-  };
-
-  const [dateDebut, setDateDebut] = useState(null);
-  useEffect(() => {
-    // Définit la date actuelle par défaut au moment du rendu du composant
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Réinitialise l'heure pour éviter un décalage
-    setDateDebut(today); // Définit la date actuelle par défaut
-  }, []);
+  x;
+  const fonctionTest = () => {};
+  const fonctionTest2 = () => {};
 
   ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
-
+  x;
+  // Fonction pour le format de timestamp en Heure, minutes et seconde.
   function FormatDateHeure(timestamp) {
     // Convertir le timestamp en millisecondes
     const date = new Date(timestamp * 1000);
@@ -2670,19 +2384,30 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
       time: formattedTime,
     };
   }
-
-  const [chooseHistoriqueLongitude, setchooseHistoriqueLongitude] =
-    useState("");
-  const [chooseHistoriqueLatitude, setchooseHistoriqueLatitude] = useState("");
-  const [histiriqueSelectedLocationIndex, sethistiriqueSelectedLocationIndex] =
-    useState(0);
-
-  useEffect(() => {
-    console.log(chooseHistoriqueLongitude);
-    console.log(chooseHistoriqueLatitude);
-  }, [chooseHistoriqueLongitude, chooseHistoriqueLatitude]);
-
-  // pour la fonction export exel dans la page rapport
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Pour les téléchargements en PDF et en EXCEL
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  x;
+  // pour la fonction export excel dans la page rapport
   const tableRef = useRef(null);
   // conversion page en pdf rapport
   const rapportPersonnelPDFtRef = useRef(); // Crée une référence pour l'élément
@@ -2694,80 +2419,78 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         fonctionTest,
         fonctionTest2,
         userData,
-        vehicleData,
+        véhiculeData,
         vehicleDetails,
         mergedData,
         isAuthenticated,
         error,
-        isLoading,
+        isHomePageLoading,
         handleLogin,
         handleLogout,
-        currentVehicule,
+        currentVéhicule,
         handleDateChange,
         loadingHistoriqueFilter,
         setLoadingHistoriqueFilter,
-        searchQuery,
-        setSearchQuery,
+        searchQueryForHeader,
+        setSearchQueryForHeader,
         search,
         setSearch,
         showSideBar,
         setShowSideBar,
-        logOut,
-        setLogOut,
+        logOutPopup,
+        setLogOutPopup,
         showListeOption,
         setShowListOption,
         fetchVehicleDetails,
 
         fetchHistoriqueVehicleDetails,
-        vehiclueHistoriqueDetails,
-        firstCallHistoriqueData,
-        setCurrentVehicule,
+        véhiculeHistoriqueDetails,
+        setCurrentVéhicule,
         account,
         username,
         password,
         isPasswordConfirmed,
         setIsPasswordConfirmed,
-        showChangePasswordPupup,
-        setShowChangePasswordPupup,
-        selectedVehicle,
-        setSelectedVehicle,
+        showChangePasswordPopup,
+        setShowChangePasswordPopup,
+        selectedVehicleToShowInMap,
+        setSelectedVehicleToShowInMap,
         createVehicle,
         deleteVehicle,
         updateVehicle,
         setError,
-        crud_loading,
-        setCrud_loading,
+        createVéhiculeLoading,
+        setCreateVéhiculeLoading,
 
-        successAddvehiculePupup,
-        setsuccessAddvehiculePupup,
-        errorAddvehiculePupup,
-        seterrorAddvehiculePupup,
+        successAddVéhiculePopup,
+        setSuccessAddVéhiculePopup,
+        errorAddVéhiculePopup,
+        setErrorAddVéhiculePopup,
 
-        successModifiervehiculePupup,
-        setsuccessModifiervehiculePupup,
-        errorModifiervehiculePupup,
-        seterrorModifiervehiculePupup,
+        successModifierVéhiculePopup,
+        setSuccessModifierVéhiculePopup,
+        errorModifierVéhiculePopup,
+        setErrorModifierVéhiculePopup,
 
-        successDeletevehiculePupup,
-        setsuccessDeletevehiculePupup,
-        errorDeletevehiculePupup,
-        seterrorDeletevehiculePupup,
+        successDeleteVéhiculePopup,
+        setSuccessDeleteVéhiculePopup,
+        errorDeleteVéhiculePopup,
+        setErrorDeleteVéhiculePopup,
         //
-        rapportvehicleDetails,
-        fetRapportchVehicleDetails,
-        firstCallRapportData,
+        rapportVehicleDetails,
+        fetchRapportVehicleDetails,
         setRapportDataLoading,
         rapportDataLoading,
-        donneeFusionneeForRapport,
-        setdonneeFusionneeForRapport,
-        vehiculeActiveAjourdhui,
-        setVehiculeActiveAjourdhui,
-        vehiculeNotActiveAjourdhui,
-        setVehiculeNotActiveAjourdhui,
-        vehiculeActiveMaintenant,
-        setVehiculeActiveMaintenant,
-        vehiculeNotActif,
-        setVehiculeNotActif,
+        donneeFusionnéForRapport,
+        setDonneeFusionnéForRapport,
+        véhiculeActiveToday,
+        setVéhiculeActiveToday,
+        véhiculeNotActiveToday,
+        setVéhiculeNotActiveToday,
+        véhiculeEnMouvementMaintenant,
+        setVéhiculeEnMouvementMaintenant,
+        véhiculeHorsService,
+        setVéhiculeHorsService,
         handleTabClick,
         tab,
         envoyerSMS,
@@ -2775,55 +2498,39 @@ const DataContextProvider = ({ children, centerOnFirstMarker }) => {
         setSmsError,
         showHistoriqueInMap,
         setShowHistoriqueInMap,
-        setVehiclueHistoriqueDetails,
-        fetSearchRapportchVehicleDetails,
-        searchdonneeFusionneeForRapport,
-        setSearchdonneeFusionneeForRapport,
+        setVéhiculeHistoriqueDetails,
+        fetchSearchRapportVehicleDetails,
+        searchDonneeFusionnéForRapport,
+        setSearchDonneeFusionnéForRapport,
 
         timeZoneData,
         setTimeZoneData,
-        timeZonesearchQuery,
-        settimeZoneSearchQuery,
+        timeZoneSearchQuery,
+        setTimeZoneSearchQuery,
         selectedTimeZone,
         setSelectedTimeZone,
         selectUTC,
-        setselectUTC,
+        setSelectUTC,
         selectTime,
-        setselectTime,
+        setSelectTime,
         handleSelectTimeZone,
 
-        //
-        showCategorieListe,
-        setshowCategorieListe,
-        chooseActifs,
-        setchooseActifs,
-        chooseStationnement,
-        setchooseStationnement,
-        chooseInactifs,
-        setchooseInactifs,
-        chooseALl,
-        setchooseALl,
-
-        currentdataFusionnee,
+        currentDataFusionné,
         // callError,
         // setCallError,
         lancerAppel,
-        setIsLoading,
+        setIsHomePageLoading,
         setUsername,
-        statisticFilter,
-        setstatisticFilter,
-        statisticFilterText,
-        setstatisticFilterText,
-        dateDebut,
-        setDateDebut,
+        statisticFilterInHomePage,
+        setStatisticFilterInHomePage,
+        statisticFilterTextInHomePage,
+        setStatisticFilterTextInHomePage,
+
         /////////////////////////////////////////
         FormatDateHeure,
-        chooseHistoriqueLongitude,
-        setchooseHistoriqueLongitude,
-        chooseHistoriqueLatitude,
-        setchooseHistoriqueLatitude,
-        histiriqueSelectedLocationIndex,
-        sethistiriqueSelectedLocationIndex,
+
+        historiqueSelectedLocationIndex,
+        setHistoriqueSelectedLocationIndex,
         homePageReload,
         tableRef,
         rapportPersonnelPDFtRef,

@@ -120,7 +120,7 @@ function TrajetVehicule({
               <ScaleControl position="bottomright" />
               <AttributionControl position="bottomleft" />
 
-              {vehicles?.map((vehicule, index) => {
+              {vehicles?.map((véhicule, index) => {
                 const {
                   lastValidLatitude,
                   lastValidLongitude,
@@ -133,9 +133,9 @@ function TrajetVehicule({
                   speedKPH,
                   heading,
                   timestamp,
-                } = vehicule;
+                } = véhicule;
 
-                // const markerIcon = getMarkerIcon(vehicule); // Récupérer l'icône en fonction de la vitesse
+                // const markerIcon = getMarkerIcon(véhicule); // Récupérer l'icône en fonction de la vitesse
 
                 const firstMarkerIcon = L.icon({
                   iconUrl: "/pin/start.png", // Remplacez par le chemin de votre icône
@@ -164,15 +164,14 @@ function TrajetVehicule({
                   markerIcon = firstMarkerIcon;
                 } else if (!firstVehicle && index === 0) {
                   markerIcon = lastMarkerIcon;
-                } else if (vehicule === firstVehicle) {
-              
+                } else if (véhicule === firstVehicle) {
                   markerIcon = lastMarkerIcon;
-                } else if (vehicule === lastVehicle) {
+                } else if (véhicule === lastVehicle) {
                   markerIcon = firstMarkerIcon;
                 } else {
                   // Autres positions
                   markerIcon = L.icon({
-                    iconUrl: getMarkerIcon(vehicule),
+                    iconUrl: getMarkerIcon(véhicule),
                     iconSize: [17, 25],
                     iconAnchor: [9, 25],
                     popupAnchor: [-1, -20],
@@ -189,8 +188,6 @@ function TrajetVehicule({
                     key={index}
                     position={[lastValidLatitude || 0, lastValidLongitude || 0]}
                     icon={markerIcon}
-
-                 
                   >
                     <Popup className="">
                       <div className="--w-[70vw] ---max-w-[20rem]">
@@ -220,10 +217,8 @@ function TrajetVehicule({
                           <strong>Date :</strong>{" "}
                           {timestamp
                             ? FormatDateHeureTimestamp?.date
-                            : 
-                              "Pas de date disponible"}
+                            : "Pas de date disponible"}
                           <span className="px-3">/</span>
-                      
                           {FormatDateHeureTimestamp?.time}
                         </p>
 

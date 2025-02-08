@@ -23,10 +23,9 @@ const DateTimePicker = ({
     handleDateChange,
     fetchVehicleDetails,
     // fetchHistoriqueVehicleDetails,
-    currentVehicule,
+    currentVéhicule,
     setLoadingHistoriqueFilter,
-    dateDebut,
-    setDateDebut,
+ 
   } = useContext(DataContext);
 
   // const today = new Date(); // La date actuelle
@@ -97,8 +96,7 @@ const DateTimePicker = ({
                 dateFormat="dd/MM/yyyy"
                 placeholderText="Choisissez une date"
                 required
-                selected={dateDebut}
-                onChange={(date) => setDateDebut(date)}
+               
                 maxDate={today} // Désactive tous les jours futurs
               /> */}
               {/* <DatePicker

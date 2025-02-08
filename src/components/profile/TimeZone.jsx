@@ -8,14 +8,14 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
   const {
     timeZoneData,
     setTimeZoneData,
-    timeZonesearchQuery,
-    settimeZoneSearchQuery,
+    timeZoneSearchQuery,
+    setTimeZoneSearchQuery,
     selectedTimeZone,
     setSelectedTimeZone,
     selectUTC,
-    setselectUTC,
+    setSelectUTC,
     selectTime,
-    setselectTime,
+    setSelectTime,
     handleSelectTimeZone,
     userData,
     homePageReload,
@@ -25,7 +25,7 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
   // // Filtrer les données en fonction de la recherche
   // const filteredData = timeZoneData?.filter((zone) =>
   //   [zone.region, zone.utcOffset, zone.currentTime].some((field) =>
-  //     field.toLowerCase().includes(timeZonesearchQuery.toLowerCase())
+  //     field.toLowerCase().includes(timeZoneSearchQuery.toLowerCase())
   //   )
 
   // );
@@ -35,8 +35,8 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
       zone?.utcOffset
         ?.toString()
         .toLowerCase()
-        .includes(timeZonesearchQuery.toLowerCase()) ||
-      zone?.region?.toLowerCase().includes(timeZonesearchQuery.toLowerCase())
+        .includes(timeZoneSearchQuery.toLowerCase()) ||
+      zone?.region?.toLowerCase().includes(timeZoneSearchQuery.toLowerCase())
   );
 
   // const [timestamp, setTimestamp] = useState(Date.now() / 1000);
@@ -121,8 +121,8 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
                 type="text"
                 placeholder="Recherche (région, UTC, heure actuelle)"
                 className="focus:outline-none p-1 w-full bg-transparent dark:text-gray-200"
-                value={timeZonesearchQuery}
-                onChange={(e) => settimeZoneSearchQuery(e.target.value)}
+                value={timeZoneSearchQuery}
+                onChange={(e) => setTimeZoneSearchQuery(e.target.value)}
               />
               <IoSearch className="text-xl text-gray-500 dark:text-gray-400" />
             </div>
@@ -143,8 +143,8 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
                   localStorage.removeItem("selectTime");
 
                   setSelectedTimeZone("");
-                  setselectUTC("");
-                  setselectTime("");
+                  setSelectUTC("");
+                  setSelectTime("");
                   setChangeTimeZone(false);
                   setChangeTimeZoneMessage(true);
                 }}

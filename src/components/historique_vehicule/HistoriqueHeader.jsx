@@ -25,146 +25,160 @@ function HistoriqueHeader({
   centerOnFirstMarker,
   setShowVehiculeListe,
   showVehiculeListe,
-  currentVehicule,
+  currentVéhicule,
   setshowFilter,
   showFilter,
 }) {
   return (
     <>
-      <div className="flex relative justify-between px-4 max-w-[35rem] w-[100vw]-- w-full items-center-- gap-3 w-full--">
-        <div
-          onClick={() => {
-            setShowHistoriqueInMap(!showHistoriqueInMap);
-          }}
-          className="cursor-pointer relative shadow-xl border md:border-orange-200 min-w-10 rounded-md flex justify-center items-center py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-300/30"
-        >
-          {showHistoriqueInMap ? (
-            <Tooltip
-              PopperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10], // Décalage horizontal et vertical
-                    },
-                  },
-                  {
-                    name: "zIndex",
-                    enabled: true,
-                    phase: "write",
-                    fn: ({ state }) => {
-                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                    },
-                  },
-                ],
+      <div className="flex flex-col w-full">
+        <div className="w-full ">
+          <div className="flex  mx-auto relative justify-between px-4 max-w-[45rem] w-[100vw]-- w-full items-center-- gap-3 w-full--">
+            <div
+              onClick={() => {
+                setShowHistoriqueInMap(!showHistoriqueInMap);
               }}
-              title="Voir l'historique du véhicule"
+              className="cursor-pointer relative shadow-xl border md:border-orange-200 min-w-10 rounded-md flex justify-center items-center py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-300/30"
             >
-              <div className="cursor-pointer">
-                <IoStatsChart className="text-xl text-orange-600 " />
-              </div>
-            </Tooltip>
-          ) : (
-            <Tooltip
-              PopperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10], // Décalage horizontal et vertical
-                    },
-                  },
-                  {
-                    name: "zIndex",
-                    enabled: true,
-                    phase: "write",
-                    fn: ({ state }) => {
-                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                    },
-                  },
-                ],
-              }}
-              title="Voir le trajet du véhicule"
-            >
-              <img className="w-[1.7rem]" src="/img/cars/parcoure.png" alt="" />
-            </Tooltip>
-          )}
-          {/* <div className="absolute z-10 top-[3em] left-0 w-[20rem] p-2 border text-gray-6 bg-orange-50 rounded-lg">
+              {showHistoriqueInMap ? (
+                <Tooltip
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -10], // Décalage horizontal et vertical
+                        },
+                      },
+                      {
+                        name: "zIndex",
+                        enabled: true,
+                        phase: "write",
+                        fn: ({ state }) => {
+                          state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                        },
+                      },
+                    ],
+                  }}
+                  title="Voir l'historique du véhicule"
+                >
+                  <div className="cursor-pointer">
+                    <IoStatsChart className="text-xl text-orange-600 " />
+                  </div>
+                </Tooltip>
+              ) : (
+                <Tooltip
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -10], // Décalage horizontal et vertical
+                        },
+                      },
+                      {
+                        name: "zIndex",
+                        enabled: true,
+                        phase: "write",
+                        fn: ({ state }) => {
+                          state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                        },
+                      },
+                    ],
+                  }}
+                  title="Voir le trajet du véhicule"
+                >
+                  <img
+                    className="w-[1.7rem]"
+                    src="/img/cars/parcoure.png"
+                    alt=""
+                  />
+                </Tooltip>
+              )}
+              {/* <div className="absolute z-10 top-[3em] left-0 w-[20rem] p-2 border text-gray-6 bg-orange-50 rounded-lg">
             hover to display me !{" "}
           </div> */}
-        </div>
-        <Tooltip
-          PopperProps={{
-            modifiers: [
-              {
-                name: "offset",
-                options: {
-                  offset: [0, -10], // Décalage horizontal et vertical
-                },
-              },
-              {
-                name: "zIndex",
-                enabled: true,
-                phase: "write",
-                fn: ({ state }) => {
-                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                },
-              },
-            ],
-          }}
-          title="Choisissez un véhicule"
-        >
-          <div
-            onClick={() => {
-              setShowVehiculeListe(!showVehiculeListe);
-            }}
-            className="relative w-full "
-          >
-            <div
-              className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
-                 px-3 py-2 bg-orange-50 shadow-xl text-center"
-            >
-              {/* <p
-                // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
-                className="md:hidden"
-              >
-                Choisis un véhicule
-              </p> */}
-              <p className="hidden-- md:block">
-                {currentVehicule?.description || "Choisir un vehicule"}
-              </p>
-              <FaChevronDown className="mt-1" />
             </div>
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Choisissez un véhicule"
+            >
+              <div
+                onClick={() => {
+                  setShowVehiculeListe(!showVehiculeListe);
+                }}
+                className="relative w-full "
+              >
+                <div
+                  className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
+                 px-3 py-2 bg-orange-50 shadow-xl text-center"
+                >
+                  <p
+                    // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
+                    className="md:hidden"
+                  >
+                    Choisis un véhicule
+                  </p>
+                  <p className="hidden md:block">
+                    {currentVéhicule?.description || "Choisir un véhicule"}
+                  </p>
+                  <FaChevronDown className="mt-1" />
+                </div>
+              </div>
+            </Tooltip>
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title="Filtrer les résultats de recherche"
+            >
+              <div
+                onClick={() => setshowFilter(!showFilter)}
+                className="min-w-10 cursor-pointer border rounded-md shadow-xl md:border-orange-200 flex justify-center items-center py-2 bg-orange-50  dark:bg-gray-900/50 dark:border-gray-300/30"
+              >
+                <BsFilterRight className="text-2xl text-orange-600 " />
+              </div>
+            </Tooltip>
           </div>
-        </Tooltip>
-        <Tooltip
-          PopperProps={{
-            modifiers: [
-              {
-                name: "offset",
-                options: {
-                  offset: [0, -10], // Décalage horizontal et vertical
-                },
-              },
-              {
-                name: "zIndex",
-                enabled: true,
-                phase: "write",
-                fn: ({ state }) => {
-                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                },
-              },
-            ],
-          }}
-          title="Filtrer les résultats de recherche"
-        >
-          <div
-            onClick={() => setshowFilter(!showFilter)}
-            className="min-w-10 cursor-pointer border rounded-md shadow-xl md:border-orange-200 flex justify-center items-center py-2 bg-orange-50  dark:bg-gray-900/50 dark:border-gray-300/30"
-          >
-            <BsFilterRight className="text-2xl text-orange-600 " />
-          </div>
-        </Tooltip>
+        </div>
+        <div className="px-4 flex justify-center items-center py-1 ">
+          <p className="font-semibold md:hidden mt-1 dark:text-orange-500">
+            {" "}
+            {currentVéhicule?.description || ""}
+          </p>
+        </div>
       </div>
     </>
   );

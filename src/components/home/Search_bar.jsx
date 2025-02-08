@@ -10,7 +10,7 @@ function Search_bar({}) {
     handleLogout,
     setShowSideBar,
     fetchVehicleData,
-    setSearchQuery,
+    setSearchQueryForHeader,
   } = useContext(DataContext);
 
   return (
