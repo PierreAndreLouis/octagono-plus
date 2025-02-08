@@ -265,7 +265,7 @@ function RapportPersonnel({
           <h1 className="text-center mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
             {currentVéhicule?.description || ""}
           </h1>
-          <div className="mb-12 shadow-md dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
+          <div className="mb-12 shadow--md dark:bg-gray-800 dark:shadow--lg dark:shadow--gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -339,7 +339,7 @@ function RapportPersonnel({
               </div>
             </div>
           </div>
-          <div className="shadow-md mt-4 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
+          <div className="shadow--md mt-4 dark:bg-gray-800 dark:shadow--lg dark:shadow--gray-700 py-4  bg-orange-50 p-2 rounded-md flex--- items-start gap-4">
             <div className="flex gap-4 items-center-- border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <div>
@@ -521,7 +521,7 @@ function RapportPersonnel({
           </div>
           {/* {preparationDownloadPDF && <p className="min-h-[10rem]"></p>} */}
           {!preparationDownloadPDF && (
-            <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
+            <div className="shadow--md mt-20  py-3 dark:bg-gray-800 dark:shadow--lg dark:shadow--gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
               <GiPathDistance className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
                 Trajet du véhicule{" "}
@@ -541,7 +541,7 @@ function RapportPersonnel({
                         setzoomCart(false);
                       }}
                     >
-                      <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
+                      <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow--xl">
                         <IoClose className="text-white text-[1.52rem]" />
                       </div>
                     </button>
@@ -576,7 +576,7 @@ function RapportPersonnel({
                       setzoomCart(true);
                     }}
                   >
-                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow--xl">
                       <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
                     </div>
                   </button>
@@ -584,7 +584,7 @@ function RapportPersonnel({
                     className="absolute z-[999] top-[4rem] right-[1rem]"
                     onClick={centerOnFirstMarker}
                   >
-                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow--xl">
                       <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
                     </div>
                   </button>
@@ -628,7 +628,7 @@ function RapportPersonnel({
           {/*  */}
           {preparationDownloadPDF && <p className="min-h-[5rem]">.</p>}
 
-          <div className="shadow-md mt-20 mb-2  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
+          <div className="shadow--md mt-20 mb-2  py-3 dark:bg-gray-800 dark:shadow--lg dark:shadow--gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
             <SlSpeedometer className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
               Graphe des vitesses{" "}
@@ -700,13 +700,13 @@ function RapportPersonnel({
             <div className="z-[9999999999999999999999999999999999999999999999999999999999999] fixed bg-black/50 inset-0 pt-20 px-4">
               <div className="relative    h-[80vh] min-w-[90vw] my-20 rounded-lg mt-3 overflow-hidden">
                 <button
-                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
+                  className="absolute shadow--lg shadow--gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
                   // onClick={centerOnFirstMarker}
                   onClick={() => {
                     setvoirPositionSurCarte(false);
                   }}
                 >
-                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow--xl">
                     <IoClose className="text-red-500 text-[1.62rem]" />
                   </div>
                 </button>
@@ -721,7 +721,7 @@ function RapportPersonnel({
           {/*  */}
           {/*  */}
           {/*  */}
-          <div className="shadow-md-- relative mt-20 pb-[10rem] cursor-pointer dark:bg-gray-800-- dark:shadow-lg-- dark:shadow-gray-700 py-4 hover:bg-orange-100/70-- bg-orange-50-- p-2- rounded-md flex--- items-start gap-4">
+          <div className="shadow--md-- relative mt-20 pb-[10rem] cursor-pointer dark:bg-gray-800-- dark:shadow--lg-- dark:shadow--gray-700 py-4 hover:bg-orange-100/70-- bg-orange-50-- p-2- rounded-md flex--- items-start gap-4">
             <div className="flex dark:bg-gray-800 bg-orange-50 flex-col border-b-- border-orange-600/30 dark:border-gray-600 p-3 rounded-lg mb-3 pb-2-- mb-3--">
               <div className="flex gap-4 items-center border-b-- border-orange-600/30 dark:border-gray-600 pb-2-- mb-3--">
                 <TfiMapAlt className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
@@ -760,7 +760,7 @@ function RapportPersonnel({
                 </div>
 
                 {lieuxFrequentePupup && (
-                  <div className="absolute hidden-- top-[4.3rem] rounded-lg p-4 bg-white  dark:border dark:bg-gray-900 shadow-lg shadow-gray-600 left-0 right-0">
+                  <div className="absolute hidden-- top-[4.3rem] rounded-lg p-4 bg-white  dark:border dark:bg-gray-900 shadow--lg shadow--gray-600 left-0 right-0">
                     <div
                       onClick={() => {
                         setlieuxFrequentePupupSearch(true);
@@ -990,7 +990,7 @@ function RapportPersonnel({
                           }}
                         >
                           <div
-                            className="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg  shadow-lg "
+                            className="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg  shadow--lg "
                             key={index}
                             onClick={() => {
                               setSelectedVehicleToShowInMap(
@@ -1078,7 +1078,7 @@ function RapportPersonnel({
                           }}
                         >
                           <div
-                            className="bg-orange-50 dark:bg-gray-900/40 dark:text-gray-300 p-3 rounded-lg  shadow-lg  dark:shadow-gray-700"
+                            className="bg-orange-50 dark:bg-gray-900/40 dark:text-gray-300 p-3 rounded-lg  shadow--lg  dark:shadow--gray-700"
                             key={index}
                             onClick={() => {
                               setSelectedVehicleToShowInMap(

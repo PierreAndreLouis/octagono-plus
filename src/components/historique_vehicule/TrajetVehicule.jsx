@@ -36,8 +36,8 @@ import L from "leaflet";
 // Exemple de fonction de sélection d'icône pour un véhicule donné
 // (déjà utilisée dans d'autres parties du composant)
 const getMarkerIcon = (véhicule) => {
-  const speed = parseFloat(véhicule.speedKPH);
-  const direction = Math.round(véhicule.heading / 45.0) % 8;
+  const speed = parseFloat(véhicule?.speedKPH);
+  const direction = Math.round(véhicule?.heading / 45.0) % 8;
 
   if (speed <= 0) return "/pin/ping_red.png";
   else if (speed > 0 && speed <= 20)
@@ -77,6 +77,8 @@ function TrajetVehicule({
   const [addressActuelleAnimation, setAddressActuelleAnimation] = useState(
     vehicles[0]?.address
   );
+
+  const [visitedPositions, setVisitedPositions] = useState([]); // Track visited positions
 
   // Après vos autres useState
   // Variable pour pause ou play l'animation
@@ -193,13 +195,12 @@ function TrajetVehicule({
     const moveMarker = () => {
       if (!animationActiveRef.current) return;
 
-      // Sélectionnez start et end selon la direction
       let start, end;
       if (isReversedRef.current) {
         if (index <= 0) {
           setIsAnimating(false);
+          setVisitedPositions([]);
           setVoirInfoSurAnimation(false);
-
           animationActiveRef.current = false;
           return;
         }
@@ -208,8 +209,9 @@ function TrajetVehicule({
       } else {
         if (index >= pathData.length - 1) {
           setIsAnimating(false);
-          setVoirInfoSurAnimation(false);
+          setVisitedPositions([]);
 
+          setVoirInfoSurAnimation(false);
           animationActiveRef.current = false;
           return;
         }
@@ -217,7 +219,7 @@ function TrajetVehicule({
         end = pathData[index + 1];
       }
 
-      const duration = ajusterLaVitesseRef.current * 1000; // 1 seconde par segment
+      const duration = ajusterLaVitesseRef.current * 1000; // 1 second per segment
       const totalFrames = (duration / 1000) * frameRate;
       let frame = 0;
 
@@ -231,22 +233,34 @@ function TrajetVehicule({
 
       const animateFrame = () => {
         if (!animationActiveRef.current) return;
+
         if (frame >= totalFrames) {
           setAnimatedCurrentPosition(end.position);
+
+          // Store the position along with vehicle data (including speedKPH and heading) for marker customization
+          setVisitedPositions((prev) => [
+            ...prev,
+            {
+              position: end.position,
+              vehicle: end.vehicle, // Store the full vehicle data
+            },
+          ]);
+
           setAnimatedPath((prev) => [...prev, end.position]);
           const iconUrl = getMarkerIcon(end.vehicle);
           setVitesseActuelleAnimation(end.vehicle?.speedKPH);
           setTimestampActuelleAnimation(end.vehicle?.timestamp);
           setAddressActuelleAnimation(end.vehicle?.address);
+
           const updatedIcon = L.icon({
             iconUrl,
             iconSize: [30, 30],
             iconAnchor: [15, 30],
           });
+
           if (animatedMarkerRef.current) {
             animatedMarkerRef.current.setIcon(updatedIcon);
           }
-          // Mise à jour de l'index selon la direction
           index = isReversedRef.current ? index - 1 : index + 1;
           moveMarker();
           return;
@@ -261,19 +275,20 @@ function TrajetVehicule({
         const newPos = interpolatePosition(start.position, end.position, t);
         setAnimatedCurrentPosition(newPos);
         setAnimatedPath((prev) => [...prev, newPos]);
+
         const iconUrl = getMarkerIcon(start.vehicle);
         const updatedIcon = L.icon({
           iconUrl,
           iconSize: [30, 30],
           iconAnchor: [15, 30],
         });
+
         if (animatedMarkerRef.current) {
           animatedMarkerRef.current.setIcon(updatedIcon);
           animatedMarkerRef.current.setLatLng(newPos);
         }
-        frame++;
-        // frame = isReversedRef.current ? frame - 1 : frame + 1;
 
+        frame++;
         requestAnimationFrame(animateFrame);
       };
 
@@ -290,6 +305,9 @@ function TrajetVehicule({
       animationActiveRef.current = false;
       clearTimeout(animationTimeoutRef.current);
       setIsAnimating(false);
+      setVoirInfoSurAnimation(true);
+      setVisitedPositions([]);
+
       setAnimatedPath([]);
       setAnimatedCurrentPosition(null);
       return;
@@ -309,6 +327,7 @@ function TrajetVehicule({
 
     animationActiveRef.current = true;
     setIsAnimating(true);
+    setVoirInfoSurAnimation(true);
     if (!isReversedRef.current) {
       setAnimatedCurrentPosition(
         filteredData[filteredData.length - 1].position
@@ -327,6 +346,8 @@ function TrajetVehicule({
       animationActiveRef.current = false;
       clearTimeout(animationTimeoutRef.current);
       setIsAnimating(false);
+      setVisitedPositions([]);
+
       setAnimatedPath([]);
       setAnimatedCurrentPosition(null);
     }
@@ -347,6 +368,7 @@ function TrajetVehicule({
 
       animationActiveRef.current = true;
       setIsAnimating(true);
+      setVoirInfoSurAnimation(true);
       if (!isReversedRef.current) {
         setAnimatedCurrentPosition(
           filteredData[filteredData.length - 1].position
@@ -357,20 +379,6 @@ function TrajetVehicule({
       // Démarre l'animation sur les données filtrées
       // animateMovement(filteredData);
       animateMovement(filteredData.reverse());
-
-      //
-
-      // if (isReversedRef.current) {
-      //   animateMovement(filteredData);
-      //   setAnimatedCurrentPosition(filteredData[0].position);
-      //   setAnimatedPath([filteredData[0].position]);
-      // } else {
-      //   setAnimatedCurrentPosition(
-      //     filteredData[filteredData.length - 1].position
-      //   );
-      //   setAnimatedPath([filteredData[filteredData.length - 1].position]);
-      //   animateMovement(filteredData.reverse());
-      // }
     }, 500); // 1 secondes
   };
 
@@ -399,7 +407,7 @@ function TrajetVehicule({
         <div
           className={`${
             voirAnimationTrajetPopup ? " pl-0.5" : ""
-          } absolute  bg-white cursor-pointer flex flex-col md:flex-row items-center z-[999999999999999999999999999] top-[4rem] left-[1rem] overflow-hidden---  font-bold shadow-lg shadow-black/20  rounded-lg`}
+          } absolute md:bg-white cursor-pointer flex flex-col md:flex-row md:items-center  justify-start items-start z-[999999999999999999999999999] top-[4rem] left-[1rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
         >
           <div
             className={`${
@@ -413,9 +421,7 @@ function TrajetVehicule({
             {/*  */}
             <Tooltip
               title={`${
-                isAnimating
-                  ? "Arrêtez le visionnage"
-                  : "Visionné le trajet animé"
+                isAnimating ? "Arrêtez l'animation" : "Retracer le trajet "
               }`}
               PopperProps={{
                 modifiers: [
@@ -442,13 +448,17 @@ function TrajetVehicule({
                   setIsPaused(false);
                 }}
               >
-                {isAnimating ? "Arrêter " : "Start"}
+                {isAnimating ? "Arrêter " : "Retracer le trajet"}
               </div>
             </Tooltip>
             {/*  */}
             {/*  */}
             {/*  */}
-            <Tooltip title="Afficher/Masquer le trajet animé">
+            <Tooltip
+              title={`${
+                voirAnimationTrajetPopup ? " Masquer " : " Afficher"
+              }  les options`}
+            >
               <div className="border-l-2 pl-2 cursor-pointer">
                 {voirAnimationTrajetPopup ? (
                   <FaChevronLeft
@@ -484,37 +494,40 @@ function TrajetVehicule({
               </div>
             </Tooltip>
           </div>
-          <div className="relative  ">
+          <div className="relative bg-white mt-1 rounded-lg md:rounded-none   md:mt-0  w-full-- ">
             <div
               className={`${
                 !voirAnimationTrajetPopup
                   ? " max-w-[0rem] max-h-[0rem] md:max-h-[10rem]"
-                  : "max-w-[40rem] max-h-[50rem]  p-1"
-              } -- transition-all duration-500 flex flex-col gap-3 justify-start md:flex-row overflow-hidden`}
+                  : "max-w-[40rem] max-h-[50rem] p-2 md:p-1"
+              } -- transition-all duration-500 flex flex-col rounded-lg md:rounded-none gap-3 justify-start md:flex-row overflow-hidden`}
             >
               <Tooltip title={isPaused ? "Play" : "Pause"}>
-                <div
-                  onClick={() => {
-                    setIsPaused(!isPaused);
-                  }}
-                  className={`${
-                    !isPaused ? "bg-gray-50" : "bg-gray-50"
-                  } min-w-[3rem] h-[2.3rem] mt-4 md:mt-0 md:ml-4 flex justify-center items-center rounded-lg border `}
-                >
-                  {isPaused ? (
-                    <FaRegCirclePlay className="text-xl text-green-500" />
-                  ) : (
-                    <FaRegCirclePause className="text-xl text-red-500" />
-                  )}
-                  {/* <FaRegCirclePause /> */}
+                <div className="flex items-center gap-4">
+                  <div
+                    onClick={() => {
+                      setIsPaused(!isPaused);
+                    }}
+                    className={`${
+                      !isPaused ? "bg-gray-50" : "bg-gray-50"
+                    } min-w-[3rem] h-[2.3rem] mt-1 md:mt-0 md:ml-4 flex justify-center items-center rounded-lg border `}
+                  >
+                    {isPaused ? (
+                      <FaRegCirclePlay className="text-xl text-green-500" />
+                    ) : (
+                      <FaRegCirclePause className="text-xl text-red-500" />
+                    )}
+                    {/* <FaRegCirclePause /> */}
+                  </div>
+                  {/* <p>{isPaused ? "Play" : "Pause"}</p> */}
                 </div>
               </Tooltip>
 
               <Tooltip
                 title={
                   !centrerLaCarteAuto
-                    ? "Activer le centrage automatique"
-                    : "Désactiver le centrage automatique"
+                    ? "Activer le centrage automatique de la carte"
+                    : "Désactiver le centrage automatique de la carte"
                 }
               >
                 <div
@@ -538,7 +551,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Rejouer l'animation">
+              <Tooltip title="Recommencer le trajet">
                 <div
                   onClick={() => {
                     replayAnimation();
@@ -554,7 +567,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Ajuster la vitesse">
+              <Tooltip title="Ajuster la vitesse du trajet">
                 <div
                   onClick={() => {
                     setVoirAjusterLaVitessePopup(!voirAjusterLaVitessePopup);
@@ -586,7 +599,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Inverser la direction du trajet">
+              {/* <Tooltip title="Inverser la direction du trajet">
                 <div
                   onClick={() => {
                     setIsReversed(!isReversed);
@@ -609,10 +622,9 @@ function TrajetVehicule({
                         <FaCar className="text-xl text-red-600" />
                       </div>
                     )}
-                    {/* <FaRegCirclePause /> */}
                   </div>
                 </div>
-              </Tooltip>
+              </Tooltip> */}
 
               <Tooltip title="Vois des details sur le trajet">
                 <div
@@ -633,8 +645,8 @@ function TrajetVehicule({
               <Tooltip
                 title={
                   voirAnimationTrajetPopup
-                    ? "Masquer l'animation"
-                    : "Afficher l'animation"
+                    ? "Masquer les options"
+                    : "Afficher les options"
                 }
               >
                 <div
@@ -658,7 +670,7 @@ function TrajetVehicule({
             {voirAjusterLaVitessePopup && (
               <div className="absolute font-normal z-[99999] bg-white min-w-[12rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-center border-b pb-2">
-                  <p>Vitesse</p>
+                  <p>Vitesse de l'animation</p>
                   <IoClose
                     onClick={() => {
                       setVoirAjusterLaVitessePopup(false);
@@ -819,9 +831,11 @@ function TrajetVehicule({
         </div>
 
         {voirInfoSurAnimation && (
-          <div className="absolute flex flex-col gap-2 z-[999999999999] bottom-[17rem] lg:bottom-[10rem] left-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem] p-3 bg-white rounded-lg shadow-lg shadow-black/20 ">
-            <div className="flex border-b pb-3 justify-between ">
-              <p className="font-bold">{currentVéhicule?.description || ""}</p>
+          <div className="fixed flex flex-col gap-2 z-[999999999999] bottom-[4rem] lg:bottom-[1rem] left-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem]-- p-3 bg-white rounded-lg shadow-lg shadow-black/20 ">
+            <div className="flex border-b md:pb-3 justify-end md:justify-between ">
+              <p className="font-bold hidden md:block">
+                {currentVéhicule?.description || ""}
+              </p>
               <MdClose
                 onClick={() => {
                   setVoirInfoSurAnimation(false);
@@ -853,7 +867,7 @@ function TrajetVehicule({
                   : "Non disponible"}
               </span>
             </p>
-            <p className="font-bold">
+            <p className="font-bold  hidden md:block">
               Adresse :{" "}
               <span className="font-normal">
                 {addressActuelleAnimation || ""}
@@ -1034,9 +1048,69 @@ function TrajetVehicule({
               )}
 
               {/* Trace la polyline animée */}
-              {animatedPath.length > 0 && (
+              {isAnimating && animatedPath.length > 0 && (
                 <Polyline positions={animatedPath} color="green" weight={3} />
               )}
+
+              {isAnimating &&
+                visitedPositions.map((pos, index) => {
+                  // Use the vehicle data from the stored position to determine the marker icon
+                  const markerIcon = L.icon({
+                    iconUrl: getMarkerIcon(pos.vehicle), // Use the getMarkerIcon function
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 22],
+                    popupAnchor: [-1, -20],
+                  });
+
+                  return (
+                    <Marker
+                      key={index}
+                      position={pos.position}
+                      icon={markerIcon}
+                    >
+                      {isPaused && (
+                        <Popup>
+                          <div>
+                            <p>
+                              <strong>Vitesse :</strong>{" "}
+                              {pos.vehicle?.speedKPH &&
+                              !isNaN(Number(pos.vehicle?.speedKPH))
+                                ? Number(pos.vehicle?.speedKPH).toFixed(0)
+                                : "Non disponible"}{" "}
+                              Km/h
+                            </p>
+
+                            <p>
+                              <strong>Date :</strong>{" "}
+                              {pos.vehicle?.timestamp
+                                ? FormatDateHeure(pos.vehicle?.timestamp).date
+                                : "Pas de date disponible"}
+                              <span className="px-3">/</span>
+                              <span className="font-bold">
+                                {FormatDateHeure(pos.vehicle?.timestamp).time}
+                              </span>
+                            </p>
+
+                            <p>
+                              <strong>Adresse :</strong>{" "}
+                              {pos.vehicle?.address || "Non disponible"}
+                            </p>
+
+                            <p>
+                              <strong>Statut : </strong>
+                              {pos.vehicle?.speedKPH < 1 && "En stationnement"}
+                              {pos.vehicle?.speedKPH > 20 &&
+                                "En mouvement rapide"}
+                              {pos.vehicle?.speedKPH >= 1 &&
+                                pos.vehicle?.speedKPH <= 20 &&
+                                "En mouvement lent"}
+                            </p>
+                          </div>
+                        </Popup>
+                      )}
+                    </Marker>
+                  );
+                })}
 
               {/* Marqueur d'animation */}
               {animatedCurrentPosition && (
