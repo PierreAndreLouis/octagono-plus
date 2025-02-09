@@ -209,6 +209,7 @@ const LocationPage = () => {
         <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-[14124124124124] shadow-xl border-- border-gray-100 rounded-md p-3">
           <SearchVehiculePupup
             searchQueryListPopup={searchQueryLocationPage}
+            setSearchQueryListPopup={setSearchQueryLocationPage}
             handleSearchChange={handleSearchChange}
             setShowOptions={setShowVehiculeListe}
             filteredVehicles={filteredVehicles}

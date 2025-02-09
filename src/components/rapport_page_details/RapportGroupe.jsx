@@ -1476,9 +1476,9 @@ function RapportGroupe({
               {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
 
               <div className="mx-auto  md:w-[75vw]">
-                <div className="flex flex-wrap">
-                  <p>Date : </p>
-                  <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
+                <div className="flex  flex-wrap">
+                  <p className="font-bold">Date : </p>
+                  <span className="font-semibold dark:text-orange-500 text-gray-900 pl-5">
                     {jourDebut ? (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
                         Du{" "}
@@ -1498,9 +1498,9 @@ function RapportGroupe({
                 </div>
                 {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
                 <div className="flex flex-wrap">
-                  <p>Heure :</p>
+                  <p className="font-bold">Heure :</p>
                   {jourDebut ? (
-                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
+                    <span className="font-semibold dark:text-orange-500 text-gray-700 pl-5">
                       De{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                         {heureDebut}
@@ -3946,7 +3946,6 @@ function RapportGroupe({
                 <div className="relative  h-[100vh]  rounded-lg mt-3-- overflow-hidden">
                   <button
                     className="absolute z-[999] top-[1rem] right-[1rem]"
-                    // onClick={centerOnFirstMarker}
                     onClick={() => {
                       setzoomPosition(false);
                       setSelectedVehicleToShowInMap(null);
@@ -3965,7 +3964,6 @@ function RapportGroupe({
               <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
                 <button
                   className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
-                  // onClick={centerOnFirstMarker}
                   onClick={() => {
                     setzoomPosition(true);
                     setSelectedVehicleToShowInMap(null);

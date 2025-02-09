@@ -262,6 +262,13 @@ const DataContextProvider = ({ children }) => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
 
+  const [centrerAutoMapTrajet, setCentrerAutoMapTrajet] = useState(true);
+  setTimeout(() => {
+    setCentrerAutoMapTrajet(false);
+  }, 1000); // 15 secondes
+  useEffect(() => {
+    console.log(centrerAutoMapTrajet);
+  }, [centrerAutoMapTrajet]);
   // to choose the only véhicule to show in the map
   const [selectedVehicleToShowInMap, setSelectedVehicleToShowInMap] =
     useState(null);
@@ -2535,6 +2542,8 @@ const DataContextProvider = ({ children }) => {
         tableRef,
         rapportPersonnelPDFtRef,
         rapportGroupePDFtRef,
+        centrerAutoMapTrajet,
+        setCentrerAutoMapTrajet,
       }}
     >
       {children}

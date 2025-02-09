@@ -56,14 +56,22 @@ function TrajetVehicule({
   positions,
   centerOnFirstMarker,
   openGoogleMaps,
+  composantLocationPage,
 }) {
-  const { selectUTC, FormatDateHeure, username, currentVéhicule } =
-    useContext(DataContext);
+  const {
+    selectUTC,
+    FormatDateHeure,
+    username,
+    currentVéhicule,
+    véhiculeHistoriqueDetails,
+    showHistoriqueInMap,
+  } = useContext(DataContext);
   const [ajusterLaVitesse, setAjusterLaVitesse] = useState(0.5);
   const [ajusterLaVitesseText, setAjusterLaVitesseText] = useState("Normal");
   const [centrerLaCarteAuto, setCentrerLaCarteAuto] = useState(true);
+  const [centrerLaCarteAutoPopup, setCentrerLaCarteAutoPopup] = useState(false);
   const [voirInfoSurAnimation, setVoirInfoSurAnimation] = useState(false);
-  const [niveauZoomAuto, setNiveauZoomAuto] = useState(15);
+  const [niveauZoomAuto, setNiveauZoomAuto] = useState(16);
   const [niveauZoomAutoText, setNiveauZoomAutoText] = useState(50);
   const [voirAnimationTrajetPopup, setVoirAnimationTrajetPopup] =
     useState(false);
@@ -95,14 +103,12 @@ function TrajetVehicule({
     ajusterLaVitesseRef.current = ajusterLaVitesse;
   }, [isPaused, isReversed, ajusterLaVitesse]);
 
-  console.log("vitesseActuelleAnimation :", vitesseActuelleAnimation);
-
   useEffect(() => {
-    console.log(isPaused);
-    console.log(ajusterLaVitesse);
-    console.log(vitesseActuelleAnimation);
-    console.log(timestampActuelleAnimation);
-    console.log(addressActuelleAnimation);
+    // console.log(isPaused);
+    // console.log(ajusterLaVitesse);
+    // console.log(vitesseActuelleAnimation);
+    // console.log(timestampActuelleAnimation);
+    // console.log(addressActuelleAnimation);
   }, [
     ajusterLaVitesse,
     vitesseActuelleAnimation,
@@ -123,7 +129,7 @@ function TrajetVehicule({
   // console.log(animatedCurrentPosition);
   //   // Fonction pour centrer la carte sur le premier marqueur
   const centerOnFirstMarkerAnimation = () => {
-    console.log("111111111111");
+    // console.log("111111111111");
     if (mapRef.current && vehicles.length > 0) {
       const lastValidLatitude = animatedCurrentPosition?.[0];
       const lastValidLongitude = animatedCurrentPosition?.[1];
@@ -407,13 +413,15 @@ function TrajetVehicule({
         <div
           className={`${
             voirAnimationTrajetPopup ? " pl-0.5" : ""
-          } absolute md:bg-white cursor-pointer flex flex-col md:flex-row md:items-center  justify-start items-start z-[999999999999999999999999999] top-[4rem] left-[1rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
+          } absolute md:bg-white cursor-pointer flex flex-col md:flex-row md:items-center  justify-start items-start z-[999999999999999999999999999] ${
+            composantLocationPage === "historique" ? "top-[5rem]" : "top-[2rem]"
+          }  md:top-[4rem] left-[1rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
         >
           <div
             className={`${
               isAnimating
-                ? "text-red-500 border border-red-500 bg-red-50"
-                : "text-green-500 border border-green-500 bg-green-50"
+                ? "text-red-700 border border-red-500 bg-red-50"
+                : "text-green-700 border border-green-500 bg-green-50"
             } flex gap-4 items-center p-2 rounded-lg `}
           >
             {/*  */}
@@ -502,17 +510,23 @@ function TrajetVehicule({
                   : "max-w-[40rem] max-h-[50rem] p-2 md:p-1"
               } -- transition-all duration-500 flex flex-col rounded-lg md:rounded-none gap-3 justify-start md:flex-row overflow-hidden`}
             >
-              <Tooltip title={isPaused ? "Play" : "Pause"}>
+              <Tooltip title={!isAnimating || isPaused ? "Play" : "Pause"}>
                 <div className="flex items-center gap-4">
                   <div
                     onClick={() => {
-                      setIsPaused(!isPaused);
+                      if (!isAnimating) {
+                        startOrStopAnimation();
+                      } else if (isAnimating) {
+                        setIsPaused(!isPaused);
+                      } else if (!isAnimating && isPaused) {
+                        setIsPaused(!isPaused);
+                      }
                     }}
                     className={`${
                       !isPaused ? "bg-gray-50" : "bg-gray-50"
                     } min-w-[3rem] h-[2.3rem] mt-1 md:mt-0 md:ml-4 flex justify-center items-center rounded-lg border `}
                   >
-                    {isPaused ? (
+                    {!isAnimating || isPaused ? (
                       <FaRegCirclePlay className="text-xl text-green-500" />
                     ) : (
                       <FaRegCirclePause className="text-xl text-red-500" />
@@ -532,7 +546,8 @@ function TrajetVehicule({
               >
                 <div
                   onClick={() => {
-                    setCentrerLaCarteAuto(!centrerLaCarteAuto);
+                    // setCentrerLaCarteAuto(!centrerLaCarteAuto);
+                    setCentrerLaCarteAutoPopup(true);
                   }}
                   className="max-w-[0rem]-- max-w-[100rem]   transition-all overflow-hidden"
                 >
@@ -541,7 +556,7 @@ function TrajetVehicule({
                       !centrerLaCarteAuto ? "bg-gray-50" : "bg-gray-50"
                     } min-w-[3rem] h-[2.3rem]  flex justify-center items-center rounded-lg border `}
                   >
-                    {!centrerLaCarteAuto ? (
+                    {centrerLaCarteAuto ? (
                       <MdCenterFocusStrong className="text-2xl text-green-500" />
                     ) : (
                       <MdCenterFocusStrong className="text-2xl text-red-500" />
@@ -634,9 +649,15 @@ function TrajetVehicule({
                   className="max-w-[0rem]-- max-w-[100rem]   transition-all overflow-hidden"
                 >
                   <div
-                    className={`bg-gray-50  min-w-[3rem] h-[2.3rem]  flex justify-center items-center rounded-lg border `}
+                    className={`${
+                      voirInfoSurAnimation ? "bg-green-50" : "bg-red-50"
+                    }   min-w-[3rem] h-[2.3rem]  flex justify-center items-center rounded-lg border `}
                   >
-                    <IoMdInformationCircleOutline className="text-2xl text-gray-800" />
+                    <IoMdInformationCircleOutline
+                      className={`${
+                        voirInfoSurAnimation ? "text-green-700" : "text-red-700"
+                      } text-2xl `}
+                    />
                     {/* <FaRegCirclePause /> */}
                   </div>
                 </div>
@@ -668,7 +689,7 @@ function TrajetVehicule({
             </div>
 
             {voirAjusterLaVitessePopup && (
-              <div className="absolute font-normal z-[99999] bg-white min-w-[12rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
+              <div className="absolute font-normal z-[99999] bg-white min-w-[20rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-center border-b pb-2">
                   <p>Vitesse de l'animation</p>
                   <IoClose
@@ -754,9 +775,9 @@ function TrajetVehicule({
             )}
 
             {voirNiveauZoomAutoPopup && (
-              <div className="absolute bg-white min-w-[15rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
+              <div className="absolute bg-white min-w-[20rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-center border-b pb-2">
-                  <p>Niveau de Zoom</p>
+                  <p>Niveau de Zoom lors de l'animation</p>
                   <IoClose
                     onClick={() => {
                       setVoirNiveauZoomAutoPopup(false);
@@ -769,6 +790,28 @@ function TrajetVehicule({
                     setVoirNiveauZoomAutoPopup(false);
                   }}
                 >
+                  <p
+                    onClick={() => {
+                      setNiveauZoomAuto(16.5);
+                      setNiveauZoomAutoText(70);
+                    }}
+                    className={`${
+                      niveauZoomAutoText === 70 ? "bg-orange-100" : ""
+                    } hover:bg-orange-100 p-2 cursor-pointer`}
+                  >
+                    70%
+                  </p>
+                  <p
+                    onClick={() => {
+                      setNiveauZoomAuto(16);
+                      setNiveauZoomAutoText(60);
+                    }}
+                    className={`${
+                      niveauZoomAutoText === 60 ? "bg-orange-100" : ""
+                    } hover:bg-orange-100 p-2 cursor-pointer`}
+                  >
+                    60%
+                  </p>
                   <p
                     onClick={() => {
                       setNiveauZoomAuto(15);
@@ -827,11 +870,65 @@ function TrajetVehicule({
                 </div>
               </div>
             )}
+
+            {centrerLaCarteAutoPopup && (
+              <div className="absolute bg-white min-w-[20rem] max-w-[70vw] w-full shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
+                <div className="font-bold flex justify-between items-start border-b pb-2">
+                  <p>Centrer automatique la carte lors de l'animation</p>
+                  <IoClose
+                    onClick={() => {
+                      setCentrerLaCarteAutoPopup(false);
+                    }}
+                    className="text-red-500 min-w-[2rem] text-2xl cursor-pointer"
+                  />
+                </div>
+                <div
+                  onClick={() => {
+                    // setVoirNiveauZoomAutoPopup(false);
+                    setCentrerLaCarteAutoPopup(false);
+                  }}
+                  className="font-semibold"
+                >
+                  <p
+                    onClick={() => {
+                      // setNiveauZoomAuto(16.5);
+                      // setNiveauZoomAutoText(70);
+                      setCentrerLaCarteAuto(true);
+                    }}
+                    className={`${
+                      centrerLaCarteAuto ? "bg-orange-100" : ""
+                    } hover:bg-orange-100 p-2 cursor-pointer`}
+                  >
+                    Activer
+                  </p>
+                  <p
+                    onClick={() => {
+                      // setNiveauZoomAuto(16);
+                      // setNiveauZoomAutoText(60);
+                      setCentrerLaCarteAuto(false);
+                    }}
+                    className={`${
+                      !centrerLaCarteAuto ? "bg-orange-100" : ""
+                    } hover:bg-orange-100 p-2 cursor-pointer`}
+                  >
+                    Désactiver
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
+        {/* ${
+              composantLocationPage === "historique"
+                ? "right-[1rem] top-[9.9rem]"
+                : "top-[2rem] right-[4rem]"
+            }   */}
+
         {voirInfoSurAnimation && (
-          <div className="fixed flex flex-col gap-2 z-[999999999999] bottom-[4rem] lg:bottom-[1rem] left-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem]-- p-3 bg-white rounded-lg shadow-lg shadow-black/20 ">
+          <div
+            className={`fixed flex flex-col gap-2 z-[999999999999]  md:top-auto md: bottom-[4rem] lg:bottom-[1rem] md: left-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem]-- p-3 bg-white rounded-lg shadow-lg shadow-black/20 `}
+          >
             <div className="flex border-b md:pb-3 justify-end md:justify-between ">
               <p className="font-bold hidden md:block">
                 {currentVéhicule?.description || ""}
@@ -1068,7 +1165,7 @@ function TrajetVehicule({
                       position={pos.position}
                       icon={markerIcon}
                     >
-                      {isPaused && (
+                      {(isPaused || !centrerLaCarteAuto) && (
                         <Popup>
                           <div>
                             <p>

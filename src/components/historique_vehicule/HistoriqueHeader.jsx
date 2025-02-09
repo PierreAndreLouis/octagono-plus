@@ -22,7 +22,6 @@ import { MdCenterFocusStrong } from "react-icons/md";
 function HistoriqueHeader({
   setShowHistoriqueInMap,
   showHistoriqueInMap,
-  centerOnFirstMarker,
   setShowVehiculeListe,
   showVehiculeListe,
   currentVéhicule,
@@ -174,9 +173,9 @@ function HistoriqueHeader({
           </div>
         </div>
         <div className="px-4 flex justify-center items-center py-1 ">
-          <p className="font-semibold md:hidden mt-1 dark:text-orange-500">
+          <p className="font-semibold text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
             {" "}
-            {currentVéhicule?.description || ""}
+            {(showHistoriqueInMap && currentVéhicule?.description) || ""}
           </p>
         </div>
       </div>

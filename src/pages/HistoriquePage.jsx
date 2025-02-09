@@ -41,6 +41,8 @@ function HistoriquePage() {
     fetchHistoriqueVehicleDetails,
     currentDataFusionné,
     setSelectedVehicleToShowInMap,
+    centrerAutoMapTrajet,
+    setCentrerAutoMapTrajet,
   } = useContext(DataContext);
 
   let x;
@@ -92,7 +94,7 @@ function HistoriquePage() {
       if (speedKPH <= 0) {
         if (
           lastZeroSpeedTimestamp === null ||
-          lastZeroSpeedTimestamp - timestamp >= 60 * 10  // 10 minutes
+          lastZeroSpeedTimestamp - timestamp >= 60 * 10 // 10 minutes
         ) {
           ecar10minuteArret.push(details);
           lastZeroSpeedTimestamp = timestamp;
@@ -138,7 +140,26 @@ function HistoriquePage() {
   // Mettre a jour le data
   useEffect(() => {
     setvehicles(véhiculeData);
-  }, [véhiculeHistoriqueDetails]);
+    // console.log(vehicles);
+  }, [véhiculeHistoriqueDetails, vehicles, currentVéhicule]);
+  //
+  //
+  //
+  //
+
+  useEffect(() => {
+    // setvehicles(véhiculeData);
+    if (centrerAutoMapTrajet) {
+      centerOnFirstMarker();
+    }
+  }, [véhiculeHistoriqueDetails, vehicles, currentVéhicule]);
+
+  useEffect(() => {
+    // setvehicles(véhiculeData);
+    if (!centrerAutoMapTrajet) {
+      setCentrerAutoMapTrajet(true);
+    }
+  }, [véhiculeHistoriqueDetails, currentVéhicule]);
 
   // type de carte
   const [mapType, setMapType] = useState("streets");
@@ -200,7 +221,6 @@ function HistoriquePage() {
     if (mapRef.current && vehicles.length > 0) {
       const { lastValidLatitude, lastValidLongitude } = vehicles[0];
       mapRef.current.setView([lastValidLatitude, lastValidLongitude], 13);
-      console.log("centerOnFirstMarker.......................");
     }
   };
 
@@ -214,15 +234,20 @@ function HistoriquePage() {
     if (foundVehicle) {
       setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
       setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+
+      // setInterval(() => {
+      //   // setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
+      //   // setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+      // }, 2000);
     } else {
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
     setShowVehiculeListe(!showVehiculeListe);
-    centerOnFirstMarker();
-    setTimeout(() => {
-      centerOnFirstMarker();
-    }, 1000); // 1 secondes
-    // ....................
+    // centerOnFirstMarker();
+    // setTimeout(() => {
+    //   centerOnFirstMarker();
+    // }, 1000); // 1 secondes
+    // // ....................
   };
 
   const handleCheckboxChange = (name) => {
@@ -408,6 +433,10 @@ function HistoriquePage() {
   //
   x;
 
+  useEffect(() => {
+    // console.log("xxxxxxxxxxxxxxxxxxxxxx", currentVéhicule);
+  }, [currentVéhicule]);
+
   return (
     <div className="p-4 min-h-screen flex flex-col gap-4 mt-16 mb-32 px-4 sm:px-12 md:px-20 lg:px-40">
       <div className="z-50"></div>
@@ -459,6 +488,7 @@ function HistoriquePage() {
             <div className="fixed z-[999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50  shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80 dark:border-gray-600">
               <SearchVehiculePupup
                 searchQueryListPopup={searchQueryHistoriquePage}
+                setSearchQueryListPopup={setSearchQueryHistoriquePage}
                 handleSearchChange={handleSearchChange}
                 setShowOptions={setShowVehiculeListe}
                 filteredVehicles={filteredVehiclesPupup}
@@ -506,7 +536,7 @@ function HistoriquePage() {
       ) : (
         // carte section
         <div className="  fixed z-[9] right-0 top-[5rem] md:top-[3.8rem] bottom-0 overflow-hidden left-0">
-          <div className=" mt-[2.3rem] md:mt-0 overflow-hidden">
+          <div className=" mt-[2.3rem]-- md:mt-0 overflow-hidden">
             <TrajetVehicule
               typeDeVue={typeDeVue}
               setTypeDeVue={setTypeDeVue}
@@ -522,6 +552,7 @@ function HistoriquePage() {
               centerOnFirstMarker={centerOnFirstMarker}
               showHistoriqueInMap={showHistoriqueInMap}
               openGoogleMaps={openGoogleMaps}
+              composantLocationPage={"historique"}
             />
           </div>
         </div>

@@ -25,7 +25,8 @@ function ShowFilterComponent({
   setShowVehiculeListe,
   handleApply,
 }) {
-  const { currentVéhicule } = useContext(DataContext);
+  const { currentVéhicule, setVéhiculeHistoriqueDetails } =
+    useContext(DataContext);
 
   const formatDateToDDMMYYYY = (date) => {
     if (!(date instanceof Date)) {
@@ -178,6 +179,7 @@ function ShowFilterComponent({
             ) : (
               <p
                 onClick={() => {
+                  setVéhiculeHistoriqueDetails([]);
                   handleApply();
                   applyFilter();
                   setshowFilter(false);

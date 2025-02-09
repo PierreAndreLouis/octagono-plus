@@ -270,6 +270,8 @@ function RapportPageDetailsHeader({
       {showOptions && (
         <SearchVehiculePupup
           searchQueryListPopup={searchQueryRapportPageDetailHeader}
+            setSearchQueryListPopup={setRapportPageDetailHeader}
+
           handleSearchChange={handleSearchChange}
           setShowOptions={setShowOptions}
           filteredVehicles={filteredVehicles}
