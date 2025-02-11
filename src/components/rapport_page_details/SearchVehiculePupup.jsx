@@ -71,8 +71,8 @@ function SearchVehiculePupup({
   );
   return (
     <div>
-      <div className="fixed  sm:mx-auto  border mx-4 max-w-[50rem] pt-[5.5rem] p-4 dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
-        <div className="absolute  top-[1rem] left-4 right-4 p-2">
+      <div className="fixed  sm:mx-auto  border mx-2 max-w-[50rem] pt-[5.5rem] p-2- dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
+        <div className="absolute  top-[1rem] left-4 right-4 py-2">
           <div className="mt-4 mb-4  flex items-center gap-2">
             <Tooltip
               title="Appuyer pour filtrer
