@@ -150,7 +150,7 @@ function HistoriquePage() {
   useEffect(() => {
     // setvehicles(véhiculeData);
     if (centrerAutoMapTrajet) {
-      centerOnFirstMarker();
+      // centerOnFirstMarker();
     }
   }, [véhiculeHistoriqueDetails, vehicles, currentVéhicule]);
 
