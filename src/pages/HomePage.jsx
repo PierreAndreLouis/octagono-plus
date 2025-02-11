@@ -18,11 +18,17 @@ const Home = () => {
     statisticFilterTextInHomePage,
     setStatisticFilterTextInHomePage,
     setStatisticFilterInHomePage,
+    GeofenceDataFonction,
+    geofenceData,
+    userData,
+    account,
+    username,
+    password,
   } = useContext(DataContext);
 
   let x;
   useEffect(() => {
-    console.log(mergedData);
+    // console.log(mergedData);
   }, [mergedData]);
 
   //
@@ -126,7 +132,7 @@ const Home = () => {
 
   // pour mettre a jour la variable isLoading2
   useEffect(() => {
-    console.log(isLoading2);
+    // console.log(isLoading2);
   }, [isLoading2]);
 
   //Pour Simuler un délai de 10 secondes pour le loading de l'icon loading dans la page home
@@ -196,7 +202,7 @@ const Home = () => {
       // reloadHomePage();
       homePageReload();
 
-      console.log("HomePage Reload start....");
+      // console.log("HomePage Reload start....");
     }, 10000);
 
     return () => clearInterval(intervalId);
@@ -231,11 +237,11 @@ const Home = () => {
 
   useEffect(() => {
     // Met à jour l'état avec la dernière valeur choisie
-    console.log(
-      "mise a jour de Statistic header:",
-      statisticFilterTextRef.current
-    );
-    console.log("mise a jour de Statistic header:", statisticFilterRef.current);
+    // console.log(
+    //   "mise a jour de Statistic header:",
+    //   statisticFilterTextRef.current
+    // );
+    // console.log("mise a jour de Statistic header:", statisticFilterRef.current);
     setStatisticFilterInHomePage(statisticFilterRef.current);
     setStatisticFilterTextInHomePage(statisticFilterTextRef.current); // Met à jour l'état
   }, [mergedData, statisticFilterInHomePage, statisticFilterTextInHomePage]);
@@ -262,7 +268,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (statisticFilterTextInHomePage) {
-        console.log("Dernier Filter choisi :", statisticFilterTextInHomePage);
+        // console.log("Dernier Filter choisi :", statisticFilterTextInHomePage);
         setStatisticFilterTextInHomePage(statisticFilterTextInHomePage); // Met à jour l'état
         setStatisticFilterInHomePage(statisticFilterInHomePage);
       }
@@ -312,7 +318,6 @@ const Home = () => {
     <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-screen">
       {/* Statistic component */}
       <Statistics />
-
       {/* Chargement quand on login */}
       {isHomePageLoading && (
         <div className="fixed inset-0 bg-gray-200/50 dark:bg-gray-900/50">
@@ -321,7 +326,6 @@ const Home = () => {
           </div>
         </div>
       )}
-
       {/* Pour afficher la date et heure de la dernière mise a jour */}
       {lastUpdate?.mostRecentTimestamp !== -Infinity && (
         <div
@@ -352,7 +356,6 @@ const Home = () => {
           </div>
         </div>
       )}
-
       {/* Message quand il n y a pas d'internet */}
       {isOffline && (
         <div className="shadow-md dark:bg-red-900/40 dark:shadow-gray-900  flex gap-2 justify-center md:gap-6 rounded-lg mx-2 mt-3 p-3 text-center bg-red-100">
@@ -362,10 +365,27 @@ const Home = () => {
           </h3>
         </div>
       )}
-
+      {/* <button
+        onClick={() => {
+          GeofenceDataFonction();
+        }}
+      >
+        testeeeeeeeeeeeeeeeeeeeee
+      </button>
+sssssss
+      <button
+        onClick={() => {
+          console.log("Geofence data xxxxxxxxxxxxxxxxxxx:", geofenceData);
+          console.log("userData:", userData);
+          console.log("accountID:", account);
+          console.log("userID:", username);
+          console.log("password:", password);
+        }}
+      >
+        log console
+      </button> */}
       {/* Liste des véhiculés */}
       <Liste setShowListOption={setShowListOption} />
-
       {/* Option pour chaque véhicule */}
       {showListeOption && <Liste_options />}
     </div>

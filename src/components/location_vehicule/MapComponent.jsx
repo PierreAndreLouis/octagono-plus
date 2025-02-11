@@ -14,6 +14,7 @@ import iconLowSpeed from "/pin/ping_red.png";
 import iconMediumSpeed from "/pin/ping_yellow.png";
 import iconHighSpeed from "/pin/ping_green.png";
 import { DataContext } from "../../context/DataContext";
+import { Polygon } from "react-leaflet";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,7 +31,53 @@ function MapComponent({ mapType }) {
     FormatDateHeure,
     historiqueSelectedLocationIndex,
     username,
+    geofenceData,
   } = useContext(DataContext);
+
+  const geofences = geofenceData;
+  // const geofences = [
+  //   {
+  //     description: "geofence4 -  - Port-au-Prince Zone",
+  //     color: "blue",
+  //     fillColor: "rgba(0, 0, 255, 0.146)",
+  //     opacity: 0.4,
+  //     weight: 3,
+  //     coordinates: [
+  //       { lat: 18.53917, lng: -72.3361 },
+  //       { lat: 18.56123, lng: -72.2854 },
+  //       { lat: 18.51234, lng: -72.2709 },
+  //       { lat: 18.48712, lng: -72.3198 },
+  //     ],
+  //   },
+
+  //   {
+  //     description: "geofence5 - Cap-Haïtien Zone",
+  //     color: "orange",
+  //     fillColor: "rgba(255, 165, 0, 0.3)",
+  //     opacity: 0.4,
+  //     weight: 3,
+  //     coordinates: [
+  //       { lat: 19.7573, lng: -72.2046 },
+  //       { lat: 19.7334, lng: -72.2124 },
+  //       { lat: 19.7421, lng: -72.2501 },
+  //       { lat: 19.7752, lng: -72.2408 },
+  //     ],
+  //   },
+  //   {
+  //     description: "geofence6 - Jacmel Perimeter",
+  //     color: "cyan",
+  //     fillColor: "rgba(0, 255, 255, 0.2)",
+  //     opacity: 0.5,
+  //     weight: 2,
+  //     coordinates: [
+  //       { lat: 18.2328, lng: -72.5378 },
+  //       { lat: 18.2556, lng: -72.5312 },
+  //       { lat: 18.2601, lng: -72.5105 },
+  //       { lat: 18.2457, lng: -72.4908 },
+  //       { lat: 18.2203, lng: -72.5032 },
+  //     ],
+  //   },
+  // ];
 
   // le data a utiliser
   const dataFusionné = currentDataFusionné;
@@ -134,7 +181,8 @@ function MapComponent({ mapType }) {
     }, 500);
 
     return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
-  }, [selectedVehicleToShowInMap, vehicles]);
+    // }, [selectedVehicleToShowInMap, vehicles]);
+  }, [selectedVehicleToShowInMap]);
 
   const getMarkerIcon = (speedKPH) => {
     if (speedKPH < 1) return iconLowSpeed;
@@ -162,6 +210,23 @@ function MapComponent({ mapType }) {
         />
         <ScaleControl position="bottomright" />
         <AttributionControl position="bottomleft" />
+
+        {/* Affichage des géofences */}
+        {geofences.map((geofence, index) => (
+          <Polygon
+            key={index}
+            positions={geofence.coordinates.map((point) => [
+              point.lat,
+              point.lng,
+            ])}
+            pathOptions={{
+              color: geofence.color || "", // Couleur de la bordure
+              fillColor: geofence.color || "#000000", // Couleur du fond
+              fillOpacity: 0.1, // Opacité du fond
+              weight: 1, // Épaisseur des lignes
+            }}
+          />
+        ))}
 
         {vehicles.map((véhicule, index) => {
           const FormatDateHeureTimestamp = FormatDateHeure(véhicule.timestamp);

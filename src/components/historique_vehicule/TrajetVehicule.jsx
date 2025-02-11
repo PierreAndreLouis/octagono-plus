@@ -32,6 +32,7 @@ import {
 } from "react-leaflet";
 import { DataContext } from "../../context/DataContext";
 import L from "leaflet";
+import { Polygon } from "react-leaflet";
 
 // Exemple de fonction de sélection d'icône pour un véhicule donné
 // (déjà utilisée dans d'autres parties du composant)
@@ -65,14 +66,17 @@ function TrajetVehicule({
     currentVéhicule,
     véhiculeHistoriqueDetails,
     showHistoriqueInMap,
+    geofenceData,
   } = useContext(DataContext);
+  const geofences = geofenceData;
+
   const [ajusterLaVitesse, setAjusterLaVitesse] = useState(0.5);
   const [ajusterLaVitesseText, setAjusterLaVitesseText] = useState("Normal");
   const [centrerLaCarteAuto, setCentrerLaCarteAuto] = useState(true);
   const [centrerLaCarteAutoPopup, setCentrerLaCarteAutoPopup] = useState(false);
   const [voirInfoSurAnimation, setVoirInfoSurAnimation] = useState(false);
   const [niveauZoomAuto, setNiveauZoomAuto] = useState(16);
-  const [niveauZoomAutoText, setNiveauZoomAutoText] = useState(50);
+  const [niveauZoomAutoText, setNiveauZoomAutoText] = useState(60);
   const [voirAnimationTrajetPopup, setVoirAnimationTrajetPopup] =
     useState(false);
 
@@ -1003,6 +1007,23 @@ function TrajetVehicule({
               />
               <ScaleControl position="bottomright" />
               <AttributionControl position="bottomleft" />
+
+              {/* Affichage des géofences */}
+              {geofences.map((geofence, index) => (
+                <Polygon
+                  key={index}
+                  positions={geofence.coordinates.map((point) => [
+                    point.lat,
+                    point.lng,
+                  ])}
+                  pathOptions={{
+                    color: geofence.color || "", // Couleur de la bordure
+                    fillColor: geofence.color || "#000000", // Couleur du fond
+                    fillOpacity: 0.1, // Opacité du fond
+                    weight: 1, // Épaisseur des lignes
+                  }}
+                />
+              ))}
 
               {/* Affichage des marqueurs "classiques" si l'animation n'est pas lancée */}
               {!isAnimating &&

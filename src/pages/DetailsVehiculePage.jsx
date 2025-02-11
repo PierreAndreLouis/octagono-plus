@@ -7,8 +7,12 @@ import VehiculeDetailInformationComponent from "../components/vehicule_details/V
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 
 function DetailsVehiculePage() {
-  const { currentVéhicule, mergedData, setCurrentVéhicule } =
-    useContext(DataContext); // fetchVehicleDetails importée du contexte
+  const {
+    currentVéhicule,
+    mergedData,
+    setCurrentVéhicule,
+    currentDataFusionné,
+  } = useContext(DataContext); // fetchVehicleDetails importée du contexte
   let x;
   //
   //
@@ -46,7 +50,7 @@ function DetailsVehiculePage() {
   };
 
   // Pour filtrer la recherche des véhicules
-  const filteredVehicles = dataFusionné?.filter(
+  const filteredVehicles = currentDataFusionné?.filter(
     (véhicule) =>
       // véhicule.displayName.toLowerCase().includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
       véhicule?.imeiNumber

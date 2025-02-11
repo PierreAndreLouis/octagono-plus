@@ -156,10 +156,14 @@ function HistoriquePage() {
 
   useEffect(() => {
     // setvehicles(véhiculeData);
-    if (!centrerAutoMapTrajet) {
-      setCentrerAutoMapTrajet(true);
-    }
-  }, [véhiculeHistoriqueDetails, currentVéhicule]);
+    // if (!centrerAutoMapTrajet) {
+    setCentrerAutoMapTrajet(true);
+    // }
+  }, [véhiculeHistoriqueDetails]);
+
+  setTimeout(() => {
+    setCentrerAutoMapTrajet(false);
+  }, 1000); // 15 secondes
 
   // type de carte
   const [mapType, setMapType] = useState("streets");
@@ -273,7 +277,7 @@ function HistoriquePage() {
   };
 
   // Pour filtrer le recherche
-  const filteredVehiclesPupup = dataFusionné?.filter(
+  const filteredVehiclesPupup = currentDataFusionné?.filter(
     (véhicule) =>
       véhicule?.imeiNumber
         .toLowerCase()

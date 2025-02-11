@@ -26,6 +26,7 @@ function Modifier() {
     setSuccessModifierVéhiculePopup,
     errorModifierVéhiculePopup,
     setErrorModifierVéhiculePopup,
+    currentDataFusionné,
   } = useContext(DataContext);
   let x;
   //
@@ -190,7 +191,7 @@ function Modifier() {
   };
 
   // Pour filtrer les véhicules de la liste
-  const filteredVehicles = dataFusionné?.filter(
+  const filteredVehicles = currentDataFusionné?.filter(
     (véhicule) =>
       véhicule?.imeiNumber
         .toLowerCase()

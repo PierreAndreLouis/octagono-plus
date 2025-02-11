@@ -32,6 +32,12 @@ const DataContextProvider = ({ children }) => {
     return storedUserData ? JSON.parse(storedUserData) : null;
   });
 
+  // to store login user data  // account, username, password
+  const [geofenceData, setGeofenceData] = useState(() => {
+    const storedGeofenceData = localStorage.getItem("geofenceData");
+    return storedGeofenceData ? JSON.parse(storedGeofenceData) : null;
+  });
+
   // to know if the user is login or not
   const isAuthenticated = userData !== null;
 
@@ -40,6 +46,10 @@ const DataContextProvider = ({ children }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
+
+  const geofenceAccount = account;
+  const geofenceUsername = username;
+  const geofencePassword = password;
 
   // to show the log out popup
   const [logOutPopup, setLogOutPopup] = useState(false);
@@ -263,12 +273,15 @@ const DataContextProvider = ({ children }) => {
   x;
 
   const [centrerAutoMapTrajet, setCentrerAutoMapTrajet] = useState(true);
+
   setTimeout(() => {
     setCentrerAutoMapTrajet(false);
   }, 1000); // 15 secondes
+
   useEffect(() => {
     console.log(centrerAutoMapTrajet);
   }, [centrerAutoMapTrajet]);
+
   // to choose the only véhicule to show in the map
   const [selectedVehicleToShowInMap, setSelectedVehicleToShowInMap] =
     useState(null);
@@ -638,6 +651,9 @@ const DataContextProvider = ({ children }) => {
     localStorage.removeItem("userData");
     setUserData(null);
 
+    localStorage.removeItem("geofenceData");
+    setGeofenceData(null);
+
     localStorage.removeItem("véhiculeData");
     setVehicleData(null);
 
@@ -683,6 +699,259 @@ const DataContextProvider = ({ children }) => {
     currentDataFusionné = [];
     setCurrentVéhicule(null);
     navigate("/login");
+  };
+
+  // const GeofenceDataFonction = async () => {
+  //   console.log("Début de la récupération des données Geofence");
+
+  //   const account = geofenceAccount || "foodforthepoor";
+  //   const user = "monitoring";
+  //   const password = "123456";
+
+  //   const xmlData = `<GTSRequest command="dbget">
+  //     <Authorization account="${account}" user="${user}" password="${password}" />
+  //     <Record table="Geozone" partial="true">
+  //       <Field name="accountID">${account}</Field>
+  //       <Field name="descriptionZone" />
+  //     </Record>
+  //   </GTSRequest>`;
+
+  //   try {
+  //     const response = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     const data = await response.text();
+  //     console.log(data);
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       ?.getAttribute("result");
+
+  //     if (result === "success") {
+  //       const fields = xmlDoc.getElementsByTagName("Field");
+  //       const geofenceDataList = Array.from(fields)
+  //         .filter((field) => field.getAttribute("name") === "descriptionZone")
+  //         .map((field) => field.textContent);
+
+  //       localStorage.setItem("geofenceData", JSON.stringify(geofenceDataList));
+  //       setGeofenceData(geofenceDataList);
+  //       console.log("Geofence Data :", geofenceDataList);
+  //     } else {
+  //       setError("Erreur lors de la récupération des données.");
+  //     }
+  //   } catch (error) {
+  //     setError("Erreur lors de la connexion à l'API.");
+  //     console.error("API Error :", error);
+  //   }
+  // };
+
+  // const GeofenceDataFonction = async () => {
+  //   console.log("Startttttt geofense");
+
+  //   console.log("account:", geofenceAccount);
+  //   console.log("username:", geofenceUsername);
+  //   console.log("password:", geofencePassword);
+
+  //   // const { accountID, userID, password } = userData;
+  //   // <Authorization account="${account}" user="${username}" password="${password}" />
+
+  //   const account = geofenceAccount || "foodforthepoor";
+  //   const user = "monitoring";
+  //   const password = "123456";
+
+  //   const xmlData = `<GTSRequest command="dbget">
+  //   <Authorization account="${account}" user="${user}" password="${password}" />
+  //   <Record table="Geozone" partial="true">
+  //     <Field name="accountID">${account}</Field>
+  //     <Field name="descriptionZone" />
+  //   </Record>
+  // </GTSRequest>`;
+
+  //   console.log("Startttttt geofense 1111111111111111111");
+
+  //   try {
+  //     const response = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+  //     console.log("Startttttt geofense 222222222222222222");
+
+  //     const data = await response.text();
+  //     console.log(data);
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       .getAttribute("result");
+  //     console.log("Startttttt geofense   333333333333", data);
+
+  //     if (result === "success") {
+  //       const fields = xmlDoc.getElementsByTagName("Field");
+  //       let geofenceDataList = [];
+
+  //       for (let i = 0; i < fields.length; i++) {
+  //         const fieldName = fields[i].getAttribute("name");
+  //         let fieldValue = fields[i].textContent;
+
+  //         if (fieldName === "descriptionZone") {
+  //           geofenceDataList.push(fieldValue);
+  //         }
+  //       }
+
+  //       try {
+  //         localStorage.setItem(
+  //           "geofenceData",
+  //           JSON.stringify(geofenceDataList)
+  //         );
+  //       } catch (error) {
+  //         if (error.name === "QuotaExceededError") {
+  //           console.error(
+  //             "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
+  //           );
+  //         } else {
+  //           console.error("Erreur de stockage : ", error);
+  //         }
+  //       }
+
+  //       console.log("geofenceDataList : >>>>>>", geofenceDataList);
+  //       setGeofenceData(geofenceDataList);
+  //     } else if (result === "error") {
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0]?.textContent;
+  //       setError(errorMessage || "Erreur lors de la récupération des données.");
+  //     }
+  //   } catch (error) {
+  //     setError("Erreur lors de la connexion à l'API.");
+  //     console.error("Erreur lors de la connexion à l'API", error);
+  //   } finally {
+  //     // setIsLoading(false);
+  //     console.log("Startttttt geofense   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  //   }
+  //   console.log("Startttttt geofense   zzzzzzzzzzzzzzzzzzzzzzzzzzz");
+  // };
+
+  const GeofenceDataFonction = async () => {
+    console.log("Startttttt geofence");
+
+    const account = geofenceAccount || "foodforthepoor";
+    const user = "monitoring";
+    const password = "123456";
+
+    const xmlData = `<GTSRequest command="dbget">
+      <Authorization account="${account}" user="${user}" password="${password}" />
+      <Record table="Geozone" partial="true">
+        <Field name="accountID">${account}</Field>
+        <Field name="descriptionZone" />
+      </Record>
+    </GTSRequest>`;
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const xmlText = await response.text();
+      console.log("Received XML Data:", xmlText);
+
+      // Convert XML to JSON
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+      // Extract records from the XML response
+      const records = Array.from(xmlDoc.getElementsByTagName("Record")).map(
+        (record) => {
+          const fields = Array.from(
+            record.getElementsByTagName("Field")
+          ).reduce((acc, field) => {
+            const name = field.getAttribute("name");
+            const value =
+              field.textContent || field.firstChild?.nodeValue || null;
+            acc[name] = value;
+            return acc;
+          }, {});
+          return fields;
+        }
+      );
+
+      console.log("Geofence Data:", records);
+
+      // Map records to geofence structure
+      const geofences = records.map((record, index) => ({
+        description: record.description,
+        geozoneID: record.geozoneID,
+        radius: record.radius,
+        zoneType: record.zoneType,
+        zoomRegion: record.zoomRegion,
+        lastUpdateTime: record.lastUpdateTime,
+        accountID: record.accountID || "",
+        // shapeColor: record.shapeColor || "", // Default color if not provided
+        color: record.shapeColor || "", // Use shapeColor for consistency
+        // fillColor: `${record.shapeColor || ""}`, // Semi-transparent fill
+        // fillColor: `${record.shapeColor || ""}33`, // Semi-transparent fill
+        // opacity: 0.1,
+        // weight: 1,
+        coordinates: [
+          {
+            lat: parseFloat(record.latitude1),
+            lng: parseFloat(record.longitude1),
+          },
+          {
+            lat: parseFloat(record.latitude2),
+            lng: parseFloat(record.longitude2),
+          },
+          {
+            lat: parseFloat(record.latitude3),
+            lng: parseFloat(record.longitude3),
+          },
+          {
+            lat: parseFloat(record.latitude4),
+            lng: parseFloat(record.longitude4),
+          },
+          {
+            lat: parseFloat(record.latitude5),
+            lng: parseFloat(record.longitude5),
+          },
+          {
+            lat: parseFloat(record.latitude6),
+            lng: parseFloat(record.longitude6),
+          },
+          {
+            lat: parseFloat(record.latitude7),
+            lng: parseFloat(record.longitude7),
+          },
+          {
+            lat: parseFloat(record.latitude8),
+            lng: parseFloat(record.longitude8),
+          },
+        ].filter((point) => !isNaN(point.lat) && !isNaN(point.lng)), // Filter invalid points
+      }));
+
+      console.log("Mapped Geofence Data:", geofences);
+
+      try {
+        localStorage.setItem("geofenceData", JSON.stringify(geofences));
+        setGeofenceData(geofences); // Mise à jour de la variable
+      } catch (error) {
+        if (error.name === "QuotaExceededError") {
+          console.error(
+            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
+          );
+        } else {
+          console.error("Erreur de stockage : ", error);
+        }
+      }
+
+      return geofences;
+    } catch (error) {
+      console.error("Error fetching or parsing geofence data:", error);
+    }
   };
 
   //
@@ -970,6 +1239,7 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     if (userData) {
       fetchVehicleData();
+      GeofenceDataFonction();
     }
   }, [userData]);
 
@@ -1211,9 +1481,9 @@ const DataContextProvider = ({ children }) => {
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
-        console.error(
-          "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-        );
+        // console.error(
+        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        // );
       } else {
         console.error("Erreur de stockage : ", error);
       }
@@ -1718,6 +1988,20 @@ const DataContextProvider = ({ children }) => {
         setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
       }
     }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Pas de dépendances, exécution régulière
+
+  // Pour mettre a jour le véhicule actuelle
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (geofenceData.length <= 0) {
+        GeofenceDataFonction();
+        console.log("Pas de donnee dans geofence >>>>>>>>>>>>>>>>>>>>>>>>>>");
+      } else {
+        console.log(" des donnee dans geofence 111111111111111111111111111111");
+      }
+    }, 4000);
 
     return () => clearInterval(intervalId);
   }, []); // Pas de dépendances, exécution régulière
@@ -2263,9 +2547,9 @@ const DataContextProvider = ({ children }) => {
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
-        console.error(
-          "Quota dépassé pour rapportVehicleDetails : essayez de réduire la taille des données ou de nettoyer localStorage."
-        );
+        // console.error(
+        //   "Quota dépassé pour rapportVehicleDetails : essayez de réduire la taille des données ou de nettoyer localStorage."
+        // );
       } else {
         console.error("Erreur de stockage : ", error);
       }
@@ -2278,9 +2562,21 @@ const DataContextProvider = ({ children }) => {
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
-        console.error(
-          "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-        );
+        // console.error(
+        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        // );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
+
+    try {
+      localStorage.setItem("geofenceData", JSON.stringify(geofenceData));
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        // console.error(
+        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        // );
       } else {
         console.error("Erreur de stockage : ", error);
       }
@@ -2290,6 +2586,7 @@ const DataContextProvider = ({ children }) => {
     vehicleDetails,
     rapportVehicleDetails,
     mergedData,
+    geofenceData,
   ]);
 
   // Pour mettre a jour mergedData
@@ -2544,6 +2841,8 @@ const DataContextProvider = ({ children }) => {
         rapportGroupePDFtRef,
         centrerAutoMapTrajet,
         setCentrerAutoMapTrajet,
+        GeofenceDataFonction,
+        geofenceData,
       }}
     >
       {children}

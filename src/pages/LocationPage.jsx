@@ -23,6 +23,7 @@ const LocationPage = () => {
     selectedVehicleToShowInMap,
     setSelectedVehicleToShowInMap,
     currentVéhicule,
+    currentDataFusionné,
   } = useContext(DataContext);
   let x;
   //
@@ -44,7 +45,7 @@ const LocationPage = () => {
   const dataFusionné = mergedData ? Object.values(mergedData) : [];
 
   // filtrer la liste des véhicules pour avoir seulement les véhicules avec des details
-  const vehiculeActive = dataFusionné.filter(
+  const vehiculeActive = currentDataFusionné.filter(
     (véhicule) =>
       véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
   );

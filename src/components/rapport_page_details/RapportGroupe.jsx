@@ -61,6 +61,12 @@ function RapportGroupe({
   //
   const dataFusionneeHome = mergedData ? Object.values(mergedData) : [];
 
+  //
+  //
+  //
+  //
+  //
+  //
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
 
@@ -71,6 +77,24 @@ function RapportGroupe({
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   //
   //
+  //
+  //
+  //
+  //
+  //
+  const véhiculeHorsService2 = dataFusionneeHome.filter((véhicule, index) => {
+    const hasDetails =
+      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0;
+
+    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+    const lastUpdateTimeMs = véhicule.lastUpdateTime
+      ? véhicule.lastUpdateTime * 1000
+      : 0;
+    const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    return !hasDetails || !isActive;
+  });
+
   //
   //
   //
@@ -1164,6 +1188,7 @@ function RapportGroupe({
   x;
 
   // Vehicule en stationnement actuellement
+  // const notActiveVehicleCount = dataFusionneeHome?.filter((véhicule) => {
   const notActiveVehicleCount = currentDataFusionné?.filter((véhicule) => {
     // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
     const isNotSpeedActive =
@@ -1610,7 +1635,7 @@ function RapportGroupe({
                     let main_text_color = "text-red-900 dark:text-red-300";
                     let statut = "";
                     let lite_bg_color =
-                      "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-950/20";
+                      "bg-red-100/40 dark:bg-gray-900/40 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-red-600/80 shadow---lg shadow---gray-950/20";
                     let activeTextColor = "text-red-900 dark:text-red-200";
                     let active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
                     let vitess_img = "img/cars/orange_vitess.png";
@@ -1632,14 +1657,14 @@ function RapportGroupe({
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = "En mouvement rapide";
                       lite_bg_color =
-                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-green-600/80  shadow---lg shadow---gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
                       active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
                       vitess_img = "/img/home_icon/active.png";
                       vitess_img_dark = "/img/home_icon/rapport_active.png";
                       imgClass = "w-12  h-auto sm:w-14 md:w-20";
                       imgBg =
-                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow---gray-600 shadow---md shadow---green-200 ";
                       border_top =
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
                     } else if (
@@ -1654,7 +1679,7 @@ function RapportGroupe({
                       main_text_color = "text-red-900 dark:text-red-300";
                       statut = "En Stationnement";
                       lite_bg_color =
-                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-red-600/80 shadow---lg shadow---gray-900/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
                       active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
                       vitess_img = "/img/home_icon/rapport_parking2.png";
@@ -1662,7 +1687,7 @@ function RapportGroupe({
 
                       imgClass = "w-14  h-auto sm:w-16 md:w-24";
                       imgBg =
-                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow---gray-600 shadow---md shadow---red-200 ";
                       border_top =
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
@@ -1671,7 +1696,7 @@ function RapportGroupe({
                       main_text_color = "text-purple-900 dark:text-purple-300 ";
                       statut = "Hors service";
                       lite_bg_color =
-                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow---lg shadow---gray-950/20";
                       activeTextColor = "text-purple-900 dark:text-purple-200";
                       active_bg_color =
                         "bg-purple-200/50 dark:bg-purple-600/50";
@@ -1680,7 +1705,7 @@ function RapportGroupe({
 
                       imgClass = "w-14  h-auto sm:w-16 md:w-24";
                       imgBg =
-                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
+                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow---gray-600 shadow---md shadow---purple-200 ";
                       border_top =
                         "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
                     }
@@ -1697,7 +1722,7 @@ function RapportGroupe({
                       main_text_color = "text-red-900 dark:text-red-300";
                       statut = "En Stationnement";
                       lite_bg_color =
-                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-red-600/80 shadow---lg shadow---gray-900/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
                       active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
                       vitess_img = "/img/home_icon/rapport_parking2.png";
@@ -1705,7 +1730,7 @@ function RapportGroupe({
 
                       imgClass = "w-14  h-auto sm:w-16 md:w-24";
                       imgBg =
-                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow---gray-600 shadow---md shadow---red-200 ";
                       border_top =
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
@@ -1719,14 +1744,14 @@ function RapportGroupe({
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = "En mouvement rapide";
                       lite_bg_color =
-                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-green-600/80  shadow---lg shadow---gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
                       active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
                       vitess_img = "/img/home_icon/active.png";
                       vitess_img_dark = "/img/home_icon/rapport_active.png";
                       imgClass = "w-12  h-auto sm:w-14 md:w-20";
                       imgBg =
-                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow---gray-600 shadow---md shadow---green-200 ";
                       border_top =
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
                     }
@@ -1736,21 +1761,21 @@ function RapportGroupe({
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = "En mouvement rapide";
                       lite_bg_color =
-                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-green-600/80  shadow---lg shadow---gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
                       active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
                       vitess_img = "/img/home_icon/active.png";
                       vitess_img_dark = "/img/home_icon/rapport_active.png";
                       imgClass = "w-12  h-auto sm:w-14 md:w-20";
                       imgBg =
-                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow---gray-600 shadow---md shadow---green-200 ";
                       border_top =
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
                     } else if (isSearching && hasDetails && noSpeed) {
                       main_text_color = "text-red-900 dark:text-red-300";
                       statut = "En Stationnement";
                       lite_bg_color =
-                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-red-600/80 shadow---lg shadow---gray-900/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
                       active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
                       vitess_img = "/img/home_icon/rapport_parking2.png";
@@ -1758,7 +1783,7 @@ function RapportGroupe({
 
                       imgClass = "w-14  h-auto sm:w-16 md:w-24";
                       imgBg =
-                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow---gray-600 shadow---md shadow---red-200 ";
                       border_top =
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
@@ -1767,7 +1792,7 @@ function RapportGroupe({
                       main_text_color = "text-purple-900 dark:text-purple-300 ";
                       statut = "Hors service";
                       lite_bg_color =
-                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow---gray-600/50 dark:shadow---lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow---lg shadow---gray-950/20";
                       activeTextColor = "text-purple-900 dark:text-purple-200";
                       active_bg_color =
                         "bg-purple-200/50 dark:bg-purple-600/50";
@@ -1776,7 +1801,7 @@ function RapportGroupe({
 
                       imgClass = "w-14  h-auto sm:w-16 md:w-24";
                       imgBg =
-                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
+                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow---gray-600 shadow---md shadow---purple-200 ";
                       border_top =
                         "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
                     }
@@ -1789,7 +1814,7 @@ function RapportGroupe({
                             handleClick(véhicule);
                           }}
                           key={index}
-                          className="bg-white relative rounded-lg dark:bg-gray-800 dark:shadow-gray-600"
+                          className="bg-white relative rounded-lg dark:bg-gray-800 dark:shadow---gray-600"
                         >
                           <div
                             className={`${active_bg_color} ${main_text_color} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-4 pb-4 font-bold text-lg `}
@@ -1797,7 +1822,7 @@ function RapportGroupe({
                             {index + 1}
                           </div>
                           <div
-                            className={` py-6 ${lite_bg_color} dark:border-l-[.5rem] dark:border-green-800 dark:bg-gray-900/50 dark:shadow-gray-700 shadow-md rounded-lg p-3`}
+                            className={` py-6 ${lite_bg_color} dark:border-l-[.5rem] dark:border-green-800 dark:bg-gray-900/50 dark:shadow---gray-700 shadow---md rounded-lg p-3`}
                           >
                             <div className="flex items-stretch relative gap-3 md:py-6--">
                               <div
@@ -2076,7 +2101,7 @@ function RapportGroupe({
                   setVoirTrajetDansLaCarte(false);
                 }}
               >
-                <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
+                <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow---xl">
                   <IoClose className="text-white text-[1.52rem]" />
                 </div>
               </button>
@@ -2849,7 +2874,7 @@ function RapportGroupe({
           Rapport détaillé en groupe
         </h1>
         {preparationDownloadPDF && <p className="min-h-[4rem]"></p>}
-        <div className="shadow-md dark:bg-gray-800 dark:shadow-gray-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
+        <div className="shadow---md dark:bg-gray-800 dark:shadow---gray-lg dark:shadow---gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
           <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
             <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -3107,7 +3132,7 @@ function RapportGroupe({
           {/*  */}
           {/* Vehicule en mouvement en premier */}
           {/* {vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 && ( */}
-          <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
+          <div className="shadow---md mt-10 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
                 Véhicule en mouvement en 1er
@@ -3221,7 +3246,7 @@ function RapportGroupe({
                           positionDansCarte(vehiclesByDepartureTime[0]);
                           setVoirTrajetDansLaCarte(true);
                         }}
-                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                        className="mx-l px-4 text-white border border-orange-200 shadow---lg-- shadow---gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
                         Voir sur la carte
                       </button>
@@ -3230,7 +3255,7 @@ function RapportGroupe({
                       onClick={() => {
                         settableDeplacement(true);
                       }}
-                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow---lg-- shadow---gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
                       Plus d'info
                     </button>
@@ -3262,7 +3287,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/* véhicule en mouvement en premier */}
-          <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
+          <div className="shadow---md mt-10 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -3385,7 +3410,7 @@ function RapportGroupe({
 
                           setVoirTrajetDansLaCarte(true);
                         }}
-                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                        className="mx-l px-4 text-white border border-orange-200 shadow---lg-- shadow---gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
                         Voir sur la carte
                       </button>
@@ -3394,7 +3419,7 @@ function RapportGroupe({
                       onClick={() => {
                         settableDistance(true);
                       }}
-                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow---lg-- shadow---gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
                       Plus d'info
                     </button>
@@ -3430,7 +3455,7 @@ function RapportGroupe({
           {/*  */}
           {/*  */}
           {/* véhicule en mouvement plus longtemps */}
-          <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
+          <div className="shadow---md mt-10 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -3557,7 +3582,7 @@ function RapportGroupe({
 
                           setVoirTrajetDansLaCarte(true);
                         }}
-                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                        className="mx-l px-4 text-white border border-orange-200 shadow---lg-- shadow---gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
                         Voir sur la carte
                       </button>
@@ -3566,7 +3591,7 @@ function RapportGroupe({
                       onClick={() => {
                         settableActivite(true);
                       }}
-                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow---lg-- shadow---gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
                       Plus d'info
                     </button>
@@ -3603,7 +3628,7 @@ function RapportGroupe({
           {/*  */}
 
           {/* véhicule avec la vitesse maximale */}
-          <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
+          <div className="shadow---md mt-10 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -3728,7 +3753,7 @@ function RapportGroupe({
                           positionDansCarte(vehiclesByMaxSpeed[0]);
                           setVoirTrajetDansLaCarte(true);
                         }}
-                        className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
+                        className="mx-l px-4 text-white border border-orange-200 shadow---lg-- shadow---gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                       >
                         Voir sur la carte
                       </button>
@@ -3737,7 +3762,7 @@ function RapportGroupe({
                       onClick={() => {
                         settablevitesse(true);
                       }}
-                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
+                      className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow---lg-- shadow---gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
                       Plus d'info
                     </button>
@@ -3766,7 +3791,7 @@ function RapportGroupe({
                   // behavior: "smooth", // Défilement fluide
                 });
               }}
-              className="p-4 text-center  py-1 my-4 rounded-lg cursor-pointer shadow-lg shadow-gray-400/20 bg-orange-500/80 mt-8"
+              className="p-4 text-center  py-1 my-4 rounded-lg cursor-pointer shadow---lg shadow---gray-400/20 bg-orange-500/80 mt-8"
             >
               <p className="text-white font-semibold  cursor-pointer">
                 voir moins
@@ -3789,7 +3814,7 @@ function RapportGroupe({
         {/*  */}
         {/*  */}
         {/*  */}
-        <div className="shadow-md mt-10 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
+        <div className="shadow---md mt-10 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700 py-4  bg-orange-50 p-2 rounded-md flex-- items-start gap-4">
           <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
             <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -3932,7 +3957,7 @@ function RapportGroupe({
         </div>
         {/* {preparationDownloadPDF && <p className="min-h-[11rem]"></p>} */}
         {!preparationDownloadPDF && (
-          <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
+          <div className="shadow---md mt-20  py-3 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
             <MdLocationPin className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
               Position des véhicules{" "}
@@ -3951,7 +3976,7 @@ function RapportGroupe({
                       setSelectedVehicleToShowInMap(null);
                     }}
                   >
-                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
+                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow---xl">
                       <IoClose className="text-white text-[1.52rem]" />
                     </div>
                   </button>
@@ -3963,13 +3988,13 @@ function RapportGroupe({
             ) : (
               <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
                 <button
-                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
+                  className="absolute shadow---lg shadow---gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
                   onClick={() => {
                     setzoomPosition(true);
                     setSelectedVehicleToShowInMap(null);
                   }}
                 >
-                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow---xl">
                     <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
                   </div>
                 </button>
@@ -3985,7 +4010,7 @@ function RapportGroupe({
           Exporter la table en Excel
         </button> */}
         {preparationDownloadPDF && <p className="min-h-[13rem]">.</p>}
-        <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
+        <div className="shadow---md mt-20  py-3 dark:bg-gray-800 dark:shadow---lg dark:shadow---gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
           <BsTable className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
           <div className="flex justify-between items-center  w-full">
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
@@ -4001,7 +4026,7 @@ function RapportGroupe({
                 Filtrer
               </p>
               {showsortfilterpupup && (
-                <div className="absolute z-[30] flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow-gray-900 dark:border shadow-lg shadow-gray-500 rounded-md p-3 top-10 -right-2 min-w-[20rem]">
+                <div className="absolute z-[30] flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow---gray-900 dark:border shadow---lg shadow---gray-500 rounded-md p-3 top-10 -right-2 min-w-[20rem]">
                   <div className="flex justify-between mb-2 items-center ">
                     <p className="text-orange-500  font-semibold">
                       Filtrer par :
@@ -4014,7 +4039,7 @@ function RapportGroupe({
                     />{" "}
                   </div>
 
-                  <div className="flex gap-2 mb-4 p-[.2rem] border  shadow-md shadow-orange-100 border-orange-100 rounded-lg justify-between">
+                  <div className="flex gap-2 mb-4 p-[.2rem] border  shadow---md shadow---orange-100 border-orange-100 rounded-lg justify-between">
                     <p
                       onClick={() => {
                         setTableSortCroissant(true);
