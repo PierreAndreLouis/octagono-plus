@@ -26,7 +26,7 @@ function HistoriquePage() {
   const [typeDeVue, setTypeDeVue] = useState(false);
 
   const {
-    mergedData,
+    mergedDataHome,
     currentVéhicule,
     loadingHistoriqueFilter,
     setShowListOption,
@@ -41,8 +41,6 @@ function HistoriquePage() {
     fetchHistoriqueVehicleDetails,
     currentDataFusionné,
     setSelectedVehicleToShowInMap,
-    centrerAutoMapTrajet,
-    setCentrerAutoMapTrajet,
   } = useContext(DataContext);
 
   let x;
@@ -147,24 +145,6 @@ function HistoriquePage() {
   //
   //
 
-  useEffect(() => {
-    // setvehicles(véhiculeData);
-    if (centrerAutoMapTrajet) {
-      // centerOnFirstMarker();
-    }
-  }, [véhiculeHistoriqueDetails, vehicles, currentVéhicule]);
-
-  useEffect(() => {
-    // setvehicles(véhiculeData);
-    // if (!centrerAutoMapTrajet) {
-    setCentrerAutoMapTrajet(true);
-    // }
-  }, [véhiculeHistoriqueDetails]);
-
-  setTimeout(() => {
-    setCentrerAutoMapTrajet(false);
-  }, 1000); // 15 secondes
-
   // type de carte
   const [mapType, setMapType] = useState("streets");
 
@@ -215,22 +195,34 @@ function HistoriquePage() {
     window.open(googleMapsUrl, "_blank"); // Ouvrir dans un nouvel onglet
   };
 
-  const dataFusionné = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // Pour afficher la liste des véhicules
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
   // Fonction pour centrer la carte sur le premier marqueur
+
+  const vehiclesRef = useRef(vehicles);
+
+  useEffect(() => {
+    vehiclesRef.current = vehicles;
+  }, [vehicles]);
+
+  useEffect(() => {
+    console.log("vehicles mise a jour..................");
+  }, [vehicles]);
+
   const centerOnFirstMarker = () => {
     if (mapRef.current && vehicles.length > 0) {
-      const { lastValidLatitude, lastValidLongitude } = vehicles[0];
+      const { lastValidLatitude, lastValidLongitude } = vehiclesRef.current[0];
       mapRef.current.setView([lastValidLatitude, lastValidLongitude], 13);
+      console.log("centrer la carte 33333333333333333333333333333333333333333");
     }
   };
 
   // Recherche du véhicule correspondant dans la liste
   const handleVehicleClick = (véhicule) => {
-    const deviceID = véhicule.deviceID;
+    const deviceID = véhicule?.deviceID;
     const foundVehicle = donneeFusionnéForRapport.find(
       (v) => v.deviceID === deviceID
     );
@@ -239,19 +231,19 @@ function HistoriquePage() {
       setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
       setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
 
-      // setInterval(() => {
-      //   // setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
-      //   // setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
-      // }, 2000);
+      centerOnFirstMarker();
+      setTimeout(() => {
+        centerOnFirstMarker();
+      }, 500);
     } else {
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
     setShowVehiculeListe(!showVehiculeListe);
-    // centerOnFirstMarker();
-    // setTimeout(() => {
-    //   centerOnFirstMarker();
-    // }, 1000); // 1 secondes
-    // // ....................
+    centerOnFirstMarker();
+
+    setTimeout(() => {
+      centerOnFirstMarker();
+    }, 500);
   };
 
   const handleCheckboxChange = (name) => {
@@ -295,14 +287,6 @@ function HistoriquePage() {
     véhicule.lastValidLatitude,
     véhicule.lastValidLongitude,
   ]);
-
-  //   // Fonction pour centrer la carte sur le premier marqueur
-  // const centerOnFirstMarkerAnimation = () => {
-  //   if (mapRef.current && vehicles.length > 0) {
-  //     const { lastValidLatitude, lastValidLongitude } = vehicles[vehicles?.length - 1];
-  //     mapRef.current.setView([lastValidLatitude, lastValidLongitude], 14);
-  //   }
-  // };
 
   // Pour afficher le popup du choix de la date
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -479,7 +463,6 @@ function HistoriquePage() {
           <HistoriqueHeader
             setShowHistoriqueInMap={setShowHistoriqueInMap}
             showHistoriqueInMap={showHistoriqueInMap}
-            centerOnFirstMarker={centerOnFirstMarker}
             setShowVehiculeListe={setShowVehiculeListe}
             showVehiculeListe={showVehiculeListe}
             currentVéhicule={currentVéhicule}
@@ -499,6 +482,8 @@ function HistoriquePage() {
                 handleClick={handleVehicleClick}
                 currentVéhicule={currentVéhicule}
                 isMapcomponent="false"
+                vehicles={vehicles}
+                mapRef={mapRef}
               />
             </div>
           )}
@@ -553,7 +538,6 @@ function HistoriquePage() {
               // currentLocation={currentLocation}
               customMarkerIcon={customMarkerIcon}
               positions={positions}
-              centerOnFirstMarker={centerOnFirstMarker}
               showHistoriqueInMap={showHistoriqueInMap}
               openGoogleMaps={openGoogleMaps}
               composantLocationPage={"historique"}

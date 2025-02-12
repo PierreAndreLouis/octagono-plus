@@ -4,13 +4,13 @@ import Tooltip from "@mui/material/Tooltip";
 
 function Statistics() {
   const {
-    mergedData,
+    mergedDataHome,
     setStatisticFilterInHomePage,
     setStatisticFilterTextInHomePage,
     statisticFilterTextInHomePage,
   } = useContext(DataContext);
 
-  const vehicleArray = mergedData ? Object.values(mergedData) : [];
+  const vehicleArray = mergedDataHome ? Object.values(mergedDataHome) : [];
   let x;
   //
   //
@@ -54,15 +54,15 @@ function Statistics() {
   const activeVehicleCount = vehicleArray.filter((véhicule) => {
     // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
     const isSpeedActive =
-      véhicule.véhiculeDetails &&
-      véhicule.véhiculeDetails[0] &&
-      véhicule.véhiculeDetails[0].speedKPH > 0;
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].speedKPH > 0;
 
     // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
     const lastUpdateTimestampMs =
-      véhicule.véhiculeDetails &&
-      véhicule.véhiculeDetails[0] &&
-      véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
     // Vérifie si la mise à jour est récente (moins de 30 minutes)
@@ -71,8 +71,8 @@ function Statistics() {
       currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
-    const lastUpdateTimeMs = véhicule.lastUpdateTime
-      ? véhicule.lastUpdateTime * 1000
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime
+      ? véhicule?.lastUpdateTime * 1000
       : 0;
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
@@ -93,28 +93,28 @@ function Statistics() {
   const filteredVehicles = vehicleArray.filter((véhicule) => {
     // Vérifie si le véhicule a des détails
     const hasDetails =
-      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0;
+      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
 
     // Vérifie la vitesse (noSpeed)
-    const noSpeed = véhicule.véhiculeDetails?.every(
+    const noSpeed = véhicule?.véhiculeDetails?.every(
       (detail) => detail.speedKPH <= 0
     );
 
     // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-    const lastUpdateTimeMs = véhicule.lastUpdateTime
-      ? véhicule.lastUpdateTime * 1000
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime
+      ? véhicule?.lastUpdateTime * 1000
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     const lastUpdateTimestampMs =
-      véhicule.véhiculeDetails &&
-      véhicule.véhiculeDetails[0] &&
-      véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
     const isSpeedActive =
-      véhicule.véhiculeDetails &&
-      véhicule.véhiculeDetails[0] &&
-      véhicule.véhiculeDetails[0].speedKPH > 0;
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].speedKPH > 0;
 
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
@@ -147,7 +147,7 @@ function Statistics() {
   const filteredVehiclesInactifs = vehicleArray.filter((véhicule) => {
     // Vérifier si le véhicule n'a pas de détails
     const noDetails =
-      !véhicule.véhiculeDetails || véhicule.véhiculeDetails.length === 0;
+      !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
 
     // Vérifier si le véhicule est inactif
     const lastUpdateTime = véhicule?.lastUpdateTime;

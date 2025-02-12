@@ -8,7 +8,7 @@ import "./style.css";
 
 function Liste() {
   const {
-    mergedData,
+    mergedDataHome,
     setCurrentVéhicule,
     setSelectedVehicleToShowInMap,
     isHomePageLoading,
@@ -36,7 +36,7 @@ function Liste() {
   const dataFusionné = statisticFilterInHomePage
     ? Object.values(statisticFilterInHomePage)
     : [];
-  const dataFusionné_2 = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné_2 = mergedDataHome ? Object.values(mergedDataHome) : [];
   //
   //
   //
@@ -58,8 +58,8 @@ function Liste() {
           véhicule?.simPhoneNumber
             .toLowerCase()
             .includes(searchQueryForHeader.toLowerCase()) ||
-          (véhicule.véhiculeDetails?.[0]?.address &&
-            véhicule.véhiculeDetails[0].address
+          (véhicule?.véhiculeDetails?.[0]?.address &&
+            véhicule?.véhiculeDetails[0].address
               .toLowerCase()
               .includes(searchQueryForHeader.toLowerCase()))
       )
@@ -92,7 +92,7 @@ function Liste() {
   // Fonction pour choisir le véhicule actuel depuis la liste dans la page home
   const handleClick = (véhicule) => {
     setCurrentVéhicule(véhicule);
-    setSelectedVehicleToShowInMap(véhicule.deviceID);
+    setSelectedVehicleToShowInMap(véhicule?.deviceID);
     setShowListOption(true);
     setSearchDonneeFusionnéForRapport([]);
     console.log("véhicule cliquer:", véhicule);
@@ -114,8 +114,9 @@ function Liste() {
       {isHomePageLoading ? (
         <p>Chargement des données...</p>
       ) : filteredData.length > 0 ? (
+        // filteredData.map((véhicule, index) => {
         filteredData.map((véhicule, index) => {
-          const speed = véhicule.véhiculeDetails?.[0]?.speedKPH || 0;
+          const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
 
           let main_text_color = "text-red-900 dark:text-red-300";
           let statut = "";
@@ -152,37 +153,37 @@ function Liste() {
           //
           x;
 
-          const isMoving = véhicule.véhiculeDetails?.some(
+          const isMoving = véhicule?.véhiculeDetails?.some(
             (detail) => detail.speedKPH >= 1
           );
 
           const hasDetails =
-            véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0;
+            véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
 
-          // const noSpeed = véhicule.véhiculeDetails?.every(
+          // const noSpeed = véhicule?.véhiculeDetails?.every(
           //   (detail) => detail.speedKPH <= 0
           // );
 
           const noSpeed =
-            véhicule.véhiculeDetails &&
-            véhicule.véhiculeDetails[0] &&
-            véhicule.véhiculeDetails[0].speedKPH <= 0;
+            véhicule?.véhiculeDetails &&
+            véhicule?.véhiculeDetails[0] &&
+            véhicule?.véhiculeDetails[0].speedKPH <= 0;
 
           // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-          const lastUpdateTimeMs = véhicule.lastUpdateTime
-            ? véhicule.lastUpdateTime * 1000
+          const lastUpdateTimeMs = véhicule?.lastUpdateTime
+            ? véhicule?.lastUpdateTime * 1000
             : 0;
           const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
           const lastUpdateTimestampMs =
-            véhicule.véhiculeDetails &&
-            véhicule.véhiculeDetails[0] &&
-            véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+            véhicule?.véhiculeDetails &&
+            véhicule?.véhiculeDetails[0] &&
+            véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
           const isSpeedActive =
-            véhicule.véhiculeDetails &&
-            véhicule.véhiculeDetails[0] &&
-            véhicule.véhiculeDetails[0].speedKPH > 0;
+            véhicule?.véhiculeDetails &&
+            véhicule?.véhiculeDetails[0] &&
+            véhicule?.véhiculeDetails[0].speedKPH > 0;
 
           // Vérifie si la mise à jour est récente (moins de 30 minutes)
           const isStillSpeedActive =
@@ -278,7 +279,7 @@ function Liste() {
             <div className="bg-white dark:bg-gray-800">
               <div
                 onClick={() => handleClick(véhicule)}
-                key={véhicule.deviceID}
+                key={véhicule?.deviceID}
                 className={` ${lite_bg_color} shadow-md relative rounded-lg p-3 border-2-- border-red-500--`}
               >
                 <div
@@ -326,7 +327,7 @@ function Liste() {
                           </h3>
                         </div>
 
-                        {véhicule.véhiculeDetails?.[0]?.timestamp ? (
+                        {véhicule?.véhiculeDetails?.[0]?.timestamp ? (
                           <div className="flex items-center gap-1">
                             <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl" />
                             <h3 className="text-sm sm:text-sm md:text-[1rem] lg:text-lg--">
@@ -355,8 +356,8 @@ function Liste() {
                         </div>
                         {/* Adresse du véhicule */}
                         <p className=" text-md felx sm:flex text-gray-600 mt-2 md:text-[1.1rem] dark:text-gray-300">
-                          {véhicule.véhiculeDetails?.[0]?.backupAddress ||
-                            véhicule.véhiculeDetails?.[0]?.address ||
+                          {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
+                            véhicule?.véhiculeDetails?.[0]?.address ||
                             "Adresse non disponible"}
                         </p>
                       </div>
@@ -372,8 +373,8 @@ function Liste() {
                     >
                       Adresse :{" "}
                     </span>
-                    {véhicule.véhiculeDetails?.[0]?.backupAddress ||
-                      véhicule.véhiculeDetails?.[0]?.address ||
+                    {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
+                      véhicule?.véhiculeDetails?.[0]?.address ||
                       "Adresse non disponible"}
                   </p>
                 </div>

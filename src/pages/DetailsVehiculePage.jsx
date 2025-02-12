@@ -9,7 +9,7 @@ import SearchVehiculePupup from "../components/rapport_page_details/SearchVehicu
 function DetailsVehiculePage() {
   const {
     currentVéhicule,
-    mergedData,
+    mergedDataHome,
     setCurrentVéhicule,
     currentDataFusionné,
   } = useContext(DataContext); // fetchVehicleDetails importée du contexte
@@ -27,7 +27,7 @@ function DetailsVehiculePage() {
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
   // Le data a utiliser
-  const dataFusionné = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // Pour définir le véhicule actuel
   const handleVehicleClick = (véhicule) => {

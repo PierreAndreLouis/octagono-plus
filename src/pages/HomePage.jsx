@@ -11,7 +11,7 @@ const Home = () => {
     isHomePageLoading,
     showListeOption,
     setShowListOption,
-    mergedData,
+    mergedDataHome,
     FormatDateHeure,
     homePageReload,
     statisticFilterInHomePage,
@@ -28,8 +28,8 @@ const Home = () => {
 
   let x;
   useEffect(() => {
-    // console.log(mergedData);
-  }, [mergedData]);
+    // console.log(mergedDataHome);
+  }, [mergedDataHome]);
 
   //
   //
@@ -87,17 +87,19 @@ const Home = () => {
     const validTimestamps = data
       .filter(
         (véhicule) =>
-          Array.isArray(véhicule.véhiculeDetails) &&
-          véhicule.véhiculeDetails.length > 0
+          Array.isArray(véhicule?.véhiculeDetails) &&
+          véhicule?.véhiculeDetails.length > 0
       )
-      .map((véhicule) => parseInt(véhicule.véhiculeDetails[0].timestamp));
+      .map((véhicule) => parseInt(véhicule?.véhiculeDetails[0].timestamp));
 
     // Trouver le timestamp le plus récent
     const mostRecentTimestamp = Math.max(...validTimestamps);
 
     return { mostRecentTimestamp };
   }
-  const dataFusionnePourTimestamp = mergedData ? Object.values(mergedData) : [];
+  const dataFusionnePourTimestamp = mergedDataHome
+    ? Object.values(mergedDataHome)
+    : [];
 
   // Pour stocker le timestamp le plus récent lorsque "data" change
   const [lastUpdate, setLastUpdate] = useState(null);
@@ -106,7 +108,7 @@ const Home = () => {
   useEffect(() => {
     const result = getMostRecentTimestamp(dataFusionnePourTimestamp);
     setLastUpdate(result);
-  }, [mergedData]);
+  }, [mergedDataHome]);
 
   // pour la conversion en heure/minute/seconde
   const MiseAJourFormatDateHeure = FormatDateHeure(
@@ -244,7 +246,11 @@ const Home = () => {
     // console.log("mise a jour de Statistic header:", statisticFilterRef.current);
     setStatisticFilterInHomePage(statisticFilterRef.current);
     setStatisticFilterTextInHomePage(statisticFilterTextRef.current); // Met à jour l'état
-  }, [mergedData, statisticFilterInHomePage, statisticFilterTextInHomePage]);
+  }, [
+    mergedDataHome,
+    statisticFilterInHomePage,
+    statisticFilterTextInHomePage,
+  ]);
 
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -275,7 +281,11 @@ const Home = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [statisticFilterTextInHomePage, mergedData, statisticFilterInHomePage]);
+  }, [
+    statisticFilterTextInHomePage,
+    mergedDataHome,
+    statisticFilterInHomePage,
+  ]);
   //
   //
   //
@@ -294,20 +304,20 @@ const Home = () => {
   //
   x;
 
-  // const previousDataRef = useRef(JSON.stringify(mergedData)); // Utilisation de useRef
+  // const previousDataRef = useRef(JSON.stringify(mergedDataHome)); // Utilisation de useRef
 
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
-  //     const currentData = JSON.stringify(mergedData);
+  //     const currentData = JSON.stringify(mergedDataHome);
 
   //     if (currentData !== previousDataRef.current) {
   //       console.log(
-  //         "Données de mergedData changé VVVVVVVVVVVVVVVVVVVVVV :",
-  //         mergedData
+  //         "Données de mergedDataHome changé VVVVVVVVVVVVVVVVVVVVVV :",
+  //         mergedDataHome
   //       );
   //       previousDataRef.current = currentData; // Mise à jour de la référence
   //     } else {
-  //       console.log("Les données de mergedData sont inchangées.");
+  //       console.log("Les données de mergedDataHome sont inchangées.");
   //     }
   //   }, 3000);
 
@@ -367,23 +377,13 @@ const Home = () => {
       )}
       {/* <button
         onClick={() => {
-          GeofenceDataFonction();
+          // console.log(mergedDataHome);
+          console.log("geofenceData indexdb", geofenceData);
         }}
       >
         testeeeeeeeeeeeeeeeeeeeee
-      </button>
-sssssss
-      <button
-        onClick={() => {
-          console.log("Geofence data xxxxxxxxxxxxxxxxxxx:", geofenceData);
-          console.log("userData:", userData);
-          console.log("accountID:", account);
-          console.log("userID:", username);
-          console.log("password:", password);
-        }}
-      >
-        log console
       </button> */}
+
       {/* Liste des véhiculés */}
       <Liste setShowListOption={setShowListOption} />
       {/* Option pour chaque véhicule */}

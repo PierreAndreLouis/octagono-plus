@@ -13,13 +13,14 @@ function SearchVehiculePupup({
   currentVéhicule,
   isMapcomponent,
   setSearchQueryListPopup,
+  vehicles,
+  mapRef,
 }) {
   const {
     currentDataFusionné,
     selectedVehicleToShowInMap,
     setSelectedVehicleToShowInMap,
-    centrerAutoMapTrajet,
-    setCentrerAutoMapTrajet,
+
   } = useContext(DataContext);
 
   const [
@@ -38,15 +39,15 @@ function SearchVehiculePupup({
   const filteredVehiclesPupupByCategorie = filteredVehicles?.filter(
     (véhicule) => {
       const hasBeenMoving =
-        véhicule.véhiculeDetails &&
-        véhicule.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+        véhicule?.véhiculeDetails &&
+        véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
 
       const noSpeed =
-        véhicule.véhiculeDetails &&
-        véhicule.véhiculeDetails?.every((detail) => detail.speedKPH <= 0);
+        véhicule?.véhiculeDetails &&
+        véhicule?.véhiculeDetails?.every((detail) => detail.speedKPH <= 0);
 
-      const hasDetails = véhicule.véhiculeDetails.length > 0;
-      const noDetails = véhicule.véhiculeDetails.length <= 0;
+      const hasDetails = véhicule?.véhiculeDetails.length > 0;
+      const noDetails = véhicule?.véhiculeDetails.length <= 0;
 
       // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
       const lastUpdateTimeMs = véhicule?.lastUpdateTime
@@ -191,20 +192,21 @@ function SearchVehiculePupup({
         <div className="overflow-auto  mt-14 h-[55vh]">
           {filteredVehiclesPupupByCategorie?.length > 0 ? (
             filteredVehiclesPupupByCategorie?.map((véhicule, index) => {
-              const isMoving = véhicule.véhiculeDetails?.some(
+              const isMoving = véhicule?.véhiculeDetails?.some(
                 (detail) => detail.speedKPH >= 1
               );
 
               const hasDetails =
-                véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0;
+                véhicule?.véhiculeDetails &&
+                véhicule?.véhiculeDetails.length > 0;
 
-              const noSpeed = véhicule.véhiculeDetails?.every(
+              const noSpeed = véhicule?.véhiculeDetails?.every(
                 (detail) => detail.speedKPH <= 0
               );
 
               // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-              const lastUpdateTimeMs = véhicule.lastUpdateTime
-                ? véhicule.lastUpdateTime * 1000
+              const lastUpdateTimeMs = véhicule?.lastUpdateTime
+                ? véhicule?.lastUpdateTime * 1000
                 : 0;
               const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
@@ -224,8 +226,7 @@ function SearchVehiculePupup({
                   onClick={() => {
                     handleClick(véhicule);
                     setShowOptions(false);
-                    setSelectedVehicleToShowInMap(véhicule.deviceID);
-                    setCentrerAutoMapTrajet(true);
+                    setSelectedVehicleToShowInMap(véhicule?.deviceID);
                   }}
                   className={`${
                     véhicule.description ===

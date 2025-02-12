@@ -16,7 +16,8 @@ function InfoUserComponent({
   SelectedTimeZone,
   setChangeTimeZone,
 }) {
-  const { setUsername, homePageReload } = useContext(DataContext);
+  const { setUsername, homePageReload, resetIndexedDB } =
+    useContext(DataContext);
   // setUsername
   return (
     <div>
@@ -107,7 +108,7 @@ function InfoUserComponent({
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             Version de l'application :
           </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">11.02.03</p>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">12.02.01</p>
         </div>
 
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
@@ -116,6 +117,7 @@ function InfoUserComponent({
           </h3>
           <p
             onClick={() => {
+              resetIndexedDB(); // Vide le localStorage
               localStorage.clear(); // Vide le localStorage
               window.location.reload(); // Rafraîchit la page
             }}

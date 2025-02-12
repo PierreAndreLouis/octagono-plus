@@ -55,7 +55,6 @@ function TrajetVehicule({
   mapRef,
   tileLayers,
   positions,
-  centerOnFirstMarker,
   openGoogleMaps,
   composantLocationPage,
 }) {
@@ -70,8 +69,8 @@ function TrajetVehicule({
   } = useContext(DataContext);
   const geofences = geofenceData;
 
-  const [ajusterLaVitesse, setAjusterLaVitesse] = useState(0.5);
-  const [ajusterLaVitesseText, setAjusterLaVitesseText] = useState("Normal");
+  const [ajusterLaVitesse, setAjusterLaVitesse] = useState(1);
+  const [ajusterLaVitesseText, setAjusterLaVitesseText] = useState("Lent");
   const [centrerLaCarteAuto, setCentrerLaCarteAuto] = useState(true);
   const [centrerLaCarteAutoPopup, setCentrerLaCarteAutoPopup] = useState(false);
   const [voirInfoSurAnimation, setVoirInfoSurAnimation] = useState(false);
@@ -405,9 +404,16 @@ function TrajetVehicule({
         <button
           className="absolute z-[999] top-[5rem] right-[1rem]"
           // onClick={centerOnFirstMarkerAnimation}
-          onClick={
-            !isAnimating ? centerOnFirstMarker : centerOnFirstMarkerAnimation
-          }
+          // !isAnimating ? centerOnFirstMarker : centerOnFirstMarkerAnimation;
+          onClick={() => {
+            if (mapRef.current && vehicles.length > 0) {
+              const { lastValidLatitude, lastValidLongitude } = vehicles[0];
+              mapRef.current.setView(
+                [lastValidLatitude, lastValidLongitude],
+                13
+              );
+            }
+          }}
         >
           <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
             <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
@@ -617,33 +623,6 @@ function TrajetVehicule({
                   </div>
                 </div>
               </Tooltip>
-
-              {/* <Tooltip title="Inverser la direction du trajet">
-                <div
-                  onClick={() => {
-                    setIsReversed(!isReversed);
-                  }}
-                  className="max-w-[0rem]-- max-w-[100rem]   transition-all overflow-hidden"
-                >
-                  <div
-                    className={`${
-                      !isReversed ? "bg-gray-50" : "bg-gray-50"
-                    } min-w-[4rem] h-[2.3rem]   flex justify-center items-center rounded-lg border `}
-                  >
-                    {isReversed ? (
-                      <div className="flex gap-1 items-center">
-                        <FaCar className="text-xl text-gray-600" />
-                        <FaArrowRight className="text-lg text-gray-600" />
-                      </div>
-                    ) : (
-                      <div className="flex gap-1 items-center">
-                        <FaArrowLeft className="text-lg text-red-600" />
-                        <FaCar className="text-xl text-red-600" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Tooltip> */}
 
               <Tooltip title="Vois des details sur le trajet">
                 <div

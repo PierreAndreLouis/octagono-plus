@@ -146,6 +146,100 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
+  //
+
+  // Ouvrir la base de données
+  const openDatabase = () => {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open("MyDatabase", 1);
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+
+        if (!db.objectStoreNames.contains("mergedDataHome")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("mergedDataHome", { autoIncrement: true });
+        }
+
+        if (!db.objectStoreNames.contains("geofenceData")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("geofenceData", { autoIncrement: true });
+        }
+      };
+
+      request.onerror = (error) => reject(error);
+      request.onsuccess = (event) => resolve(event.target.result);
+    });
+  };
+
+  const saveDataToIndexedDB = (storeName, data) => {
+    openDatabase().then((db) => {
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
+
+      store.clear(); // Supprime les anciennes données
+
+      // Si data est un tableau, ajoute chaque élément séparément
+      if (Array.isArray(data)) {
+        data.forEach((item) => store.put(item));
+      } else {
+        store.put(data); // Ajoute l'objet directement sans enveloppe
+      }
+    });
+  };
+
+  // Lire les données depuis IndexedDB
+  const getDataFromIndexedDB = (storeName) => {
+    return openDatabase().then((db) => {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+        const request = store.getAll(); // Utilise getAll() pour tout récupérer
+
+        request.onsuccess = () => {
+          resolve(request.result || []); // Retourne un tableau vide si aucun résultat
+        };
+        request.onerror = () =>
+          reject("Erreur lors de la récupération des données.");
+      });
+    });
+  };
+
+  // Récupérer les données au chargement
+  useEffect(() => {
+    getDataFromIndexedDB("mergedDataHome").then((data) => {
+      if (data.length > 0) {
+        setMergedDataHome(data[0]);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getDataFromIndexedDB("geofenceData").then((data) => {
+      if (data.length > 0) {
+        setGeofenceData(data[0]);
+      }
+    });
+  }, []);
+
+  // Sauvegarder les données lorsqu'elles changent
+  useEffect(() => {
+    if (mergedDataHome) {
+      saveDataToIndexedDB("mergedDataHome", mergedDataHome);
+    }
+  }, [mergedDataHome]);
+
+  useEffect(() => {
+    if (geofenceData) {
+      saveDataToIndexedDB("geofenceData", geofenceData);
+    }
+  }, [geofenceData]);
+
+  // Réinitialiser IndexedDB
+  const resetIndexedDB = () => {
+    indexedDB.deleteDatabase("MyDatabase");
+    console.log("IndexedDB a été réinitialisé.");
+  };
 
   //
   //
@@ -185,18 +279,16 @@ const DataContextProvider = ({ children }) => {
   const [rapportDataLoading, setRapportDataLoading] = useState(false);
 
   // rapportVehicleDetails and véhiculeData together
-  // const [donneeFusionnéForRapport, setDonneeFusionnéForRapport] = useState(
-  //   () => {
-  //     const storedDonneeFusionnéForRapport = localStorage.getItem(
-  //       "donneeFusionnéForRapport"
-  //     );
-  //     return storedDonneeFusionnéForRapport
-  //       ? JSON.parse(storedDonneeFusionnéForRapport)
-  //       : [];
-  //   }
-  // );
-
-  const [donneeFusionnéForRapport, setDonneeFusionnéForRapport] = useState();
+  const [donneeFusionnéForRapport, setDonneeFusionnéForRapport] = useState(
+    () => {
+      const storedDonneeFusionnéForRapport = localStorage.getItem(
+        "donneeFusionnéForRapport"
+      );
+      return storedDonneeFusionnéForRapport
+        ? JSON.parse(storedDonneeFusionnéForRapport)
+        : [];
+    }
+  );
 
   // liste des véhicule ayant déplacer aujourd'hui
   const [véhiculeActiveToday, setVéhiculeActiveToday] = useState([]);
@@ -297,9 +389,6 @@ const DataContextProvider = ({ children }) => {
   // Historique page variables
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
-
-
-
 
   // to choose the only véhicule to show in the map
   const [selectedVehicleToShowInMap, setSelectedVehicleToShowInMap] =
@@ -459,125 +548,6 @@ const DataContextProvider = ({ children }) => {
   //
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //
-  //
-  //   //
-
-  // Ouvrir la base de données
-  const openDatabase = () => {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 1);
-
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-
-        if (!db.objectStoreNames.contains("mergedDataHome")) {
-          // Auto-incrémente sans keyPath pour stocker uniquement les données
-          db.createObjectStore("mergedDataHome", { autoIncrement: true });
-        }
-
-        if (!db.objectStoreNames.contains("geofenceData")) {
-          // Auto-incrémente sans keyPath pour stocker uniquement les données
-          db.createObjectStore("geofenceData", { autoIncrement: true });
-        }
-
-        if (!db.objectStoreNames.contains("donneeFusionnéForRapport")) {
-          // Auto-incrémente sans keyPath pour stocker uniquement les données
-          db.createObjectStore("donneeFusionnéForRapport", {
-            autoIncrement: true,
-          });
-        }
-      };
-
-      request.onerror = (error) => reject(error);
-      request.onsuccess = (event) => resolve(event.target.result);
-    });
-  };
-
-  const saveDataToIndexedDB = (storeName, data) => {
-    openDatabase().then((db) => {
-      const transaction = db.transaction([storeName], "readwrite");
-      const store = transaction.objectStore(storeName);
-
-      store.clear(); // Supprime les anciennes données
-
-      // Si data est un tableau, ajoute chaque élément séparément
-      if (Array.isArray(data)) {
-        data.forEach((item) => store.put(item));
-      } else {
-        store.put(data); // Ajoute l'objet directement sans enveloppe
-      }
-    });
-  };
-
-  // Lire les données depuis IndexedDB
-  const getDataFromIndexedDB = (storeName) => {
-    return openDatabase().then((db) => {
-      return new Promise((resolve, reject) => {
-        const transaction = db.transaction([storeName], "readonly");
-        const store = transaction.objectStore(storeName);
-        const request = store.getAll(); // Utilise getAll() pour tout récupérer
-
-        request.onsuccess = () => {
-          resolve(request.result || []); // Retourne un tableau vide si aucun résultat
-        };
-        request.onerror = () =>
-          reject("Erreur lors de la récupération des données.");
-      });
-    });
-  };
-
-  // Récupérer les données au chargement
-  useEffect(() => {
-    getDataFromIndexedDB("mergedDataHome").then((data) => {
-      if (data.length > 0) {
-        setMergedDataHome(data[0]);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    getDataFromIndexedDB("geofenceData").then((data) => {
-      if (data.length > 0) {
-        setGeofenceData(data);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
-      if (data.length > 0) {
-        setDonneeFusionnéForRapport(data);
-      }
-    });
-  }, []);
-
-  // Sauvegarder les données lorsqu'elles changent
-  useEffect(() => {
-    if (mergedDataHome) {
-      saveDataToIndexedDB("mergedDataHome", mergedDataHome);
-    }
-  }, [mergedDataHome]);
-
-  useEffect(() => {
-    console.log("geofenceData:", geofenceData);
-    if (geofenceData) {
-      saveDataToIndexedDB("geofenceData", geofenceData);
-    }
-  }, [geofenceData]);
-
-  useEffect(() => {
-    console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
-    if (donneeFusionnéForRapport) {
-      saveDataToIndexedDB("donneeFusionnéForRapport", donneeFusionnéForRapport);
-    }
-  }, [donneeFusionnéForRapport]);
-
-  // Réinitialiser IndexedDB
-  const resetIndexedDB = () => {
-    indexedDB.deleteDatabase("MyDatabase");
-    console.log("IndexedDB a été réinitialisé.");
-  };
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -802,7 +772,7 @@ const DataContextProvider = ({ children }) => {
     localStorage.removeItem("mergedDataHome");
     setMergedDataHome(null);
 
-    // localStorage.removeItem("donneeFusionnéForRapport");
+    localStorage.removeItem("donneeFusionnéForRapport");
     setDonneeFusionnéForRapport([]);
 
     setVéhiculeActiveToday([]);
@@ -940,20 +910,18 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Mapped Geofence Data:", geofences);
 
-      try {
-        setGeofenceData(geofences); // Mise à jour de la variable
-        // localStorage.setItem("geofenceData", JSON.stringify(geofences));
-      } catch (error) {
-        if (error.name === "QuotaExceededError") {
-          console.error(
-            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
-          );
-        } else {
-          console.error("Erreur de stockage : ", error);
-        }
-      }
-
-      setGeofenceData(geofences); // Mise à jour de la variable
+      // try {
+      //   setGeofenceData(geofences); // Mise à jour de la variable
+      //   localStorage.setItem("geofenceData", JSON.stringify(geofences));
+      // } catch (error) {
+      //   if (error.name === "QuotaExceededError") {
+      //     console.error(
+      //       "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
+      //     );
+      //   } else {
+      //     console.error("Erreur de stockage : ", error);
+      //   }
+      // }
 
       return geofences;
     } catch (error) {
@@ -1443,10 +1411,9 @@ const DataContextProvider = ({ children }) => {
     // Récupérer les anciens détails depuis localStorage
     const previousData = (() => {
       try {
-        const data = donneeFusionnéForRapport;
-        //  JSON.parse(
-        //   localStorage.getItem("donneeFusionnéForRapport")
-        // );
+        const data = JSON.parse(
+          localStorage.getItem("donneeFusionnéForRapport")
+        );
         return Array.isArray(data) ? data : [];
       } catch (error) {
         console.error(
@@ -1484,12 +1451,10 @@ const DataContextProvider = ({ children }) => {
     setDonneeFusionnéForRapport(dataFusionné);
 
     try {
-      setDonneeFusionnéForRapport(dataFusionné);
-
-      // localStorage.setItem(
-      //   "donneeFusionnéForRapport",
-      //   JSON.stringify(dataFusionné)
-      // );
+      localStorage.setItem(
+        "donneeFusionnéForRapport",
+        JSON.stringify(dataFusionné)
+      );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
         // console.error(
@@ -1998,7 +1963,7 @@ const DataContextProvider = ({ children }) => {
         setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
         setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
       }
-    }, 20000);
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, []); // Pas de dépendances, exécution régulière
@@ -2566,20 +2531,20 @@ const DataContextProvider = ({ children }) => {
       }
     }
 
-    // try {
-    //   localStorage.setItem(
-    //     "donneeFusionnéForRapport",
-    //     JSON.stringify(donneeFusionnéForRapport)
-    //   );
-    // } catch (error) {
-    //   if (error.name === "QuotaExceededError") {
-    //     // console.error(
-    //     //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-    //     // );
-    //   } else {
-    //     console.error("Erreur de stockage : ", error);
-    //   }
-    // }
+    try {
+      localStorage.setItem(
+        "donneeFusionnéForRapport",
+        JSON.stringify(donneeFusionnéForRapport)
+      );
+    } catch (error) {
+      if (error.name === "QuotaExceededError") {
+        // console.error(
+        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        // );
+      } else {
+        console.error("Erreur de stockage : ", error);
+      }
+    }
 
     // try {
     //   localStorage.setItem("geofenceData", JSON.stringify(geofenceData));
@@ -2593,7 +2558,7 @@ const DataContextProvider = ({ children }) => {
     //   }
     // }
   }, [
-    // donneeFusionnéForRapport,
+    donneeFusionnéForRapport,
     vehicleDetails,
     rapportVehicleDetails,
     // mergedDataHome,
@@ -2850,7 +2815,7 @@ const DataContextProvider = ({ children }) => {
         tableRef,
         rapportPersonnelPDFtRef,
         rapportGroupePDFtRef,
-   
+
         GeofenceDataFonction,
         geofenceData,
         resetIndexedDB,

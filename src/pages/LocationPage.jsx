@@ -19,7 +19,7 @@ L.Icon.Default.mergeOptions({
 
 const LocationPage = () => {
   const {
-    mergedData,
+    mergedDataHome,
     selectedVehicleToShowInMap,
     setSelectedVehicleToShowInMap,
     currentVéhicule,
@@ -42,31 +42,31 @@ const LocationPage = () => {
   const [typeDeVue, setTypeDeVue] = useState(false);
 
   // Le data converti en Objet
-  const dataFusionné = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // filtrer la liste des véhicules pour avoir seulement les véhicules avec des details
-  const vehiculeActive = currentDataFusionné.filter(
+  const vehiculeActive = currentDataFusionné?.filter(
     (véhicule) =>
-      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
+      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
   );
 
   // le formatage des véhicules afficher sur la carte
-  const véhiculeData = vehiculeActive.map((véhicule) => ({
-    deviceID: véhicule.deviceID || "---",
+  const véhiculeData = vehiculeActive?.map((véhicule) => ({
+    deviceID: véhicule?.deviceID || "---",
     description: véhicule.description || "Véhicule",
-    lastValidLatitude: véhicule.véhiculeDetails?.[0]?.latitude || "",
-    lastValidLongitude: véhicule.véhiculeDetails?.[0]?.longitude || "",
-    address: véhicule.véhiculeDetails?.[0]?.address || "",
+    lastValidLatitude: véhicule?.véhiculeDetails?.[0]?.latitude || "",
+    lastValidLongitude: véhicule?.véhiculeDetails?.[0]?.longitude || "",
+    address: véhicule?.véhiculeDetails?.[0]?.address || "",
     imeiNumber: véhicule?.imeiNumber || "",
     isActive: véhicule?.isActive || "",
     licensePlate: véhicule?.licensePlate || "",
     simPhoneNumber: véhicule?.simPhoneNumber || "",
-    speedKPH: véhicule.véhiculeDetails?.[0]?.speedKPH || 0,
+    speedKPH: véhicule?.véhiculeDetails?.[0]?.speedKPH || 0,
   }));
 
   // Pour afficher une seule véhicule sur la carte
   const handleVehicleClick = (véhicule) => {
-    setSelectedVehicleToShowInMap(véhicule.deviceID);
+    setSelectedVehicleToShowInMap(véhicule?.deviceID);
     setShowVehiculeListe(!showVehiculeListe);
   };
 
@@ -129,7 +129,7 @@ const LocationPage = () => {
         if (selectedVehicleToShowInMap) {
           // Si un véhicule est sélectionné, centrer sur lui
           const selectedVehicleData = vehicles.find(
-            (véhicule) => véhicule.deviceID === selectedVehicleToShowInMap
+            (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap
           );
           if (selectedVehicleData) {
             const { lastValidLatitude, lastValidLongitude } =

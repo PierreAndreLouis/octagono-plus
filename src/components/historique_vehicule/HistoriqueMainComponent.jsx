@@ -46,22 +46,22 @@ function HistoriqueMainComponent({
 
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  const targetDeviceID = "864893039477131";
+  // const targetDeviceID = "864893039477131";
 
-  const véhicule = currentDataFusionné.find(
-    (véhicule) => véhicule.deviceID === targetDeviceID
-  );
+  // const véhicule = currentDataFusionné?.find(
+  //   (véhicule) => véhicule?.deviceID === targetDeviceID
+  // );
 
-  if (véhicule) {
-    console.log("Véhicule trouvé :", véhicule);
-    console.log("VéhiculeDetails trouvé :", véhicule.véhiculeDetails);
-    console.log(
-      "VéhiculeDetails Length trouvé :",
-      véhicule.véhiculeDetails.length
-    );
-  } else {
-    console.log("Aucun véhicule trouvé avec ce deviceID.");
-  }
+  // if (véhicule) {
+  //   console.log("Véhicule trouvé :", véhicule);
+  //   console.log("VéhiculeDetails trouvé :", véhicule?.véhiculeDetails);
+  //   console.log(
+  //     "VéhiculeDetails Length trouvé :",
+  //     véhicule?.véhiculeDetails.length
+  //   );
+  // } else {
+  //   console.log("Aucun véhicule trouvé avec ce deviceID.");
+  // }
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   //

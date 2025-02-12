@@ -66,7 +66,7 @@ function AjouterPage() {
 
     // Vérification si deviceID existe déjà
     const deviceExists = véhiculeData.some(
-      (véhicule) => véhicule.deviceID === deviceID
+      (véhicule) => véhicule?.deviceID === deviceID
     );
 
     if (deviceExists) {
@@ -144,7 +144,6 @@ function AjouterPage() {
         setErrorMessage={setErrorMessage}
         handlePasswordCheck={handlePasswordCheck}
         setIsPasswordConfirmed={setShowConfirmAddVéhiculePopup}
-
       />
 
       {/* Popup pour Message de succès */}

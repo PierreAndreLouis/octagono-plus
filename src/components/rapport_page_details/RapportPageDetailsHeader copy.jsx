@@ -44,7 +44,7 @@ function RapportPageDetailsHeader({
 
   // const donneeVehiculeDetails = currentDataFusionné?.find(
   //   (véhicule) =>
-  //     véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
+  //     véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
   // )?.véhiculeDetails;
 
   // const premierDetail =
@@ -53,7 +53,7 @@ function RapportPageDetailsHeader({
 
   const donneeVehiculeDetails = currentDataFusionné?.find(
     (véhicule) =>
-      véhicule.véhiculeDetails && véhicule.véhiculeDetails.length > 0
+      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
   )?.véhiculeDetails;
 
   const premierDetail =
@@ -247,7 +247,7 @@ function RapportPageDetailsHeader({
           </div>
         )}
       </div>
-      {currentDataFusionné.length > 0 &&
+      {currentDataFusionné?.length > 0 &&
         (pageSection === "unite" || pageSection === "groupe") && (
           <div className="flex justify-between gap-3 px-4 ">
             <div className="sm:flex w-full   gap-10 max-w-[50rem] mx-4-- justify-start items-center ">

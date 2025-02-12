@@ -47,7 +47,7 @@ function HeaderLocation({
               {selectedVehicleToShowInMap
                 ? véhiculeData?.find(
                     (véhicule) =>
-                      véhicule.deviceID === selectedVehicleToShowInMap
+                      véhicule?.deviceID === selectedVehicleToShowInMap
                   )?.description || "Véhicule non disponible"
                 : "Choisir un véhicule"}
             </p>

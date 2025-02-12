@@ -14,7 +14,7 @@ function Modifier() {
     setError,
     deleteVehicle,
     password,
-    mergedData,
+    mergedDataHome,
     setCurrentVéhicule,
     createVéhiculeLoading,
     username,
@@ -57,7 +57,7 @@ function Modifier() {
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
   // Le data des véhicules
-  const dataFusionné = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // État pour chaque champ du formulaire
   const [addVéhiculeData, setAddVehicleData] = useState({

@@ -49,7 +49,7 @@ function RapportPageDetails() {
     rapportDataLoading,
     fetchSearchRapportVehicleDetails,
     setRapportDataLoading,
-    mergedData,
+    mergedDataHome,
     setSelectedVehicleToShowInMap,
     FormatDateHeure,
   } = useContext(DataContext);
@@ -89,7 +89,7 @@ function RapportPageDetails() {
     }, 2000); // Délai d'attente de 3 secondes
   };
 
-  const dataFusionné = mergedData ? Object.values(mergedData) : [];
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // Référence de la carte
   const mapRef = useRef();
@@ -99,7 +99,7 @@ function RapportPageDetails() {
   const [pageSection, setpageSection] = useState("unite");
 
   const handleClick = (véhicule) => {
-    const deviceID = véhicule.deviceID;
+    const deviceID = véhicule?.deviceID;
 
     // // Recherche du véhicule correspondant dans la liste
     const foundVehicle = currentDataFusionné.find(
@@ -876,7 +876,7 @@ function RapportPageDetails() {
 
     if (dataFusionné && dataFusionné.length > 0) {
       dataFusionné.forEach((véhicule) => {
-        fetchSearchRapportVehicleDetails(véhicule.deviceID, timeFrom, timeTo);
+        fetchSearchRapportVehicleDetails(véhicule?.deviceID, timeFrom, timeTo);
         setRapportDataLoading(true);
 
         console.log("TimeFrom---------", timeFrom);
@@ -972,7 +972,7 @@ function RapportPageDetails() {
     // handleDateChange(timeFrom, timeTo);
     if (dataFusionné && dataFusionné.length > 0) {
       dataFusionné.forEach((véhicule) => {
-        fetchSearchRapportVehicleDetails(véhicule.deviceID, timeFrom, timeTo);
+        fetchSearchRapportVehicleDetails(véhicule?.deviceID, timeFrom, timeTo);
         setRapportDataLoading(true);
         console.log("TimeFrom---------", timeFrom);
         console.log("TimeTo------", timeTo);
