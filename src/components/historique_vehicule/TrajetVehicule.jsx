@@ -412,16 +412,16 @@ function TrajetVehicule({
       const zoom = map.getZoom();
       // pppppppppppppppppppppppppppppppppp
       if (zoom >= 18) {
-        newSize = "24px";
-        newWidth = "17rem";
+        newSize = "15px";
+        newWidth = "14rem";
       } else if (zoom >= 16) {
-        newSize = "24px";
-        newWidth = "15rem";
+        newSize = "15px";
+        newWidth = "14rem";
       } else if (zoom >= 15) {
-        newSize = "24px";
+        newSize = "15px";
         newWidth = "14rem";
       } else if (zoom >= 14) {
-        newSize = "18px";
+        newSize = "15px";
         newWidth = "12rem";
       } else if (zoom >= 8) {
         newSize = "10px";
