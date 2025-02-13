@@ -279,7 +279,7 @@ function Liste() {
             <div className="bg-white dark:bg-gray-800">
               <div
                 onClick={() => handleClick(véhicule)}
-                key={véhicule?.deviceID}
+                key={index}
                 className={` ${lite_bg_color} shadow-md relative rounded-lg p-3 border-2-- border-red-500--`}
               >
                 <div

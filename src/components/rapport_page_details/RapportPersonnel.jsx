@@ -37,7 +37,7 @@ import HistoriqueMainComponent from "../historique_vehicule/HistoriqueMainCompon
 import MapComponent from "../location_vehicule/MapComponent";
 
 function RapportPersonnel({
-  currentVéhicule,
+  // currentVéhicule,
   heureActiveDebut,
   heureActiveFin,
   selectUTC,
@@ -94,7 +94,25 @@ function RapportPersonnel({
     FormatDateHeure,
     rapportPersonnelPDFtRef,
     searchDonneeFusionnéForRapport,
+    currentVéhicule,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
+
+  useEffect(() => {
+    if (currentDataFusionné?.length > 0) {
+      const updatedVéhicule = currentDataFusionné.find(
+        (véhicule) => véhicule?.deviceID === currentVéhicule?.deviceID
+      );
+      if (updatedVéhicule) {
+        setCurrentVéhicule(updatedVéhicule);
+        setVéhiculeHistoriqueDetails(updatedVéhicule?.véhiculeDetails);
+        setSelectedVehicleToShowInMap(updatedVéhicule.deviceID);
+      }
+    }
+  }, [currentDataFusionné]);
+
+  useEffect(() => {
+    console.log(currentVéhicule);
+  }, [currentVéhicule]);
 
   const formatTime = (hours, minutes, seconds) => {
     if (hours > 0 || minutes > 0 || seconds > 0) {
