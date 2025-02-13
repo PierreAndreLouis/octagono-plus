@@ -298,9 +298,6 @@ const DataContextProvider = ({ children }) => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
 
-
-
-
   // to choose the only véhicule to show in the map
   const [selectedVehicleToShowInMap, setSelectedVehicleToShowInMap] =
     useState(null);
@@ -495,19 +492,20 @@ const DataContextProvider = ({ children }) => {
   };
 
   const saveDataToIndexedDB = (storeName, data) => {
-    openDatabase().then((db) => {
-      const transaction = db.transaction([storeName], "readwrite");
-      const store = transaction.objectStore(storeName);
+    if (data && data.length > 0) {
+      openDatabase().then((db) => {
+        const transaction = db.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
 
-      store.clear(); // Supprime les anciennes données
-
-      // Si data est un tableau, ajoute chaque élément séparément
-      if (Array.isArray(data)) {
-        data.forEach((item) => store.put(item));
-      } else {
-        store.put(data); // Ajoute l'objet directement sans enveloppe
-      }
-    });
+        store.clear(); // Supprime les anciennes données
+        // Si data est un tableau, ajoute chaque élément séparément
+        if (Array.isArray(data)) {
+          data.forEach((item) => store.put(item));
+        } else {
+          store.put(data); // Ajoute l'objet directement sans enveloppe
+        }
+      });
+    }
   };
 
   // Lire les données depuis IndexedDB
@@ -2850,7 +2848,7 @@ const DataContextProvider = ({ children }) => {
         tableRef,
         rapportPersonnelPDFtRef,
         rapportGroupePDFtRef,
-   
+
         GeofenceDataFonction,
         geofenceData,
         resetIndexedDB,
