@@ -82,18 +82,20 @@ function RapportGroupe({
   //
   //
   //
-  const véhiculeHorsService2 = dataFusionneeHome.filter((véhicule, index) => {
-    const hasDetails =
-      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
+  const véhiculeHorsService2 =
+    dataFusionneeHome &&
+    dataFusionneeHome?.filter((véhicule, index) => {
+      const hasDetails =
+        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
 
-    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-    const lastUpdateTimeMs = véhicule?.lastUpdateTime
-      ? véhicule?.lastUpdateTime * 1000
-      : 0;
-    const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+      // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+      const lastUpdateTimeMs = véhicule?.lastUpdateTime
+        ? véhicule?.lastUpdateTime * 1000
+        : 0;
+      const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    return !hasDetails || !isActive;
-  });
+      return !hasDetails || !isActive;
+    });
 
   //
   //
@@ -1054,9 +1056,9 @@ function RapportGroupe({
       currentDataFusionné &&
       currentDataFusionné.find((v) => v.deviceID === véhicule?.deviceID);
 
-    const matchedVehicle2 = dataFusionneeHome.find(
-      (v) => v.deviceID === véhicule?.deviceID
-    );
+    const matchedVehicle2 =
+      dataFusionneeHome &&
+      dataFusionneeHome?.find((v) => v.deviceID === véhicule?.deviceID);
 
     const isSpeedActive =
       matchedVehicle2.véhiculeDetails &&
@@ -1597,9 +1599,11 @@ function RapportGroupe({
                         (v) => v.deviceID === véhicule?.deviceID
                       );
 
-                    const matchedVehicle2 = dataFusionneeHome.find(
-                      (v) => v.deviceID === véhicule?.deviceID
-                    );
+                    const matchedVehicle2 =
+                      dataFusionneeHome &&
+                      dataFusionneeHome?.find(
+                        (v) => v.deviceID === véhicule?.deviceID
+                      );
 
                     const isSpeedActive =
                       matchedVehicle2.véhiculeDetails &&

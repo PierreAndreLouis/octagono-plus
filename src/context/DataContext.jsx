@@ -463,7 +463,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 1);
+      const request = indexedDB.open("MyDatabase", 2);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -492,23 +492,63 @@ const DataContextProvider = ({ children }) => {
   };
 
   const saveDataToIndexedDB = (storeName, data) => {
-    if (data && data.length > 0) {
-      openDatabase().then((db) => {
-        const transaction = db.transaction([storeName], "readwrite");
-        const store = transaction.objectStore(storeName);
-
-        store.clear(); // Supprime les anciennes données
-        // Si data est un tableau, ajoute chaque élément séparément
-        if (Array.isArray(data)) {
-          data.forEach((item) => store.put(item));
-        } else {
-          store.put(data); // Ajoute l'objet directement sans enveloppe
-        }
-      });
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      console.log("Aucune donnée à enregistrer.");
+      return;
     }
+    openDatabase().then((db) => {
+      const transaction = db.transaction([storeName], "readwrite");
+      const store = transaction.objectStore(storeName);
+
+      store.clear(); // Supprime les anciennes données
+      // Si data est un tableau, ajoute chaque élément séparément
+      if (Array.isArray(data)) {
+        data.forEach((item) => store.put(item));
+      } else {
+        store.put(data); // Ajoute l'objet directement sans enveloppe
+      }
+    });
   };
 
   // Lire les données depuis IndexedDB
+
+  // const saveDataToIndexedDB = (storeName, data) => {
+  //   if (!data || (Array.isArray(data) && data.length === 0)) {
+  //     console.log("Aucune nouvelle donnée à enregistrer.");
+  //     return;
+  //   }
+
+  //   openDatabase().then((db) => {
+  //     const transaction = db.transaction([storeName], "readwrite");
+  //     const store = transaction.objectStore(storeName);
+
+  //     // Récupère d'abord les données existantes
+  //     const getRequest = store.getAll();
+  //     getRequest.onsuccess = () => {
+  //       const existingData = getRequest.result;
+
+  //       // Si des données existent déjà et que de nouvelles arrivent
+  //       if (existingData.length > 0) {
+  //         // Supprime seulement celles qui doivent être mises à jour
+  //         existingData.forEach((item, index) => {
+  //           store.delete(index + 1); // Utilise l'index comme clé
+  //         });
+  //       }
+
+  //       // Ajoute les nouvelles données
+  //       if (Array.isArray(data)) {
+  //         data.forEach((item) => store.put(item));
+  //       } else {
+  //         store.put(data); // Ajoute l'objet directement
+  //       }
+  //     };
+
+  //     getRequest.onerror = () => {
+  //       console.error("Erreur lors de la récupération des données existantes.");
+  //     };
+  //   });
+  // };
+
   const getDataFromIndexedDB = (storeName) => {
     return openDatabase().then((db) => {
       return new Promise((resolve, reject) => {
