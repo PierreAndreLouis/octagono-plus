@@ -6,6 +6,7 @@ import {
   Popup,
   ScaleControl,
   AttributionControl,
+  useMap,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -169,6 +170,77 @@ function MapComponent({ mapType }) {
     window.open(googleMapsUrl, "_blank");
   };
 
+  // const map = useMap();
+  // const [textSize, setTextSize] = useState("12px");
+
+  // // Fonction pour ajuster la taille du texte en fonction du niveau de zoom
+  // const updateTextSize = () => {
+  //   const zoom = map.getZoom();
+  //   let newSize = "12px"; // Taille par défaut
+
+  //   if (zoom >= 18) newSize = "20px";
+  //   else if (zoom >= 15) newSize = "16px";
+  //   else if (zoom >= 12) newSize = "14px";
+  //   else if (zoom >= 10) newSize = "10px";
+  //   else newSize = "0px"; // Rendre le texte invisible
+
+  //   setTextSize(newSize);
+  // };
+
+  // // Mettre à jour la taille du texte lors du chargement de la carte et à chaque changement de zoom
+  // useEffect(() => {
+  //   updateTextSize();
+  //   map.on("zoomend", updateTextSize);
+  //   return () => {
+  //     map.off("zoomend", updateTextSize);
+  //   };
+  // }, [map]);
+
+  const [textSize, setTextSize] = useState("12px");
+  const [widthSize, setwidthSize] = useState("8rem");
+  const ZoomTextUpdater = () => {
+    const map = useMap();
+
+    const updateTextSize = () => {
+      let newSize = "12px";
+      let newWidth = "8rem";
+      const zoom = map.getZoom();
+      // pppppppppppppppppppppppppppppppppp
+      if (zoom >= 18) {
+        newSize = "24px";
+        newWidth = "17rem";
+      } else if (zoom >= 16) {
+        newSize = "24px";
+        newWidth = "15rem";
+      } else if (zoom >= 15) {
+        newSize = "24px";
+        newWidth = "14rem";
+      } else if (zoom >= 14) {
+        newSize = "18px";
+        newWidth = "12rem";
+      } else if (zoom >= 8) {
+        newSize = "10px";
+        newWidth = "8rem";
+      } else if (zoom >= 6) {
+        newSize = "6px";
+        newWidth = "6rem";
+      } else newSize = "0px";
+
+      setTextSize(newSize);
+      setwidthSize(newWidth);
+    };
+
+    useEffect(() => {
+      updateTextSize();
+      map.on("zoomend", updateTextSize);
+      return () => {
+        map.off("zoomend", updateTextSize);
+      };
+    }, [map]);
+
+    return null;
+  };
+
   return (
     <div>
       <MapContainer
@@ -185,22 +257,55 @@ function MapComponent({ mapType }) {
         <ScaleControl position="bottomright" />
         <AttributionControl position="bottomleft" />
 
-        {/* Affichage des géofences */}
-        {geofences?.map((geofence, index) => (
-          <Polygon
-            key={index}
-            positions={geofence.coordinates.map((point) => [
-              point.lat,
-              point.lng,
-            ])}
-            pathOptions={{
-              color: geofence.color || "", // Couleur de la bordure
-              fillColor: geofence.color || "#000000", // Couleur du fond
-              fillOpacity: 0.1, // Opacité du fond
-              weight: 1, // Épaisseur des lignes
-            }}
-          />
-        ))}
+        <ZoomTextUpdater />
+
+        {geofences?.map((geofence, index) => {
+          // Calculer le centre du geofence
+          const latitudes = geofence.coordinates.map((point) => point.lat);
+          const longitudes = geofence.coordinates.map((point) => point.lng);
+          const center = [
+            (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+            (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+          ];
+
+          return (
+            <React.Fragment key={index}>
+              <Polygon
+                positions={geofence.coordinates.map((point) => [
+                  point.lat,
+                  point.lng,
+                ])}
+                pathOptions={{
+                  color: geofence.color || "", // Couleur de la bordure
+                  fillColor: geofence.color || "#000000", // Couleur du fond
+                  fillOpacity: 0.1, // Opacité du fond
+                  weight: 1, // Épaisseur des lignes
+                }}
+              />
+
+              <Marker
+                position={center}
+                icon={L.divIcon({
+                  className: "geofence-label",
+                  html: `<div 
+                           class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
+                           
+                           style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
+                           ${geofence?.description}
+                           </div>`,
+                })}
+              />
+
+              {/* <Marker
+                         position={center}
+                         icon={L.divIcon({
+                           className: "geofence-label",
+                           html: `<div className="bg-red-600" style="font-size: ${textSize}; font-weight: bold; text-align: center; color: black; white-space: nowrap; text-overflow: ellipsis;">${geofence?.description}</div>`,
+                         })}
+                       /> */}
+            </React.Fragment>
+          );
+        })}
 
         {vehicles?.map((véhicule, index) => {
           const FormatDateHeureTimestamp = FormatDateHeure(véhicule.timestamp);

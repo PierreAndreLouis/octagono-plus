@@ -22,6 +22,11 @@ function SuccèsÉchecMessagePopup({
     header_bg = "bg-red-600";
     button_bg = "bg-red-500";
     text_color = "text-red-600";
+  } else {
+    body_bg = "bg-gray-50";
+    header_bg = "bg-gray-600";
+    button_bg = "bg-gray-500";
+    text_color = "text-gray-600";
   }
 
   return (
@@ -40,6 +45,10 @@ function SuccèsÉchecMessagePopup({
                 composant_from.includes("succès")
                   ? "Succès"
                   : "Échec"}
+
+                {composant_from === "Redémarrer l'application"
+                  ? "Redémarrer l'application"
+                  : ""}
               </h2>
             </div>
             <div>
@@ -60,6 +69,8 @@ function SuccèsÉchecMessagePopup({
                   "Échec de la modification du véhicule."}
                 {composant_from === "succès modification timezone" &&
                   "Le fuseau horaire prendra automatiquement effet lors de la prochaine mise à jour des véhicules."}
+                {composant_from === "Redémarrer l'application" &&
+                  "Êtes vous sur de redémarrer l'application ?"}
               </h3>
 
               {composant_from ===

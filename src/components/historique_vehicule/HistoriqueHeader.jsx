@@ -172,6 +172,10 @@ function HistoriqueHeader({
             </Tooltip>
           </div>
         </div>
+        {/* <div className="border py-.5 px-1 rounded-lg bg-orange-600 text-clip">
+          {" "}
+          La maison de Monsieur Pedro
+        </div> */}
         <div className="px-4 flex justify-center items-center py-1 ">
           <p className="font-semibold text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
             {" "}

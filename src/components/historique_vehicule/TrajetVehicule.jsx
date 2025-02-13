@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import TypeDeVue from "./TypeDeVue";
 import { MdCenterFocusStrong, MdClose } from "react-icons/md";
-import { Polyline } from "react-leaflet";
+import { Polyline, useMap } from "react-leaflet";
 import { FaChevronDown } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import { FaRegCirclePause } from "react-icons/fa6";
@@ -14,6 +14,7 @@ import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronUp } from "react-icons/fa6";
 import { TbReload } from "react-icons/tb";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { IoEarth } from "react-icons/io5";
 
 import { RiSpeedUpFill } from "react-icons/ri";
 
@@ -74,6 +75,8 @@ function TrajetVehicule({
   const [centrerLaCarteAuto, setCentrerLaCarteAuto] = useState(true);
   const [centrerLaCarteAutoPopup, setCentrerLaCarteAutoPopup] = useState(false);
   const [voirInfoSurAnimation, setVoirInfoSurAnimation] = useState(false);
+  const [voirGeofence, setVoirGeofence] = useState(true);
+  const [voirGeofencePopup, setVoirGeofencePopup] = useState(false);
   const [niveauZoomAuto, setNiveauZoomAuto] = useState(16);
   const [niveauZoomAutoText, setNiveauZoomAutoText] = useState(60);
   const [voirAnimationTrajetPopup, setVoirAnimationTrajetPopup] =
@@ -398,6 +401,51 @@ function TrajetVehicule({
     };
   }, []);
 
+  const [textSize, setTextSize] = useState("12px");
+  const [widthSize, setwidthSize] = useState("8rem");
+  const ZoomTextUpdater = () => {
+    const map = useMap();
+
+    const updateTextSize = () => {
+      let newSize = "12px";
+      let newWidth = "8rem";
+      const zoom = map.getZoom();
+      // pppppppppppppppppppppppppppppppppp
+      if (zoom >= 18) {
+        newSize = "24px";
+        newWidth = "17rem";
+      } else if (zoom >= 16) {
+        newSize = "24px";
+        newWidth = "15rem";
+      } else if (zoom >= 15) {
+        newSize = "24px";
+        newWidth = "14rem";
+      } else if (zoom >= 14) {
+        newSize = "18px";
+        newWidth = "12rem";
+      } else if (zoom >= 8) {
+        newSize = "10px";
+        newWidth = "8rem";
+      } else if (zoom >= 6) {
+        newSize = "6px";
+        newWidth = "6rem";
+      } else newSize = "0px";
+
+      setTextSize(newSize);
+      setwidthSize(newWidth);
+    };
+
+    useEffect(() => {
+      updateTextSize();
+      map.on("zoomend", updateTextSize);
+      return () => {
+        map.off("zoomend", updateTextSize);
+      };
+    }, [map]);
+
+    return null;
+  };
+
   return (
     <div>
       <div className="relative">
@@ -410,6 +458,7 @@ function TrajetVehicule({
               const { lastValidLatitude, lastValidLongitude } = vehicles[0];
               mapRef.current.setView(
                 [lastValidLatitude, lastValidLongitude],
+                // 13
                 13
               );
             }
@@ -624,7 +673,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Vois des details sur le trajet">
+              <Tooltip title="Voir des details sur le trajet">
                 <div
                   onClick={() => {
                     setVoirInfoSurAnimation(!voirInfoSurAnimation);
@@ -639,6 +688,28 @@ function TrajetVehicule({
                     <IoMdInformationCircleOutline
                       className={`${
                         voirInfoSurAnimation ? "text-green-700" : "text-red-700"
+                      } text-2xl `}
+                    />
+                    {/* <FaRegCirclePause /> */}
+                  </div>
+                </div>
+              </Tooltip>
+
+              <Tooltip title="Voir les séparations de la carte">
+                <div
+                  onClick={() => {
+                    setVoirGeofencePopup(!voirGeofencePopup);
+                  }}
+                  className="max-w-[0rem]-- max-w-[100rem]   transition-all overflow-hidden"
+                >
+                  <div
+                    className={`${
+                      voirGeofence ? "bg-green-50" : "bg-red-50"
+                    }   min-w-[3rem] h-[2.3rem]  flex justify-center items-center rounded-lg border `}
+                  >
+                    <IoEarth
+                      className={`${
+                        voirGeofence ? "text-green-700" : "text-red-700"
                       } text-2xl `}
                     />
                     {/* <FaRegCirclePause /> */}
@@ -899,6 +970,55 @@ function TrajetVehicule({
                 </div>
               </div>
             )}
+
+            {voirGeofencePopup && (
+              <div className="absolute bg-white min-w-[20rem] max-w-[70vw] w-full shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
+                <div className="font-bold flex justify-between items-start border-b pb-2">
+                  <p>
+                    Voir les séparations et le nom des différentes parties de la
+                    carte
+                  </p>
+                  <IoClose
+                    onClick={() => {
+                      setVoirGeofencePopup(false);
+                    }}
+                    className="text-red-500 min-w-[2rem] text-2xl cursor-pointer"
+                  />
+                </div>
+                <div
+                  onClick={() => {
+                    // setVoirNiveauZoomAutoPopup(false);
+                    setVoirGeofencePopup(false);
+                  }}
+                  className="font-semibold"
+                >
+                  <p
+                    onClick={() => {
+                      // setNiveauZoomAuto(16.5);
+                      // setNiveauZoomAutoText(70);
+                      setVoirGeofence(true);
+                    }}
+                    className={`${
+                      voirGeofence ? "bg-orange-100" : ""
+                    } hover:bg-orange-100 p-2 cursor-pointer`}
+                  >
+                    Activer
+                  </p>
+                  <p
+                    onClick={() => {
+                      // setNiveauZoomAuto(16);
+                      // setNiveauZoomAutoText(60);
+                      setVoirGeofence(false);
+                    }}
+                    className={`${
+                      !voirGeofence ? "bg-orange-100" : ""
+                    } hover:bg-orange-100 p-2 cursor-pointer`}
+                  >
+                    Désactiver
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -987,22 +1107,61 @@ function TrajetVehicule({
               <ScaleControl position="bottomright" />
               <AttributionControl position="bottomleft" />
 
+              <ZoomTextUpdater />
+
               {/* Affichage des géofences */}
-              {geofences.map((geofence, index) => (
-                <Polygon
-                  key={index}
-                  positions={geofence.coordinates.map((point) => [
-                    point.lat,
-                    point.lng,
-                  ])}
-                  pathOptions={{
-                    color: geofence.color || "", // Couleur de la bordure
-                    fillColor: geofence.color || "#000000", // Couleur du fond
-                    fillOpacity: 0.1, // Opacité du fond
-                    weight: 1, // Épaisseur des lignes
-                  }}
-                />
-              ))}
+              {voirGeofence &&
+                geofences?.map((geofence, index) => {
+                  // Calculer le centre du geofence
+                  const latitudes = geofence.coordinates.map(
+                    (point) => point.lat
+                  );
+                  const longitudes = geofence.coordinates.map(
+                    (point) => point.lng
+                  );
+                  const center = [
+                    (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+                    (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+                  ];
+
+                  return (
+                    <React.Fragment key={index}>
+                      <Polygon
+                        positions={geofence.coordinates.map((point) => [
+                          point.lat,
+                          point.lng,
+                        ])}
+                        pathOptions={{
+                          color: geofence.color || "", // Couleur de la bordure
+                          fillColor: geofence.color || "#000000", // Couleur du fond
+                          fillOpacity: 0.1, // Opacité du fond
+                          weight: 1, // Épaisseur des lignes
+                        }}
+                      />
+
+                      <Marker
+                        position={center}
+                        icon={L.divIcon({
+                          className: "geofence-label",
+                          html: `<div 
+                        class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
+                        
+                        style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
+                        ${geofence?.description}
+                        </div>`,
+                        })}
+                      />
+
+                      {/* <Marker
+                      position={center}
+                      icon={L.divIcon({
+                        className: "geofence-label",
+                        html: `<div className="bg-red-600" style="font-size: ${textSize}; font-weight: bold; text-align: center; color: black; white-space: nowrap; text-overflow: ellipsis;">${geofence?.description}</div>`,
+                      })}
+                    /> */}
+                    </React.Fragment>
+                  );
+                })}
 
               {/* Affichage des marqueurs "classiques" si l'animation n'est pas lancée */}
               {!isAnimating &&

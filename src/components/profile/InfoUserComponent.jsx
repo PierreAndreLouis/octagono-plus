@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 import LanguageComponent from "../home/LanguageComponent";
@@ -18,6 +18,13 @@ function InfoUserComponent({
 }) {
   const { setUsername, homePageReload, resetIndexedDB } =
     useContext(DataContext);
+
+  const [redemarerApplication, setRedemarerApplication] = useState(false);
+
+  let body_bg = "bg-red-50";
+  let header_bg = "bg-red-600";
+  let button_bg = "bg-red-500";
+  let text_color = "text-red-600";
   // setUsername
   return (
     <div>
@@ -108,7 +115,7 @@ function InfoUserComponent({
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             Version de l'application :
           </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">12.02.01</p>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">13.02.01</p>
         </div>
 
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
@@ -117,20 +124,16 @@ function InfoUserComponent({
           </h3>
           <p
             onClick={() => {
-              resetIndexedDB(); // Vide le localStorage
-              localStorage.clear(); // Vide le localStorage
-              window.location.reload(); // Rafraîchit la page
+              setRedemarerApplication(true);
+              // resetIndexedDB(); // Vide le localStorage
+              // localStorage.clear(); // Vide le localStorage
+              // window.location.reload(); // Rafraîchit la page
             }}
             className="pl-3 text-orange-500 font-semibold cursor-pointer dark:text-gray-300"
           >
             Cliquez ici
           </p>
         </div>
-
-        {/* <div>
-          <GoogleTranslate />
-          <LanguageSwitcher />
-        </div> */}
       </div>
 
       {/* Boutons d'action */}
@@ -154,6 +157,52 @@ function InfoUserComponent({
           Se déconnecter{" "}
         </button>
       </div>
+
+      {redemarerApplication && (
+        <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
+          <div
+            className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+          >
+            <div
+              className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
+            >
+              <h2 className="font-bold text-white text-xl">
+                Redémarrer l'application
+              </h2>
+            </div>
+            <div>
+              <h3
+                className={`${text_color}  block font-semibold text-lg  text-center leading-6  mb-3 `}
+              >
+                Êtes vous sur de redémarrer l'application ?
+              </h3>
+            </div>
+            <div className="flex justify-center gap-2 mt-5">
+              <div
+                onClick={() => {
+                  setRedemarerApplication(false);
+                  resetIndexedDB(); // Vide le localStorage
+                  localStorage.clear(); // Vide le localStorage
+                  window.location.reload(); // Rafraîchit la page
+                }}
+                // to="/home?tab=acceuil"
+                className={` bg-red-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+              >
+                Oui
+              </div>
+              <div
+                onClick={() => {
+                  setRedemarerApplication(false);
+                }}
+                // to="/home?tab=acceuil"
+                className={` bg-gray-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+              >
+                Non
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
