@@ -52,7 +52,7 @@ function GestionGeofences() {
                 .map((geozone, index) => {
                   return (
                     <div
-                      className="shadow-lg md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-2"
+                      className="shadow-lg md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                       key={index}
                     >
                       <div className="flex  gap-3  ">
