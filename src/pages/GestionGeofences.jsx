@@ -52,48 +52,50 @@ function GestionGeofences() {
                 .map((geozone, index) => {
                   return (
                     <div
+                      className="shadow-lg md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-2"
                       key={index}
-                      className="flex  gap-3 items-center-- shadow-lg rounded-lg px-4 py-2"
                     >
-                      <IoEarth className="text-[3rem] text-orange-500" />
-                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                        <div>
-                          <div className="flex flex-wrap">
-                            <p className="font-bold">Nom du Geozone :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {geozone?.description}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap">
-                            <p className="font-bold">Date de creation :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {FormatDateHeure(geozone?.lastUpdateTime).date}
-                              <span className="px-3">-</span>
-                              {FormatDateHeure(geozone?.lastUpdateTime).time}
-                            </span>
-                          </div>{" "}
+                      <div className="flex  gap-3  ">
+                        <IoEarth className="text-[3rem] text-orange-500" />
+                        <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                          <div>
+                            <div className="flex flex-wrap">
+                              <p className="font-bold">Nom du Geozone :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {geozone?.description}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap">
+                              <p className="font-bold">Date de creation :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {FormatDateHeure(geozone?.lastUpdateTime).date}
+                                <span className="px-3">-</span>
+                                {FormatDateHeure(geozone?.lastUpdateTime).time}
+                              </span>
+                            </div>{" "}
+                          </div>
                         </div>
-                        <div className="flex gap-3 mt-3 justify-between items-center ">
-                          <Link
-                            onClick={() => {
-                              setCurrentGeozone(geozone);
-                              setAjouterGeofencePopup(true);
-                              setIsEditingGeofence(true);
-                            }}
-                            to="/Groupe_vehicule_location?tab=localisation"
-                            className="bg-gray-100 w-full font-semibold rounded-lg py-1 px-4"
-                          >
-                            Modifier
-                          </Link>
-                          <button
-                            onClick={() => {
-                              setSupprimerGeozonePopup(true);
-                            }}
-                            className="bg-red-500 text-white w-full font-semibold rounded-lg py-1 px-4"
-                          >
-                            Supprimer
-                          </button>
-                        </div>
+                      </div>
+                      <div className="flex  sm:max-w-[25rem] gap-3 mt-3 justify-between items-center ">
+                        <Link
+                          onClick={() => {
+                            setCurrentGeozone(geozone);
+                            setAjouterGeofencePopup(true);
+                            setIsEditingGeofence(true);
+                          }}
+                          to="/Groupe_vehicule_location?tab=localisation"
+                          className="bg-gray-100 w-full font-semibold rounded-lg py-1 px-4"
+                        >
+                          Modifier
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setSupprimerGeozonePopup(true);
+                          }}
+                          className="bg-red-500 text-white w-full font-semibold rounded-lg py-1 px-4"
+                        >
+                          Supprimer
+                        </button>
                       </div>
                     </div>
                   );

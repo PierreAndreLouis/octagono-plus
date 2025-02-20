@@ -1369,9 +1369,7 @@ const DataContextProvider = ({ children }) => {
 
     const description = "Test d'ajout de Geofence";
     const geozoneID = "test_d_ajout_de_geofence_foodforthepoor";
-    // const radius = null;
-    // const zoneType = null;
-    // const zoomRegion = null;
+    
     const color = "#FF0000";
     const lat1 = "-21.083419994194877";
     const lng1 = "21.379394531250004";

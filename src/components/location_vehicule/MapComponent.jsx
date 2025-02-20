@@ -670,10 +670,24 @@ function MapComponent({ mapType }) {
   return (
     <div>
       {isAddingNewGeofence && (
+        <div className="fixed  z-[9999999999] shadow-lg right-[1rem] lg:right-[2rem] md:top-[5rem] top-[11rem]  ">
+          <Link
+            onClick={() => {
+              setIsAddingNewGeofence(false);
+              setAjouterGeofencePopup(false);
+            }}
+            to="/gestion_geofences?tab=geozone"
+            className="py-1.5 w-full flex justify-center items-center cursor-pointer px-3 bg-red-600 text-white rounded-lg"
+          >
+            Annuler
+          </Link>
+        </div>
+      )}
+      {isAddingNewGeofence && (
         <div className="fixed text-sm flex gap-2 z-[999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem] right-[.5rem] bg-white  ">
           <div className="mx-auto flex flex-col xs:flex-row gap-3">
             <p
-              className=" xs:min-w-[11rem] flex justify-center font-semibold items-center gap-2 rounded-lg bg-green-200 text-green-900 px-3 py-1 cursor-pointer"
+              className=" xs:min-w-[11rem] flex justify-center font-semibold items-center gap-2 rounded-lg bg-green-200 text-green-900 px-3 py-1.5 cursor-pointer"
               onClick={() => {
                 if (clickedPosition1 != null) {
                   setPositionIndex(2);
@@ -705,7 +719,7 @@ function MapComponent({ mapType }) {
             </p>
             <div className="flex  gap-3 w-full  min-w-[80vw] xs:min-w-0">
               <p
-                className="py-1 w-full font-semibold flex justify-center items-center cursor-pointer px-3 bg-red-200 text-red-900 rounded-lg"
+                className="py-1.5 w-full font-semibold flex justify-center items-center cursor-pointer px-3 bg-red-200 text-red-900 rounded-lg"
                 onClick={() => {
                   setClickedPosition1(null);
                   setClickedPosition2(null);
@@ -724,7 +738,7 @@ function MapComponent({ mapType }) {
                 onClick={() => {
                   setAjouterGeofencePopup(true);
                 }}
-                className="py-1 w-full flex justify-center items-center cursor-pointer px-3 bg-green-600 text-white rounded-lg"
+                className="py-1.5 w-full flex justify-center items-center cursor-pointer px-3 bg-green-600 text-white rounded-lg"
               >
                 Continue
               </p>
@@ -863,54 +877,25 @@ function MapComponent({ mapType }) {
                   Vous devez ajouter au moin 3 positions
                 </p>
               )}
-              <div className="mt-10 flex justify-center gap-3 ">
+              <div className="mt-10 max-w-[25rem] flex justify-center  mx-auto gap-3 ">
                 <button
                   type="submit"
                   // onClick={() => {
                   //   console.log("Les donnees trouver..............xxxxxxxxxxx");
                   //   addGeofenceFonction();
                   // }}
-                  className="px-4 cursor-pointer py-1 rounded-lg bg-green-500 text-white"
+                  className="px-4 w-full cursor-pointer py-1 rounded-lg bg-green-500 text-white"
                 >
                   {isEditingGeofence ? "Modifier" : "Ajouter"}
                 </button>
-                {/* <div
-                  onClick={() => {
-                    createNewGeofence();
-                    setCurrentGeozoneFonction();
-                  }}
-                >
-                  add
-                </div> */}
-                {/* 
-                <div
-                  onClick={() => {
-                    console.log("currentGeozone", currentGeozone);
-                    // setCurrentGeozoneFonction();
-                    // console.log(
-                    //   currentGeozone?.coordinates[0].lat,
-                    //   currentGeozone?.coordinates[0].lng
-                    // );
-                    // console.log(geofences);
-                    console.log("clickedPosition1", clickedPosition1);
-                    console.log("clickedPosition2", clickedPosition2);
-                    console.log("clickedPosition3", clickedPosition3);
-                    console.log("clickedPosition4", clickedPosition4);
-                    console.log("clickedPosition5", clickedPosition5);
-                    console.log("clickedPosition6", clickedPosition6);
-                    console.log("clickedPosition7", clickedPosition7);
-                    console.log("clickedPosition8", clickedPosition8);
-                  }}
-                >
-                  log
-                </div> */}
+
                 <Link
                   onClick={() => {
                     setIsAddingNewGeofence(false);
                     setAjouterGeofencePopup(false);
                   }}
                   to="/gestion_geofences?tab=geozone"
-                  className="px-4 cursor-pointer py-1 rounded-lg bg-red-500 text-white"
+                  className="px-4 w-full text-center cursor-pointer py-1 rounded-lg bg-red-500 text-white"
                 >
                   Annuler
                 </Link>
