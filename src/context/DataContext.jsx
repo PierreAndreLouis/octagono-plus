@@ -40,6 +40,12 @@ const DataContextProvider = ({ children }) => {
 
   const [geofenceData, setGeofenceData] = useState(null);
 
+  const geofenceDataRef = useRef(geofenceData);
+
+  useEffect(() => {
+    geofenceDataRef.current = geofenceData;
+  }, [geofenceData]);
+
   // to know if the user is login or not
   const isAuthenticated = userData !== null;
 
@@ -98,6 +104,12 @@ const DataContextProvider = ({ children }) => {
     return storedVehicleData ? JSON.parse(storedVehicleData) : null;
   });
 
+  const véhiculeDataRef = useRef(véhiculeData);
+
+  useEffect(() => {
+    véhiculeDataRef.current = véhiculeData;
+  }, [véhiculeData]);
+
   // véhicule detail in home page
   const [vehicleDetails, setVehicleDetails] = useState(() => {
     const storedVehicleDetails = localStorage.getItem("vehicleDetails");
@@ -105,6 +117,12 @@ const DataContextProvider = ({ children }) => {
       ? JSON.parse(storedVehicleDetails)
       : [];
   });
+
+  const vehicleDetailsRef = useRef(vehicleDetails);
+
+  useEffect(() => {
+    vehicleDetailsRef.current = vehicleDetails;
+  }, [vehicleDetails]);
 
   // véhiculeData and vehicleDetails together
   const [mergedDataHome, setMergedDataHome] = useState(null);
@@ -176,6 +194,12 @@ const DataContextProvider = ({ children }) => {
   // véhicule details in rapport page
 
   const [rapportVehicleDetails, setRapportVehicleDetails] = useState([]);
+
+  const rapportVehicleDetailsRef = useRef(rapportVehicleDetails);
+
+  useEffect(() => {
+    rapportVehicleDetailsRef.current = rapportVehicleDetails;
+  }, [rapportVehicleDetails]);
 
   //véhicule search data in rapport page
   const [searchRapportVehicleDetails, setSearchRapportVehicleDetails] =
@@ -1720,24 +1744,38 @@ const DataContextProvider = ({ children }) => {
 
   // Pour lancer la requête de details des véhicules
   // ????????????????????????????????????????????????????????????????????????????
-  // useEffect(() => {
-  //   if (userData) {
-  //     fetchVehicleData();
-  //     GeofenceDataFonction();
-  //   }
-  // }, [userData]);
+  useEffect(() => {
+    if (userData) {
+      fetchVehicleData();
+      GeofenceDataFonction();
+    }
+  }, [userData]);
 
   // Premier appelle de donnee pour les details de véhicule de la page home et rapport
   // ????????????????????????????????????????????????????????????????????????????
 
-  // useEffect(() => {
-  //   if (véhiculeData && véhiculeData?.length > 0) {
-  //     véhiculeData.forEach((véhicule) => {
-  //       fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-  //       fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-  //     });
-  //   }
-  // }, [véhiculeData]);
+  useEffect(() => {
+    if (
+      véhiculeData &&
+      véhiculeData?.length > 0 &&
+      (vehicleDetailsRef.current?.length <= 0 || vehicleDetails?.length <= 0)
+    ) {
+      véhiculeData.forEach((véhicule) => {
+        fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+      });
+    }
+
+    if (
+      véhiculeData &&
+      véhiculeData?.length > 0 &&
+      (rapportVehicleDetailsRef.current.length <= 0 ||
+        rapportVehicleDetails.length <= 0)
+    ) {
+      véhiculeData.forEach((véhicule) => {
+        fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+      });
+    }
+  }, [véhiculeData]);
 
   // Pour mettre a jour les donnees
   const homePageReload = () => {
@@ -2495,27 +2533,32 @@ const DataContextProvider = ({ children }) => {
 
   // Pour mettre a jour le véhicule actuelle
   // ?????????????????????????????????
+
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (geofenceData?.length <= 0) {
-        GeofenceDataFonction();
-        console.log("Pas de donnee dans geofence >>>>>>>>>>>>>>>>>>>>>>>>>>");
+      if (geofenceDataRef.current?.length > 0) {
+        // console.log(
+        //   " il y a des donnees de geofence disponible",
+        //   geofenceDataRef.current
+        // );
       } else {
-        // console.log(" il y a des donnees de geofence disponible");
+        GeofenceDataFonction();
+        console.log(
+          "Pas de donnee dans geofence >>>>>>>>>>>>>>>>>>>>>>>>>>",
+          geofenceData
+        );
       }
-      //
-      //
-      //
-      //
-      //
 
-      if (userData && véhiculeData?.length <= 0) {
+      if (véhiculeDataRef.current?.length > 0) {
+        // console.log(
+        //   " il y a des donnees de véhiculeData home disponible",
+        //   véhiculeDataRef.current
+        // );
+      } else {
         console.log(
           " il n'y a de donnees de véhiculeData home disponible xxxxxxxxxxxxxxxxxxx"
         );
         fetchVehicleData();
-      } else {
-        // console.log(" il y a des donnees de véhiculeData home disponible");
       }
       //
       //
@@ -2523,17 +2566,23 @@ const DataContextProvider = ({ children }) => {
       //
       //
       //
-      if (userData && vehicleDetails?.length <= 0) {
+      if (
+        véhiculeDataRef.current?.length > 0 &&
+        vehicleDetailsRef.current?.length > 0
+      ) {
+        // console.log(
+        //   " il y a des donnees de details home disponible",
+        //   vehicleDetailsRef.current
+        // );
+      } else {
         console.log(
           "Pas de donnee dans details home disponible >>>>>>>>>>>>>>>>>>>>>>>>>>"
         );
-        if (véhiculeData && véhiculeData?.length > 0) {
-          véhiculeData.forEach((véhicule) => {
+        if (véhiculeDataRef.current && véhiculeDataRef.current?.length > 0) {
+          véhiculeDataRef.current.forEach((véhicule) => {
             fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
           });
         }
-      } else {
-        // console.log(" il y a des donnees de details home disponible");
       }
       //
       //
@@ -2541,17 +2590,23 @@ const DataContextProvider = ({ children }) => {
       //
       //
       //
-      if (véhiculeData && rapportVehicleDetails?.length <= 0) {
+      if (
+        véhiculeDataRef.current?.length > 0 &&
+        rapportVehicleDetailsRef.current?.length > 0
+      ) {
+        // console.log(
+        //   " il y a des donnees de rapport disponible",
+        //   rapportVehicleDetailsRef.current
+        // );
+      } else {
         console.log(
           "Pas de donnees de rapport disponible >>>>>>>>>>>>>>>>>>>>>>>>>>"
         );
-        if (véhiculeData && véhiculeData?.length > 0) {
-          véhiculeData.forEach((véhicule) => {
+        if (véhiculeDataRef.current && véhiculeDataRef.current?.length > 0) {
+          véhiculeDataRef.current.forEach((véhicule) => {
             fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
           });
         }
-      } else {
-        // console.log(" il y a des donnees de rapport disponible");
       }
 
       //

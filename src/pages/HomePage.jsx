@@ -378,7 +378,7 @@ const Home = () => {
       {/* <button
         onClick={() => {
           // console.log(mergedDataHome);
-          console.log("geofenceData indexdb", geofenceData);
+          console.log("geofenceData indexdb", geofenceData.length);
         }}
       >
         testeeeeeeeeeeeeeeeeeeeee
