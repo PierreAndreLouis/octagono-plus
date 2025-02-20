@@ -71,6 +71,10 @@ function SuccèsÉchecMessagePopup({
                   "Le fuseau horaire prendra automatiquement effet lors de la prochaine mise à jour des véhicules."}
                 {composant_from === "Redémarrer l'application" &&
                   "Êtes vous sur de redémarrer l'application ?"}
+                {composant_from === "échec de la creation du geozone" &&
+                  "échec de la creation du geozone "}
+                {composant_from === "succès de creation du geozone" &&
+                  "Creation du geozone avec succès "}
               </h3>
 
               {composant_from ===

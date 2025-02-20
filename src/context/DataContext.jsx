@@ -270,6 +270,8 @@ const DataContextProvider = ({ children }) => {
   // to show the confirm password popup in user page
   const [showChangePasswordPopup, setShowChangePasswordPopup] = useState(false);
 
+  const [ajouterGeofencePopup, setAjouterGeofencePopup] = useState(false);
+
   //
   //
   //
@@ -598,14 +600,14 @@ const DataContextProvider = ({ children }) => {
   }, [mergedDataHome]);
 
   useEffect(() => {
-    console.log("geofenceData:", geofenceData);
+    // console.log("geofenceData:", geofenceData);
     if (geofenceData) {
       saveDataToIndexedDB("geofenceData", geofenceData);
     }
   }, [geofenceData]);
 
   useEffect(() => {
-    console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
+    // console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
     if (donneeFusionnéForRapport) {
       saveDataToIndexedDB("donneeFusionnéForRapport", donneeFusionnéForRapport);
     }
@@ -999,6 +1001,441 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  // console.log(
+  //   "%cGeofence Details",
+  //   "color: red; font-weight: bold; font-size: 14px;",
+  //   "\nDescription:",
+  //   description,
+  //   "\nGeozone ID:",
+  //   geozoneID,
+  //   "\nRadius:",
+  //   radius,
+  //   "\nZone Type:",
+  //   zoneType,
+  //   "\nZoom Region:",
+  //   zoomRegion,
+  //   "\nLast Update Time:",
+  //   lastUpdateTime,
+  //   "\nAccount ID:",
+  //   accountID,
+  //   "\nColor:",
+  //   color,
+  //   "\nCoordinates:",
+  //   `\n  Latitude1: ${lat1}, Longitude1: ${lng1}`,
+  //   `\n  Latitude2: ${lat2}, Longitude2: ${lng2}`,
+  //   `\n  Latitude3: ${lat3}, Longitude3: ${lng3}`,
+  //   `\n  Latitude4: ${lat4}, Longitude4: ${lng4}`,
+  //   `\n  Latitude5: ${lat5}, Longitude5: ${lng5}`,
+  //   `\n  Latitude6: ${lat6}, Longitude6: ${lng6}`,
+  //   `\n  Latitude7: ${lat7}, Longitude7: ${lng7}`,
+  //   `\n  Latitude8: ${lat8}, Longitude8: ${lng8}`
+  // );
+
+  const [succesCreateGeofencePopup, setSuccesCreateGeofencePopup] =
+    useState(false);
+  const [errorCreateGeofencePopup, setErrorCreateGeofencePopup] =
+    useState(false);
+  const [createGeofenceLoading, setCreateGeofenceLoading] = useState(false);
+
+  const [currentGeozone, setCurrentGeozone] = useState();
+
+  // const createNewGeofence = async (
+  //   description,
+  //   geozoneID,
+  //   radius,
+  //   zoneType,
+  //   zoomRegion,
+  //   lastUpdateTime,
+  //   accountID,
+  //   color,
+  //   lat1,
+  //   lng1,
+  //   lat2,
+  //   lng2,
+  //   lat3,
+  //   lng3,
+  //   lat4,
+  //   lng4,
+  //   lat5,
+  //   lng5,
+  //   lat6,
+  //   lng6,
+  //   lat7,
+  //   lng7,
+  //   lat8,
+  //   lng8
+  // ) => {
+  //   if (!userData) return;
+
+  //   const deviceID = "2392374283479";
+
+  //   console.log(
+  //     "%cGeofence Details",
+  //     "color: red; font-weight: bold; font-size: 14px;",
+  //     "\nDescription:",
+  //     description,
+  //     "\nGeozone ID:",
+  //     geozoneID,
+  //     "\nRadius:",
+  //     radius,
+  //     "\nZone Type:",
+  //     zoneType,
+  //     "\nZoom Region:",
+  //     zoomRegion,
+  //     "\nLast Update Time:",
+  //     lastUpdateTime,
+  //     "\nAccount ID:",
+  //     accountID,
+  //     "\nColor:",
+  //     color,
+  //     "\nCoordinates:",
+  //     `\n  Latitude1: ${lat1}, Longitude1: ${lng1}`,
+  //     `\n  Latitude2: ${lat2}, Longitude2: ${lng2}`,
+  //     `\n  Latitude3: ${lat3}, Longitude3: ${lng3}`,
+  //     `\n  Latitude4: ${lat4}, Longitude4: ${lng4}`,
+  //     `\n  Latitude5: ${lat5}, Longitude5: ${lng5}`,
+  //     `\n  Latitude6: ${lat6}, Longitude6: ${lng6}`,
+  //     `\n  Latitude7: ${lat7}, Longitude7: ${lng7}`,
+  //     `\n  Latitude8: ${lat8}, Longitude8: ${lng8}`
+  //   );
+
+  //   //   const xmlData2 = `<GTSRequest command="dbget">
+  //   //   <Authorization account="${account}" user="${user}" password="${password}" />
+  //   //   <Record table="Geozone" partial="true">
+  //   //     <Field name="accountID">${account}</Field>
+  //   //     <Field name="descriptionZone" />
+  //   //   </Record>
+  //   // </GTSRequest>`;
+
+  //   setCreateGeofenceLoading(true);
+  //   setErrorCreateGeofencePopup(false);
+  //   const account = geofenceAccount || "foodforthepoor";
+  //   const user = "monitoring";
+  //   const password = "123456";
+
+  //   const xmlData = `<GTSRequest command="dbcreate">
+  //   <Authorization account="${account}" user="${user}" password="${password}" />
+  //     <Record table="Geozone" partial="true">
+  //       <Field name="accountID">${account}</Field>
+
+  //       <Field name="deviceID">${deviceID}</Field>
+  //       <Field name="description">${description}</Field>
+  //       <Field name="geozoneID">${geozoneID}</Field>
+  //       <Field name="radius">${radius}</Field>
+  //       <Field name="zoneType">${zoneType}</Field>
+  //       <Field name="zoomRegion">${zoomRegion}</Field>
+  //       <Field name="lastUpdateTime">${lastUpdateTime}</Field>
+  //       <Field name="accountID">${accountID}</Field>
+  //       <Field name="color">${color}</Field>
+
+  //       <Field name="latitude1">${lat1}</Field>
+  //       <Field name="longitude1">${lng1}</Field>
+
+  //       <Field name="latitude2">${lat2}</Field>
+  //       <Field name="longitude2">${lng2}</Field>
+
+  //       <Field name="latitude3">${lat3}</Field>
+  //       <Field name="longitude3">${lng3}</Field>
+
+  //       <Field name="latitude4">${lat4}</Field>
+  //       <Field name="longitude4">${lng4}</Field>
+
+  //       <Field name="latitude5">${lat5}</Field>
+  //       <Field name="longitude5">${lng5}</Field>
+
+  //       <Field name="latitude6">${lat6}</Field>
+  //       <Field name="longitude6">${lng6}</Field>
+
+  //       <Field name="latitude7">${lat7}</Field>
+  //       <Field name="longitude7">${lng7}</Field>
+
+  //       <Field name="latitude8">${lat8}</Field>
+  //       <Field name="longitude8">${lng8}</Field>
+
+  //       <Field name="isActive">1</Field>
+  //     </Record>
+  //   </GTSRequest>`;
+
+  //   try {
+  //     const response = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     const data = await response.text();
+
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       .getAttribute("result");
+
+  //     if (result === "success") {
+  //       console.log("creation de Geofence avec successs...........");
+  //       setCreateGeofenceLoading(false);
+  //       setErrorCreateGeofencePopup(false);
+  //       setSuccesCreateGeofencePopup(true);
+  //     } else {
+  //       console.log("Errorrrrrrrrrrrrr...........");
+  //       setCreateGeofenceLoading(false);
+  //       setErrorCreateGeofencePopup(true);
+
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0].textContent;
+  //     }
+  //   } catch (error) {
+  //     setError("Échec de la création du Geofence.");
+  //     console.error("Échec de la création du Geofence", error);
+  //     setCreateGeofenceLoading(false);
+  //     setErrorCreateGeofencePopup(true);
+  //   }
+  // };
+
+  // const createNewGeofence = async (
+  //   description,
+  //   geozoneID,
+  //   radius,
+  //   zoneType,
+  //   zoomRegion,
+  //   lastUpdateTime,
+  //   accountID,
+  //   color,
+  //   lat1,
+  //   lng1,
+  //   lat2,
+  //   lng2,
+  //   lat3,
+  //   lng3,
+  //   lat4,
+  //   lng4,
+  //   lat5,
+  //   lng5,
+  //   lat6,
+  //   lng6,
+  //   lat7,
+  //   lng7,
+  //   lat8,
+  //   lng8
+  // ) => {
+  //   if (!userData) return;
+
+  //   const deviceID = "2392374283479";
+
+  //   // Log de détails des paramètres
+  //   console.log(
+  //     "%cGeofence Details",
+  //     "color: red; font-weight: bold; font-size: 14px;",
+  //     "\nDescription:",
+  //     description,
+  //     "\nGeozone ID:",
+  //     geozoneID,
+  //     "\nRadius:",
+  //     radius,
+  //     "\nZone Type:",
+  //     zoneType,
+  //     "\nZoom Region:",
+  //     zoomRegion,
+  //     "\nLast Update Time:",
+  //     lastUpdateTime,
+  //     "\nAccount ID:",
+  //     accountID,
+  //     "\nColor:",
+  //     color,
+  //     `\nCoordinates: Latitude1: ${lat1}, Longitude1: ${lng1}`,
+  //     `Latitude2: ${lat2}, Longitude2: ${lng2}`,
+  //     `Latitude3: ${lat3}, Longitude3: ${lng3}`,
+  //     `Latitude4: ${lat4}, Longitude4: ${lng4}`,
+  //     `Latitude5: ${lat5}, Longitude5: ${lng5}`,
+  //     `Latitude6: ${lat6}, Longitude6: ${lng6}`,
+  //     `Latitude7: ${lat7}, Longitude7: ${lng7}`,
+  //     `Latitude8: ${lat8}, Longitude8: ${lng8}`
+  //   );
+
+  //   setCreateGeofenceLoading(true);
+  //   setErrorCreateGeofencePopup(false);
+  //   const account = geofenceAccount || "foodforthepoor";
+  //   const user = "monitoring";
+  //   const password = "123456";
+
+  //   const xmlData = `<GTSRequest command="dbcreate">
+  //     <Authorization account="${account}" user="${user}" password="${password}" />
+  //     <Record table="Geozone" partial="true">
+  //       <Field name="accountID">${account}</Field>
+  //       <Field name="deviceID">${deviceID}</Field>
+  //       <Field name="description">${description}</Field>
+  //       <Field name="geozoneID">${geozoneID}</Field>
+  //       <Field name="radius">${radius}</Field>
+  //       <Field name="zoneType">${zoneType}</Field>
+  //       <Field name="zoomRegion">${zoomRegion}</Field>
+  //       <Field name="lastUpdateTime">${lastUpdateTime}</Field>
+  //       <Field name="accountID">${accountID}</Field>
+  //       <Field name="color">${color}</Field>
+  //       <Field name="latitude1">${lat1}</Field>
+  //       <Field name="longitude1">${lng1}</Field>
+  //       <Field name="latitude2">${lat2}</Field>
+  //       <Field name="longitude2">${lng2}</Field>
+  //       <Field name="latitude3">${lat3}</Field>
+  //       <Field name="longitude3">${lng3}</Field>
+  //       <Field name="latitude4">${lat4}</Field>
+  //       <Field name="longitude4">${lng4}</Field>
+  //       <Field name="latitude5">${lat5}</Field>
+  //       <Field name="longitude5">${lng5}</Field>
+  //       <Field name="latitude6">${lat6}</Field>
+  //       <Field name="longitude6">${lng6}</Field>
+  //       <Field name="latitude7">${lat7}</Field>
+  //       <Field name="longitude7">${lng7}</Field>
+  //       <Field name="latitude8">${lat8}</Field>
+  //       <Field name="longitude8">${lng8}</Field>
+  //       <Field name="isActive">1</Field>
+  //     </Record>
+  //   </GTSRequest>`;
+
+  //   try {
+  //     console.log("Sending request to create Geofence...");
+  //     const response = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     console.log("Response received:", response);
+  //     const data = await response.text();
+  //     console.log("Response text:", data);
+
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       .getAttribute("result");
+
+  //     if (result === "success") {
+  //       console.log("Geofence created successfully...");
+  //       setCreateGeofenceLoading(false);
+  //       setErrorCreateGeofencePopup(false);
+  //       setSuccesCreateGeofencePopup(true);
+  //     } else {
+  //       console.log("Error occurred while creating Geofence...");
+  //       setCreateGeofenceLoading(false);
+  //       setErrorCreateGeofencePopup(true);
+
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0].textContent;
+  //       console.error("Error message:", errorMessage);
+  //     }
+  //   } catch (error) {
+  //     setError("Échec de la création du Geofence.");
+  //     console.error("Échec de la création du Geofence", error);
+  //     setCreateGeofenceLoading(false);
+  //     setErrorCreateGeofencePopup(true);
+  //   }
+  // };
+
+  const createNewGeofence = async () => {
+    if (!userData) return;
+
+    setCreateGeofenceLoading(true);
+    setErrorCreateGeofencePopup(false);
+
+    const account = "foodforthepoor";
+    const user = "monitoring";
+    const password = "123456";
+
+    const description = "Test d'ajout de Geofence";
+    const geozoneID = "test_d_ajout_de_geofence_foodforthepoor";
+    const radius = null;
+    const zoneType = null;
+    const zoomRegion = null;
+    const color = "#FF0000";
+    const lat1 = "-21.083419994194877";
+    const lng1 = "21.379394531250004";
+    const lat2 = "-21.502869800875303";
+    const lng2 = "22.17041015625";
+    const lat3 = "-22.0636485635849";
+    const lng3 = "23.356933593750004";
+    const lat4 = "-23.440695030461626";
+    const lng4 = "23.444824218750004";
+    const lat5 = "-23.863118837324905";
+    const lng5 = "21.983642578125004";
+    const lat6 = "-23.601779135057985";
+    const lng6 = "20.478515625000004";
+    const lat7 = "-22.34828756276516";
+    const lng7 = "19.907226562500004";
+    const lat8 = "-21.53351411829517";
+    const lng8 = "20.368652343750004";
+
+    const xmlData = `<GTSRequest command="dbcreate">
+      <Authorization account="${account}" user="${user}" password="${password}" />
+      <Record table="Geozone" partial="true">
+        <Field name="accountID">${account}</Field>
+
+
+        <Field name="description">${description}</Field>
+        <Field name="geozoneID">${geozoneID}</Field>
+        <Field name="radius">${radius}</Field>
+        <Field name="zoneType">${zoneType}</Field>
+        <Field name="zoomRegion">${zoomRegion}</Field>
+        <Field name="color">${color}</Field>
+        <Field name="latitude1">${lat1}</Field>
+        <Field name="longitude1">${lng1}</Field>
+        <Field name="latitude2">${lat2}</Field>
+        <Field name="longitude2">${lng2}</Field>
+        <Field name="latitude3">${lat3}</Field>
+        <Field name="longitude3">${lng3}</Field>
+        <Field name="latitude4">${lat4}</Field>
+        <Field name="longitude4">${lng4}</Field>
+        <Field name="latitude5">${lat5}</Field>
+        <Field name="longitude5">${lng5}</Field>
+        <Field name="latitude6">${lat6}</Field>
+        <Field name="longitude6">${lng6}</Field>
+        <Field name="latitude7">${lat7}</Field>
+        <Field name="longitude7">${lng7}</Field>
+        <Field name="latitude8">${lat8}</Field>
+        <Field name="longitude8">${lng8}</Field>
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    try {
+      console.log("Sending request to create Geofence...");
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      console.log("Response received:", response);
+      const data = await response.text();
+      console.log("Response text:", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      if (result === "success") {
+        console.log("Geofence created successfully...");
+        setCreateGeofenceLoading(false);
+        setErrorCreateGeofencePopup(false);
+        setSuccesCreateGeofencePopup(true);
+      } else {
+        console.log("Error occurred while creating Geofence...");
+        setCreateGeofenceLoading(false);
+        setErrorCreateGeofencePopup(true);
+
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        console.error("Error message:", errorMessage);
+      }
+    } catch (error) {
+      setError("Échec de la création du Geofence.");
+      console.error("Échec de la création du Geofence", error);
+      setCreateGeofenceLoading(false);
+      setErrorCreateGeofencePopup(true);
+    }
+  };
+
   //
   //
   //
@@ -1084,7 +1521,7 @@ const DataContextProvider = ({ children }) => {
 
       setVehicleData(véhiculeData);
 
-      if (véhiculeData && véhiculeData.length > 0) {
+      if (véhiculeData && véhiculeData?.length > 0) {
         véhiculeData.forEach((véhicule) => {
           fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
           fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
@@ -1282,33 +1719,48 @@ const DataContextProvider = ({ children }) => {
   };
 
   // Pour lancer la requête de details des véhicules
-  useEffect(() => {
-    if (userData) {
-      fetchVehicleData();
-      GeofenceDataFonction();
-    }
-  }, [userData]);
+  // ????????????????????????????????????????????????????????????????????????????
+  // useEffect(() => {
+  //   if (userData) {
+  //     fetchVehicleData();
+  //     GeofenceDataFonction();
+  //   }
+  // }, [userData]);
 
   // Premier appelle de donnee pour les details de véhicule de la page home et rapport
-  useEffect(() => {
-    if (véhiculeData && véhiculeData.length > 0) {
-      véhiculeData.forEach((véhicule) => {
-        fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-        fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-      });
-    }
-  }, [véhiculeData]);
+  // ????????????????????????????????????????????????????????????????????????????
+
+  // useEffect(() => {
+  //   if (véhiculeData && véhiculeData?.length > 0) {
+  //     véhiculeData.forEach((véhicule) => {
+  //       fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //       fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //     });
+  //   }
+  // }, [véhiculeData]);
 
   // Pour mettre a jour les donnees
   const homePageReload = () => {
     console.log("reload HomePage");
-    if (véhiculeData && véhiculeData.length > 0) {
+    if (véhiculeData && véhiculeData?.length > 0) {
       véhiculeData.forEach((véhicule) => {
         fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
       });
     }
   };
+
+  // Mise a jour les donnee de rapport page tous les 1 minutes
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // reloadHomePage();
+      homePageReload();
+
+      // console.log("HomePage Reload start....");
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   // Pour arrêter le loading pares 15 second de la page home apres login
   useEffect(() => {
@@ -1323,7 +1775,7 @@ const DataContextProvider = ({ children }) => {
       vehicleDetails &&
       vehicleDetails.length > 0 &&
       véhiculeData &&
-      véhiculeData.length > 0
+      véhiculeData?.length > 0
     ) {
       mergeVehicleDataWithEvents();
     }
@@ -2042,14 +2494,70 @@ const DataContextProvider = ({ children }) => {
   }, []); // Pas de dépendances, exécution régulière
 
   // Pour mettre a jour le véhicule actuelle
+  // ?????????????????????????????????
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (geofenceData?.length <= 0) {
         GeofenceDataFonction();
         console.log("Pas de donnee dans geofence >>>>>>>>>>>>>>>>>>>>>>>>>>");
       } else {
-        console.log(" des donnee dans geofence 111111111111111111111111111111");
+        // console.log(" il y a des donnees de geofence disponible");
       }
+      //
+      //
+      //
+      //
+      //
+
+      if (userData && véhiculeData?.length <= 0) {
+        console.log(
+          " il n'y a de donnees de véhiculeData home disponible xxxxxxxxxxxxxxxxxxx"
+        );
+        fetchVehicleData();
+      } else {
+        // console.log(" il y a des donnees de véhiculeData home disponible");
+      }
+      //
+      //
+      //
+      //
+      //
+      //
+      if (userData && vehicleDetails?.length <= 0) {
+        console.log(
+          "Pas de donnee dans details home disponible >>>>>>>>>>>>>>>>>>>>>>>>>>"
+        );
+        if (véhiculeData && véhiculeData?.length > 0) {
+          véhiculeData.forEach((véhicule) => {
+            fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+          });
+        }
+      } else {
+        // console.log(" il y a des donnees de details home disponible");
+      }
+      //
+      //
+      //
+      //
+      //
+      //
+      if (véhiculeData && rapportVehicleDetails?.length <= 0) {
+        console.log(
+          "Pas de donnees de rapport disponible >>>>>>>>>>>>>>>>>>>>>>>>>>"
+        );
+        if (véhiculeData && véhiculeData?.length > 0) {
+          véhiculeData.forEach((véhicule) => {
+            fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+          });
+        }
+      } else {
+        // console.log(" il y a des donnees de rapport disponible");
+      }
+
+      //
+      //
+      //
+      //
     }, 4000);
 
     return () => clearInterval(intervalId);
@@ -2211,7 +2719,7 @@ const DataContextProvider = ({ children }) => {
 
   // Pour la rehcerhce de donnee dans Historique page apres avoir choisi une date
   const handleDateChange = (TimeFrom, TimeTo) => {
-    if (véhiculeData && véhiculeData.length > 0) {
+    if (véhiculeData && véhiculeData?.length > 0) {
       véhiculeData.forEach((véhicule) => {
         fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
       });
@@ -2892,6 +3400,17 @@ const DataContextProvider = ({ children }) => {
         GeofenceDataFonction,
         geofenceData,
         resetIndexedDB,
+        createNewGeofence,
+        ajouterGeofencePopup,
+        setAjouterGeofencePopup,
+        createGeofenceLoading,
+        setCreateGeofenceLoading,
+        errorCreateGeofencePopup,
+        setErrorCreateGeofencePopup,
+        succesCreateGeofencePopup,
+        setSuccesCreateGeofencePopup,
+        currentGeozone,
+        setCurrentGeozone,
       }}
     >
       {children}

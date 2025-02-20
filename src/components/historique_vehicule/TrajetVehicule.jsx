@@ -822,7 +822,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 0.1 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Supper rapide
+                    Super rapide
                   </p>
                 </div>
               </div>
@@ -1067,7 +1067,7 @@ function TrajetVehicule({
                   : "Non disponible"}
               </span>
             </p>
-            <p className="font-bold  hidden md:block">
+            <p className="font-bold  ">
               Adresse :{" "}
               <span className="font-normal">
                 {addressActuelleAnimation || ""}

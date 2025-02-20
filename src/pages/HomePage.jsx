@@ -205,7 +205,7 @@ const Home = () => {
       homePageReload();
 
       // console.log("HomePage Reload start....");
-    }, 10000);
+    }, 20000);
 
     return () => clearInterval(intervalId);
   }, []);

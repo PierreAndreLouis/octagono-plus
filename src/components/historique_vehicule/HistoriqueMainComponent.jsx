@@ -95,9 +95,9 @@ function HistoriqueMainComponent({
           (v) => v.deviceID === deviceID
         );
 
-        setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
-        setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
-        setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
+        // setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
+        // setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+        // setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
       }
     }, 10000);
 

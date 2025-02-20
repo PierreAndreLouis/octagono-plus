@@ -11,6 +11,7 @@ import Logout from "../login/Logout";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaCar } from "react-icons/fa";
 import InstallationPWA from "../../pages/InstallationPWA";
+import { IoEarth } from "react-icons/io5";
 
 function SideBar() {
   const {
@@ -180,6 +181,20 @@ function SideBar() {
           <FaCar />
           <h3>Rapport des véhicules</h3>
         </Link>
+
+        {/* <Link
+          to="/gestion_geofences?tab=geozone"
+          onClick={() => {
+            setShowSideBar(true);
+            handleTabClick("geozone");
+          }}
+          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+            tab === "geozone" ? "text-orange-500" : ""
+          } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+        >
+          <IoEarth />
+          <h3>Gestion des Geozones</h3>
+        </Link> */}
 
         {/*  */}
         {/*  */}

@@ -20,7 +20,6 @@ function SearchVehiculePupup({
     currentDataFusionné,
     selectedVehicleToShowInMap,
     setSelectedVehicleToShowInMap,
-    searchDonneeFusionnéForRapport,
   } = useContext(DataContext);
 
   const [
@@ -30,16 +29,6 @@ function SearchVehiculePupup({
   useEffect(() => {
     setTilterSearchVehiculePopupByCategorie("all");
   }, [searchQueryListPopup]);
-
-  const isSearching = searchDonneeFusionnéForRapport?.length > 0;
-
-  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
-  const getTodayTimestamp = () => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0); // Minuit
-    return Math.floor(now.getTime() / 1000); // Convertir en secondes
-  };
-  const todayTimestamp = getTodayTimestamp() * 1000;
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -56,8 +45,7 @@ function SearchVehiculePupup({
         véhicule?.véhiculeDetails &&
         véhicule?.véhiculeDetails?.every((detail) => detail.speedKPH <= 0);
 
-      const hasDetails =
-        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
+      const hasDetails = véhicule?.véhiculeDetails.length > 0;
       const noDetails = véhicule?.véhiculeDetails.length <= 0;
 
       // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
@@ -66,6 +54,14 @@ function SearchVehiculePupup({
         : 0;
       const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+      // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+      const getTodayTimestamp = () => {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // Minuit
+        return Math.floor(now.getTime() / 1000); // Convertir en secondes
+      };
+      const todayTimestamp = getTodayTimestamp() * 1000;
+
       const lastUpdateTimestampMs =
         véhicule.véhiculeDetails &&
         véhicule.véhiculeDetails[0] &&
@@ -73,40 +69,28 @@ function SearchVehiculePupup({
 
       const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
-      if (isSearching) {
-        if (filterSearchVehiculePopupByCategorie === "all") {
-          return true;
-        } else if (filterSearchVehiculePopupByCategorie === "deplace") {
-          return hasBeenMoving;
-        } else if (filterSearchVehiculePopupByCategorie === "non deplace") {
-          return hasDetails && noSpeed;
-        } else if (filterSearchVehiculePopupByCategorie === "hors service") {
-          return noDetails;
-        }
-      } else {
-        if (filterSearchVehiculePopupByCategorie === "all") {
-          return true;
-        } else if (filterSearchVehiculePopupByCategorie === "deplace") {
-          return hasBeenMoving && isToday && isActive;
-        } else if (filterSearchVehiculePopupByCategorie === "non deplace") {
-          return (
-            hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
-          );
-        } else if (filterSearchVehiculePopupByCategorie === "hors service") {
-          return noDetails || !isActive;
-        }
+      if (filterSearchVehiculePopupByCategorie === "all") {
+        return true;
+      } else if (filterSearchVehiculePopupByCategorie === "deplace") {
+        return hasBeenMoving && isToday;
+      } else if (filterSearchVehiculePopupByCategorie === "non deplace") {
+        return (
+          hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
+        );
+      } else if (filterSearchVehiculePopupByCategorie === "hors service") {
+        return noDetails || !isActive;
       }
     }
   );
 
-  const foundVehicle = currentDataFusionné?.find(
+  const foundVehicle = currentDataFusionné.find(
     (v) => v.deviceID === selectedVehicleToShowInMap
   );
   return (
-    <div className="fixed px-2 z-[999999999999999] inset-0 bg-black/50 flex justify-center ">
-      <div className=" sm:mx-auto   min-w-[90vw] md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh] border-red-600  shadow-lg shadow-gray-600/80 ">
-        <div className="absolute  top-[1rem] left-2 right-2 md:left-4  md:right-4 py-2">
-          <div className="mt-4 mb-4   flex items-center gap-2">
+    <div>
+      <div className="fixed z-[99999999999999999999] sm:mx-auto  border mx-2 max-w-[50rem] pt-[5.5rem] p-2- dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-0 left-0 min-h-20 shadow-lg shadow-gray-600/80">
+        <div className="absolute  top-[1rem] left-4 right-4 py-2">
+          <div className="mt-4 mb-4  flex items-center gap-2">
             <Tooltip
               title="Appuyer pour filtrer
             "
@@ -221,14 +205,12 @@ function SearchVehiculePupup({
             className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]"
           />
         </div>
-        <div className="overflow-auto  mt-14 h-[62vh] md:h-[55vh] ">
+        <div className="overflow-auto  mt-14 h-[55vh]">
           {filteredVehiclesPupupByCategorie?.length > 0 ? (
             filteredVehiclesPupupByCategorie?.map((véhicule, index) => {
-              const isMoving =
-                véhicule?.véhiculeDetails &&
-                véhicule?.véhiculeDetails?.some(
-                  (detail) => detail.speedKPH >= 1
-                );
+              const isMoving = véhicule?.véhiculeDetails?.some(
+                (detail) => detail.speedKPH >= 1
+              );
 
               const hasDetails =
                 véhicule?.véhiculeDetails &&
@@ -244,6 +226,14 @@ function SearchVehiculePupup({
                 : 0;
               const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
+              // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+              const getTodayTimestamp = () => {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0); // Minuit
+                return Math.floor(now.getTime() / 1000); // Convertir en secondes
+              };
+              const todayTimestamp = getTodayTimestamp() * 1000;
+
               const lastUpdateTimestampMs =
                 véhicule.véhiculeDetails &&
                 véhicule.véhiculeDetails[0] &&
@@ -253,27 +243,18 @@ function SearchVehiculePupup({
 
               let iconBg = "text-red-500 dark:text-red-500";
 
-              if (isSearching) {
-                if (isMoving) {
-                  iconBg = "text-green-500 dark:text-green-500";
-                } else if (hasDetails && noSpeed) {
-                  iconBg = "text-red-500 dark:text-red-500";
-                } else if (!hasDetails) {
-                  iconBg = "text-purple-500 dark:text-purple-500";
-                }
-              } else {
-                if (hasDetails && isMoving && isToday && isActive) {
-                  iconBg = "text-green-500 dark:text-green-500";
-                } else if (
-                  hasDetails &&
-                  (noSpeed || (isMoving && !isToday)) &&
-                  isActive
-                ) {
-                  iconBg = "text-red-500 dark:text-red-500";
-                } else if (!hasDetails || !isActive) {
-                  iconBg = "text-purple-500 dark:text-purple-500";
-                }
+              if (hasDetails && isMoving && isToday) {
+                iconBg = "text-green-500 dark:text-green-500";
+              } else if (
+                hasDetails &&
+                (noSpeed || (isMoving && !isToday)) &&
+                isActive
+              ) {
+                iconBg = "text-red-500 dark:text-red-500";
+              } else if (!hasDetails || !isActive) {
+                iconBg = "text-purple-500 dark:text-purple-500";
               }
+
               return (
                 <div
                   key={véhicule.deviseID}

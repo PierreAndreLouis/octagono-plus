@@ -28,6 +28,7 @@ import DetailsVehiculePage from "./pages/DetailsVehiculePage";
 import LocationPage from "./pages/LocationPage";
 import HistoriquePage from "./pages/HistoriquePage";
 import RapportPageDetails from "./pages/RapportPageDetails";
+import GestionGeofences from "./pages/GestionGeofences";
 
 function App() {
   const location = useLocation();
@@ -99,7 +100,11 @@ function App() {
             element={<PrivateRoute element={<ProfilUserPage />} />}
           />
 
-       
+          <Route
+            path="/gestion_geofences"
+            element={<PrivateRoute element={<GestionGeofences />} />}
+          />
+
           <Route
             path="/Groupe_vehicule_location"
             element={<PrivateRoute element={<LocationPage />} />}
