@@ -1063,6 +1063,8 @@ const DataContextProvider = ({ children }) => {
 
   const [currentGeozone, setCurrentGeozone] = useState();
 
+  const [isEditingGeofence, setIsEditingGeofence] = useState(false);
+
   // const createNewGeofence = async (
   //   description,
   //   geozoneID,
@@ -1367,9 +1369,9 @@ const DataContextProvider = ({ children }) => {
 
     const description = "Test d'ajout de Geofence";
     const geozoneID = "test_d_ajout_de_geofence_foodforthepoor";
-    const radius = null;
-    const zoneType = null;
-    const zoomRegion = null;
+    // const radius = null;
+    // const zoneType = null;
+    // const zoomRegion = null;
     const color = "#FF0000";
     const lat1 = "-21.083419994194877";
     const lng1 = "21.379394531250004";
@@ -1396,9 +1398,110 @@ const DataContextProvider = ({ children }) => {
 
         <Field name="description">${description}</Field>
         <Field name="geozoneID">${geozoneID}</Field>
-        <Field name="radius">${radius}</Field>
-        <Field name="zoneType">${zoneType}</Field>
-        <Field name="zoomRegion">${zoomRegion}</Field>
+  
+        <Field name="color">${color}</Field>
+        <Field name="latitude1">${lat1}</Field>
+        <Field name="longitude1">${lng1}</Field>
+        <Field name="latitude2">${lat2}</Field>
+        <Field name="longitude2">${lng2}</Field>
+        <Field name="latitude3">${lat3}</Field>
+        <Field name="longitude3">${lng3}</Field>
+        <Field name="latitude4">${lat4}</Field>
+        <Field name="longitude4">${lng4}</Field>
+        <Field name="latitude5">${lat5}</Field>
+        <Field name="longitude5">${lng5}</Field>
+        <Field name="latitude6">${lat6}</Field>
+        <Field name="longitude6">${lng6}</Field>
+        <Field name="latitude7">${lat7}</Field>
+        <Field name="longitude7">${lng7}</Field>
+        <Field name="latitude8">${lat8}</Field>
+        <Field name="longitude8">${lng8}</Field>
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    try {
+      console.log("Sending request to create Geofence...");
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      console.log("Response received:", response);
+      const data = await response.text();
+      console.log("Response text:", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      if (result === "success") {
+        console.log("Geofence created successfully...");
+        setCreateGeofenceLoading(false);
+        setErrorCreateGeofencePopup(false);
+        setSuccesCreateGeofencePopup(true);
+      } else {
+        console.log("Error occurred while creating Geofence...");
+        setCreateGeofenceLoading(false);
+        setErrorCreateGeofencePopup(true);
+
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        console.error("Error message:", errorMessage);
+      }
+    } catch (error) {
+      setError("Échec de la création du Geofence.");
+      console.error("Échec de la création du Geofence", error);
+      setCreateGeofenceLoading(false);
+      setErrorCreateGeofencePopup(true);
+    }
+  };
+
+  const ModifierGeofence = async () => {
+    if (!userData) return;
+
+    setCreateGeofenceLoading(true);
+    setErrorCreateGeofencePopup(false);
+
+    const account = "foodforthepoor";
+    const user = "monitoring";
+    const password = "123456";
+
+    const description = "Test d'ajout de Geofence";
+    const geozoneID = "test_d_ajout_de_geofence_foodforthepoor";
+    // const radius = null;
+    // const zoneType = null;
+    // const zoomRegion = null;
+    const color = "#FF0000";
+    const lat1 = "-21.083419994194877";
+    const lng1 = "21.379394531250004";
+    const lat2 = "-21.502869800875303";
+    const lng2 = "22.17041015625";
+    const lat3 = "-22.0636485635849";
+    const lng3 = "23.356933593750004";
+    const lat4 = "-23.440695030461626";
+    const lng4 = "23.444824218750004";
+    const lat5 = "-23.863118837324905";
+    const lng5 = "21.983642578125004";
+    const lat6 = "-23.601779135057985";
+    const lng6 = "20.478515625000004";
+    const lat7 = "-22.34828756276516";
+    const lng7 = "19.907226562500004";
+    const lat8 = "-21.53351411829517";
+    const lng8 = "20.368652343750004";
+
+    const xmlData = `<GTSRequest command="dbcreate">
+      <Authorization account="${account}" user="${user}" password="${password}" />
+      <Record table="Geozone" partial="true">
+        <Field name="accountID">${account}</Field>
+
+
+        <Field name="description">${description}</Field>
+        <Field name="geozoneID">${geozoneID}</Field>
+  
         <Field name="color">${color}</Field>
         <Field name="latitude1">${lat1}</Field>
         <Field name="longitude1">${lng1}</Field>
@@ -3456,6 +3559,7 @@ const DataContextProvider = ({ children }) => {
         geofenceData,
         resetIndexedDB,
         createNewGeofence,
+        ModifierGeofence,
         ajouterGeofencePopup,
         setAjouterGeofencePopup,
         createGeofenceLoading,
@@ -3466,6 +3570,8 @@ const DataContextProvider = ({ children }) => {
         setSuccesCreateGeofencePopup,
         currentGeozone,
         setCurrentGeozone,
+        isEditingGeofence,
+        setIsEditingGeofence,
       }}
     >
       {children}

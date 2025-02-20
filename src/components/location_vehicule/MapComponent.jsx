@@ -51,6 +51,9 @@ function MapComponent({ mapType }) {
     succesCreateGeofencePopup,
     setSuccesCreateGeofencePopup,
     currentGeozone,
+    isEditingGeofence,
+    setIsEditingGeofence,
+    ModifierGeofence,
   } = useContext(DataContext);
 
   // le data a utiliser
@@ -239,6 +242,18 @@ function MapComponent({ mapType }) {
     ajouterCouleurGeofenceCodeCouleur,
     setAjouterCouleurGeofenceCodeCouleur,
   ] = useState("#FF0000");
+
+  const ajouterCouleurGeofenceCodeCouleurRef = useRef(
+    ajouterCouleurGeofenceCodeCouleur
+  );
+
+  useEffect(() => {
+    ajouterCouleurGeofenceCodeCouleurRef.current =
+      ajouterCouleurGeofenceCodeCouleur;
+  }, [ajouterCouleurGeofenceCodeCouleur]);
+
+  // xxxxxxxxxxxxxxxxxxxxxxx
+
   const [ajouterCouleurGeofenceEnText, setAjouterCouleurGeofenceEnText] =
     useState("Rouge vif");
 
@@ -270,13 +285,68 @@ function MapComponent({ mapType }) {
     `position${positionIndex}`
   );
   const [clickedPosition1, setClickedPosition1] = useState(null);
+  const clickedPosition1Ref = useRef(clickedPosition1);
+
+  useEffect(() => {
+    clickedPosition1Ref.current = clickedPosition1;
+  }, [clickedPosition1]);
+
+  // const [clickedPosition2, setClickedPosition2] = useState(null);
+  // const [clickedPosition3, setClickedPosition3] = useState(null);
+  // const [clickedPosition4, setClickedPosition4] = useState(null);
+  // const [clickedPosition5, setClickedPosition5] = useState(null);
+  // const [clickedPosition6, setClickedPosition6] = useState(null);
+  // const [clickedPosition7, setClickedPosition7] = useState(null);
+  // const [clickedPosition8, setClickedPosition8] = useState(null);
+
   const [clickedPosition2, setClickedPosition2] = useState(null);
+  const clickedPosition2Ref = useRef(clickedPosition2);
+
   const [clickedPosition3, setClickedPosition3] = useState(null);
+  const clickedPosition3Ref = useRef(clickedPosition3);
+
   const [clickedPosition4, setClickedPosition4] = useState(null);
+  const clickedPosition4Ref = useRef(clickedPosition4);
+
   const [clickedPosition5, setClickedPosition5] = useState(null);
+  const clickedPosition5Ref = useRef(clickedPosition5);
+
   const [clickedPosition6, setClickedPosition6] = useState(null);
+  const clickedPosition6Ref = useRef(clickedPosition6);
+
   const [clickedPosition7, setClickedPosition7] = useState(null);
+  const clickedPosition7Ref = useRef(clickedPosition7);
+
   const [clickedPosition8, setClickedPosition8] = useState(null);
+  const clickedPosition8Ref = useRef(clickedPosition8);
+
+  useEffect(() => {
+    clickedPosition2Ref.current = clickedPosition2;
+  }, [clickedPosition2]);
+
+  useEffect(() => {
+    clickedPosition3Ref.current = clickedPosition3;
+  }, [clickedPosition3]);
+
+  useEffect(() => {
+    clickedPosition4Ref.current = clickedPosition4;
+  }, [clickedPosition4]);
+
+  useEffect(() => {
+    clickedPosition5Ref.current = clickedPosition5;
+  }, [clickedPosition5]);
+
+  useEffect(() => {
+    clickedPosition6Ref.current = clickedPosition6;
+  }, [clickedPosition6]);
+
+  useEffect(() => {
+    clickedPosition7Ref.current = clickedPosition7;
+  }, [clickedPosition7]);
+
+  useEffect(() => {
+    clickedPosition8Ref.current = clickedPosition8;
+  }, [clickedPosition8]);
 
   useEffect(() => {
     console.log("");
@@ -329,7 +399,7 @@ function MapComponent({ mapType }) {
     // if (coordinates.length > 2) {
     setGeofence({
       coordinates, // Tableau d'objets { lat, lng }
-      color: ajouterCouleurGeofenceCodeCouleur, // Couleur par défaut
+      color: ajouterCouleurGeofenceCodeCouleurRef.current, // Couleur par défaut
     });
     // }
   }, [
@@ -341,6 +411,8 @@ function MapComponent({ mapType }) {
     clickedPosition6,
     clickedPosition7,
     clickedPosition8,
+    ajouterCouleurGeofenceCodeCouleurRef,
+    ajouterCouleurGeofenceCodeCouleurRef.current,
   ]);
 
   const positions = [
@@ -461,12 +533,43 @@ function MapComponent({ mapType }) {
 
     // const latitude8 = "";
     // const longitude8 = "";
-    if (geofences?.coordinates.length >= 3) {
+    if (geofences?.coordinates.length >= 3 && !isEditingGeofence) {
       const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
         geofences?.coordinates;
 
       // console.log(
       createNewGeofence(
+        description,
+        geozoneID,
+        radius,
+        zoneType,
+        zoomRegion,
+        lastUpdateTime,
+        accountID,
+        color,
+        pos1?.lat || "",
+        pos1?.lng || "",
+        pos2?.lat || "",
+        pos2?.lng || "",
+        pos3?.lat || "",
+        pos3?.lng || "",
+        pos4?.lat || "",
+        pos4?.lng || "",
+        pos5?.lat || "",
+        pos5?.lng || "",
+        pos6?.lat || "",
+        pos6?.lng || "",
+        pos7?.lat || "",
+        pos7?.lng || "",
+        pos8?.lat || "",
+        pos8?.lng || ""
+      );
+    } else if (geofences?.coordinates.length >= 3 && isEditingGeofence) {
+      const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
+        geofences?.coordinates;
+
+      // console.log(
+      ModifierGeofence(
         description,
         geozoneID,
         radius,
@@ -504,43 +607,70 @@ function MapComponent({ mapType }) {
     setAjouterCouleurGeofenceCodeCouleur(currentGeozone?.color);
     setAjouterCouleurGeofenceEnText("");
     setClickedPosition1(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[0].lat,
+        currentGeozone?.coordinates[0].lng
+      )
     );
+
     setClickedPosition2(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[1].lat,
+        currentGeozone?.coordinates[1].lng
+      )
     );
+
     setClickedPosition3(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[2].lat,
+        currentGeozone?.coordinates[2].lng
+      )
     );
+
     setClickedPosition4(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[3].lat,
+        currentGeozone?.coordinates[3].lng
+      )
     );
+
     setClickedPosition5(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[4].lat,
+        currentGeozone?.coordinates[4].lng
+      )
     );
+
     setClickedPosition6(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[5].lat,
+        currentGeozone?.coordinates[5].lng
+      )
     );
+
     setClickedPosition7(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[6].lat,
+        currentGeozone?.coordinates[6].lng
+      )
     );
+
     setClickedPosition8(
-      Number(currentGeozone?.coordinates[0].lat),
-      Number(currentGeozone?.coordinates[0].lng)
+      L.latLng(
+        currentGeozone?.coordinates[7].lat,
+        currentGeozone?.coordinates[7].lng
+      )
     );
   };
+
+  useEffect(() => {
+    setCurrentGeozoneFonction();
+  }, [currentGeozone]);
 
   return (
     <div>
       {isAddingNewGeofence && (
-        <div className="fixed text-sm flex gap-2 z-[9999999999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem] right-[.5rem] bg-white  ">
+        <div className="fixed text-sm flex gap-2 z-[999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem] right-[.5rem] bg-white  ">
           <div className="mx-auto flex flex-col xs:flex-row gap-3">
             <p
               className=" xs:min-w-[11rem] flex justify-center font-semibold items-center gap-2 rounded-lg bg-green-200 text-green-900 px-3 py-1 cursor-pointer"
@@ -653,7 +783,7 @@ function MapComponent({ mapType }) {
               />
             </div>
             <form onSubmit={addGeofenceFonction} className="mt-4">
-              <label
+              {/* <label
                 htmlFor="zoneName"
                 className="block text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
               >
@@ -668,7 +798,7 @@ function MapComponent({ mapType }) {
                 onChange={handleInputChange}
                 required
                 className="block px-3 w-full border-b pb-2 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-              />
+              /> */}
               <label
                 htmlFor="zoneDescription"
                 className="block mt-4 text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
@@ -742,34 +872,38 @@ function MapComponent({ mapType }) {
                   // }}
                   className="px-4 cursor-pointer py-1 rounded-lg bg-green-500 text-white"
                 >
-                  Enregistrer
+                  {isEditingGeofence ? "Modifier" : "Ajouter"}
                 </button>
-                <div
+                {/* <div
                   onClick={() => {
                     createNewGeofence();
+                    setCurrentGeozoneFonction();
                   }}
                 >
                   add
-                </div>
-
+                </div> */}
+                {/* 
                 <div
                   onClick={() => {
-                    // console.log(currentGeozone);
+                    console.log("currentGeozone", currentGeozone);
                     // setCurrentGeozoneFonction();
                     // console.log(
                     //   currentGeozone?.coordinates[0].lat,
                     //   currentGeozone?.coordinates[0].lng
                     // );
                     // console.log(geofences);
-                    console.log(clickedPosition1);
-                    console.log(clickedPosition2);
-                    console.log(clickedPosition3);
-                    console.log(clickedPosition1);
-                    console.log(clickedPosition1);
+                    console.log("clickedPosition1", clickedPosition1);
+                    console.log("clickedPosition2", clickedPosition2);
+                    console.log("clickedPosition3", clickedPosition3);
+                    console.log("clickedPosition4", clickedPosition4);
+                    console.log("clickedPosition5", clickedPosition5);
+                    console.log("clickedPosition6", clickedPosition6);
+                    console.log("clickedPosition7", clickedPosition7);
+                    console.log("clickedPosition8", clickedPosition8);
                   }}
                 >
                   log
-                </div>
+                </div> */}
                 <Link
                   onClick={() => {
                     setIsAddingNewGeofence(false);
@@ -1009,8 +1143,12 @@ function MapComponent({ mapType }) {
               point.lng,
             ])}
             pathOptions={{
-              color: geofences?.color || ajouterCouleurGeofenceCodeCouleur,
-              fillColor: geofences?.color || ajouterCouleurGeofenceCodeCouleur,
+              color:
+                geofences?.color ||
+                ajouterCouleurGeofenceCodeCouleurRef.current,
+              fillColor:
+                geofences?.color ||
+                ajouterCouleurGeofenceCodeCouleurRef.current,
               fillOpacity: 0.1,
               weight: 1,
             }}

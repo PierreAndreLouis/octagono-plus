@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { IoEarth } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
@@ -12,10 +12,10 @@ function GestionGeofences() {
     account,
     currentGeozone,
     setCurrentGeozone,
+    isEditingGeofence,
+    setIsEditingGeofence,
   } = useContext(DataContext);
-
-
-
+  const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
   return (
     <div>
       <div className="px-4 pb-40">
@@ -32,6 +32,8 @@ function GestionGeofences() {
             to="/Groupe_vehicule_location?tab=localisation"
             onClick={() => {
               setAjouterGeofencePopup(true);
+              setIsEditingGeofence(false);
+              setCurrentGeozone();
             }}
             className="bg-green-100 text-green-900 font-semibold rounded-lg py-1 px-6"
           >
@@ -76,13 +78,19 @@ function GestionGeofences() {
                             onClick={() => {
                               setCurrentGeozone(geozone);
                               setAjouterGeofencePopup(true);
+                              setIsEditingGeofence(true);
                             }}
                             to="/Groupe_vehicule_location?tab=localisation"
                             className="bg-gray-100 w-full font-semibold rounded-lg py-1 px-4"
                           >
                             Modifier
                           </Link>
-                          <button className="bg-red-500 text-white w-full font-semibold rounded-lg py-1 px-4">
+                          <button
+                            onClick={() => {
+                              setSupprimerGeozonePopup(true);
+                            }}
+                            className="bg-red-500 text-white w-full font-semibold rounded-lg py-1 px-4"
+                          >
                             Supprimer
                           </button>
                         </div>
@@ -98,6 +106,65 @@ function GestionGeofences() {
           }
         </div>
       </div>
+
+      {supprimerGeozonePopup && (
+        <div className="fixed inset-0 z-10">
+          <div className="fixed inset-0 z-40 min-h-full overflow-y-auto overflow-x-hidden transition flex items-center">
+            {/* <!-- overlay --> */}
+            <div className="fixed inset-0 w-full h-full bg-black/50 cursor-pointer"></div>
+
+            {/* <!-- Modal --> */}
+            <div className="relative w-full cursor-pointer pointer-events-none transition my-auto p-4">
+              <div className="w-full py-2 bg-white cursor-default pointer-events-auto ---dark:bg-gray-800 relative rounded-xl mx-auto max-w-sm">
+                <div className="space-y-2 p-2">
+                  <div className="p-4 space-y-2 text-center ---dark:text-white">
+                    <h2
+                      className="text-xl font-bold tracking-tight"
+                      id="page-action.heading"
+                    >
+                      Supprimer
+                    </h2>
+
+                    <p className="text-gray-500">
+                      Es-tu sûr de supprimer le geozone ? ?
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="border-t ---dark:border-gray-700 px-2"></div>
+
+                  <div className="px-6 py-2">
+                    <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(0,1fr))]">
+                      <button
+                        onClick={() => {
+                          setSupprimerGeozonePopup(false);
+                        }}
+                        className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset ---dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-gray-800 bg-white border-gray-300 hover:bg-gray-50 focus:ring-primary-600 focus:text-primary-600 focus:bg-primary-50 focus:border-primary-600 ---dark:bg-gray-800 ---dark:hover:bg-gray-700 ---dark:border-gray-600 ---dark:hover:border-gray-500 ---dark:text-gray-200 ---dark:focus:text-primary-400 ---dark:focus:border-primary-400 ---dark:focus:bg-gray-800"
+                      >
+                        <span className="flex items-center gap-1">
+                          <span className="">Annuler</span>
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setSupprimerGeozonePopup(false);
+                        }}
+                        className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset ---dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-white shadow focus:ring-white border-transparent bg-red-600 hover:bg-red-500 focus:bg-red-700 focus:ring-offset-red-700"
+                      >
+                        <span className="flex items-center gap-1">
+                          <span className="">Supprimer</span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
