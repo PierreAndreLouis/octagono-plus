@@ -1367,9 +1367,11 @@ const DataContextProvider = ({ children }) => {
     const user = "monitoring";
     const password = "123456";
 
-    const description = "Test d'ajout de Geofence";
-    const geozoneID = "test_d_ajout_de_geofence_foodforthepoor";
-    
+    const description = "Test ajout";
+
+    const geozoneID = "test";
+    const sortID = "test1";
+
     const color = "#FF0000";
     const lat1 = "-21.083419994194877";
     const lng1 = "21.379394531250004";
@@ -1390,12 +1392,14 @@ const DataContextProvider = ({ children }) => {
 
     const xmlData = `<GTSRequest command="dbcreate">
       <Authorization account="${account}" user="${user}" password="${password}" />
-      <Record table="Geozone" partial="true">
+      <Record table="Geozone" partial="false">
         <Field name="accountID">${account}</Field>
 
 
         <Field name="description">${description}</Field>
         <Field name="geozoneID">${geozoneID}</Field>
+        <Field name="sortID">${sortID}</Field>
+        
   
         <Field name="color">${color}</Field>
         <Field name="latitude1">${lat1}</Field>
@@ -2066,6 +2070,68 @@ const DataContextProvider = ({ children }) => {
   };
 
   // Pour le fusionnement de donnee de la page rapport véhiculeData et rapportVehicleDetails
+  // const rapportFusionnerDonnees = () => {
+  //   if (!véhiculeData || !rapportVehicleDetails) return [];
+
+  //   // Récupérer les anciens détails depuis localStorage
+  //   const previousData = (() => {
+  //     try {
+  //       const data = donneeFusionnéForRapport;
+  //       //  JSON.parse(
+  //       //   localStorage.getItem("donneeFusionnéForRapport")
+  //       // );
+  //       return Array.isArray(data) ? data : [];
+  //     } catch (error) {
+  //       console.error(
+  //         "Erreur lors de la récupération des données du localStorage:",
+  //         error
+  //       );
+  //       return [];
+  //     }
+  //   })();
+
+  //   const dataFusionné = véhiculeData.map((véhicule) => {
+  //     // Trouver les nouveaux détails pour le véhicule
+  //     const newDetails = rapportVehicleDetails?.filter(
+  //       (detail) => detail.Device === véhicule?.deviceID
+  //     );
+
+  //     // Récupérer les anciens détails depuis les données précédentes
+  //     const previousDetails = previousData.find(
+  //       (prev) => prev.deviceID === véhicule?.deviceID
+  //     )?.véhiculeDetails;
+
+  //     // Conserver les anciens détails si aucun nouveau n'est trouvé
+  //     const updatedDetails =
+  //       newDetails && newDetails.length > 0
+  //         ? newDetails
+  //         : previousDetails || [];
+
+  //     return {
+  //       ...véhicule,
+  //       véhiculeDetails: updatedDetails,
+  //     };
+  //   });
+
+  //   // Met à jour l'état avec les données fusionnées
+  //   setDonneeFusionnéForRapport(dataFusionné);
+
+  //   try {
+  //     setDonneeFusionnéForRapport(dataFusionné);
+
+  //   } catch (error) {
+  //     if (error.name === "QuotaExceededError") {
+  //       console.error(
+  //         "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+  //       );
+  //     } else {
+  //       console.error("Erreur de stockage : ", error);
+  //     }
+  //   }
+
+  //   return dataFusionné;
+  // };
+
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
 
@@ -2073,9 +2139,6 @@ const DataContextProvider = ({ children }) => {
     const previousData = (() => {
       try {
         const data = donneeFusionnéForRapport;
-        //  JSON.parse(
-        //   localStorage.getItem("donneeFusionnéForRapport")
-        // );
         return Array.isArray(data) ? data : [];
       } catch (error) {
         console.error(
@@ -2086,50 +2149,51 @@ const DataContextProvider = ({ children }) => {
       }
     })();
 
-    const dataFusionné = véhiculeData.map((véhicule) => {
-      // Trouver les nouveaux détails pour le véhicule
-      const newDetails = rapportVehicleDetails?.filter(
-        (detail) => detail.Device === véhicule?.deviceID
-      );
+    const dataFusionné = {};
+    const seenEvents = new Set();
 
-      // Récupérer les anciens détails depuis les données précédentes
-      const previousDetails = previousData.find(
-        (prev) => prev.deviceID === véhicule?.deviceID
-      )?.véhiculeDetails;
-
-      // Conserver les anciens détails si aucun nouveau n'est trouvé
-      const updatedDetails =
-        newDetails && newDetails.length > 0
-          ? newDetails
-          : previousDetails || [];
-
-      return {
-        ...véhicule,
-        véhiculeDetails: updatedDetails,
-      };
+    véhiculeData.forEach((véhicule) => {
+      const { deviceID } = véhicule;
+      if (deviceID) {
+        dataFusionné[deviceID] = {
+          ...véhicule,
+          véhiculeDetails:
+            rapportVehicleDetails.filter((v) => v.Device === deviceID) || [],
+        };
+      }
     });
 
-    // Met à jour l'état avec les données fusionnées
-    setDonneeFusionnéForRapport(dataFusionné);
+    rapportVehicleDetails.forEach((detail) => {
+      const { Device, timestamp, ...eventDetails } = detail;
+      const eventKey = `${Device}-${timestamp}`;
+
+      if (!seenEvents.has(eventKey)) {
+        seenEvents.add(eventKey);
+
+        if (dataFusionné[Device]) {
+          if (Object.keys(eventDetails).length > 0) {
+            dataFusionné[Device].véhiculeDetails.push({
+              timestamp,
+              ...eventDetails,
+            });
+          }
+        }
+      }
+    });
 
     try {
-      setDonneeFusionnéForRapport(dataFusionné);
-
-      // localStorage.setItem(
-      //   "donneeFusionnéForRapport",
-      //   JSON.stringify(dataFusionné)
-      // );
+      setDonneeFusionnéForRapport(Object.values(dataFusionné));
     } catch (error) {
       if (error.name === "QuotaExceededError") {
-        // console.error(
-        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-        // );
+        console.error(
+          "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        );
       } else {
         console.error("Erreur de stockage : ", error);
       }
     }
 
-    return dataFusionné;
+    return Object.values(dataFusionné);
   };
 
   // Pour lancer le fusionnement des donnees dans la page rapport

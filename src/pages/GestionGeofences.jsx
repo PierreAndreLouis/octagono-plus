@@ -52,9 +52,12 @@ function GestionGeofences() {
                 .map((geozone, index) => {
                   return (
                     <div
-                      className="shadow-lg md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                      className="shadow-lg relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                       key={index}
                     >
+                      <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                        {index + 1}
+                      </div>
                       <div className="flex  gap-3  ">
                         <IoEarth className="text-[3rem] text-orange-500" />
                         <div className=" w-full flex flex-wrap justify-between gap-x-4">
@@ -76,7 +79,7 @@ function GestionGeofences() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex  sm:max-w-[25rem] gap-3 mt-3 justify-between items-center ">
+                      <div className="flex md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between items-center ">
                         <Link
                           onClick={() => {
                             setCurrentGeozone(geozone);
@@ -84,7 +87,7 @@ function GestionGeofences() {
                             setIsEditingGeofence(true);
                           }}
                           to="/Groupe_vehicule_location?tab=localisation"
-                          className="bg-gray-100 w-full font-semibold rounded-lg py-1 px-4"
+                          className="bg-gray-100 text-center w-full text-sm font-semibold rounded-lg py-1 px-4"
                         >
                           Modifier
                         </Link>
@@ -92,7 +95,7 @@ function GestionGeofences() {
                           onClick={() => {
                             setSupprimerGeozonePopup(true);
                           }}
-                          className="bg-red-500 text-white w-full font-semibold rounded-lg py-1 px-4"
+                          className="bg-red-500 text-white text-sm w-full font-semibold rounded-lg py-1 px-4"
                         >
                           Supprimer
                         </button>

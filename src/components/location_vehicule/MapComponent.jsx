@@ -686,37 +686,39 @@ function MapComponent({ mapType }) {
       {isAddingNewGeofence && (
         <div className="fixed text-sm flex gap-2 z-[999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem] right-[.5rem] bg-white  ">
           <div className="mx-auto flex flex-col xs:flex-row gap-3">
-            <p
-              className=" xs:min-w-[11rem] flex justify-center font-semibold items-center gap-2 rounded-lg bg-green-200 text-green-900 px-3 py-1.5 cursor-pointer"
-              onClick={() => {
-                if (clickedPosition1 != null) {
-                  setPositionIndex(2);
-                }
-                if (clickedPosition2 != null) {
-                  setPositionIndex(3);
-                }
-                if (clickedPosition3 != null) {
-                  setPositionIndex(4);
-                }
-                if (clickedPosition4 != null) {
-                  setPositionIndex(5);
-                }
-                if (clickedPosition5 != null) {
-                  setPositionIndex(6);
-                }
-                if (clickedPosition6 != null) {
-                  setPositionIndex(7);
-                }
-                if (clickedPosition7 != null) {
-                  setPositionIndex(8);
-                }
-              }}
-            >
-              <span className="w-[1.5rem] h-[1.5rem] flex justify-center items-center rounded-full bg-green-600 text-white">
-                <FaPlus />
-              </span>
-              Nouvelle position
-            </p>
+            {positionIndex <= 8 && (
+              <p
+                className=" xs:min-w-[11rem] flex justify-center font-semibold items-center gap-2 rounded-lg bg-green-200 text-green-900 px-3 py-1.5 cursor-pointer"
+                onClick={() => {
+                  if (clickedPosition1 != null) {
+                    setPositionIndex(2);
+                  }
+                  if (clickedPosition2 != null) {
+                    setPositionIndex(3);
+                  }
+                  if (clickedPosition3 != null) {
+                    setPositionIndex(4);
+                  }
+                  if (clickedPosition4 != null) {
+                    setPositionIndex(5);
+                  }
+                  if (clickedPosition5 != null) {
+                    setPositionIndex(6);
+                  }
+                  if (clickedPosition6 != null) {
+                    setPositionIndex(7);
+                  }
+                  if (clickedPosition7 != null) {
+                    setPositionIndex(8);
+                  }
+                }}
+              >
+                <span className="w-[1.5rem] h-[1.5rem] flex justify-center items-center rounded-full bg-green-600 text-white">
+                  <FaPlus />
+                </span>
+                Nouvelle position
+              </p>
+            )}
             <div className="flex  gap-3 w-full  min-w-[80vw] xs:min-w-0">
               <p
                 className="py-1.5 w-full font-semibold flex justify-center items-center cursor-pointer px-3 bg-red-200 text-red-900 rounded-lg"
@@ -888,6 +890,13 @@ function MapComponent({ mapType }) {
                 >
                   {isEditingGeofence ? "Modifier" : "Ajouter"}
                 </button>
+                {/* <button
+                  onClick={() => {
+                    createNewGeofence();
+                  }}
+                >
+                  createNewGeofence
+                </button> */}
 
                 <Link
                   onClick={() => {
