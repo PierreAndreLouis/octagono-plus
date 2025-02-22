@@ -54,6 +54,10 @@ function MapComponent({ mapType }) {
     isEditingGeofence,
     setIsEditingGeofence,
     ModifierGeofence,
+    succesModifierGeofencePopup,
+    setSuccesModifierGeofencePopup,
+    errorModifierGeofencePopup,
+    setErrorModifierGeofencePopup,
   } = useContext(DataContext);
 
   // le data a utiliser
@@ -217,7 +221,7 @@ function MapComponent({ mapType }) {
       } else if (zoom >= 6) {
         newSize = "6px";
         newWidth = "6rem";
-      } else newSize = "0px";
+      } else newSize = "6px";
 
       setTextSize(newSize);
       setwidthSize(newWidth);
@@ -501,38 +505,18 @@ function MapComponent({ mapType }) {
   }, [geofences]);
   const addGeofenceFonction = (e) => {
     if (e) e.preventDefault(); // Vérifie si `e` existe avant d'appeler preventDefault()
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
     const description = zoneDescription || "";
-    const geozoneID = zoneName || "";
-    const radius = "";
-    const zoneType = "";
-    const zoomRegion = "";
-    const lastUpdateTime = "";
-    const accountID = "";
-    const color = ajouterCouleurGeofenceCodeCouleur || ""; // Use shapeColor for consistency
-    // const latitude1 = "";
-    // const longitude1 = "";
 
-    // const latitude2 = "";
-    // const longitude2 = "";
+    const color =
+      ajouterCouleurGeofenceCodeCouleur ||
+      ajouterCouleurGeofenceCodeCouleurRef.current ||
+      ""; // Use shapeColor for consistency
 
-    // const latitude3 = "";
-    // const longitude3 = "";
+    const geozoneID =
+      currentGeozone?.geozoneID ||
+      `${zoneDescription.toLowerCase().replace(/\s+/g, "_")}`;
 
-    // const latitude4 = "";
-    // const longitude4 = "";
-
-    // const latitude5 = "";
-    // const longitude5 = "";
-
-    // const latitude6 = "";
-    // const longitude6 = "";
-
-    // const latitude7 = "";
-    // const longitude7 = "";
-
-    // const latitude8 = "";
-    // const longitude8 = "";
     if (geofences?.coordinates.length >= 3 && !isEditingGeofence) {
       const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
         geofences?.coordinates;
@@ -540,12 +524,7 @@ function MapComponent({ mapType }) {
       // console.log(
       createNewGeofence(
         description,
-        geozoneID,
-        radius,
-        zoneType,
-        zoomRegion,
-        lastUpdateTime,
-        accountID,
+
         color,
         pos1?.lat || "",
         pos1?.lng || "",
@@ -571,13 +550,9 @@ function MapComponent({ mapType }) {
       // console.log(
       ModifierGeofence(
         description,
-        geozoneID,
-        radius,
-        zoneType,
-        zoomRegion,
-        lastUpdateTime,
-        accountID,
+
         color,
+        geozoneID,
         pos1?.lat || "",
         pos1?.lng || "",
         pos2?.lat || "",
@@ -783,6 +758,20 @@ function MapComponent({ mapType }) {
             composant_from={"succès de creation du geozone"}
           />
 
+          <SuccèsÉchecMessagePopup
+            message={succesModifierGeofencePopup}
+            setMessage={setSuccesModifierGeofencePopup}
+            véhiculeData={null}
+            composant_from={"succès de modification du geozone"}
+          />
+
+          <SuccèsÉchecMessagePopup
+            message={errorModifierGeofencePopup}
+            setMessage={setErrorModifierGeofencePopup}
+            véhiculeData={null}
+            composant_from={"échec de la modification du geozone"}
+          />
+
           <div className="mx-auto relative   min-w-[90vw]-- w-full max-w-[40rem] rounded-lg p-4 bg-white">
             <div className="flex justify-between items-center gap-2">
               <h2 className="text-md font-semibold pb-2 border-b">
@@ -849,7 +838,7 @@ function MapComponent({ mapType }) {
                   ></div>
                   <p>{ajouterCouleurGeofenceEnText}</p>
                 </div>
-                <p className="cursor-pointer text-orange-500">modifier</p>
+                <p className="cursor-pointer text-orange-500">Modifier</p>
               </div>
               <label
                 htmlFor="description"
@@ -876,7 +865,7 @@ function MapComponent({ mapType }) {
               </div>
               {pasAssezDePositionAjouterErreur && (
                 <p className="bg-red-100 mt-3 text-red-800 px-4 py-1 rounded-lg">
-                  Vous devez ajouter au moin 3 positions
+                  Vous devez ajouter au 3 positions
                 </p>
               )}
               <div className="mt-10 max-w-[25rem] flex justify-center  mx-auto gap-3 ">
@@ -929,7 +918,7 @@ function MapComponent({ mapType }) {
                   onClick={() => {
                     setAjouterCouleurGeofencePopup(false);
                   }}
-                  className="mt-4 flex flex-col"
+                  className="mt-4 overflow-auto max-h-[20rem] flex flex-col"
                 >
                   {[
                     { name: "Bleu foncé", color: "#003366" },
@@ -942,6 +931,13 @@ function MapComponent({ mapType }) {
                     { name: "Gris anthracite", color: "#34495E" },
                     { name: "Rose fuchsia", color: "#C0392B" },
                     { name: "Noir", color: "#000000" },
+                    { name: "Rouge foncé", color: "#8B0000" }, // Dark Red
+                    { name: "Orange foncé", color: "#E65100" }, // Dark Orange
+                    { name: "Jaune foncé", color: "#B7950B" }, // Dark Yellow
+                    { name: "Vert foncé", color: "#006400" }, // Dark Green
+                    { name: "Bleu foncé", color: "#00008B" }, // Dark Blue
+                    { name: "Indigo foncé", color: "#4B0082" }, // Dark Indigo
+                    { name: "Violet foncé", color: "#5B2C6F" }, // Dark Violet
                   ].map((item, index) => (
                     <div
                       key={index}
@@ -992,45 +988,63 @@ function MapComponent({ mapType }) {
         {/* Composant qui gère le clic sur la carte */}
 
         {!isAddingNewGeofence &&
-          geofenceData?.map((geofence, index) => {
-            // Calculer le centre du geofence
-            const latitudes = geofence.coordinates.map((point) => point.lat);
-            const longitudes = geofence.coordinates.map((point) => point.lng);
-            const center = [
-              (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
-              (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-            ];
+          geofenceData
+            ?.filter((isActiveGeofence) => {
+              const activeGeofence = isActiveGeofence?.isActive === 1;
+              return activeGeofence;
+            })
+            ?.map((geofence, index) => {
+              // Filtrer les coordonnées valides
+              const validCoordinates = geofence?.coordinates?.filter(
+                (point) =>
+                  point.lat !== null &&
+                  point.lng !== null &&
+                  point.lat !== "" &&
+                  point.lng !== "" &&
+                  point.lat !== 0 &&
+                  point.lng !== 0
+              );
 
-            return (
-              <React.Fragment key={index}>
-                <Polygon
-                  positions={geofence.coordinates.map((point) => [
-                    point.lat,
-                    point.lng,
-                  ])}
-                  pathOptions={{
-                    color: geofence.color || "", // Couleur de la bordure
-                    fillColor: geofence.color || "#000000", // Couleur du fond
-                    fillOpacity: 0.1, // Opacité du fond
-                    weight: 1, // Épaisseur des lignes
-                  }}
-                />
+              if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
 
-                <Marker
-                  position={center}
-                  icon={L.divIcon({
-                    className: "geofence-label",
-                    html: `<div 
+              // Calculer le centre du geofence
+              const latitudes = validCoordinates?.map((point) => point.lat);
+              const longitudes = validCoordinates?.map((point) => point.lng);
+              const center = [
+                (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+                (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+              ];
+
+              return (
+                <React.Fragment key={index}>
+                  <Polygon
+                    positions={validCoordinates?.map((point) => [
+                      point.lat,
+                      point.lng,
+                    ])}
+                    pathOptions={{
+                      color: geofence?.color || "", // Couleur de la bordure
+                      fillColor: geofence?.color || "#000000", // Couleur du fond
+                      fillOpacity: 0.1, // Opacité du fond
+                      weight: 1, // Épaisseur des lignes
+                    }}
+                  />
+
+                  <Marker
+                    position={center}
+                    icon={L.divIcon({
+                      className: "geofence-label",
+                      html: `<div 
                            class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                            
                            style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                            ${geofence?.description}
                            </div>`,
-                  })}
-                />
-              </React.Fragment>
-            );
-          })}
+                    })}
+                  />
+                </React.Fragment>
+              );
+            })}
 
         {!isAddingNewGeofence &&
           vehicles?.map((véhicule, index) => {

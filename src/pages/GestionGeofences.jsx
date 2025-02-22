@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { IoEarth } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
+import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function GestionGeofences() {
   const {
@@ -14,10 +16,83 @@ function GestionGeofences() {
     setCurrentGeozone,
     isEditingGeofence,
     setIsEditingGeofence,
+    ModifierGeofence,
+    supprimerGeofence,
+    activerOuDesactiverGeofence,
+    succesCreateGeofencePopup,
+    setSuccesCreateGeofencePopup,
+    succesModifierGeofencePopup,
+    setSuccesModifierGeofencePopup,
+    errorModifierGeofencePopup,
+    setErrorModifierGeofencePopup,
+    succesDeleteGeofencePopup,
+    setSuccesDeleteGeofencePopup,
+    errorDeleteGeofencePopup,
+    setErrorDeleteGeofencePopup,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
+
+  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+  //
+  //
+  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+  const lastUpdateTimeMs = currentGeozone?.lastUpdateTime
+    ? currentGeozone?.lastUpdateTime * 1000
+    : 0;
+  const isCurrentGeozoneActive =
+    currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+  const geozoneID =
+    currentGeozone?.geozoneID ||
+    `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
+
+  const supprimerOuModifierGeozone = () => {
+    // activerOuDesactiverGeofence(geozoneID, 0);
+
+    if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
+      supprimerGeofence(geozoneID);
+    }
+
+    if (
+      (isCurrentGeozoneActive || !isCurrentGeozoneActive) &&
+      currentGeozone?.isActive === 0
+    ) {
+      // activerOuDesactiverGeofence(geozoneID, 1);
+    }
+
+    if (!isCurrentGeozoneActive && currentGeozone?.isActive === 1) {
+      // activerOuDesactiverGeofence(geozoneID, 0);
+    }
+  };
+
   return (
     <div>
+      <SuccèsÉchecMessagePopup
+        message={succesCreateGeofencePopup}
+        setMessage={setSuccesCreateGeofencePopup}
+        véhiculeData={null}
+        composant_from={"succès de creation du geozone"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={succesModifierGeofencePopup}
+        setMessage={setSuccesModifierGeofencePopup}
+        véhiculeData={null}
+        composant_from={"succès de modification du geozone"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={succesDeleteGeofencePopup}
+        setMessage={setSuccesDeleteGeofencePopup}
+        véhiculeData={null}
+        composant_from={"succès de suppression du geozone"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={errorDeleteGeofencePopup}
+        setMessage={setErrorDeleteGeofencePopup}
+        véhiculeData={null}
+        composant_from={"échec de la suppression du geozone"}
+      />
+
       <div className="px-4 pb-40">
         <h2
           onClick={() => {
@@ -25,7 +100,7 @@ function GestionGeofences() {
           }}
           className="mt-[6rem] text-lg text-center font-bold "
         >
-          Liste de tes Geozones
+          Geozones
         </h2>
         <div className="flex justify-center mt-4">
           <Link
@@ -50,6 +125,13 @@ function GestionGeofences() {
               geofenceData
                 // ?.filter((item) => item.geozoneID.endsWith(`_${account}`))
                 .map((geozone, index) => {
+                  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                  const lastUpdateTimeMs = geozone?.lastUpdateTime
+                    ? geozone?.lastUpdateTime * 1000
+                    : 0;
+                  const isActive =
+                    currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
                   return (
                     <div
                       className="shadow-lg relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
@@ -93,11 +175,26 @@ function GestionGeofences() {
                         </Link>
                         <button
                           onClick={() => {
+                            setCurrentGeozone(geozone);
                             setSupprimerGeozonePopup(true);
                           }}
-                          className="bg-red-500 text-white text-sm w-full font-semibold rounded-lg py-1 px-4"
+                          className={`${
+                            isActive
+                              ? " bg-red-500 text-white"
+                              : "text-red-600 border-[0.09rem] border-red-500 "
+                          }   text-sm w-full font-semibold rounded-lg py-1 px-4`}
                         >
-                          Supprimer
+                          {isActive &&
+                            geozone?.isActive === (0 || 1) &&
+                            "Supprimer"}
+                          {/* {isActive && geozone?.isActive === 0 && "Supprimer"} */}
+                          {/* {!isActive && geozone?.isActive === 0 && "Activer"} */}
+
+                          {(isActive || !isActive) &&
+                            geozone?.isActive === 0 &&
+                            "Activer"}
+
+                          {!isActive && geozone?.isActive === 1 && "Désactiver"}
                         </button>
                       </div>
                     </div>
@@ -127,11 +224,16 @@ function GestionGeofences() {
                       className="text-xl font-bold tracking-tight"
                       id="page-action.heading"
                     >
-                      Supprimer
+                      {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"}
                     </h2>
 
                     <p className="text-gray-500">
-                      Es-tu sûr de supprimer le geozone ? ?
+                      Es-tu sûr de{" "}
+                      {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"} le
+                      geozone ? ?
+                    </p>
+                    <p className="text-red-500 font-semibold">
+                      {currentGeozone?.description}
                     </p>
                   </div>
                 </div>
@@ -154,12 +256,17 @@ function GestionGeofences() {
 
                       <button
                         onClick={() => {
+                          supprimerOuModifierGeozone();
                           setSupprimerGeozonePopup(false);
                         }}
                         className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset ---dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-white shadow focus:ring-white border-transparent bg-red-600 hover:bg-red-500 focus:bg-red-700 focus:ring-offset-red-700"
                       >
                         <span className="flex items-center gap-1">
-                          <span className="">Supprimer</span>
+                          <span className="">
+                            {isCurrentGeozoneActive
+                              ? "Supprimer"
+                              : "Désactiver"}
+                          </span>
                         </span>
                       </button>
                     </div>

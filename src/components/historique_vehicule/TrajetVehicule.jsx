@@ -429,7 +429,7 @@ function TrajetVehicule({
       } else if (zoom >= 6) {
         newSize = "6px";
         newWidth = "6rem";
-      } else newSize = "0px";
+      } else newSize = "6px";
 
       setTextSize(newSize);
       setwidthSize(newWidth);
@@ -1111,57 +1111,75 @@ function TrajetVehicule({
 
               {/* Affichage des géofences */}
               {voirGeofence &&
-                geofences?.map((geofence, index) => {
-                  // Calculer le centre du geofence
-                  const latitudes = geofence.coordinates.map(
-                    (point) => point.lat
-                  );
-                  const longitudes = geofence.coordinates.map(
-                    (point) => point.lng
-                  );
-                  const center = [
-                    (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
-                    (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-                  ];
+                geofences
+                  ?.filter((isActiveGeofence) => {
+                    const activeGeofence = isActiveGeofence?.isActive === 1;
+                    return activeGeofence;
+                  })
+                  ?.map((geofence, index) => {
+                    // Filtrer les coordonnées valides
+                    const validCoordinates = geofence?.coordinates?.filter(
+                      (point) =>
+                        point.lat !== null &&
+                        point.lng !== null &&
+                        point.lat !== "" &&
+                        point.lng !== "" &&
+                        point.lat !== 0 &&
+                        point.lng !== 0
+                    );
 
-                  return (
-                    <React.Fragment key={index}>
-                      <Polygon
-                        positions={geofence.coordinates.map((point) => [
-                          point.lat,
-                          point.lng,
-                        ])}
-                        pathOptions={{
-                          color: geofence.color || "", // Couleur de la bordure
-                          fillColor: geofence.color || "#000000", // Couleur du fond
-                          fillOpacity: 0.1, // Opacité du fond
-                          weight: 1, // Épaisseur des lignes
-                        }}
-                      />
+                    if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
 
-                      <Marker
-                        position={center}
-                        icon={L.divIcon({
-                          className: "geofence-label",
-                          html: `<div 
+                    // Calculer le centre du geofence
+                    const latitudes = validCoordinates?.map(
+                      (point) => point.lat
+                    );
+                    const longitudes = validCoordinates?.map(
+                      (point) => point.lng
+                    );
+
+                    const center = [
+                      (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+                      (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+                    ];
+
+                    return (
+                      <React.Fragment key={index}>
+                        <Polygon
+                          positions={validCoordinates?.coordinates?.map(
+                            (point) => [point.lat, point.lng]
+                          )}
+                          pathOptions={{
+                            color: geofence.color || "", // Couleur de la bordure
+                            fillColor: geofence.color || "#000000", // Couleur du fond
+                            fillOpacity: 0.1, // Opacité du fond
+                            weight: 1, // Épaisseur des lignes
+                          }}
+                        />
+
+                        <Marker
+                          position={center}
+                          icon={L.divIcon({
+                            className: "geofence-label",
+                            html: `<div 
                         class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                         
                         style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                         ${geofence?.description}
                         </div>`,
-                        })}
-                      />
+                          })}
+                        />
 
-                      {/* <Marker
+                        {/* <Marker
                       position={center}
                       icon={L.divIcon({
                         className: "geofence-label",
                         html: `<div className="bg-red-600" style="font-size: ${textSize}; font-weight: bold; text-align: center; color: black; white-space: nowrap; text-overflow: ellipsis;">${geofence?.description}</div>`,
                       })}
                     /> */}
-                    </React.Fragment>
-                  );
-                })}
+                      </React.Fragment>
+                    );
+                  })}
 
               {/* Affichage des marqueurs "classiques" si l'animation n'est pas lancée */}
               {!isAnimating &&
