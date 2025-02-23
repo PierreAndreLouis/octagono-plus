@@ -4384,315 +4384,322 @@ function RapportGroupe({
               preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
             }  border-2-- pb-10 -translate-y-[3.1rem] w-full min-w-[160rem]  overflow-y-auto overflow-x-hidden`}
           >
-            <table
-              ref={tableRef}
-              id="myTable"
-              className=" w-full text-left dark:bg-gray-800 dark:text-gray-200"
-            >
-              <thead>
-                <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-                  <th className="border border-l-4  border-l-red-600  min-w-[0rem] max-w-[0rem]"></th>
-                  <th className="border border-l-4--  border-l-red-600 dark:border-gray-600 py-3 px-2  min-w-[4rem] max-w-[4rem]">
-                    #
-                  </th>
+            <div>
+              {/* <div>
+                asdfasdfasdfasdf
+              </div> */}
+              {/* xxxxxxxxxxxxxxxxxxxxxxxx */}
+              <table
+                ref={tableRef}
+                id="myTable"
+                className=" w-full text-left dark:bg-gray-800 dark:text-gray-200"
+              >
+                <thead>
+                  <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                    <th className="border border-l-4  border-l-red-600  min-w-[0rem] max-w-[0rem]"></th>
+                    <th className="border border-l-4--  border-l-red-600 dark:border-gray-600 py-3 px-2  min-w-[4rem] max-w-[4rem]">
+                      #
+                    </th>
 
-                  <th className="border dark:border-gray-600 py-3 px-2  min-w-[18rem] max-w-[18rem]">
-                    Véhicule
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                    Date et Heure de départ
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                    Date et Heure d'arrivée
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                    Vitesse moyenne
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                    Vitesse maximale
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                    Distance totale
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                    Nombre d'arrêts
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
-                    Temps en mouvement
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                    Adresse de départ
-                  </th>
-                  <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]  max-w-[30rem]">
-                    Adresse d'arrivée
-                  </th>
-                </tr>
-              </thead>
+                    <th className="border dark:border-gray-600 py-3 px-2  min-w-[18rem] max-w-[18rem]">
+                      Véhicule
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
+                      Date et Heure de départ
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
+                      Date et Heure d'arrivée
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                      Vitesse moyenne
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                      Vitesse maximale
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                      Distance totale
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                      Nombre d'arrêts
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
+                      Temps en mouvement
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
+                      Adresse de départ
+                    </th>
+                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]  max-w-[30rem]">
+                      Adresse d'arrivée
+                    </th>
+                  </tr>
+                </thead>
 
-              <tbody className="  max-w-20">
-                {(tableSortBy || vehiclesByDepartureTime)?.map(
-                  (véhicule, index) => {
-                    // Trouver le véhicule correspondant dans updateData
-                    const matchedVehicle =
-                      currentDataFusionné &&
-                      currentDataFusionné.find(
-                        (v) => v.deviceID === véhicule?.deviceID
+                <tbody className="  max-w-20">
+                  {(tableSortBy || vehiclesByDepartureTime)?.map(
+                    (véhicule, index) => {
+                      // Trouver le véhicule correspondant dans updateData
+                      const matchedVehicle =
+                        currentDataFusionné &&
+                        currentDataFusionné.find(
+                          (v) => v.deviceID === véhicule?.deviceID
+                        );
+
+                      const isMoving = matchedVehicle.véhiculeDetails?.some(
+                        (detail) => detail.speedKPH >= 1
                       );
 
-                    const isMoving = matchedVehicle.véhiculeDetails?.some(
-                      (detail) => detail.speedKPH >= 1
-                    );
+                      const hasDetails =
+                        matchedVehicle.véhiculeDetails &&
+                        matchedVehicle.véhiculeDetails.length > 0;
 
-                    const hasDetails =
-                      matchedVehicle.véhiculeDetails &&
-                      matchedVehicle.véhiculeDetails.length > 0;
+                      const noSpeed = matchedVehicle.véhiculeDetails?.every(
+                        (detail) => detail.speedKPH <= 0
+                      );
 
-                    const noSpeed = matchedVehicle.véhiculeDetails?.every(
-                      (detail) => detail.speedKPH <= 0
-                    );
+                      // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                      const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+                        ? matchedVehicle.lastUpdateTime * 1000
+                        : 0;
+                      const isActive =
+                        currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-                    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-                    const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
-                      ? matchedVehicle.lastUpdateTime * 1000
-                      : 0;
-                    const isActive =
-                      currentTime - lastUpdateTimeMs < twentyHoursInMs;
+                      ///////////////////////////////////////////////////////////////////////////
+                      // iiiiiiiiiiiiiiiiiiiiiiiiiiii
 
-                    ///////////////////////////////////////////////////////////////////////////
-                    // iiiiiiiiiiiiiiiiiiiiiiiiiiii
+                      const lastUpdateTimestampMs =
+                        matchedVehicle.véhiculeDetails &&
+                        matchedVehicle.véhiculeDetails[0] &&
+                        matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-                    const lastUpdateTimestampMs =
-                      matchedVehicle.véhiculeDetails &&
-                      matchedVehicle.véhiculeDetails[0] &&
-                      matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+                      const isToday =
+                        lastUpdateTimestampMs - todayTimestamp > 0;
 
-                    const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+                      ////////////////////////////////////////////////////////////////////
 
-                    ////////////////////////////////////////////////////////////////////
+                      let iconBg = "text-red-500 dark:text-red-500";
+                      let vehiculeBG =
+                        "bg-red-50/50-- hover:bg-red-100 dark:hover:bg-gray-700";
 
-                    let iconBg = "text-red-500 dark:text-red-500";
-                    let vehiculeBG =
-                      "bg-red-50/50-- hover:bg-red-100 dark:hover:bg-gray-700";
+                      if (
+                        hasDetails &&
+                        isMoving &&
+                        (isToday || (isSearching && !isToday))
+                      ) {
+                        iconBg =
+                          "text-green-500 bg-green-50/50  dark:text-green-500 border-l-green-600 dark:border-l-green-600";
+                        vehiculeBG =
+                          "bg-green-50/50-- text-green-800 dark:text-green-200 font-semibold hover:bg-green-100 dark:hover:bg-gray-700";
+                      } else if (
+                        hasDetails &&
+                        (noSpeed || (isMoving && !isToday)) &&
+                        isActive
+                      ) {
+                        iconBg =
+                          "text-red-500  bg-red-50/50 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
+                        vehiculeBG =
+                          "bg-red-50/50--  text-red-700 dark:text-red-200  font-semibold hover:bg-red-100 dark:hover:bg-gray-700";
+                      } else if (!hasDetails || !isActive) {
+                        iconBg =
+                          "text-purple-800  bg-purple-50/50 dark:text-purple-100 border-l-purple-500 dark:border-l-purple-600";
+                        vehiculeBG =
+                          "bg-purple-50/50--  text-purple-800 dark:text-purple-200  font-semibold hover:bg-purple-100 dark:hover:bg-gray-700";
+                      }
+                      {
+                        /* yyyyyyyyyyyyyyyyyyyyyy */
+                      }
 
-                    if (
-                      hasDetails &&
-                      isMoving &&
-                      (isToday || (isSearching && !isToday))
-                    ) {
-                      iconBg =
-                        "text-green-500 bg-green-50/50  dark:text-green-500 border-l-green-600 dark:border-l-green-600";
-                      vehiculeBG =
-                        "bg-green-50/50-- text-green-800 dark:text-green-200 font-semibold hover:bg-green-100 dark:hover:bg-gray-700";
-                    } else if (
-                      hasDetails &&
-                      (noSpeed || (isMoving && !isToday)) &&
-                      isActive
-                    ) {
-                      iconBg =
-                        "text-red-500  bg-red-50/50 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
-                      vehiculeBG =
-                        "bg-red-50/50--  text-red-700 dark:text-red-200  font-semibold hover:bg-red-100 dark:hover:bg-gray-700";
-                    } else if (!hasDetails || !isActive) {
-                      iconBg =
-                        "text-purple-800  bg-purple-50/50 dark:text-purple-100 border-l-purple-500 dark:border-l-purple-600";
-                      vehiculeBG =
-                        "bg-purple-50/50--  text-purple-800 dark:text-purple-200  font-semibold hover:bg-purple-100 dark:hover:bg-gray-700";
-                    }
-                    {
-                      /* yyyyyyyyyyyyyyyyyyyyyy */
-                    }
-
-                    ///////////////////////////////////////////////////////////////////////
-                    return (
-                      <tr key={index} className="border dark:border-gray-600">
-                        <td
-                          className={`${iconBg}   border font-semibold text-lg border-l-4  dark:bg-gray-900/70  dark:border-gray-600`}
-                        ></td>
-                        <td
-                          className={`${iconBg}   border font-semibold text-lg border-l-4--  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600`}
-                        >
-                          {index + 1 || "---"}
-                        </td>
-                        <td
-                          onClick={() => {
-                            handleClick(véhicule);
-                          }}
-                          className={`${vehiculeBG} border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
-                        >
-                          {véhicule?.description || "---"}
-                        </td>
-                        {/*  */}
-                        <td
-                          className={`${
-                            tableSortByColorBg ===
-                              ("vehiclesByDepartureTime" || "") &&
-                            "bg-orange-50 dark:bg-orange-950"
-                          } border py-3 px-2   dark:border-gray-600`}
-                        >
-                          {véhicule?.véhiculeDetails[0]?.timestamp
-                            ? FormatDateHeure(
-                                véhicule?.véhiculeDetails[
-                                  véhicule?.véhiculeDetails.length - 1
-                                ]?.timestamp
-                              )?.date
-                            : ""}{" "}
-                          {véhicule?.véhiculeDetails[0]?.timestamp && (
-                            <span className="px-2">/</span>
-                          )}{" "}
-                          {véhicule?.véhiculeDetails[0]?.timestamp
-                            ? FormatDateHeure(
-                                véhicule?.véhiculeDetails[
-                                  véhicule?.véhiculeDetails.length - 1
-                                ]?.timestamp
-                              )?.time
-                            : "Pas de date disponible"}{" "}
-                        </td>
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                          {véhicule?.véhiculeDetails[0]?.timestamp
-                            ? FormatDateHeure(
-                                véhicule?.véhiculeDetails[0]?.timestamp
-                              )?.date
-                            : ""}{" "}
-                          {véhicule?.véhiculeDetails[0]?.timestamp && (
-                            <span className="px-2">/</span>
-                          )}{" "}
-                          {véhicule?.véhiculeDetails[0]?.timestamp
-                            ? FormatDateHeure(
-                                véhicule?.véhiculeDetails[0]?.timestamp
-                              )?.time
-                            : "Pas de date disponible"}{" "}
-                        </td>
-
-                        {/* Vitesse moyenne */}
-                        <td className="border py-3 px-2 dark:border-gray-600">
-                          {véhicule?.avgSpeed + " Km/h"}
-                        </td>
-                        {/* max speed */}
-                        <td
-                          className={`${
-                            tableSortByColorBg ===
-                              ("vehiclesByMaxSpeed" || "") &&
-                            "bg-orange-50 dark:bg-orange-950"
-                          } border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
-                        >
-                          {(véhicule?.maxSpeed).toFixed(0) + " Km/h"}
-                        </td>
-
-                        {/* Distance totale */}
-                        <td
-                          className={`${
-                            tableSortByColorBg ===
-                              ("vehiclesByDistance" || "") &&
-                            "bg-orange-50 dark:bg-orange-950"
-                          } border py-3 px-2 dark:border-gray-600`}
-                        >
-                          {véhicule.totalDistance.toFixed(0)} km
-                        </td>
-
-                        {/* Nombre d'arret */}
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                          {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
-                          {véhicule.stopCount + " arrêts"}
-                        </td>
-
-                        {/* Temps actifs */}
-                        <td
-                          className={`${
-                            tableSortByColorBg ===
-                              ("vehiclesByMovingDuration" || "") &&
-                            "bg-orange-50 dark:bg-orange-950"
-                          } border py-3 px-2 dark:border-gray-600`}
-                        >
-                          {véhicule?.totalMovingDuration}
-                        </td>
-
-                        {/* Addresse départ */}
-                        <Tooltip
-                          title="Voir cette adresse sur la carte
-                         "
-                          PopperProps={{
-                            modifiers: [
-                              {
-                                name: "offset",
-                                options: {
-                                  offset: [0, -30], // Décalage horizontal et vertical
-                                },
-                              },
-                              {
-                                name: "zIndex",
-                                enabled: true,
-                                phase: "write",
-                                fn: ({ state }) => {
-                                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                                },
-                              },
-                            ],
-                          }}
-                        >
+                      ///////////////////////////////////////////////////////////////////////
+                      return (
+                        <tr key={index} className="border dark:border-gray-600">
+                          <td
+                            className={`${iconBg}   border font-semibold text-lg border-l-4  dark:bg-gray-900/70  dark:border-gray-600`}
+                          ></td>
+                          <td
+                            className={`${iconBg}   border font-semibold text-lg border-l-4--  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600`}
+                          >
+                            {index + 1 || "---"}
+                          </td>
                           <td
                             onClick={() => {
-                              afficherPositionTableauEnCarte(
-                                véhicule,
-                                véhicule?.véhiculeDetails[
-                                  véhicule?.véhiculeDetails?.length - 1
-                                ]?.creationTime
-                              );
+                              handleClick(véhicule);
                             }}
-                            className="border py-3 px-2  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
+                            className={`${vehiculeBG} border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
                           >
-                            {véhicule?.véhiculeDetails[
-                              véhicule?.véhiculeDetails.length - 1
-                            ]?.backupAddress ||
-                              véhicule?.véhiculeDetails[
+                            {véhicule?.description || "---"}
+                          </td>
+                          {/*  */}
+                          <td
+                            className={`${
+                              tableSortByColorBg ===
+                                ("vehiclesByDepartureTime" || "") &&
+                              "bg-orange-50 dark:bg-orange-950"
+                            } border py-3 px-2   dark:border-gray-600`}
+                          >
+                            {véhicule?.véhiculeDetails[0]?.timestamp
+                              ? FormatDateHeure(
+                                  véhicule?.véhiculeDetails[
+                                    véhicule?.véhiculeDetails.length - 1
+                                  ]?.timestamp
+                                )?.date
+                              : ""}{" "}
+                            {véhicule?.véhiculeDetails[0]?.timestamp && (
+                              <span className="px-2">/</span>
+                            )}{" "}
+                            {véhicule?.véhiculeDetails[0]?.timestamp
+                              ? FormatDateHeure(
+                                  véhicule?.véhiculeDetails[
+                                    véhicule?.véhiculeDetails.length - 1
+                                  ]?.timestamp
+                                )?.time
+                              : "Pas de date disponible"}{" "}
+                          </td>
+                          <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                            {véhicule?.véhiculeDetails[0]?.timestamp
+                              ? FormatDateHeure(
+                                  véhicule?.véhiculeDetails[0]?.timestamp
+                                )?.date
+                              : ""}{" "}
+                            {véhicule?.véhiculeDetails[0]?.timestamp && (
+                              <span className="px-2">/</span>
+                            )}{" "}
+                            {véhicule?.véhiculeDetails[0]?.timestamp
+                              ? FormatDateHeure(
+                                  véhicule?.véhiculeDetails[0]?.timestamp
+                                )?.time
+                              : "Pas de date disponible"}{" "}
+                          </td>
+
+                          {/* Vitesse moyenne */}
+                          <td className="border py-3 px-2 dark:border-gray-600">
+                            {véhicule?.avgSpeed + " Km/h"}
+                          </td>
+                          {/* max speed */}
+                          <td
+                            className={`${
+                              tableSortByColorBg ===
+                                ("vehiclesByMaxSpeed" || "") &&
+                              "bg-orange-50 dark:bg-orange-950"
+                            } border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
+                          >
+                            {(véhicule?.maxSpeed).toFixed(0) + " Km/h"}
+                          </td>
+
+                          {/* Distance totale */}
+                          <td
+                            className={`${
+                              tableSortByColorBg ===
+                                ("vehiclesByDistance" || "") &&
+                              "bg-orange-50 dark:bg-orange-950"
+                            } border py-3 px-2 dark:border-gray-600`}
+                          >
+                            {véhicule.totalDistance.toFixed(0)} km
+                          </td>
+
+                          {/* Nombre d'arret */}
+                          <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                            {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
+                            {véhicule.stopCount + " arrêts"}
+                          </td>
+
+                          {/* Temps actifs */}
+                          <td
+                            className={`${
+                              tableSortByColorBg ===
+                                ("vehiclesByMovingDuration" || "") &&
+                              "bg-orange-50 dark:bg-orange-950"
+                            } border py-3 px-2 dark:border-gray-600`}
+                          >
+                            {véhicule?.totalMovingDuration}
+                          </td>
+
+                          {/* Addresse départ */}
+                          <Tooltip
+                            title="Voir cette adresse sur la carte
+                         "
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: "offset",
+                                  options: {
+                                    offset: [0, -30], // Décalage horizontal et vertical
+                                  },
+                                },
+                                {
+                                  name: "zIndex",
+                                  enabled: true,
+                                  phase: "write",
+                                  fn: ({ state }) => {
+                                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                  },
+                                },
+                              ],
+                            }}
+                          >
+                            <td
+                              onClick={() => {
+                                afficherPositionTableauEnCarte(
+                                  véhicule,
+                                  véhicule?.véhiculeDetails[
+                                    véhicule?.véhiculeDetails?.length - 1
+                                  ]?.creationTime
+                                );
+                              }}
+                              className="border py-3 px-2  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
+                            >
+                              {véhicule?.véhiculeDetails[
                                 véhicule?.véhiculeDetails.length - 1
-                              ]?.address ||
-                              "Pas d'adresse disponible"}
-                          </td>
-                        </Tooltip>
+                              ]?.backupAddress ||
+                                véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
+                                ]?.address ||
+                                "Pas d'adresse disponible"}
+                            </td>
+                          </Tooltip>
 
-                        {/* Addresse départ */}
-                        <Tooltip
-                          title="Voir cette adresse sur la carte
+                          {/* Addresse départ */}
+                          <Tooltip
+                            title="Voir cette adresse sur la carte
                          "
-                          PopperProps={{
-                            modifiers: [
-                              {
-                                name: "offset",
-                                options: {
-                                  offset: [0, -30], // Décalage horizontal et vertical
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: "offset",
+                                  options: {
+                                    offset: [0, -30], // Décalage horizontal et vertical
+                                  },
                                 },
-                              },
-                              {
-                                name: "zIndex",
-                                enabled: true,
-                                phase: "write",
-                                fn: ({ state }) => {
-                                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                {
+                                  name: "zIndex",
+                                  enabled: true,
+                                  phase: "write",
+                                  fn: ({ state }) => {
+                                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                  },
                                 },
-                              },
-                            ],
-                          }}
-                        >
-                          <td
-                            onClick={() => {
-                              afficherPositionTableauEnCarte(
-                                véhicule,
-                                véhicule?.véhiculeDetails[0]?.creationTime
-                              );
+                              ],
                             }}
-                            className="border py-3 px-2  cursor-pointer   dark:border-gray-600"
                           >
-                            {véhicule?.véhiculeDetails[0]?.backupAddress ||
-                              véhicule?.véhiculeDetails[0]?.address ||
-                              "Pas d'adresse disponible"}
-                          </td>
-                        </Tooltip>
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
+                            <td
+                              onClick={() => {
+                                afficherPositionTableauEnCarte(
+                                  véhicule,
+                                  véhicule?.véhiculeDetails[0]?.creationTime
+                                );
+                              }}
+                              className="border py-3 px-2  cursor-pointer   dark:border-gray-600"
+                            >
+                              {véhicule?.véhiculeDetails[0]?.backupAddress ||
+                                véhicule?.véhiculeDetails[0]?.address ||
+                                "Pas d'adresse disponible"}
+                            </td>
+                          </Tooltip>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>{" "}
+            </div>
           </div>
         </div>
       </div>

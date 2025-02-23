@@ -15,6 +15,7 @@ import { FaChevronDown } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import SearchVehiculePupup from "./SearchVehiculePupup";
 import Tooltip from "@mui/material/Tooltip";
+import { MdErrorOutline } from "react-icons/md";
 
 // import "leaflet/dist/leaflet.css";
 
@@ -97,6 +98,39 @@ function RapportPageDetailsHeader({
       const element = rapportGroupePDFtRef.current; // Cible l'élément avec useRef
       html2pdf().from(element).save("Rapport en Groupe.pdf");
     }, 1000); // Délai d'attente de 2 secondes
+  };
+
+  // const generateTableGroupePDF = () => {
+  //   fonctiondownloadExelPDF();
+
+  //   setTimeout(() => {
+  //     const element = tableRef.current; // Cible l'élément avec useRef
+  //     html2pdf()
+  //       .from(element)
+  //       .save("Rapport Tableau Récapitulatif en Groupe.pdf");
+  //   }, 1000); // Délai d'attente de 2 secondes
+  // };
+
+  const generateTableGroupePDF = () => {
+    fonctiondownloadExelPDF();
+
+    setTimeout(() => {
+      const element = tableRef.current;
+
+      const options = {
+        margin: 10,
+        filename: "Rapport Tableau Récapitulatif en Groupe.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true }, // Permet de capturer correctement les styles
+        jsPDF: {
+          unit: "mm",
+          format: [700, element.scrollHeight], // Largeur fixée à 250mm, hauteur ajustée dynamiquement
+          orientation: "portrait",
+        },
+      };
+
+      html2pdf().set(options).from(element).save();
+    }, 1000);
   };
 
   const donneeVehiculeDetails = currentDataFusionné?.find(
@@ -375,6 +409,18 @@ function RapportPageDetailsHeader({
                         className=" text-xl text-red-500 cursor-pointer"
                       />
                     </div>
+                    {/*  */}
+                    {/*  */}
+                    {/* <div className="flex justify-center items-center "> */}
+                    <p className="flex items-start gap-3 bg-yellow-100 text-yellow-600 text-md mb-2 px-2 py-1 rounded-md text-center dark:bg-yellow-900 dark:text-yellow-400">
+                      {/* <span>
+                          <MdErrorOutline className="text-2xl mt-0.5" />
+                        </span> */}
+                      Le téléchargement peut prendre jusqu'a 1 minute
+                    </p>
+                    {/* </div> */}
+                    {/*  */}
+                    {/*  */}
                     {pageSection === "unite" && (
                       <div
                         onClick={() => {
@@ -400,6 +446,22 @@ function RapportPageDetailsHeader({
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
                         <p>Telecharger le rapport en PDF</p>
+                        <img
+                          className="w-[2rem]"
+                          src="/img/pdf_download.png"
+                          alt=""
+                        />
+                      </div>
+                    )}
+                    {pageSection !== "unite" && (
+                      <div
+                        onClick={() => {
+                          generateTableGroupePDF();
+                          setPdfDownloadPupup(false);
+                        }}
+                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                      >
+                        <p>Telecharger le tableau recapitulatif en PDF</p>
                         <img
                           className="w-[2rem]"
                           src="/img/pdf_download.png"
