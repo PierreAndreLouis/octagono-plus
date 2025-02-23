@@ -124,7 +124,8 @@ function RapportPageDetailsHeader({
         html2canvas: { scale: 2, useCORS: true }, // Permet de capturer correctement les styles
         jsPDF: {
           unit: "mm",
-          format: [700, element.scrollHeight], // Largeur fixée à 250mm, hauteur ajustée dynamiquement
+          format: [700, 1000], // Largeur fixée à 250mm, hauteur ajustée dynamiquement
+          // format: [700, element.scrollHeight], // Largeur fixée à 250mm, hauteur ajustée dynamiquement
           orientation: "portrait",
         },
       };

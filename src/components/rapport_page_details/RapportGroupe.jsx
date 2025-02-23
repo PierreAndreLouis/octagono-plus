@@ -4331,6 +4331,17 @@ function RapportGroupe({
             Véhicules hors service
           </p>
         </div>
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
         <div
           className={`${
             preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
@@ -4380,17 +4391,111 @@ function RapportGroupe({
           </thead>
 
           <div
+            ref={tableRef}
             className={` ${
               preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
             }  border-2-- pb-10 -translate-y-[3.1rem] w-full min-w-[160rem]  overflow-y-auto overflow-x-hidden`}
           >
             <div>
-              {/* <div>
-                asdfasdfasdfasdf
-              </div> */}
+              {/* eeeeeeeeeeeeeeeeeeeee */}
+              {preparationDownloadPDF && (
+                <div>
+                  <p className="text-white">.</p>
+                  <p className="text-white">.</p>
+
+                  <h2 className="w-full  mt-20 text-center font-semibold text-gray-800 text-[3rem] dark:text-orange-50 ">
+                    Tableau récapitulatif{" "}
+                  </h2>
+                  <div className="flex justify-between  mt-4  items-center ">
+                    <div className="sm:flex w-full gap-20 max-w-[50rem]-- mx-4-- justify-start items-center ">
+                      <div className="flex gap-0 items-center text-xl">
+                        <p className="font-bold ">Date du resultat: </p>
+                        <p className="text-[.9rem]--  text-xl">
+                          <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                            {
+                              <span className="text-[.85rem]--  --sm:text-sm md:text-[1rem]-- text-xl  lg:text-lg--">
+                                Du{" "}
+                                <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                                  {jourDebut}{" "}
+                                  {moisDebut === moisFin ? "" : moisDebut}{" "}
+                                  {anneeDebut === anneeFin ? "" : anneeDebut}
+                                </span>{" "}
+                                au{" "}
+                                <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                                  {jourFin} {moisFin} {anneeFin}
+                                </span>
+                              </span>
+                              // )
+                            }
+                          </span>
+                        </p>
+                      </div>
+
+                      <div className="flex gap-0 items-center text-xl">
+                        <p className="font-bold ">Heure du resultat: </p>
+
+                        <p className="text-[.9rem]-- text-xl">
+                          <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                            De{" "}
+                            <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
+                              {heureDebut}
+                            </span>{" "}
+                            a{" "}
+                            <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
+                              {heureFin}
+                            </span>{" "}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {!preparationDownloadPDF && (
+                      <div
+                        onClick={() => {
+                          exportToExcel();
+                        }}
+                        className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
+                      >
+                        <p>Telecharger</p>
+                        <img
+                          className="w-[2rem] mr-3--"
+                          src="/img/exel_download.png"
+                          alt=""
+                        />
+                      </div>
+                    )}
+
+                    {preparationDownloadPDF && (
+                      <p
+                        onClick={() => {
+                          exportToExcel();
+                        }}
+                        className=" lg:hidden cursor-pointer     py-1 px-4"
+                      >
+                        <img
+                          className="w-[2.6rem]"
+                          src="/img/exel_download.png"
+                          alt=""
+                        />
+                      </p>
+                    )}
+                  </div>
+                  <div className="mt-4 mb-8 flex items-center gap-2">
+                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
+                      Véhicules déplacés
+                    </p>
+                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
+                      Véhicules non déplacés
+                    </p>
+                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
+                      Véhicules hors service
+                    </p>
+                  </div>
+                </div>
+              )}
               {/* xxxxxxxxxxxxxxxxxxxxxxxx */}
               <table
-                ref={tableRef}
+                // ref={tableRef}
                 id="myTable"
                 className=" w-full text-left dark:bg-gray-800 dark:text-gray-200"
               >
