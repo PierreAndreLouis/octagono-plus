@@ -134,7 +134,7 @@ function GestionGeofences() {
 
                   return (
                     <div
-                      className="shadow-lg relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                      className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                       key={index}
                     >
                       <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
@@ -161,7 +161,32 @@ function GestionGeofences() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between items-center ">
+                      <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                        {isActive && geozone?.isActive === (0 || 1) && (
+                          <button
+                            onClick={() => {
+                              setCurrentGeozone(geozone);
+                              setSupprimerGeozonePopup(true);
+                            }}
+                            className={`${
+                              isActive
+                                ? " bg-red-500 text-white"
+                                : "text-red-600 border-[0.02rem] border-red-500 "
+                            }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
+                          >
+                            {isActive &&
+                              geozone?.isActive === (0 || 1) &&
+                              "Supprimer"}
+
+                            {(isActive || !isActive) &&
+                              geozone?.isActive === 0 &&
+                              "Activer"}
+
+                            {!isActive &&
+                              geozone?.isActive === 1 &&
+                              "Désactiver"}
+                          </button>
+                        )}
                         <Link
                           onClick={() => {
                             setCurrentGeozone(geozone);
@@ -169,33 +194,36 @@ function GestionGeofences() {
                             setIsEditingGeofence(true);
                           }}
                           to="/Groupe_vehicule_location?tab=localisation"
-                          className="bg-gray-100 text-center w-full text-sm font-semibold rounded-lg py-1 px-4"
+                          className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"
                         >
                           Modifier
                         </Link>
-                        <button
-                          onClick={() => {
-                            setCurrentGeozone(geozone);
-                            setSupprimerGeozonePopup(true);
-                          }}
-                          className={`${
-                            isActive
-                              ? " bg-red-500 text-white"
-                              : "text-red-600 border-[0.09rem] border-red-500 "
-                          }   text-sm w-full font-semibold rounded-lg py-1 px-4`}
-                        >
-                          {isActive &&
-                            geozone?.isActive === (0 || 1) &&
-                            "Supprimer"}
-                          {/* {isActive && geozone?.isActive === 0 && "Supprimer"} */}
-                          {/* {!isActive && geozone?.isActive === 0 && "Activer"} */}
 
-                          {(isActive || !isActive) &&
-                            geozone?.isActive === 0 &&
-                            "Activer"}
+                        {/* {isActive && geozone?.isActive === (0 || 1) && (
+                          <button
+                            onClick={() => {
+                              setCurrentGeozone(geozone);
+                              setSupprimerGeozonePopup(true);
+                            }}
+                            className={`${
+                              isActive
+                                ? " bg-red-500 text-white"
+                                : "text-red-600 border-[0.02rem] border-red-500 "
+                            }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
+                          >
+                            {isActive &&
+                              geozone?.isActive === (0 || 1) &&
+                              "Supprimer"}
 
-                          {!isActive && geozone?.isActive === 1 && "Désactiver"}
-                        </button>
+                            {(isActive || !isActive) &&
+                              geozone?.isActive === 0 &&
+                              "Activer"}
+
+                            {!isActive &&
+                              geozone?.isActive === 1 &&
+                              "Désactiver"}
+                          </button>
+                        )} */}
                       </div>
                     </div>
                   );

@@ -2,6 +2,7 @@
 import React, { createContext, useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
+import emailjs from "emailjs-com";
 
 export const DataContext = createContext();
 
@@ -842,6 +843,10 @@ const DataContextProvider = ({ children }) => {
         setAccount(localStorage.getItem("account") || "");
         setUsername(localStorage.getItem("username") || "");
         setPassword(localStorage.getItem("password") || "");
+
+        // Envoie d'un mail pour avertir m'avertir de la connexion
+
+        // sendConfirmConnexionMail(account);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -921,7 +926,71 @@ const DataContextProvider = ({ children }) => {
     setCurrentVéhicule(null);
     navigate("/login");
   };
+  //
 
+  function sendConfirmConnexionMail(account) {
+    // if (e) e.preventDefault(); // Empêche le rechargement de la page
+
+    // setLoading(true); // Active le mode chargement
+
+    const serviceID = "service_1fuirwo";
+    const templateID = "template_1ohyj6l";
+    const publicKey = "1c_u66zneOqI3RQi0"; // Clé publique
+
+    const accountConnected = account || localStorage.getItem("account") || "";
+    const now = new Date();
+    const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
+    const heureActuel = now.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }); // Format: HH:MM AM/PM
+
+    const params = {
+      message: `Le client ${accountConnected} s'est connecté le ${dateAujourdhui} à ${heureActuel}`,
+    };
+
+    emailjs.init(publicKey);
+
+    emailjs
+      .send(serviceID, templateID, params)
+      .then((res) => {
+        console.log(res);
+        console.log("Envoie du mail de connexion avec success");
+
+        // alert("Votre message a été envoyé avec succès !");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Erreur lors de l'envoi du message. Veuillez réessayer.");
+        // alert("Erreur lors de l'envoi du message. Veuillez réessayer.");
+      })
+      .finally(() => {
+        console.log("Envoie du mail de connexion avec success");
+        // setLoading(false); // Désactive le mode chargement après l'envoi
+      });
+  }
+
+  x;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
   const GeofenceDataFonction = async () => {
     console.log("Startttttt geofence");
 
@@ -1289,7 +1358,7 @@ const DataContextProvider = ({ children }) => {
     <Field name="sortID">${geozoneID}</Field>
 
         <Field name="description">${description}</Field>
-        <Field name="color">${color}</Field>
+        <Field name="shapeColor">${color}</Field>
         
   
         <Field name="latitude1">${lat1}</Field>
@@ -1875,10 +1944,10 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     if (userData) {
       fetchVehicleData();
-      if (geofenceDataRef?.current?.length > 0 || geofenceData?.length > 0) {
-      } else {
-        GeofenceDataFonction();
-      }
+      // if (geofenceDataRef?.current?.length > 0 || geofenceData?.length > 0) {
+      // } else {
+      //   GeofenceDataFonction();
+      // }
     }
   }, [userData]);
 

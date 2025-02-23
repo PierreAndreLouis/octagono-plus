@@ -182,7 +182,7 @@ function SideBar() {
           <h3>Rapport des véhicules</h3>
         </Link>
 
-        {/* <Link
+        <Link
           to="/gestion_geofences?tab=geozone"
           onClick={() => {
             setShowSideBar(true);
@@ -194,7 +194,7 @@ function SideBar() {
         >
           <IoEarth />
           <h3>Gestion des Geozones</h3>
-        </Link> */}
+        </Link>
 
         {/*  */}
         {/*  */}

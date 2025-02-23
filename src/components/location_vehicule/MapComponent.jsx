@@ -652,7 +652,7 @@ function MapComponent({ mapType }) {
               setAjouterGeofencePopup(false);
             }}
             to="/gestion_geofences?tab=geozone"
-            className="py-1.5 w-full flex justify-center items-center cursor-pointer px-3 bg-red-600 text-white rounded-lg"
+            className="py-[.1rem] w-full flex justify-center items-center cursor-pointer px-3 bg-red-600 text-white rounded-lg"
           >
             Annuler
           </Link>

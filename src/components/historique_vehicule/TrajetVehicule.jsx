@@ -1146,9 +1146,10 @@ function TrajetVehicule({
                     return (
                       <React.Fragment key={index}>
                         <Polygon
-                          positions={validCoordinates?.coordinates?.map(
-                            (point) => [point.lat, point.lng]
-                          )}
+                          positions={validCoordinates?.map((point) => [
+                            point.lat,
+                            point.lng,
+                          ])}
                           pathOptions={{
                             color: geofence.color || "", // Couleur de la bordure
                             fillColor: geofence.color || "#000000", // Couleur du fond
@@ -1169,14 +1170,6 @@ function TrajetVehicule({
                         </div>`,
                           })}
                         />
-
-                        {/* <Marker
-                      position={center}
-                      icon={L.divIcon({
-                        className: "geofence-label",
-                        html: `<div className="bg-red-600" style="font-size: ${textSize}; font-weight: bold; text-align: center; color: black; white-space: nowrap; text-overflow: ellipsis;">${geofence?.description}</div>`,
-                      })}
-                    /> */}
                       </React.Fragment>
                     );
                   })}
