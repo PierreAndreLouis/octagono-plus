@@ -846,7 +846,8 @@ const DataContextProvider = ({ children }) => {
 
         // Envoie d'un mail pour avertir m'avertir de la connexion
 
-        sendConfirmConnexionMail(account);
+        sendConfirmConnexionMail(account, user);
+        sendConfirmConnexionMail2(account, user);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -924,11 +925,15 @@ const DataContextProvider = ({ children }) => {
     // localStorage.clear();
     currentDataFusionné = [];
     setCurrentVéhicule(null);
+
+    resetIndexedDB(); // Vide le localStorage
+    window.location.reload(); // Rafraîchit la page
+    window.location.reload(); // Rafraîchit la page
     navigate("/login");
   };
   //
 
-  function sendConfirmConnexionMail(account) {
+  function sendConfirmConnexionMail(account, user) {
     // if (e) e.preventDefault(); // Empêche le rechargement de la page
 
     // setLoading(true); // Active le mode chargement
@@ -946,8 +951,125 @@ const DataContextProvider = ({ children }) => {
       hour12: true,
     }); // Format: HH:MM AM/PM
 
+    // Récupérer l'adresse IP publique
+    fetch("https://api4.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => {
+        const ipClient = data.ip; // Adresse IP du client
+
+        // Mise à jour des params avec toutes les informations demandées
+        const params = {
+          userAccount: accountConnected,
+          userName: user || "Utilisateur inconnu", // Si user n'est pas fourni
+          date: dateAujourdhui,
+          heure: heureActuel,
+          adresseIp: ipClient,
+        };
+
+        emailjs.init(publicKey);
+
+        emailjs
+          .send(serviceID, templateID, params)
+          .then((res) => {
+            console.log(res);
+            console.log("Envoi du mail de connexion avec succès");
+          })
+          .catch((err) => {
+            console.log(err);
+            console.log(
+              "Erreur lors de l'envoi du message. Veuillez réessayer."
+            );
+          })
+          .finally(() => {
+            console.log("Envoi du mail de connexion terminé");
+          });
+      })
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la récupération de l'adresse IP :",
+          error
+        );
+      });
+  }
+
+  function sendConfirmConnexionMail22(account, user) {
+    // if (e) e.preventDefault(); // Empêche le rechargement de la page
+
+    // setLoading(true); // Active le mode chargement
+
+    const serviceID = "service_vsuzpsx";
+    const templateID = "template_e11xt3v";
+    const publicKey = "Y4DfcLA5moa5C1k6K"; // Clé publique
+
+    const accountConnected = account || localStorage.getItem("account") || "";
+    const now = new Date();
+    const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
+    const heureActuel = now.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }); // Format: HH:MM AM/PM
+
+    // Récupérer l'adresse IP publique
+    fetch("https://api4.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => {
+        const ipClient = data.ip; // Adresse IP du client
+
+        // Mise à jour des params avec toutes les informations demandées
+        const params = {
+          userAccount: accountConnected,
+          userName: user || "Utilisateur inconnu", // Si user n'est pas fourni
+          date: dateAujourdhui,
+          heure: heureActuel,
+          adresseIp: ipClient,
+        };
+
+        emailjs.init(publicKey);
+
+        emailjs
+          .send(serviceID, templateID, params)
+          .then((res) => {
+            console.log(res);
+            console.log("Envoi du mail de connexion avec succès");
+          })
+          .catch((err) => {
+            console.log(err);
+            console.log(
+              "Erreur lors de l'envoi du message. Veuillez réessayer."
+            );
+          })
+          .finally(() => {
+            console.log("Envoi du mail de connexion terminé");
+          });
+      })
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la récupération de l'adresse IP :",
+          error
+        );
+      });
+  }
+
+  function sendConfirmConnexionMail2(account, user) {
+    const serviceID = "service_vsuzpsx";
+    const templateID = "template_e11xt3v";
+    const publicKey = "Y4DfcLA5moa5C1k6K"; // Clé publique
+
+    // Obtenir la date et l'heure actuelles
+    const now = new Date();
+    const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
+    const hereActurel = now.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }); // Format: HH:MM AM/PM
+
+    // Exemple de client connecté (tu peux récupérer cette valeur dynamiquement)
+    const accountConnected = account || localStorage.getItem("account") || "";
+
     const params = {
-      message: `Le client ${accountConnected} s'est connecté le ${dateAujourdhui} à ${heureActuel}`,
+      message: `Le client ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel}`,
     };
 
     emailjs.init(publicKey);
@@ -956,17 +1078,13 @@ const DataContextProvider = ({ children }) => {
       .send(serviceID, templateID, params)
       .then((res) => {
         console.log(res);
-        console.log("Envoie du mail de connexion avec success");
-
         // alert("Votre message a été envoyé avec succès !");
       })
       .catch((err) => {
         console.log(err);
-        console.log("Erreur lors de l'envoi du message. Veuillez réessayer.");
         // alert("Erreur lors de l'envoi du message. Veuillez réessayer.");
       })
       .finally(() => {
-        console.log("Envoie du mail de connexion avec success");
         // setLoading(false); // Désactive le mode chargement après l'envoi
       });
   }
@@ -1979,8 +2097,15 @@ const DataContextProvider = ({ children }) => {
 
   // Pour mettre a jour les donnees
   const homePageReload = () => {
-    console.log("reload HomePage");
-    if (véhiculeData && véhiculeData?.length > 0) {
+    // const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
+
+    if (
+      véhiculeData &&
+      (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0)
+      // ||
+      // vehicleDataDB.length > 0
+    ) {
+      console.log("reload HomePage");
       véhiculeData.forEach((véhicule) => {
         fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
@@ -2227,35 +2352,97 @@ const DataContextProvider = ({ children }) => {
   //   return dataFusionné;
   // };
 
+  // const rapportFusionnerDonnees = () => {
+  //   if (!véhiculeData || !rapportVehicleDetails) return [];
+
+  //   // Récupérer les anciens détails depuis localStorage
+  //   const previousData = (() => {
+  //     try {
+  //       const data = donneeFusionnéForRapport;
+  //       return Array.isArray(data) ? data : [];
+  //     } catch (error) {
+  //       console.error(
+  //         "Erreur lors de la récupération des données du localStorage:",
+  //         error
+  //       );
+  //       return [];
+  //     }
+  //   })();
+
+  //   const dataFusionné = {};
+  //   const seenEvents = new Set();
+
+  //   véhiculeData.forEach((véhicule) => {
+  //     const { deviceID } = véhicule;
+  //     if (deviceID) {
+  //       dataFusionné[deviceID] = {
+  //         ...véhicule,
+  //         véhiculeDetails:
+  //           rapportVehicleDetails.filter((v) => v.Device === deviceID) || [],
+  //       };
+  //     }
+  //   });
+
+  //   rapportVehicleDetails.forEach((detail) => {
+  //     const { Device, timestamp, ...eventDetails } = detail;
+  //     const eventKey = `${Device}-${timestamp}`;
+
+  //     if (!seenEvents.has(eventKey)) {
+  //       seenEvents.add(eventKey);
+
+  //       if (dataFusionné[Device]) {
+  //         if (Object.keys(eventDetails).length > 0) {
+  //           dataFusionné[Device].véhiculeDetails.push({
+  //             timestamp,
+  //             ...eventDetails,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   try {
+  //     setDonneeFusionnéForRapport(Object.values(dataFusionné));
+  //   } catch (error) {
+  //     if (error.name === "QuotaExceededError") {
+  //       console.error(
+  //         "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+  //       );
+  //     } else {
+  //       console.error("Erreur de stockage : ", error);
+  //     }
+  //   }
+
+  //   return Object.values(dataFusionné);
+  // };
+
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
 
-    // Récupérer les anciens détails depuis localStorage
-    const previousData = (() => {
-      try {
-        const data = donneeFusionnéForRapport;
-        return Array.isArray(data) ? data : [];
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données du localStorage:",
-          error
-        );
-        return [];
-      }
-    })();
+    // Récupérer les anciens détails
+    const previousData = donneeFusionnéForRapport || [];
 
     const dataFusionné = {};
     const seenEvents = new Set();
 
+    // Convertir previousData en un objet indexé par deviceID pour une recherche rapide
+    const previousDataMap = previousData.reduce((acc, véhicule) => {
+      acc[véhicule.deviceID] = véhicule;
+      return acc;
+    }, {});
+
     véhiculeData.forEach((véhicule) => {
       const { deviceID } = véhicule;
-      if (deviceID) {
-        dataFusionné[deviceID] = {
-          ...véhicule,
-          véhiculeDetails:
-            rapportVehicleDetails.filter((v) => v.Device === deviceID) || [],
-        };
-      }
+      if (!deviceID) return;
+
+      // Fusionner avec les données précédentes
+      const previousVéhicule = previousDataMap[deviceID] || {};
+
+      dataFusionné[deviceID] = {
+        ...previousVéhicule,
+        ...véhicule,
+        véhiculeDetails: previousVéhicule.véhiculeDetails || [],
+      };
     });
 
     rapportVehicleDetails.forEach((detail) => {
@@ -2276,19 +2463,32 @@ const DataContextProvider = ({ children }) => {
       }
     });
 
+    // Mise à jour des données sans écraser les anciennes valeurs non remplacées
+    const finalData = Object.values(dataFusionné).map((véhicule) => {
+      const previousVéhicule = previousDataMap[véhicule.deviceID] || {};
+
+      return {
+        ...previousVéhicule,
+        ...véhicule,
+        véhiculeDetails: véhicule.véhiculeDetails.length
+          ? véhicule.véhiculeDetails
+          : previousVéhicule.véhiculeDetails || [],
+      };
+    });
+
     try {
-      setDonneeFusionnéForRapport(Object.values(dataFusionné));
+      setDonneeFusionnéForRapport(finalData);
     } catch (error) {
       if (error.name === "QuotaExceededError") {
         console.error(
-          "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+          "Quota dépassé, essayez de réduire la taille des données."
         );
       } else {
         console.error("Erreur de stockage : ", error);
       }
     }
 
-    return Object.values(dataFusionné);
+    return finalData;
   };
 
   // Pour lancer le fusionnement des donnees dans la page rapport
@@ -2906,7 +3106,13 @@ const DataContextProvider = ({ children }) => {
         ) {
           console.log("Données geofence disponibles", geofenceDataRef.current);
         } else {
-          GeofenceDataFonction();
+          if (
+            véhiculeDataRef.current?.length > 0 ||
+            véhiculeData?.length > 0 ||
+            vehicleDataDB.length > 0
+          ) {
+            GeofenceDataFonction();
+          }
           console.log("Pas de données dans geofence", geofenceDataRef.current);
         }
 
@@ -2922,12 +3128,9 @@ const DataContextProvider = ({ children }) => {
         }
 
         if (
-          (véhiculeDataRef.current?.length > 0 ||
-            véhiculeData?.length > 0 ||
-            vehicleDataDB.length > 0) &&
-          (vehicleDetailsRef.current?.length > 0 ||
-            vehicleDetails?.length > 0 ||
-            vehicleDataDB.length > 0)
+          vehicleDetailsRef.current?.length > 0 ||
+          vehicleDetails?.length > 0 ||
+          vehicleDataDB.length > 0
         ) {
           console.log(
             "Données vehicleDetails disponibles",
@@ -2938,25 +3141,35 @@ const DataContextProvider = ({ children }) => {
             "Pas de données vehicleDetails",
             vehicleDetailsRef.current
           );
-          véhiculeDataRef.current?.forEach((véhicule) => {
-            fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-          });
+          if (
+            véhiculeDataRef.current?.length > 0 ||
+            véhiculeData?.length > 0 ||
+            vehicleDataDB.length > 0
+          ) {
+            véhiculeDataRef.current?.forEach((véhicule) => {
+              fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+            });
+          }
         }
 
         if (
-          (véhiculeDataRef.current?.length > 0 ||
-            véhiculeData?.length > 0 ||
-            vehicleDataDB.length > 0) &&
-          (rapportVehicleDetailsRef.current?.length > 0 ||
-            rapportVehicleDetails?.length > 0 ||
-            rapportVehicleDetailsDB.length > 0)
+          rapportVehicleDetailsRef.current?.length > 0 ||
+          rapportVehicleDetails?.length > 0 ||
+          rapportVehicleDetailsDB.length > 0
         ) {
           console.log("Données rapport disponibles", rapportVehicleDetailsDB);
         } else {
           console.log("Pas de données rapport", rapportVehicleDetailsDB);
-          véhiculeDataRef.current?.forEach((véhicule) => {
-            fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-          });
+
+          if (
+            véhiculeDataRef.current?.length > 0 ||
+            véhiculeData?.length > 0 ||
+            vehicleDataDB.length > 0
+          ) {
+            véhiculeDataRef.current?.forEach((véhicule) => {
+              fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+            });
+          }
         }
       } catch (error) {
         console.error(
@@ -2968,7 +3181,7 @@ const DataContextProvider = ({ children }) => {
 
     const intervalId = setInterval(() => {
       checkData();
-    }, 10000);
+    }, 20000);
 
     return () => clearInterval(intervalId);
   }, []);
