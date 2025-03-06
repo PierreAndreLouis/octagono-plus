@@ -2998,7 +2998,11 @@ function RapportGroupe({
         {/*  */}
         <h1
           onClick={() => {
-            console.log(vehiclesByDepartureTime);
+            // console.log(vehiclesByDepartureTime);
+            console.log("xxxxxxxxxxxxxx");
+            console.log("notActiveVehicleCount", notActiveVehicleCount);
+            console.log("notActiveVehicleCount2", notActiveVehicleCount2);
+            console.log("xxxxxxxxxxxxxx");
           }}
           className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300"
         >
@@ -3094,9 +3098,12 @@ function RapportGroupe({
                 <p>
                   Véhicule en mouvement :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {isSearching
+                    {/* {isSearching
                       ? activeVehicleCount2
-                      : activeVehicleCount?.length || "0"}
+                      : activeVehicleCount?.length || "0"} */}
+
+                    {!isSearching && activeVehicleCount?.length}
+                    {isSearching && activeVehicleCount2?.length}
                   </span>
                 </p>
                 <p
@@ -3116,9 +3123,12 @@ function RapportGroupe({
                 <p>
                   Véhicule en stationnement :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {isSearching
+                    {/* {isSearching
                       ? notActiveVehicleCount2
-                      : notActiveVehicleCount?.length || "0"}
+                      : notActiveVehicleCount?.length || "0"} */}
+                    {/* {notActiveVehicleCount?.length || "0"} */}
+                    {!isSearching && notActiveVehicleCount?.length}
+                    {isSearching && notActiveVehicleCount2?.length}
                   </span>
                 </p>
                 <p

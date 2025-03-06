@@ -846,8 +846,8 @@ const DataContextProvider = ({ children }) => {
 
         // Envoie d'un mail pour avertir m'avertir de la connexion
 
-        sendConfirmConnexionMail(account, user);
-        sendConfirmConnexionMail2(account, user);
+        // sendConfirmConnexionMail(account, user);
+        // sendConfirmConnexionMail2(account, user);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -2289,284 +2289,70 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  // Pour le fusionnement de donnee de la page rapport véhiculeData et rapportVehicleDetails
-  // const rapportFusionnerDonnees = () => {
-  //   if (!véhiculeData || !rapportVehicleDetails) return [];
-
-  //   // Récupérer les anciens détails depuis localStorage
-  //   const previousData = (() => {
-  //     try {
-  //       const data = donneeFusionnéForRapport;
-  //       //  JSON.parse(
-  //       //   localStorage.getItem("donneeFusionnéForRapport")
-  //       // );
-  //       return Array.isArray(data) ? data : [];
-  //     } catch (error) {
-  //       console.error(
-  //         "Erreur lors de la récupération des données du localStorage:",
-  //         error
-  //       );
-  //       return [];
-  //     }
-  //   })();
-
-  //   const dataFusionné = véhiculeData.map((véhicule) => {
-  //     // Trouver les nouveaux détails pour le véhicule
-  //     const newDetails = rapportVehicleDetails?.filter(
-  //       (detail) => detail.Device === véhicule?.deviceID
-  //     );
-
-  //     // Récupérer les anciens détails depuis les données précédentes
-  //     const previousDetails = previousData.find(
-  //       (prev) => prev.deviceID === véhicule?.deviceID
-  //     )?.véhiculeDetails;
-
-  //     // Conserver les anciens détails si aucun nouveau n'est trouvé
-  //     const updatedDetails =
-  //       newDetails && newDetails.length > 0
-  //         ? newDetails
-  //         : previousDetails || [];
-
-  //     return {
-  //       ...véhicule,
-  //       véhiculeDetails: updatedDetails,
-  //     };
-  //   });
-
-  //   // Met à jour l'état avec les données fusionnées
-  //   setDonneeFusionnéForRapport(dataFusionné);
-
-  //   try {
-  //     setDonneeFusionnéForRapport(dataFusionné);
-
-  //   } catch (error) {
-  //     if (error.name === "QuotaExceededError") {
-  //       console.error(
-  //         "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-  //       );
-  //     } else {
-  //       console.error("Erreur de stockage : ", error);
-  //     }
-  //   }
-
-  //   return dataFusionné;
-  // };
-
-  // const rapportFusionnerDonnees = () => {
-  //   if (!véhiculeData || !rapportVehicleDetails) return [];
-
-  //   // Récupérer les anciens détails depuis localStorage
-  //   const previousData = (() => {
-  //     try {
-  //       const data = donneeFusionnéForRapport;
-  //       return Array.isArray(data) ? data : [];
-  //     } catch (error) {
-  //       console.error(
-  //         "Erreur lors de la récupération des données du localStorage:",
-  //         error
-  //       );
-  //       return [];
-  //     }
-  //   })();
-
-  //   const dataFusionné = {};
-  //   const seenEvents = new Set();
-
-  //   véhiculeData.forEach((véhicule) => {
-  //     const { deviceID } = véhicule;
-  //     if (deviceID) {
-  //       dataFusionné[deviceID] = {
-  //         ...véhicule,
-  //         véhiculeDetails:
-  //           rapportVehicleDetails.filter((v) => v.Device === deviceID) || [],
-  //       };
-  //     }
-  //   });
-
-  //   rapportVehicleDetails.forEach((detail) => {
-  //     const { Device, timestamp, ...eventDetails } = detail;
-  //     const eventKey = `${Device}-${timestamp}`;
-
-  //     if (!seenEvents.has(eventKey)) {
-  //       seenEvents.add(eventKey);
-
-  //       if (dataFusionné[Device]) {
-  //         if (Object.keys(eventDetails).length > 0) {
-  //           dataFusionné[Device].véhiculeDetails.push({
-  //             timestamp,
-  //             ...eventDetails,
-  //           });
-  //         }
-  //       }
-  //     }
-  //   });
-
-  //   try {
-  //     setDonneeFusionnéForRapport(Object.values(dataFusionné));
-  //   } catch (error) {
-  //     if (error.name === "QuotaExceededError") {
-  //       console.error(
-  //         "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-  //       );
-  //     } else {
-  //       console.error("Erreur de stockage : ", error);
-  //     }
-  //   }
-
-  //   return Object.values(dataFusionné);
-  // };
-
-  // const rapportFusionnerDonnees = () => {
-  //   if (!véhiculeData || !rapportVehicleDetails) return [];
-
-  //   // Récupérer les anciens détails
-  //   const previousData = donneeFusionnéForRapport || [];
-
-  //   const dataFusionné = {};
-  //   const seenEvents = new Set();
-
-  //   // Convertir previousData en un objet indexé par deviceID pour une recherche rapide
-  //   const previousDataMap = previousData.reduce((acc, véhicule) => {
-  //     acc[véhicule.deviceID] = véhicule;
-  //     return acc;
-  //   }, {});
-
-  //   véhiculeData.forEach((véhicule) => {
-  //     const { deviceID } = véhicule;
-  //     if (!deviceID) return;
-
-  //     // Fusionner avec les données précédentes
-  //     const previousVéhicule = previousDataMap[deviceID] || {};
-
-  //     dataFusionné[deviceID] = {
-  //       ...previousVéhicule,
-  //       ...véhicule,
-  //       véhiculeDetails: previousVéhicule.véhiculeDetails || [],
-  //     };
-  //   });
-
-  //   rapportVehicleDetails.forEach((detail) => {
-  //     const { Device, timestamp, ...eventDetails } = detail;
-  //     const eventKey = `${Device}-${timestamp}`;
-
-  //     if (!seenEvents.has(eventKey)) {
-  //       seenEvents.add(eventKey);
-
-  //       if (dataFusionné[Device]) {
-  //         if (Object.keys(eventDetails).length > 0) {
-  //           dataFusionné[Device].véhiculeDetails.push({
-  //             timestamp,
-  //             ...eventDetails,
-  //           });
-  //         }
-  //       }
-  //     }
-  //   });
-
-  //   // Mise à jour des données sans écraser les anciennes valeurs non remplacées
-  //   const finalData = Object.values(dataFusionné).map((véhicule) => {
-  //     const previousVéhicule = previousDataMap[véhicule.deviceID] || {};
-
-  //     return {
-  //       ...previousVéhicule,
-  //       ...véhicule,
-  //       véhiculeDetails: véhicule.véhiculeDetails.length
-  //         ? véhicule.véhiculeDetails
-  //         : previousVéhicule.véhiculeDetails || [],
-  //     };
-  //   });
-
-  //   try {
-  //     setDonneeFusionnéForRapport(finalData);
-  //   } catch (error) {
-  //     if (error.name === "QuotaExceededError") {
-  //       console.error(
-  //         "Quota dépassé, essayez de réduire la taille des données."
-  //       );
-  //     } else {
-  //       console.error("Erreur de stockage : ", error);
-  //     }
-  //   }
-
-  //   return finalData;
-  // };
-
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
 
-    // Récupérer les anciens détails
-    const previousData = donneeFusionnéForRapport || [];
-
-    const dataFusionné = {};
-    const seenEvents = new Set();
-
-    // Convertir previousData en un objet indexé par deviceID pour une recherche rapide
-    const previousDataMap = previousData.reduce((acc, véhicule) => {
-      acc[véhicule.deviceID] = véhicule;
-      return acc;
-    }, {});
-
-    véhiculeData.forEach((véhicule) => {
-      const { deviceID } = véhicule;
-      if (!deviceID) return;
-
-      // Fusionner avec les données précédentes
-      const previousVéhicule = previousDataMap[deviceID] || {};
-
-      dataFusionné[deviceID] = {
-        ...previousVéhicule,
-        ...véhicule,
-        véhiculeDetails: previousVéhicule.véhiculeDetails || [],
-      };
-    });
-
-    rapportVehicleDetails.forEach((detail) => {
-      const { Device, timestamp, ...eventDetails } = detail;
-      const eventKey = `${Device}-${timestamp}`;
-
-      if (!seenEvents.has(eventKey)) {
-        seenEvents.add(eventKey);
-
-        if (dataFusionné[Device]) {
-          if (Object.keys(eventDetails).length > 0) {
-            // Vérifie si les données de véhicule existent et ne sont pas vides ou nulles avant d'ajouter les événements
-            if (dataFusionné[Device] && dataFusionné[Device].véhiculeDetails) {
-              dataFusionné[Device].véhiculeDetails.push({
-                timestamp,
-                ...eventDetails,
-              });
-            }
-          }
-        }
+    // Récupérer les anciens détails depuis localStorage
+    const previousData = (() => {
+      try {
+        const data = donneeFusionnéForRapport;
+        //  JSON.parse(
+        //   localStorage.getItem("donneeFusionnéForRapport")
+        // );
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des données du localStorage:",
+          error
+        );
+        return [];
       }
-    });
+    })();
 
-    // Mise à jour des données sans écraser les anciennes valeurs non remplacées
-    const finalData = Object.values(dataFusionné).map((véhicule) => {
-      const previousVéhicule = previousDataMap[véhicule.deviceID] || {};
+    const dataFusionné = véhiculeData.map((véhicule) => {
+      // Trouver les nouveaux détails pour le véhicule
+      const newDetails = rapportVehicleDetails?.filter(
+        (detail) => detail.Device === véhicule?.deviceID
+      );
+
+      // Récupérer les anciens détails depuis les données précédentes
+      const previousDetails = previousData.find(
+        (prev) => prev.deviceID === véhicule?.deviceID
+      )?.véhiculeDetails;
+
+      // Conserver les anciens détails si aucun nouveau n'est trouvé
+      const updatedDetails =
+        newDetails && newDetails.length > 0
+          ? newDetails
+          : previousDetails || [];
 
       return {
-        ...previousVéhicule,
         ...véhicule,
-        véhiculeDetails: véhicule.véhiculeDetails.length
-          ? véhicule.véhiculeDetails
-          : previousVéhicule.véhiculeDetails || [],
+        véhiculeDetails: updatedDetails,
       };
     });
 
+    // Met à jour l'état avec les données fusionnées
+    setDonneeFusionnéForRapport(dataFusionné);
+
     try {
-      setDonneeFusionnéForRapport(finalData);
+      setDonneeFusionnéForRapport(dataFusionné);
+
+      // localStorage.setItem(
+      //   "donneeFusionnéForRapport",
+      //   JSON.stringify(dataFusionné)
+      // );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
-        console.error(
-          "Quota dépassé, essayez de réduire la taille des données."
-        );
+        // console.error(
+        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
+        // );
       } else {
         console.error("Erreur de stockage : ", error);
       }
     }
 
-    return finalData;
+    return dataFusionné;
   };
 
   // Pour lancer le fusionnement des donnees dans la page rapport
