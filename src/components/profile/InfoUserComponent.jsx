@@ -115,7 +115,7 @@ function InfoUserComponent({
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             Version de l'application :
           </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">24.02.25</p>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">06.03.25</p>
         </div>
 
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">

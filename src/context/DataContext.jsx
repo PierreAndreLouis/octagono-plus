@@ -846,8 +846,8 @@ const DataContextProvider = ({ children }) => {
 
         // Envoie d'un mail pour avertir m'avertir de la connexion
 
-        sendConfirmConnexionMail(account, user);
-        sendConfirmConnexionMail2(account, user);
+        // sendConfirmConnexionMail(account, user);
+        // sendConfirmConnexionMail2(account, user);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -2416,6 +2416,81 @@ const DataContextProvider = ({ children }) => {
   //   return Object.values(dataFusionné);
   // };
 
+  // const rapportFusionnerDonnees = () => {
+  //   if (!véhiculeData || !rapportVehicleDetails) return [];
+
+  //   // Récupérer les anciens détails
+  //   const previousData = donneeFusionnéForRapport || [];
+
+  //   const dataFusionné = {};
+  //   const seenEvents = new Set();
+
+  //   // Convertir previousData en un objet indexé par deviceID pour une recherche rapide
+  //   const previousDataMap = previousData.reduce((acc, véhicule) => {
+  //     acc[véhicule.deviceID] = véhicule;
+  //     return acc;
+  //   }, {});
+
+  //   véhiculeData.forEach((véhicule) => {
+  //     const { deviceID } = véhicule;
+  //     if (!deviceID) return;
+
+  //     // Fusionner avec les données précédentes
+  //     const previousVéhicule = previousDataMap[deviceID] || {};
+
+  //     dataFusionné[deviceID] = {
+  //       ...previousVéhicule,
+  //       ...véhicule,
+  //       véhiculeDetails: previousVéhicule.véhiculeDetails || [],
+  //     };
+  //   });
+
+  //   rapportVehicleDetails.forEach((detail) => {
+  //     const { Device, timestamp, ...eventDetails } = detail;
+  //     const eventKey = `${Device}-${timestamp}`;
+
+  //     if (!seenEvents.has(eventKey)) {
+  //       seenEvents.add(eventKey);
+
+  //       if (dataFusionné[Device]) {
+  //         if (Object.keys(eventDetails).length > 0) {
+  //           dataFusionné[Device].véhiculeDetails.push({
+  //             timestamp,
+  //             ...eventDetails,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   // Mise à jour des données sans écraser les anciennes valeurs non remplacées
+  //   const finalData = Object.values(dataFusionné).map((véhicule) => {
+  //     const previousVéhicule = previousDataMap[véhicule.deviceID] || {};
+
+  //     return {
+  //       ...previousVéhicule,
+  //       ...véhicule,
+  //       véhiculeDetails: véhicule.véhiculeDetails.length
+  //         ? véhicule.véhiculeDetails
+  //         : previousVéhicule.véhiculeDetails || [],
+  //     };
+  //   });
+
+  //   try {
+  //     setDonneeFusionnéForRapport(finalData);
+  //   } catch (error) {
+  //     if (error.name === "QuotaExceededError") {
+  //       console.error(
+  //         "Quota dépassé, essayez de réduire la taille des données."
+  //       );
+  //     } else {
+  //       console.error("Erreur de stockage : ", error);
+  //     }
+  //   }
+
+  //   return finalData;
+  // };
+
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
 
@@ -2454,10 +2529,13 @@ const DataContextProvider = ({ children }) => {
 
         if (dataFusionné[Device]) {
           if (Object.keys(eventDetails).length > 0) {
-            dataFusionné[Device].véhiculeDetails.push({
-              timestamp,
-              ...eventDetails,
-            });
+            // Vérifie si les données de véhicule existent et ne sont pas vides ou nulles avant d'ajouter les événements
+            if (dataFusionné[Device] && dataFusionné[Device].véhiculeDetails) {
+              dataFusionné[Device].véhiculeDetails.push({
+                timestamp,
+                ...eventDetails,
+              });
+            }
           }
         }
       }

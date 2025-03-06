@@ -1151,7 +1151,37 @@ function RapportGroupe({
   //
   x;
   // Vehicule en mouvement actuellement
-  const activeVehicleCount =
+
+  const activeVehicleCount = dataFusionneeHome.filter((véhicule) => {
+    // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
+    const isSpeedActive =
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].speedKPH > 0;
+
+    // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
+    const lastUpdateTimestampMs =
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
+    // Vérifie si la mise à jour est récente (moins de 30 minutes)
+    const isStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+
+    // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime
+      ? véhicule?.lastUpdateTime * 1000
+      : 0;
+    const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    // Le véhicule doit être actif selon la vitesse et la mise à jour
+    return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
+  });
+
+  const activeVehicleCount2 =
     currentDataFusionné &&
     currentDataFusionné?.filter((véhicule) => {
       // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
@@ -1200,7 +1230,50 @@ function RapportGroupe({
 
   // Vehicule en stationnement actuellement
   // const notActiveVehicleCount = dataFusionneeHome?.filter((véhicule) => {
-  const notActiveVehicleCount =
+
+  const notActiveVehicleCount = dataFusionneeHome?.filter((véhicule) => {
+    // Vérifie si le véhicule a des détails
+    const hasDetails =
+      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
+
+    // Vérifie la vitesse (noSpeed)
+    const noSpeed = véhicule?.véhiculeDetails?.every(
+      (detail) => detail.speedKPH <= 0
+    );
+
+    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime
+      ? véhicule?.lastUpdateTime * 1000
+      : 0;
+    const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+    const lastUpdateTimestampMs =
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+    const isSpeedActive =
+      véhicule?.véhiculeDetails &&
+      véhicule?.véhiculeDetails[0] &&
+      véhicule?.véhiculeDetails[0].speedKPH > 0;
+
+    const isNotStillSpeedActive =
+      lastUpdateTimestampMs &&
+      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+
+    // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
+    // return hasDetails && noSpeed && isActive;
+    // Inclure les véhicules :
+    // - Soit ils ont noSpeed et sont actifs
+    // - Soit ils sont isSpeedActive mais isNotStillSpeedActive
+    return (
+      hasDetails &&
+      isActive &&
+      (noSpeed || (isSpeedActive && isNotStillSpeedActive))
+    );
+  });
+
+  const notActiveVehicleCount2 =
     currentDataFusionné &&
     currentDataFusionné?.filter((véhicule) => {
       // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
@@ -3021,7 +3094,9 @@ function RapportGroupe({
                 <p>
                   Véhicule en mouvement :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {activeVehicleCount?.length || "0"}
+                    {isSearching
+                      ? activeVehicleCount2
+                      : activeVehicleCount?.length || "0"}
                   </span>
                 </p>
                 <p
@@ -3041,7 +3116,9 @@ function RapportGroupe({
                 <p>
                   Véhicule en stationnement :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {notActiveVehicleCount?.length || "0"}
+                    {isSearching
+                      ? notActiveVehicleCount2
+                      : notActiveVehicleCount?.length || "0"}
                   </span>
                 </p>
                 <p
