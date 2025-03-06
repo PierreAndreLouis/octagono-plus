@@ -846,8 +846,8 @@ const DataContextProvider = ({ children }) => {
 
         // Envoie d'un mail pour avertir m'avertir de la connexion
 
-        // sendConfirmConnexionMail(account, user);
-        // sendConfirmConnexionMail2(account, user);
+        sendConfirmConnexionMail(account, user);
+        sendConfirmConnexionMail2(account, user);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
