@@ -19,6 +19,8 @@ function Liste() {
     statisticFilterInHomePage,
     statisticFilterTextInHomePage,
     FormatDateHeure,
+    setCurrentPersonelVéhicule,
+    vehiclesByDepartureTime,
   } = useContext(DataContext);
 
   let x;
@@ -95,6 +97,18 @@ function Liste() {
     setSelectedVehicleToShowInMap(véhicule?.deviceID);
     setShowListOption(true);
     setSearchDonneeFusionnéForRapport([]);
+
+    //
+    const deviceID = véhicule?.deviceID;
+    const foundPersonelVehicle = vehiclesByDepartureTime.find(
+      (v) => v.deviceID === deviceID
+    );
+
+    if (foundPersonelVehicle) {
+      setCurrentPersonelVéhicule(foundPersonelVehicle);
+    } else {
+      console.error("Véhicule introuvable avec le deviceID :", deviceID);
+    }
     console.log("véhicule cliquer:", véhicule);
   };
   //

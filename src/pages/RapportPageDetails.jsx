@@ -129,6 +129,26 @@ function RapportPageDetails() {
     }
   };
 
+  useEffect(() => {
+    if (!vehiclesByDepartureTime || !Array.isArray(vehiclesByDepartureTime)) {
+      console.error(
+        "vehiclesByDepartureTime est undefined ou n'est pas un tableau !"
+      );
+      return;
+    }
+
+    const deviceID = currentVéhicule?.deviceID;
+    const foundPersonelVehicle = vehiclesByDepartureTime.find(
+      (v) => v.deviceID === deviceID
+    );
+
+    if (foundPersonelVehicle) {
+      setCurrentPersonelVéhicule(foundPersonelVehicle);
+    } else {
+      console.error("Véhicule introuvable avec le deviceID :", deviceID);
+    }
+  }, [searchDonneeFusionnéForRapport]);
+
   ////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////
