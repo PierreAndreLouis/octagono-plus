@@ -19,6 +19,7 @@ function NavigationBar() {
     setCurrentVéhicule,
     setVéhiculeHistoriqueDetails,
     véhiculeNotActiveToday,
+    chooseFirstVéhicule,
   } = useContext(DataContext);
   let x;
   //
@@ -32,17 +33,6 @@ function NavigationBar() {
   //
   x;
 
-  // Pour définir un véhicule par défaut
-  const chooseFirstVéhicule = () => {
-    if (
-      !currentVéhicule &&
-      véhiculeNotActiveToday &&
-      véhiculeNotActiveToday.length > 0
-    ) {
-      setCurrentVéhicule(véhiculeNotActiveToday[0]);
-      setVéhiculeHistoriqueDetails(véhiculeNotActiveToday[0].véhiculeDetails);
-    }
-  };
   //
   //
   //
@@ -159,7 +149,10 @@ function NavigationBar() {
 
         <Link
           to="/rapport_page_details?tab=rapport"
-          onClick={() => handleTabClick("rapport")}
+          onClick={() => {
+            handleTabClick("rapport");
+            chooseFirstVéhicule();
+          }}
           className={`${
             tab === "rapport"
               ? "text-orange-500 dark:text-orange-300"

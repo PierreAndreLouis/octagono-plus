@@ -3770,6 +3770,18 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
+
+  // Pour définir un véhicule par défaut
+  const chooseFirstVéhicule = () => {
+    if (
+      !currentVéhicule &&
+      véhiculeNotActiveToday &&
+      véhiculeNotActiveToday.length > 0
+    ) {
+      setCurrentVéhicule(véhiculeNotActiveToday[0]);
+      setVéhiculeHistoriqueDetails(véhiculeNotActiveToday[0].véhiculeDetails);
+    }
+  };
   //
   //
   //
@@ -4310,6 +4322,7 @@ const DataContextProvider = ({ children }) => {
         setTableSortCroissant,
         currentPersonelVéhicule,
         setCurrentPersonelVéhicule,
+        chooseFirstVéhicule,
       }}
     >
       {children}

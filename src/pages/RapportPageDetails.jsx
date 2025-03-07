@@ -55,6 +55,7 @@ function RapportPageDetails() {
     vehiclesByDepartureTime,
     currentPersonelVéhicule,
     setCurrentPersonelVéhicule,
+    chooseFirstVéhicule,
   } = useContext(DataContext);
 
   let x;
@@ -130,23 +131,27 @@ function RapportPageDetails() {
   };
 
   useEffect(() => {
-    if (!vehiclesByDepartureTime || !Array.isArray(vehiclesByDepartureTime)) {
-      console.error(
-        "vehiclesByDepartureTime est undefined ou n'est pas un tableau !"
-      );
-      return;
+    if (!currentVéhicule) {
+      chooseFirstVéhicule();
     }
+    setTimeout(() => {
+      if (!vehiclesByDepartureTime || !Array.isArray(vehiclesByDepartureTime)) {
+        console.error(
+          "vehiclesByDepartureTime est undefined ou n'est pas un tableau !"
+        );
+      } else {
+        const deviceID = currentVéhicule?.deviceID || "";
+        const foundPersonelVehicle = vehiclesByDepartureTime?.find(
+          (v) => v.deviceID === deviceID
+        );
 
-    const deviceID = currentVéhicule?.deviceID;
-    const foundPersonelVehicle = vehiclesByDepartureTime.find(
-      (v) => v.deviceID === deviceID
-    );
-
-    if (foundPersonelVehicle) {
-      setCurrentPersonelVéhicule(foundPersonelVehicle);
-    } else {
-      console.error("Véhicule introuvable avec le deviceID :", deviceID);
-    }
+        if (foundPersonelVehicle) {
+          setCurrentPersonelVéhicule(foundPersonelVehicle);
+        } else {
+          console.error("Véhicule introuvable avec le deviceID :", deviceID);
+        }
+      }
+    }, 2000);
   }, [searchDonneeFusionnéForRapport]);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
