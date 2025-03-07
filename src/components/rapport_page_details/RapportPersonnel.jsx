@@ -95,6 +95,8 @@ function RapportPersonnel({
     rapportPersonnelPDFtRef,
     searchDonneeFusionnéForRapport,
     currentVéhicule,
+    currentPersonelVéhicule,
+    setCurrentPersonelVéhicule,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   useEffect(() => {
@@ -241,10 +243,10 @@ function RapportPersonnel({
     const averageSpeed =
       validSpeeds?.length > 0 ? totalSpeed / validSpeeds?.length : 0;
 
-    return averageSpeed.toFixed(2); // Arrondir à 2 décimales
+    return averageSpeed.toFixed(); // Arrondir à 2 décimales
   };
 
-  const vitesseMoyenne = calculateAverageSpeed(currentVéhicule);
+  const vitesseMoyenne = calculateAverageSpeed(currentPersonelVéhicule);
   // console.log(`Vitesse moyenne : ${averageSpeed} km/h`);
 
   const [voirPositionSurCarte, setvoirPositionSurCarte] = useState(false);
@@ -471,22 +473,29 @@ function RapportPersonnel({
                 {/*  */}
                 <p>
                   Durée total en mouvement :{" "}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {formatTime(
+                  <span
+                    onClick={() => {
+                      console.log(currentPersonelVéhicule);
+                    }}
+                    className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3"
+                  >
+                    {/* {formatTime(
                       totalMovingHours,
                       totalMovingMinutes,
                       totalMovingSeconds
-                    )}
+                    )} */}
+                    {currentPersonelVéhicule?.totalMovingDuration || ""}
                   </span>
                 </p>
                 <p>
                   Durée des arrêts lors du deplacement :
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {formatTime(
+                    {/* {formatTime(
                       totalStopHours,
                       totalStopMinutes,
                       totalStopSeconds
-                    )}
+                    )} */}
+                    {currentPersonelVéhicule?.totalPauseDuration || ""}
                   </span>
                 </p>
                 <p>
@@ -505,16 +514,19 @@ function RapportPersonnel({
                 <p>
                   Distance totale parcourue:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {calculateTotalDistance(
+                    {/* {calculateTotalDistance(
                       currentVéhicule?.véhiculeDetails
-                    ).toFixed(0)}
+                    ).toFixed(0)} */}
+                    {currentPersonelVéhicule?.totalDistance?.toFixed() || ""}
                     Km{" "}
                   </span>
                 </p>
                 <p>
                   Nombre total d’arrêts :
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {nombreArret || "0"}
+                    {/* {nombreArret || "0"} */}
+                    {currentPersonelVéhicule?.stopCount || ""}
+
                     {/* {stopSequences?.length || "---"} */}
                   </span>
                 </p>
@@ -526,20 +538,22 @@ function RapportPersonnel({
                 <p>
                   Vitesse minimale:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {(minSpeed && minSpeed.toFixed(0)) || "0"} Km/h
+                    {/* {(minSpeed && minSpeed.toFixed(0)) || "0"} Km/h */}
+                    {currentPersonelVéhicule?.minSpeed?.toFixed() || "0"} Km/h
                   </span>
                 </p>{" "}
                 <p>
                   Vitesse maximale:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {(maxSpeed && maxSpeed.toFixed(0)) || "0"} Km/h
+                    {/* {(maxSpeed && maxSpeed.toFixed(0)) || "0"} Km/h */}
+                    {currentPersonelVéhicule?.maxSpeed?.toFixed() || "0"} Km/h
                   </span>
                 </p>
                 <p>
                   Vitesse moyenne:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/ */}
-                    {vitesseMoyenne || 0} Km/h
+                    {currentPersonelVéhicule?.avgSpeed || 0} Km/h
                   </span>
                 </p>
               </div>

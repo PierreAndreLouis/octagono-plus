@@ -3761,6 +3761,395 @@ const DataContextProvider = ({ children }) => {
   const rapportPersonnelPDFtRef = useRef(); // Crée une référence pour l'élément
   const rapportGroupePDFtRef = useRef(); // Crée une référence pour l'élément
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+  //
+  //
+  x;
+
+  const [tableSortCroissant, setTableSortCroissant] = useState(true);
+  const [currentPersonelVéhicule, setCurrentPersonelVéhicule] = useState(null); // 1. Déclaration de currentVéhicule
+
+  // Fonction pour calculer la distance entre deux points géographiques en kilomètres
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Rayon de la Terre en kilomètres
+    const dLat = (lat2 - lat1) * (Math.PI / 180); // Conversion des degrés en radians
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance en kilomètres
+  };
+
+  // Fonction pour calculer la durée entre deux timestamps en secondes
+  const calculateDuration = (timestamp1, timestamp2) => {
+    return Math.abs(parseInt(timestamp2) - parseInt(timestamp1)); // Différence absolue en secondes
+  };
+
+  // Fonction pour convertir une durée en secondes au format heure, minute et seconde
+  const formatDuration = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs}h ${mins}m ${secs}s`;
+  };
+
+  const processVehicleData = (currentData) => {
+    return currentData?.map((item) => {
+      const véhiculeDetails = item.véhiculeDetails;
+
+      // Trouver le premier et le dernier index où speedKPH >= 1
+      const firstValidIndex = véhiculeDetails.findIndex(
+        (detail) => parseFloat(detail.speedKPH) >= 1
+      );
+
+      const lastValidIndex =
+        véhiculeDetails.length -
+        1 -
+        véhiculeDetails
+          .slice()
+          .reverse()
+          .findIndex((detail) => parseFloat(detail.speedKPH) >= 1) +
+        1;
+
+      if (
+        firstValidIndex === -1 ||
+        lastValidIndex === -1 ||
+        firstValidIndex > lastValidIndex
+      ) {
+        return {
+          ...item,
+          véhiculeDetails: [],
+          totalDistance: 0, // Aucune distance calculée si aucun détail valide
+          totalDuration: "0h 0m 0s", // Aucune durée calculée si aucun détail valide
+          totalPauseDuration: "0h 0m 0s", // Aucune durée de pause calculée
+          totalMovingDuration: "0h 0m 0s", // Aucune durée en mouvement calculée
+          minSpeed: 0,
+          maxSpeed: 0,
+          avgSpeed: 0,
+          stopCount: 0, // Nombre d'arrêts
+          totalStopDuration: "0h 0m 0s", // Durée totale des arrêts
+        };
+      }
+
+      const filteredVehiculeDetails = véhiculeDetails.slice(
+        firstValidIndex,
+        lastValidIndex + 1
+      );
+
+      // Calculer la distance totale parcourue, la durée totale, la durée de pause et la durée en mouvement
+      let totalDistance = 0;
+      let totalDuration = 0;
+      let totalPauseDuration = 0;
+      let totalMovingDuration = 0;
+      let stopCount = 0;
+      let totalStopDuration = 0;
+
+      let speeds = [];
+      let stopStartIndex = null;
+
+      for (let i = 1; i < filteredVehiculeDetails.length; i++) {
+        const lat1 = parseFloat(filteredVehiculeDetails[i - 1].latitude);
+        const lon1 = parseFloat(filteredVehiculeDetails[i - 1].longitude);
+        const lat2 = parseFloat(filteredVehiculeDetails[i].latitude);
+        const lon2 = parseFloat(filteredVehiculeDetails[i].longitude);
+        const time1 = filteredVehiculeDetails[i - 1].timestamp;
+        const time2 = filteredVehiculeDetails[i].timestamp;
+        const speed1 = parseFloat(filteredVehiculeDetails[i - 1].speedKPH);
+
+        speeds.push(speed1);
+        totalDistance += calculateDistance(lat1, lon1, lat2, lon2);
+        totalDuration += calculateDuration(time1, time2);
+
+        if (speed1 <= 0) {
+          if (stopStartIndex === null) {
+            stopStartIndex = i - 1;
+          }
+        } else {
+          if (stopStartIndex !== null) {
+            const stopEndIndex = i;
+            const stopDuration = calculateDuration(
+              filteredVehiculeDetails[stopStartIndex].timestamp,
+              filteredVehiculeDetails[
+                Math.min(stopEndIndex, filteredVehiculeDetails.length - 1)
+              ].timestamp
+            );
+            totalStopDuration += stopDuration;
+            stopCount++;
+            stopStartIndex = null;
+          }
+        }
+
+        if (speed1 <= 0) {
+          totalPauseDuration += calculateDuration(time1, time2);
+        } else {
+          totalMovingDuration += calculateDuration(time1, time2);
+        }
+      }
+
+      if (stopStartIndex !== null) {
+        const stopDuration = calculateDuration(
+          filteredVehiculeDetails[stopStartIndex].timestamp,
+          filteredVehiculeDetails[filteredVehiculeDetails.length - 1].timestamp
+        );
+        totalStopDuration += stopDuration;
+        stopCount++;
+      }
+
+      const minSpeed =
+        speeds.length > 0
+          ? Math.min(...speeds.filter((speed) => speed > 0)) || 0
+          : 0;
+      const maxSpeed = speeds.length > 0 ? Math.max(...speeds) : 0;
+      const avgSpeed =
+        speeds.length > 0
+          ? (
+              speeds.reduce((sum, speed) => sum + speed, 0) / speeds.length
+            ).toFixed(0)
+          : 0;
+
+      if (speeds.length === 0) {
+        // Si aucune vitesse n'est valide
+        return {
+          ...item,
+          véhiculeDetails: [],
+          totalDistance: 0,
+          totalDuration: "0h 0m 0s",
+          totalPauseDuration: "0h 0m 0s",
+          totalMovingDuration: "0h 0m 0s",
+          minSpeed: 0,
+          maxSpeed: 0,
+          avgSpeed: 0,
+          stopCount: 0,
+          totalStopDuration: "0h 0m 0s",
+        };
+      }
+
+      return {
+        ...item,
+        véhiculeDetails: filteredVehiculeDetails,
+        totalDistance: totalDistance, // Ajouter la distance parcourue
+        totalDuration: formatDuration(totalDuration), // Ajouter la durée totale formatée
+        totalPauseDuration: formatDuration(totalPauseDuration), // Ajouter la durée totale des pauses formatée
+        totalMovingDuration: formatDuration(totalMovingDuration), // Ajouter la durée totale en mouvement formatée
+        minSpeed: minSpeed || 0,
+        maxSpeed: maxSpeed || 0,
+        avgSpeed: avgSpeed || 0,
+        stopCount: stopCount, // Ajouter le nombre d'arrêts
+        totalStopDuration: formatDuration(totalStopDuration), // Ajouter la durée totale des arrêts
+      };
+    });
+  };
+
+  const sortVehiclesBySpeed = (filteredData) => {
+    return filteredData
+      ?.map((item) => {
+        const lastDetail =
+          item.véhiculeDetails[item.véhiculeDetails.length - 1];
+        return {
+          description: item.description,
+          deviceID: item.deviceID,
+          lastSpeedKPH: lastDetail ? parseFloat(lastDetail.speedKPH) : 0,
+          totalDistance: item.totalDistance, // Inclure la distance parcourue
+          totalDuration: item.totalDuration, // Inclure la durée totale
+          totalPauseDuration: item.totalPauseDuration, // Inclure la durée totale des pauses
+          totalMovingDuration: item.totalMovingDuration, // Inclure la durée totale en mouvement
+          minSpeed: item.minSpeed || 0,
+          maxSpeed: item.maxSpeed || 0,
+          avgSpeed: item.avgSpeed || 0,
+          stopCount: item.stopCount, // Ajouter le nombre d'arrêts
+          totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
+          véhiculeDetails: item.véhiculeDetails,
+        };
+      })
+      .sort((a, b) =>
+        tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed
+      );
+  };
+
+  const sortVehiclesByDistance = (filteredData) => {
+    return filteredData
+      ?.map((item) => ({
+        description: item.description,
+        deviceID: item.deviceID,
+        totalDistance: item.totalDistance, // Inclure la distance parcourue
+        totalDuration: item.totalDuration, // Inclure la durée totale
+        totalPauseDuration: item.totalPauseDuration, // Inclure la durée totale des pauses
+        totalMovingDuration: item.totalMovingDuration, // Inclure la durée totale en mouvement
+        minSpeed: item.minSpeed || 0,
+        maxSpeed: item.maxSpeed || 0,
+        avgSpeed: item.avgSpeed || 0,
+        stopCount: item.stopCount, // Ajouter le nombre d'arrêts
+        totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
+        véhiculeDetails: item.véhiculeDetails,
+      }))
+      .sort((a, b) =>
+        tableSortCroissant
+          ? b.totalDistance - a.totalDistance
+          : a.totalDistance - b.totalDistance
+      );
+  };
+
+  const sortVehiclesByMovingDuration = (filteredData) => {
+    return filteredData
+      ?.map((item) => ({
+        description: item.description,
+        deviceID: item.deviceID,
+        totalDistance: item.totalDistance, // Inclure la distance parcourue
+        totalDuration: item.totalDuration, // Inclure la durée totale
+        totalPauseDuration: item.totalPauseDuration, // Inclure la durée totale des pauses
+        totalMovingDuration: item.totalMovingDuration, // Inclure la durée totale en mouvement
+        minSpeed: item.minSpeed || 0,
+        maxSpeed: item.maxSpeed || 0,
+        avgSpeed: item.avgSpeed || 0,
+        stopCount: item.stopCount, // Ajouter le nombre d'arrêts
+        totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
+        véhiculeDetails: item.véhiculeDetails,
+      }))
+      .sort((a, b) => {
+        // Convertir les durées en secondes pour les comparer
+        const [ah, am, as] = a.totalMovingDuration
+          .split(/[hms]/)
+          .filter(Boolean)
+          .map(Number);
+        const [bh, bm, bs] = b.totalMovingDuration
+          .split(/[hms]/)
+          .filter(Boolean)
+          .map(Number);
+
+        const totalA = ah * 3600 + am * 60 + as;
+        const totalB = bh * 3600 + bm * 60 + bs;
+
+        return tableSortCroissant ? totalB - totalA : totalA - totalB;
+      });
+  };
+
+  const sortVehiclesByMaxSpeed = (filteredData) => {
+    return filteredData
+      ?.map((item) => ({
+        description: item.description,
+        deviceID: item.deviceID,
+        totalDistance: item.totalDistance, // Inclure la distance parcourue
+        totalDuration: item.totalDuration, // Inclure la durée totale
+        totalPauseDuration: item.totalPauseDuration, // Inclure la durée totale des pauses
+        totalMovingDuration: item.totalMovingDuration, // Inclure la durée totale en mouvement
+        minSpeed: item.minSpeed || 0,
+        maxSpeed: item.maxSpeed || 0,
+        avgSpeed: item.avgSpeed || 0,
+        stopCount: item.stopCount, // Ajouter le nombre d'arrêts
+        totalStopDuration: item.totalStopDuration, // Ajouter la durée totale des arrêts
+        véhiculeDetails: item.véhiculeDetails,
+      }))
+      .sort((a, b) =>
+        tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed
+      );
+  };
+
+  const sortVehiclesByFirstMovement = (filteredData) => {
+    return filteredData
+      ?.map((item) => {
+        const véhiculeDetails = item.véhiculeDetails;
+
+        // Trouver le dernier index où speedKPH >= 1
+        const lastValidIndex = véhiculeDetails.findLastIndex(
+          (detail) => parseFloat(detail.speedKPH) >= 1
+        );
+
+        // Si aucun mouvement n'est trouvé, retourner un timestamp par défaut très élevé
+        const firstMovementTimestamp =
+          lastValidIndex === -1
+            ? Number.MAX_SAFE_INTEGER
+            : véhiculeDetails[lastValidIndex].timestamp;
+
+        return {
+          ...item,
+          firstMovementTimestamp, // Ajouter le timestamp du premier mouvement ou une valeur par défaut
+          description: item.description,
+          deviceID: item.deviceID,
+          totalDistance: item.totalDistance,
+          totalDuration: item.totalDuration,
+          totalPauseDuration: item.totalPauseDuration,
+          totalMovingDuration: item.totalMovingDuration,
+          minSpeed: item.minSpeed || 0,
+          maxSpeed: item.maxSpeed || 0,
+          avgSpeed: item.avgSpeed || 0,
+          stopCount: item.stopCount,
+          totalStopDuration: item.totalStopDuration,
+          véhiculeDetails: item.véhiculeDetails,
+        };
+      })
+      .sort((a, b) => {
+        // Trier par ordre croissant du timestamp, en mettant les véhicules sans mouvement à la fin
+        return tableSortCroissant
+          ? a.firstMovementTimestamp - b.firstMovementTimestamp
+          : b.firstMovementTimestamp - a.firstMovementTimestamp;
+      });
+  };
+
+  const filteredData = processVehicleData(
+    currentDataFusionné && currentDataFusionné
+  );
+
+  const vehiculeMouvementOrdered = sortVehiclesBySpeed(filteredData);
+
+  // Filtrer par distance parcouru OKK... tester
+  const vehiclesByDistance = sortVehiclesByDistance(filteredData);
+
+  // Filter par temps en mouvement OKKK... tester
+  const vehiclesByMovingDuration = sortVehiclesByMovingDuration(filteredData);
+
+  // Filtrer par vitesse maximale OKKK... tester
+  const vehiclesByMaxSpeed = sortVehiclesByMaxSpeed(filteredData);
+
+  // Appliquer le filtre par heure de départ
+  const vehiclesByDepartureTime = sortVehiclesByFirstMovement(filteredData);
+  //
+  //
+
   return (
     <DataContext.Provider
       value={{
@@ -3911,6 +4300,16 @@ const DataContextProvider = ({ children }) => {
         setSuccesDeleteGeofencePopup,
         errorDeleteGeofencePopup,
         setErrorDeleteGeofencePopup,
+
+        vehiculeMouvementOrdered,
+        vehiclesByDistance,
+        vehiclesByMovingDuration,
+        vehiclesByMaxSpeed,
+        vehiclesByDepartureTime,
+        tableSortCroissant,
+        setTableSortCroissant,
+        currentPersonelVéhicule,
+        setCurrentPersonelVéhicule,
       }}
     >
       {children}

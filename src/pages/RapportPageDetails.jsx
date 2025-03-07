@@ -52,6 +52,9 @@ function RapportPageDetails() {
     mergedDataHome,
     setSelectedVehicleToShowInMap,
     FormatDateHeure,
+    vehiclesByDepartureTime,
+    currentPersonelVéhicule,
+    setCurrentPersonelVéhicule,
   } = useContext(DataContext);
 
   let x;
@@ -102,11 +105,15 @@ function RapportPageDetails() {
     const deviceID = véhicule?.deviceID;
 
     // // Recherche du véhicule correspondant dans la liste
-    const foundVehicle = currentDataFusionné.find(
+    const foundVehicle = currentDataFusionné?.find(
+      (v) => v.deviceID === deviceID
+    );
+    const foundPersonelVehicle = vehiclesByDepartureTime?.find(
       (v) => v.deviceID === deviceID
     );
 
     if (foundVehicle) {
+      setCurrentPersonelVéhicule(foundPersonelVehicle);
       setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
       setPersonnelDetails(true);
       setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
