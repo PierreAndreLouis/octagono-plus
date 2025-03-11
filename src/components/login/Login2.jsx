@@ -3,9 +3,12 @@ import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 import { DataContext } from "../../context/DataContext.jsx";
 import InstallationPWA from "../../pages/InstallationPWA.jsx";
 import GoogleTranslate from "../home/GoogleTranslate.jsx";
+import { Link } from "react-router-dom";
+import { FaAddressBook } from "react-icons/fa";
 
 function Login2() {
-  const { handleLogin, error, isHomePageLoading } = useContext(DataContext);
+  const { handleLogin, error, isHomePageLoading, setReadDocumentation } =
+    useContext(DataContext);
   let x;
   //
   //
@@ -148,24 +151,37 @@ function Login2() {
                 />
               </div>
             </div>
+            <div className="flex justify-between gap-2 items-center">
+              <div className="flex items-center">
+                <input
+                  id="remember_me"
+                  name="remember_me"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-800 dark:border-gray-600 dark:checked:bg-indigo-500"
+                />
+                <label
+                  htmlFor="remember_me"
+                  className="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+                >
+                  Se souvenir de moi
+                </label>
+              </div>
 
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-800 dark:border-gray-600 dark:checked:bg-indigo-500"
-              />
-              <label
-                htmlFor="remember_me"
-                className="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+              <div
+                // to="/gestion_geofences?tab=geozone"
+                onClick={() => {
+                  setReadDocumentation(true);
+                  // setShowSideBar(true);
+                  // handleTabClick("geozone");
+                }}
+                className={`flex text-gray-600  py-4 gap-2 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
               >
-                Se souvenir de moi
-              </label>
+                <FaAddressBook className="text-blue-600" />
+                <h3 className="text-sm">Manuelle d'utilisation</h3>
+              </div>
             </div>
-
             {error && (
               <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
             )}

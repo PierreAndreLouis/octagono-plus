@@ -28,6 +28,14 @@ const DataContextProvider = ({ children }) => {
   x;
 
   // to store login user data  // account, username, password
+  const [readDocumentation, setReadDocumentation] = useState(true);
+  const [documentationPage, setDocumentationPage] = useState("connecter");
+  const seConnecterRef = useRef(); // Crée une référence pour l'élément
+  const docAddVehiculeRef = useRef(); // Crée une référence pour l'élément
+  const docModifierVehiculeRef = useRef(); // Crée une référence pour l'élément
+  const docLocalisationVehiculeRef = useRef(); // Crée une référence pour l'élément
+  const docTrajetVehiculeRef = useRef(); // Crée une référence pour l'élément
+
   const [userData, setUserData] = useState(() => {
     const storedUserData = localStorage.getItem("userData");
     return storedUserData ? JSON.parse(storedUserData) : null;
@@ -3635,7 +3643,9 @@ const DataContextProvider = ({ children }) => {
 
   // Pour mettre a jour mergedDataHome
   useEffect(() => {
-    console.log("m");
+    // console.log("m");
+    let x;
+    x = 0;
   }, [mergedDataHome]);
 
   //
@@ -4161,10 +4171,18 @@ const DataContextProvider = ({ children }) => {
   const vehiclesByDepartureTime = sortVehiclesByFirstMovement(filteredData);
   //
   //
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "auto", // Défilement fluide
+      // behavior: "smooth", // Défilement fluide
+    });
+  };
 
   return (
     <DataContext.Provider
       value={{
+        scrollToTop,
         fonctionTest,
         fonctionTest2,
         userData,
@@ -4323,6 +4341,15 @@ const DataContextProvider = ({ children }) => {
         currentPersonelVéhicule,
         setCurrentPersonelVéhicule,
         chooseFirstVéhicule,
+        readDocumentation,
+        setReadDocumentation,
+        seConnecterRef,
+        docAddVehiculeRef,
+        docModifierVehiculeRef,
+        documentationPage,
+        setDocumentationPage,
+        docLocalisationVehiculeRef,
+        docTrajetVehiculeRef,
       }}
     >
       {children}

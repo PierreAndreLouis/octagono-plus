@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaRegEdit } from "react-icons/fa";
+import { FaAddressBook, FaRegEdit } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -23,6 +23,8 @@ function SideBar() {
     tab,
     username,
     setHistoriqueSelectedLocationIndex,
+    readDocumentation,
+    setReadDocumentation,
   } = useContext(DataContext);
   let x;
   //
@@ -194,6 +196,19 @@ function SideBar() {
         >
           <IoEarth />
           <h3>Gestion des Geozones</h3>
+        </Link>
+
+        <Link
+          // to="/gestion_geofences?tab=geozone"
+          onClick={() => {
+            setReadDocumentation(true);
+            setShowSideBar(true);
+            // handleTabClick("geozone");
+          }}
+          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+        >
+          <FaAddressBook />
+          <h3>Manuelle d'utilisation</h3>
         </Link>
 
         {/*  */}

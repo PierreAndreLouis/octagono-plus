@@ -622,7 +622,7 @@ function Liste_options({}) {
                 className="dark:text-gray-100 mt-4 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <FaEdit className="text-3xl" />
-                <h3>Modifier ou supprimer le véhicule</h3>
+                <h3>Modifier ou supprimer l'appareil</h3>
               </Link>
             </Tooltip>
           )}
