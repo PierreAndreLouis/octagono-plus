@@ -179,7 +179,7 @@ function Login2() {
                 className={`flex text-gray-600  py-4 gap-2 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
               >
                 <FaAddressBook className="text-blue-600" />
-                <h3 className="text-sm">Manuelle d'utilisation</h3>
+                <h3 className="text-sm">Manuel d'utilisation</h3>
               </div>
             </div>
             {error && (

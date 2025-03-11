@@ -12,7 +12,7 @@ function DocTrajetVehicule() {
     >
       <div className="px-4 transition-all mx-auto max-w-[35rem]">
         <h2 className="text-orange-600 font-semibold  mt-6 text-center">
-          Manuelle d'utilisation
+          Manuel d'utilisation
         </h2>
         <h1 className="font-bold mt-4  text-center text-xl">
           Comment voir le trajet d'un Appareil ?

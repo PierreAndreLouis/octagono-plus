@@ -195,7 +195,7 @@ function App() {
               >
                 <div className="border-b py-2 flex justify-between items-center">
                   <h3 className="font-semibold ml-4 text-xl">
-                    Manuelle d'utilisation
+                    Manuel d'utilisation
                   </h3>
                   <IoClose
                     onClick={() => {

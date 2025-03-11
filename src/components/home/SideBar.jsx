@@ -208,7 +208,7 @@ function SideBar() {
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaAddressBook />
-          <h3>Manuelle d'utilisation</h3>
+          <h3>Manuel d'utilisation</h3>
         </Link>
 
         {/*  */}
