@@ -28,7 +28,7 @@ const DataContextProvider = ({ children }) => {
   x;
 
   // to store login user data  // account, username, password
-  const [readDocumentation, setReadDocumentation] = useState(true);
+  const [readDocumentation, setReadDocumentation] = useState(false);
   const [documentationPage, setDocumentationPage] = useState("connecter");
   const seConnecterRef = useRef(); // Crée une référence pour l'élément
   const docAddVehiculeRef = useRef(); // Crée une référence pour l'élément
