@@ -159,7 +159,7 @@ function App() {
                   }}
                 >
                   <img src="/img/cars/logo.png" className="w-10" alt="Logo" />
-                  <h2 className="text-xl sm:text-2xl font-bold opacity-70">
+                  <h2 className="text-md sm:text-2xl font-bold opacity-70">
                     Octagono-<span className="text-orange-600">PLus</span>
                   </h2>
                 </Link>
