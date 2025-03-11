@@ -35,10 +35,12 @@ function Liste() {
   //
   x;
   // Pour filtrer les véhicules dans la page home, en fonction de filtre dans la statistic choisis
-  const dataFusionné = statisticFilterInHomePage
-    ? Object.values(statisticFilterInHomePage)
-    : [];
-  const dataFusionné_2 = mergedDataHome ? Object.values(mergedDataHome) : [];
+  // const dataFusionné = statisticFilterInHomePage
+  //   ? Object.values(statisticFilterInHomePage)
+  //   : [];
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
   //
   //
   //
@@ -49,7 +51,7 @@ function Liste() {
   x;
   // Filtrer les données selon la recherche dans le header
   const filteredData = searchQueryForHeader
-    ? (statisticFilterTextInHomePage ? dataFusionné : dataFusionné_2).filter(
+    ? dataFusionné.filter(
         (véhicule) =>
           véhicule?.description
             .toLowerCase()
@@ -65,9 +67,7 @@ function Liste() {
               .toLowerCase()
               .includes(searchQueryForHeader.toLowerCase()))
       )
-    : statisticFilterTextInHomePage
-    ? dataFusionné
-    : dataFusionné_2;
+    : dataFusionné;
 
   //
   //
@@ -123,13 +123,84 @@ function Liste() {
   //
   x;
 
+  // Définir les valeurs nécessaires
+  const currentTimeMs = Date.now();
+  const thirtyMinutesInMs = 30 * 60 * 1000; // 30 minutes en millisecondes
+  const twentyHoursInMs = 20 * 60 * 60 * 1000; // 20 heures en millisecondes
+
+  const filteredDataToDisplay = filteredData.filter((véhicule) => {
+    // Gérer chaque filtre en fonction du texte de filtrage
+    if (statisticFilterTextInHomePage === "mouvement") {
+      const isSpeedActive = véhicule?.véhiculeDetails?.[0]?.speedKPH > 0;
+
+      const lastUpdateTimestampMs =
+        véhicule?.véhiculeDetails?.[0]?.timestamp * 1000;
+      const isStillSpeedActive =
+        currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+
+      const lastUpdateTimeMs = véhicule?.lastUpdateTime
+        ? véhicule?.lastUpdateTime * 1000
+        : 0;
+      const isRecentlyUpdated =
+        currentTimeMs - lastUpdateTimeMs < twentyHoursInMs;
+
+      return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
+    }
+
+    if (statisticFilterTextInHomePage === "parking") {
+      const hasDetails = véhicule?.véhiculeDetails?.length > 0;
+      const noSpeed = véhicule?.véhiculeDetails?.every(
+        (detail) => detail.speedKPH <= 0
+      );
+
+      const lastUpdateTimeMs = véhicule?.lastUpdateTime
+        ? véhicule?.lastUpdateTime * 1000
+        : 0;
+      const isActive = currentTimeMs - lastUpdateTimeMs < twentyHoursInMs;
+
+      const lastUpdateTimestampMs =
+        véhicule?.véhiculeDetails?.[0]?.timestamp * 1000;
+      const isSpeedActive = véhicule?.véhiculeDetails?.[0]?.speedKPH > 0;
+      const isNotStillSpeedActive =
+        currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+
+      return (
+        hasDetails &&
+        isActive &&
+        (noSpeed || (isSpeedActive && isNotStillSpeedActive))
+      );
+    }
+
+    if (statisticFilterTextInHomePage === "hors_service") {
+      const noDetails =
+        !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
+
+      const lastUpdateTimeMs = véhicule?.lastUpdateTime
+        ? véhicule?.lastUpdateTime * 1000
+        : 0;
+      const isInactive = currentTimeMs - lastUpdateTimeMs >= twentyHoursInMs;
+
+      return noDetails || isInactive;
+    }
+
+    // Si le filtre est "tous" ou vide, ne rien filtrer
+    if (
+      statisticFilterTextInHomePage === "tout" ||
+      statisticFilterTextInHomePage === ""
+    ) {
+      return true; // Aucun filtre, tout afficher
+    }
+
+    return false; // Retourner false par défaut si aucune condition n'est remplie
+  });
+
   return (
     <div className="p-2 flex flex-col gap-4 mt-4 mb-[10rem]-- pb-[6rem] dark:text-white">
       {isHomePageLoading ? (
         <p>Chargement des données...</p>
-      ) : filteredData.length > 0 ? (
-        // filteredData.map((véhicule, index) => {
-        filteredData.map((véhicule, index) => {
+      ) : filteredDataToDisplay.length > 0 ? (
+        // filteredDataToDisplay.map((véhicule, index) => {
+        filteredDataToDisplay.map((véhicule, index) => {
           const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
 
           let main_text_color = "text-red-900 dark:text-red-300";

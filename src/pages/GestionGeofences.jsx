@@ -3,6 +3,7 @@ import { IoEarth } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+import { FaPlusCircle } from "react-icons/fa";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function GestionGeofences() {
@@ -110,9 +111,12 @@ function GestionGeofences() {
               setIsEditingGeofence(false);
               setCurrentGeozone();
             }}
-            className="bg-green-100 text-green-900 font-semibold rounded-lg py-1 px-6"
+            className="bg-green-400 text-white font-semibold rounded-lg py-2 px-6"
           >
-            Ajouter un nouveau Geozone
+            <div className="flex justify-center items-center gap-3">
+              <FaPlusCircle className="text-2xl" />
+              <p className="text-lg text-center">Ajouter un nouveau Geozone</p>
+            </div>
           </Link>{" "}
         </div>
 

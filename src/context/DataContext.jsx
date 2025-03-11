@@ -2120,7 +2120,7 @@ const DataContextProvider = ({ children }) => {
       homePageReload();
 
       // console.log("HomePage Reload start....");
-    }, 20000);
+    }, 30000);
 
     return () => clearInterval(intervalId);
   }, []);

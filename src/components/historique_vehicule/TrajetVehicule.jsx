@@ -1165,7 +1165,7 @@ function TrajetVehicule({
                             html: `<div 
                         class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                         
-                        style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
+                        style="font-size: ${textSize}; width: ${widthSize}; color:  #706f6f; {geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                         ${geofence?.description}
                         </div>`,
                           })}

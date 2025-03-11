@@ -202,10 +202,9 @@ const Home = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       // reloadHomePage();
+      console.log("HomePage Reload start....");
       homePageReload();
-
-      // console.log("HomePage Reload start....");
-    }, 20000);
+    }, 30000);
 
     return () => clearInterval(intervalId);
   }, []);

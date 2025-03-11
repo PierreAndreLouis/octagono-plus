@@ -95,6 +95,9 @@ function MapComponent({ mapType }) {
     speedKPH:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.speedKPH || 0,
+    heading:
+      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+        ?.heading || 0,
   }));
 
   // une reference pour la carte
@@ -165,27 +168,62 @@ function MapComponent({ mapType }) {
     // }, [selectedVehicleToShowInMap, vehicles]);
   }, [selectedVehicleToShowInMap]);
 
-  const getMarkerIcon = (speedKPH, timestamp) => {
-    const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-    const currentTime = Date.now(); // Heure actuelle en millisecondes
+  // const getMarkerIcon = (véhicule) => {
+  //   const speedKPH = véhicule.speedKPH;
+  //   const timestamp = véhicule.timestamp;
 
-    // Fonction pour obtenir le timestamp actuel en millisecondes
-    const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+  //   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  //   const currentTime = Date.now(); // Heure actuelle en millisecondes
 
-    const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
-    const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+  //   // Fonction pour obtenir le timestamp actuel en millisecondes
+  //   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-    const lastUpdateTimestampMs = timestamp * 1000; // Convertir en millisecondes
+  //   const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+  //   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+
+  //   const lastUpdateTimestampMs = timestamp * 1000; // Convertir en millisecondes
+
+  //   const isStillSpeedActive =
+  //     lastUpdateTimestampMs &&
+  //     currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+
+  //   if (speedKPH < 1 || !isStillSpeedActive) return iconLowSpeed;
+  //   if (speedKPH >= 1 && speedKPH <= 20 && isStillSpeedActive)
+  //     return iconMediumSpeed;
+  //   if (speedKPH > 20 && isStillSpeedActive) return iconMediumSpeed;
+  //   // return iconHighSpeed ;
+  // };
+
+  // const getMarkerIcon = (véhicule) => {
+  //   const speed = parseFloat(véhicule?.speedKPH);
+  //   const direction = Math.round(véhicule?.heading / 45.0) % 8;
+
+  //   if (speed <= 0) return "/pin/ping_red.png";
+  //   else if (speed > 0 && speed <= 20)
+  //     return `/pin/ping_yellow_h${direction}.png`;
+  //   else return `/pin/ping_green_h${direction}.png`;
+  // };
+
+  const getMarkerIcon = (véhicule) => {
+    const speed = parseFloat(véhicule?.speedKPH);
+    const direction = Math.round(véhicule?.heading / 45.0) % 8;
+    const timestamp = véhicule?.timestamp * 1000; // Convertir en millisecondes
+
+    const thirtyMinutesInMs = 30 * 60 * 1000; // 30 minutes en millisecondes
+    const currentTimeMs = Date.now();
 
     const isStillSpeedActive =
-      lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+      timestamp && currentTimeMs - timestamp <= thirtyMinutesInMs;
 
-    if (speedKPH < 1 || !isStillSpeedActive) return iconLowSpeed;
-    if (speedKPH >= 1 && speedKPH <= 20 && isStillSpeedActive)
-      return iconMediumSpeed;
-    if (speedKPH > 20 && isStillSpeedActive) return iconMediumSpeed;
-    // return iconHighSpeed ;
+    if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+    if (speed > 0 && speed <= 20 && isStillSpeedActive)
+      return `/pin/ping_yellow_h${direction}.png`;
+    return `/pin/ping_green_h${direction}.png`;
+
+    // if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+    // if (speed > 0 && speed <= 20 && isStillSpeedActive)
+    //   return `/pin/ping_yellow_h${direction}.png`;
+    // return `/pin/ping_green_h${direction}.png`;
   };
 
   const openGoogleMaps = (latitude, longitude) => {
@@ -295,14 +333,6 @@ function MapComponent({ mapType }) {
     clickedPosition1Ref.current = clickedPosition1;
   }, [clickedPosition1]);
 
-  // const [clickedPosition2, setClickedPosition2] = useState(null);
-  // const [clickedPosition3, setClickedPosition3] = useState(null);
-  // const [clickedPosition4, setClickedPosition4] = useState(null);
-  // const [clickedPosition5, setClickedPosition5] = useState(null);
-  // const [clickedPosition6, setClickedPosition6] = useState(null);
-  // const [clickedPosition7, setClickedPosition7] = useState(null);
-  // const [clickedPosition8, setClickedPosition8] = useState(null);
-
   const [clickedPosition2, setClickedPosition2] = useState(null);
   const clickedPosition2Ref = useRef(clickedPosition2);
 
@@ -360,21 +390,43 @@ function MapComponent({ mapType }) {
   function MapClickHandler({ setClickedPosition1 }) {
     useMapEvent("click", (e) => {
       console.log("Position cliquée :", e.latlng);
-      if (addOrEditPosition === "position1") {
+
+      if (addOrEditPosition === "position1" && clickedPosition1 === undefined) {
         setClickedPosition1(e.latlng);
-      } else if (addOrEditPosition === "position2") {
+      } else if (
+        addOrEditPosition === "position2" &&
+        clickedPosition2 === undefined
+      ) {
         setClickedPosition2(e.latlng);
-      } else if (addOrEditPosition === "position3") {
+      } else if (
+        addOrEditPosition === "position3" &&
+        clickedPosition3 === undefined
+      ) {
         setClickedPosition3(e.latlng);
-      } else if (addOrEditPosition === "position4") {
+      } else if (
+        addOrEditPosition === "position4" &&
+        clickedPosition4 === undefined
+      ) {
         setClickedPosition4(e.latlng);
-      } else if (addOrEditPosition === "position5") {
+      } else if (
+        addOrEditPosition === "position5" &&
+        clickedPosition5 === undefined
+      ) {
         setClickedPosition5(e.latlng);
-      } else if (addOrEditPosition === "position6") {
+      } else if (
+        addOrEditPosition === "position6" &&
+        clickedPosition6 === undefined
+      ) {
         setClickedPosition6(e.latlng);
-      } else if (addOrEditPosition === "position7") {
+      } else if (
+        addOrEditPosition === "position7" &&
+        clickedPosition7 === undefined
+      ) {
         setClickedPosition7(e.latlng);
-      } else if (addOrEditPosition === "position8") {
+      } else if (
+        addOrEditPosition === "position8" &&
+        clickedPosition8 === undefined
+      ) {
         setClickedPosition8(e.latlng);
       } else {
         return;
@@ -430,8 +482,88 @@ function MapComponent({ mapType }) {
     clickedPosition8,
   ];
 
+  // const positionComponents = positions.map((position, index) => {
+  //   const positionNumber = index + 1;
+  //   return (
+  //     position && (
+  //       <Marker
+  //         key={positionNumber}
+  //         icon={L.icon({
+  //           iconUrl:
+  //             addOrEditPosition === `position${positionNumber}`
+  //               ? "/pin/ping_green.png"
+  //               : "/pin/ping_red.png",
+  //           iconSize: [25, 41],
+  //           iconAnchor: [12, 41],
+  //           popupAnchor: [1, -34],
+  //           shadowUrl:
+  //             "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+  //           shadowSize: [41, 41],
+  //         })}
+  //         position={[position.lat, position.lng]}
+  //       >
+  //         <Popup ref={popupRef}>
+  //           <div className="">
+  //             <div className="font-bold mb-1">Coordonnée #{positionNumber}</div>
+  //             Latitude: {position.lat.toFixed(6)} <br />
+  //             Longitude: {position.lng.toFixed(6)} <br />
+  //             <div
+  //               onClick={() => {
+  //                 setAddOrEditPosition(`position${positionNumber}`);
+  //                 if (popupRef.current) {
+  //                   popupRef.current.closePopup(); // Fermer le popup correctement
+  //                 }
+  //               }}
+  //               className={`${
+  //                 addOrEditPosition === `position${positionNumber}`
+  //                   ? "bg-green-500"
+  //                   : "bg-red-500"
+  //               } mt-2 cursor-pointer rounded-md text-white p-1 px-3`}
+  //             >
+  //               Modifier
+  //             </div>
+  //           </div>
+  //         </Popup>
+  //       </Marker>
+  //     )
+  //   );
+  // });
+
   const positionComponents = positions.map((position, index) => {
     const positionNumber = index + 1;
+
+    const handleDragEnd = (event) => {
+      const { lat, lng } = event.target.getLatLng();
+      switch (positionNumber) {
+        case 1:
+          setClickedPosition1({ lat, lng });
+          break;
+        case 2:
+          setClickedPosition2({ lat, lng });
+          break;
+        case 3:
+          setClickedPosition3({ lat, lng });
+          break;
+        case 4:
+          setClickedPosition4({ lat, lng });
+          break;
+        case 5:
+          setClickedPosition5({ lat, lng });
+          break;
+        case 6:
+          setClickedPosition6({ lat, lng });
+          break;
+        case 7:
+          setClickedPosition7({ lat, lng });
+          break;
+        case 8:
+          setClickedPosition8({ lat, lng });
+          break;
+        default:
+          break;
+      }
+    };
+
     return (
       position && (
         <Marker
@@ -449,8 +581,12 @@ function MapComponent({ mapType }) {
             shadowSize: [41, 41],
           })}
           position={[position.lat, position.lng]}
+          draggable={true} // Active le déplacement du marqueur
+          eventHandlers={{
+            dragend: handleDragEnd, // Met à jour la position après le déplacement
+          }}
         >
-          <Popup ref={popupRef}>
+          {/* <Popup ref={popupRef}>
             <div className="">
               <div className="font-bold mb-1">Coordonnée #{positionNumber}</div>
               Latitude: {position.lat.toFixed(6)} <br />
@@ -471,7 +607,7 @@ function MapComponent({ mapType }) {
                 Modifier
               </div>
             </div>
-          </Popup>
+          </Popup> */}
         </Marker>
       )
     );
@@ -642,6 +778,24 @@ function MapComponent({ mapType }) {
     setCurrentGeozoneFonction();
   }, [currentGeozone]);
 
+  const calculatePolygonCenter = (coordinates) => {
+    if (!coordinates || coordinates.length === 0) return { lat: 0, lng: 0 };
+    const latSum = coordinates.reduce((sum, point) => sum + point.lat, 0);
+    const lngSum = coordinates.reduce((sum, point) => sum + point.lng, 0);
+    return {
+      lat: latSum / coordinates.length,
+      lng: lngSum / coordinates.length,
+    };
+  };
+
+  const centerOnFirstGeofencePosition = () => {
+    if (mapRef.current && geofences?.coordinates?.length > 0) {
+      const { lat, lng } = geofences.coordinates[0];
+      mapRef.current.setView([lat, lng], 10);
+      console.log("Carte centrée sur la première position du geofence");
+    }
+  };
+
   return (
     <div>
       {isAddingNewGeofence && (
@@ -650,6 +804,7 @@ function MapComponent({ mapType }) {
             onClick={() => {
               setIsAddingNewGeofence(false);
               setAjouterGeofencePopup(false);
+              // centerOnFirstGeofencePosition();
             }}
             to="/gestion_geofences?tab=geozone"
             className="py-[.1rem] w-full flex justify-center items-center cursor-pointer px-3 bg-red-600 text-white rounded-lg"
@@ -661,7 +816,7 @@ function MapComponent({ mapType }) {
       {isAddingNewGeofence && (
         <div className="fixed text-sm flex gap-2 z-[999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem] right-[.5rem] bg-white  ">
           <div className="mx-auto flex flex-col xs:flex-row gap-3">
-            {positionIndex <= 8 && (
+            {positionIndex < 8 && (
               <p
                 className=" xs:min-w-[11rem] flex justify-center font-semibold items-center gap-2 rounded-lg bg-green-200 text-green-900 px-3 py-1.5 cursor-pointer"
                 onClick={() => {
@@ -686,6 +841,10 @@ function MapComponent({ mapType }) {
                   if (clickedPosition7 != null) {
                     setPositionIndex(8);
                   }
+                  console.log(clickedPosition1);
+                  console.log(clickedPosition2);
+                  console.log(clickedPosition3);
+                  console.log(clickedPosition4);
                 }}
               >
                 <span className="w-[1.5rem] h-[1.5rem] flex justify-center items-center rounded-full bg-green-600 text-white">
@@ -698,14 +857,14 @@ function MapComponent({ mapType }) {
               <p
                 className="py-1.5 w-full font-semibold flex justify-center items-center cursor-pointer px-3 bg-red-200 text-red-900 rounded-lg"
                 onClick={() => {
-                  setClickedPosition1(null);
-                  setClickedPosition2(null);
-                  setClickedPosition3(null);
-                  setClickedPosition4(null);
-                  setClickedPosition5(null);
-                  setClickedPosition6(null);
-                  setClickedPosition7(null);
-                  setClickedPosition8(null);
+                  setClickedPosition1(undefined);
+                  setClickedPosition2(undefined);
+                  setClickedPosition3(undefined);
+                  setClickedPosition4(undefined);
+                  setClickedPosition5(undefined);
+                  setClickedPosition6(undefined);
+                  setClickedPosition7(undefined);
+                  setClickedPosition8(undefined);
                   setPositionIndex(1);
                 }}
               >
@@ -780,12 +939,15 @@ function MapComponent({ mapType }) {
                   (Separation sur la carte)
                 </span>
               </h2>
-              <IoClose
-                onClick={() => {
-                  setAjouterGeofencePopup(false);
-                }}
-                className="text-2xl cursor-pointer text-red-600"
-              />
+              <Link to="/gestion_geofences?tab=geozone">
+                <IoClose
+                  onClick={() => {
+                    setAjouterGeofencePopup(false);
+                    setIsAddingNewGeofence(false);
+                  }}
+                  className="text-2xl cursor-pointer text-red-600"
+                />
+              </Link>
             </div>
             <form onSubmit={addGeofenceFonction} className="mt-4">
               {/* <label
@@ -855,6 +1017,7 @@ function MapComponent({ mapType }) {
                   onClick={() => {
                     setAjouterGeofencePopup(false);
                     setIsAddingNewGeofence(true);
+                    centerOnFirstGeofencePosition();
                   }}
                   className="block cursor-pointer text-orange-600 px-3  border-b pb-2 py-1.5 outline-none  dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm "
                 >
@@ -1037,7 +1200,7 @@ function MapComponent({ mapType }) {
                       html: `<div 
                            class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                            
-                           style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
+                           style="font-size: ${textSize}; width: ${widthSize}; color: #706f6f; {geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                            ${geofence?.description}
                            </div>`,
                     })}
@@ -1059,7 +1222,7 @@ function MapComponent({ mapType }) {
                   véhicule.lastValidLongitude || 0,
                 ]}
                 icon={L.icon({
-                  iconUrl: getMarkerIcon(véhicule.speedKPH, véhicule.timestamp),
+                  iconUrl: getMarkerIcon(véhicule),
                   iconSize: [25, 41],
                   iconAnchor: [12, 41],
                   popupAnchor: [1, -34],
@@ -1145,22 +1308,57 @@ function MapComponent({ mapType }) {
         <MapClickHandler setClickedPosition1={setClickedPosition1} />
 
         {isAddingNewGeofence && (
-          <Polygon
-            positions={geofences?.coordinates?.map((point) => [
-              point.lat,
-              point.lng,
-            ])}
-            pathOptions={{
-              color:
-                geofences?.color ||
-                ajouterCouleurGeofenceCodeCouleurRef.current,
-              fillColor:
-                geofences?.color ||
-                ajouterCouleurGeofenceCodeCouleurRef.current,
-              fillOpacity: 0.1,
-              weight: 1,
-            }}
-          />
+          // <Polygon
+          //   positions={geofences?.coordinates?.map((point) => [
+          //     point.lat,
+          //     point.lng,
+          //   ])}
+          //   pathOptions={{
+          //     color:
+          //       geofences?.color ||
+          //       ajouterCouleurGeofenceCodeCouleurRef.current,
+          //     fillColor:
+          //       geofences?.color ||
+          //       ajouterCouleurGeofenceCodeCouleurRef.current,
+          //     fillOpacity: 0.1,
+          //     weight: 1,
+          //   }}
+          // />
+
+          <React.Fragment>
+            <Polygon
+              positions={geofences?.coordinates?.map((point) => [
+                point.lat,
+                point.lng,
+              ])}
+              pathOptions={{
+                color:
+                  geofences?.color ||
+                  ajouterCouleurGeofenceCodeCouleurRef.current, // Couleur de la bordure
+                fillColor:
+                  geofences?.color ||
+                  ajouterCouleurGeofenceCodeCouleurRef.current, // Couleur du fond
+                fillOpacity: 0.1, // Opacité du fond
+                weight: 1, // Épaisseur des lignes
+              }}
+            />
+
+            <Marker
+              position={calculatePolygonCenter(geofences?.coordinates || [])}
+              icon={L.divIcon({
+                className: "geofence-label",
+                html: `<div 
+                           class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
+                           
+                           style="font-size: ${textSize}; width: ${widthSize}; color: #706f6f; {
+                  ajouterCouleurGeofenceCodeCouleurRef.current ||
+                  ajouterCouleurGeofenceCodeCouleur
+                }; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
+                           ${zoneDescription || ""}
+                           </div>`,
+              })}
+            />
+          </React.Fragment>
         )}
 
         <>{isAddingNewGeofence && positionComponents}</>
