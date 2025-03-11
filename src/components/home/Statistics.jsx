@@ -24,7 +24,7 @@ function Statistics() {
 
   // Fonction pour obtenir le timestamp actuel en millisecondes
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-  const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -68,7 +68,7 @@ function Statistics() {
     // Vérifie si la mise à jour est récente (moins de 30 minutes)
     const isStillSpeedActive =
       lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+      currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
     const lastUpdateTimeMs = véhicule?.lastUpdateTime
@@ -118,7 +118,7 @@ function Statistics() {
 
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
     // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
     // return hasDetails && noSpeed && isActive;

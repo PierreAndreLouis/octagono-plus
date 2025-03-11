@@ -125,7 +125,7 @@ function Liste() {
 
   // Définir les valeurs nécessaires
   const currentTimeMs = Date.now();
-  const thirtyMinutesInMs = 30 * 60 * 1000; // 30 minutes en millisecondes
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const twentyHoursInMs = 20 * 60 * 60 * 1000; // 20 heures en millisecondes
 
   const filteredDataToDisplay = filteredData.filter((véhicule) => {
@@ -136,7 +136,7 @@ function Liste() {
       const lastUpdateTimestampMs =
         véhicule?.véhiculeDetails?.[0]?.timestamp * 1000;
       const isStillSpeedActive =
-        currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+        currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
       const lastUpdateTimeMs = véhicule?.lastUpdateTime
         ? véhicule?.lastUpdateTime * 1000
@@ -162,7 +162,7 @@ function Liste() {
         véhicule?.véhiculeDetails?.[0]?.timestamp * 1000;
       const isSpeedActive = véhicule?.véhiculeDetails?.[0]?.speedKPH > 0;
       const isNotStillSpeedActive =
-        currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+        currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
       return (
         hasDetails &&
@@ -228,7 +228,7 @@ function Liste() {
           // Fonction pour obtenir le timestamp actuel en millisecondes
           const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-          const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+          const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
           const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
           //
           //
@@ -273,7 +273,7 @@ function Liste() {
           // Vérifie si la mise à jour est récente (moins de 30 minutes)
           const isStillSpeedActive =
             lastUpdateTimestampMs &&
-            currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+            currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
           //
           //

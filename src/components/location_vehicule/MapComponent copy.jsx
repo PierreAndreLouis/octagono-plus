@@ -172,14 +172,14 @@ function MapComponent({ mapType }) {
     // Fonction pour obtenir le timestamp actuel en millisecondes
     const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-    const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+    const tenMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
     const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
 
     const lastUpdateTimestampMs = timestamp * 1000; // Convertir en millisecondes
 
     const isStillSpeedActive =
       lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+      currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
     if (speedKPH < 1 || !isStillSpeedActive) return iconLowSpeed;
     if (speedKPH >= 1 && speedKPH <= 20 && isStillSpeedActive)

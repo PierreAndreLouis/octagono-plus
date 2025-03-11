@@ -53,8 +53,8 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Cliquer sur n'importe quel marker pour vois les information sur
-              la position
+              3- Cliquer sur n'importe quel marqueur pour voir les informations
+              sur la position
             </h3>
             <p className="text-white">.</p>
 
@@ -73,7 +73,7 @@ function DocTrajetVehicule() {
               Si tu veux retracer le trajet du véhicule
             </h3>
             <h3 className="text-lg font-semibold">
-              4- Cliquer sur le bouton en haut a gauche "Retracer le trajet"
+              4- Cliquer sur le bouton en haut à gauche "Retracer le trajet"
             </h3>
             <p className="text-white">.</p>
 
@@ -89,10 +89,10 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-2xl text-green-600 font-semibold">
-              Pour voir les fonctionnalité sur l'animation du trajet
+              Pour voir les fonctionnalités sur l'animation du trajet
             </h3>
             <h3 className="text-lg font-semibold">
-              5- Cliquer sur l'icon a droite du bouton "Retracer le trajet"
+              5- Cliquer sur l'icône à droite du bouton "Retracer le trajet"
             </h3>
             <p className="text-white">.</p>
 

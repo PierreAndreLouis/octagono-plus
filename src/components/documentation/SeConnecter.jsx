@@ -20,7 +20,7 @@ function SeConnecter() {
         <div className="mt-8">
           <div className="border-b pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Installer l'application si l'icon est visible (optionel) :
+              1- Installer l'application si l'icon est visible (optionnel) :
             </h3>
             <p className="text-white">.</p>
 
@@ -35,7 +35,7 @@ function SeConnecter() {
           {/*  */}
           <div className="mt-8 pb-10 border-b border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Entrer les Informations nécessaire :
+              2- Entrer les informations nécessaires :
             </h3>
             <div className="ml-14">
               <div className="flex gap-4 items-center">
@@ -65,7 +65,7 @@ function SeConnecter() {
               4- CLiquer sur le bouton : "Se connecter"
             </h3>
             <h3 className="ml-6 font-">
-              Activer se souvenir de moi (si souhaiter)
+              Activer « Se souvenir de moi » (si souhaité)
             </h3>
             <div className="flex mt-8 justify-center w-full">
               <img

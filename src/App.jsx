@@ -78,7 +78,7 @@ function App() {
   );
 
   const [readDocumentationSideBar, setReadDocumentationSideBar] =
-    useState(false);
+    useState(true);
 
   const generatePersonelPDF = () => {
     setTimeout(() => {
@@ -135,22 +135,22 @@ function App() {
         {readDocumentation ? (
           <div className="transition-all">
             {/* télécharger */}
-            <div className="fixed top-[4rem] right-[1rem] z-30">
+            <div className="fixed  overflow-hidden rounded-lg bg-white shadow-lg shadow-black/10 top-[4rem] right-[1rem] z-30">
               <div
                 onClick={() => {
                   generatePersonelPDF();
                   // generatePersonelPDF();
                   // setPdfDownloadPupup(false);
                 }}
-                className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                className=" flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
               >
                 <p className="hidden md:block">Télécharger en PDF</p>
                 <img className="w-[2rem]" src="/img/pdf_download.png" alt="" />
               </div>
             </div>
 
-            <header className="fixed z-[2] top-0 left-0 right-0 bg-white">
-              <div className="flex shadow-lg shadow-black/20 justify-between items-center px-4 py-2">
+            <header className="fixed z-[9999] top-0 left-0 right-0 bg-white">
+              <div className="flex shadow-lg shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
                 <Link
                   to="/home?tab=acceuil"
                   className="flex items-center gap-3"
@@ -191,7 +191,7 @@ function App() {
                   readDocumentationSideBar
                     ? "translate-x-0"
                     : "-translate-x-[100%]"
-                }  transition-all lg:translate-x-0-- bg-white fixed   lg:relative-- left-0 top-[5rem] p-4 z-[1] shadow-lg shadow-black/20 min-w-[22rem] max-w-[25rem] min-h-[100vh]`}
+                }  transition-all lg:translate-x-0-- bg-white fixed   lg:relative-- left-0 top-[3rem] p-4 z-[5999] shadow-lg shadow-black/20 min-w-[22rem]-- w-[80vw]-- w-[100vw] max-w-[22rem] min-h-[100vh]`}
               >
                 <div className="border-b py-2 flex justify-between items-center">
                   <h3 className="font-semibold ml-4 text-xl">
@@ -307,7 +307,7 @@ function App() {
                   !readDocumentationSideBar ? "hidden" : "lg:flex"
                 } transition-all lg:translate-x-0-- bg-white hidden --  lg:relative left-0 top-[5rem] p-4 z-[0]  min-w-[21rem] max-w-[25rem] min-h-[100vh]`}
               ></sidebar>
-              <div className="w-full mx-auto">
+              <div className="w-full pb-32 mx-auto">
                 {/* content */}
                 {documentationPage === "connecter" && <SeConnecter />}
                 {documentationPage === "ajouter_véhicule" && <DocAddVehicule />}

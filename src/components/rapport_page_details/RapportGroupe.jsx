@@ -81,7 +81,7 @@ function RapportGroupe({
   // Fonction pour obtenir le timestamp actuel en millisecondes
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-  const thirtyMinutesInMs = 15 * 60 * 1000; // 30 minutes en millisecondes
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   //
   //
@@ -776,7 +776,7 @@ function RapportGroupe({
 
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
     if (!isSearching) {
       if (filter === "movingNow")
@@ -841,7 +841,7 @@ function RapportGroupe({
     // Vérifie si la mise à jour est récente (moins de 30 minutes)
     const isStillSpeedActive =
       lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+      currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
     const lastUpdateTimeMs = véhicule?.lastUpdateTime
@@ -878,7 +878,7 @@ function RapportGroupe({
       // Vérifie si la mise à jour est récente (moins de 30 minutes)
       const isStillSpeedActive =
         lastUpdateTimestampMs &&
-        currentTimeMs - lastUpdateTimestampMs <= thirtyMinutesInMs;
+        currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
       // Le véhicule doit être actif selon la vitesse et la mise à jour
       return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
@@ -931,7 +931,7 @@ function RapportGroupe({
 
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
     // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
     // return hasDetails && noSpeed && isActive;
@@ -977,7 +977,7 @@ function RapportGroupe({
 
       const isNotStillSpeedActive =
         lastUpdateTimestampMs &&
-        currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+        currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
       const hasBeenMoving =
         véhicule?.véhiculeDetails &&
@@ -1407,7 +1407,7 @@ function RapportGroupe({
 
                     const isNotStillSpeedActive =
                       lastUpdateTimestampMs &&
-                      currentTimeMs - lastUpdateTimestampMs > thirtyMinutesInMs;
+                      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
                     ////////////////////////////x////////////////////////////////////////
 

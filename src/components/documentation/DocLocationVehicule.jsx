@@ -38,7 +38,7 @@ function DocLocationVehicule() {
 
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquer sur l'icon "Localisation"
+              2- Cliquer sur l'icône "Localisation"
             </h3>
             <p className="text-white">.</p>
 
@@ -53,7 +53,7 @@ function DocLocationVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Cliquer sur le marker pour voir les informations sur la
+              3- Cliquer sur le marqueur pour voir les informations sur la
               position
             </h3>
             <p className="text-white">.</p>

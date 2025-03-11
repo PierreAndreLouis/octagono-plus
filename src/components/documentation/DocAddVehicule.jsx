@@ -21,7 +21,7 @@ function DocAddVehicule() {
         <div className="mt-8">
           <div className="border-b pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquer sur l'icon menu, en haut a droite
+              1- Cliquer sur l'icône menu, en haut à droite
             </h3>
             <p className="text-white">.</p>
 
@@ -52,7 +52,7 @@ function DocAddVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Ajouter tous les informations demandées
+              3- Ajouter toutes les informations demandées
             </h3>
             <p className="text-white">.</p>
 
@@ -68,7 +68,7 @@ function DocAddVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Cliquer sur le bouton enregistrer
+              4- Cliquer sur le bouton "Enregistrer"
             </h3>
             <p className="text-white">.</p>
 
@@ -100,7 +100,7 @@ function DocAddVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Felicitation, tu as ajouter nouveau un véhicule
+              6- Félicitations, tu as ajouté un nouveau véhicule
             </h3>
             <p className="text-white">.</p>
 
