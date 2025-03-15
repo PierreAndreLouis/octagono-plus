@@ -7,6 +7,7 @@ import { RiWifiOffLine } from "react-icons/ri";
 import { MdUpdate } from "react-icons/md";
 import { FaCheckSquare } from "react-icons/fa";
 import { FaSquareXmark } from "react-icons/fa6";
+import { GoDotFill } from "react-icons/go";
 
 const Home = () => {
   const {
@@ -28,6 +29,7 @@ const Home = () => {
     password,
     updateAuto,
     setupdateAuto,
+    estLancerUpdateAuto,
   } = useContext(DataContext);
 
   let x;
@@ -372,7 +374,14 @@ const Home = () => {
               isLoading2 ? "animate-spin" : ""
             }  text-red-700 min-w-12   flex justify-center sm:items-center dark:text-gray-200 text-2xl `}
           >
-            <MdUpdate className="sm:text-[2rem] mt-1 sm:mt-0" />
+            <div className="relative ">
+              {estLancerUpdateAuto && (
+                <div className=" flex justify-center items-center absolute scale-75 opacity-75 top-0 mt-1 left-0 right-0 z-20">
+                  <GoDotFill className="text-green-600" />
+                </div>
+              )}
+              <MdUpdate className="sm:text-[2rem] mt-1 sm:mt-0" />
+            </div>
           </div>
           {/* <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" /> */}
           <div className="flex justify-between items-start  sm:items-center w-full gap-2  ">

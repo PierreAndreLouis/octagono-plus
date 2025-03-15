@@ -38,6 +38,16 @@ const DataContextProvider = ({ children }) => {
     localStorage.setItem("updateAuto", JSON.stringify(updateAuto));
   }, [updateAuto]);
 
+  const [estLancerUpdateAuto, setEstLancerUpdateAuto] = useState(false);
+
+  useEffect(() => {
+    if (estLancerUpdateAuto) {
+      setTimeout(() => {
+        setEstLancerUpdateAuto(false);
+      }, 3000);
+    }
+  }, [estLancerUpdateAuto]);
+
   //
   //
   //
@@ -2209,6 +2219,7 @@ const DataContextProvider = ({ children }) => {
           fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
           fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         });
+        setEstLancerUpdateAuto(true);
       }
     }, 30000);
 
@@ -4592,6 +4603,7 @@ const DataContextProvider = ({ children }) => {
         docGestionGeozoneRef,
         updateAuto,
         setupdateAuto,
+        estLancerUpdateAuto,
       }}
     >
       {children}
