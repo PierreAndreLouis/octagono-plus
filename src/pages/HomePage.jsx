@@ -375,7 +375,7 @@ const Home = () => {
             <MdUpdate className="sm:text-[2rem] mt-1 sm:mt-0" />
           </div>
           {/* <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" /> */}
-          <div className="flex justify-between items-start border sm:items-center w-full gap-2  ">
+          <div className="flex justify-between items-start  sm:items-center w-full gap-2  ">
             <div
               onClick={() => {
                 handleClick();
