@@ -2390,14 +2390,31 @@ const DataContextProvider = ({ children }) => {
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
 
+    const getTodayTimestamp = () => {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // Minuit
+      return Math.floor(now.getTime() / 1000); // Convertir en secondes
+    };
+    const todayTimestamp = getTodayTimestamp() * 1000;
+
     // Récupérer les anciens détails depuis localStorage
     const previousData = (() => {
       try {
-        const data = donneeFusionnéForRapport;
-        //  JSON.parse(
-        //   localStorage.getItem("donneeFusionnéForRapport")
-        // );
-        return Array.isArray(data) ? data : [];
+        // Initialiser une valeur par défaut vide avant de charger les données de IndexedDB
+        let data = [];
+
+        // Charger les données depuis IndexedDB
+        getDataFromIndexedDB("donneeFusionnéForRapport").then((result) => {
+          // Vérifier si les données sont valides et les définir
+          data = Array.isArray(result) ? result : [];
+        });
+
+        return data || Array.isArray(donneeFusionnéForRapport)
+          ? donneeFusionnéForRapport
+          : [];
+        // const data = donneeFusionnéForRapport;
+
+        // return Array.isArray(data) ? data : [];
       } catch (error) {
         console.error(
           "Erreur lors de la récupération des données du localStorage:",
@@ -2413,16 +2430,34 @@ const DataContextProvider = ({ children }) => {
         (detail) => detail.Device === véhicule?.deviceID
       );
 
-      // Récupérer les anciens détails depuis les données précédentes
-      const previousDetails = previousData.find(
-        (prev) => prev.deviceID === véhicule?.deviceID
-      )?.véhiculeDetails;
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0); // Met l'heure à 00:00:00.000
+
+      const previousDetails = previousData
+        .find((prev) => prev.deviceID === véhicule?.deviceID)
+        ?.véhiculeDetails?.filter((detail) => {
+          const timestampDate = new Date(detail.timestamp * 1000); // Conversion du timestamp en date
+          return timestampDate >= todayMidnight;
+        });
+
+      // const previousDetails = previousData.find(
+      //   (prev) => prev.deviceID === véhicule?.deviceID
+      // )?.véhiculeDetails;
 
       // Conserver les anciens détails si aucun nouveau n'est trouvé
       const updatedDetails =
         newDetails && newDetails.length > 0
           ? newDetails
           : previousDetails || [];
+
+      // // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+
+      // // const updatedDetails =
+      // //   newDetails && newDetails.length > 0
+      // //     ? newDetails.filter((detail) => detail.timestamp >= todayTimestamp)
+      // //     : (previousDetails || []).filter(
+      // //         (detail) => detail.timestamp >= todayTimestamp
+      // //       );
 
       return {
         ...véhicule,
