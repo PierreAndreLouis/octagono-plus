@@ -30,6 +30,7 @@ const Home = () => {
     updateAuto,
     setupdateAuto,
     estLancerUpdateAuto,
+    setEstLancerUpdateAuto,
   } = useContext(DataContext);
 
   let x;
@@ -309,7 +310,7 @@ const Home = () => {
   //
   x;
 
-  const [activeDesactiveUpdateAuto, setActiveDesactiveUpdateAuto] =
+  const [activeDesactiveUpdateAutoPopup, setActiveDesactiveUpdateAutoPopup] =
     useState(false);
   let body_bg = "bg-red-50";
   let header_bg = "bg-red-600";
@@ -407,7 +408,7 @@ const Home = () => {
             {/* updateAuto, setupdateAuto, */}
             <div
               onClick={() => {
-                setActiveDesactiveUpdateAuto(true);
+                setActiveDesactiveUpdateAutoPopup(true);
               }}
               className="flex mt-1 sm:mt-0 gap-2 items-center "
             >
@@ -451,7 +452,7 @@ const Home = () => {
       {/* Option pour chaque véhicule */}
       {showListeOption && <Liste_options />}
 
-      {activeDesactiveUpdateAuto && (
+      {activeDesactiveUpdateAutoPopup && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
           <div
             className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
@@ -472,23 +473,32 @@ const Home = () => {
               </h3>
             </div>
             <div className="flex justify-center gap-2 mt-12">
+              {updateAuto ? (
+                <div
+                  onClick={() => {
+                    setupdateAuto(false);
+                    setActiveDesactiveUpdateAutoPopup(false);
+                  }}
+                  // to="/home?tab=acceuil"
+                  className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+                >
+                  Oui
+                </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    setupdateAuto(true);
+                    setActiveDesactiveUpdateAutoPopup(false);
+                  }}
+                  // to="/home?tab=acceuil"
+                  className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+                >
+                  Oui
+                </div>
+              )}
               <div
                 onClick={() => {
-                  // setRedemarerApplication(false);
-                  // resetIndexedDB(); // Vide le localStorage
-                  // localStorage.clear(); // Vide le localStorage
-                  // window.location.reload(); // Rafraîchit la page
-                  setupdateAuto(!updateAuto);
-                  setActiveDesactiveUpdateAuto(false);
-                }}
-                // to="/home?tab=acceuil"
-                className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
-              >
-                Oui
-              </div>
-              <div
-                onClick={() => {
-                  setActiveDesactiveUpdateAuto(false);
+                  setActiveDesactiveUpdateAutoPopup(false);
                 }}
                 // to="/home?tab=acceuil"
                 className={` bg-gray-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}

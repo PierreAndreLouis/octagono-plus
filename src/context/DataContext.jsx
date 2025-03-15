@@ -41,12 +41,17 @@ const DataContextProvider = ({ children }) => {
   const [estLancerUpdateAuto, setEstLancerUpdateAuto] = useState(false);
 
   useEffect(() => {
+    // console.log("estLancerUpdateAuto ", estLancerUpdateAuto);
     if (estLancerUpdateAuto) {
       setTimeout(() => {
         setEstLancerUpdateAuto(false);
-      }, 3000);
+      }, 2000);
     }
   }, [estLancerUpdateAuto]);
+
+  useEffect(() => {
+    console.log("updateAuto", updateAuto);
+  }, [updateAuto]);
 
   //
   //
@@ -2209,17 +2214,16 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       // reloadHomePage();
-      if (
-        (updateAuto && véhiculeDataRef?.current?.length > 0) ||
-        véhiculeData?.length > 0
-      ) {
-        console.log("HomePage Reload start....");
-        // console.log("reload HomePage");
-        (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
-          fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-          fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-        });
-        setEstLancerUpdateAuto(true);
+      if (updateAuto) {
+        if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
+          console.log("HomePage Reload start....");
+          // console.log("reload HomePage");
+          (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
+            fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+            fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+          });
+          setEstLancerUpdateAuto(true);
+        }
       }
     }, 30000);
 
@@ -4639,6 +4643,7 @@ const DataContextProvider = ({ children }) => {
         updateAuto,
         setupdateAuto,
         estLancerUpdateAuto,
+        setEstLancerUpdateAuto,
       }}
     >
       {children}
