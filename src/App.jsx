@@ -207,7 +207,7 @@ function App() {
     }
   };
 
-  // const [sidebarClickSection, setSideBarClickSection] = useState("connecter")
+  const [waitToDownload, setWaitToDownload] = useState(false);
 
   return (
     <div className="dark:bg-gray-700 min-h-screen">
@@ -236,8 +236,8 @@ function App() {
               <div
                 onClick={() => {
                   generatePersonelPDF();
+                  setWaitToDownload(true);
                   // generatePersonelPDF();
-                  // setPdfDownloadPupup(false);
                 }}
                 className=" flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
               >
@@ -956,6 +956,40 @@ function App() {
                   !readDocumentationSideBar ? "hidden" : "lg:flex"
                 } transition-all lg:translate-x-0-- bg-white hidden --  lg:relative left-0 top-[5rem] p-4 z-[0]  min-w-[21rem] max-w-[25rem] min-h-[100vh]`}
               ></div>
+
+              {waitToDownload && (
+                <div className="fixed z-[99999999999999] flex justify-center items-center inset-0 bg-black/50">
+                  <div
+                    className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+                  >
+                    <div
+                      className={` bg-orange-600 flex justify-center items-center py-4 px-4  mb-8 `}
+                    >
+                      <h2 className="font-bold text-white text-xl">
+                        Téléchargement en cours...
+                      </h2>
+                    </div>
+                    <div>
+                      <h3
+                        className={`text-gray-800 block font-semibold text-lg  text-center leading-6  mb-3 px-4`}
+                      >
+                        Cela peut prendre jusqu'a{" "}
+                        <span className="font-bold">1 minute.</span>
+                      </h3>
+                    </div>
+                    <div className="flex justify-center gap-2 mt-12">
+                      <div
+                        onClick={() => {
+                          setWaitToDownload(false);
+                        }}
+                        className={` bg-orange-600 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+                      >
+                        Ok
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="w-full pb-32 mx-auto">
                 {/* content */}
                 {documentationPage === "installation" && <DocInstallation />}
