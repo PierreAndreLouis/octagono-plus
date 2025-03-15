@@ -861,8 +861,11 @@ const DataContextProvider = ({ children }) => {
 
         // Envoie d'un mail pour avertir m'avertir de la connexion
 
-        sendConfirmConnexionMail(account, user);
-        sendConfirmConnexionMail2(account, user);
+        if (window.location.hostname !== "localhost") {
+          // Exécuter la fonction seulement si ce n'est pas localhost
+          sendConfirmConnexionMail(account, user);
+          sendConfirmConnexionMail2(account, user);
+        }
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -2438,11 +2441,20 @@ const DataContextProvider = ({ children }) => {
       todayMidnight.setHours(0, 0, 0, 0); // Met l'heure à 00:00:00.000
 
       const previousDetails = previousData
-        .find((prev) => prev.deviceID === véhicule?.deviceID)
+        ?.find((prev) => prev.deviceID === véhicule?.deviceID)
         ?.véhiculeDetails?.filter((detail) => {
           const timestampDate = new Date(detail.timestamp * 1000); // Conversion du timestamp en date
           return timestampDate >= todayMidnight;
         });
+
+      // const previousDetails = Array.isArray(previousData)
+      //   ? previousData
+      //       ?.find((prev) => prev.deviceID === véhicule?.deviceID)
+      //       ?.véhiculeDetails?.filter((detail) => {
+      //         const timestampDate = new Date(detail.timestamp * 1000); // Conversion du timestamp en date
+      //         return timestampDate >= todayMidnight;
+      //       })
+      //   : [];
 
       // const previousDetails = previousData.find(
       //   (prev) => prev.deviceID === véhicule?.deviceID
