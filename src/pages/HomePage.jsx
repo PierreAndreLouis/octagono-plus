@@ -5,6 +5,8 @@ import Liste_options from "../components/home/Liste_options";
 import { DataContext } from "../context/DataContext";
 import { RiWifiOffLine } from "react-icons/ri";
 import { MdUpdate } from "react-icons/md";
+import { FaCheckSquare } from "react-icons/fa";
+import { FaSquareXmark } from "react-icons/fa6";
 
 const Home = () => {
   const {
@@ -24,6 +26,8 @@ const Home = () => {
     account,
     username,
     password,
+    updateAuto,
+    setupdateAuto,
   } = useContext(DataContext);
 
   let x;
@@ -199,15 +203,15 @@ const Home = () => {
   x;
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // reloadHomePage();
-      console.log("HomePage Reload start....");
-      homePageReload();
-    }, 30000);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     // reloadHomePage();
+  //     console.log("HomePage Reload start....");
+  //     homePageReload();
+  //   }, 30000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   //
   //
@@ -303,6 +307,25 @@ const Home = () => {
   //
   x;
 
+  const [activeDesactiveUpdateAuto, setActiveDesactiveUpdateAuto] =
+    useState(false);
+  let body_bg = "bg-red-50";
+  let header_bg = "bg-red-600";
+  let button_bg = "bg-red-500";
+  let text_color = "text-red-600";
+
+  if (!updateAuto) {
+    body_bg = "bg-green-50";
+    header_bg = "bg-green-600";
+    button_bg = "bg-green-500";
+    text_color = "text-green-600";
+  } else {
+    body_bg = "bg-red-50";
+    header_bg = "bg-red-600";
+    button_bg = "bg-red-500";
+    text_color = "text-red-600";
+  }
+
   // const previousDataRef = useRef(JSON.stringify(mergedDataHome)); // Utilisation de useRef
 
   // useEffect(() => {
@@ -324,7 +347,7 @@ const Home = () => {
   // }, []);
 
   return (
-    <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-screen">
+    <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-[120vh]">
       {/* Statistic component */}
       <Statistics />
       {/* Chargement quand on login */}
@@ -337,31 +360,62 @@ const Home = () => {
       )}
       {/* Pour afficher la date et heure de la dernière mise a jour */}
       {lastUpdate?.mostRecentTimestamp !== -Infinity && (
-        <div
-          onClick={() => {
-            handleClick();
-            homePageReload();
-          }}
-          className="shadow-md cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-6 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100"
-        >
+        <div className="shadow-md md:py-4 md:pr-4 lg:pr-10 cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-6 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100">
           <div
+            onClick={() => {
+              handleClick();
+              console.log("HomePage Reload start....");
+
+              homePageReload();
+            }}
             className={`${
               isLoading2 ? "animate-spin" : ""
-            }  text-red-700 min-w-12   flex justify-center items-center dark:text-gray-200 text-2xl `}
+            }  text-red-700 min-w-12   flex justify-center sm:items-center dark:text-gray-200 text-2xl `}
           >
-            <MdUpdate />
+            <MdUpdate className="sm:text-[2rem] mt-1 sm:mt-0" />
           </div>
           {/* <MdUpdate className="translate-y-0 text-red-700 dark:text-gray-200 text-2xl" /> */}
-          <div className=" xs:flex items-center gap-4 ">
-            <h3 className="text-red-700 text-start  dark:text-red-100">
-              Dernière mise à jour :{" "}
-            </h3>
-            <p className="text-start font-bold  text-[.85rem] xs:text-[.91rem] dark:text-gray-100 text-gray-700 ">
-              {" "}
-              {MiseAJourFormatDateHeure?.date}
-              {" / "}
-              {MiseAJourFormatDateHeure?.time}
-            </p>
+          <div className="flex justify-between items-start border sm:items-center w-full gap-2  ">
+            <div
+              onClick={() => {
+                handleClick();
+                console.log("HomePage Reload start....");
+
+                homePageReload();
+              }}
+              className=" xs:flex flex-wrap items-center col-gap-4 "
+            >
+              <h3 className="text-red-700 mr-3 text-start sm:text-[1.15rem] sm:font-bold  dark:text-red-100">
+                Dernière mise à jour :{" "}
+              </h3>
+              <p className="text-start font-bold  text-[.85rem] xs:text-[.91rem] sm:text-[1.1rem] dark:text-gray-100 text-gray-700 ">
+                {" "}
+                {MiseAJourFormatDateHeure?.date}
+                {" / "}
+                {MiseAJourFormatDateHeure?.time}
+              </p>
+            </div>
+            {/* updateAuto, setupdateAuto, */}
+            <div
+              onClick={() => {
+                setActiveDesactiveUpdateAuto(true);
+              }}
+              className="flex mt-1 sm:mt-0 gap-2 items-center "
+            >
+              {updateAuto ? (
+                <FaCheckSquare className="text-orange-600 text-xl" />
+              ) : (
+                <FaSquareXmark className="text-orange-600 text-xl" />
+              )}
+
+              <p className="font-semibold sm:hidden text-sm sm:text-[1rem]">
+                Auto...
+              </p>
+
+              <p className="font-semibold hidden sm:block text-sm sm:text-[1rem]">
+                Automatique
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -387,6 +441,55 @@ const Home = () => {
       <Liste setShowListOption={setShowListOption} />
       {/* Option pour chaque véhicule */}
       {showListeOption && <Liste_options />}
+
+      {activeDesactiveUpdateAuto && (
+        <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
+          <div
+            className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+          >
+            <div
+              className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
+            >
+              <h2 className="font-bold text-white text-xl">
+                Mise a jour automatique
+              </h2>
+            </div>
+            <div>
+              <h3
+                className={`${text_color}  block font-semibold text-lg  text-center leading-6  mb-3 px-4`}
+              >
+                Es-tu sur {updateAuto ? "de désactiver" : "d'activer"} la mise a
+                jour automatique ?
+              </h3>
+            </div>
+            <div className="flex justify-center gap-2 mt-12">
+              <div
+                onClick={() => {
+                  // setRedemarerApplication(false);
+                  // resetIndexedDB(); // Vide le localStorage
+                  // localStorage.clear(); // Vide le localStorage
+                  // window.location.reload(); // Rafraîchit la page
+                  setupdateAuto(!updateAuto);
+                  setActiveDesactiveUpdateAuto(false);
+                }}
+                // to="/home?tab=acceuil"
+                className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+              >
+                Oui
+              </div>
+              <div
+                onClick={() => {
+                  setActiveDesactiveUpdateAuto(false);
+                }}
+                // to="/home?tab=acceuil"
+                className={` bg-gray-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+              >
+                Non
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

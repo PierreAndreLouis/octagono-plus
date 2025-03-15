@@ -34,3 +34,20 @@
   z-index: 999999999999999;
   transform: translateY(-50%); /* Pour centrer précisément */
 }
+
+
+/* Debut */
+.ajouter-appareil-container:hover .ajouter-appareil-other {
+    /* max-height: 10rem; */
+  }
+  .ajouter-appareil-other {
+    transition: all;
+    transition-duration: 0.41s;
+    max-height: 0rem;
+}
+.ajouter-appareil-container:hover .ajouter-appareil-container-2 {
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+    background-color: #FFF7ED;
+}
+/* Fin */

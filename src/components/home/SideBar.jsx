@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaAddressBook, FaRegEdit } from "react-icons/fa";
+import { FaAddressBook, FaBook, FaRegEdit } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -207,7 +207,7 @@ function SideBar() {
           }}
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
-          <FaAddressBook />
+          <FaBook />
           <h3>Manuel d'utilisation</h3>
         </Link>
 

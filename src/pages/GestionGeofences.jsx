@@ -111,7 +111,7 @@ function GestionGeofences() {
               setIsEditingGeofence(false);
               setCurrentGeozone();
             }}
-            className="bg-green-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+            className="bg-orange-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
           >
             <div className="flex justify-center items-center gap-3">
               <FaPlusCircle className="text-2xl" />

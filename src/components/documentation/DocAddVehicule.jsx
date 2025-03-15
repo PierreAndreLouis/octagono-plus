@@ -3,7 +3,7 @@ import { TbPointFilled } from "react-icons/tb";
 import { DataContext } from "../../context/DataContext";
 
 function DocAddVehicule() {
-  const { docAddVehiculeRef } = useContext(DataContext);
+  const { docAddVehiculeRef, testRef } = useContext(DataContext);
 
   return (
     <div ref={docAddVehiculeRef} className="transition-all mt-[5rem]  w-full">
@@ -21,7 +21,7 @@ function DocAddVehicule() {
         <div className="mt-8">
           <div className="border-b pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquer sur l'icône menu, en haut à droite
+              1- Cliquez sur l'icône menu, en haut à droite
             </h3>
             <p className="text-white">.</p>
 
@@ -37,7 +37,7 @@ function DocAddVehicule() {
 
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquer sur "Ajouter un véhicule"
+              2- Cliquez sur "Ajouter un véhicule"
             </h3>
             <p className="text-white">.</p>
 
@@ -51,7 +51,7 @@ function DocAddVehicule() {
           </div>
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
-            <h3 className="text-lg font-semibold">
+            <h3 ref={testRef} className="text-lg font-semibold">
               3- Ajouter toutes les informations demandées
             </h3>
             <p className="text-white">.</p>
@@ -68,7 +68,7 @@ function DocAddVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Cliquer sur le bouton "Enregistrer"
+              4- Cliquez sur le bouton "Enregistrer"
             </h3>
             <p className="text-white">.</p>
 

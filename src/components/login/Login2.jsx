@@ -4,7 +4,7 @@ import { DataContext } from "../../context/DataContext.jsx";
 import InstallationPWA from "../../pages/InstallationPWA.jsx";
 import GoogleTranslate from "../home/GoogleTranslate.jsx";
 import { Link } from "react-router-dom";
-import { FaAddressBook } from "react-icons/fa";
+import { FaAddressBook, FaBook } from "react-icons/fa";
 
 function Login2() {
   const { handleLogin, error, isHomePageLoading, setReadDocumentation } =
@@ -178,7 +178,7 @@ function Login2() {
                 }}
                 className={`flex text-gray-600  py-4 gap-2 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
               >
-                <FaAddressBook className="text-blue-600" />
+                <FaBook className="text-blue-600" />
                 <h3 className="text-sm">Manuel d'utilisation</h3>
               </div>
             </div>

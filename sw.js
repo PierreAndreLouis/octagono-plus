@@ -26,6 +26,12 @@ const assets = [
   'img/logo/*.png',
   'img/home_icon/*.png',
   'pin/*.png',
+  
+  'img/screenshot/*.png',
+  'img/screenshot/ajouter_nouveau_appareil/*.png',
+  'img/screenshot/localisation/*.png',
+  'img/screenshot/modifier_ou_supprimer/*.png',
+  'img/screenshot/trajet/*.png',
 
 
 

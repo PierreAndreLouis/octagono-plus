@@ -23,7 +23,7 @@ function DocModifierVehicule() {
         </h1>
         <div className="mt-8">
           <div className="border-b pb-5 border-b-orange-300">
-            <h3 className="text-lg font-semibold">1- Cliquer sur l'appareil</h3>
+            <h3 className="text-lg font-semibold">1- Cliquez sur l'appareil</h3>
             <p className="text-white">.</p>
 
             <div className="flex h-[15rem]-- justify-center w-full-">
@@ -38,7 +38,7 @@ function DocModifierVehicule() {
 
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquer sur l'icône "Modifier ou supprimer l'appareil"
+              2- Cliquez sur l'icône "Modifier ou supprimer l'appareil"
             </h3>
             <p className="text-white">.</p>
 
@@ -56,7 +56,7 @@ function DocModifierVehicule() {
               Si tu veux supprimer
             </h3>
             <h3 className="text-lg font-semibold">
-              3- Cliquer sur le bouton supprimer et confirmer ton mot de passe
+              3- Cliquez sur le bouton supprimer et confirmer ton mot de passe
             </h3>
             <p className="text-white">.</p>
 
@@ -75,7 +75,8 @@ function DocModifierVehicule() {
               Si tu veux Modifier
             </h3>
             <h3 className="text-lg font-semibold">
-              4- Modifie les informations souhaitées et cliquer sur "Enregistrer"
+              4- Modifie les informations souhaitées et cliquer sur
+              "Enregistrer"
             </h3>
             <p className="text-white">.</p>
 

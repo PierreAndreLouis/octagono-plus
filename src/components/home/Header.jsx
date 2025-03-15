@@ -150,7 +150,8 @@ function Header() {
               Bonjour
             </h3>
             <h2 className="font-semibold text-lg text-gray-600 dark:text-gray-200 leading-5">
-              {(userData && account) || "Nom absent"}
+              {/* {(userData && account) || "Nom absent"} */}
+              demo
             </h2>
           </div>
         </div>

@@ -16,7 +16,7 @@ function InfoUserComponent({
   SelectedTimeZone,
   setChangeTimeZone,
 }) {
-  const { setUsername, homePageReload, resetIndexedDB } =
+  const { setUsername, homePageReload, resetIndexedDB, countRequête } =
     useContext(DataContext);
 
   const [redemarerApplication, setRedemarerApplication] = useState(false);
@@ -111,11 +111,20 @@ function InfoUserComponent({
             {userData?.addressCity || "-----"}
           </p>
         </div>
+        {/* Adresse */}
+        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
+            Nombre de requête effectué par l'application :
+          </h3>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">
+            {countRequête || "o"}
+          </p>
+        </div> */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             Version de l'application :
           </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">11.03.25</p>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">15.03.25</p>
         </div>
 
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">

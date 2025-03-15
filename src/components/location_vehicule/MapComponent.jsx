@@ -788,11 +788,32 @@ function MapComponent({ mapType }) {
     };
   };
 
-  const centerOnFirstGeofencePosition = () => {
+  const centrerSurGeofenceChoisis = () => {
     if (mapRef.current && geofences?.coordinates?.length > 0) {
       const { lat, lng } = geofences.coordinates[0];
       mapRef.current.setView([lat, lng], 10);
       console.log("Carte centrée sur la première position du geofence");
+    }
+  };
+
+  const centrerSurHaiti = () => {
+    if (mapRef.current) {
+      const coordinates = [
+        { lat: 17.79297219635383, lng: -74.46607937065865 },
+        { lat: 19.81964982383767, lng: -74.57589816742004 },
+        { lat: 20.180774787037656, lng: -70.42474764983946 },
+        { lat: 17.83656772376724, lng: -70.14165652823564 },
+      ];
+
+      const avgLat =
+        coordinates.reduce((sum, coord) => sum + coord.lat, 0) /
+        coordinates.length;
+      const avgLng =
+        coordinates.reduce((sum, coord) => sum + coord.lng, 0) /
+        coordinates.length;
+
+      mapRef.current.setView([avgLat, avgLng], 7);
+      console.log("Carte centrée sur le point moyen des 4 positions");
     }
   };
 
@@ -804,7 +825,7 @@ function MapComponent({ mapType }) {
             onClick={() => {
               setIsAddingNewGeofence(false);
               setAjouterGeofencePopup(false);
-              // centerOnFirstGeofencePosition();
+              // centrerSurGeofenceChoisis();
             }}
             to="/gestion_geofences?tab=geozone"
             className="py-[.1rem] w-full flex justify-center items-center cursor-pointer px-3 bg-red-600 text-white rounded-lg"
@@ -1017,7 +1038,11 @@ function MapComponent({ mapType }) {
                   onClick={() => {
                     setAjouterGeofencePopup(false);
                     setIsAddingNewGeofence(true);
-                    centerOnFirstGeofencePosition();
+                    if (isEditingGeofence) {
+                      centrerSurGeofenceChoisis();
+                    } else {
+                      centrerSurHaiti();
+                    }
                   }}
                   className="block cursor-pointer text-orange-600 px-3  border-b pb-2 py-1.5 outline-none  dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm "
                 >

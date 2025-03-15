@@ -56,9 +56,12 @@ function FormAjouterVehicule({
           <div key={field.id}>
             <label
               htmlFor={field.id}
-              className="block text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
+              className="block-- flex justify-between items-center text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
             >
-              {field.label}
+              {field.label}{" "}
+              {!addVéhiculeData[field.id] && (
+                <span className="text-red-600 text-lg"> *</span>
+              )}
             </label>
             <input
               id={field.id}

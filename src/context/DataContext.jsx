@@ -10,6 +10,34 @@ const DataContextProvider = ({ children }) => {
   let x;
   const navigate = useNavigate();
 
+  // Pour compter le nombre de requêtes
+  const [countRequête, setCountRequête] = useState(() => {
+    const storedCountRequête = localStorage.getItem("countRequête");
+    return storedCountRequête && storedCountRequête !== "undefined"
+      ? JSON.parse(storedCountRequête)
+      : 0;
+  });
+
+  const incrementerRequête = () => {
+    setCountRequête((prevCount) => {
+      const newCount = (prevCount ?? 0) + 1;
+      localStorage.setItem("countRequête", JSON.stringify(newCount));
+      return newCount;
+    });
+  };
+
+  const [updateAuto, setupdateAuto] = useState(() => {
+    const storedupdateAuto = localStorage.getItem("updateAuto");
+    return storedupdateAuto && storedupdateAuto !== "undefined"
+      ? JSON.parse(storedupdateAuto)
+      : false;
+  });
+
+  // Sauvegarde dans localStorage à chaque changement
+  useEffect(() => {
+    localStorage.setItem("updateAuto", JSON.stringify(updateAuto));
+  }, [updateAuto]);
+
   //
   //
   //
@@ -30,11 +58,10 @@ const DataContextProvider = ({ children }) => {
   // to store login user data  // account, username, password
   const [readDocumentation, setReadDocumentation] = useState(false);
   const [documentationPage, setDocumentationPage] = useState("connecter");
-  const seConnecterRef = useRef(); // Crée une référence pour l'élément
-  const docAddVehiculeRef = useRef(); // Crée une référence pour l'élément
-  const docModifierVehiculeRef = useRef(); // Crée une référence pour l'élément
-  const docLocalisationVehiculeRef = useRef(); // Crée une référence pour l'élément
-  const docTrajetVehiculeRef = useRef(); // Crée une référence pour l'élément
+  const seConnecterRef = useRef();
+  const docAddVehiculeRef = useRef();
+  const docModifierVehiculeRef = useRef();
+  const docLocalisationVehiculeRef = useRef();
 
   const [userData, setUserData] = useState(() => {
     const storedUserData = localStorage.getItem("userData");
@@ -370,9 +397,9 @@ const DataContextProvider = ({ children }) => {
     useState(0);
 
   // Pour mettre a jour la variable apres changement.
-  useEffect(() => {
-    console.log(véhiculeHistoriqueDetails);
-  }, [véhiculeHistoriqueDetails]);
+  // useEffect(() => {
+  //   console.log(véhiculeHistoriqueDetails);
+  // }, [véhiculeHistoriqueDetails]);
 
   //
   //
@@ -562,45 +589,6 @@ const DataContextProvider = ({ children }) => {
       }
     });
   };
-
-  // Lire les données depuis IndexedDB
-
-  // const saveDataToIndexedDB = (storeName, data) => {
-  //   if (!data || (Array.isArray(data) && data.length === 0)) {
-  //     console.log("Aucune nouvelle donnée à enregistrer.");
-  //     return;
-  //   }
-
-  //   openDatabase().then((db) => {
-  //     const transaction = db.transaction([storeName], "readwrite");
-  //     const store = transaction.objectStore(storeName);
-
-  //     // Récupère d'abord les données existantes
-  //     const getRequest = store.getAll();
-  //     getRequest.onsuccess = () => {
-  //       const existingData = getRequest.result;
-
-  //       // Si des données existent déjà et que de nouvelles arrivent
-  //       if (existingData.length > 0) {
-  //         // Supprime seulement celles qui doivent être mises à jour
-  //         existingData.forEach((item, index) => {
-  //           store.delete(index + 1); // Utilise l'index comme clé
-  //         });
-  //       }
-
-  //       // Ajoute les nouvelles données
-  //       if (Array.isArray(data)) {
-  //         data.forEach((item) => store.put(item));
-  //       } else {
-  //         store.put(data); // Ajoute l'objet directement
-  //       }
-  //     };
-
-  //     getRequest.onerror = () => {
-  //       console.error("Erreur lors de la récupération des données existantes.");
-  //     };
-  //   });
-  // };
 
   const getDataFromIndexedDB = (storeName) => {
     return openDatabase().then((db) => {
@@ -792,6 +780,10 @@ const DataContextProvider = ({ children }) => {
   x;
   // Fonction to log in
   const handleLogin = async (account, user, password) => {
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: handleLogin");
+    // /////////
     setIsHomePageLoading(true);
     setError(null);
 
@@ -1118,6 +1110,11 @@ const DataContextProvider = ({ children }) => {
   //
   x;
   const GeofenceDataFonction = async () => {
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: GeofenceDataFonction");
+
+    // /////////
     console.log("Startttttt geofence");
 
     const account = localStorage.getItem("account") || "";
@@ -1328,6 +1325,11 @@ const DataContextProvider = ({ children }) => {
     lng8
   ) => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: createNewGeofence");
+
+    // /////////
 
     setCreateGeofenceLoading(true);
     setErrorCreateGeofencePopup(false);
@@ -1464,6 +1466,11 @@ const DataContextProvider = ({ children }) => {
     lng8
   ) => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: ModifierGeofence");
+
+    // /////////
 
     setCreateGeofenceLoading(true);
 
@@ -1585,6 +1592,12 @@ const DataContextProvider = ({ children }) => {
 
   const supprimerGeofence = async (geozoneID) => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: supprimerGeofence");
+
+    // /////////
+
     setCreateGeofenceLoading(true);
 
     const account = localStorage.getItem("account") || "";
@@ -1645,6 +1658,36 @@ const DataContextProvider = ({ children }) => {
         setErrorDeleteGeofencePopup(false);
         // GeofenceDataFonction();
 
+        //
+        // Supprimer la geozone de IndexedDB
+        openDatabase().then((db) => {
+          const transaction = db.transaction(["geofenceData"], "readwrite");
+          const store = transaction.objectStore("geofenceData");
+
+          const deleteRequest = store.openCursor();
+          deleteRequest.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+              if (cursor.value.geozoneID === geozoneID) {
+                cursor.delete();
+              }
+              cursor.continue();
+            }
+          };
+
+          transaction.oncomplete = () => {
+            console.log("Geozone supprimée de IndexedDB.");
+          };
+
+          transaction.onerror = () => {
+            console.error(
+              "Erreur lors de la suppression de la geozone dans IndexedDB."
+            );
+          };
+        });
+
+        //
+
         navigate("/gestion_geofences?tab=geozone");
 
         console.log("Geofence Supprimer avec succès.");
@@ -1666,6 +1709,13 @@ const DataContextProvider = ({ children }) => {
 
   const activerOuDesactiverGeofence = async (geozoneID, isActiveValue) => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log(
+      "++++++++++++++++ Requête effectué: activerOuDesactiverGeofence"
+    );
+
+    // /////////
 
     setCreateGeofenceLoading(true);
 
@@ -1809,6 +1859,11 @@ const DataContextProvider = ({ children }) => {
   // Requête pour afficher tous les véhicule mais sans details
   const fetchVehicleData = async () => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    // console.log("++++++++++++++++ Requête effectué: fetchVehicleData");
+
+    // /////////
 
     const { accountID, userID, password } = userData;
 
@@ -1869,7 +1924,7 @@ const DataContextProvider = ({ children }) => {
       setVehicleData(véhiculeData);
 
       if (véhiculeData && véhiculeData?.length > 0) {
-        véhiculeData.forEach((véhicule) => {
+        véhiculeData?.forEach((véhicule) => {
           fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
           fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         });
@@ -1885,6 +1940,11 @@ const DataContextProvider = ({ children }) => {
   // Requête pour rechercher les details des véhicule dans la page home
   const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    // console.log("++++++++++++++++ Requête effectué: fetchVehicleDetails");
+
+    // /////////
 
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
@@ -1991,8 +2051,14 @@ const DataContextProvider = ({ children }) => {
           });
         }
 
+        // if (updatedDetails && updatedDetails.length > 0) {
+        //   mergeVehicleDataWithEvents(updatedDetails);
+        // }
+
         return [...updatedDetails];
       });
+
+      // mergeVehicleDataWithEvents();
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -2001,13 +2067,19 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    if (vehicleDetails.length > 0) {
+      mergeVehicleDataWithEvents(vehicleDetails);
+    }
+  }, [vehicleDetails]);
+
   // Pour fusionnée les donnees pour la page home // véhiculeData et vehicleDetails
   const mergeVehicleDataWithEvents = (eventData = vehicleDetails) => {
     const dataFusionne = {};
     const seenEvents = new Set();
 
     // Vérifiez si deviceID existe bien dans véhiculeData
-    véhiculeData.forEach((véhicule) => {
+    véhiculeData?.forEach((véhicule) => {
       const { deviceID } = véhicule;
       if (deviceID) {
         // Vérification de l'existence de deviceID
@@ -2058,10 +2130,6 @@ const DataContextProvider = ({ children }) => {
     setMergedDataHome(dataFusionne);
     setIsHomePageLoading(false);
 
-    setTimeout(() => {
-      setIsHomePageLoading(false);
-    }, 15000); // 15 secondes
-
     return dataFusionne;
   };
 
@@ -2070,87 +2138,82 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     if (userData) {
       fetchVehicleData();
-      // if (geofenceDataRef?.current?.length > 0 || geofenceData?.length > 0) {
-      // } else {
-      //   GeofenceDataFonction();
-      // }
     }
   }, [userData]);
 
   // Premier appelle de donnee pour les details de véhicule de la page home et rapport
   // ????????????????????????????????????????????????????????????????????????????
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  useEffect(() => {
-    if (
-      véhiculeData &&
-      véhiculeData?.length > 0 &&
-      (vehicleDetailsRef.current?.length <= 0 || vehicleDetails?.length <= 0)
-    ) {
-      véhiculeData.forEach((véhicule) => {
-        fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-      });
-    }
+  // useEffect(() => {
+  //   if (
+  //     véhiculeData &&
+  //     véhiculeData?.length > 0 &&
+  //     (vehicleDetailsRef.current?.length <= 0 || vehicleDetails?.length <= 0)
+  //   ) {
+  //     véhiculeData?.forEach((véhicule) => {
+  //       console.log(
+  //         "Recherche de donnee pour : vehiculeDetails  // pas de donnee"
+  //       );
+  //       fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //     });
+  //   }
 
-    if (
-      véhiculeData &&
-      véhiculeData?.length > 0 &&
-      (rapportVehicleDetailsRef.current.length <= 0 ||
-        rapportVehicleDetails.length <= 0)
-    ) {
-      véhiculeData.forEach((véhicule) => {
-        fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-      });
-    }
-  }, [véhiculeData]);
+  //   if (
+  //     véhiculeData &&
+  //     véhiculeData?.length > 0 &&
+  //     (rapportVehicleDetailsRef.current.length <= 0 ||
+  //       rapportVehicleDetails.length <= 0)
+  //   ) {
+  //     véhiculeData?.forEach((véhicule) => {
+  //       console.log(
+  //         "Recherche de donnee pour : RapportvehiculeDetails  // pas de donnee"
+  //       );
+
+  //       fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //     });
+  //   }
+  // }, [véhiculeData]);
 
   // Pour mettre a jour les donnees
   const homePageReload = () => {
     // const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
-
-    if (
-      véhiculeData &&
-      (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0)
-      // ||
-      // vehicleDataDB.length > 0
-    ) {
-      console.log("reload HomePage");
-      véhiculeData.forEach((véhicule) => {
+    // fetchVehicleData();
+    if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
+      // console.log("reload HomePage");
+      (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
         fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
       });
     }
+
+    // if (véhiculeData && véhiculeData?.length > 0) {
+    //   véhiculeData?.forEach((véhicule) => {
+    //     fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+    //     fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+    //   });
+    // }
   };
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
   useEffect(() => {
     const intervalId = setInterval(() => {
       // reloadHomePage();
-      homePageReload();
-
-      // console.log("HomePage Reload start....");
+      if (
+        (updateAuto && véhiculeDataRef?.current?.length > 0) ||
+        véhiculeData?.length > 0
+      ) {
+        console.log("HomePage Reload start....");
+        // console.log("reload HomePage");
+        (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
+          fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+          fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+        });
+      }
     }, 30000);
 
     return () => clearInterval(intervalId);
   }, []);
-
-  // Pour arrêter le loading pares 15 second de la page home apres login
-  useEffect(() => {
-    setTimeout(() => {
-      setIsHomePageLoading(false);
-    }, 15000); //  50 secondes
-  }, [isHomePageLoading]);
-
-  // Pour fusionner les donnes des véhicule dans la page Home
-  useEffect(() => {
-    if (
-      vehicleDetails &&
-      vehicleDetails.length > 0 &&
-      véhiculeData &&
-      véhiculeData?.length > 0
-    ) {
-      mergeVehicleDataWithEvents();
-    }
-  }, [véhiculeData, vehicleDetails]);
 
   //
   //
@@ -2180,7 +2243,6 @@ const DataContextProvider = ({ children }) => {
   x;
   // Requête pour rechercher les details des véhicule dans la page rapport
   const fetchRapportVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-    // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
       date.setHours(date.getHours() + hours);
@@ -2191,6 +2253,15 @@ const DataContextProvider = ({ children }) => {
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console
+      .log
+      // "++++++++++++++++ Requête effectué: fetchRapportVehicleDetails"
+      ();
+
+    // /////////
+    // Ajuste les heures de TimeFrom et TimeTo
 
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
@@ -2289,6 +2360,8 @@ const DataContextProvider = ({ children }) => {
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...filteredVehicleDetails,
       ]);
+
+      // rapportFusionnerDonnees();
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -2296,6 +2369,12 @@ const DataContextProvider = ({ children }) => {
       );
     }
   };
+
+  useEffect(() => {
+    if (rapportVehicleDetails && rapportVehicleDetails.length > 0) {
+      rapportFusionnerDonnees();
+    }
+  }, [rapportVehicleDetails]);
 
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
@@ -2363,13 +2442,6 @@ const DataContextProvider = ({ children }) => {
     return dataFusionné;
   };
 
-  // Pour lancer le fusionnement des donnees dans la page rapport
-  useEffect(() => {
-    if (rapportVehicleDetails?.length > 0 && véhiculeData?.length > 0) {
-      rapportFusionnerDonnees();
-    }
-  }, [rapportVehicleDetails, véhiculeData]);
-
   //
   //
   //
@@ -2413,6 +2485,14 @@ const DataContextProvider = ({ children }) => {
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log(
+      "++++++++++++++++ Requête effectué: fetchSearchRapportVehicleDetails"
+    );
+
+    // /////////
+    // Ajuste les heures de TimeFrom et TimeTo
 
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
@@ -2567,12 +2647,12 @@ const DataContextProvider = ({ children }) => {
   };
 
   // Pour mettre a jour la variable searchDonneeFusionnéForRapport
-  useEffect(() => {
-    console.log(
-      "Mise à jour de searchDonneeFusionnéForRapport:",
-      searchDonneeFusionnéForRapport
-    );
-  }, [searchDonneeFusionnéForRapport]);
+  // useEffect(() => {
+  //   console.log(
+  //     "Mise à jour de searchDonneeFusionnéForRapport:",
+  //     searchDonneeFusionnéForRapport
+  //   );
+  // }, [searchDonneeFusionnéForRapport]);
 
   // Pour lancer le fusionnement de donnee de recherche par date des fonctions fetchSearchRapportVehicleDetails et rapportSearchFusionnerDonnees
   useEffect(() => {
@@ -2582,9 +2662,9 @@ const DataContextProvider = ({ children }) => {
   }, [searchRapportVehicleDetails, véhiculeData]);
 
   // Pour mettre a jour la variable rapportDataLoading
-  useEffect(() => {
-    console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
-  }, [rapportDataLoading]);
+  // useEffect(() => {
+  //   console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
+  // }, [rapportDataLoading]);
 
   //
   //
@@ -2976,7 +3056,7 @@ const DataContextProvider = ({ children }) => {
           geofenceData?.length > 0 ||
           geofenceDataDB.length > 0
         ) {
-          console.log("Données geofence disponibles", geofenceDataRef.current);
+          // console.log("Données geofence disponibles", geofenceDataRef.current);
         } else {
           if (
             véhiculeDataRef.current?.length > 0 ||
@@ -2993,7 +3073,7 @@ const DataContextProvider = ({ children }) => {
           véhiculeData?.length > 0 ||
           vehicleDataDB.length > 0
         ) {
-          console.log("Données véhiculeData disponibles", vehicleDataDB);
+          // console.log("Données véhiculeData disponibles", vehicleDataDB);
         } else {
           fetchVehicleData();
           console.log("Pas de données véhiculeData", vehicleDataDB);
@@ -3004,10 +3084,10 @@ const DataContextProvider = ({ children }) => {
           vehicleDetails?.length > 0 ||
           vehicleDataDB.length > 0
         ) {
-          console.log(
-            "Données vehicleDetails disponibles",
-            vehicleDetailsRef.current
-          );
+          // console.log(
+          //   "Données vehicleDetails disponibles",
+          //   vehicleDetailsRef.current
+          // );
         } else {
           console.log(
             "Pas de données vehicleDetails",
@@ -3029,7 +3109,7 @@ const DataContextProvider = ({ children }) => {
           rapportVehicleDetails?.length > 0 ||
           rapportVehicleDetailsDB.length > 0
         ) {
-          console.log("Données rapport disponibles", rapportVehicleDetailsDB);
+          // console.log("Données rapport disponibles", rapportVehicleDetailsDB);
         } else {
           console.log("Pas de données rapport", rapportVehicleDetailsDB);
 
@@ -3058,11 +3138,11 @@ const DataContextProvider = ({ children }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(() => {
-    console.log(currentVéhicule);
-    console.log(véhiculeHistoriqueDetails);
-    console.log(selectedVehicleToShowInMap);
-  }, [currentVéhicule, véhiculeHistoriqueDetails, selectedVehicleToShowInMap]);
+  // useEffect(() => {
+  //   console.log(currentVéhicule);
+  //   console.log(véhiculeHistoriqueDetails);
+  //   console.log(selectedVehicleToShowInMap);
+  // }, [currentVéhicule, véhiculeHistoriqueDetails, selectedVehicleToShowInMap]);
   //
   //
   //
@@ -3094,7 +3174,7 @@ const DataContextProvider = ({ children }) => {
   // Historique page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
-  // pour afficher les detail d'hun véhicule dans Historique page (utilise pour les recherche)
+  // pour afficher les detail d'hun véhicule dans Historique page (utilise pour les recherches)
   const fetchHistoriqueVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
@@ -3110,6 +3190,14 @@ const DataContextProvider = ({ children }) => {
     setLoadingHistoriqueFilter(true);
 
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log(
+      "++++++++++++++++ Requête effectué: fetchHistoriqueVehicleDetails"
+    );
+
+    // /////////
+    // Ajuste les heures de TimeFrom et TimeTo
 
     const { accountID, userID, password } = userData;
     const xmlData = `<GTSRequest command="eventdata">
@@ -3215,7 +3303,7 @@ const DataContextProvider = ({ children }) => {
   // Pour la rehcerhce de donnee dans Historique page apres avoir choisi une date
   const handleDateChange = (TimeFrom, TimeTo) => {
     if (véhiculeData && véhiculeData?.length > 0) {
-      véhiculeData.forEach((véhicule) => {
+      véhiculeData?.forEach((véhicule) => {
         fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
       });
     }
@@ -3258,6 +3346,11 @@ const DataContextProvider = ({ children }) => {
     vehicleID
   ) => {
     if (!userData) return;
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: createVehicle");
+
+    // /////////
 
     setError("");
     setCreateVéhiculeLoading(true);
@@ -3324,6 +3417,11 @@ const DataContextProvider = ({ children }) => {
 
   // Fonction pour supprimer un véhicule
   const deleteVehicle = async (deviceID) => {
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
+
+    // /////////
     // console.log("Start Deleting.........");
     setCreateVéhiculeLoading(true);
 
@@ -3353,6 +3451,49 @@ const DataContextProvider = ({ children }) => {
         setVehicleData((prevVehicles) =>
           prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
         );
+
+        //
+        // Supprimer le véhicule de IndexedDB
+        openDatabase().then((db) => {
+          const transaction = db.transaction(["mergedDataHome"], "readwrite");
+          const store = transaction.objectStore("mergedDataHome");
+
+          // Récupérer toutes les données actuelles
+          const getRequest = store.getAll();
+
+          getRequest.onsuccess = () => {
+            const existingData = getRequest.result || [];
+            const updatedData = existingData.filter(
+              (vehicle) => vehicle.deviceID !== deviceID
+            );
+
+            store.clear(); // Supprime les anciennes données
+            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+          };
+        });
+
+        // Supprimer le véhicule de IndexedDB
+        openDatabase().then((db) => {
+          const transaction = db.transaction(
+            ["donneeFusionnéForRapport"],
+            "readwrite"
+          );
+          const store = transaction.objectStore("donneeFusionnéForRapport");
+
+          // Récupérer toutes les données actuelles
+          const getRequest = store.getAll();
+
+          getRequest.onsuccess = () => {
+            const existingData = getRequest.result || [];
+            const updatedData = existingData.filter(
+              (vehicle) => vehicle.deviceID !== deviceID
+            );
+
+            store.clear(); // Supprime les anciennes données
+            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+          };
+        });
+
         // console.log("Véhicule supprimé avec succès.");
         fetchVehicleData();
         setSuccessDeleteVéhiculePopup(true);
@@ -3388,6 +3529,11 @@ const DataContextProvider = ({ children }) => {
     equipmentType,
     simPhoneNumber
   ) => {
+    // Pour suivre le nombre de requête
+    incrementerRequête();
+    console.log("++++++++++++++++ Requête effectué: updateVehicle");
+
+    // /////////
     // console.log("Start updating.....");
     setCreateVéhiculeLoading(true);
     const requestBody =
@@ -3580,16 +3726,6 @@ const DataContextProvider = ({ children }) => {
       }
     }
 
-    // try {
-    //   localStorage.setItem("mergedDataHome", JSON.stringify(mergedDataHome));
-    // } catch (error) {
-    //   if (error.name === "QuotaExceededError") {
-    //     console.error(
-    //       "Quota dépassé pour mergedDataHome : essayez de réduire la taille des données ou de nettoyer localStorage."
-    //     );
-    //   } else {
-    //     console.error("Erreur de stockage : ", error);
-    //   }
     // }
 
     try {
@@ -3640,13 +3776,6 @@ const DataContextProvider = ({ children }) => {
     // mergedDataHome,
     // geofenceData,
   ]);
-
-  // Pour mettre a jour mergedDataHome
-  useEffect(() => {
-    // console.log("m");
-    let x;
-    x = 0;
-  }, [mergedDataHome]);
 
   //
   //
@@ -3768,8 +3897,8 @@ const DataContextProvider = ({ children }) => {
   // pour la fonction export excel dans la page rapport
   const tableRef = useRef(null);
   // conversion page en pdf rapport
-  const rapportPersonnelPDFtRef = useRef(); // Crée une référence pour l'élément
-  const rapportGroupePDFtRef = useRef(); // Crée une référence pour l'élément
+  const rapportPersonnelPDFtRef = useRef();
+  const rapportGroupePDFtRef = useRef();
 
   //
   //
@@ -4179,9 +4308,81 @@ const DataContextProvider = ({ children }) => {
     });
   };
 
+  // PDF ref
+  const testRef = useRef();
+  const docInstallationRef = useRef();
+  const docGestionAppareilRef = useRef();
+  const docPositionAppareilRef = useRef();
+  const docTrajetVehiculeRef = useRef();
+  const docHistoriqueRef = useRef();
+  const docRapportUniteRef = useRef();
+  const docRapportGroupeRef = useRef();
+  const docGestionGeozoneRef = useRef();
+
+  //
+  //
+  //
+
+  //
+
+  const installation_sur_application_ref = useRef();
+  const installation_sur_chrome_ref = useRef();
+
+  const ajouter_nouveau_appareil_section_ref = useRef();
+  const modidier_appareil_section_ref = useRef();
+  const supprimer_appareil_section_ref = useRef();
+  //
+  //
+  //
+  const voir_position_appareil_ref = useRef();
+  const position_choisir_autre_appareil_ref = useRef();
+  const position_voir_tous_appareil_ref = useRef();
+  const position_type_de_vue_ref = useRef();
+  //
+  //
+  //
+  const voir_trajet_ref = useRef();
+  const trajet_recentrer_ref = useRef();
+  const trajet_choix_autre_appareil_ref = useRef();
+  const trajet_type_de_vue_ref = useRef();
+  const trajet_recherche_ref = useRef();
+  const trajet_retracer_trajet_ref = useRef();
+  //
+  //
+  //
+  //
+  //
+  const voir_historique_appareil_ref = useRef();
+  const voir_position_historiquer_sur_carte_ref = useRef();
+  const historique_choix_autre_appareil_ref = useRef();
+  const historique_recherche_ref = useRef();
+  //
+  //
+  //
+  //
+  const aller_page_rapport_unite_ref = useRef();
+  const rapport_unite_autre_appareil_ref = useRef();
+  const rapport_unite_recherche_ref = useRef();
+  const rapport_unite_telecherche_pdf_ref = useRef();
+  //
+  //
+  //
+  //
+  //
+  const voir_rapport_groupe_ref = useRef();
+  const rapport_groupe_recherche_ref = useRef();
+  const rapport_groupe_telecharger_pdf_ref = useRef();
+  //
+  //
+  //
+  //
+  const creer_geozone_ref = useRef();
+  const modifier_geozone_ref = useRef();
+
   return (
     <DataContext.Provider
       value={{
+        countRequête,
         scrollToTop,
         fonctionTest,
         fonctionTest2,
@@ -4350,6 +4551,47 @@ const DataContextProvider = ({ children }) => {
         setDocumentationPage,
         docLocalisationVehiculeRef,
         docTrajetVehiculeRef,
+        testRef,
+        docInstallationRef,
+
+        installation_sur_application_ref,
+        installation_sur_chrome_ref,
+        ajouter_nouveau_appareil_section_ref,
+        modidier_appareil_section_ref,
+        supprimer_appareil_section_ref,
+        //
+        voir_position_appareil_ref,
+        position_choisir_autre_appareil_ref,
+        position_voir_tous_appareil_ref,
+        position_type_de_vue_ref,
+        voir_trajet_ref,
+        trajet_recentrer_ref,
+        trajet_choix_autre_appareil_ref,
+        trajet_type_de_vue_ref,
+        trajet_recherche_ref,
+        trajet_retracer_trajet_ref,
+        voir_historique_appareil_ref,
+        voir_position_historiquer_sur_carte_ref,
+        historique_choix_autre_appareil_ref,
+        historique_recherche_ref,
+        aller_page_rapport_unite_ref,
+        rapport_unite_autre_appareil_ref,
+        rapport_unite_recherche_ref,
+        rapport_unite_telecherche_pdf_ref,
+        voir_rapport_groupe_ref,
+        rapport_groupe_recherche_ref,
+        rapport_groupe_telecharger_pdf_ref,
+        creer_geozone_ref,
+        modifier_geozone_ref,
+        //
+        docGestionAppareilRef,
+        docPositionAppareilRef,
+        docHistoriqueRef,
+        docRapportUniteRef,
+        docRapportGroupeRef,
+        docGestionGeozoneRef,
+        updateAuto,
+        setupdateAuto,
       }}
     >
       {children}

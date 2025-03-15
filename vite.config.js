@@ -39,7 +39,13 @@ export default defineConfig({
         'favicon.png',
         'favicon.ico',
         'robots.txt',
-        'apple-touch-icon.png'],
+        'apple-touch-icon.png', 
+      
+  'img/screenshot/*.png',
+  'img/screenshot/ajouter_nouveau_appareil/*.png',
+  'img/screenshot/localisation/*.png',
+  'img/screenshot/modifier_ou_supprimer/*.png',
+  'img/screenshot/trajet/*.png',],
       
       
       manifest: {
