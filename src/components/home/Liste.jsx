@@ -24,6 +24,15 @@ function Liste() {
   } = useContext(DataContext);
 
   let x;
+
+  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+  // Fonction pour obtenir le timestamp actuel en millisecondes
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+  //
   //
   //
   //
@@ -34,19 +43,8 @@ function Liste() {
   //
   //
   x;
-  // Pour filtrer les véhicules dans la page home, en fonction de filtre dans la statistic choisis
-  // const dataFusionné = statisticFilterInHomePage
-  //   ? Object.values(statisticFilterInHomePage)
-  //   : [];
-  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  //
-  //
-  //
-  //
-  //
-  //
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   x;
   // Filtrer les données selon la recherche dans le header
@@ -123,11 +121,6 @@ function Liste() {
   //
   x;
 
-  // Définir les valeurs nécessaires
-  const currentTimeMs = Date.now();
-  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
-  const twentyHoursInMs = 20 * 60 * 60 * 1000; // 20 heures en millisecondes
-
   const filteredDataToDisplay = filteredData.filter((véhicule) => {
     // Gérer chaque filtre en fonction du texte de filtrage
     if (statisticFilterTextInHomePage === "mouvement") {
@@ -194,13 +187,63 @@ function Liste() {
     return false; // Retourner false par défaut si aucune condition n'est remplie
   });
 
+  /////////////////////////////////////////////
+
+  const sortedData = [...filteredDataToDisplay].sort((a, b) => {
+    const getPriority = (véhicule) => {
+      const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
+
+      const hasDetails =
+        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
+
+      // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+      const lastUpdateTimeMs = véhicule?.lastUpdateTime
+        ? véhicule?.lastUpdateTime * 1000
+        : 0;
+      const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+      const lastUpdateTimestampMs =
+        véhicule?.véhiculeDetails &&
+        véhicule?.véhiculeDetails[0] &&
+        véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+      const isSpeedActive =
+        véhicule?.véhiculeDetails &&
+        véhicule?.véhiculeDetails[0] &&
+        véhicule?.véhiculeDetails[0].speedKPH > 0;
+
+      // Vérifie si la mise à jour est récente (moins de 30 minutes)
+      const isStillSpeedActive =
+        lastUpdateTimestampMs &&
+        currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
+
+      if (hasDetails && isActive && speed > 20 && isStillSpeedActive) return 1;
+      if (
+        hasDetails &&
+        isActive &&
+        speed >= 1 &&
+        speed <= 20 &&
+        isStillSpeedActive
+      )
+        return 2;
+      if (
+        hasDetails &&
+        isActive &&
+        (speed < 1 || (isSpeedActive && !isStillSpeedActive))
+      )
+        return 3;
+      if (!hasDetails || !isActive) return 4;
+    };
+
+    return getPriority(a) - getPriority(b);
+  });
+
   return (
     <div className="p-2 flex flex-col gap-4 mt-4 mb-[10rem]-- pb-[6rem] dark:text-white">
       {isHomePageLoading ? (
         <p>Chargement des données...</p>
-      ) : filteredDataToDisplay.length > 0 ? (
-        // filteredDataToDisplay.map((véhicule, index) => {
-        filteredDataToDisplay.map((véhicule, index) => {
+      ) : sortedData.length > 0 ? (
+        sortedData.map((véhicule, index) => {
           const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
 
           let main_text_color = "text-red-900 dark:text-red-300";
@@ -223,36 +266,8 @@ function Liste() {
           //
           x;
 
-          const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-          const currentTime = Date.now(); // Heure actuelle en millisecondes
-          // Fonction pour obtenir le timestamp actuel en millisecondes
-          const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-
-          const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
-          const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-          //
-          //
-          //
-          //
-          //
-          //
-          x;
-
-          const isMoving = véhicule?.véhiculeDetails?.some(
-            (detail) => detail.speedKPH >= 1
-          );
-
           const hasDetails =
             véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
-
-          // const noSpeed = véhicule?.véhiculeDetails?.every(
-          //   (detail) => detail.speedKPH <= 0
-          // );
-
-          const noSpeed =
-            véhicule?.véhiculeDetails &&
-            véhicule?.véhiculeDetails[0] &&
-            véhicule?.véhiculeDetails[0].speedKPH <= 0;
 
           // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
           const lastUpdateTimeMs = véhicule?.lastUpdateTime
