@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import { ReloadPrompt } from "./pages/Prompt";
@@ -209,6 +209,27 @@ function App() {
 
   const [waitToDownload, setWaitToDownload] = useState(false);
 
+  //
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  // fonction pour gestion du message de connexion d'internet
+  useEffect(() => {
+    // Détecter la perte de connexion
+    const handleOffline = () => setIsOffline(true);
+    // Détecter le retour de la connexion
+    const handleOnline = () => setIsOffline(false);
+
+    // Ajouter les écouteurs d'événements
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    // Nettoyage des écouteurs d'événements
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
+
   return (
     <div className="dark:bg-gray-700 min-h-screen">
       <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800">
@@ -228,6 +249,39 @@ function App() {
         )}
 
         {/* <Login2 /> */}
+
+        {isOffline && (
+          <div className="fixed z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/70">
+            <div
+              className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+            >
+              <div
+                className={` bg-orange-600 flex justify-center items-center py-4 px-4  mb-8 `}
+              >
+                <h2 className="font-bold text-white text-xl">
+                  Pas de connexion Internet.
+                </h2>
+              </div>
+              <div>
+                <h3
+                  className={`text-gray-800 block font-semibold text-lg py-4  text-center leading-6  mb-3 px-4`}
+                >
+                  Veuillez vérifier votre connexion Internet pour continuer.
+                </h3>
+              </div>
+              {/* <div className="flex justify-center gap-2 mt-12">
+                <div
+                  onClick={() => {
+                    setWaitToDownload(false);
+                  }}
+                  className={` bg-orange-600 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
+                >
+                  Ok
+                </div>
+              </div> */}
+            </div>
+          </div>
+        )}
 
         {readDocumentation ? (
           <div className="transition-all">

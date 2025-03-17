@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import emailjs from "emailjs-com";
+import Logout from "../components/login/Logout";
 
 export const DataContext = createContext();
 
@@ -104,6 +105,22 @@ const DataContextProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     // console.log("Se deconnecter");
+  //     // console.log("username", localStorage.getItem("username"));
+  //     if (
+  //       (localStorage.getItem("username") || username) === "mdireny" ||
+  //       (localStorage.getItem("username") || username) === "fpaulemon" ||
+  //       (localStorage.getItem("username") || username) === "slouis" ||
+  //       (localStorage.getItem("username") || username) === "foodforthepoor"
+  //     ) {
+  //       handleLogout();
+  //       navigate("/login");
+  //     }
+  //   }, 10000);
+  // }, []);
 
   // const [account, setAccount] = useState(() => {
   //   const storedAccount = localStorage.getItem("account");
@@ -818,6 +835,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      // console.log("inactive message: ", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -859,6 +877,16 @@ const DataContextProvider = ({ children }) => {
         setUsername(localStorage.getItem("username") || "");
         setPassword(localStorage.getItem("password") || "");
 
+        // if (
+        //   user === "mdireny" ||
+        //   user === "fpaulemon" ||
+        //   user === "slouis" ||
+        //   user === "foodforthepoor"
+        // ) {
+        //   handleLogout();
+        //   navigate("/login");
+        // }
+
         // Envoie d'un mail pour avertir m'avertir de la connexion
 
         if (window.location.hostname !== "localhost") {
@@ -870,6 +898,13 @@ const DataContextProvider = ({ children }) => {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la connexion.");
+        //
+        console.log("errorMessage inactive", errorMessage);
+        if (errorMessage === "User inactive") {
+          console.log("Logout the user, and navigate to /login");
+          handleLogout();
+          navigate("/login");
+        }
       }
     } catch (error) {
       setError("Erreur lors de la connexion à l'API.");
@@ -879,6 +914,21 @@ const DataContextProvider = ({ children }) => {
       setIsHomePageLoading(false);
     }
   };
+
+  useEffect(() => {
+    // setInterval(() => {
+    const accountConnexion = username || localStorage.getItem("account");
+    const usernameConnexion = username || localStorage.getItem("username");
+    const passwordConnexion = username || localStorage.getItem("password");
+
+    console.log("Rafraîchissement de la page...............");
+
+    if (accountConnexion && usernameConnexion && passwordConnexion) {
+      // console.log("username useefect :", usernameConnexion);
+      handleLogin(accountConnexion, usernameConnexion, passwordConnexion);
+    }
+    // }, 60000);
+  }, []);
 
   // pour stoker les donnees de l'utilisateur en local
   useEffect(() => {
