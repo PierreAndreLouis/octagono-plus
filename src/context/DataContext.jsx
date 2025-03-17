@@ -813,6 +813,9 @@ const DataContextProvider = ({ children }) => {
   // Fonction to log in
   const handleLogin = async (account, user, password) => {
     // Pour suivre le nombre de requête
+    console.log("account : ===>", account);
+    console.log("user : ===>", user);
+    console.log("password : ===>", password);
     incrementerRequête();
     console.log("++++++++++++++++ Requête effectué: handleLogin");
     // /////////
@@ -827,6 +830,8 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
+    console.log("xmlData ===>", xmlData);
+
     try {
       const response = await fetch("/api/track/Service", {
         method: "POST",
@@ -835,7 +840,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("inactive message: ", data);
+      console.log("Login data message: ", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -1931,9 +1936,11 @@ const DataContextProvider = ({ children }) => {
     incrementerRequête();
     // console.log("++++++++++++++++ Requête effectué: fetchVehicleData");
 
-    // /////////
+    // const { accountID, userID, password } = userData;
 
-    const { accountID, userID, password } = userData;
+    const accountID = account || localStorage.getItem("account") || "";
+    const userID = username || localStorage.getItem("username") || "";
+    const password = localStorage.getItem("password") || "";
 
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -1963,6 +1970,8 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
+    console.log("xmlData : ===>", xmlData);
+
     try {
       const response = await fetch("/api/track/Service", {
         method: "POST",
@@ -1971,6 +1980,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("Data fetchVehicleData", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -2024,7 +2034,11 @@ const DataContextProvider = ({ children }) => {
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
-    const { accountID, userID, password } = userData;
+    // const { accountID, userID, password } = userData;
+    const accountID = account || localStorage.getItem("account") || "";
+    const userID = username || localStorage.getItem("username") || "";
+    const password = localStorage.getItem("password") || "";
+
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
@@ -2061,6 +2075,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      // console.log("data brut de :", fetchVehicleDetails);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -2246,9 +2261,10 @@ const DataContextProvider = ({ children }) => {
   // Pour mettre a jour les donnees
   const homePageReload = () => {
     // const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
-    // fetchVehicleData();
+    fetchVehicleData();
+    console.log("Start fetching.............");
     if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
-      // console.log("reload HomePage");
+      console.log("reload HomePage");
       (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
         fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
@@ -2331,7 +2347,11 @@ const DataContextProvider = ({ children }) => {
     // /////////
     // Ajuste les heures de TimeFrom et TimeTo
 
-    const { accountID, userID, password } = userData;
+    // const { accountID, userID, password } = userData;
+    const accountID = account || localStorage.getItem("account") || "";
+    const userID = username || localStorage.getItem("username") || "";
+    const password = localStorage.getItem("password") || "";
+
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
@@ -2606,7 +2626,11 @@ const DataContextProvider = ({ children }) => {
     // /////////
     // Ajuste les heures de TimeFrom et TimeTo
 
-    const { accountID, userID, password } = userData;
+    // const { accountID, userID, password } = userData;
+    const accountID = account || localStorage.getItem("account") || "";
+    const userID = username || localStorage.getItem("username") || "";
+    const password = localStorage.getItem("password") || "";
+
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
@@ -3311,7 +3335,11 @@ const DataContextProvider = ({ children }) => {
     // /////////
     // Ajuste les heures de TimeFrom et TimeTo
 
-    const { accountID, userID, password } = userData;
+    // const { accountID, userID, password } = userData;
+    const accountID = account || localStorage.getItem("account") || "";
+    const userID = username || localStorage.getItem("username") || "";
+    const password = localStorage.getItem("password") || "";
+
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <EventData>
@@ -4706,6 +4734,7 @@ const DataContextProvider = ({ children }) => {
         setupdateAuto,
         estLancerUpdateAuto,
         setEstLancerUpdateAuto,
+        fetchVehicleData,
       }}
     >
       {children}

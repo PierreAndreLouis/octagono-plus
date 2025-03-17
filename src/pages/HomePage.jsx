@@ -31,6 +31,9 @@ const Home = () => {
     setupdateAuto,
     estLancerUpdateAuto,
     setEstLancerUpdateAuto,
+    fetchVehicleDetails,
+    handleLogin,
+    fetchVehicleData,
   } = useContext(DataContext);
 
   let x;
@@ -441,17 +444,47 @@ const Home = () => {
       {/* <button
         onClick={() => {
           // console.log(mergedDataHome);
-          console.log("geofenceData indexdb", geofenceData.length);
+          // fetchVehicleDetails();
+          homePageReload();
+          // console.log("fetchVehicleDetails", fetchVehicleDetails);
         }}
       >
-        testeeeeeeeeeeeeeeeeeeeee
+        Mise a jour des donnees
+      </button>
+      <br />
+      <button
+        onClick={() => {
+          handleLogin("foodforthepoor", "monitoring", "123456");
+        }}
+      >
+        Login
+      </button>
+      <br /> */}
+      {/* <button
+        onClick={() => {
+          // console.log(mergedDataHome);
+          // fetchVehicleDetails();
+          fetchVehicleData();
+          // console.log("fetchVehicleDetails", fetchVehicleDetails);
+        }}
+      >
+        Recherche de donnee vehicule
+      </button>
+      <br />
+
+      <button
+        onClick={() => {
+          console.log();
+          localStorage.getItem("username");
+        }}
+      >
+        localStorage
       </button> */}
 
       {/* Liste des véhiculés */}
       <Liste setShowListOption={setShowListOption} />
       {/* Option pour chaque véhicule */}
       {showListeOption && <Liste_options />}
-
       {activeDesactiveUpdateAutoPopup && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
           <div
