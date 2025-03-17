@@ -27,12 +27,13 @@ const DataContextProvider = ({ children }) => {
     });
   };
 
-  const [updateAuto, setupdateAuto] = useState(() => {
-    const storedupdateAuto = localStorage.getItem("updateAuto");
-    return storedupdateAuto && storedupdateAuto !== "undefined"
-      ? JSON.parse(storedupdateAuto)
-      : false;
-  });
+  // const [updateAuto, setupdateAuto] = useState(() => {
+  //   const storedupdateAuto = localStorage.getItem("updateAuto");
+  //   return storedupdateAuto && storedupdateAuto !== "undefined"
+  //     ? JSON.parse(storedupdateAuto)
+  //     : false;
+  // });
+  const [updateAuto, setupdateAuto] = useState(false);
 
   // Sauvegarde dans localStorage à chaque changement
   useEffect(() => {
@@ -830,7 +831,7 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
-    console.log("xmlData ===>", xmlData);
+    // console.log("xmlData ===>", xmlData);
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -840,7 +841,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Login data message: ", data);
+      // console.log("Login data message: ", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -920,20 +921,41 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    // setInterval(() => {
-    const accountConnexion = username || localStorage.getItem("account");
-    const usernameConnexion = username || localStorage.getItem("username");
-    const passwordConnexion = username || localStorage.getItem("password");
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     // reloadHomePage();
+  //     const accountConnexion = username || localStorage.getItem("account");
+  //     const usernameConnexion = username || localStorage.getItem("username");
+  //     const passwordConnexion = username || localStorage.getItem("password");
 
-    console.log("Rafraîchissement de la page...............");
+  //     console.log("Verification identite...............");
 
-    if (accountConnexion && usernameConnexion && passwordConnexion) {
-      // console.log("username useefect :", usernameConnexion);
-      handleLogin(accountConnexion, usernameConnexion, passwordConnexion);
+  //     if (accountConnexion && usernameConnexion && passwordConnexion) {
+  //       // console.log("username useefect :", usernameConnexion);
+  //       // handleLogin(accountConnexion, usernameConnexion, passwordConnexion);
+  //     }
+  //   }, 30000);
+
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  function handleUserError(xmlDoc) {
+    const errorMessage = xmlDoc.getElementsByTagName("Message")[0]?.textContent;
+
+    // console.log("errorMessage inactive", errorMessage);
+
+    if (errorMessage === "User inactive") {
+      console.log("Logout the user, and navigate to /login");
+      handleLogout();
+      navigate("/login");
     }
-    // }, 60000);
-  }, []);
+  }
+
+  //
+  //
+  //
+  //
+  //
 
   // pour stoker les donnees de l'utilisateur en local
   useEffect(() => {
@@ -1138,7 +1160,7 @@ const DataContextProvider = ({ children }) => {
       hour12: true,
     }); // Format: HH:MM AM/PM
 
-    // Exemple de client connecté (tu peux récupérer cette valeur dynamiquement)
+    // Exemple de client connecté (vous pouvez récupérer cette valeur dynamiquement)
     const accountConnected = account || localStorage.getItem("account") || "";
 
     const params = {
@@ -1303,6 +1325,9 @@ const DataContextProvider = ({ children }) => {
 
       setGeofenceData(geofences); // Mise à jour de la variable
 
+      handleUserError(xmlDoc);
+      /////////////////////////////////////////////////////
+
       return geofences;
     } catch (error) {
       console.error("Error fetching or parsing geofence data:", error);
@@ -1458,7 +1483,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      console.log("Response text:", data);
+      // console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -1508,6 +1533,7 @@ const DataContextProvider = ({ children }) => {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         console.error("Error message:", errorMessage);
+        handleUserError(xmlDoc);
       }
     } catch (error) {
       setError("Échec de la création du Geofence.");
@@ -1598,7 +1624,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      console.log("Response text:", data);
+      // console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -1655,6 +1681,7 @@ const DataContextProvider = ({ children }) => {
         console.log("Erreur lors de la modification du geofence");
         setErrorModifierGeofencePopup(true);
         setCreateGeofenceLoading(false);
+        handleUserError(xmlDoc);
       }
     } catch (error) {
       console.log("Erreur lors de la modification du geofence");
@@ -1710,7 +1737,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      console.log("Response text:", data);
+      // console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -1777,6 +1804,7 @@ const DataContextProvider = ({ children }) => {
       console.log("Erreur lors de la Suppression du geofence");
       setErrorDeleteGeofencePopup(true);
       setCreateGeofenceLoading(false);
+      handleUserError(xmlDoc);
     }
   };
 
@@ -1823,7 +1851,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      console.log("Response text:", data);
+      // console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -1890,6 +1918,7 @@ const DataContextProvider = ({ children }) => {
         );
         setErrorModifierGeofencePopup(true);
         setCreateGeofenceLoading(false);
+        handleUserError(xmlDoc);
       }
     } catch (error) {
       console.log(
@@ -1970,7 +1999,7 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
-    console.log("xmlData : ===>", xmlData);
+    // console.log("xmlData : ===>", xmlData);
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -1980,7 +2009,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Data fetchVehicleData", data);
+      // console.log("Data fetchVehicleData", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -2007,6 +2036,7 @@ const DataContextProvider = ({ children }) => {
           fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
         });
       }
+      handleUserError(xmlDoc);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des données des véhicules",
@@ -2140,6 +2170,8 @@ const DataContextProvider = ({ children }) => {
 
         return [...updatedDetails];
       });
+
+      handleUserError(xmlDoc);
 
       // mergeVehicleDataWithEvents();
     } catch (error) {
@@ -2448,6 +2480,7 @@ const DataContextProvider = ({ children }) => {
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...filteredVehicleDetails,
       ]);
+      handleUserError(xmlDoc);
 
       // rapportFusionnerDonnees();
     } catch (error) {
@@ -2723,8 +2756,11 @@ const DataContextProvider = ({ children }) => {
         ...prevDetails.filter((detail) => detail.Device !== Device),
         ...filteredVehicleDetails,
       ]);
+
+      handleUserError(xmlDoc);
     } catch (error) {
       setRapportDataLoading(false);
+      handleUserError(xmlDoc);
 
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -3432,6 +3468,7 @@ const DataContextProvider = ({ children }) => {
       setTimeout(() => {
         setLoadingHistoriqueFilter(false);
       }, 15000); // 10 000 millisecondes = 10 secondes
+      handleUserError(xmlDoc);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -3541,9 +3578,13 @@ const DataContextProvider = ({ children }) => {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
         // console.log("errorrrrrrrrr");
         setErrorAddVéhiculePopup(true);
         setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
       }
 
       // console.log("End creating..............");

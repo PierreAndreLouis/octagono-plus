@@ -357,13 +357,13 @@ const Home = () => {
       {/* Statistic component */}
       <Statistics />
       {/* Chargement quand on login */}
-      {isHomePageLoading && (
+      {/* {isHomePageLoading && (
         <div className="fixed inset-0 bg-gray-200/50 dark:bg-gray-900/50">
           <div className="w-full h-full flex justify-center items-center">
             <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
           </div>
         </div>
-      )}
+      )} */}
       {/* Pour afficher la date et heure de la dernière mise a jour */}
       {lastUpdate?.mostRecentTimestamp !== -Infinity && (
         <div className="shadow-md md:py-4 md:pr-4 lg:pr-10 cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-2 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100">

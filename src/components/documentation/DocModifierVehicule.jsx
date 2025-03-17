@@ -108,7 +108,7 @@ function DocModifierVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Felicitation, tu as modifier l'appareil
+              6- Felicitation, vous avez modifier l'appareil
             </h3>
             <p className="text-white">.</p>
 

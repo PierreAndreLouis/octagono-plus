@@ -100,7 +100,7 @@ function DocAddVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Félicitations, tu as ajouté un nouveau véhicule
+              6- Félicitations, vous avez ajouté un nouveau véhicule
             </h3>
             <p className="text-white">.</p>
 

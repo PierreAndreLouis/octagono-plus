@@ -112,7 +112,7 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Félicitations, tu as ajouté un nouveau véhicule
+              6- Félicitations, vous avez ajouté un nouveau véhicule
             </h3>
             <p className="text-white">.</p>
 
@@ -198,7 +198,7 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Felicitation, tu as modifié l'appareil
+              6- Felicitation, vous avez modifié l'appareil
             </h3>
             <p className="text-white">.</p>
 
@@ -284,7 +284,7 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Félicitations, tu as supprimé l'appareil
+              6- Félicitations, vous avez supprimé l'appareil
             </h3>
             <p className="text-white">.</p>
 

@@ -141,7 +141,7 @@ function DocPositionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Enfin, tu peux choisir l'appareil souhaité dans la liste
+              4- Enfin, vous pouvez choisir l'appareil souhaité dans la liste
             </h3>
             <p className="text-white">.</p>
 
