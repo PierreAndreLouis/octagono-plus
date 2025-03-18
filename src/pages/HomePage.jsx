@@ -398,10 +398,10 @@ const Home = () => {
               }}
               className=" xs:flex flex-wrap items-center col-gap-4 "
             >
-              <h3 className="text-red-700 mr-3 text-start sm:text-[1.15rem] sm:font-bold  dark:text-red-100">
+              <h3 className="text-red-700 mr-3 text-start md:text-[1.15rem] sm:font-bold  dark:text-red-100">
                 Dernière mise à jour :{" "}
               </h3>
-              <p className="text-start font-bold  text-[.85rem] xs:text-[.91rem] sm:text-[1.1rem] dark:text-gray-100 text-gray-700 ">
+              <p className="text-start font-bold  text-[.85rem] xs:text-[.91rem] md:text-[1.1rem] dark:text-gray-100 text-gray-700 ">
                 {" "}
                 {MiseAJourFormatDateHeure?.date}
                 {" / "}
@@ -425,8 +425,11 @@ const Home = () => {
                 Auto...
               </p>
 
-              <p className="font-semibold hidden sm:block text-sm sm:text-[1rem]">
-                Automatique
+              <p className="font-semibold hidden sm:block whitespace-nowrap lg:hidden text-sm sm:text-[1rem]---">
+                Actualisation auto...
+              </p>
+              <p className="font-semibold hidden lg:block text-sm sm:text-[1rem]">
+                Actualisation automatique
               </p>
             </div>
           </div>
@@ -488,7 +491,7 @@ const Home = () => {
       {activeDesactiveUpdateAutoPopup && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
           <div
-            className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+            className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[90vw] `}
           >
             <div
               className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
@@ -501,8 +504,8 @@ const Home = () => {
               <h3
                 className={`${text_color}  block font-semibold text-lg  text-center leading-6  mb-3 px-4`}
               >
-                Es-tu sur {updateAuto ? "de désactiver" : "d'activer"} la mise a
-                jour automatique ?
+                Êtes-vous sur {updateAuto ? "de désactiver" : "d'activer"} la
+                mise a jour automatique ?
               </h3>
             </div>
             <div className="flex justify-center gap-2 mt-12">

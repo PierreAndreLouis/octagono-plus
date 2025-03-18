@@ -260,7 +260,7 @@ function GestionGeofences() {
                     </h2>
 
                     <p className="text-gray-500">
-                      Es-tu sûr de{" "}
+                      Êtes-vous sûr de{" "}
                       {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"} le
                       geozone ? ?
                     </p>

@@ -37,10 +37,10 @@ function Logout({ setLogOutPopup }) {
                   className="text-xl font-bold text-gray-800"
                   id="page-action.heading"
                 >
-                  Se Deconnecter
+                  Se Déconnecter
                 </h2>
 
-                <p className="text-gray-500">Es tu sur de te deconnecter ?</p>
+                <p className="text-gray-500">Êtes vous sur de te déconnecter ?</p>
               </div>
             </div>
 

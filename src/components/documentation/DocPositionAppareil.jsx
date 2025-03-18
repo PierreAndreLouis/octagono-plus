@@ -226,7 +226,7 @@ function DocPositionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Choisis le type de vue que tu préfères dans la liste
+              2- Choisissez le type de vue que vous préférez dans la liste.
             </h3>
             <p className="text-white">.</p>
 

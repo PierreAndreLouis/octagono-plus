@@ -84,7 +84,7 @@ function DocAddVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Confirmer ton mot de passe
+              5- Confirmez votre mot de passe.
             </h3>
             <p className="text-white">.</p>
 

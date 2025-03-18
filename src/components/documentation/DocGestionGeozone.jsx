@@ -188,7 +188,7 @@ function DocGestionGeozone() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur "modifier" pour le géozone de ton choix
+              1- Cliquez sur "Modifier" pour la géozone de votre choix.
             </h3>
             <p className="text-white">.</p>
 
@@ -203,8 +203,7 @@ function DocGestionGeozone() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Modifiez les informations de ton choix, puis cliquer sur
-              "Modifier" pour terminer
+              2- Modifiez les informations de votre choix, puis cliquez sur "Modifier" pour terminer.
             </h3>
             <p className="text-white">.</p>
 

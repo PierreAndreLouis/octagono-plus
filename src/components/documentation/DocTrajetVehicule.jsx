@@ -248,7 +248,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Choisis le type de vue que tu veux parmi la liste
+              3- Choisis le type de vue que vous voulez parmi la liste
             </h3>
             <p className="text-white">.</p>
 
@@ -336,7 +336,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Tu peux filtrer par status, si tu le souhaites.
+              4- Vous pouvez filtrer par statut, si vous le souhaitez.
             </h3>
             <p className="text-white">.</p>
 

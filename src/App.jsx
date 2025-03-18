@@ -253,7 +253,7 @@ function App() {
         {isOffline && (
           <div className="fixed z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/70">
             <div
-              className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+              className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[90vw] `}
             >
               <div
                 className={` bg-orange-600 flex justify-center items-center py-4 px-4  mb-8 `}
@@ -1014,7 +1014,7 @@ function App() {
               {waitToDownload && (
                 <div className="fixed z-[99999999999999] flex justify-center items-center inset-0 bg-black/50">
                   <div
-                    className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+                    className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[90vw] `}
                   >
                     <div
                       className={` bg-orange-600 flex justify-center items-center py-4 px-4  mb-8 `}

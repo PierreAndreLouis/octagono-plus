@@ -28,7 +28,7 @@ function DocInstallation() {
             className="border-b pb-5 border-b-orange-300"
           >
             <h3 className="text-2xl text-orange-600 mb-8 mt-12 text-center font-semibold">
-              Si tu n'es pas encore connecté
+              Si vous n'êtes  pas encore connecté
             </h3>
             <h3 className="text-lg font-semibold">
               1- Clique sur le bouton "Installer l'application", si c'est
@@ -62,7 +62,7 @@ function DocInstallation() {
           {/*  */}
 
           <h3 className="text-2xl text-orange-600 mb-8 mt-52 text-center font-semibold">
-            Si tu es déjà connecté{" "}
+            Si vous êtes déjà connecté{" "}
           </h3>
 
           <div className="border-b mt-10 pb-5 border-b-orange-300">

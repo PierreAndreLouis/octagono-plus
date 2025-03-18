@@ -40,7 +40,9 @@ function Logout_pupup({ setLogOutPopup }) {
                   Se Déconnecter
                 </h2>
 
-                <p className="text-gray-500">Es-tu sûr de te déconnecter ?</p>
+                <p className="text-gray-500">
+                  Êtes-vous sûr de te déconnecter ?
+                </p>
               </div>
             </div>
 

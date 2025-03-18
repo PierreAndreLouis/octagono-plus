@@ -53,10 +53,11 @@ function DocModifierVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-2xl text-red-600 font-semibold">
-              Si tu veux supprimer
+              Si vous voulez supprimer
             </h3>
             <h3 className="text-lg font-semibold">
-              3- Cliquez sur le bouton supprimer et confirmer ton mot de passe
+              3- Cliquez sur le bouton "Supprimer" et confirmez votre mot de
+              passe.
             </h3>
             <p className="text-white">.</p>
 
@@ -72,7 +73,7 @@ function DocModifierVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-2xl text-green-600 font-semibold">
-              Si tu veux Modifier
+              Si vous voulez Modifier
             </h3>
             <h3 className="text-lg font-semibold">
               4- Modifie les informations souhaitées et cliquer sur
@@ -92,7 +93,7 @@ function DocModifierVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Confirmer ton mot de passe
+              5- Confirmez votre mot de passe.
             </h3>
             <p className="text-white">.</p>
 
