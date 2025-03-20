@@ -269,16 +269,6 @@ function App() {
                   Veuillez vérifier votre connexion Internet pour continuer.
                 </h3>
               </div>
-              {/* <div className="flex justify-center gap-2 mt-12">
-                <div
-                  onClick={() => {
-                    setWaitToDownload(false);
-                  }}
-                  className={` bg-orange-600 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
-                >
-                  Ok
-                </div>
-              </div> */}
             </div>
           </div>
         )}

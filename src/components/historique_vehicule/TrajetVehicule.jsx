@@ -1175,7 +1175,7 @@ function TrajetVehicule({
                   })}
 
               {/* Affichage des marqueurs "classiques" si l'animation n'est pas lancée */}
-              {!isAnimating &&
+              {/* {!isAnimating &&
                 vehicles?.map((véhicule, index) => {
                   const {
                     lastValidLatitude,
@@ -1306,6 +1306,170 @@ function TrajetVehicule({
                         </div>
                       </Popup>
                     </Marker>
+                  );
+                })} */}
+
+              {!isAnimating &&
+                vehicles?.map((véhicule, index) => {
+                  const {
+                    lastValidLatitude,
+                    lastValidLongitude,
+                    description,
+                    imeiNumber,
+                    isActive,
+                    licensePlate,
+                    simPhoneNumber,
+                    address,
+                    speedKPH,
+                    heading,
+                    timestamp,
+                  } = véhicule;
+
+                  const firstMarkerIcon = L.icon({
+                    iconUrl: "/pin/start.png",
+                    iconSize: [50, 60],
+                    iconAnchor: [47, 61],
+                    popupAnchor: [-22, -51],
+                  });
+
+                  const lastMarkerIcon = L.icon({
+                    iconUrl: "/pin/end.png",
+                    iconSize: [50, 60],
+                    iconAnchor: [4, 61],
+                    popupAnchor: [25, -51],
+                  });
+
+                  const additionalMarkerIcon = L.icon({
+                    iconUrl: getMarkerIcon(véhicule),
+                    iconSize: [17, 25],
+                    iconAnchor: [9, 25],
+                    popupAnchor: [-1, -20],
+                    shadowUrl:
+                      "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+                    shadowSize: [5, 5],
+                  });
+
+                  let markerIcon;
+
+                  const firstVehicle = vehicles.find((veh) => veh.speedKPH > 0);
+                  const lastVehicle = vehicles
+                    .filter((veh) => veh.speedKPH > 0)
+                    .pop();
+
+                  const firstStoppedVehicle = vehicles
+                    .slice(0, vehicles.indexOf(firstVehicle))
+                    .reverse()
+                    .find((veh) => veh.speedKPH <= 0);
+
+                  const lastStoppedVehicle = vehicles
+                    .slice(vehicles.indexOf(lastVehicle) + 1)
+                    .find((veh) => veh.speedKPH <= 0);
+
+                  if (!lastStoppedVehicle && index === vehicles.length - 1) {
+                    markerIcon = firstMarkerIcon;
+                  } else if (!firstStoppedVehicle && index === 0) {
+                    markerIcon = lastMarkerIcon;
+                  } else if (véhicule === firstStoppedVehicle) {
+                    markerIcon = lastMarkerIcon;
+                  } else if (véhicule === lastStoppedVehicle) {
+                    markerIcon = firstMarkerIcon;
+                  } else {
+                    markerIcon = additionalMarkerIcon;
+                  }
+
+                  // if (index === vehicles.length - 1) {
+                  //   markerIcon = firstMarkerIcon;
+                  // } else if (index === 0) {
+                  //   markerIcon = lastMarkerIcon;
+                  // } else {
+                  //   markerIcon = additionalMarkerIcon;
+                  // }
+
+                  const FormatDateHeureTimestamp = FormatDateHeure(timestamp);
+
+                  return (
+                    <>
+                      <Marker
+                        key={`main-${index}`}
+                        position={[
+                          lastValidLatitude || 0,
+                          lastValidLongitude || 0,
+                        ]}
+                        icon={markerIcon}
+                      >
+                        <Popup>
+                          <div>
+                            <p className="font-bold text-[1rem]">
+                              <span>Description :</span>{" "}
+                              {description || "Non disponible"}
+                            </p>
+                            <p>
+                              <strong>Adresse :</strong>{" "}
+                              {address || "Non disponible"}
+                            </p>
+                            {username === "admin" && (
+                              <p>
+                                <strong>IMEI Number :</strong>{" "}
+                                {imeiNumber || "loading..."}
+                              </p>
+                            )}
+                            <p>
+                              <strong>Vitesse :</strong>{" "}
+                              {speedKPH && !isNaN(Number(speedKPH))
+                                ? Number(speedKPH).toFixed(0)
+                                : "Non disponible"}{" "}
+                              Km/h
+                            </p>
+                            <p>
+                              <strong>Date :</strong>{" "}
+                              {timestamp
+                                ? FormatDateHeureTimestamp?.date
+                                : "Pas de date disponible"}
+                              <span className="px-3">/</span>
+                              {FormatDateHeureTimestamp?.time}
+                            </p>
+                            <p>
+                              <strong>Statut : </strong>
+                              {speedKPH < 1 && "En stationnement"}
+                              {speedKPH > 20 && "En mouvement rapide"}
+                              {speedKPH >= 1 &&
+                                speedKPH <= 20 &&
+                                "En mouvement lent"}
+                            </p>
+                            <p>
+                              <strong>License Plate :</strong>{" "}
+                              {licensePlate || "loading..."}
+                            </p>
+                            <p>
+                              <strong>Numéro SIM :</strong>{" "}
+                              {simPhoneNumber || "loading..."}
+                            </p>
+                            <button
+                              onClick={() =>
+                                openGoogleMaps(
+                                  lastValidLatitude,
+                                  lastValidLongitude
+                                )
+                              }
+                              className="mt-2 px-3 py-1 bg-green-500 text-white rounded-md"
+                            >
+                              Voir sur Google Maps
+                            </button>
+                          </div>
+                        </Popup>
+                      </Marker>
+                      {(markerIcon === firstMarkerIcon ||
+                        markerIcon === lastMarkerIcon) && (
+                        <Marker
+                          key={`additional-${index}`}
+                          position={[
+                            lastValidLatitude || 0,
+                            lastValidLongitude || 0,
+                          ]}
+                          icon={additionalMarkerIcon}
+                        />
+                      )}
+                    </>
                   );
                 })}
 

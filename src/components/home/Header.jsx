@@ -147,7 +147,7 @@ function Header() {
               // onClick={fetchVehicleData} // Récupère les données des véhicules
               className="text-gray-500 dark:text-gray-300 text-sm"
             >
-              Hello
+              Bonjour
             </h3>
             <h2 className="font-semibold text-lg text-gray-600 dark:text-gray-200 leading-5">
               {(userData && account) || "Nom absent"}
