@@ -28,10 +28,10 @@ function DocInstallation() {
             className="border-b pb-5 border-b-orange-300"
           >
             <h3 className="text-2xl text-orange-600 mb-8 mt-12 text-center font-semibold">
-              Si vous n'êtes  pas encore connecté
+              Si vous n'êtes pas encore connecté
             </h3>
             <h3 className="text-lg font-semibold">
-              1- Clique sur le bouton "Installer l'application", si c'est
+              1- Cliquez sur le bouton "Installer l'application, si c'est
               visible :
             </h3>
             <p className="text-white">.</p>
@@ -47,7 +47,7 @@ function DocInstallation() {
           {/*  */}
           <div className="border-b pt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Confirmer l'installation de l'application :
+              2- Confirmez l'installation de l'application :
             </h3>
             <p className="text-white">.</p>
 
@@ -67,7 +67,7 @@ function DocInstallation() {
 
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Clique sur l'icône du menu, en haut à droite
+              1- Cliquez sur l'icône du menu, en haut à droite
             </h3>
             <p className="text-white">.</p>
 
@@ -122,7 +122,7 @@ function DocInstallation() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Clique sur les 3 points du navigateur, en haut à droite
+              1- Cliquez sur les trois points du navigateur, en haut à droite
             </h3>
             <p className="text-white">.</p>
 
@@ -138,7 +138,7 @@ function DocInstallation() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Clique sur le menu "Cast, Save and Share"
+              2- Cliquez sur le menu "Cast, Save and Share"
             </h3>
             <p className="text-white">.</p>
 
@@ -154,7 +154,7 @@ function DocInstallation() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Cliquez sur le menu "Install Octagono-PLus"
+              3- Cliquez sur le menu "Installer Octagono-Plus"
             </h3>
             <p className="text-white">.</p>
 

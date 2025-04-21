@@ -49,7 +49,7 @@ function DocTrajetVehicule() {
 
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquez sur l'icon "trajet"
+              2- Cliquez sur l’icône "Trajet"
             </h3>
             <p className="text-white">.</p>
 
@@ -64,7 +64,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Tu verras alors le trajet de l'appareil
+              3- Vous verrez alors le trajet de l’appareil
             </h3>
             <p className="text-white">.</p>
 
@@ -95,7 +95,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur l'icon "recentrer", en haut a droite de la page.
+              1- Cliquez sur l’icône "Recentrer", en haut à droite de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -121,7 +121,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez le nom de l'appareil actuel en haut de la page.
+              1- Cliquez sur le nom de l’appareil actuel, en haut de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -138,8 +138,8 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Tu peux filter les recherches en cliquant sur les section en
-              haut.
+              2- Vous pouvez filtrer les recherches en cliquant sur les sections
+              en haut.
             </h3>
             <p className="text-white">.</p>
 
@@ -156,8 +156,8 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Tu peux recherche dans la bar de recherche ou réinitialiser les
-              filtres et recherches
+              3- Vous pouvez effectuer une recherche dans la barre ou
+              réinitialiser les filtres et recherches.
             </h3>
             <p className="text-white">.</p>
 
@@ -174,7 +174,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Enfin, vous pouvez choisir l'appareil souhaiter dans la liste
+              4- Enfin, vous pouvez choisir l’appareil souhaité dans la liste.
             </h3>
             <p className="text-white">.</p>
 
@@ -189,7 +189,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Le trajet de l'appareil choisis sera afficher sur la carte.
+              5- Le trajet de l’appareil choisi sera affiché sur la carte.
             </h3>
             <p className="text-white">.</p>
 
@@ -214,7 +214,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur l'icon en haut a droite de la page.
+              1- Cliquez sur l’icône, en haut à droite de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -248,7 +248,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Choisis le type de vue que vous voulez parmi la liste
+              3- Choisissez le type de vue souhaité dans la liste.
             </h3>
             <p className="text-white">.</p>
 
@@ -289,7 +289,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur l'icon en haut a droite de la page.
+              1- Cliquez sur l’icône, en haut à droite de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -305,7 +305,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquez sur l'icon "filtrer par date".
+              2- Cliquez sur l’icône "Filtrer par date".
             </h3>
             <p className="text-white">.</p>
 
@@ -321,7 +321,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Choisis les dates, puis clique sur le bouton "Appliquer".
+              3- Choisissez les dates, puis cliquez sur le bouton "Appliquer".
             </h3>
             <p className="text-white">.</p>
 
@@ -351,7 +351,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Enfin, cliquer sur "Appliquer" pour lancer la recherche
+              5- Enfin, cliquez sur "Appliquer" pour lancer la recherche.
             </h3>
             <p className="text-white">.</p>
 
@@ -374,8 +374,8 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez le bouton "Retracer le trajet" en haut, a gauche.
-              l’animation va commencer automatiquement.
+              1- Cliquez sur le bouton "Retracer le trajet", en haut à gauche.
+              L’animation commencera automatiquement.
             </h3>
             <p className="text-white">.</p>
 
@@ -390,8 +390,8 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Pour modifier les paramètres des l'animation, cliquer sur
-              l'icon a droite du bouton "Retracer le trajet"
+              2- Pour modifier les paramètres de l’animation, cliquez sur
+              l’icône à droite du bouton "Retracer le trajet".
             </h3>
             <p className="text-white">.</p>
 
@@ -406,7 +406,7 @@ function DocTrajetVehicule() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Roles des différentes fonctionnalités
+              3- Rôles des différentes fonctionnalités
             </h3>
             <div className="ml-4--">
               <div className="flex gap-4 items-center">
@@ -416,7 +416,7 @@ function DocTrajetVehicule() {
                   <span className="font-bold text-orange-600 mr-4">
                     Icône #1:
                   </span>{" "}
-                  Pour pause et play l’animation
+                  Pour mettre l’animation en pause ou la relancer
                 </p>
               </div>
               <div className="flex gap-4 items-center">
@@ -437,7 +437,7 @@ function DocTrajetVehicule() {
                   <span className="font-bold text-orange-600 mr-4">
                     Icône #3:
                   </span>{" "}
-                  Pour redémarrer l'animation depuis le debut
+                  Pour redémarrer l’animation depuis le début
                 </p>
               </div>
               <div className="flex gap-4 items-center">
@@ -467,7 +467,7 @@ function DocTrajetVehicule() {
                   <span className="font-bold text-orange-600 mr-4">
                     Icône #6:
                   </span>{" "}
-                  Pour afficher les information du trajet lors de l'animation
+                  Pour afficher les informations du trajet pendant l’animation
                 </p>
               </div>
               <div className="flex gap-4 items-center">
@@ -477,7 +477,7 @@ function DocTrajetVehicule() {
                   <span className="font-bold text-orange-600 mr-4">
                     Icône #7:
                   </span>{" "}
-                  Pour activer ou désactiver l'affichage des geozones
+                  Pour activer ou désactiver l’affichage des géozones
                 </p>
               </div>
               <div className="flex gap-4 items-center">
@@ -487,7 +487,7 @@ function DocTrajetVehicule() {
                   <span className="font-bold text-orange-600 mr-4">
                     Icône #8:
                   </span>{" "}
-                  Pour fermer la bare du paramètre
+                  Pour fermer la barre des paramètres
                 </p>
               </div>
             </div>

@@ -59,7 +59,7 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Tu arrives maintenant a la page rapport unite
+              3- Vous êtes maintenant sur la page du rapport d’unité
             </h3>
             <p className="text-white">.</p>
 
@@ -100,8 +100,8 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Tu peux filter les recherches en cliquant sur les section en
-              haut.
+              2- Vous pouvez filtrer les recherches en cliquant sur les sections
+              en haut.
             </h3>
             <p className="text-white">.</p>
 
@@ -118,8 +118,8 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Tu peux recherche dans la bar de recherche ou réinitialiser les
-              filtres et recherches
+              3- Vous pouvez effectuer une recherche dans la barre ou
+              réinitialiser les filtres et recherches.
             </h3>
             <p className="text-white">.</p>
 
@@ -136,7 +136,7 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Enfin, vous pouvez choisir l'appareil souhaiter dans la liste
+              4- Enfin, vous pouvez choisir l’appareil souhaité dans la liste.
             </h3>
             <p className="text-white">.</p>
 
@@ -151,7 +151,7 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Les informations de l'appareil choisis seront afficher dans la
+              5- Les informations de l’appareil choisi seront affichées sur la
               page.
             </h3>
             <p className="text-white">.</p>
@@ -175,7 +175,7 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur l'icon "calendrier", en haut a droite de la page.
+              1- Cliquez sur l’icône "Calendrier", en haut à droite de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -191,8 +191,8 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Pour une recherche pour seulement une journée, choisis la date
-              ici, et cliquer sur "Recherche"
+              2- Pour une recherche sur une seule journée, choisissez la date
+              ici, puis cliquez sur "Rechercher"
             </h3>
             <p className="text-white">.</p>
 
@@ -208,8 +208,8 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Pour une recherche pour plus d'une journée, cliquer sur
-              "Sélectionner une intervale de date"
+              3- Pour une recherche sur plusieurs jours, cliquez sur
+              "Sélectionner un intervalle de dates"
             </h3>
             <p className="text-white">.</p>
 
@@ -225,7 +225,7 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Choisis les dates, puis cliquer sur "Appliquer"
+              4- Choisissez les dates, puis cliquez sur "Appliquer"
             </h3>
             <p className="text-white">.</p>
 
@@ -241,8 +241,8 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Les informations de recherche de l'appareil choisis seront
-              afficher dans la page.
+              5- Les résultats de recherche de l’appareil choisi seront affichés
+              sur la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -267,7 +267,7 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur l'icon "télécharger", en haut a droite de la page.
+              1- Cliquez sur l’icône "Télécharger", en haut à droite de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -283,8 +283,8 @@ function DocRapportUnite() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquez "Télécharger le rapport en PDF", puis attendez quelque
-              secondes.
+              2- Cliquez sur "Télécharger le rapport en PDF", puis attendez
+              quelques secondes.
             </h3>
             <p className="text-white">.</p>
 

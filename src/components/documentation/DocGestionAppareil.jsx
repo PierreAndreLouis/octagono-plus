@@ -33,7 +33,7 @@ function DocGestionAppareil() {
         <div className="mt-8">
           <div className="border-b pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Clique sur l'icône menu, en haut à droite
+              1- Cliquez sur l'icône menu, en haut à droite
             </h3>
             <p className="text-white">.</p>
 
@@ -64,7 +64,7 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 ref={testRef} className="text-lg font-semibold">
-              3- Ajouter toutes les informations demandées
+              3- Ajoutez toutes les informations demandées
             </h3>
             <p className="text-white">.</p>
 
@@ -166,7 +166,8 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Modifie les informations souhaitées et clique sur "Enregistrer"
+              4- Modifiez les informations souhaitées et cliquez sur
+              "Enregistrer"
             </h3>
             <p className="text-white">.</p>
 
@@ -198,7 +199,7 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              6- Felicitation, vous avez modifié l'appareil
+              6- Félicitations, vous avez modifié l'appareil
             </h3>
             <p className="text-white">.</p>
 
@@ -252,7 +253,7 @@ function DocGestionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Clique sur le bouton supprimer
+              4- Cliquez sur le bouton "Supprimer"
             </h3>
             <p className="text-white">.</p>
 
@@ -269,14 +270,6 @@ function DocGestionAppareil() {
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
               5- Confirmez votre mot de passe.
-
-
-
-
-
-
-
-
             </h3>
             <p className="text-white">.</p>
 

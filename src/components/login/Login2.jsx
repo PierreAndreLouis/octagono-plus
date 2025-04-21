@@ -51,6 +51,10 @@ function Login2() {
     handleLogin(account, username, password);
   };
 
+  const demoAccountLogin = () => {
+    handleLogin("demo", "admin", "112233");
+  };
+
   //
   //
   //
@@ -194,6 +198,22 @@ function Login2() {
               >
                 {isHomePageLoading ? "Chargement..." : "Se connecter"}
               </button>
+              <div>
+                {isHomePageLoading ? (
+                  <div className="flex w-full justify-center rounded-md hover:bg-indigo-50 border border-indigo-500 text-gray-800 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 cursor-pointer mt-3 dark:focus:ring-indigo-400">
+                    Chargement...
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => {
+                      demoAccountLogin();
+                    }}
+                    className="flex w-full justify-center rounded-md hover:bg-indigo-50 border border-indigo-500 text-gray-800 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 cursor-pointer mt-3 dark:focus:ring-indigo-400"
+                  >
+                    Compte Demo
+                  </div>
+                )}
+              </div>
             </div>
           </form>
         </div>

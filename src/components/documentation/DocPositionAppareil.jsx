@@ -105,8 +105,8 @@ function DocPositionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Tu peux filter les recherches en cliquant sur les sections en
-              haut.
+              2- Vous pouvez filtrer les recherches en cliquant sur les sections
+              en haut.
             </h3>
             <p className="text-white">.</p>
 
@@ -123,8 +123,8 @@ function DocPositionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Tu peux rechercher dans la barre de recherche ou réinitialiser
-              les filtres et recherches
+              3- Vous pouvez effectuer une recherche dans la barre ou
+              réinitialiser les filtres et recherches.
             </h3>
             <p className="text-white">.</p>
 
@@ -180,8 +180,8 @@ function DocPositionAppareil() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur le bouton "Tous les vehicules", en haut a droite de
-              la page.
+              1- Cliquez sur le bouton "Type de vue", en haut à gauche de la
+              page.
             </h3>
             <p className="text-white">.</p>
 

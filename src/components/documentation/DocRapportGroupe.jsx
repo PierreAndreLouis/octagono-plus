@@ -74,7 +74,7 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Tu arrives maintenant a la page rapport groupe
+              4- Vous êtes maintenant sur la page du rapport de groupe
             </h3>
             <p className="text-white">.</p>
 
@@ -120,7 +120,8 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Pour une recherche d'une seule journée, choisissez la date ici, puis cliquez sur 'Recherche'
+              2- Pour une recherche d'une seule journée, choisissez la date ici,
+              puis cliquez sur 'Recherche'
             </h3>
             <p className="text-white">.</p>
 
@@ -136,7 +137,8 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Pour une recherche pour plus d'une journée, cliquez sur 'Sélectionner un intervalle de dates'
+              3- Pour une recherche pour plus d'une journée, cliquez sur
+              'Sélectionner un intervalle de dates'
             </h3>
             <p className="text-white">.</p>
 
@@ -152,7 +154,7 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Choisissez les dates, puis cliquez sur  "Appliquer"
+              4- Choisissez les dates, puis cliquez sur "Appliquer"
             </h3>
             <p className="text-white">.</p>
 
@@ -168,7 +170,8 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Les informations de recherche de l'appareil choisi seront affichées dans la page.
+              5- Les informations de recherche de l'appareil choisi seront
+              affichées dans la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -193,7 +196,7 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur l'icône 'télécharger, en haut a droite de la page.
+              1- Cliquez sur l’icône "Télécharger", en haut à droite de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -209,7 +212,8 @@ function DocRapportGroupe() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Cliquez "Télécharger le rapport en PDF", puis attendez quelques secondes.
+              2- Cliquez "Télécharger le rapport en PDF", puis attendez quelques
+              secondes.
             </h3>
             <p className="text-white">.</p>
 

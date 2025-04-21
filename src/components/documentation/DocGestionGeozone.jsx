@@ -76,8 +76,8 @@ function DocGestionGeozone() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Ajouter une description, ajouter une couleur, puis cliquer sur
-              "Ajouter des positions"
+              4- Ajoutez une description, une couleur, puis cliquez sur "Ajouter
+              des positions"
             </h3>
             <p className="text-white">.</p>
 
@@ -92,9 +92,9 @@ function DocGestionGeozone() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Pour ajouter une nouvelle position, cliquer sur le bouton
-              "Nouvelle position". Ajoutez un minimum de 3 positions, puis
-              cliquez sur "Continue"
+              5- Pour ajouter une nouvelle position, cliquez sur le bouton
+              "Nouvelle position". Ajoutez au minimum 3 positions, puis cliquez
+              sur "Continuer"
             </h3>
             <p className="text-white">.</p>
 
@@ -125,7 +125,7 @@ function DocGestionGeozone() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Création de géozone réussie
+              4- La création du géozone a été effectuée avec succès
             </h3>
             <p className="text-white">.</p>
 
@@ -203,7 +203,8 @@ function DocGestionGeozone() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Modifiez les informations de votre choix, puis cliquez sur "Modifier" pour terminer.
+              2- Modifiez les informations de votre choix, puis cliquez sur
+              "Modifier" pour terminer.
             </h3>
             <p className="text-white">.</p>
 

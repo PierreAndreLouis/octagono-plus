@@ -82,7 +82,7 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez sur la position souhaiter afficher
+              1- Cliquez sur la position que vous souhaitez afficher
             </h3>
             <p className="text-white">.</p>
 
@@ -124,7 +124,7 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez le nom de l'appareil actuel en haut de la page.
+              1- Cliquez sur le nom de l’appareil actuel, en haut de la page.
             </h3>
             <p className="text-white">.</p>
 
@@ -141,8 +141,8 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              2- Tu peux filter les recherches en cliquant sur les section en
-              haut.
+              2- Vous pouvez filtrer les recherches en cliquant sur les sections
+              en haut.
             </h3>
             <p className="text-white">.</p>
 
@@ -159,8 +159,8 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Tu peux recherche dans la bar de recherche ou réinitialiser les
-              filtres et recherches
+              3- Vous pouvez effectuer une recherche dans la barre ou
+              réinitialiser les filtres et recherches.
             </h3>
             <p className="text-white">.</p>
 
@@ -177,7 +177,7 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Enfin, vous pouvez choisir l'appareil souhaiter dans la liste
+              4- Enfin, vous pouvez choisir l’appareil souhaité dans la liste.
             </h3>
             <p className="text-white">.</p>
 
@@ -192,8 +192,8 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- L'historique des mises jour de l'appareil choisis sera
-              afficher.
+              5- L’historique des mises à jour de l’appareil choisi sera
+              affiché.
             </h3>
             <p className="text-white">.</p>
 
@@ -217,7 +217,7 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              1- Cliquez l'icon en haut a droite
+              1- Cliquez sur l’icône, en haut à droite
             </h3>
             <p className="text-white">.</p>
 
@@ -249,7 +249,8 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              3- Choisis les intervales de dates puis cliquer sur "Appliquer"
+              3- Choisissez les intervalles de dates, puis cliquez sur
+              "Appliquer"
             </h3>
             <p className="text-white">.</p>
 
@@ -265,8 +266,8 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              4- Tu peux filtrer par status si souhaiter, puis cliquer sur
-              "Appliquer"
+              4- Vous pouvez filtrer par statut, si vous le souhaitez, puis
+              cliquez sur "Appliquer"
             </h3>
             <p className="text-white">.</p>
 
@@ -281,7 +282,7 @@ function DocHistorique() {
           {/*  */}
           <div className="border-b mt-10 pb-5 border-b-orange-300">
             <h3 className="text-lg font-semibold">
-              5- Les informations de recherche seront afficher
+              5- Les résultats de la recherche seront affichés
             </h3>
             <p className="text-white">.</p>
 
