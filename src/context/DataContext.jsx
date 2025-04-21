@@ -47,7 +47,7 @@ const DataContextProvider = ({ children }) => {
     if (estLancerUpdateAuto) {
       setTimeout(() => {
         setEstLancerUpdateAuto(false);
-      }, 2000);
+      }, 3000);
     }
   }, [estLancerUpdateAuto]);
 
@@ -2329,7 +2329,7 @@ const DataContextProvider = ({ children }) => {
     }, 30000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [updateAuto, véhiculeDataRef?.current, véhiculeData]);
 
   //
   //

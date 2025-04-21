@@ -238,6 +238,23 @@ function Liste() {
     return getPriority(a) - getPriority(b);
   });
 
+  ///////////////////////
+
+  // const latitude = 19.6600065;
+  // const longitude = -72.02567933333333;
+  // const [adresse, setAdresse] = useState("");
+
+  // useEffect(() => {
+  //   const fetchAdresse = async () => {
+  //     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+  //     const response = await fetch(url);
+  //     const data = await response.json();
+  //     setAdresse(data.display_name);
+  //   };
+
+  //   fetchAdresse();
+  // }, []);
+
   return (
     <div className="p-2 flex flex-col gap-4 mt-4 mb-[10rem]-- pb-[6rem] dark:text-white">
       {isHomePageLoading ? (
@@ -374,6 +391,7 @@ function Liste() {
           //
           //
           x;
+          //////////////////////////
 
           return (
             <div className="bg-white dark:bg-gray-800">
@@ -421,17 +439,29 @@ function Liste() {
                           <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300" />
                           {/* Date de dernière mise a jour */}
                           <h3 className="text-sm sm:text-sm md:text-[1rem]  lg:text-lg--">
-                            {véhicule?.véhiculeDetails?.[0]?.timestamp
+                            {/* {véhicule?.véhiculeDetails?.[0]?.timestamp
                               ? FormatDateHeureTimestamp.date
-                              : "Pas de date disponible"}
+                              : "Pas de date disponible"} */}
+                            {véhicule?.lastUpdateTime
+                              ? véhicule?.véhiculeDetails?.[0]?.timestamp
+                                ? FormatDateHeure(
+                                    véhicule?.véhiculeDetails?.[0]?.timestamp
+                                  ).date
+                                : FormatDateHeure(véhicule?.lastUpdateTime).date
+                              : "Pas de date disponible"}{" "}
                           </h3>
                         </div>
 
-                        {véhicule?.véhiculeDetails?.[0]?.timestamp ? (
+                        {véhicule?.lastUpdateTime ? (
                           <div className="flex items-center gap-1">
                             <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl" />
                             <h3 className="text-sm sm:text-sm md:text-[1rem] lg:text-lg--">
-                              {FormatDateHeureTimestamp?.time}
+                              {véhicule?.véhiculeDetails?.[0]?.timestamp
+                                ? FormatDateHeure(
+                                    véhicule?.véhiculeDetails?.[0]?.timestamp
+                                  ).time
+                                : FormatDateHeure(véhicule?.lastUpdateTime)
+                                    .time}
                             </h3>
                           </div>
                         ) : (
