@@ -45,17 +45,24 @@ const LocationPage = () => {
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // filtrer la liste des véhicules pour avoir seulement les véhicules avec des details
-  const vehiculeActive = currentDataFusionné?.filter(
-    (véhicule) =>
-      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
-  );
+  // const vehiculeActive = currentDataFusionné?.filter(
+  //   (véhicule) =>
+  //     véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
+  // );
+  const vehiculeActive = currentDataFusionné;
 
   // le formatage des véhicules afficher sur la carte
   const véhiculeData = vehiculeActive?.map((véhicule) => ({
     deviceID: véhicule?.deviceID || "---",
     description: véhicule.description || "Véhicule",
-    lastValidLatitude: véhicule?.véhiculeDetails?.[0]?.latitude || "",
-    lastValidLongitude: véhicule?.véhiculeDetails?.[0]?.longitude || "",
+    lastValidLatitude:
+      véhicule?.véhiculeDetails?.[0]?.latitude ||
+      véhicule?.lastValidLatitude ||
+      "",
+    lastValidLongitude:
+      véhicule?.véhiculeDetails?.[0]?.longitude ||
+      véhicule?.lastValidLongitude ||
+      "",
     address: véhicule?.véhiculeDetails?.[0]?.address || "",
     imeiNumber: véhicule?.imeiNumber || "",
     isActive: véhicule?.isActive || "",

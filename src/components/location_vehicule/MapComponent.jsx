@@ -64,10 +64,12 @@ function MapComponent({ mapType }) {
   const dataFusionné = currentDataFusionné;
 
   // filtrer pour avoir seulement les véhicules avec ces details
-  const vehiculeActive = dataFusionné?.filter(
-    (véhicule) =>
-      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
-  );
+  // const vehiculeActive = dataFusionné?.filter(
+  //   (véhicule) =>
+  //     véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
+  // );
+
+  const vehiculeActive = dataFusionné;
 
   // Formatage des donnee pour la  carte
   const véhiculeData = vehiculeActive?.map((véhicule) => ({
@@ -75,10 +77,14 @@ function MapComponent({ mapType }) {
     description: véhicule.description || "Véhicule",
     lastValidLatitude:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.latitude || "",
+        ?.latitude ||
+      véhicule?.lastValidLatitude ||
+      "",
     lastValidLongitude:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.longitude || "",
+        ?.longitude ||
+      véhicule?.lastValidLongitude ||
+      "",
     address:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.backupAddress ||
@@ -91,10 +97,12 @@ function MapComponent({ mapType }) {
     simPhoneNumber: véhicule?.simPhoneNumber || "",
     timestamp:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.timestamp || "",
+        ?.timestamp ||
+      véhicule?.lastUpdateTime ||
+      "",
     speedKPH:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.speedKPH || 0,
+        ?.speedKPH,
     heading:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
         ?.heading || 0,
@@ -585,30 +593,7 @@ function MapComponent({ mapType }) {
           eventHandlers={{
             dragend: handleDragEnd, // Met à jour la position après le déplacement
           }}
-        >
-          {/* <Popup ref={popupRef}>
-            <div className="">
-              <div className="font-bold mb-1">Coordonnée #{positionNumber}</div>
-              Latitude: {position.lat.toFixed(6)} <br />
-              Longitude: {position.lng.toFixed(6)} <br />
-              <div
-                onClick={() => {
-                  setAddOrEditPosition(`position${positionNumber}`);
-                  if (popupRef.current) {
-                    popupRef.current.closePopup(); // Fermer le popup correctement
-                  }
-                }}
-                className={`${
-                  addOrEditPosition === `position${positionNumber}`
-                    ? "bg-green-500"
-                    : "bg-red-500"
-                } mt-2 cursor-pointer rounded-md text-white p-1 px-3`}
-              >
-                Modifier
-              </div>
-            </div>
-          </Popup> */}
-        </Marker>
+        ></Marker>
       )
     );
   });
@@ -1290,6 +1275,7 @@ function MapComponent({ mapType }) {
                     </p>
                     <p>
                       <strong>Statut : </strong>
+                      {véhicule.speedKPH ? "" : "Hors service"}
                       {véhicule.speedKPH < 1 && "En stationnement"}
                       {véhicule.speedKPH > 20 && "En mouvement rapide"}
                       {véhicule.speedKPH >= 1 &&
@@ -1333,23 +1319,6 @@ function MapComponent({ mapType }) {
         <MapClickHandler setClickedPosition1={setClickedPosition1} />
 
         {isAddingNewGeofence && (
-          // <Polygon
-          //   positions={geofences?.coordinates?.map((point) => [
-          //     point.lat,
-          //     point.lng,
-          //   ])}
-          //   pathOptions={{
-          //     color:
-          //       geofences?.color ||
-          //       ajouterCouleurGeofenceCodeCouleurRef.current,
-          //     fillColor:
-          //       geofences?.color ||
-          //       ajouterCouleurGeofenceCodeCouleurRef.current,
-          //     fillOpacity: 0.1,
-          //     weight: 1,
-          //   }}
-          // />
-
           <React.Fragment>
             <Polygon
               positions={geofences?.coordinates?.map((point) => [

@@ -281,6 +281,7 @@ function SearchVehiculePupup({
                     handleClick(véhicule);
                     setShowOptions(false);
                     setSelectedVehicleToShowInMap(véhicule?.deviceID);
+                    console.log(véhicule);
                   }}
                   className={`${
                     véhicule.description ===

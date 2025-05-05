@@ -59,6 +59,10 @@ import DocHistorique from "./components/documentation/DocHistorique";
 import DocGestionGeozone from "./components/documentation/DocGestionGeozone";
 import DocRapportUnite from "./components/documentation/DocRapportUnite";
 import DocRapportGroupe from "./components/documentation/DocRapportGroupe";
+import GestionDesCompts from "./pages/GestionDesCompts";
+import ListeDesUtilisateur from "./pages/ListeDesUtilisateur";
+import ListeDesVehiculesGestion from "./pages/ListeDesVehiculesGestion";
+import ListeDesGroupes from "./pages/ListeDesGroupes";
 
 function App() {
   const location = useLocation();
@@ -1053,6 +1057,7 @@ function App() {
                 {documentationPage === "gestionGeozone" && (
                   <DocGestionGeozone />
                 )}
+
                 {documentationPage === "rapportUnite" && <DocRapportUnite />}
 
                 {documentationPage === "rapportGroupe" && <DocRapportGroupe />}
@@ -1108,7 +1113,22 @@ function App() {
               path="/gestion_geofences"
               element={<PrivateRoute element={<GestionGeofences />} />}
             />
-
+            <Route
+              path="/gestion_des_comptes"
+              element={<PrivateRoute element={<GestionDesCompts />} />}
+            />
+            <Route
+              path="/liste_des_utilisateurs"
+              element={<PrivateRoute element={<ListeDesUtilisateur />} />}
+            />
+            <Route
+              path="/liste_des_vehicules"
+              element={<PrivateRoute element={<ListeDesVehiculesGestion />} />}
+            />
+            <Route
+              path="/liste_des_groupes"
+              element={<PrivateRoute element={<ListeDesGroupes />} />}
+            />
             <Route
               path="/Groupe_vehicule_location"
               element={<PrivateRoute element={<LocationPage />} />}

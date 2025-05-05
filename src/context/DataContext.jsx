@@ -510,6 +510,7 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
+  const [showAccountOptionsPopup, setShowAccountOptionsPopup] = useState(false);
   //
   //
   //
@@ -4776,6 +4777,9 @@ const DataContextProvider = ({ children }) => {
         estLancerUpdateAuto,
         setEstLancerUpdateAuto,
         fetchVehicleData,
+
+        showAccountOptionsPopup,
+        setShowAccountOptionsPopup,
       }}
     >
       {children}
