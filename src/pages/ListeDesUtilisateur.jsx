@@ -46,6 +46,8 @@ function ListeDesUtilisateur() {
     setErrorDeleteGeofencePopup,
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
+    currentAccountSelected,
+    setCurrentAccountSelected,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -312,374 +314,94 @@ function ListeDesUtilisateur() {
 
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
-          <div className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nom Utilisateur :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      monitoring
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nombre d'Appareils :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}5
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Date de creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      12-03-2024
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).date} */}
-                      <span className="px-3">-</span>
-                      12:00 PM
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
+          {currentAccountSelected?.accountUsers?.map((user, index) => {
+            return (
+              <div
+                key={index}
+                className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+              >
+                <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                  {index + 1}
+                </div>
+                <div className="flex  gap-3  ">
+                  <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
+                  <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                    <div>
+                      <div className="flex flex-wrap">
+                        <p className="font-bold- text-gray-700">
+                          Nom Utilisateur :
+                        </p>
+                        <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          {/* {geozone?.description} */}
+                          {user?.description}
+                        </span>
+                      </div>{" "}
+                      <div className="flex flex-wrap">
+                        <p className="font-bold- text-gray-700">
+                          Nombre d'Appareils :
+                        </p>
+                        <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                          ------
+                        </span>
+                      </div>{" "}
+                      <div className="flex flex-wrap">
+                        <p className="font-bold- text-gray-700">
+                          Dernière connexion :
+                        </p>
+                        <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                          {FormatDateHeure(user?.lastLoginTime).date}
+
+                          <span className="px-3">-</span>
+                          {FormatDateHeure(user?.lastLoginTime).time}
+                        </span>
+                      </div>{" "}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                  {" "}
+                  <button
+                    onClick={() => {
+                      setSeConnecterAutreComptePopup(true);
+                    }}
+                    className={`${
+                      true
+                        ? " bg-gray-50 text-gray-800"
+                        : "text-gray-800 border-[0.02rem] border-gray-50 "
+                    }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                  >
+                    <p>Login</p> <IoMdLogIn className="text-xl" />
+                  </button>
+                  {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
+                  {/* )} */}
+                  <Link
+                    onClick={() => {
+                      setEditAccountGestion(true);
+                    }}
+                    className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
+                  >
+                    <FaRegEdit />
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setDeleteAccountPopup(true);
+                    }}
+                    className={`${
+                      true
+                        ? " bg-red-500 text-white"
+                        : "text-red-600 border-[0.02rem] border-red-500 "
+                    }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
+                  >
+                    <FaTrashAlt />
+                  </button>
                 </div>
               </div>
-            </div>
-            <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              {" "}
-              <button
-                onClick={() => {
-                  setSeConnecterAutreComptePopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-gray-50 text-gray-800"
-                    : "text-gray-800 border-[0.02rem] border-gray-50 "
-                }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-              >
-                <p>Login</p> <IoMdLogIn className="text-xl" />
-              </button>
-              {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
-              {/* )} */}
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
+            );
+          })}
+
           {/*  */}
           {/*  */}
-          <div className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nom Utilisateur :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      monitoring
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nombre d'Appareils :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}5
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Date de creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      12-03-2024
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).date} */}
-                      <span className="px-3">-</span>
-                      12:00 PM
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              {" "}
-              <button
-                onClick={() => {
-                  setSeConnecterAutreComptePopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-gray-50 text-gray-800"
-                    : "text-gray-800 border-[0.02rem] border-gray-50 "
-                }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-              >
-                <p>Login</p> <IoMdLogIn className="text-xl" />
-              </button>
-              {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
-              {/* )} */}
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nom Utilisateur :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      monitoring
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nombre d'Appareils :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}5
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Date de creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      12-03-2024
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).date} */}
-                      <span className="px-3">-</span>
-                      12:00 PM
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              {" "}
-              <button
-                onClick={() => {
-                  setSeConnecterAutreComptePopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-gray-50 text-gray-800"
-                    : "text-gray-800 border-[0.02rem] border-gray-50 "
-                }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-              >
-                <p>Login</p> <IoMdLogIn className="text-xl" />
-              </button>
-              {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
-              {/* )} */}
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nom Utilisateur :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      monitoring
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nombre d'Appareils :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}5
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Date de creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      12-03-2024
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).date} */}
-                      <span className="px-3">-</span>
-                      12:00 PM
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              {" "}
-              <button
-                onClick={() => {
-                  setSeConnecterAutreComptePopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-gray-50 text-gray-800"
-                    : "text-gray-800 border-[0.02rem] border-gray-50 "
-                }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-              >
-                <p>Login</p> <IoMdLogIn className="text-xl" />
-              </button>
-              {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
-              {/* )} */}
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nom Utilisateur :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      monitoring
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Nombre d'Appareils :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}5
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap">
-                    <p className="font-bold">Date de creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      12-03-2024
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).date} */}
-                      <span className="px-3">-</span>
-                      12:00 PM
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              {" "}
-              <button
-                onClick={() => {
-                  setSeConnecterAutreComptePopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-gray-50 text-gray-800"
-                    : "text-gray-800 border-[0.02rem] border-gray-50 "
-                }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-              >
-                <p>Login</p> <IoMdLogIn className="text-xl" />
-              </button>
-              {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
-              {/* )} */}
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
+
           {/*  */}
         </div>
       </div>

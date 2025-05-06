@@ -154,14 +154,14 @@ function GestionAccountOptionPopup() {
               >
                 <FaUsers className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Voir la liste des utilisateurs
+                  Gestion des utilisateurs
                 </h2>
               </Link>
               {/*  */}
               {/*  */}
               {/*  */}
               {/*  */}
-              <Link
+              {/* <Link
                 to="/liste_des_vehicules"
                 // onClick={() =>
                 //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Resume123456")
@@ -170,9 +170,9 @@ function GestionAccountOptionPopup() {
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Voir la liste des Appareils
+                  Gestion des Appareils
                 </h2>
-              </Link>
+              </Link> */}
               {/*  */}
               {/*  */}
               {/*  */}
@@ -185,7 +185,7 @@ function GestionAccountOptionPopup() {
               >
                 <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Voir les Groupes
+                  Gestion des Groupes
                 </h2>
               </Link>
               {/*  */}

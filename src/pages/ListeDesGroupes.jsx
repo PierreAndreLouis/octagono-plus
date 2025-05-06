@@ -47,6 +47,7 @@ function ListeDesGroupes() {
     setErrorDeleteGeofencePopup,
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
+    currentAccountSelected,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -235,302 +236,88 @@ function ListeDesGroupes() {
           {/*  */}
           {/*  */}
           {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nom du Groupe :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      En Panne
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nombre d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      7{/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <p className="text-sm mr-2">Modifier</p>
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <p className="text-sm mr-2">Supprimer</p>
 
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nom du Groupe :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      En Panne
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nombre d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      7{/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <p className="text-sm mr-2">Modifier</p>
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <p className="text-sm mr-2">Supprimer</p>
+          {currentAccountSelected?.accountGroupes?.length > 0 ? (
+            currentAccountSelected?.accountGroupes?.map((groupe, index) => {
+              return (
+                <div
+                  key={index}
+                  className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                >
+                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                    {index + 1}
+                  </div>
+                  <div className="flex  gap-3  ">
+                    <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
+                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                      <div>
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold- text-gray-700">
+                            Nom du Groupe :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            {/* {geozone?.description} */}
+                            {groupe?.description}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold- text-gray-700">
+                            Nombre d'appareil :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            ----
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold- text-gray-700">
+                            Dernière mise a jour :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            21-04-2024 <span className="px-2">/</span> 05:34 PM
+                          </span>
+                        </div>{" "}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                    <Link
+                      onClick={() => {
+                        setEditAccountGestion(true);
+                      }}
+                      className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
+                    >
+                      <p className="text-sm mr-2">Modifier</p>
+                      <FaRegEdit />
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setDeleteAccountPopup(true);
+                      }}
+                      className={`${
+                        true
+                          ? " bg-red-500 text-white"
+                          : "text-red-600 border-[0.02rem] border-red-500 "
+                      }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
+                    >
+                      <p className="text-sm mr-2">Supprimer</p>
 
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nom du Groupe :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      En Panne
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nombre d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      7{/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
+                      <FaTrashAlt />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              );
+            })
+          ) : (
+            <div className="flex justify-center font-semibold text-lg">
+              Pas de résultat
             </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <p className="text-sm mr-2">Modifier</p>
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <p className="text-sm mr-2">Supprimer</p>
+          )}
 
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
           {/*  */}
           {/*  */}
           {/*  */}
           {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nom du Groupe :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      En Panne
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nombre d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      7{/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <p className="text-sm mr-2">Modifier</p>
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <p className="text-sm mr-2">Supprimer</p>
 
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nom du Groupe :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      En Panne
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Nombre d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      7{/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <p className="text-sm mr-2">Modifier</p>
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <p className="text-sm mr-2">Supprimer</p>
-
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
           {/*  */}
           {/*  */}
 

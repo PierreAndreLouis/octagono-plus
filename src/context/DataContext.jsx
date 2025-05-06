@@ -85,6 +85,21 @@ const DataContextProvider = ({ children }) => {
     return storedUserData ? JSON.parse(storedUserData) : null;
   });
 
+  // const [gestionAccountData, setGestionAccountData] = useState();
+
+  const [gestionAccountData, setGestionAccountData] = useState(() => {
+    const storedGestionAccountData = localStorage.getItem("gestionAccountData");
+    return storedGestionAccountData
+      ? JSON.parse(storedGestionAccountData)
+      : null;
+  });
+
+  const [currentAccountSelected, setCurrentAccountSelected] = useState();
+
+  useEffect(() => {
+    console.log("currentAccountSelected :", currentAccountSelected);
+  }, [currentAccountSelected]);
+
   // to store login user data  // account, username, password
   // const [geofenceData, setGeofenceData] = useState(() => {
   //   const storedGeofenceData = localStorage.getItem("geofenceData");
@@ -876,7 +891,12 @@ const DataContextProvider = ({ children }) => {
         }
 
         setUserData(userData);
-        navigate("/home");
+        // navigate("/home");
+        if (account === "sysadmin") {
+          navigate("/gestion_des_comptes");
+        } else {
+          navigate("/home");
+        }
 
         // Stocker les informations de connexion en local
         localStorage.setItem("account", account);
@@ -913,6 +933,617 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  //  <Field name="accountID">${account}</Field>
+  //         <Field name="userID">${account}</Field>
+  // Fonction to log in
+  const TestDeRequetteAccounts = async (account, user, password) => {
+    const xmlData = `<GTSRequest command="dbget">
+          <Authorization account="${account}" user="${user}" password="${password}" />
+          <Record table="Account" partial="true">
+       
+          </Record>
+        </GTSRequest>`;
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Login data message: ", data);
+      console.log("Requête envoyer :", xmlData);
+      const parser = new DOMParser();
+
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      if (result === "success") {
+        const records = xmlDoc.getElementsByTagName("Record");
+        let allUserData = [];
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          let userData = {};
+
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            userData[fieldName] = fieldValue;
+          }
+
+          allUserData.push(userData);
+        }
+
+        try {
+          setUserData(allUserData); // tableau de comptes
+          localStorage.setItem("userData", JSON.stringify(allUserData));
+        } catch (error) {
+          if (error.name === "QuotaExceededError") {
+            console.error("Quota dépassé pour userData.");
+          } else {
+            console.error("Erreur de stockage : ", error);
+          }
+        }
+
+        console.log("Données JSON de tous les comptes : ", allUserData);
+      } else if (result === "error") {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la connexion.");
+        //
+        console.log("errorMessage inactive", errorMessage);
+        if (errorMessage === "User inactive") {
+          console.log("Logout the user, and navigate to /login");
+          handleLogout();
+          navigate("/login");
+        }
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion à l'API.");
+      console.error("Erreur lors de la connexion à l'API", error);
+      setIsHomePageLoading(false);
+    } finally {
+      setIsHomePageLoading(false);
+    }
+  };
+
+  const TestDeRequetteUsers = async (account, user, password) => {
+    const account2 = "foodforthepoor";
+    const xmlData = `<GTSRequest command="dbget">
+          <Authorization account="${account}" user="${user}" password="${password}" />
+          <Record table="User" partial="true">
+       <Field name="accountID">${account2}</Field>
+          </Record>
+        </GTSRequest>`;
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Login data message: ", data);
+      console.log("Requête envoyer :", xmlData);
+      const parser = new DOMParser();
+
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      if (result === "success") {
+        const records = xmlDoc.getElementsByTagName("Record");
+        let allUserData = [];
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          let userData = {};
+
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            userData[fieldName] = fieldValue;
+          }
+
+          allUserData.push(userData);
+        }
+
+        try {
+          setUserData(allUserData); // tableau de comptes
+          localStorage.setItem("userData", JSON.stringify(allUserData));
+        } catch (error) {
+          if (error.name === "QuotaExceededError") {
+            console.error("Quota dépassé pour userData.");
+          } else {
+            console.error("Erreur de stockage : ", error);
+          }
+        }
+
+        console.log("Données JSON de tous les comptes : ", allUserData);
+      } else if (result === "error") {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la connexion.");
+        //
+        console.log("errorMessage inactive", errorMessage);
+        if (errorMessage === "User inactive") {
+          console.log("Logout the user, and navigate to /login");
+          handleLogout();
+          navigate("/login");
+        }
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion à l'API.");
+      console.error("Erreur lors de la connexion à l'API", error);
+      setIsHomePageLoading(false);
+    } finally {
+      setIsHomePageLoading(false);
+    }
+  };
+
+  const TestDeRequetteDevices = async (account, user, password) => {
+    console.log("Start........");
+
+    // const account2 = "foodforthepoor";
+    // const user2 = "admin";
+    // const password2 = "Octa@112233";
+
+    const account2 = "fjunior";
+    const user2 = "admin";
+    const password2 = "123456";
+
+    // const account2 = "lelevier";
+    // const user2 = "admin";
+    // const password2 = "123456";
+    // const password2 = "Sys@Octa@@#Plus@2021";
+
+    const xmlData = `<GTSRequest command="dbget">
+          <Authorization account="${account2}" user="${user2}" password="${password2}" />
+          <Record table="Device" partial="true">
+       <Field name="accountID">${account2}</Field>
+   
+          </Record>
+        </GTSRequest>`;
+
+    console.log("Requête envoyer :", xmlData);
+
+    const fullUrl = `${window.location.origin}/api/track/Service`;
+    console.log("URL complète de l'API :", fullUrl);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Login data message: ", data);
+      if (!response.ok) {
+        console.error("Réponse erreur serveur :", response.status, data);
+        throw new Error(`Erreur serveur : ${response.status}`);
+      }
+
+      const parser = new DOMParser();
+
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      if (result === "success") {
+        const records = xmlDoc.getElementsByTagName("Record");
+        let allUserData = [];
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          let userData = {};
+
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            userData[fieldName] = fieldValue;
+          }
+
+          allUserData.push(userData);
+        }
+
+        try {
+          setUserData(allUserData); // tableau de comptes
+          localStorage.setItem("userData", JSON.stringify(allUserData));
+        } catch (error) {
+          if (error.name === "QuotaExceededError") {
+            console.error("Quota dépassé pour userData.");
+          } else {
+            console.error("Erreur de stockage : ", error);
+          }
+        }
+
+        console.log("Données JSON de tous les comptes : ", allUserData);
+      } else if (result === "error") {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la connexion.");
+        //
+        console.log("errorMessage inactive", errorMessage);
+        if (errorMessage === "User inactive") {
+          console.log("Logout the user, and navigate to /login");
+          handleLogout();
+          navigate("/login");
+        }
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion à l'API.");
+      console.error("Erreur lors de la connexion à l'API", error);
+      setIsHomePageLoading(false);
+    } finally {
+      setIsHomePageLoading(false);
+    }
+  };
+
+  const TestDeRequetteDevicesGroupe = async (account, user, password) => {
+    const account2 = "foodforthepoor";
+    const xmlData = `<GTSRequest command="dbget">
+          <Authorization account="${account}" user="${user}" password="${password}" />
+          <Record table="DeviceGroup" partial="true">
+       <Field name="accountID">${account2}</Field>
+          </Record>
+        </GTSRequest>`;
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Login data message: ", data);
+      console.log("Requête envoyer :", xmlData);
+      const parser = new DOMParser();
+
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      if (result === "success") {
+        const records = xmlDoc.getElementsByTagName("Record");
+        let allUserData = [];
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          let userData = {};
+
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            userData[fieldName] = fieldValue;
+          }
+
+          allUserData.push(userData);
+        }
+
+        try {
+          setUserData(allUserData); // tableau de comptes
+          localStorage.setItem("userData", JSON.stringify(allUserData));
+        } catch (error) {
+          if (error.name === "QuotaExceededError") {
+            console.error("Quota dépassé pour userData.");
+          } else {
+            console.error("Erreur de stockage : ", error);
+          }
+        }
+
+        console.log("Données JSON de tous les comptes : ", allUserData);
+      } else if (result === "error") {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la connexion.");
+        //
+        console.log("errorMessage inactive", errorMessage);
+        if (errorMessage === "User inactive") {
+          console.log("Logout the user, and navigate to /login");
+          handleLogout();
+          navigate("/login");
+        }
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion à l'API.");
+      console.error("Erreur lors de la connexion à l'API", error);
+      setIsHomePageLoading(false);
+    } finally {
+      setIsHomePageLoading(false);
+    }
+  };
+
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ////////////////////v///////////////////////////////////////////////
+  const fetchAccountRelatedData = async (accountID, password) => {
+    const user = "admin";
+    const fetchData = async (tableName) => {
+      try {
+        const xml = `<GTSRequest command="dbget">
+          <Authorization account="${accountID}" user="${user}" password="${password}" />
+          <Record table="${tableName}" partial="true">
+            <Field name="accountID">${accountID}</Field>
+          </Record>
+        </GTSRequest>`;
+
+        const response = await fetch("/api/track/Service", {
+          method: "POST",
+          headers: { "Content-Type": "application/xml" },
+          body: xml,
+        });
+
+        const data = await response.text();
+        const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
+
+        const result = xmlDoc
+          .getElementsByTagName("GTSResponse")[0]
+          ?.getAttribute("result");
+        if (result !== "success") return [];
+
+        const records = xmlDoc.getElementsByTagName("Record");
+        if (!records || records.length === 0) return [];
+
+        const tableData = [];
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          const item = {};
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            item[fieldName] = fieldValue;
+          }
+          tableData.push(item);
+        }
+
+        return tableData;
+      } catch (error) {
+        console.warn(
+          `Erreur lors du fetch de ${tableName} pour ${accountID}`,
+          error
+        );
+        return [];
+      }
+    };
+
+    return {
+      accountUsers: await fetchData("User"),
+      // accountDevices: await fetchData("Device"), //////////////////////////////////////////////////
+      accountGroupes: await fetchData("DeviceGroup"),
+    };
+  };
+
+  const getAllAccountsData = async (account, user, password) => {
+    const xmlData = `<GTSRequest command="dbget">
+      <Authorization account="${account}" user="${user}" password="${password}" />
+      <Record table="Account" partial="true"></Record>
+    </GTSRequest>`;
+
+    const accounts = [];
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+
+      if (result === "success") {
+        const records = xmlDoc.getElementsByTagName("Record");
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          const accountData = {};
+
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            accountData[fieldName] = fieldValue;
+          }
+
+          // 🚫 On saute directement tout traitement pour "fjunior"
+          // if (accountData.accountID === "fjunior") {
+          //   continue;
+          // }
+
+          try {
+            const extraData = await fetchAccountRelatedData(
+              accountData.accountID,
+              accountData.password
+            );
+
+            console.log("accountData.accountID", accountData.accountID);
+            accounts.push({
+              ...accountData,
+              accountUsers: extraData.accountUsers || [],
+              // accountDevices: extraData.accountDevices || [], ////////////////////////////
+              accountGroupes: extraData.accountGroupes || [],
+            });
+            console.log("Accounts avec toutes les infos :", accounts);
+          } catch (error) {
+            console.warn(
+              `Erreur dans les données liées à ${accountData.accountID}`,
+              error
+            );
+            accounts.push({
+              ...accountData,
+              accountUsers: [],
+              // accountDevices: [], /////////////////////////////
+              accountGroupes: [],
+              error: true, // facultatif pour signaler une erreur
+            });
+            console.log("Accounts avec toutes les infos :", accounts);
+          }
+        }
+
+        console.log("Accounts avec toutes les infos :", accounts);
+        setGestionAccountData(accounts);
+        localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent;
+        setError(errorMessage || "Erreur lors de la récupération des comptes.");
+      }
+    } catch (error) {
+      console.error("Erreur de requête principale :", error);
+      setError("Erreur lors de la connexion à l'API.");
+    } finally {
+      setIsHomePageLoading(false);
+    }
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  // const fetchAccountRelatedData = async (
+  //   accountID,
+  //   account,
+  //   user,
+  //   password
+  // ) => {
+  //   const buildXML = (tableName) => `
+  //     <GTSRequest command="dbget">
+  //       <Authorization account="${account}" user="${user}" password="${password}" />
+  //       <Record table="${tableName}" partial="true">
+  //         <Field name="accountID">${accountID}</Field>
+  //       </Record>
+  //     </GTSRequest>`;
+
+  //   const fetchData = async (tableName) => {
+  //     const xml = buildXML(tableName);
+  //     const res = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xml,
+  //     });
+  //     const text = await res.text();
+  //     const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       ?.getAttribute("result");
+
+  //     if (result === "success") {
+  //       const records = xmlDoc.getElementsByTagName("Record");
+  //       const tableData = [];
+
+  //       for (let r = 0; r < records.length; r++) {
+  //         const fields = records[r].getElementsByTagName("Field");
+  //         const item = {};
+  //         for (let f = 0; f < fields.length; f++) {
+  //           const fieldName = fields[f].getAttribute("name");
+  //           const fieldValue = fields[f].textContent;
+  //           item[fieldName] = fieldValue;
+  //         }
+  //         tableData.push(item);
+  //       }
+  //       return tableData;
+  //     }
+
+  //     return [];
+  //   };
+
+  //   const [accountUsers, accountDevices, accountGroupes] = await Promise.all([
+  //     fetchData("User"),
+  //     fetchData("Device"),
+  //     fetchData("DeviceGroup"),
+  //   ]);
+
+  //   return {
+  //     accountID,
+  //     accountUsers,
+  //     accountDevices,
+  //     accountGroupes,
+  //   };
+  // };
+
+  // const getAllAccountsData = async (account, user, password) => {
+  //   const xmlData = `<GTSRequest command="dbget">
+  //         <Authorization account="${account}" user="${user}" password="${password}" />
+  //         <Record table="Account" partial="true" />
+  //       </GTSRequest>`;
+
+  //   const response = await fetch("/api/track/Service", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/xml" },
+  //     body: xmlData,
+  //   });
+
+  //   const data = await response.text();
+  //   const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
+
+  //   const result = xmlDoc
+  //     .getElementsByTagName("GTSResponse")[0]
+  //     ?.getAttribute("result");
+
+  //   if (result !== "success") throw new Error("Failed to fetch accounts");
+
+  //   const records = xmlDoc.getElementsByTagName("Record");
+  //   const accounts = [];
+
+  //   for (let r = 0; r < records.length; r++) {
+  //     const fields = records[r].getElementsByTagName("Field");
+  //     const accountData = {};
+
+  //     for (let f = 0; f < fields.length; f++) {
+  //       const fieldName = fields[f].getAttribute("name");
+  //       const fieldValue = fields[f].textContent;
+  //       accountData[fieldName] = fieldValue;
+  //     }
+
+  //     const extraData = await fetchAccountRelatedData(
+  //       accountData.accountID,
+  //       account,
+  //       user,
+  //       password
+  //     );
+  //     console.log("extraData", extraData);
+
+  //     accounts.push({
+  //       ...accountData,
+  //       accountUsers: extraData.accountUsers,
+  //       accountDevices: extraData.accountDevices,
+  //       accountGroupes: extraData.accountGroupes,
+  //     });
+  //   }
+
+  //   console.log("accounts", accounts);
+
+  //   return accounts;
+  // };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+
   function handleUserError(xmlDoc) {
     const errorMessage = xmlDoc.getElementsByTagName("Message")[0]?.textContent;
 
@@ -946,6 +1577,9 @@ const DataContextProvider = ({ children }) => {
 
     localStorage.removeItem("userData");
     setUserData(null);
+
+    localStorage.removeItem("gestionAccountData");
+    setGestionAccountData(null);
 
     // localStorage.removeItem("geofenceData");
     setGeofenceData(null);
@@ -3278,7 +3912,7 @@ const DataContextProvider = ({ children }) => {
     };
 
     const intervalId = setInterval(() => {
-      checkData();
+      // checkData();
     }, 20000);
 
     return () => clearInterval(intervalId);
@@ -4753,6 +5387,13 @@ const DataContextProvider = ({ children }) => {
 
         showAccountOptionsPopup,
         setShowAccountOptionsPopup,
+        TestDeRequetteAccounts,
+        TestDeRequetteUsers,
+        TestDeRequetteDevices,
+        getAllAccountsData,
+        gestionAccountData,
+        currentAccountSelected,
+        setCurrentAccountSelected,
       }}
     >
       {children}

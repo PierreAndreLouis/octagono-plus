@@ -1113,6 +1113,7 @@ function App() {
               path="/gestion_geofences"
               element={<PrivateRoute element={<GestionGeofences />} />}
             />
+            {/*  */}
             <Route
               path="/gestion_des_comptes"
               element={<PrivateRoute element={<GestionDesCompts />} />}
