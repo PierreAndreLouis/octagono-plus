@@ -812,12 +812,14 @@ const DataContextProvider = ({ children }) => {
   // Login, logout...
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
+
   // Fonction to log in
   const handleLogin = async (account, user, password) => {
     // Pour suivre le nombre de requête
-    console.log("account : ===>", account);
-    console.log("user : ===>", user);
-    console.log("password : ===>", password);
+    // console.log("account : ===>", account);
+    // console.log("user : ===>", user);
+    // console.log("password : ===>", password);
+
     incrementerRequête();
     console.log("++++++++++++++++ Requête effectué: handleLogin");
     // /////////
@@ -826,7 +828,7 @@ const DataContextProvider = ({ children }) => {
 
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${account}" user="${user}" password="${password}" />
-        <Record table="User" partial="true">
+        <Record table="Account" partial="true">
           <Field name="accountID">${account}</Field>
           <Field name="userID">${account}</Field>
         </Record>
@@ -842,7 +844,8 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("Login data message: ", data);
+      console.log("Login data message: ", data);
+      console.log("Requête envoyer :", xmlData);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -884,18 +887,6 @@ const DataContextProvider = ({ children }) => {
         setUsername(localStorage.getItem("username") || "");
         setPassword(localStorage.getItem("password") || "");
 
-        // if (
-        //   user === "mdireny" ||
-        //   user === "fpaulemon" ||
-        //   user === "slouis" ||
-        //   user === "foodforthepoor"
-        // ) {
-        //   handleLogout();
-        //   navigate("/login");
-        // }
-
-        // Envoie d'un mail pour avertir m'avertir de la connexion
-
         if (window.location.hostname !== "localhost") {
           // Exécuter la fonction seulement si ce n'est pas localhost
           sendConfirmConnexionMail(account, user);
@@ -921,24 +912,6 @@ const DataContextProvider = ({ children }) => {
       setIsHomePageLoading(false);
     }
   };
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     // reloadHomePage();
-  //     const accountConnexion = username || localStorage.getItem("account");
-  //     const usernameConnexion = username || localStorage.getItem("username");
-  //     const passwordConnexion = username || localStorage.getItem("password");
-
-  //     console.log("Verification identite...............");
-
-  //     if (accountConnexion && usernameConnexion && passwordConnexion) {
-  //       // console.log("username useefect :", usernameConnexion);
-  //       // handleLogin(accountConnexion, usernameConnexion, passwordConnexion);
-  //     }
-  //   }, 30000);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
 
   function handleUserError(xmlDoc) {
     const errorMessage = xmlDoc.getElementsByTagName("Message")[0]?.textContent;
@@ -2080,7 +2053,7 @@ const DataContextProvider = ({ children }) => {
         <GPSRequired>false</GPSRequired>
         <StatusCode>false</StatusCode>
         <Limit type="last">4</Limit>
-        <Ascending>false</Ascending>
+        <Ascending>true</Ascending>
         <Field name="latitude" />
         <Field name="longitude" />
         <Field name="address" />
