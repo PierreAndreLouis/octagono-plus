@@ -8,6 +8,7 @@ import { MdUpdate } from "react-icons/md";
 import { FaCheckSquare } from "react-icons/fa";
 import { FaSquareXmark } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
+import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 const Home = () => {
   const {
@@ -34,6 +35,12 @@ const Home = () => {
     fetchVehicleDetails,
     handleLogin,
     fetchVehicleData,
+    successAddVéhiculePopup,
+    successModifierVéhiculePopup,
+    setSuccessModifierVéhiculePopup,
+    successDeleteVéhiculePopup,
+    setSuccessDeleteVéhiculePopup,
+    setSuccessAddVéhiculePopup,
   } = useContext(DataContext);
 
   let x;
@@ -354,6 +361,27 @@ const Home = () => {
 
   return (
     <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-[120vh]">
+      <SuccèsÉchecMessagePopup
+        message={successAddVéhiculePopup}
+        setMessage={setSuccessAddVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"succès ajout de véhicule"}
+      />
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={successModifierVéhiculePopup}
+        setMessage={setSuccessModifierVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"succès modification de véhicule"}
+      />
+
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={successDeleteVéhiculePopup}
+        setMessage={setSuccessDeleteVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"succès suppression de véhicule"}
+      />
       {/* Statistic component */}
       <Statistics />
       {/* Chargement quand on login */}

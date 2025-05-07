@@ -5,14 +5,12 @@ import { Link } from "react-router-dom";
 import { PiIntersectThreeBold } from "react-icons/pi";
 
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
-import { MdSwitchAccount } from "react-icons/md";
 
-function GestionAccountOptionPopup() {
+function GestionUserOptionsPopup() {
   const {
-    showAccountOptionsPopup,
-    setShowAccountOptionsPopup,
-    setCurrentAccountSelected,
-    currentAccountSelected,
+    currentSelectedUserToConnect,
+    showSelectedUserOptionsPopup,
+    setShowSelectedUserOptionsPopup,
   } = useContext(DataContext);
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
@@ -28,7 +26,7 @@ function GestionAccountOptionPopup() {
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Supprimer le compte ?
+              Voulez-vous Supprimer l'utilisateur ?
             </div>
             <div>
               <label
@@ -81,7 +79,7 @@ function GestionAccountOptionPopup() {
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Modifier le compte ?
+              Voulez-vous Modifier l'utilisateur ?
             </div>
             <div>
               <label
@@ -127,11 +125,11 @@ function GestionAccountOptionPopup() {
         </div>
       )}
 
-      {showAccountOptionsPopup && (
+      {showSelectedUserOptionsPopup && (
         <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
           <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
-              onClick={() => setShowAccountOptionsPopup(false)}
+              onClick={() => setShowSelectedUserOptionsPopup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
@@ -141,34 +139,34 @@ function GestionAccountOptionPopup() {
                 }}
                 className="px-3 mt-4 mb-2--"
               >
-                Options du compte
+                Options de l'utilisateur
               </h1>
               <h2 className="px-3 mt-8-- text-orange-600 mb-4">
-                {currentAccountSelected?.description || "---"}
+                {currentSelectedUserToConnect?.description || "---"}
               </h2>
             </div>
             <div
-              onClick={() => setShowAccountOptionsPopup(false)}
+              onClick={() => setShowSelectedUserOptionsPopup(false)}
               className="p-4 flex flex-col gap-4 py-6 pb-10"
             >
-              <Link
-                to="/gestion_des_comptes"
-                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
-              >
-                <MdSwitchAccount className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
-                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Liste des Comptes
-                </h2>
-              </Link>
-              <Link
+              {/* {smsError && (
+                        <p className="flex items-start gap-0 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-50 py-2 px-4 rounded-md text-center">
+                          <MdErrorOutline className="text-2xl min-w-10 mt-0.5" />
+                          {smsError}
+                        </p>
+                      )} */}
+              {/* <Link
                 to="/liste_des_utilisateurs"
+                // onClick={() =>
+                //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Stop123456")
+                // }
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
               >
                 <FaUsers className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Gestion des utilisateurs
                 </h2>
-              </Link>
+              </Link> */}
               {/*  */}
               {/*  */}
               {/*  */}
@@ -188,18 +186,16 @@ function GestionAccountOptionPopup() {
               {/*  */}
               {/*  */}
               {/*  */}
-              <Link
+              {/* <Link
                 to="/liste_des_groupes"
-                // onClick={() =>
-                //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Resume123456")
-                // }
+              
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Gestion des Groupes
                 </h2>
-              </Link>
+              </Link> */}
               {/*  */}
               {/*  */}
               {/*  */}
@@ -212,7 +208,7 @@ function GestionAccountOptionPopup() {
               >
                 <FaEdit className="text-[1.5rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Modifier le compte
+                  Modifier l'utilisateur
                 </h2>
               </div>
               <div
@@ -224,7 +220,7 @@ function GestionAccountOptionPopup() {
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
                 <h2 className="font-semibold text-red-900 dark:text-red-50">
-                  Supprimer le compte
+                  Supprimer l'utilisateur
                 </h2>
               </div>
               {/* callError, setCallError, lancerAppel, */}
@@ -236,4 +232,6 @@ function GestionAccountOptionPopup() {
   );
 }
 
-export default GestionAccountOptionPopup;
+export default GestionUserOptionsPopup;
+
+// export default GestionUserOptionsPopup

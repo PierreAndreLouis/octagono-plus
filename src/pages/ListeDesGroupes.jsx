@@ -48,6 +48,7 @@ function ListeDesGroupes() {
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
     currentAccountSelected,
+    backToPagePrecedent,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -208,7 +209,9 @@ function ListeDesGroupes() {
         </h3>
         <div className="flex gap-2 justify-center mt-4">
           <Link
-            to="/gestion_des_comptes?tab=comptes"
+            onClick={() => {
+              backToPagePrecedent();
+            }}
             className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
           >
             <IoArrowBack className="text-xl" />

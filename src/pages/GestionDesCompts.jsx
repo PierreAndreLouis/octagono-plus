@@ -1,174 +1,49 @@
 import React, { useContext, useState } from "react";
-import { IoEarth } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
-import {
-  FaCar,
-  FaEdit,
-  FaMicrophone,
-  FaPlusCircle,
-  FaTrashAlt,
-  FaUsers,
-} from "react-icons/fa";
-// import { MdSwitchAccount  } from "react-icons/md";
-import { IoMdClose } from "react-icons/io";
-import { TbLock, TbLockOpen } from "react-icons/tb";
-import { MdSwitchAccount } from "react-icons/md";
+import { FaArrowLeft, FaPlusCircle } from "react-icons/fa";
+import { MdErrorOutline, MdSwitchAccount } from "react-icons/md";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
-// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffectCircle";
+import CreateNewAccountPage from "../components/gestion_des_comptes/CreateNewAccountPage";
 
 function GestionDesCompts() {
   const {
-    ajouterGeofencePopup,
-    setAjouterGeofencePopup,
-    geofenceData,
     FormatDateHeure,
     account,
-    currentGeozone,
-    setCurrentGeozone,
-    isEditingGeofence,
-    setIsEditingGeofence,
-    ModifierGeofence,
-    supprimerGeofence,
-    activerOuDesactiverGeofence,
-    succesCreateGeofencePopup,
-    setSuccesCreateGeofencePopup,
-    succesModifierGeofencePopup,
-    setSuccesModifierGeofencePopup,
-    errorModifierGeofencePopup,
-    setErrorModifierGeofencePopup,
-    succesDeleteGeofencePopup,
-    setSuccesDeleteGeofencePopup,
-    errorDeleteGeofencePopup,
-    setErrorDeleteGeofencePopup,
-    showAccountOptionsPopup,
-    setShowAccountOptionsPopup,
-    TestDeRequetteAccounts,
-    TestDeRequetteUsers,
     TestDeRequetteDevices,
     getAllAccountsData,
     gestionAccountData,
-    currentAccountSelected,
     setCurrentAccountSelected,
     getAllAccountsDataLoading,
-    setGetAllAccountsDataLoading,
+    setListeGestionDesVehicules,
+    setCurrentSelectedUserToConnect,
+    setShowAccountOptionsPopup,
   } = useContext(DataContext);
-  const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
-  //
-  //
-  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-  const lastUpdateTimeMs = currentGeozone?.lastUpdateTime
-    ? currentGeozone?.lastUpdateTime * 1000
-    : 0;
-  const isCurrentGeozoneActive =
-    currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-  const geozoneID =
-    currentGeozone?.geozoneID ||
-    `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
-
-  const supprimerOuModifierGeozone = () => {
-    // activerOuDesactiverGeofence(geozoneID, 0);
-
-    if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
-      supprimerGeofence(geozoneID);
-    }
-
-    if (
-      (isCurrentGeozoneActive || !isCurrentGeozoneActive) &&
-      currentGeozone?.isActive === 0
-    ) {
-      // activerOuDesactiverGeofence(geozoneID, 1);
-    }
-
-    if (!isCurrentGeozoneActive && currentGeozone?.isActive === 1) {
-      // activerOuDesactiverGeofence(geozoneID, 0);
-    }
-  };
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-  //  /////////////////////////////////////////////////////
-
-  //   const [showAccountOptionsPopup, setShowAccountOptionsPopup] = useState(false);
+  const [showCreateNewAccountPopup, setShowCreateNewAccountPopup] =
+    useState(false);
 
   return (
     <div>
       {account === "sysadmin" ? (
         <div>
-          {getAllAccountsDataLoading && (
-            <div className="fixed z-30 inset-0 bg-gray-200/50 dark:bg-black/50">
-              <div className="w-full h-full flex justify-center items-center">
-                <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
-              </div>
-            </div>
-          )}
-          {/* <SuccèsÉchecMessagePopup
-        message={succesCreateGeofencePopup}
-        setMessage={setSuccesCreateGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de creation du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={succesModifierGeofencePopup}
-        setMessage={setSuccesModifierGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de modification du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={succesDeleteGeofencePopup}
-        setMessage={setSuccesDeleteGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de suppression du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={errorDeleteGeofencePopup}
-        setMessage={setErrorDeleteGeofencePopup}
-        véhiculeData={null}
-        composant_from={"échec de la suppression du geozone"}
-      /> */}
+          {/* Loading effect quand le donnee sont recherche... */}
+          <LoadingPageEffectCircle
+            getAllAccountsDataLoading={getAllAccountsDataLoading}
+          />
+
+          {/* Composant pour créer un nouveau Compte */}
+          <CreateNewAccountPage
+            showCreateNewAccountPopup={showCreateNewAccountPopup}
+            setShowCreateNewAccountPopup={setShowCreateNewAccountPopup}
+          />
 
           <div className="px-4 pb-40">
-            <h2
-              onClick={() => {
-                console.log(geofenceData);
-              }}
-              className="mt-[10rem] text-lg text-center font-bold "
-            >
+            <h2 className="mt-[10rem] text-lg text-center font-bold ">
               Gestion Des Comptes
             </h2>
-            {/* <button
-              onClick={() => {
-                TestDeRequetteAccounts(
-                  "sysadmin",
-                  "admin",
-                  "OctagonoGPSHaitiAdmin13@1919"
-                );
-              }}
-            >
-              Test de requête Accounts
-            </button>
-            <br /> */}
-            {/* <button
-              onClick={() => {
-                TestDeRequetteUsers(
-                  "sysadmin",
-                  "admin",
-                  "OctagonoGPSHaitiAdmin13@1919"
-                );
-              }}
-            >
-              Test de requête Users
-            </button>{" "}
-            <br /> */}
+
             {/* <button
               onClick={() => {
                 TestDeRequetteDevices(
@@ -180,8 +55,8 @@ function GestionDesCompts() {
             >
               Test de requête Devices
             </button>{" "}
-            <br /> */}
-            {/* <button
+            <br />
+            <button
               onClick={() => {
                 getAllAccountsData(
                   "sysadmin",
@@ -191,36 +66,12 @@ function GestionDesCompts() {
               }}
             >
               Tous les donnees regrouper
-            </button>{" "}
-            <br /> */}
-            {/* <button
-              onClick={() => {
-                console.log("gestionAccountData :", gestionAccountData);
-              }}
-            >
-              Donnee gestionAccountData
             </button>{" "} */}
-            {/* <button
-              onClick={() => {
-                console.log("currentAccountSelected :", currentAccountSelected);
-              }}
-            >
-              currentAccountSelected
-            </button>{" "} */}
-            {/* <button
-              onClick={() => {
-                localStorage.removeItem("gestionAccountData");
-              }}
-            >
-              localStorage.removeItem("gestionAccountData")
-            </button> */}
+
             <div className="flex justify-center mt-4">
-              <Link
-                // to="/Groupe_vehicule_location?tab=localisation"
+              <button
                 onClick={() => {
-                  //   setAjouterGeofencePopup(true);
-                  //   setIsEditingGeofence(false);
-                  //   setCurrentGeozone();
+                  setShowCreateNewAccountPopup(true);
                 }}
                 className="bg-orange-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
               >
@@ -230,28 +81,20 @@ function GestionDesCompts() {
                     Ajouter un nouveau Compte
                   </p>
                 </div>
-              </Link>{" "}
+              </button>{" "}
             </div>
+
+            {/* Liste des Comptes */}
             <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-              {/*  */}
-              {/* {gestionAccountData?.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <br />
-                    <p>const account2 = "{item.accountID}";</p>
-                    <p>const user2 = "admin";</p>
-                    <p>const password2 = "{item.password}";</p>
-                    <br />
-                  </div>
-                );
-              })} */}
               {gestionAccountData?.map((account, index) => {
                 return (
                   <div
                     key={index}
                     onClick={() => {
                       setCurrentAccountSelected(account);
+                      setListeGestionDesVehicules(account?.accountDevices);
                       setShowAccountOptionsPopup(true);
+                      setCurrentSelectedUserToConnect(null);
                     }}
                     className="shadow-lg cursor-pointer bg-orange-50/50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                   >
@@ -340,5 +183,3 @@ function GestionDesCompts() {
 }
 
 export default GestionDesCompts;
-
-// export default GestionDesCompts

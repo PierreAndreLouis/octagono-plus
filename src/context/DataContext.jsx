@@ -225,6 +225,7 @@ const DataContextProvider = ({ children }) => {
 
   // véhiculeData and vehicleDetails together
   const [mergedDataHome, setMergedDataHome] = useState(null);
+
   // const [mergedDataHome, setMergedDataHome] = useState(() => {
   //   const storedMergedData = localStorage.getItem("mergedDataHome");
   //   return storedMergedData ? JSON.parse(storedMergedData) : null;
@@ -523,6 +524,10 @@ const DataContextProvider = ({ children }) => {
   //
   //
   const [showAccountOptionsPopup, setShowAccountOptionsPopup] = useState(false);
+  const [showSelectedUserOptionsPopup, setShowSelectedUserOptionsPopup] =
+    useState(false);
+  const [listeGestionDesVehicules, setListeGestionDesVehicules] =
+    useState(false);
   // const []
   //
   //
@@ -1083,16 +1088,17 @@ const DataContextProvider = ({ children }) => {
   const TestDeRequetteDevices = async (account, user, password) => {
     console.log("Start........");
 
-    const account2 = "foodforthepoor";
+    const account2 = "demo";
 
-    const user2 = "monitoring";
+    const user2 = "admin";
 
-    const password2 = "123456";
+    const password2 = "112233";
 
     const xmlData = `<GTSRequest command="dbget">
           <Authorization account="${account2}" user="${user2}" password="${password2}" />
           <Record table="Device" partial="true">
        <Field name="accountID">${account2}</Field>
+       <Field name="userID">${user2}</Field>
    
           </Record>
         </GTSRequest>`;
@@ -1173,82 +1179,6 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const TestDeRequetteDevicesGroupe = async (account, user, password) => {
-    const account2 = "foodforthepoor";
-    const xmlData = `<GTSRequest command="dbget">
-          <Authorization account="${account}" user="${user}" password="${password}" />
-          <Record table="DeviceGroup" partial="true">
-       <Field name="accountID">${account2}</Field>
-          </Record>
-        </GTSRequest>`;
-
-    try {
-      const response = await fetch("/api/track/Service", {
-        method: "POST",
-        headers: { "Content-Type": "application/xml" },
-        body: xmlData,
-      });
-
-      const data = await response.text();
-      console.log("Login data message: ", data);
-      console.log("Requête envoyer :", xmlData);
-      const parser = new DOMParser();
-
-      const xmlDoc = parser.parseFromString(data, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        .getAttribute("result");
-
-      if (result === "success") {
-        const records = xmlDoc.getElementsByTagName("Record");
-        let allUserData = [];
-
-        for (let r = 0; r < records.length; r++) {
-          const fields = records[r].getElementsByTagName("Field");
-          let userData = {};
-
-          for (let f = 0; f < fields.length; f++) {
-            const fieldName = fields[f].getAttribute("name");
-            const fieldValue = fields[f].textContent;
-            userData[fieldName] = fieldValue;
-          }
-
-          allUserData.push(userData);
-        }
-
-        try {
-          setUserData(allUserData); // tableau de comptes
-          localStorage.setItem("userData", JSON.stringify(allUserData));
-        } catch (error) {
-          if (error.name === "QuotaExceededError") {
-            console.error("Quota dépassé pour userData.");
-          } else {
-            console.error("Erreur de stockage : ", error);
-          }
-        }
-
-        console.log("Données JSON de tous les comptes : ", allUserData);
-      } else if (result === "error") {
-        const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0].textContent;
-        setError(errorMessage || "Erreur lors de la connexion.");
-        //
-        console.log("errorMessage inactive", errorMessage);
-        if (errorMessage === "User inactive") {
-          console.log("Logout the user, and navigate to /login");
-          handleLogout();
-          navigate("/login");
-        }
-      }
-    } catch (error) {
-      setError("Erreur lors de la connexion à l'API.");
-      console.error("Erreur lors de la connexion à l'API", error);
-      setIsHomePageLoading(false);
-    } finally {
-      setIsHomePageLoading(false);
-    }
-  };
-
   ///////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////
@@ -1256,34 +1186,201 @@ const DataContextProvider = ({ children }) => {
   ///////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////
   ////////////////////v///////////////////////////////////////////////
+
+  // Récupère les données liées à un compte, y compris les utilisateurs et leurs devices
+  const fetchAccountRelatedData = async (accountID, accountPassword) => {
+    // Utilisateur système pour les requêtes User et DeviceGroup
+    const systemUser = "admin";
+
+    // Génère le XML pour n'importe quelle table, avec champs dynamiques et identifiants d'authentification passés en paramètres
+    const buildXML = ({ tableName, authUser, authPassword, fields = {} }) => {
+      const auth = `<Authorization account="${accountID}" user="${authUser}" password="${authPassword}" />`;
+      const fieldTags = Object.entries(fields)
+        .map(([name, value]) => `<Field name="${name}">${value}</Field>`)
+        .join("\n");
+      return `
+      <GTSRequest command="dbget">
+        ${auth}
+        <Record table="${tableName}" partial="true">
+          ${fieldTags}
+        </Record>
+      </GTSRequest>
+    `;
+    };
+
+    // Exécute la requête XML et parse le résultat en tableau d'objets
+    const fetchData = async ({ tableName, authUser, authPassword, fields }) => {
+      const xml = buildXML({ tableName, authUser, authPassword, fields });
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+      const text = await res.text();
+      const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+      if (result !== "success") return [];
+
+      const records = Array.from(xmlDoc.getElementsByTagName("Record"));
+      return records.map((rec) => {
+        const fields = Array.from(rec.getElementsByTagName("Field"));
+        return fields.reduce((obj, fld) => {
+          obj[fld.getAttribute("name")] = fld.textContent;
+          return obj;
+        }, {});
+      });
+    };
+
+    // 1) on récupère la liste des utilisateurs de l'account
+    const accountUsers = await fetchData({
+      tableName: "User",
+      authUser: systemUser,
+      authPassword: accountPassword,
+      fields: { accountID },
+    });
+
+    // 2) pour chaque utilisateur, on récupère ses devices (sauf pour les comptes "deka" et "lacouronne")
+    const accountUsersWithDevices = ["deka", "lacouronne"].includes(accountID)
+      ? accountUsers.map((user) => ({
+          ...user,
+          userDevices: [],
+        }))
+      : await Promise.all(
+          accountUsers.map(async (usr) => {
+            const userDevices = await fetchData({
+              tableName: "Device",
+              authUser: usr.userID,
+              authPassword: usr.password,
+              fields: { accountID, userID: usr.userID },
+            });
+            return { ...usr, userDevices };
+          })
+        );
+
+    // 3) on récupère les groupes de devices au niveau du compte
+    const accountGroupes = await fetchData({
+      tableName: "DeviceGroup",
+      authUser: systemUser,
+      authPassword: accountPassword,
+      fields: { accountID },
+    });
+
+    // 4) (optionnel) si vous conservez toujours les devices globaux du compte
+    const accountDevices = ["deka", "lacouronne"].includes(accountID)
+      ? []
+      : await fetchData({
+          tableName: "Device",
+          authUser: systemUser,
+          authPassword: accountPassword,
+          fields: { accountID },
+        });
+
+    return {
+      accountID,
+      accountUsers: accountUsersWithDevices,
+      accountDevices,
+      accountGroupes,
+    };
+  };
+
+  const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
+    useState(false);
+
+  // Récupère tous les accounts, puis enrichit chacun avec fetchAccountRelatedData
+  const getAllAccountsData = async (account, systemUser, systemPassword) => {
+    // état de chargement, à adapter selon votre gestion de state
+    setGetAllAccountsDataLoading(true);
+
+    // XML pour lister les accounts
+    const listAccountsXML = `
+    <GTSRequest command="dbget">
+      <Authorization account="${account}" user="${systemUser}" password="${systemPassword}" />
+      <Record table="Account" partial="true" />
+    </GTSRequest>
+  `;
+
+    const response = await fetch("/api/track/Service", {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: listAccountsXML,
+    });
+    const text = await response.text();
+    const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
+    const result = xmlDoc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    if (result !== "success") throw new Error("Failed to fetch accounts");
+
+    // Parse les accounts
+    const records = Array.from(xmlDoc.getElementsByTagName("Record"));
+    const accountsList = records.map((rec) =>
+      Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+        obj[fld.getAttribute("name")] = fld.textContent;
+        return obj;
+      }, {})
+    );
+
+    // Pour chaque account, on appelle fetchAccountRelatedData en passant le password spécifique
+    const accounts = [];
+    for (const acct of accountsList) {
+      const extra = await fetchAccountRelatedData(
+        acct.accountID,
+        acct.password
+      );
+
+      console.log("accounts 11: ", accounts);
+
+      accounts.push({
+        ...acct,
+        accountUsers: extra.accountUsers,
+        accountDevices: extra.accountDevices,
+        accountGroupes: extra.accountGroupes,
+      });
+    }
+    console.log("accounts: ", accounts);
+    // Sauvegarde et fin de chargement
+    setGestionAccountData(accounts);
+    setGetAllAccountsDataLoading(false);
+    localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
+
+    return accounts;
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  // <Field name="accountID">${accountID}</Field>
+
   // const fetchAccountRelatedData = async (accountID, password) => {
-  //   const user = "admin";
+  //   const userID = "admin";
+  //   const buildXML = (tableName) => `
+  //     <GTSRequest command="dbget">
+  //       <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  //       <Record table="${tableName}" partial="true">
+  //         <Field name="accountID">${accountID}</Field>
+
+  //       </Record>
+  //     </GTSRequest>`;
+
   //   const fetchData = async (tableName) => {
-  //     try {
-  //       const xml = `<GTSRequest command="dbget">
-  //         <Authorization account="${accountID}" user="${user}" password="${password}" />
-  //         <Record table="${tableName}" partial="true">
-  //           <Field name="accountID">${accountID}</Field>
-  //         </Record>
-  //       </GTSRequest>`;
+  //     const xml = buildXML(tableName);
+  //     const res = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xml,
+  //     });
+  //     const text = await res.text();
+  //     const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       ?.getAttribute("result");
 
-  //       const response = await fetch("/api/track/Service", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/xml" },
-  //         body: xml,
-  //       });
-
-  //       const data = await response.text();
-  //       const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
-
-  //       const result = xmlDoc
-  //         .getElementsByTagName("GTSResponse")[0]
-  //         ?.getAttribute("result");
-  //       if (result !== "success") return [];
-
+  //     if (result === "success") {
   //       const records = xmlDoc.getElementsByTagName("Record");
-  //       if (!records || records.length === 0) return [];
-
   //       const tableData = [];
 
   //       for (let r = 0; r < records.length; r++) {
@@ -1296,248 +1393,99 @@ const DataContextProvider = ({ children }) => {
   //         }
   //         tableData.push(item);
   //       }
-
   //       return tableData;
-  //     } catch (error) {
-  //       console.warn(
-  //         `Erreur lors du fetch de ${tableName} pour ${accountID}`,
-  //         error
-  //       );
-  //       return [];
   //     }
+
+  //     return [];
   //   };
+
+  //   const [accountUsers, accountDevices, accountGroupes] = await Promise.all([
+  //     fetchData("User"),
+  //     accountID === "deka" || accountID === "lacouronne"
+  //       ? []
+  //       : fetchData("Device"), // Ignorer fetchDevice pour ces 2 comptes
+  //     // fetchData("Device"), ////////////////////////////////////////////////////////
+  //     fetchData("DeviceGroup"),
+  //   ]);
 
   //   return {
-  //     accountUsers: await fetchData("User"),
-  //     accountDevices: await fetchData("Device"), //////////////////////////////////////////////////
-  //     accountGroupes: await fetchData("DeviceGroup"),
+  //     accountID,
+  //     accountUsers,
+  //     accountDevices, ////////////////////////////////////////////////////
+  //     accountGroupes,
   //   };
   // };
 
+  // const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
+  //   useState(false);
   // const getAllAccountsData = async (account, user, password) => {
+  //   setGetAllAccountsDataLoading(true);
+  //   console.log("account, user, password :", account, user, password);
   //   const xmlData = `<GTSRequest command="dbget">
-  //     <Authorization account="${account}" user="${user}" password="${password}" />
-  //     <Record table="Account" partial="true"></Record>
-  //   </GTSRequest>`;
+  //         <Authorization account="${account}" user="${user}" password="${password}" />
+  //         <Record table="Account" partial="true" />
+  //       </GTSRequest>`;
 
+  //   const response = await fetch("/api/track/Service", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/xml" },
+  //     body: xmlData,
+  //   });
+
+  //   const data = await response.text();
+  //   const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
+
+  //   const result = xmlDoc
+  //     .getElementsByTagName("GTSResponse")[0]
+  //     ?.getAttribute("result");
+
+  //   if (result !== "success") throw new Error("Failed to fetch accounts");
+
+  //   const records = xmlDoc.getElementsByTagName("Record");
   //   const accounts = [];
 
-  //   try {
-  //     const response = await fetch("/api/track/Service", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/xml" },
-  //       body: xmlData,
-  //     });
+  //   for (let r = 0; r < records.length; r++) {
+  //     const fields = records[r].getElementsByTagName("Field");
+  //     const accountData = {};
 
-  //     const data = await response.text();
-  //     const parser = new DOMParser();
-  //     const xmlDoc = parser.parseFromString(data, "application/xml");
-  //     const result = xmlDoc
-  //       .getElementsByTagName("GTSResponse")[0]
-  //       ?.getAttribute("result");
-
-  //     if (result === "success") {
-  //       const records = xmlDoc.getElementsByTagName("Record");
-
-  //       for (let r = 0; r < records.length; r++) {
-  //         const fields = records[r].getElementsByTagName("Field");
-  //         const accountData = {};
-
-  //         for (let f = 0; f < fields.length; f++) {
-  //           const fieldName = fields[f].getAttribute("name");
-  //           const fieldValue = fields[f].textContent;
-  //           accountData[fieldName] = fieldValue;
-  //         }
-
-  //         // // 🚫 On saute directement tout traitement pour "fjunior"
-  //         // if (accountData.accountID === "deka") {
-  //         //   continue;
-  //         // }
-
-  //         try {
-  //           const extraData = await fetchAccountRelatedData(
-  //             accountData.accountID,
-  //             accountData.password
-  //           );
-
-  //           console.log("accountData.accountID", accountData.accountID);
-  //           accounts.push({
-  //             ...accountData,
-  //             accountUsers: extraData.accountUsers || [],
-  //             accountDevices: extraData.accountDevices || [], ////////////////////////////
-  //             accountGroupes: extraData.accountGroupes || [],
-  //           });
-  //           console.log("Accounts avec toutes les infos :", accounts);
-  //         } catch (error) {
-  //           console.warn(
-  //             `Erreur dans les données liées à ${accountData.accountID}`,
-  //             error
-  //           );
-  //           accounts.push({
-  //             ...accountData,
-  //             accountUsers: [],
-  //             accountDevices: [], /////////////////////////////
-  //             accountGroupes: [],
-  //             error: true, // facultatif pour signaler une erreur
-  //           });
-  //           console.log("Accounts avec toutes les infos :", accounts);
-  //         }
-  //       }
-
-  //       console.log("Accounts avec toutes les infos :", accounts);
-  //       setGestionAccountData(accounts);
-  //       localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
-  //     } else {
-  //       const errorMessage =
-  //         xmlDoc.getElementsByTagName("Message")[0]?.textContent;
-  //       setError(errorMessage || "Erreur lors de la récupération des comptes.");
+  //     for (let f = 0; f < fields.length; f++) {
+  //       const fieldName = fields[f].getAttribute("name");
+  //       const fieldValue = fields[f].textContent;
+  //       accountData[fieldName] = fieldValue;
   //     }
-  //   } catch (error) {
-  //     console.error("Erreur de requête principale :", error);
-  //     setError("Erreur lors de la connexion à l'API.");
-  //   } finally {
-  //     setIsHomePageLoading(false);
+
+  //     // if (
+  //     //   accountData.accountID === "deka" ||
+  //     //   accountData.accountID === "lacouronne"
+  //     // ) {
+  //     //   continue;
+  //     // }
+
+  //     const extraData = await fetchAccountRelatedData(
+  //       accountData.accountID,
+  //       accountData.password
+  //     );
+  //     console.log("extraData", extraData);
+  //     console.log(
+  //       "AccountID :",
+  //       accountData.accountID,
+  //       "Password:",
+  //       accountData.password
+  //     );
+  //     accounts.push({
+  //       ...accountData,
+  //       accountUsers: extraData.accountUsers,
+  //       accountDevices: extraData.accountDevices, ////////////////////////////////////////////////////////////////
+  //       accountGroupes: extraData.accountGroupes,
+  //     });
   //   }
+
+  //   console.log("accounts", accounts);
+  //   setGestionAccountData(accounts);
+  //   setGetAllAccountsDataLoading(false);
+  //   localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
+  //   return accounts;
   // };
-
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  // <Field name="accountID">${accountID}</Field>
-
-  const fetchAccountRelatedData = async (accountID, password) => {
-    const user = "admin";
-    const buildXML = (tableName) => `
-      <GTSRequest command="dbget">
-        <Authorization account="${accountID}" user="${user}" password="${password}" />
-        <Record table="${tableName}" partial="true">
-          <Field name="accountID">${accountID}</Field>
-
-        </Record>
-      </GTSRequest>`;
-
-    const fetchData = async (tableName) => {
-      const xml = buildXML(tableName);
-      const res = await fetch("/api/track/Service", {
-        method: "POST",
-        headers: { "Content-Type": "application/xml" },
-        body: xml,
-      });
-      const text = await res.text();
-      const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        ?.getAttribute("result");
-
-      if (result === "success") {
-        const records = xmlDoc.getElementsByTagName("Record");
-        const tableData = [];
-
-        for (let r = 0; r < records.length; r++) {
-          const fields = records[r].getElementsByTagName("Field");
-          const item = {};
-          for (let f = 0; f < fields.length; f++) {
-            const fieldName = fields[f].getAttribute("name");
-            const fieldValue = fields[f].textContent;
-            item[fieldName] = fieldValue;
-          }
-          tableData.push(item);
-        }
-        return tableData;
-      }
-
-      return [];
-    };
-
-    const [accountUsers, accountDevices, accountGroupes] = await Promise.all([
-      fetchData("User"),
-      accountID === "deka" || accountID === "lacouronne"
-        ? []
-        : fetchData("Device"), // Ignorer fetchDevice pour ces 2 comptes
-      // fetchData("Device"), ////////////////////////////////////////////////////////
-      fetchData("DeviceGroup"),
-    ]);
-
-    return {
-      accountID,
-      accountUsers,
-      accountDevices, ////////////////////////////////////////////////////
-      accountGroupes,
-    };
-  };
-
-  const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
-    useState(false);
-  const getAllAccountsData = async (account, user, password) => {
-    setGetAllAccountsDataLoading(true);
-    console.log("account, user, password :", account, user, password);
-    const xmlData = `<GTSRequest command="dbget">
-          <Authorization account="${account}" user="${user}" password="${password}" />
-          <Record table="Account" partial="true" />
-        </GTSRequest>`;
-
-    const response = await fetch("/api/track/Service", {
-      method: "POST",
-      headers: { "Content-Type": "application/xml" },
-      body: xmlData,
-    });
-
-    const data = await response.text();
-    const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
-
-    const result = xmlDoc
-      .getElementsByTagName("GTSResponse")[0]
-      ?.getAttribute("result");
-
-    if (result !== "success") throw new Error("Failed to fetch accounts");
-
-    const records = xmlDoc.getElementsByTagName("Record");
-    const accounts = [];
-
-    for (let r = 0; r < records.length; r++) {
-      const fields = records[r].getElementsByTagName("Field");
-      const accountData = {};
-
-      for (let f = 0; f < fields.length; f++) {
-        const fieldName = fields[f].getAttribute("name");
-        const fieldValue = fields[f].textContent;
-        accountData[fieldName] = fieldValue;
-      }
-
-      // if (
-      //   accountData.accountID === "deka" ||
-      //   accountData.accountID === "lacouronne"
-      // ) {
-      //   continue;
-      // }
-
-      const extraData = await fetchAccountRelatedData(
-        accountData.accountID,
-        accountData.password
-      );
-      console.log("extraData", extraData);
-      console.log(
-        "AccountID :",
-        accountData.accountID,
-        "Password:",
-        accountData.password
-      );
-      accounts.push({
-        ...accountData,
-        accountUsers: extraData.accountUsers,
-        accountDevices: extraData.accountDevices, ////////////////////////////////////////////////////////////////
-        accountGroupes: extraData.accountGroupes,
-      });
-    }
-
-    console.log("accounts", accounts);
-    setGestionAccountData(accounts);
-    setGetAllAccountsDataLoading(false);
-    localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
-    return accounts;
-  };
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -4186,6 +4134,7 @@ const DataContextProvider = ({ children }) => {
         setError("");
         fetchVehicleData();
         setCreateVéhiculeLoading(false);
+        navigate("/home");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -4215,12 +4164,9 @@ const DataContextProvider = ({ children }) => {
     userUsername,
     userPassword
   ) => {
-    // Pour suivre le nombre de requête
-    incrementerRequête();
     console.log("++++++++++++++++ Requête effectué: deleteVehicle");
 
     // /////////
-    // console.log("Start Deleting.........");
     setCreateVéhiculeLoading(true);
 
     const requestBody =
@@ -4229,12 +4175,12 @@ const DataContextProvider = ({ children }) => {
         userUsername || username
       }" password="${userPassword || password}"/>` +
       `<RecordKey table="Device" partial="true">` +
-      `<Field name="accountID">${account}</Field>` +
+      `<Field name="accountID">${userAccount || account}</Field>` +
       `<Field name="deviceID">${deviceID}</Field>` +
       `</RecordKey>` +
       `</GTSRequest>`;
 
-    // console.log("almost Delete.........");
+    console.log("requestBody", requestBody);
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -4248,56 +4194,62 @@ const DataContextProvider = ({ children }) => {
       // console.log("wait a little more.........");
 
       if (response.ok) {
-        setVehicleData((prevVehicles) =>
-          prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
-        );
-
-        //
-        // Supprimer le véhicule de IndexedDB
-        openDatabase().then((db) => {
-          const transaction = db.transaction(["mergedDataHome"], "readwrite");
-          const store = transaction.objectStore("mergedDataHome");
-
-          // Récupérer toutes les données actuelles
-          const getRequest = store.getAll();
-
-          getRequest.onsuccess = () => {
-            const existingData = getRequest.result || [];
-            const updatedData = existingData.filter(
-              (vehicle) => vehicle.deviceID !== deviceID
-            );
-
-            store.clear(); // Supprime les anciennes données
-            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-          };
-        });
-
-        // Supprimer le véhicule de IndexedDB
-        openDatabase().then((db) => {
-          const transaction = db.transaction(
-            ["donneeFusionnéForRapport"],
-            "readwrite"
+        if (userAccount && userUsername && userPassword) {
+          console.log("vehicule Delete avec successsssssssss...............");
+        } else {
+          console.log("Delete successsssssssss...............");
+          setVehicleData((prevVehicles) =>
+            prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
           );
-          const store = transaction.objectStore("donneeFusionnéForRapport");
 
-          // Récupérer toutes les données actuelles
-          const getRequest = store.getAll();
+          //
+          // Supprimer le véhicule de IndexedDB
+          openDatabase().then((db) => {
+            const transaction = db.transaction(["mergedDataHome"], "readwrite");
+            const store = transaction.objectStore("mergedDataHome");
 
-          getRequest.onsuccess = () => {
-            const existingData = getRequest.result || [];
-            const updatedData = existingData.filter(
-              (vehicle) => vehicle.deviceID !== deviceID
+            // Récupérer toutes les données actuelles
+            const getRequest = store.getAll();
+
+            getRequest.onsuccess = () => {
+              const existingData = getRequest.result || [];
+              const updatedData = existingData.filter(
+                (vehicle) => vehicle.deviceID !== deviceID
+              );
+
+              store.clear(); // Supprime les anciennes données
+              updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+            };
+          });
+
+          // Supprimer le véhicule de IndexedDB
+          openDatabase().then((db) => {
+            const transaction = db.transaction(
+              ["donneeFusionnéForRapport"],
+              "readwrite"
             );
+            const store = transaction.objectStore("donneeFusionnéForRapport");
 
-            store.clear(); // Supprime les anciennes données
-            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-          };
-        });
+            // Récupérer toutes les données actuelles
+            const getRequest = store.getAll();
 
-        // console.log("Véhicule supprimé avec succès.");
-        fetchVehicleData();
-        setSuccessDeleteVéhiculePopup(true);
-        setCreateVéhiculeLoading(false);
+            getRequest.onsuccess = () => {
+              const existingData = getRequest.result || [];
+              const updatedData = existingData.filter(
+                (vehicle) => vehicle.deviceID !== deviceID
+              );
+
+              store.clear(); // Supprime les anciennes données
+              updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+            };
+          });
+
+          // console.log("Véhicule supprimé avec succès.");
+          fetchVehicleData();
+          setSuccessDeleteVéhiculePopup(true);
+          setCreateVéhiculeLoading(false);
+          navigate("/home");
+        }
       } else {
         console.error(
           "Erreur lors de la suppression du véhicule:",
@@ -4307,7 +4259,7 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
       }
 
-      // console.log("finish Deleting.........");
+      console.log("finish Deleting.........");
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
@@ -4386,6 +4338,7 @@ const DataContextProvider = ({ children }) => {
         setSuccessModifierVéhiculePopup(true);
         fetchVehicleData();
         setCreateVéhiculeLoading(false);
+        navigate("/home");
       } else {
         console.error(
           "Erreur lors de la modification du véhicule:",
@@ -5179,6 +5132,58 @@ const DataContextProvider = ({ children }) => {
   const creer_geozone_ref = useRef();
   const modifier_geozone_ref = useRef();
 
+  // const location = useLocation();
+  // const navigate = useNavigate();
+
+  // Stocke la page actuelle et précédente à chaque changement de route
+  // Ajoute la page actuelle dans l'historique, sauf si on vient d'un retour
+  useEffect(() => {
+    const isGoingBack = sessionStorage.getItem("isGoingBack");
+
+    if (isGoingBack === "true") {
+      // On vient de cliquer sur "Retour", on ne stocke pas cette page
+      sessionStorage.setItem("isGoingBack", "false");
+      return;
+    }
+
+    const currentPath = location.pathname;
+
+    if (currentPath !== "/login" && currentPath !== "/") {
+      const storedHistory =
+        JSON.parse(localStorage.getItem("customHistory")) || [];
+      const lastPath = storedHistory[storedHistory.length - 1];
+
+      if (currentPath !== lastPath) {
+        const updatedHistory = [...storedHistory, currentPath];
+        localStorage.setItem("customHistory", JSON.stringify(updatedHistory));
+      }
+    }
+  }, [location]);
+
+  const backToPagePrecedent = () => {
+    const storedHistory =
+      JSON.parse(localStorage.getItem("customHistory")) || [];
+
+    if (storedHistory.length > 1) {
+      storedHistory.pop(); // Retire la page actuelle
+      const lastPath = storedHistory[storedHistory.length - 1];
+
+      // Mets à jour les données AVANT de rediriger
+      localStorage.setItem("customHistory", JSON.stringify(storedHistory));
+      sessionStorage.setItem("isGoingBack", "true");
+
+      console.log("Navigation vers :", lastPath);
+
+      // Petite astuce : on force une redirection propre
+      setTimeout(() => {
+        navigate(lastPath);
+      }, 0); // pour que sessionStorage soit bien pris en compte avant le render
+    } else {
+      navigate("/home");
+    }
+  };
+
+  // backToPagePrecedent
   return (
     <DataContext.Provider
       value={{
@@ -5409,6 +5414,11 @@ const DataContextProvider = ({ children }) => {
         setCurrentSelectedUserToConnect,
         getAllAccountsDataLoading,
         setGetAllAccountsDataLoading,
+        showSelectedUserOptionsPopup,
+        setShowSelectedUserOptionsPopup,
+        listeGestionDesVehicules,
+        setListeGestionDesVehicules,
+        backToPagePrecedent,
       }}
     >
       {children}

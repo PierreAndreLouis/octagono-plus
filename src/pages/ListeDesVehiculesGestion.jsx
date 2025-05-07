@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import {
   IoArrowBack,
   IoChevronBackCircleOutline,
+  IoClose,
   IoEarth,
   IoOptions,
 } from "react-icons/io5";
@@ -15,6 +16,8 @@ import {
   FaUserAlt,
   FaCar,
   FaUserPlus,
+  FaUserCircle,
+  FaChevronDown,
 } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
@@ -48,6 +51,12 @@ function ListeDesVehiculesGestion() {
     setShowAccountOptionsPopup,
     currentAccountSelected,
     deleteVehicle,
+    listeGestionDesVehicules,
+    setListeGestionDesVehicules,
+    currentSelectedUserToConnect,
+    setCurrentSelectedUserToConnect,
+    TestDeRequetteDevices,
+    backToPagePrecedent,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -89,6 +98,23 @@ function ListeDesVehiculesGestion() {
 
   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
+  const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
+    useState(false);
+
+  const [searchInputTerm, setSearchInputTerm] = useState("");
+
+  const filterGestionAccountData = searchInputTerm
+    ? currentAccountSelected?.accountUsers?.filter((item) =>
+        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
+      )
+    : currentAccountSelected?.accountUsers;
+
+  const [selectedVehiculeAccount, setSelectedVehiculeAccount] = useState();
+
+  const deleteVehicleFonction = () => {
+    deleteVehicle(deviceID, userAccount, userUsername, userPassword);
+  };
+
   return (
     <div>
       <GestionAccountOptionPopup />
@@ -127,7 +153,20 @@ function ListeDesVehiculesGestion() {
               <button
                 onClick={() => {
                   // setDeleteAccountPopup(false);
-                  // deleteVehicle()
+                  // deleteVehicleFonction();
+                  // deleteVehicle(deviceID, userAccount, userUsername, userPassword);
+                  console.log(
+                    selectedVehiculeAccount.deviceID,
+                    currentSelectedUserToConnect?.accountID,
+                    currentSelectedUserToConnect?.userID,
+                    currentSelectedUserToConnect?.password
+                  );
+                  // deleteVehicle(
+                  //   selectedVehiculeAccount.deviceID,
+                  //   currentSelectedUserToConnect?.accountID,
+                  //   currentSelectedUserToConnect?.userID,
+                  //   currentSelectedUserToConnect?.password
+                  // );
                 }}
                 className="py-1 px-5 bg-red-500 rounded-lg text-white"
               >
@@ -137,6 +176,7 @@ function ListeDesVehiculesGestion() {
               <h3
                 onClick={() => {
                   setDeleteAccountPopup(false);
+                  // TestDeRequetteDevices();
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
               >
@@ -200,45 +240,194 @@ function ListeDesVehiculesGestion() {
         </div>
       )}
 
+      {chooseOtherAccountGestion && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-40">
+          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[70vh] rounded-lg">
+            <div className="relative">
+              <div className="text-center font-semibold text-lg bg-orange-100 py-4">
+                <h2 className="">Liste des Utilisateurs</h2>
+                <p className="text-center font-normal- text-orange-600 translate-x-11--  text-sm">
+                  {currentAccountSelected?.description}
+                </p>
+              </div>
+
+              <IoClose
+                onClick={() => {
+                  setChooseOtherAccountGestion(false);
+                }}
+                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4"
+              />
+            </div>
+            <div className="flex mx-3 my-4 gap-2 justify-between items-center">
+              <input
+                className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
+                type="text"
+                placeholder="Rechercher un compte"
+                value={searchInputTerm}
+                onChange={(e) => {
+                  setSearchInputTerm(e.target.value);
+                }}
+                // value={searchQueryListPopup}
+                // onChange={handleSearchChange}
+              />
+              {/* <Tooltip
+                              title="Réinitialiser le filtrer par catégorie
+                            "
+                              PopperProps={{
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, 0], // Décalage horizontal et vertical
+                                    },
+                                  },
+                                ],
+                              }}
+                            > */}
+              <p
+                onClick={() => {
+                  // setTilterSearchVehiculePopupByCategorie("all");
+                  // setSearchQueryListPopup("");
+                }}
+                className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5"
+              >
+                Rechercher
+              </p>
+              {/* </Tooltip> */}
+            </div>
+            <div className="flex overflow-auto h-[45vh] pb-20 flex-col gap-4 mx-3">
+              {/*  */}
+              <button
+                onClick={() => {
+                  {
+                    setListeGestionDesVehicules(
+                      currentAccountSelected?.accountDevices
+                    );
+                    setChooseOtherAccountGestion(false);
+                    setCurrentSelectedUserToConnect(null);
+                  }
+                }}
+                className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
+              >
+                Tous les appareils
+              </button>{" "}
+              {filterGestionAccountData?.map((user, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setListeGestionDesVehicules(user?.userDevices);
+                      setCurrentSelectedUserToConnect(user);
+                      setChooseOtherAccountGestion(false);
+                    }}
+                    className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
+                  >
+                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
+                      {index + 1}
+                    </p>
+                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
+                    <div>
+                      <p className="text-gray-600">
+                        Nom du compte :{" "}
+                        <span className="font-bold">{user?.description}</span>{" "}
+                      </p>
+                      <p className="text-gray-600">
+                        Nombre d'appareil :{" "}
+                        <span className="font-bold">
+                          {user?.userDevices?.length}
+                        </span>{" "}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              {/*  */}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="px-4 pb-40">
         <h2 className="mt-[10rem] text-2xl text-gray-700 text-center font-bold ">
           Liste des Appareils
         </h2>
-        <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-lg text-center font-bold ">
+
+        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+          <span className="text-gray-700">Compte :</span>{" "}
           {currentAccountSelected?.description}
         </h3>
-        <div className="flex gap-2 justify-center mt-4">
-          <Link
-            to="/gestion_des_comptes?tab=comptes"
-            className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+          {currentSelectedUserToConnect?.description && (
+            <span className="text-gray-700">Utilisateur :</span>
+          )}{" "}
+          {currentSelectedUserToConnect?.description}
+        </h3>
+        <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
+          <span className="text-gray-700">Nombre Appareil :</span>{" "}
+          {listeGestionDesVehicules?.length}
+        </h3>
+
+        <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+          {/*  */}
+          <div className="flex gap-2 justify-center mt-4">
+            <button
+              onClick={() => {
+                backToPagePrecedent();
+              }}
+              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+            >
+              <IoArrowBack className="text-xl" />
+              <p className="hidden md:block">Retour</p>
+            </button>{" "}
+            <Link className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6">
+              <div className="flex justify-center items-center gap-3 ">
+                <FaUserPlus className="text-2xl" />
+                <p className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                  <span className="hidden md:inline">Ajouter un</span> Nouveau
+                  Appareil
+                </p>
+              </div>
+            </Link>{" "}
+            <button
+              onClick={() => setShowAccountOptionsPopup(true)}
+              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+            >
+              <p className="hidden md:block">Options</p>
+              <IoOptions className="text-xl" />
+            </button>{" "}
+          </div>
+
+          <div
+            onClick={() => {
+              setChooseOtherAccountGestion(true);
+              console.log(currentSelectedUserToConnect);
+            }}
+            className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
           >
-            <IoArrowBack className="text-xl" />
-            <p className="hidden md:block">Retour</p>
-          </Link>{" "}
-          <Link className="bg-orange-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6">
-            <div className="flex justify-center items-center gap-3 ">
-              <FaUserPlus className="text-2xl" />
-              <p className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                <span className="hidden md:inline">Ajouter un</span> Nouveau
-                Appareil
-              </p>
-            </div>
-          </Link>{" "}
-          <button
-            onClick={() => setShowAccountOptionsPopup(true)}
-            className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-          >
-            <p className="hidden md:block">Options</p>
-            <IoOptions className="text-xl" />
-          </button>{" "}
+            <h3 className="w-full text-center font-semibold">
+              {/* Compte: */}
+              <span>
+                {currentSelectedUserToConnect?.description ||
+                  "Tous les appareils"}
+              </span>
+            </h3>
+            <FaChevronDown />
+          </div>
         </div>
 
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
-          {currentAccountSelected?.accountDevices?.length > 0 ? (
-            currentAccountSelected?.accountDevices?.map((device, index) => {
+
+          {listeGestionDesVehicules?.length > 0 ? (
+            listeGestionDesVehicules?.map((device, index) => {
               return (
                 <div
+                  onClick={() => {
+                    setSelectedVehiculeAccount(device);
+                    console.log(device);
+                    console.log(currentAccountSelected);
+                    console.log(currentSelectedUserToConnect);
+                  }}
                   key={index}
                   className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                 >
@@ -352,16 +541,12 @@ function ListeDesVehiculesGestion() {
               Pas de résultat
             </div>
           )}
-
           {/*  */}
           {/*  */}
-
           {/*  */}
           {/*  */}
-
           {/*  */}
           {/*  */}
-
           {/*  */}
         </div>
       </div>
