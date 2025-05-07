@@ -51,6 +51,8 @@ function GestionDesCompts() {
     gestionAccountData,
     currentAccountSelected,
     setCurrentAccountSelected,
+    getAllAccountsDataLoading,
+    setGetAllAccountsDataLoading,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -102,6 +104,13 @@ function GestionDesCompts() {
     <div>
       {account === "sysadmin" ? (
         <div>
+          {getAllAccountsDataLoading && (
+            <div className="fixed z-30 inset-0 bg-gray-200/50 dark:bg-black/50">
+              <div className="w-full h-full flex justify-center items-center">
+                <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
+              </div>
+            </div>
+          )}
           {/* <SuccèsÉchecMessagePopup
         message={succesCreateGeofencePopup}
         setMessage={setSuccesCreateGeofencePopup}
@@ -136,7 +145,7 @@ function GestionDesCompts() {
             >
               Gestion Des Comptes
             </h2>
-            <button
+            {/* <button
               onClick={() => {
                 TestDeRequetteAccounts(
                   "sysadmin",
@@ -147,7 +156,7 @@ function GestionDesCompts() {
             >
               Test de requête Accounts
             </button>
-            <br />
+            <br /> */}
             {/* <button
               onClick={() => {
                 TestDeRequetteUsers(
@@ -160,7 +169,7 @@ function GestionDesCompts() {
               Test de requête Users
             </button>{" "}
             <br /> */}
-            <button
+            {/* <button
               onClick={() => {
                 TestDeRequetteDevices(
                   "sysadmin",
@@ -171,8 +180,8 @@ function GestionDesCompts() {
             >
               Test de requête Devices
             </button>{" "}
-            <br />
-            <button
+            <br /> */}
+            {/* <button
               onClick={() => {
                 getAllAccountsData(
                   "sysadmin",
@@ -183,7 +192,7 @@ function GestionDesCompts() {
             >
               Tous les donnees regrouper
             </button>{" "}
-            <br />
+            <br /> */}
             {/* <button
               onClick={() => {
                 console.log("gestionAccountData :", gestionAccountData);
@@ -225,6 +234,17 @@ function GestionDesCompts() {
             </div>
             <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
               {/*  */}
+              {/* {gestionAccountData?.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <br />
+                    <p>const account2 = "{item.accountID}";</p>
+                    <p>const user2 = "admin";</p>
+                    <p>const password2 = "{item.password}";</p>
+                    <br />
+                  </div>
+                );
+              })} */}
               {gestionAccountData?.map((account, index) => {
                 return (
                   <div
@@ -265,7 +285,7 @@ function GestionDesCompts() {
                               Nombre d'appareils :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              ----
+                              {account?.accountDevices?.length}
                             </span>
                           </div>{" "}
                           {/*  */}

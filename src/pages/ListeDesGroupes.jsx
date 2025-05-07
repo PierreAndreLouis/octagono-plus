@@ -204,7 +204,7 @@ function ListeDesGroupes() {
           Tous les groupes
         </h2>
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-lg text-center font-bold ">
-          foodforthepoor{" "}
+          {currentAccountSelected?.description}
         </h3>
         <div className="flex gap-2 justify-center mt-4">
           <Link

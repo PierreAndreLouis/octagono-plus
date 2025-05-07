@@ -100,11 +100,8 @@ const DataContextProvider = ({ children }) => {
     console.log("currentAccountSelected :", currentAccountSelected);
   }, [currentAccountSelected]);
 
-  // to store login user data  // account, username, password
-  // const [geofenceData, setGeofenceData] = useState(() => {
-  //   const storedGeofenceData = localStorage.getItem("geofenceData");
-  //   return storedGeofenceData ? JSON.parse(storedGeofenceData) : null;
-  // });
+  const [currentSelectedUserToConnect, setCurrentSelectedUserToConnect] =
+    useState();
 
   const [geofenceData, setGeofenceData] = useState(null);
 
@@ -526,6 +523,7 @@ const DataContextProvider = ({ children }) => {
   //
   //
   const [showAccountOptionsPopup, setShowAccountOptionsPopup] = useState(false);
+  // const []
   //
   //
   //
@@ -830,26 +828,20 @@ const DataContextProvider = ({ children }) => {
 
   // Fonction to log in
   const handleLogin = async (account, user, password) => {
-    // Pour suivre le nombre de requête
-    // console.log("account : ===>", account);
-    // console.log("user : ===>", user);
-    // console.log("password : ===>", password);
-
-    incrementerRequête();
     console.log("++++++++++++++++ Requête effectué: handleLogin");
     // /////////
-    setIsHomePageLoading(true);
-    setError(null);
+    // setIsHomePageLoading(true);
+    // setError(null);
 
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${account}" user="${user}" password="${password}" />
         <Record table="Account" partial="true">
           <Field name="accountID">${account}</Field>
-          <Field name="userID">${account}</Field>
+          <Field name="userID">${user}</Field>
         </Record>
       </GTSRequest>`;
 
-    // console.log("xmlData ===>", xmlData);
+    console.log("xmlData ===>", xmlData);
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -894,6 +886,7 @@ const DataContextProvider = ({ children }) => {
         // navigate("/home");
         if (account === "sysadmin") {
           navigate("/gestion_des_comptes");
+          getAllAccountsData(account, user, password);
         } else {
           navigate("/home");
         }
@@ -1090,18 +1083,11 @@ const DataContextProvider = ({ children }) => {
   const TestDeRequetteDevices = async (account, user, password) => {
     console.log("Start........");
 
-    // const account2 = "foodforthepoor";
-    // const user2 = "admin";
-    // const password2 = "Octa@112233";
+    const account2 = "foodforthepoor";
 
-    const account2 = "fjunior";
-    const user2 = "admin";
+    const user2 = "monitoring";
+
     const password2 = "123456";
-
-    // const account2 = "lelevier";
-    // const user2 = "admin";
-    // const password2 = "123456";
-    // const password2 = "Sys@Octa@@#Plus@2021";
 
     const xmlData = `<GTSRequest command="dbget">
           <Authorization account="${account2}" user="${user2}" password="${password2}" />
@@ -1113,8 +1099,8 @@ const DataContextProvider = ({ children }) => {
 
     console.log("Requête envoyer :", xmlData);
 
-    const fullUrl = `${window.location.origin}/api/track/Service`;
-    console.log("URL complète de l'API :", fullUrl);
+    // const fullUrl = `${window.location.origin}/api/track/Service`;
+    // console.log("URL complète de l'API :", fullUrl);
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -1270,184 +1256,34 @@ const DataContextProvider = ({ children }) => {
   ///////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////
   ////////////////////v///////////////////////////////////////////////
-  const fetchAccountRelatedData = async (accountID, password) => {
-    const user = "admin";
-    const fetchData = async (tableName) => {
-      try {
-        const xml = `<GTSRequest command="dbget">
-          <Authorization account="${accountID}" user="${user}" password="${password}" />
-          <Record table="${tableName}" partial="true">
-            <Field name="accountID">${accountID}</Field>
-          </Record>
-        </GTSRequest>`;
-
-        const response = await fetch("/api/track/Service", {
-          method: "POST",
-          headers: { "Content-Type": "application/xml" },
-          body: xml,
-        });
-
-        const data = await response.text();
-        const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
-
-        const result = xmlDoc
-          .getElementsByTagName("GTSResponse")[0]
-          ?.getAttribute("result");
-        if (result !== "success") return [];
-
-        const records = xmlDoc.getElementsByTagName("Record");
-        if (!records || records.length === 0) return [];
-
-        const tableData = [];
-
-        for (let r = 0; r < records.length; r++) {
-          const fields = records[r].getElementsByTagName("Field");
-          const item = {};
-          for (let f = 0; f < fields.length; f++) {
-            const fieldName = fields[f].getAttribute("name");
-            const fieldValue = fields[f].textContent;
-            item[fieldName] = fieldValue;
-          }
-          tableData.push(item);
-        }
-
-        return tableData;
-      } catch (error) {
-        console.warn(
-          `Erreur lors du fetch de ${tableName} pour ${accountID}`,
-          error
-        );
-        return [];
-      }
-    };
-
-    return {
-      accountUsers: await fetchData("User"),
-      // accountDevices: await fetchData("Device"), //////////////////////////////////////////////////
-      accountGroupes: await fetchData("DeviceGroup"),
-    };
-  };
-
-  const getAllAccountsData = async (account, user, password) => {
-    const xmlData = `<GTSRequest command="dbget">
-      <Authorization account="${account}" user="${user}" password="${password}" />
-      <Record table="Account" partial="true"></Record>
-    </GTSRequest>`;
-
-    const accounts = [];
-
-    try {
-      const response = await fetch("/api/track/Service", {
-        method: "POST",
-        headers: { "Content-Type": "application/xml" },
-        body: xmlData,
-      });
-
-      const data = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        ?.getAttribute("result");
-
-      if (result === "success") {
-        const records = xmlDoc.getElementsByTagName("Record");
-
-        for (let r = 0; r < records.length; r++) {
-          const fields = records[r].getElementsByTagName("Field");
-          const accountData = {};
-
-          for (let f = 0; f < fields.length; f++) {
-            const fieldName = fields[f].getAttribute("name");
-            const fieldValue = fields[f].textContent;
-            accountData[fieldName] = fieldValue;
-          }
-
-          // 🚫 On saute directement tout traitement pour "fjunior"
-          // if (accountData.accountID === "fjunior") {
-          //   continue;
-          // }
-
-          try {
-            const extraData = await fetchAccountRelatedData(
-              accountData.accountID,
-              accountData.password
-            );
-
-            console.log("accountData.accountID", accountData.accountID);
-            accounts.push({
-              ...accountData,
-              accountUsers: extraData.accountUsers || [],
-              // accountDevices: extraData.accountDevices || [], ////////////////////////////
-              accountGroupes: extraData.accountGroupes || [],
-            });
-            console.log("Accounts avec toutes les infos :", accounts);
-          } catch (error) {
-            console.warn(
-              `Erreur dans les données liées à ${accountData.accountID}`,
-              error
-            );
-            accounts.push({
-              ...accountData,
-              accountUsers: [],
-              // accountDevices: [], /////////////////////////////
-              accountGroupes: [],
-              error: true, // facultatif pour signaler une erreur
-            });
-            console.log("Accounts avec toutes les infos :", accounts);
-          }
-        }
-
-        console.log("Accounts avec toutes les infos :", accounts);
-        setGestionAccountData(accounts);
-        localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
-      } else {
-        const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0]?.textContent;
-        setError(errorMessage || "Erreur lors de la récupération des comptes.");
-      }
-    } catch (error) {
-      console.error("Erreur de requête principale :", error);
-      setError("Erreur lors de la connexion à l'API.");
-    } finally {
-      setIsHomePageLoading(false);
-    }
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  // const fetchAccountRelatedData = async (
-  //   accountID,
-  //   account,
-  //   user,
-  //   password
-  // ) => {
-  //   const buildXML = (tableName) => `
-  //     <GTSRequest command="dbget">
-  //       <Authorization account="${account}" user="${user}" password="${password}" />
-  //       <Record table="${tableName}" partial="true">
-  //         <Field name="accountID">${accountID}</Field>
-  //       </Record>
-  //     </GTSRequest>`;
-
+  // const fetchAccountRelatedData = async (accountID, password) => {
+  //   const user = "admin";
   //   const fetchData = async (tableName) => {
-  //     const xml = buildXML(tableName);
-  //     const res = await fetch("/api/track/Service", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/xml" },
-  //       body: xml,
-  //     });
-  //     const text = await res.text();
-  //     const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
-  //     const result = xmlDoc
-  //       .getElementsByTagName("GTSResponse")[0]
-  //       ?.getAttribute("result");
+  //     try {
+  //       const xml = `<GTSRequest command="dbget">
+  //         <Authorization account="${accountID}" user="${user}" password="${password}" />
+  //         <Record table="${tableName}" partial="true">
+  //           <Field name="accountID">${accountID}</Field>
+  //         </Record>
+  //       </GTSRequest>`;
 
-  //     if (result === "success") {
+  //       const response = await fetch("/api/track/Service", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/xml" },
+  //         body: xml,
+  //       });
+
+  //       const data = await response.text();
+  //       const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
+
+  //       const result = xmlDoc
+  //         .getElementsByTagName("GTSResponse")[0]
+  //         ?.getAttribute("result");
+  //       if (result !== "success") return [];
+
   //       const records = xmlDoc.getElementsByTagName("Record");
+  //       if (!records || records.length === 0) return [];
+
   //       const tableData = [];
 
   //       for (let r = 0; r < records.length; r++) {
@@ -1460,80 +1296,248 @@ const DataContextProvider = ({ children }) => {
   //         }
   //         tableData.push(item);
   //       }
-  //       return tableData;
-  //     }
 
-  //     return [];
+  //       return tableData;
+  //     } catch (error) {
+  //       console.warn(
+  //         `Erreur lors du fetch de ${tableName} pour ${accountID}`,
+  //         error
+  //       );
+  //       return [];
+  //     }
   //   };
 
-  //   const [accountUsers, accountDevices, accountGroupes] = await Promise.all([
-  //     fetchData("User"),
-  //     fetchData("Device"),
-  //     fetchData("DeviceGroup"),
-  //   ]);
-
   //   return {
-  //     accountID,
-  //     accountUsers,
-  //     accountDevices,
-  //     accountGroupes,
+  //     accountUsers: await fetchData("User"),
+  //     accountDevices: await fetchData("Device"), //////////////////////////////////////////////////
+  //     accountGroupes: await fetchData("DeviceGroup"),
   //   };
   // };
 
   // const getAllAccountsData = async (account, user, password) => {
   //   const xmlData = `<GTSRequest command="dbget">
-  //         <Authorization account="${account}" user="${user}" password="${password}" />
-  //         <Record table="Account" partial="true" />
-  //       </GTSRequest>`;
+  //     <Authorization account="${account}" user="${user}" password="${password}" />
+  //     <Record table="Account" partial="true"></Record>
+  //   </GTSRequest>`;
 
-  //   const response = await fetch("/api/track/Service", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/xml" },
-  //     body: xmlData,
-  //   });
-
-  //   const data = await response.text();
-  //   const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
-
-  //   const result = xmlDoc
-  //     .getElementsByTagName("GTSResponse")[0]
-  //     ?.getAttribute("result");
-
-  //   if (result !== "success") throw new Error("Failed to fetch accounts");
-
-  //   const records = xmlDoc.getElementsByTagName("Record");
   //   const accounts = [];
 
-  //   for (let r = 0; r < records.length; r++) {
-  //     const fields = records[r].getElementsByTagName("Field");
-  //     const accountData = {};
-
-  //     for (let f = 0; f < fields.length; f++) {
-  //       const fieldName = fields[f].getAttribute("name");
-  //       const fieldValue = fields[f].textContent;
-  //       accountData[fieldName] = fieldValue;
-  //     }
-
-  //     const extraData = await fetchAccountRelatedData(
-  //       accountData.accountID,
-  //       account,
-  //       user,
-  //       password
-  //     );
-  //     console.log("extraData", extraData);
-
-  //     accounts.push({
-  //       ...accountData,
-  //       accountUsers: extraData.accountUsers,
-  //       accountDevices: extraData.accountDevices,
-  //       accountGroupes: extraData.accountGroupes,
+  //   try {
+  //     const response = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
   //     });
+
+  //     const data = await response.text();
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       ?.getAttribute("result");
+
+  //     if (result === "success") {
+  //       const records = xmlDoc.getElementsByTagName("Record");
+
+  //       for (let r = 0; r < records.length; r++) {
+  //         const fields = records[r].getElementsByTagName("Field");
+  //         const accountData = {};
+
+  //         for (let f = 0; f < fields.length; f++) {
+  //           const fieldName = fields[f].getAttribute("name");
+  //           const fieldValue = fields[f].textContent;
+  //           accountData[fieldName] = fieldValue;
+  //         }
+
+  //         // // 🚫 On saute directement tout traitement pour "fjunior"
+  //         // if (accountData.accountID === "deka") {
+  //         //   continue;
+  //         // }
+
+  //         try {
+  //           const extraData = await fetchAccountRelatedData(
+  //             accountData.accountID,
+  //             accountData.password
+  //           );
+
+  //           console.log("accountData.accountID", accountData.accountID);
+  //           accounts.push({
+  //             ...accountData,
+  //             accountUsers: extraData.accountUsers || [],
+  //             accountDevices: extraData.accountDevices || [], ////////////////////////////
+  //             accountGroupes: extraData.accountGroupes || [],
+  //           });
+  //           console.log("Accounts avec toutes les infos :", accounts);
+  //         } catch (error) {
+  //           console.warn(
+  //             `Erreur dans les données liées à ${accountData.accountID}`,
+  //             error
+  //           );
+  //           accounts.push({
+  //             ...accountData,
+  //             accountUsers: [],
+  //             accountDevices: [], /////////////////////////////
+  //             accountGroupes: [],
+  //             error: true, // facultatif pour signaler une erreur
+  //           });
+  //           console.log("Accounts avec toutes les infos :", accounts);
+  //         }
+  //       }
+
+  //       console.log("Accounts avec toutes les infos :", accounts);
+  //       setGestionAccountData(accounts);
+  //       localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
+  //     } else {
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0]?.textContent;
+  //       setError(errorMessage || "Erreur lors de la récupération des comptes.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erreur de requête principale :", error);
+  //     setError("Erreur lors de la connexion à l'API.");
+  //   } finally {
+  //     setIsHomePageLoading(false);
   //   }
-
-  //   console.log("accounts", accounts);
-
-  //   return accounts;
   // };
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  // <Field name="accountID">${accountID}</Field>
+
+  const fetchAccountRelatedData = async (accountID, password) => {
+    const user = "admin";
+    const buildXML = (tableName) => `
+      <GTSRequest command="dbget">
+        <Authorization account="${accountID}" user="${user}" password="${password}" />
+        <Record table="${tableName}" partial="true">
+          <Field name="accountID">${accountID}</Field>
+
+        </Record>
+      </GTSRequest>`;
+
+    const fetchData = async (tableName) => {
+      const xml = buildXML(tableName);
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+      const text = await res.text();
+      const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+
+      if (result === "success") {
+        const records = xmlDoc.getElementsByTagName("Record");
+        const tableData = [];
+
+        for (let r = 0; r < records.length; r++) {
+          const fields = records[r].getElementsByTagName("Field");
+          const item = {};
+          for (let f = 0; f < fields.length; f++) {
+            const fieldName = fields[f].getAttribute("name");
+            const fieldValue = fields[f].textContent;
+            item[fieldName] = fieldValue;
+          }
+          tableData.push(item);
+        }
+        return tableData;
+      }
+
+      return [];
+    };
+
+    const [accountUsers, accountDevices, accountGroupes] = await Promise.all([
+      fetchData("User"),
+      accountID === "deka" || accountID === "lacouronne"
+        ? []
+        : fetchData("Device"), // Ignorer fetchDevice pour ces 2 comptes
+      // fetchData("Device"), ////////////////////////////////////////////////////////
+      fetchData("DeviceGroup"),
+    ]);
+
+    return {
+      accountID,
+      accountUsers,
+      accountDevices, ////////////////////////////////////////////////////
+      accountGroupes,
+    };
+  };
+
+  const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
+    useState(false);
+  const getAllAccountsData = async (account, user, password) => {
+    setGetAllAccountsDataLoading(true);
+    console.log("account, user, password :", account, user, password);
+    const xmlData = `<GTSRequest command="dbget">
+          <Authorization account="${account}" user="${user}" password="${password}" />
+          <Record table="Account" partial="true" />
+        </GTSRequest>`;
+
+    const response = await fetch("/api/track/Service", {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xmlData,
+    });
+
+    const data = await response.text();
+    const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
+
+    const result = xmlDoc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+
+    if (result !== "success") throw new Error("Failed to fetch accounts");
+
+    const records = xmlDoc.getElementsByTagName("Record");
+    const accounts = [];
+
+    for (let r = 0; r < records.length; r++) {
+      const fields = records[r].getElementsByTagName("Field");
+      const accountData = {};
+
+      for (let f = 0; f < fields.length; f++) {
+        const fieldName = fields[f].getAttribute("name");
+        const fieldValue = fields[f].textContent;
+        accountData[fieldName] = fieldValue;
+      }
+
+      // if (
+      //   accountData.accountID === "deka" ||
+      //   accountData.accountID === "lacouronne"
+      // ) {
+      //   continue;
+      // }
+
+      const extraData = await fetchAccountRelatedData(
+        accountData.accountID,
+        accountData.password
+      );
+      console.log("extraData", extraData);
+      console.log(
+        "AccountID :",
+        accountData.accountID,
+        "Password:",
+        accountData.password
+      );
+      accounts.push({
+        ...accountData,
+        accountUsers: extraData.accountUsers,
+        accountDevices: extraData.accountDevices, ////////////////////////////////////////////////////////////////
+        accountGroupes: extraData.accountGroupes,
+      });
+    }
+
+    console.log("accounts", accounts);
+    setGestionAccountData(accounts);
+    setGetAllAccountsDataLoading(false);
+    localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
+    return accounts;
+  };
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -4205,7 +4209,12 @@ const DataContextProvider = ({ children }) => {
   };
 
   // Fonction pour supprimer un véhicule
-  const deleteVehicle = async (deviceID) => {
+  const deleteVehicle = async (
+    deviceID,
+    userAccount,
+    userUsername,
+    userPassword
+  ) => {
     // Pour suivre le nombre de requête
     incrementerRequête();
     console.log("++++++++++++++++ Requête effectué: deleteVehicle");
@@ -4216,7 +4225,9 @@ const DataContextProvider = ({ children }) => {
 
     const requestBody =
       `<GTSRequest command="dbdel">` +
-      `<Authorization account="${account}" user="${username}" password="${password}"/>` +
+      `<Authorization account="${userAccount || account}" user="${
+        userUsername || username
+      }" password="${userPassword || password}"/>` +
       `<RecordKey table="Device" partial="true">` +
       `<Field name="accountID">${account}</Field>` +
       `<Field name="deviceID">${deviceID}</Field>` +
@@ -5394,6 +5405,10 @@ const DataContextProvider = ({ children }) => {
         gestionAccountData,
         currentAccountSelected,
         setCurrentAccountSelected,
+        currentSelectedUserToConnect,
+        setCurrentSelectedUserToConnect,
+        getAllAccountsDataLoading,
+        setGetAllAccountsDataLoading,
       }}
     >
       {children}

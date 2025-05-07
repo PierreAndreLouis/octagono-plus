@@ -47,7 +47,14 @@ function ListeDesUtilisateur() {
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
     currentAccountSelected,
+    password,
     setCurrentAccountSelected,
+    currentSelectedUserToConnect,
+    setCurrentSelectedUserToConnect,
+    handleLogout,
+    handleLogin,
+    resetIndexedDB,
+    setGestionAccountData,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -91,6 +98,30 @@ function ListeDesUtilisateur() {
 
   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
+  const [inputPassword, setInputPassword] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handlePasswordCheck = (event) => {
+    event.preventDefault(); // Prevents the form from submitting
+    console.log("Clicked......");
+
+    if (inputPassword === password) {
+      console.log("Clicked...... 222");
+
+      // resetIndexedDB();
+      // localStorage.removeItem("gestionAccountData");
+      // setGestionAccountData(null);
+
+      handleLogin(
+        currentSelectedUserToConnect?.accountID,
+        currentSelectedUserToConnect?.userID,
+        currentSelectedUserToConnect?.password
+      );
+    } else {
+      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+    }
+  };
+
   return (
     <div>
       <GestionAccountOptionPopup />
@@ -98,7 +129,7 @@ function ListeDesUtilisateur() {
       {seConnecterAutreComptePopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
           <form
-            // onSubmit={handlePasswordCheck}
+            onSubmit={handlePasswordCheck}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
@@ -111,7 +142,9 @@ function ListeDesUtilisateur() {
               >
                 Veuillez entrer votre mot de passe
               </label>
-
+              {errorMessage && (
+                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+              )}
               <div className="mt-2">
                 <input
                   id="password"
@@ -119,8 +152,12 @@ function ListeDesUtilisateur() {
                   type="password"
                   placeholder="Mot de passe"
                   required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
+                  value={inputPassword}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+
+                    setErrorMessage("");
+                  }}
                   className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
                 />
               </div>
@@ -128,7 +165,8 @@ function ListeDesUtilisateur() {
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button
                 onClick={() => {
-                  //   setSeConnecterAutreComptePopup(false);
+                  // setSeConnecterAutreComptePopup(false);
+                  //   changerDeCompte();
                 }}
                 className="py-1 px-5 bg-orange-500 rounded-lg text-white"
               >
@@ -164,7 +202,9 @@ function ListeDesUtilisateur() {
               >
                 Veuillez entrer votre mot de passe
               </label>
-
+              {errorMessage && (
+                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+              )}
               <div className="mt-2">
                 <input
                   id="password"
@@ -177,6 +217,9 @@ function ListeDesUtilisateur() {
                   className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
                 />
               </div>
+              {/* {errorMessage && (
+                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+              )} */}
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button
@@ -284,7 +327,7 @@ function ListeDesUtilisateur() {
           Liste des Utilisateur
         </h2>
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-lg text-center font-bold ">
-          foodforthepoor{" "}
+          {currentAccountSelected?.description}
         </h3>
         <div className="flex gap-2 justify-center mt-4">
           <Link
@@ -317,6 +360,10 @@ function ListeDesUtilisateur() {
           {currentAccountSelected?.accountUsers?.map((user, index) => {
             return (
               <div
+                onClick={() => {
+                  console.log("User:", user);
+                  setCurrentSelectedUserToConnect(user);
+                }}
                 key={index}
                 className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
               >
@@ -341,7 +388,7 @@ function ListeDesUtilisateur() {
                           Nombre d'Appareils :
                         </p>
                         <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                          ------
+                          {currentAccountSelected?.accountDevices?.length}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">

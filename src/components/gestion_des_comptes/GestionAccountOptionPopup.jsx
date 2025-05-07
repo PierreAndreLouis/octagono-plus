@@ -161,7 +161,7 @@ function GestionAccountOptionPopup() {
               {/*  */}
               {/*  */}
               {/*  */}
-              {/* <Link
+              <Link
                 to="/liste_des_vehicules"
                 // onClick={() =>
                 //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Resume123456")
@@ -172,7 +172,7 @@ function GestionAccountOptionPopup() {
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Gestion des Appareils
                 </h2>
-              </Link> */}
+              </Link>
               {/*  */}
               {/*  */}
               {/*  */}

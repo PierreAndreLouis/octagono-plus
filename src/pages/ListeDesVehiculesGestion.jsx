@@ -46,6 +46,8 @@ function ListeDesVehiculesGestion() {
     setErrorDeleteGeofencePopup,
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
+    currentAccountSelected,
+    deleteVehicle,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -124,7 +126,8 @@ function ListeDesVehiculesGestion() {
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button
                 onClick={() => {
-                  //   setDeleteAccountPopup(false);
+                  // setDeleteAccountPopup(false);
+                  // deleteVehicle()
                 }}
                 className="py-1 px-5 bg-red-500 rounded-lg text-white"
               >
@@ -202,7 +205,7 @@ function ListeDesVehiculesGestion() {
           Liste des Appareils
         </h2>
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-lg text-center font-bold ">
-          foodforthepoor{" "}
+          {currentAccountSelected?.description}
         </h3>
         <div className="flex gap-2 justify-center mt-4">
           <Link
@@ -232,470 +235,130 @@ function ListeDesVehiculesGestion() {
 
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Description :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      Camion Mack Blanc IT-02590/ Caracol/ Prob Batterie
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Plaque du véhicule :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      IT-02590
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Type d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      B1
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Distance totale parcourue :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      40506.11 km
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Numéro de la carte SIM :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      50941070132
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <p className="text-sm mr-2">Modifier</p>
+          {currentAccountSelected?.accountDevices?.length > 0 ? (
+            currentAccountSelected?.accountDevices?.map((device, index) => {
+              return (
+                <div
+                  key={index}
+                  className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                >
+                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                    {index + 1}
+                  </div>
+                  <div className="flex  gap-3  ">
+                    <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
+                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                      <div>
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Description :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {device?.description}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Dernière mise a jour :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {FormatDateHeure(device?.lastUpdateTime).date}
+                            <span className="px-2">/</span>{" "}
+                            {FormatDateHeure(device?.lastUpdateTime).time}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Plaque du véhicule :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {device?.licensePlate}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Telephone :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {device?.simPhoneNumber}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Type d'appareil :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {device?.equipmentType}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">ImeiNumber :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {device?.imeiNumber}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">
+                            Distance totale parcourue :
+                          </p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {/* {device?.lastOdometerKM.toFixed(0)} */}
+                            {device?.lastOdometerKM &&
+                            !isNaN(Number(device?.lastOdometerKM))
+                              ? Number(device?.lastOdometerKM).toFixed(0) +
+                                " km"
+                              : "Non disponible"}{" "}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Numéro de la carte SIM :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            50941070132
+                            {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Date Creation :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {FormatDateHeure(device?.creationTime).date}
+                            <span className="px-2">/</span>{" "}
+                            {FormatDateHeure(device?.creationTime).time}
+                          </span>
+                        </div>{" "}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
+                    <Link
+                      onClick={() => {
+                        setEditAccountGestion(true);
+                      }}
+                      className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
+                    >
+                      <p className="text-sm mr-2">Modifier</p>
 
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <p className="text-sm mr-2">Supprimer</p>
+                      <FaRegEdit />
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setDeleteAccountPopup(true);
+                      }}
+                      className={`${
+                        true
+                          ? " bg-red-500 text-white"
+                          : "text-red-600 border-[0.02rem] border-red-500 "
+                      }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
+                    >
+                      <p className="text-sm mr-2">Supprimer</p>
 
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Description :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      Camion Mack Blanc IT-02590/ Caracol/ Prob Batterie
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Plaque du véhicule :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      IT-02590
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Type d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      B1
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Distance totale parcourue :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      40506.11 km
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Numéro de la carte SIM :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      50941070132
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
+                      <FaTrashAlt />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              );
+            })
+          ) : (
+            <div className="flex justify-center font-semibold text-lg">
+              Pas de résultat
             </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
+          )}
+
           {/*  */}
           {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Description :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      Camion Mack Blanc IT-02590/ Caracol/ Prob Batterie
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Plaque du véhicule :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      IT-02590
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Type d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      B1
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Distance totale parcourue :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      40506.11 km
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Numéro de la carte SIM :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      50941070132
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
+
           {/*  */}
           {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Description :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      Camion Mack Blanc IT-02590/ Caracol/ Prob Batterie
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Plaque du véhicule :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      IT-02590
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Type d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      B1
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Distance totale parcourue :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      40506.11 km
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Numéro de la carte SIM :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      50941070132
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Description :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      Camion Mack Blanc IT-02590/ Caracol/ Prob Batterie
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Plaque du véhicule :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      IT-02590
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Type d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      B1
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Distance totale parcourue :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      40506.11 km
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Numéro de la carte SIM :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      50941070132
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
-          {/*  */}
-          {/*  */}
-          <div className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4">
-            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-              1
-            </div>
-            <div className="flex  gap-3  ">
-              <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
-              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                <div>
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Description :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      {/* {geozone?.description} */}
-                      Camion Mack Blanc IT-02590/ Caracol/ Prob Batterie
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Date Creation :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      21-04-2024 <span className="px-2">/</span> 05:34 PM
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Plaque du véhicule :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      IT-02590
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Type d'appareil :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      B1
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Distance totale parcourue :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      40506.11 km
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                  <div className="flex flex-wrap border-b py-1">
-                    <p className="font-bold">Numéro de la carte SIM :</p>
-                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                      50941070132
-                      {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                    </span>
-                  </div>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-              <Link
-                onClick={() => {
-                  setEditAccountGestion(true);
-                }}
-                className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-              >
-                <FaRegEdit />
-              </Link>
-              <button
-                onClick={() => {
-                  setDeleteAccountPopup(true);
-                }}
-                className={`${
-                  true
-                    ? " bg-red-500 text-white"
-                    : "text-red-600 border-[0.02rem] border-red-500 "
-                }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          </div>
+
           {/*  */}
           {/*  */}
 
