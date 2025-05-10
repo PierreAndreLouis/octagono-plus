@@ -19,6 +19,8 @@ import {
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { PiIntersectThreeBold } from "react-icons/pi";
+import CreateNewGroupeGestion from "../components/gestion_des_comptes/CreateNewGroupeGestion";
+import ModifyGroupeGestion from "../components/gestion_des_comptes/ModifyGroupeGestion";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function ListeDesGroupes() {
@@ -49,6 +51,8 @@ function ListeDesGroupes() {
     setShowAccountOptionsPopup,
     currentAccountSelected,
     backToPagePrecedent,
+    currentSelectedGroupeGestion,
+    setCurrentSelectedGroupeGestion,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -90,9 +94,23 @@ function ListeDesGroupes() {
 
   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
+  const [showCreateNewGroupePage, setShowCreateNewGroupePage] = useState(false);
+  const [showModifyNewGroupePage, setShowModifyNewGroupePage] = useState(false);
+
   return (
     <div>
       <GestionAccountOptionPopup />
+
+      {showCreateNewGroupePage && (
+        <CreateNewGroupeGestion
+          setShowCreateNewGroupePage={setShowCreateNewGroupePage}
+        />
+      )}
+      {showModifyNewGroupePage && (
+        <ModifyGroupeGestion
+          setShowModifyNewGroupePage={setShowModifyNewGroupePage}
+        />
+      )}
 
       {deleteAccountPopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
@@ -217,7 +235,12 @@ function ListeDesGroupes() {
             <IoArrowBack className="text-xl" />
             <p className="hidden md:block">Retour</p>
           </Link>{" "}
-          <Link className="bg-orange-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6">
+          <div
+            onClick={() => {
+              setShowCreateNewGroupePage(true);
+            }}
+            className="bg-orange-500 cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+          >
             <div className="flex justify-center items-center gap-3 ">
               <FaUserPlus className="text-2xl" />
               <p className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
@@ -225,7 +248,7 @@ function ListeDesGroupes() {
                 Groupe
               </p>
             </div>
-          </Link>{" "}
+          </div>{" "}
           <button
             onClick={() => setShowAccountOptionsPopup(true)}
             className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
@@ -244,6 +267,9 @@ function ListeDesGroupes() {
             currentAccountSelected?.accountGroupes?.map((groupe, index) => {
               return (
                 <div
+                  onClick={() => {
+                    setCurrentSelectedGroupeGestion(groupe);
+                  }}
                   key={index}
                   className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                 >
@@ -265,10 +291,19 @@ function ListeDesGroupes() {
                         </div>{" "}
                         <div className="flex flex-wrap border-b py-1">
                           <p className="font-bold- text-gray-700">
+                            ID du Groupe :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            {/* {geozone?.description} */}
+                            {groupe?.groupID}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold- text-gray-700">
                             Nombre d'appareil :
                           </p>
                           <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            ----
+                            {groupe?.groupeDevices?.length}
                           </span>
                         </div>{" "}
                         <div className="flex flex-wrap border-b py-1">
@@ -285,7 +320,9 @@ function ListeDesGroupes() {
                   <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
                     <Link
                       onClick={() => {
-                        setEditAccountGestion(true);
+                        // setEditAccountGestion(true);
+                        setCurrentSelectedGroupeGestion(groupe);
+                        setShowModifyNewGroupePage(true);
                       }}
                       className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >
@@ -295,6 +332,7 @@ function ListeDesGroupes() {
                     <button
                       onClick={() => {
                         setDeleteAccountPopup(true);
+                        setCurrentSelectedGroupeGestion(groupe);
                       }}
                       className={`${
                         true

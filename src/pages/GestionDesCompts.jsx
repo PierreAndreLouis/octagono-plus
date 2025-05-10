@@ -6,6 +6,7 @@ import { MdErrorOutline, MdSwitchAccount } from "react-icons/md";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffectCircle";
 import CreateNewAccountPage from "../components/gestion_des_comptes/CreateNewAccountPage";
+import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
 
 function GestionDesCompts() {
   const {
@@ -19,10 +20,25 @@ function GestionDesCompts() {
     setListeGestionDesVehicules,
     setCurrentSelectedUserToConnect,
     setShowAccountOptionsPopup,
+    fetchAllComptes,
+    userDevices,
+    accountDevices,
+    fetchAccountGroupes,
+    fetchGroupeDevices,
+    fetchAccountUsers,
+    fetchUserDevices,
   } = useContext(DataContext);
 
   const [showCreateNewAccountPopup, setShowCreateNewAccountPopup] =
     useState(false);
+
+  const [inputSearchItem, setInputSearchItem] = useState("");
+
+  const filterListeDesCompte = inputSearchItem
+    ? gestionAccountData.filter((item) =>
+        item?.description.toLowerCase().includes(inputSearchItem.toLowerCase())
+      )
+    : gestionAccountData;
 
   return (
     <div>
@@ -43,31 +59,53 @@ function GestionDesCompts() {
             <h2 className="mt-[10rem] text-lg text-center font-bold ">
               Gestion Des Comptes
             </h2>
-
             {/* <button
               onClick={() => {
-                TestDeRequetteDevices(
-                  "sysadmin",
-                  "admin",
-                  "OctagonoGPSHaitiAdmin13@1919"
-                );
+                fetchAccountUsers("demo", "112233")
+                  .then((users) => fetchUserDevices("demo", users))
+                  .catch((err) => {
+                    console.error(
+                      "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+                      err
+                    );
+                    setError("Erreur lors de la mise à jour des utilisateurs.");
+                  });
+                // TestDeRequetteDevices();
+                // fetchAccountGroupes("demo", "112233")
+                //   .then((groupes) =>
+                //     fetchGroupeDevices("demo", groupes, "112233")
+                //   )
+                //   .catch((err) => {
+                //     console.error(
+                //       "Erreur lors du rafraîchissement des groupes :",
+                //       err
+                //     );
+                //     setError("Erreur lors de la mise à jour des groupes.");
+                //   });
               }}
             >
-              Test de requête Devices
-            </button>{" "}
-            <br />
+              Test de requête
+            </button>{" "} */}
+            {/* <br />
             <button
               onClick={() => {
-                getAllAccountsData(
-                  "sysadmin",
-                  "admin",
-                  "OctagonoGPSHaitiAdmin13@1919"
-                );
+                // fetchAllComptes(
+                //   "sysadmin",
+                //   "admin",
+                //   "OctagonoGPSHaitiAdmin13@1919"
+                // );
+
+                console.log("accountDevices:", accountDevices);
+                console.log("userDevices:", userDevices);
+                // getAllAccountsData(
+                //   "sysadmin",
+                //   "admin",
+                //   "OctagonoGPSHaitiAdmin13@1919"
+                // );
               }}
             >
               Tous les donnees regrouper
             </button>{" "} */}
-
             <div className="flex justify-center mt-4">
               <button
                 onClick={() => {
@@ -83,10 +121,26 @@ function GestionDesCompts() {
                 </div>
               </button>{" "}
             </div>
-
+            <div className="mx-auto border border-gray-400 rounded-md flex items-center justify-between max-w-[30rem] mt-4">
+              <input
+                id="text"
+                name="text"
+                type="text"
+                placeholder="Rechercher un compte"
+                required
+                value={inputSearchItem}
+                onChange={(e) => setInputSearchItem(e.target.value)}
+                className=" px-3 w-full focus:outline-0  dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400   sm:text-sm sm:leading-6"
+              />
+              <IoCloseOutline
+                onClick={() => setInputSearchItem("")}
+                className="text-2xl min-w-[2rem] mr-2 cursor-pointer text-red-500"
+              />
+              <IoSearchOutline className="text-2xl text-gray-500 border-l-2 cursor-pointer border-l-gray-400 min-w-[3rem]" />
+            </div>
             {/* Liste des Comptes */}
             <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-              {gestionAccountData?.map((account, index) => {
+              {filterListeDesCompte?.map((account, index) => {
                 return (
                   <div
                     key={index}
@@ -111,6 +165,14 @@ function GestionDesCompts() {
                             </p>
                             <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
                               {account?.description}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              ID du Compte :
+                            </p>
+                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                              {account?.accountID}
                             </span>
                           </div>{" "}
                           {/*  */}

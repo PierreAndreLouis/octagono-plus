@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   IoArrowBack,
   IoChevronBackCircleOutline,
@@ -21,6 +21,8 @@ import {
 } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
+import CreateNewDeviceGestion from "../components/gestion_des_comptes/CreateNewDeviceGestion";
+import ModifyDeviceGestion from "../components/gestion_des_comptes/ModifyDeviceGestion";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function ListeDesVehiculesGestion() {
@@ -57,6 +59,14 @@ function ListeDesVehiculesGestion() {
     setCurrentSelectedUserToConnect,
     TestDeRequetteDevices,
     backToPagePrecedent,
+    password,
+    deleteVehicleEnGestionAccount,
+    currentSelectedDeviceGestion,
+    setCurrentSelectedDeviceGestion,
+    deviceListeTitleGestion,
+    setDeviceListeTitleGestion,
+    gestionAccountData,
+    groupeDevices,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -71,28 +81,7 @@ function ListeDesVehiculesGestion() {
   const isCurrentGeozoneActive =
     currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-  const geozoneID =
-    currentGeozone?.geozoneID ||
-    `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
-
-  const supprimerOuModifierGeozone = () => {
-    // activerOuDesactiverGeofence(geozoneID, 0);
-
-    if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
-      supprimerGeofence(geozoneID);
-    }
-
-    if (
-      (isCurrentGeozoneActive || !isCurrentGeozoneActive) &&
-      currentGeozone?.isActive === 0
-    ) {
-      // activerOuDesactiverGeofence(geozoneID, 1);
-    }
-
-    if (!isCurrentGeozoneActive && currentGeozone?.isActive === 1) {
-      // activerOuDesactiverGeofence(geozoneID, 0);
-    }
-  };
+  const [inputPassword, setInputPassword] = useState("");
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
 
@@ -109,20 +98,87 @@ function ListeDesVehiculesGestion() {
       )
     : currentAccountSelected?.accountUsers;
 
-  const [selectedVehiculeAccount, setSelectedVehiculeAccount] = useState();
+  const filterGroupeAccountData = searchInputTerm
+    ? currentAccountSelected?.accountGroupes?.filter((item) =>
+        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
+      )
+    : currentAccountSelected?.accountGroupes;
 
-  const deleteVehicleFonction = () => {
-    deleteVehicle(deviceID, userAccount, userUsername, userPassword);
+  // const [selectedVehiculeAccount, setSelectedVehiculeAccount] = useState();
+
+  const deleteVehicleFonction = (e) => {
+    e.preventDefault();
+    console.log("asdsdfsdf");
+    console.log(inputPassword);
+    console.log(password);
+    if (inputPassword === password) {
+      console.log("Permission de supprimer avec passowrd: ", inputPassword);
+      deleteVehicleEnGestionAccount(
+        currentSelectedDeviceGestion?.deviceID,
+        currentSelectedUserToConnect?.accountID,
+        currentSelectedUserToConnect?.userID,
+        currentSelectedUserToConnect?.password
+      );
+      setDeleteAccountPopup(false);
+    } else {
+      console.log("Mot de passe incorrect");
+    }
   };
+
+  const [showCreateNewDevicePage, setShowCreateNewDevicePage] = useState(false);
+  const [showModifyNewDevicePage, setShowModifyNewDevicePage] = useState(false);
+
+  const [showUserListeToSelectDevice, setShowUserListeToSelectDevice] =
+    useState(true);
+
+  const [currentSelectedGroupeGestion, setCurrentSelectedGroupeGestion] =
+    useState();
+
+  useEffect(() => {
+    // Crée un Set des deviceID de deviceInfo pour une recherche rapide
+    const deviceIDsInInfo = new Set(
+      currentSelectedGroupeGestion?.groupeDevices?.map(
+        (device) => device.deviceID
+      )
+    );
+
+    // Filtre les éléments de deviceListe
+    const updateListe = currentAccountSelected?.accountDevices?.filter(
+      (device) => deviceIDsInInfo.has(device.deviceID)
+    );
+
+    // console.log(updateListe);
+
+    setListeGestionDesVehicules(updateListe);
+  }, [currentSelectedGroupeGestion]);
+
+  const [showChooseUserMessage, setShowChooseUserMessage] = useState("");
+
+  const [showUserGroupeCategorieSection, setShowUserGroupeCategorieSection] =
+    useState(true);
 
   return (
     <div>
       <GestionAccountOptionPopup />
+      {showCreateNewDevicePage && (
+        <CreateNewDeviceGestion
+          setShowUserListeToSelectDevice={setShowUserListeToSelectDevice}
+          setShowUserGroupeCategorieSection={setShowUserGroupeCategorieSection}
+          setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+          setShowCreateNewDevicePage={setShowCreateNewDevicePage}
+        />
+      )}
+
+      {showModifyNewDevicePage && (
+        <ModifyDeviceGestion
+          setShowModifyNewDevicePage={setShowModifyNewDevicePage}
+        />
+      )}
 
       {deleteAccountPopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
           <form
-            // onSubmit={handlePasswordCheck}
+            onSubmit={deleteVehicleFonction}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
@@ -143,24 +199,22 @@ function ListeDesVehiculesGestion() {
                   type="password"
                   placeholder="Mot de passe"
                   required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
+                  value={inputPassword}
+                  onChange={(e) => setInputPassword(e.target.value)}
                   className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button
+                type="submit"
                 onClick={() => {
-                  // setDeleteAccountPopup(false);
-                  // deleteVehicleFonction();
-                  // deleteVehicle(deviceID, userAccount, userUsername, userPassword);
-                  console.log(
-                    selectedVehiculeAccount.deviceID,
-                    currentSelectedUserToConnect?.accountID,
-                    currentSelectedUserToConnect?.userID,
-                    currentSelectedUserToConnect?.password
-                  );
+                  // console.log(
+                  //   selectedVehiculeAccount.deviceID,
+                  //   currentSelectedUserToConnect?.accountID,
+                  //   currentSelectedUserToConnect?.userID,
+                  //   currentSelectedUserToConnect?.password
+                  // );
                   // deleteVehicle(
                   //   selectedVehiculeAccount.deviceID,
                   //   currentSelectedUserToConnect?.accountID,
@@ -241,8 +295,8 @@ function ListeDesVehiculesGestion() {
       )}
 
       {chooseOtherAccountGestion && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-40">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[70vh] rounded-lg">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999999999999999999]">
+          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[80vh] max-h-[90vh] rounded-lg">
             <div className="relative">
               <div className="text-center font-semibold text-lg bg-orange-100 py-4">
                 <h2 className="">Liste des Utilisateurs</h2>
@@ -258,97 +312,209 @@ function ListeDesVehiculesGestion() {
                 className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4"
               />
             </div>
-            <div className="flex mx-3 my-4 gap-2 justify-between items-center">
-              <input
-                className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
-                type="text"
-                placeholder="Rechercher un compte"
-                value={searchInputTerm}
-                onChange={(e) => {
-                  setSearchInputTerm(e.target.value);
-                }}
-                // value={searchQueryListPopup}
-                // onChange={handleSearchChange}
-              />
-              {/* <Tooltip
-                              title="Réinitialiser le filtrer par catégorie
-                            "
-                              PopperProps={{
-                                modifiers: [
-                                  {
-                                    name: "offset",
-                                    options: {
-                                      offset: [0, 0], // Décalage horizontal et vertical
-                                    },
-                                  },
-                                ],
-                              }}
-                            > */}
-              <p
-                onClick={() => {
-                  // setTilterSearchVehiculePopupByCategorie("all");
-                  // setSearchQueryListPopup("");
-                }}
-                className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5"
-              >
-                Rechercher
-              </p>
-              {/* </Tooltip> */}
-            </div>
-            <div className="flex overflow-auto h-[45vh] pb-20 flex-col gap-4 mx-3">
-              {/*  */}
-              <button
-                onClick={() => {
-                  {
-                    setListeGestionDesVehicules(
-                      currentAccountSelected?.accountDevices
-                    );
-                    setChooseOtherAccountGestion(false);
-                    setCurrentSelectedUserToConnect(null);
-                  }
-                }}
-                className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
-              >
-                Tous les appareils
-              </button>{" "}
-              {filterGestionAccountData?.map((user, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setListeGestionDesVehicules(user?.userDevices);
-                      setCurrentSelectedUserToConnect(user);
-                      setChooseOtherAccountGestion(false);
-                    }}
-                    className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                      {index + 1}
+            {showUserGroupeCategorieSection && (
+              <div className="grid grid-cols-2 mx-3 my-3 gap-2">
+                <button
+                  onClick={() => {
+                    setShowUserListeToSelectDevice(true);
+                  }}
+                  className={`${
+                    showUserListeToSelectDevice
+                      ? "bg-orange-300"
+                      : "bg-gray-200"
+                  } flex cursor-pointer justify-center items-center shadow-lg-- shadow-black/10 rounded-md  font-bold text-black py-2 `}
+                >
+                  Utilisateurs
+                </button>
+                <button
+                  onClick={() => {
+                    setShowUserListeToSelectDevice(false);
+                  }}
+                  className={`${
+                    !showUserListeToSelectDevice
+                      ? "bg-orange-300"
+                      : "bg-gray-200"
+                  }  font-bold cursor-pointer    flex  justify-center items-center shadow-lg-- shadow-black/10 rounded-md  py-2 `}
+                >
+                  Groupe
+                </button>
+              </div>
+            )}
+            <div>
+              {showUserListeToSelectDevice ? (
+                <div>
+                  <div className="flex mx-3 my-4 gap-2 justify-between items-center">
+                    <input
+                      className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
+                      type="text"
+                      placeholder="Rechercher un utilisateur"
+                      value={searchInputTerm}
+                      onChange={(e) => {
+                        setSearchInputTerm(e.target.value);
+                      }}
+                    />
+
+                    <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
+                      Rechercher
                     </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                    <div>
-                      <p className="text-gray-600">
-                        Nom du compte :{" "}
-                        <span className="font-bold">{user?.description}</span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
-                        <span className="font-bold">
-                          {user?.userDevices?.length}
-                        </span>{" "}
-                      </p>
-                    </div>
+                    {/* </Tooltip> */}
                   </div>
-                );
-              })}
-              {/*  */}
+                  {showChooseUserMessage && (
+                    <div className="px-3 flex justify-between items-start py-2 rounded-md border border-red-600 bg-red-200 font-semibold mx-3 mb-4">
+                      <p className="w-full text-red-700">
+                        Choisissez un utilisateur pour ajouter un nouveau
+                        Appareil
+                      </p>
+                      <IoClose
+                        className="text-[1.6rem] cursor-pointer text-red-500"
+                        onClick={() => {
+                          setShowChooseUserMessage(false);
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="flex overflow-auto h-[60vh] max-h-[55vh] pb-20 flex-col gap-4 mx-3">
+                    {/*  */}
+                    <button
+                      onClick={() => {
+                        {
+                          setDeviceListeTitleGestion("Tous les appareils");
+                          setListeGestionDesVehicules(
+                            currentAccountSelected?.accountDevices
+                          );
+                          setChooseOtherAccountGestion(false);
+                          setCurrentSelectedUserToConnect(null);
+                        }
+                      }}
+                      className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
+                    >
+                      Tous les appareils
+                    </button>{" "}
+                    {filterGestionAccountData?.map((user, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setListeGestionDesVehicules(user?.userDevices);
+                            setCurrentSelectedUserToConnect(user);
+                            setChooseOtherAccountGestion(false);
+                            setDeviceListeTitleGestion(
+                              "Utilisateur : " + user?.description
+                            );
+                            setShowChooseUserMessage(false);
+                          }}
+                          className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
+                        >
+                          <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
+                            {index + 1}
+                          </p>
+                          <FaUserCircle className="text-gray-500 text-[2.5rem]" />
+                          <div>
+                            <p className="text-gray-600">
+                              Nom du compte :{" "}
+                              <span className="font-bold">
+                                {user?.description}
+                              </span>{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              Nombre d'appareil :{" "}
+                              <span className="font-bold">
+                                {user?.userDevices?.length}
+                              </span>{" "}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {/*  */}
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex mx-3 my-4 gap-2 justify-between items-center">
+                    <input
+                      className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
+                      type="text"
+                      placeholder="Rechercher un groupe"
+                      value={searchInputTerm}
+                      onChange={(e) => {
+                        setSearchInputTerm(e.target.value);
+                      }}
+                    />
+
+                    <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
+                      Rechercher
+                    </p>
+                    {/* </Tooltip> */}
+                  </div>
+                  <div className="flex overflow-auto h-[60vh] max-h-[55vh] pb-20 flex-col gap-4 mx-3">
+                    {/*  */}
+                    <button
+                      onClick={() => {
+                        {
+                          setListeGestionDesVehicules(
+                            currentAccountSelected?.accountDevices
+                          );
+                          setChooseOtherAccountGestion(false);
+                          setCurrentSelectedUserToConnect(null);
+                        }
+                      }}
+                      className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
+                    >
+                      Tous les appareils
+                    </button>{" "}
+                    {filterGroupeAccountData?.map((group, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            // setCurrentSelectedUserToConnect(group);
+                            setChooseOtherAccountGestion(false);
+                            setCurrentSelectedGroupeGestion(group);
+                            setDeviceListeTitleGestion(
+                              "Groupe : " + group?.description
+                            );
+                          }}
+                          className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
+                        >
+                          <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
+                            {index + 1}
+                          </p>
+                          <FaUserCircle className="text-gray-500 text-[2.5rem]" />
+                          <div>
+                            <p className="text-gray-600">
+                              Nom du compte :{" "}
+                              <span className="font-bold">
+                                {group?.description}
+                              </span>{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              Nombre d'appareil :{" "}
+                              <span className="font-bold">
+                                {group?.groupeDevices?.length}
+                              </span>{" "}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {/*  */}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
 
       <div className="px-4 pb-40">
-        <h2 className="mt-[10rem] text-2xl text-gray-700 text-center font-bold ">
+        <h2
+          onClick={() => {
+            console.log("gestionAccountData", gestionAccountData);
+            console.log("groupeDevices", groupeDevices);
+          }}
+          className="mt-[10rem] text-2xl text-gray-700 text-center font-bold "
+        >
           Liste des Appareils
         </h2>
 
@@ -379,15 +545,28 @@ function ListeDesVehiculesGestion() {
               <IoArrowBack className="text-xl" />
               <p className="hidden md:block">Retour</p>
             </button>{" "}
-            <Link className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6">
-              <div className="flex justify-center items-center gap-3 ">
+            <button
+              onClick={() => {
+                setShowCreateNewDevicePage(true);
+                // if (!currentSelectedUserToConnect) {
+                //   setChooseOtherAccountGestion(true);
+                //   setShowChooseUserMessage(true);
+                //   setShowCreateNewDevicePage(true);
+                //   setShowUserGroupeCategorieSection(false);
+                //   setShowUserGroupeCategorieSection(false);
+                //   setShowUserListeToSelectDevice(true);
+                // }
+              }}
+              className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+            >
+              <span className="flex justify-center items-center gap-3 ">
                 <FaUserPlus className="text-2xl" />
-                <p className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                <span className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
                   <span className="hidden md:inline">Ajouter un</span> Nouveau
                   Appareil
-                </p>
-              </div>
-            </Link>{" "}
+                </span>
+              </span>
+            </button>{" "}
             <button
               onClick={() => setShowAccountOptionsPopup(true)}
               className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
@@ -400,16 +579,15 @@ function ListeDesVehiculesGestion() {
           <div
             onClick={() => {
               setChooseOtherAccountGestion(true);
+              setShowUserGroupeCategorieSection(true);
+
               console.log(currentSelectedUserToConnect);
             }}
             className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
           >
             <h3 className="w-full text-center font-semibold">
               {/* Compte: */}
-              <span>
-                {currentSelectedUserToConnect?.description ||
-                  "Tous les appareils"}
-              </span>
+              <span>{deviceListeTitleGestion || "Tous les Appareils"}</span>
             </h3>
             <FaChevronDown />
           </div>
@@ -423,7 +601,7 @@ function ListeDesVehiculesGestion() {
               return (
                 <div
                   onClick={() => {
-                    setSelectedVehiculeAccount(device);
+                    // setCurrentSelectedDeviceGestion(device);
                     console.log(device);
                     console.log(currentAccountSelected);
                     console.log(currentSelectedUserToConnect);
@@ -441,9 +619,17 @@ function ListeDesVehiculesGestion() {
                         <div className="flex flex-wrap border-b py-1">
                           <p className="font-bold">Description :</p>
                           <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.description}
+                            {device?.description ||
+                              device?.displayName ||
+                              "Pas de nom disponible"}
                           </span>
                         </div>{" "}
+                        {/* <div className="flex flex-wrap border-b py-1">
+                          <p className="font-bold">Groupe :</p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {device?.groupeID || "Défaut"}
+                          </span>
+                        </div>{" "} */}
                         <div className="flex flex-wrap border-b py-1">
                           <p className="font-bold">Dernière mise a jour :</p>
                           <span className=" dark:text-orange-500 text-gray-600 pl-5">
@@ -510,7 +696,11 @@ function ListeDesVehiculesGestion() {
                   <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
                     <Link
                       onClick={() => {
-                        setEditAccountGestion(true);
+                        // setEditAccountGestion(true);
+                        setCurrentSelectedDeviceGestion(device);
+
+                        setShowModifyNewDevicePage(true);
+                        setShowUserGroupeCategorieSection(false);
                       }}
                       className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >
@@ -520,6 +710,8 @@ function ListeDesVehiculesGestion() {
                     </Link>
                     <button
                       onClick={() => {
+                        setCurrentSelectedDeviceGestion(device);
+
                         setDeleteAccountPopup(true);
                       }}
                       className={`${
@@ -550,75 +742,6 @@ function ListeDesVehiculesGestion() {
           {/*  */}
         </div>
       </div>
-
-      {supprimerGeozonePopup && (
-        <div className="fixed inset-0 z-10">
-          <div className="fixed inset-0 z-40 min-h-full overflow-y-auto overflow-x-hidden transition flex items-center">
-            {/* <!-- overlay --> */}
-            <div className="fixed inset-0 w-full h-full bg-black/50 cursor-pointer"></div>
-
-            {/* <!-- Modal --> */}
-            <div className="relative w-full cursor-pointer pointer-events-none transition my-auto p-4">
-              <div className="w-full py-2 bg-white cursor-default pointer-events-auto ---dark:bg-gray-800 relative rounded-xl mx-auto max-w-sm">
-                <div className="space-y-2 p-2">
-                  <div className="p-4 space-y-2 text-center ---dark:text-white">
-                    <h2
-                      className="text-xl font-bold tracking-tight"
-                      id="page-action.heading"
-                    >
-                      {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"}
-                    </h2>
-
-                    <p className="text-gray-500">
-                      Êtes-vous sûr de{" "}
-                      {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"} le
-                      geozone ? ?
-                    </p>
-                    <p className="text-red-500 font-semibold">
-                      {currentGeozone?.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="border-t ---dark:border-gray-700 px-2"></div>
-
-                  <div className="px-6 py-2">
-                    <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(0,1fr))]">
-                      <button
-                        onClick={() => {
-                          setSupprimerGeozonePopup(false);
-                        }}
-                        className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset ---dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-gray-800 bg-white border-gray-300 hover:bg-gray-50 focus:ring-primary-600 focus:text-primary-600 focus:bg-primary-50 focus:border-primary-600 ---dark:bg-gray-800 ---dark:hover:bg-gray-700 ---dark:border-gray-600 ---dark:hover:border-gray-500 ---dark:text-gray-200 ---dark:focus:text-primary-400 ---dark:focus:border-primary-400 ---dark:focus:bg-gray-800"
-                      >
-                        <span className="flex items-center gap-1">
-                          <span className="">Annuler</span>
-                        </span>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          //   supprimerOuModifierGeozone();
-                          //   setSupprimerGeozonePopup(false);
-                        }}
-                        className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset ---dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-white shadow focus:ring-white border-transparent bg-red-600 hover:bg-red-500 focus:bg-red-700 focus:ring-offset-red-700"
-                      >
-                        <span className="flex items-center gap-1">
-                          <span className="">
-                            {isCurrentGeozoneActive
-                              ? "Supprimer"
-                              : "Désactiver"}
-                          </span>
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

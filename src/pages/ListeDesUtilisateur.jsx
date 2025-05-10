@@ -63,6 +63,8 @@ function ListeDesUtilisateur() {
     setListeGestionDesVehicules,
     gestionAccountData,
     backToPagePrecedent,
+    fetchAccountUsers,
+    fetchUserDevices,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -341,30 +343,9 @@ function ListeDesUtilisateur() {
                 onChange={(e) => {
                   setSearchInputTerm(e.target.value);
                 }}
-                // value={searchQueryListPopup}
-                // onChange={handleSearchChange}
               />
-              {/* <Tooltip
-                        title="Réinitialiser le filtrer par catégorie
-                      "
-                        PopperProps={{
-                          modifiers: [
-                            {
-                              name: "offset",
-                              options: {
-                                offset: [0, 0], // Décalage horizontal et vertical
-                              },
-                            },
-                          ],
-                        }}
-                      > */}
-              <p
-                onClick={() => {
-                  // setTilterSearchVehiculePopupByCategorie("all");
-                  // setSearchQueryListPopup("");
-                }}
-                className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5"
-              >
+
+              <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
                 Rechercher
               </p>
               {/* </Tooltip> */}
@@ -436,26 +417,31 @@ function ListeDesUtilisateur() {
       /> */}
 
       <div className="px-4 pb-40">
-        <h2 className="mt-[10rem] text-2xl text-gray-700 text-center font-bold ">
+        <h2
+          onClick={() => {
+            fetchAccountUsers("demo", "112233")
+              .then((users) => fetchUserDevices("demo", users))
+              .catch((err) => {
+                console.error(
+                  "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+                  err
+                );
+                setError("Erreur lors de la mise à jour des utilisateurs.");
+              });
+          }}
+          className="mt-[10rem] text-2xl text-gray-700 text-center font-bold "
+        >
           Liste des Utilisateur
         </h2>
-        {/* <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-lg text-center font-bold ">
-          {currentAccountSelected?.description}
-        </h3> */}
+
         <h3 className=" text-orange-600 mb-10 text-md text-center font-bold-- ">
           <span className="text-gray-700">Compte :</span>{" "}
           {currentAccountSelected?.description}
         </h3>
-        {/* <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-          {currentSelectedUserToConnect?.description && (
-            <span className="text-gray-700">Utilisateur :</span>
-          )}{" "}
-          {currentSelectedUserToConnect?.description}
-        </h3> */}
+
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           <div className="flex    gap-2 justify-between mt-4">
             <button
-              // to="/gestion_des_comptes?tab=comptes"
               onClick={() => {
                 backToPagePrecedent();
               }}
@@ -521,6 +507,20 @@ function ListeDesUtilisateur() {
                         <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
                           {/* {geozone?.description} */}
                           {user?.description}
+                        </span>
+                      </div>{" "}
+                      <div className="flex flex-wrap">
+                        <p className="font-bold- text-gray-700">UserID :</p>
+                        <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          {/* {geozone?.description} */}
+                          {user?.userID}
+                        </span>
+                      </div>{" "}
+                      <div className="flex flex-wrap">
+                        <p className="font-bold- text-gray-700">Groupe :</p>
+                        <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          {/* {geozone?.description} */}
+                          {/* {user?.Grou} */}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
@@ -593,9 +593,6 @@ function ListeDesUtilisateur() {
               </div>
             );
           })}
-
-          {/*  */}
-          {/*  */}
 
           {/*  */}
         </div>

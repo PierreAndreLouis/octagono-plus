@@ -1,19 +1,27 @@
 import React, { useContext, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PiIntersectThreeBold } from "react-icons/pi";
 
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
 import { MdSwitchAccount } from "react-icons/md";
 
-function GestionAccountOptionPopup() {
+function GestionAccountOptionPopup({
+  showCreateNewDevicePage,
+  setShowCreateNewDevicePage,
+}) {
   const {
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
     setCurrentAccountSelected,
     currentAccountSelected,
+    listeGestionDesVehicules,
+    setListeGestionDesVehicules,
+    deviceListeTitleGestion,
+    setDeviceListeTitleGestion,
   } = useContext(DataContext);
+  const navigate = useNavigate(); // ✅ OK ici
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
 
@@ -128,7 +136,7 @@ function GestionAccountOptionPopup() {
       )}
 
       {showAccountOptionsPopup && (
-        <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
+        <div className="fixed flex justify-center items-center z-[9999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
           <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowAccountOptionsPopup(false)}
@@ -149,17 +157,8 @@ function GestionAccountOptionPopup() {
             </div>
             <div
               onClick={() => setShowAccountOptionsPopup(false)}
-              className="p-4 flex flex-col gap-4 py-6 pb-10"
+              className="p-4 flex flex-col gap-4 py-6 pb-10--"
             >
-              <Link
-                to="/gestion_des_comptes"
-                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
-              >
-                <MdSwitchAccount className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
-                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Liste des Comptes
-                </h2>
-              </Link>
               <Link
                 to="/liste_des_utilisateurs"
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
@@ -175,9 +174,14 @@ function GestionAccountOptionPopup() {
               {/*  */}
               <Link
                 to="/liste_des_vehicules"
-                // onClick={() =>
-                //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Resume123456")
-                // }
+                onClick={() => {
+                  setTimeout(() => {
+                    setListeGestionDesVehicules(
+                      currentAccountSelected?.accountDevices
+                    );
+                    setDeviceListeTitleGestion("Tous les Appareils");
+                  }, 500);
+                }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
@@ -226,6 +230,17 @@ function GestionAccountOptionPopup() {
                 <h2 className="font-semibold text-red-900 dark:text-red-50">
                   Supprimer le compte
                 </h2>
+              </div>
+              <div className="flex justify-end">
+                <Link
+                  to="/gestion_des_comptes"
+                  className="shadow-md mt-8 cursor-pointer bg-orange-500 text-white font-bold dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
+                >
+                  {/* <MdSwitchAccount className="text-[1.62rem] text-orange-400 dark:text-orange-50" /> */}
+                  <h2 className="font-semibold px-4">
+                    Retour a la Liste des Comptes
+                  </h2>
+                </Link>
               </div>
               {/* callError, setCallError, lancerAppel, */}
             </div>

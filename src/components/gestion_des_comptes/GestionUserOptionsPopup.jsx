@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PiIntersectThreeBold } from "react-icons/pi";
 
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
@@ -11,7 +11,10 @@ function GestionUserOptionsPopup() {
     currentSelectedUserToConnect,
     showSelectedUserOptionsPopup,
     setShowSelectedUserOptionsPopup,
+    setListeGestionDesVehicules,
+    setDeviceListeTitleGestion,
   } = useContext(DataContext);
+  const navigate = useNavigate();
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
 
@@ -173,9 +176,22 @@ function GestionUserOptionsPopup() {
               {/*  */}
               <Link
                 to="/liste_des_vehicules"
-                // onClick={() =>
-                //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Resume123456")
-                // }
+                onClick={() => {
+                  setTimeout(() => {
+                    setListeGestionDesVehicules(
+                      currentSelectedUserToConnect?.userDevices
+                    );
+                    console.log(
+                      "currentSelectedUserToConnect?.userDevices",
+                      currentSelectedUserToConnect?.userDevices
+                    );
+                    setDeviceListeTitleGestion(
+                      "Utilisateur : " +
+                        currentSelectedUserToConnect?.description
+                    );
+                  }, 500);
+                  // navigate("/liste_des_vehicules");
+                }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
@@ -186,16 +202,7 @@ function GestionUserOptionsPopup() {
               {/*  */}
               {/*  */}
               {/*  */}
-              {/* <Link
-                to="/liste_des_groupes"
-              
-                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
-              >
-                <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
-                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Gestion des Groupes
-                </h2>
-              </Link> */}
+
               {/*  */}
               {/*  */}
               {/*  */}

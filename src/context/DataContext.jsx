@@ -18,7 +18,7 @@ const DataContextProvider = ({ children }) => {
       ? JSON.parse(storedCountRequête)
       : 0;
   });
-
+  // return { groupID: grp.groupID, groupeDevices: data };
   const incrementerRequête = () => {
     setCountRequête((prevCount) => {
       const newCount = (prevCount ?? 0) + 1;
@@ -85,23 +85,190 @@ const DataContextProvider = ({ children }) => {
     return storedUserData ? JSON.parse(storedUserData) : null;
   });
 
-  // const [gestionAccountData, setGestionAccountData] = useState();
+  const [deviceListeTitleGestion, setDeviceListeTitleGestion] = useState("");
 
-  const [gestionAccountData, setGestionAccountData] = useState(() => {
-    const storedGestionAccountData = localStorage.getItem("gestionAccountData");
-    return storedGestionAccountData
-      ? JSON.parse(storedGestionAccountData)
-      : null;
-  });
+  // États de base
+  const [comptes, setComptes] = useState([]);
+  const [accountDevices, setAccountDevices] = useState([]);
+  const [accountGroupes, setAccountGroupes] = useState([]);
+  const [accountUsers, setAccountUsers] = useState([]);
+  const [userDevices, setUserDevices] = useState([]);
+  const [groupeDevices, setGroupeDevices] = useState([]);
+
+  // États liés à la gestion
+  const [gestionAccountData, setGestionAccountData] = useState();
 
   const [currentAccountSelected, setCurrentAccountSelected] = useState();
-
-  useEffect(() => {
-    console.log("currentAccountSelected :", currentAccountSelected);
-  }, [currentAccountSelected]);
-
   const [currentSelectedUserToConnect, setCurrentSelectedUserToConnect] =
     useState();
+  const [currentSelectedDeviceGestion, setCurrentSelectedDeviceGestion] =
+    useState();
+
+  const [currentSelectedGroupeGestion, setCurrentSelectedGroupeGestion] =
+    useState();
+
+  const [listeGestionDesVehicules, setListeGestionDesVehicules] = useState([]);
+
+  // Log des mises à jour
+  useEffect(() => {
+    console.log("🟢 currentAccountSelected CHANGÉ :", currentAccountSelected);
+  }, [currentAccountSelected]);
+
+  useEffect(() => {
+    console.log(
+      "🔵 currentSelectedUserToConnect CHANGÉ :",
+      currentSelectedUserToConnect
+    );
+  }, [currentSelectedUserToConnect]);
+
+  useEffect(() => {
+    console.log(
+      "🟣 listeGestionDesVehicules CHANGÉ :",
+      listeGestionDesVehicules
+    );
+  }, [listeGestionDesVehicules]);
+
+  // Effet principal : met à jour currentAccountSelected quand les données changent
+  useEffect(() => {
+    if (!currentAccountSelected) return;
+
+    const compteMisAJour = gestionAccountData?.find(
+      (compte) => compte?.accountID === currentAccountSelected?.accountID
+    );
+
+    if (compteMisAJour) {
+      console.log(
+        "📥 Mise à jour de currentAccountSelected avec :",
+        compteMisAJour
+      );
+      setCurrentAccountSelected(compteMisAJour);
+    } else {
+      console.warn("❌ Aucun compte trouvé avec cet ID.");
+    }
+  }, [
+    comptes,
+    accountDevices,
+    accountGroupes,
+    accountUsers,
+    userDevices,
+    groupeDevices,
+    gestionAccountData,
+  ]);
+
+  // Quand currentAccountSelected est mis à jour, mettre à jour l'utilisateur sélectionné
+  useEffect(() => {
+    if (!currentAccountSelected || !currentSelectedUserToConnect) return;
+
+    const utilisateurActuel = currentAccountSelected?.accountUsers?.find(
+      (user) => user?.userID === currentSelectedUserToConnect?.userID
+    );
+
+    if (utilisateurActuel) {
+      console.log(
+        "📥 Mise à jour de currentSelectedUserToConnect avec :",
+        utilisateurActuel
+      );
+      setCurrentSelectedUserToConnect(utilisateurActuel);
+    } else {
+      console.warn("❌ Utilisateur non trouvé dans le compte sélectionné.");
+    }
+  }, [currentAccountSelected]);
+
+  // Quand currentSelectedUserToConnect est mis à jour, on met à jour la liste des véhicules
+  useEffect(() => {
+    if (!currentSelectedUserToConnect) return;
+
+    const vehicules = currentSelectedUserToConnect?.userDevices || [];
+    console.log("📥 Mise à jour de listeGestionDesVehicules avec :", vehicules);
+    setListeGestionDesVehicules(vehicules);
+  }, [currentSelectedUserToConnect]);
+
+  // Variables d’état pour chaque jeu de données
+  // const [comptes, setComptes] = useState([]);
+  // const [accountDevices, setAccountDevices] = useState([]);
+  // const [accountGroupes, setAccountGroupes] = useState([]);
+  // const [accountUsers, setAccountUsers] = useState([]);
+  // const [userDevices, setUserDevices] = useState([]);
+
+  // const [gestionAccountData, setGestionAccountData] = useState();
+
+  // const [currentAccountSelected, setCurrentAccountSelected] = useState();
+
+  // useEffect(() => {
+  //   console.log("currentAccountSelected :", currentAccountSelected);
+  // }, [currentAccountSelected]);
+
+  // const [currentSelectedUserToConnect, setCurrentSelectedUserToConnect] =
+  //   useState();
+
+  // const [currentSelectedDeviceGestion, setCurrentSelectedDeviceGestion] =
+  //   useState();
+
+  // const [listeGestionDesVehicules, setListeGestionDesVehicules] = useState();
+
+  // // Quand listeDesComptes est mise à jour, on met à jour les données sélectionnées
+  // useEffect(() => {
+  //   if (!currentAccountSelected) return;
+
+  //   const compteMisAJour = comptes?.find(
+  //     (compte) => compte?.accountID === currentAccountSelected?.accountID
+  //   );
+  //   console.log("---------------  currentAccountSelected :", compteMisAJour);
+
+  //   if (compteMisAJour) {
+  //     setCurrentAccountSelected(compteMisAJour);
+  //     console.log(
+  //       "++++++++++++++++++++  setCurrentAccountSelected :",
+  //       compteMisAJour
+  //     );
+
+  //     const utilisateurActuel = currentAccountSelected?.accountUsers?.find(
+  //       (user) => user?.userID === currentSelectedUserToConnect?.userID
+  //     );
+
+  //     console.log("---------currentSelectedUserToConnect :", utilisateurActuel);
+  //     console.log(
+  //       "-------currentSelectedUserToConnect userDevices :",
+  //       utilisateurActuel?.userDevices
+  //     );
+  //     if (utilisateurActuel) {
+  //       setCurrentSelectedUserToConnect(utilisateurActuel);
+  //       setListeGestionDesVehicules(utilisateurActuel?.userDevices);
+
+  //       console.log(
+  //         "+++++++++++++++ setCurrentSelectedUserToConnect :",
+  //         utilisateurActuel
+  //       );
+  //       console.log(
+  //         "++++++++++++ setCurrentSelectedUserToConnect userDevices :",
+  //         utilisateurActuel?.userDevices
+  //       );
+
+  //       console.log(
+  //         "??????????? currentSelectedUserToConnect :",
+  //         currentSelectedUserToConnect
+  //       );
+  //       console.log(
+  //         "???????????????? >>>>>> listeGestionDesVehicules :",
+  //         listeGestionDesVehicules
+  //       );
+  //     } else {
+  //       console.log(
+  //         "xxxxxxxxxxxxxxxx CurrentSelectedUserToConnect :",
+  //         utilisateurActuel
+  //       );
+  //       console.log(
+  //         "xxxxxxxxxxxxxxxxx CurrentSelectedUserToConnect userDevices :",
+  //         utilisateurActuel?.userDevices
+  //       );
+  //     }
+  //   } else {
+  //     console.log(
+  //       "xxxxxxxxxxxxxxxxxxxx  CurrentAccountSelected :",
+  //       compteMisAJour
+  //     );
+  //   }
+  // }, [comptes, accountDevices, accountGroupes, accountUsers, userDevices]);
 
   const [geofenceData, setGeofenceData] = useState(null);
 
@@ -526,8 +693,7 @@ const DataContextProvider = ({ children }) => {
   const [showAccountOptionsPopup, setShowAccountOptionsPopup] = useState(false);
   const [showSelectedUserOptionsPopup, setShowSelectedUserOptionsPopup] =
     useState(false);
-  const [listeGestionDesVehicules, setListeGestionDesVehicules] =
-    useState(false);
+
   // const []
   //
   //
@@ -595,7 +761,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 2);
+      const request = indexedDB.open("MyDatabase", 4);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -608,6 +774,33 @@ const DataContextProvider = ({ children }) => {
         if (!db.objectStoreNames.contains("geofenceData")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("geofenceData", { autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains("comptes")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("comptes", { autoIncrement: true });
+        }
+        //
+        if (!db.objectStoreNames.contains("accountDevices")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("accountDevices", { autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains("accountGroupes")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("accountGroupes", { autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains("groupeDevices")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("groupeDevices", { autoIncrement: true });
+        }
+
+        groupeDevices;
+        if (!db.objectStoreNames.contains("accountUsers")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("accountUsers", { autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains("userDevices")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("userDevices", { autoIncrement: true });
         }
 
         if (!db.objectStoreNames.contains("donneeFusionnéForRapport")) {
@@ -676,6 +869,51 @@ const DataContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    getDataFromIndexedDB("comptes").then((data) => {
+      if (data.length > 0) {
+        setComptes(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getDataFromIndexedDB("accountDevices").then((data) => {
+      if (data.length > 0) {
+        setAccountDevices(data);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    getDataFromIndexedDB("accountGroupes").then((data) => {
+      if (data.length > 0) {
+        setAccountGroupes(data);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    getDataFromIndexedDB("groupeDevices").then((data) => {
+      if (data.length > 0) {
+        setGroupeDevices(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getDataFromIndexedDB("accountUsers").then((data) => {
+      if (data.length > 0) {
+        setAccountUsers(data);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    getDataFromIndexedDB("userDevices").then((data) => {
+      if (data.length > 0) {
+        setUserDevices(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
       if (data.length > 0) {
         setDonneeFusionnéForRapport(data);
@@ -691,11 +929,46 @@ const DataContextProvider = ({ children }) => {
   }, [mergedDataHome]);
 
   useEffect(() => {
-    // console.log("geofenceData:", geofenceData);
     if (geofenceData) {
       saveDataToIndexedDB("geofenceData", geofenceData);
     }
   }, [geofenceData]);
+
+  useEffect(() => {
+    if (comptes) {
+      saveDataToIndexedDB("comptes", comptes);
+    }
+  }, [comptes]);
+
+  useEffect(() => {
+    if (accountDevices) {
+      saveDataToIndexedDB("accountDevices", accountDevices);
+    }
+  }, [accountDevices]);
+
+  useEffect(() => {
+    if (accountGroupes) {
+      saveDataToIndexedDB("accountGroupes", accountGroupes);
+    }
+  }, [accountGroupes]);
+
+  useEffect(() => {
+    if (groupeDevices) {
+      saveDataToIndexedDB("groupeDevices", groupeDevices);
+    }
+  }, [groupeDevices]);
+
+  useEffect(() => {
+    if (accountUsers) {
+      saveDataToIndexedDB("accountUsers", accountUsers);
+    }
+  }, [accountUsers]);
+
+  useEffect(() => {
+    if (userDevices) {
+      saveDataToIndexedDB("userDevices", userDevices);
+    }
+  }, [userDevices]);
 
   useEffect(() => {
     // console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
@@ -888,10 +1161,11 @@ const DataContextProvider = ({ children }) => {
         }
 
         setUserData(userData);
+        console.log("userData", userData);
         // navigate("/home");
         if (account === "sysadmin") {
           navigate("/gestion_des_comptes");
-          getAllAccountsData(account, user, password);
+          fetchAllComptes(account, user, password);
         } else {
           navigate("/home");
         }
@@ -901,14 +1175,18 @@ const DataContextProvider = ({ children }) => {
         localStorage.setItem("username", user);
         localStorage.setItem("password", password);
 
+        console.log("account", account);
+        console.log("username", user);
+        console.log("password", password);
+
         setAccount(localStorage.getItem("account") || "");
         setUsername(localStorage.getItem("username") || "");
         setPassword(localStorage.getItem("password") || "");
 
         if (window.location.hostname !== "localhost") {
           // Exécuter la fonction seulement si ce n'est pas localhost
-          sendConfirmConnexionMail(account, user);
-          sendConfirmConnexionMail2(account, user);
+          // sendConfirmConnexionMail(account, user);
+          // sendConfirmConnexionMail2(account, user);
         }
       } else if (result === "error") {
         const errorMessage =
@@ -1094,16 +1372,103 @@ const DataContextProvider = ({ children }) => {
 
     const password2 = "112233";
 
-    const xmlData = `<GTSRequest command="dbget">
-          <Authorization account="${account2}" user="${user2}" password="${password2}" />
-          <Record table="Device" partial="true">
-       <Field name="accountID">${account2}</Field>
-       <Field name="userID">${user2}</Field>
-   
-          </Record>
-        </GTSRequest>`;
+    const groupID = "add_group_test_2";
+
+    const deviceID = "44444444444444";
+
+    const displayName = "test d'ajout de groupe 22";
+    const description = "test d'ajout de groupe 22";
+    const notes = "test d'ajout de groupe 22";
+    const workOrderID = "234234234234";
+
+    const xmlData = `
+  <GTSRequest command="dbget">
+    <Authorization account="${account2}" user="${user2}" password="${password2}" />
+    <Record table="Device" partial="true">
+      <Field name="accountID">${account2}</Field>
+      <Field name="userID">${user2}</Field>
+    </Record>
+  </GTSRequest>
+      `;
+
+    //      `
+    // <GTSRequest command="dbget">
+    //   <Authorization account="${accountID}" user="${usr.userID}" password="${usr.password}" />
+    //   <Record table="Device" partial="true">
+    //     <Field name="accountID">${accountID}</Field>
+    //     <Field name="userID">${usr.userID}</Field>
+    //   </Record>
+    // </GTSRequest>
+    //     `
 
     console.log("Requête envoyer :", xmlData);
+
+    // DataContext.jsx:2134 xmlData
+    // <GTSRequest command="dbput">
+    //   <Authorization account="demo" user="admin" password="112233" />
+    //   <Record table="DeviceList">
+    //     <Field name="accountID">demo</Field>
+    //     <Field name="groupID">monitoring</Field>
+    //     <Field name="deviceID">1818</Field>
+    //   </Record>
+    // </GTSRequest>
+
+    // const xmlData = `<GTSRequest command="dbcreate">
+    //       <Authorization account="${account2}" user="${user2}" password="${password2}" />
+    //       <Record table="Device" partial="true">
+
+    //    <Field name="accountID">${account2}</Field>
+    //    <Field name="deviceID">${deviceID}</Field>
+
+    //     <Field name="displayName">${displayName}</Field>
+    //   <Field name="description">${description}</Field>
+
+    //     <Field name="equipmentType">B2</Field>
+    //     <Field name="uniqueID">tk_345345</Field>
+    //     <Field name="imeiNumber">45342</Field>
+    //     <Field name="vehicleID">23452345</Field>
+    //     <Field name="licensePlate">SE-345345</Field>
+    //     <Field name="simPhoneNumber">509444444444444444</Field>
+    //     <Field name="isActive">1</Field>
+
+    //       </Record>
+    //     </GTSRequest>`;
+    //  <Field name="groupID">${groupID}</Field>
+
+    //       <Field name="displayName">${displayName}</Field>
+    //  <Field name="description">${description}</Field>
+    //  <Field name="notes">${notes}</Field>
+    //  <Field name="workOrderID">${workOrderID}</Field>
+
+    //        ` <GTSRequest command="dbput">
+    //   <Authorization account="${account}" user="${user}" password="${password}" />
+    //   <Record table="DeviceList">
+    //     <Field name="accountID">${account}</Field>
+    //     <Field name="groupID">${groupID}</Field>
+    //     <Field name="deviceID">${deviceID}</Field>
+    //   </Record>
+    // </GTSRequest>`
+
+    //   const xmlData = `<GTSRequest command="dbget">
+    //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    //     <Record table="DeviceList" partial="true">
+
+    //  <Field name="accountID">${account}</Field>
+    //  <Field name="groupID">${groupID}</Field>
+
+    //     </Record>
+    //   </GTSRequest>`;
+
+    // Pour trouver le nom du groupe auquel appartient Utilisateur
+
+    //     const xmlData = `<GTSRequest command="dbget">
+    //     <Authorization account="${account2}" user="${user2}" password="${password2}" />
+    //     <Record table="GroupList" partial="true">
+    //  <Field name="accountID">${account2}</Field>
+    //  <Field name="userID">${user2}</Field>
+
+    //     </Record>
+    //   </GTSRequest>`;
 
     // const fullUrl = `${window.location.origin}/api/track/Service`;
     // console.log("URL complète de l'API :", fullUrl);
@@ -1116,7 +1481,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Login data message: ", data);
+      console.log("message Retour message: ", data);
       if (!response.ok) {
         console.error("Réponse erreur serveur :", response.status, data);
         throw new Error(`Erreur serveur : ${response.status}`);
@@ -1128,6 +1493,8 @@ const DataContextProvider = ({ children }) => {
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
+
+      console.log("result", result);
 
       if (result === "success") {
         const records = xmlDoc.getElementsByTagName("Record");
@@ -1187,187 +1554,30 @@ const DataContextProvider = ({ children }) => {
   ///////////////////////////////////////////////////////////////////
   ////////////////////v///////////////////////////////////////////////
 
-  // Récupère les données liées à un compte, y compris les utilisateurs et leurs devices
-  const fetchAccountRelatedData = async (accountID, accountPassword) => {
-    // Utilisateur système pour les requêtes User et DeviceGroup
-    const systemUser = "admin";
+  // // Récupère les données liées à un compte, y compris les utilisateurs et leurs devices
+  // const fetchAccountRelatedData = async (accountID, accountPassword) => {
+  //   // Utilisateur système pour les requêtes User et DeviceGroup
+  //   const systemUser = "admin";
 
-    // Génère le XML pour n'importe quelle table, avec champs dynamiques et identifiants d'authentification passés en paramètres
-    const buildXML = ({ tableName, authUser, authPassword, fields = {} }) => {
-      const auth = `<Authorization account="${accountID}" user="${authUser}" password="${authPassword}" />`;
-      const fieldTags = Object.entries(fields)
-        .map(([name, value]) => `<Field name="${name}">${value}</Field>`)
-        .join("\n");
-      return `
-      <GTSRequest command="dbget">
-        ${auth}
-        <Record table="${tableName}" partial="true">
-          ${fieldTags}
-        </Record>
-      </GTSRequest>
-    `;
-    };
-
-    // Exécute la requête XML et parse le résultat en tableau d'objets
-    const fetchData = async ({ tableName, authUser, authPassword, fields }) => {
-      const xml = buildXML({ tableName, authUser, authPassword, fields });
-      const res = await fetch("/api/track/Service", {
-        method: "POST",
-        headers: { "Content-Type": "application/xml" },
-        body: xml,
-      });
-      const text = await res.text();
-      const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        ?.getAttribute("result");
-      if (result !== "success") return [];
-
-      const records = Array.from(xmlDoc.getElementsByTagName("Record"));
-      return records.map((rec) => {
-        const fields = Array.from(rec.getElementsByTagName("Field"));
-        return fields.reduce((obj, fld) => {
-          obj[fld.getAttribute("name")] = fld.textContent;
-          return obj;
-        }, {});
-      });
-    };
-
-    // 1) on récupère la liste des utilisateurs de l'account
-    const accountUsers = await fetchData({
-      tableName: "User",
-      authUser: systemUser,
-      authPassword: accountPassword,
-      fields: { accountID },
-    });
-
-    // 2) pour chaque utilisateur, on récupère ses devices (sauf pour les comptes "deka" et "lacouronne")
-    const accountUsersWithDevices = ["deka", "lacouronne"].includes(accountID)
-      ? accountUsers.map((user) => ({
-          ...user,
-          userDevices: [],
-        }))
-      : await Promise.all(
-          accountUsers.map(async (usr) => {
-            const userDevices = await fetchData({
-              tableName: "Device",
-              authUser: usr.userID,
-              authPassword: usr.password,
-              fields: { accountID, userID: usr.userID },
-            });
-            return { ...usr, userDevices };
-          })
-        );
-
-    // 3) on récupère les groupes de devices au niveau du compte
-    const accountGroupes = await fetchData({
-      tableName: "DeviceGroup",
-      authUser: systemUser,
-      authPassword: accountPassword,
-      fields: { accountID },
-    });
-
-    // 4) (optionnel) si vous conservez toujours les devices globaux du compte
-    const accountDevices = ["deka", "lacouronne"].includes(accountID)
-      ? []
-      : await fetchData({
-          tableName: "Device",
-          authUser: systemUser,
-          authPassword: accountPassword,
-          fields: { accountID },
-        });
-
-    return {
-      accountID,
-      accountUsers: accountUsersWithDevices,
-      accountDevices,
-      accountGroupes,
-    };
-  };
-
-  const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
-    useState(false);
-
-  // Récupère tous les accounts, puis enrichit chacun avec fetchAccountRelatedData
-  const getAllAccountsData = async (account, systemUser, systemPassword) => {
-    // état de chargement, à adapter selon votre gestion de state
-    setGetAllAccountsDataLoading(true);
-
-    // XML pour lister les accounts
-    const listAccountsXML = `
-    <GTSRequest command="dbget">
-      <Authorization account="${account}" user="${systemUser}" password="${systemPassword}" />
-      <Record table="Account" partial="true" />
-    </GTSRequest>
-  `;
-
-    const response = await fetch("/api/track/Service", {
-      method: "POST",
-      headers: { "Content-Type": "application/xml" },
-      body: listAccountsXML,
-    });
-    const text = await response.text();
-    const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
-    const result = xmlDoc
-      .getElementsByTagName("GTSResponse")[0]
-      ?.getAttribute("result");
-    if (result !== "success") throw new Error("Failed to fetch accounts");
-
-    // Parse les accounts
-    const records = Array.from(xmlDoc.getElementsByTagName("Record"));
-    const accountsList = records.map((rec) =>
-      Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
-        obj[fld.getAttribute("name")] = fld.textContent;
-        return obj;
-      }, {})
-    );
-
-    // Pour chaque account, on appelle fetchAccountRelatedData en passant le password spécifique
-    const accounts = [];
-    for (const acct of accountsList) {
-      const extra = await fetchAccountRelatedData(
-        acct.accountID,
-        acct.password
-      );
-
-      console.log("accounts 11: ", accounts);
-
-      accounts.push({
-        ...acct,
-        accountUsers: extra.accountUsers,
-        accountDevices: extra.accountDevices,
-        accountGroupes: extra.accountGroupes,
-      });
-    }
-    console.log("accounts: ", accounts);
-    // Sauvegarde et fin de chargement
-    setGestionAccountData(accounts);
-    setGetAllAccountsDataLoading(false);
-    localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
-
-    return accounts;
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  // <Field name="accountID">${accountID}</Field>
-
-  // const fetchAccountRelatedData = async (accountID, password) => {
-  //   const userID = "admin";
-  //   const buildXML = (tableName) => `
+  //   // Génère le XML pour n'importe quelle table, avec champs dynamiques et identifiants d'authentification passés en paramètres
+  //   const buildXML = ({ tableName, authUser, authPassword, fields = {} }) => {
+  //     const auth = `<Authorization account="${accountID}" user="${authUser}" password="${authPassword}" />`;
+  //     const fieldTags = Object.entries(fields)
+  //       .map(([name, value]) => `<Field name="${name}">${value}</Field>`)
+  //       .join("\n");
+  //     return `
   //     <GTSRequest command="dbget">
-  //       <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  //       ${auth}
   //       <Record table="${tableName}" partial="true">
-  //         <Field name="accountID">${accountID}</Field>
-
+  //         ${fieldTags}
   //       </Record>
-  //     </GTSRequest>`;
+  //     </GTSRequest>
+  //   `;
+  //   };
 
-  //   const fetchData = async (tableName) => {
-  //     const xml = buildXML(tableName);
+  //   // Exécute la requête XML et parse le résultat en tableau d'objets
+  //   const fetchData = async ({ tableName, authUser, authPassword, fields }) => {
+  //     const xml = buildXML({ tableName, authUser, authPassword, fields });
   //     const res = await fetch("/api/track/Service", {
   //       method: "POST",
   //       headers: { "Content-Type": "application/xml" },
@@ -1378,123 +1588,706 @@ const DataContextProvider = ({ children }) => {
   //     const result = xmlDoc
   //       .getElementsByTagName("GTSResponse")[0]
   //       ?.getAttribute("result");
+  //     if (result !== "success") return [];
 
-  //     if (result === "success") {
-  //       const records = xmlDoc.getElementsByTagName("Record");
-  //       const tableData = [];
-
-  //       for (let r = 0; r < records.length; r++) {
-  //         const fields = records[r].getElementsByTagName("Field");
-  //         const item = {};
-  //         for (let f = 0; f < fields.length; f++) {
-  //           const fieldName = fields[f].getAttribute("name");
-  //           const fieldValue = fields[f].textContent;
-  //           item[fieldName] = fieldValue;
-  //         }
-  //         tableData.push(item);
-  //       }
-  //       return tableData;
-  //     }
-
-  //     return [];
+  //     const records = Array.from(xmlDoc.getElementsByTagName("Record"));
+  //     return records.map((rec) => {
+  //       const fields = Array.from(rec.getElementsByTagName("Field"));
+  //       return fields.reduce((obj, fld) => {
+  //         obj[fld.getAttribute("name")] = fld.textContent;
+  //         return obj;
+  //       }, {});
+  //     });
   //   };
 
-  //   const [accountUsers, accountDevices, accountGroupes] = await Promise.all([
-  //     fetchData("User"),
-  //     accountID === "deka" || accountID === "lacouronne"
-  //       ? []
-  //       : fetchData("Device"), // Ignorer fetchDevice pour ces 2 comptes
-  //     // fetchData("Device"), ////////////////////////////////////////////////////////
-  //     fetchData("DeviceGroup"),
-  //   ]);
+  //   // 1) on récupère la liste des utilisateurs de l'account
+  //   const accountUsers = await fetchData({
+  //     tableName: "User",
+  //     authUser: systemUser,
+  //     authPassword: accountPassword,
+  //     fields: { accountID },
+  //   });
+
+  //   // 2) pour chaque utilisateur, on récupère ses devices (sauf pour les comptes "deka" et "lacouronne")
+  //   const accountUsersWithDevices = ["deka", "lacouronne"].includes(accountID)
+  //     ? accountUsers.map((user) => ({
+  //         ...user,
+  //         userDevices: [],
+  //       }))
+  //     : await Promise.all(
+  //         accountUsers.map(async (usr) => {
+  //           const userDevices = await fetchData({
+  //             tableName: "Device",
+  //             authUser: usr.userID,
+  //             authPassword: usr.password,
+  //             fields: { accountID, userID: usr.userID },
+  //           });
+  //           return { ...usr, userDevices };
+  //         })
+  //       );
+
+  //   // 3) on récupère les groupes de devices au niveau du compte
+  //   const accountGroupes = await fetchData({
+  //     tableName: "DeviceGroup",
+  //     authUser: systemUser,
+  //     authPassword: accountPassword,
+  //     fields: { accountID },
+  //   });
+
+  //   // 4) (optionnel) si vous conservez toujours les devices globaux du compte
+  //   const accountDevices = ["deka", "lacouronne"].includes(accountID)
+  //     ? []
+  //     : await fetchData({
+  //         tableName: "Device",
+  //         authUser: systemUser,
+  //         authPassword: accountPassword,
+  //         fields: { accountID },
+  //       });
 
   //   return {
   //     accountID,
-  //     accountUsers,
-  //     accountDevices, ////////////////////////////////////////////////////
+  //     accountUsers: accountUsersWithDevices,
+  //     accountDevices,
   //     accountGroupes,
   //   };
   // };
 
-  // const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
-  //   useState(false);
-  // const getAllAccountsData = async (account, user, password) => {
+  const [getAllAccountsDataLoading, setGetAllAccountsDataLoading] =
+    useState(false);
+
+  const getAllAccountsData = "";
+
+  // // Récupère tous les accounts, puis enrichit chacun avec fetchAccountRelatedData
+  // const getAllAccountsData = async (account, systemUser, systemPassword) => {
+  //   // état de chargement, à adapter selon votre gestion de state
   //   setGetAllAccountsDataLoading(true);
-  //   console.log("account, user, password :", account, user, password);
-  //   const xmlData = `<GTSRequest command="dbget">
-  //         <Authorization account="${account}" user="${user}" password="${password}" />
-  //         <Record table="Account" partial="true" />
-  //       </GTSRequest>`;
+
+  //   // XML pour lister les accounts
+  //   const listAccountsXML = `
+  //   <GTSRequest command="dbget">
+  //     <Authorization account="${account}" user="${systemUser}" password="${systemPassword}" />
+  //     <Record table="Account" partial="true" />
+  //   </GTSRequest>
+  // `;
 
   //   const response = await fetch("/api/track/Service", {
   //     method: "POST",
   //     headers: { "Content-Type": "application/xml" },
-  //     body: xmlData,
+  //     body: listAccountsXML,
   //   });
-
-  //   const data = await response.text();
-  //   const xmlDoc = new DOMParser().parseFromString(data, "application/xml");
-
+  //   const text = await response.text();
+  //   const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
   //   const result = xmlDoc
   //     .getElementsByTagName("GTSResponse")[0]
   //     ?.getAttribute("result");
-
   //   if (result !== "success") throw new Error("Failed to fetch accounts");
 
-  //   const records = xmlDoc.getElementsByTagName("Record");
+  //   // Parse les accounts
+  //   const records = Array.from(xmlDoc.getElementsByTagName("Record"));
+  //   const accountsList = records.map((rec) =>
+  //     Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+  //       obj[fld.getAttribute("name")] = fld.textContent;
+  //       return obj;
+  //     }, {})
+  //   );
+
+  //   // Pour chaque account, on appelle fetchAccountRelatedData en passant le password spécifique
   //   const accounts = [];
-
-  //   for (let r = 0; r < records.length; r++) {
-  //     const fields = records[r].getElementsByTagName("Field");
-  //     const accountData = {};
-
-  //     for (let f = 0; f < fields.length; f++) {
-  //       const fieldName = fields[f].getAttribute("name");
-  //       const fieldValue = fields[f].textContent;
-  //       accountData[fieldName] = fieldValue;
-  //     }
-
-  //     // if (
-  //     //   accountData.accountID === "deka" ||
-  //     //   accountData.accountID === "lacouronne"
-  //     // ) {
-  //     //   continue;
-  //     // }
-
-  //     const extraData = await fetchAccountRelatedData(
-  //       accountData.accountID,
-  //       accountData.password
+  //   for (const acct of accountsList) {
+  //     const extra = await fetchAccountRelatedData(
+  //       acct.accountID,
+  //       acct.password
   //     );
-  //     console.log("extraData", extraData);
-  //     console.log(
-  //       "AccountID :",
-  //       accountData.accountID,
-  //       "Password:",
-  //       accountData.password
-  //     );
+
+  //     console.log("accounts 11: ", accounts);
+
   //     accounts.push({
-  //       ...accountData,
-  //       accountUsers: extraData.accountUsers,
-  //       accountDevices: extraData.accountDevices, ////////////////////////////////////////////////////////////////
-  //       accountGroupes: extraData.accountGroupes,
+  //       ...acct,
+  //       accountUsers: extra.accountUsers,
+  //       accountDevices: extra.accountDevices,
+  //       accountGroupes: extra.accountGroupes,
   //     });
   //   }
-
-  //   console.log("accounts", accounts);
+  //   console.log("accounts: ", accounts);
+  //   // Sauvegarde et fin de chargement
   //   setGestionAccountData(accounts);
   //   setGetAllAccountsDataLoading(false);
   //   localStorage.setItem("gestionAccountData", JSON.stringify(accounts));
+
   //   return accounts;
   // };
 
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+
+  // paramètres d’authentification globaux (à adapter)
+  const systemUser = "admin";
+
+  // 1) Récupérer la liste des comptes et déclencher les autres fetchs
+  const fetchAllComptes = async (account, user, password) => {
+    console.log("fetchComptes: lancement de la requête XML");
+    const xml = `
+<GTSRequest command="dbget">
+  <Authorization account="${account}" user="${user}" password="${password}" />
+  <Record table="Account" partial="true" />
+</GTSRequest>
+  `;
+
+    const res = await fetch("/api/track/Service", {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xml,
+    });
+    const text = await res.text();
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    const result = doc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    const records = Array.from(doc.getElementsByTagName("Record"));
+
+    const data =
+      result === "success"
+        ? records.map((rec) =>
+            Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+              obj[fld.getAttribute("name")] = fld.textContent;
+              return obj;
+            }, {})
+          )
+        : [];
+
+    console.log("fetchComptes: résultats =", data);
+    setComptes(data);
+
+    // Déclenchement automatique des autres fetchs pour chaque compte
+    data.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
+
+      setTimeout(() => {
+        // Devices du compte
+        fetchAccountDevices(id, pwd).catch((err) => {
+          console.error("Erreur lors du chargement des devices :", err);
+          setError("Erreur lors du chargement des devices.");
+        });
+      }, 2000);
+
+      setTimeout(() => {
+        // Groupes + Devices par groupe
+        fetchAccountGroupes(id, pwd)
+          .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des groupes ou des devices de groupes :",
+              err
+            );
+            setError("Erreur lors de la mise à jour des groupes.");
+          });
+      }, 7000);
+
+      setTimeout(() => {
+        // Utilisateurs + Devices par utilisateur
+        fetchAccountUsers(id, pwd)
+          .then((users) => fetchUserDevices(id, users))
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+              err
+            );
+            setError("Erreur lors de la mise à jour des utilisateurs.");
+          });
+      }, 12000);
+
+      // fetchAccountDevices(id, pwd);
+      // fetchAccountGroupes(id, pwd).then((groupes) => {
+      //   fetchGroupeDevices(id, groupes, pwd);
+      // });
+      // fetchAccountUsers(id, pwd).then((users) => {
+      //   fetchUserDevices(id, users);
+      // });
+    });
+
+    return data;
+  };
+
+  // 2) Récupérer accountDevices
+  const fetchAccountDevices = async (accountID, password) => {
+    console.log(
+      "fetchAccountDevices: lancement de la requête XML pour",
+      accountID
+    );
+    const xml = `
+<GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+  <Record table="Device" partial="true">
+    <Field name="accountID">${accountID}</Field>
+  </Record>
+</GTSRequest>
+  `;
+
+    const res = await fetch("/api/track/Service", {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xml,
+    });
+    const text = await res.text();
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    const result = doc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    const records = Array.from(doc.getElementsByTagName("Record"));
+
+    const data =
+      result === "success"
+        ? records.map((rec) =>
+            Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+              obj[fld.getAttribute("name")] = fld.textContent;
+              return obj;
+            }, {})
+          )
+        : [];
+
+    console.log("fetchAccountDevices: résultats =", data);
+    // setAccountDevices((prev) => [...prev, ...data]);
+    setAccountDevices((prev) => {
+      const newDevices = data.filter(
+        (device) => !prev.some((d) => d.creationTime === device.creationTime)
+      );
+      return [...prev, ...newDevices];
+    });
+
+    return data;
+  };
+
+  // 3) Récupérer accountGroupes
+  const fetchAccountGroupes = async (accountID, password) => {
+    console.log(
+      "fetchAccountGroupes: lancement de la requête XML pour",
+      accountID
+    );
+    const xml = `
+<GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+  <Record table="DeviceGroup" partial="true">
+    <Field name="accountID">${accountID}</Field>
+  </Record>
+</GTSRequest>
+  `;
+
+    const res = await fetch("/api/track/Service", {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xml,
+    });
+    const text = await res.text();
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    const result = doc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    const records = Array.from(doc.getElementsByTagName("Record"));
+
+    const data =
+      result === "success"
+        ? records.map((rec) =>
+            Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+              obj[fld.getAttribute("name")] = fld.textContent;
+              return obj;
+            }, {})
+          )
+        : [];
+
+    console.log("fetchAccountGroupes: résultats =", data);
+    // setAccountGroupes((prev) => [...prev, ...data]);
+    setAccountGroupes((prev) => {
+      const newGroupes = data.filter(
+        (group) => !prev.some((g) => g.creationTime === group.creationTime)
+      );
+      return [...prev, ...newGroupes];
+    });
+    console.log("Resultat AccountGroupe :", (prev) => {
+      const newGroupes = data.filter(
+        (group) => !prev.some((g) => g.creationTime === group.creationTime)
+      );
+      return [...prev, ...newGroupes];
+    });
+
+    return data;
+  };
+
+  // 4) Récupérer accountUsers
+  const fetchAccountUsers = async (accountID, password) => {
+    console.log(
+      "fetchAccountUsers: lancement de la requête XML pour",
+      accountID
+    );
+    const xml = `
+<GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+  <Record table="User" partial="true">
+    <Field name="accountID">${accountID}</Field>
+  </Record>
+</GTSRequest>
+  `;
+
+    const res = await fetch("/api/track/Service", {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xml,
+    });
+    const text = await res.text();
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    const result = doc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    const records = Array.from(doc.getElementsByTagName("Record"));
+
+    const data =
+      result === "success"
+        ? records.map((rec) =>
+            Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+              obj[fld.getAttribute("name")] = fld.textContent;
+              return obj;
+            }, {})
+          )
+        : [];
+
+    console.log("fetchAccountUsers: résultats =", data);
+    // setAccountUsers((prev) => [...prev, ...data]);
+    setAccountUsers((prev) => {
+      const newUsers = data.filter(
+        (user) => !prev.some((u) => u.creationTime === user.creationTime)
+        // (user) => !prev.some((u) => u.userID === user.userID)
+      );
+      return [...prev, ...newUsers];
+    });
+
+    return data;
+  };
+
+  // 5) Récupérer userDevices pour chaque user
+  const fetchUserDevices = async (accountID, users) => {
+    if (!Array.isArray(users)) {
+      console.warn("fetchUserDevices: 'users' est invalide ou vide :", users);
+      return [];
+    }
+
+    console.log(
+      "fetchUserDevices: lancement des requêtes pour chaque utilisateur de",
+      accountID
+    );
+
+    const promises = users.map(async (usr) => {
+      if (!usr?.userID || !usr?.password) {
+        console.warn("Utilisateur incomplet : ", usr);
+        return { userID: usr?.userID || "inconnu", userDevices: [] };
+      }
+
+      const xml = `
+  <GTSRequest command="dbget">
+    <Authorization account="${accountID}" user="${usr.userID}" password="${usr.password}" />
+    <Record table="Device" partial="true">
+      <Field name="accountID">${accountID}</Field>
+      <Field name="userID">${usr.userID}</Field>
+    </Record>
+  </GTSRequest>
+      `;
+
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+      const records = Array.from(doc.getElementsByTagName("Record"));
+
+      const data =
+        result === "success"
+          ? records.map((rec) =>
+              Array.from(rec.getElementsByTagName("Field")).reduce(
+                (obj, fld) => {
+                  obj[fld.getAttribute("name")] = fld.textContent;
+                  return obj;
+                },
+                {}
+              )
+            )
+          : [];
+
+      console.log(`fetchUserDevices: user ${usr.userID}, devices =`, data);
+      return { userID: usr.userID, userDevices: data };
+    });
+
+    const results = await Promise.all(promises);
+
+    // Mise à jour sans doublon par userID
+    setUserDevices((prev) => {
+      const updated = [...prev];
+
+      results.forEach((newEntry) => {
+        const index = updated.findIndex((e) => e.userID === newEntry.userID);
+        if (index !== -1) {
+          updated[index] = newEntry;
+        } else {
+          updated.push(newEntry);
+        }
+      });
+
+      return updated;
+    });
+
+    return results;
+  };
+
+  // 6) Récupérer groupeDevices pour chaque groupe
+  const fetchGroupeDevices = async (accountID, groupes, accountPassword) => {
+    if (!Array.isArray(groupes)) {
+      console.warn(
+        "fetchGroupeDevices: 'groupes' est invalide ou vide :",
+        groupes
+      );
+      return [];
+    }
+
+    console.log(
+      "fetchGroupeDevices: lancement des requêtes pour chaque groupe de",
+      accountID
+    );
+
+    const promises = groupes.map(async (grp) => {
+      if (!grp?.groupID) {
+        console.warn("Groupe incomplet : ", grp);
+        return { groupID: grp?.groupID || "inconnu", groupeDevices: [] };
+      }
+
+      const xml = `
+<GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${systemUser}" password="${accountPassword}" />
+  <Record table="DeviceList" partial="true">
+    <Field name="accountID">${accountID}</Field>
+    <Field name="groupID">${grp.groupID}</Field>
+  </Record>
+</GTSRequest>
+    `;
+
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+      const records = Array.from(doc.getElementsByTagName("Record"));
+
+      const data =
+        result === "success"
+          ? records.map((rec) =>
+              Array.from(rec.getElementsByTagName("Field")).reduce(
+                (obj, fld) => {
+                  obj[fld.getAttribute("name")] = fld.textContent;
+                  return obj;
+                },
+                {}
+              )
+            )
+          : [];
+
+      console.log(`fetchGroupeDevices: groupe ${grp.groupID}, devices =`, data);
+      return { groupID: grp.groupID, groupeDevices: data };
+    });
+
+    const results = await Promise.all(promises);
+
+    // Mise à jour sans doublon par groupID
+    console.log("Resultat Groupe Devices", (prev) => {
+      const updated = [...prev];
+      results.forEach((newEntry) => {
+        const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
+        if (index !== -1) {
+          updated[index] = newEntry;
+        } else {
+          updated.push(newEntry);
+        }
+      });
+      return updated;
+    });
+    //
+    //
+    //
+    //
+    //
+    //
+    setGroupeDevices((prev) => {
+      const updated = [...prev];
+      results.forEach((newEntry) => {
+        const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
+        if (index !== -1) {
+          updated[index] = newEntry;
+        } else {
+          updated.push(newEntry);
+        }
+      });
+      return updated;
+    });
+
+    return results;
+  };
+
+  useEffect(() => {
+    console.log("fuseDonnee: fusion des données");
+    const merged = comptes.map((acct) => {
+      const users = accountUsers.filter((u) => u.accountID === acct.accountID);
+      const devices = accountDevices.filter(
+        (d) => d.accountID === acct.accountID
+      );
+      const groupes = accountGroupes.filter(
+        (g) => g.accountID === acct.accountID
+      );
+      const usrDevs = userDevices.filter((ud) =>
+        users.some((u) => u.userID === ud.userID)
+      );
+
+      const grpDevs = groupeDevices.filter((gd) =>
+        groupes.some((g) => g.groupID === gd.groupID)
+      );
+
+      return {
+        ...acct,
+        accountUsers: users.map((u) => ({
+          ...u,
+          userDevices:
+            usrDevs.find((ud) => ud.userID === u.userID)?.userDevices || [],
+        })),
+        accountDevices: devices,
+        accountGroupes: groupes.map((g) => ({
+          ...g,
+          groupeDevices:
+            grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
+        })),
+      };
+
+      // return {
+      //   ...acct,
+      //   accountUsers: users.map((u) => ({
+      //     ...u,
+      //     userDevices:
+      //       usrDevs.find((ud) => ud.userID === u.userID)?.userDevices || [],
+      //   })),
+      //   accountDevices: devices,
+      //   accountGroupes: groupes,
+      // };
+    });
+    setGestionAccountData(merged);
+    console.log("fuseDonnee: résultat fusion =", merged);
+    // setDonneeFusionneeAccount(merged);
+  }, [
+    comptes,
+    accountDevices,
+    accountGroupes,
+    groupeDevices,
+    accountUsers,
+    userDevices,
+  ]);
+
+  // Fonction pour assigner un device à un groupe
+  const assignDeviceToGroup = async (
+    account,
+    user,
+    password,
+    groupID,
+    deviceID
+  ) => {
+    const xmlData = `
+<GTSRequest command="dbcreate">
+  <Authorization account="${account}" user="${user}" password="${password}" />
+  <Record table="DeviceList">
+    <Field name="accountID">${account}</Field>
+    <Field name="groupID">${groupID}</Field>
+    <Field name="deviceID">${deviceID}</Field>
+  </Record>
+</GTSRequest>
+  `;
+
+    console.log("xmlData", xmlData);
+
+    try {
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+      const text = await res.text();
+      console.log("text", text);
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+      console.log(
+        `assignDeviceToGroup: Résultat pour ${deviceID} -> ${groupID} :`,
+        result
+      );
+      return result === "success";
+    } catch (error) {
+      console.error(
+        `Erreur lors de l’assignation du device '${deviceID}' au groupe '${groupID}'`,
+        error
+      );
+      return false;
+    }
+  };
+
+  // Fonction pour assigner un device à plusieurs groupes en parallèle
+  const assignDeviceToMultipleGroups = async (
+    account,
+    user,
+    password,
+    deviceID,
+    groupesSelectionnes
+  ) => {
+    const assignPromises = groupesSelectionnes.map((groupID) =>
+      assignDeviceToGroup(account, user, password, groupID, deviceID)
+    );
+
+    const results = await Promise.all(assignPromises);
+    const failed = groupesSelectionnes.filter((_, idx) => !results[idx]);
+
+    if (failed.length > 0) {
+      console.warn("Échec pour les groupes suivants :", failed);
+    } else {
+      console.log("Le device a été assigné à tous les groupes avec succès.");
+    }
+
+    // ✅ Rafraîchir les données des groupes et des devices dans les groupes
+    const id = account;
+    const pwd = password;
+
+    try {
+      // const groupes = await fetchAccountGroupes(id, pwd);
+      // await fetchGroupeDevices(id, groupes, pwd);
+      //  fetchAccountGroupes(id, pwd).then((groupes) => {
+      //     fetchGroupeDevices(id, groupes, pwd);
+      //   });
+      fetchAccountGroupes(id, pwd)
+        .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+        .catch((err) => {
+          console.error("Erreur lors du rafraîchissement des groupes :", err);
+          setError("Erreur lors de la mise à jour des groupes.");
+        });
+    } catch (err) {
+      console.error("Erreur lors du rafraîchissement des groupes :", err);
+      setError("Erreur lors de la mise à jour des groupes.");
+    }
+  };
 
   function handleUserError(xmlDoc) {
     const errorMessage = xmlDoc.getElementsByTagName("Message")[0]?.textContent;
@@ -4157,13 +4950,467 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  // Fonction pour supprimer un véhicule
-  const deleteVehicle = async (
-    deviceID,
+  const modifyGroupeEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+
+    groupID,
+    description,
+    displayName,
+    notes,
+    workOrderID
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbput">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="DeviceGroup" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        <Field name="displayName">${displayName}</Field>
+        <Field name="description">${description}</Field>
+        <Field name="groupID">${groupID}</Field>
+        <Field name="notes">${notes}</Field>
+        <Field name="workOrderID">${workOrderID}</Field>
+
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Modifier d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+        console.log("Groupe ajouter avec success");
+        const id = accountID;
+        const pwd = password;
+
+        // const modifyGroupe =  currentSelectedGroupeGestion?.accountGroupes?.find((groupe) => groupe?.groupID === groupID);
+        // const filterGoupeListe = currentSelectedGroupeGestion?.accountGroupes?.filter((groupe) => groupe?.groupID === groupID)
+
+        try {
+          fetchAccountGroupes(id, pwd)
+            .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+            .catch((err) => {
+              console.error(
+                "Erreur lors du rafraîchissement des groupes :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des groupes.");
+            });
+        } catch (err) {
+          console.error("Erreur lors du rafraîchissement des groupes :", err);
+          setError("Erreur lors de la mise à jour des groupes.");
+        }
+
+        // try {
+        //   // Devices du compte
+        //   // fetchAccountDevices(id, pwd).catch((err) => {
+        //   //   console.error("Erreur lors du chargement des devices :", err);
+        //   //   setError("Erreur lors du chargement des devices.");
+        //   // });
+        //   // fetchAccountUsers(id, pwd)
+        //   //   .then((users) => fetchUserDevices(id, users))
+        //   //   .catch((err) => {
+        //   //     console.error(
+        //   //       "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+        //   //       err
+        //   //     );
+        //   //     setError("Erreur lors de la mise à jour des utilisateurs.");
+        //   //   });
+        //   // await fetchAccountDevices(id, pwd);
+        //   // const users = await fetchAccountUsers(id, pwd);
+        //   // await fetchUserDevices(id, users);
+        // } catch (err) {
+        //   console.error("Erreur lors du rafraîchissement des données :", err);
+        //   setError("Erreur lors de la mise à jour des données.");
+        // }
+
+        setCreateVéhiculeLoading(false);
+        // Attendre que le device apparaisse dans la liste
+        // setTimeout(() => {
+        //   assignDeviceToMultipleGroups(
+        //     userAccount,
+        //     userUsername,
+        //     userPassword,
+        //     deviceID,
+        //     groupesSelectionnes
+        //   );
+        // }, 5000);
+        // waitForDeviceThenAssign(
+        //   userAccount,
+        //   userUsername,
+        //   userPassword,
+        //   deviceID,
+        //   groupesSelectionnes
+        // );
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const createNewGroupeEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+
+    groupID,
+    description,
+    displayName,
+    notes,
+    workOrderID
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbcreate">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="DeviceGroup" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        <Field name="displayName">${displayName}</Field>
+        <Field name="description">${description}</Field>
+        <Field name="groupID">${groupID}</Field>
+        <Field name="notes">${notes}</Field>
+        <Field name="workOrderID">${workOrderID}</Field>
+
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+        console.log("Groupe ajouter avec success");
+        const id = accountID;
+        const pwd = password;
+
+        try {
+          // const groupes = await fetchAccountGroupes(id, pwd);
+          // await fetchGroupeDevices(id, groupes, pwd);
+          //  fetchAccountGroupes(id, pwd).then((groupes) => {
+          //     fetchGroupeDevices(id, groupes, pwd);
+          //   });
+          fetchAccountGroupes(id, pwd)
+            .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+            .catch((err) => {
+              console.error(
+                "Erreur lors du rafraîchissement des groupes :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des groupes.");
+            });
+        } catch (err) {
+          console.error("Erreur lors du rafraîchissement des groupes :", err);
+          setError("Erreur lors de la mise à jour des groupes.");
+        }
+
+        // try {
+        //   // Devices du compte
+        //   // fetchAccountDevices(id, pwd).catch((err) => {
+        //   //   console.error("Erreur lors du chargement des devices :", err);
+        //   //   setError("Erreur lors du chargement des devices.");
+        //   // });
+        //   // fetchAccountUsers(id, pwd)
+        //   //   .then((users) => fetchUserDevices(id, users))
+        //   //   .catch((err) => {
+        //   //     console.error(
+        //   //       "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+        //   //       err
+        //   //     );
+        //   //     setError("Erreur lors de la mise à jour des utilisateurs.");
+        //   //   });
+        //   // await fetchAccountDevices(id, pwd);
+        //   // const users = await fetchAccountUsers(id, pwd);
+        //   // await fetchUserDevices(id, users);
+        // } catch (err) {
+        //   console.error("Erreur lors du rafraîchissement des données :", err);
+        //   setError("Erreur lors de la mise à jour des données.");
+        // }
+
+        setCreateVéhiculeLoading(false);
+        // Attendre que le device apparaisse dans la liste
+        // setTimeout(() => {
+        //   assignDeviceToMultipleGroups(
+        //     userAccount,
+        //     userUsername,
+        //     userPassword,
+        //     deviceID,
+        //     groupesSelectionnes
+        //   );
+        // }, 5000);
+        // waitForDeviceThenAssign(
+        //   userAccount,
+        //   userUsername,
+        //   userPassword,
+        //   deviceID,
+        //   groupesSelectionnes
+        // );
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const createVehicleEnGestionAccount = async (
     userAccount,
     userUsername,
-    userPassword
+    userPassword,
+    deviceID,
+    imeiNumber,
+    uniqueIdentifier,
+    description,
+    displayName,
+    licensePlate,
+    equipmentType,
+    simPhoneNumber,
+    vehicleID,
+    groupesSelectionnes
   ) => {
+    console.log(
+      userAccount,
+      userUsername,
+      userPassword,
+      deviceID,
+      groupesSelectionnes
+    );
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbcreate">
+      <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
+      <Record table="Device" partial="true">
+        <Field name="accountID">${userAccount}</Field>
+
+        <Field name="deviceID">${deviceID}</Field>
+        <Field name="description">${description}</Field>
+        <Field name="equipmentType">${equipmentType}</Field>
+        <Field name="uniqueID">${uniqueIdentifier}</Field>
+        <Field name="imeiNumber">${imeiNumber}</Field>
+        <Field name="vehicleID">${vehicleID}</Field>
+        <Field name="licensePlate">${licensePlate}</Field>
+        <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
+        <Field name="displayName">${displayName}</Field>
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      // console.log("data from add véhicule", data);
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+
+        const id = userAccount;
+        const pwd = userPassword;
+
+        try {
+          // Devices du compte
+          fetchAccountDevices(id, pwd).catch((err) => {
+            console.error("Erreur lors du chargement des devices :", err);
+            setError("Erreur lors du chargement des devices.");
+          });
+          fetchAccountUsers(id, pwd)
+            .then((users) => fetchUserDevices(id, users))
+            .catch((err) => {
+              console.error(
+                "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des utilisateurs.");
+            });
+          // await fetchAccountDevices(id, pwd);
+          // const users = await fetchAccountUsers(id, pwd);
+          // await fetchUserDevices(id, users);
+        } catch (err) {
+          console.error("Erreur lors du rafraîchissement des données :", err);
+          setError("Erreur lors de la mise à jour des données.");
+        }
+
+        setCreateVéhiculeLoading(false);
+        // Attendre que le device apparaisse dans la liste
+        setTimeout(() => {
+          assignDeviceToMultipleGroups(
+            userAccount,
+            userUsername,
+            userPassword,
+            deviceID,
+            groupesSelectionnes
+          );
+        }, 5000);
+        waitForDeviceThenAssign(
+          userAccount,
+          userUsername,
+          userPassword,
+          deviceID,
+          groupesSelectionnes
+        );
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const waitForDeviceThenAssign = (
+    userAccount,
+    userUsername,
+    userPassword,
+    deviceID,
+    groupesSelectionnes,
+    maxRetries = 10 // 10 essais = 30 secondes
+  ) => {
+    let attempts = 0;
+
+    const interval = setInterval(() => {
+      const allDevices = currentAccountSelected?.accountDevices;
+      const deviceExists = allDevices?.some(
+        (device) => device.deviceID === deviceID
+      );
+
+      if (deviceExists) {
+        clearInterval(interval);
+        console.log("Device trouvé. Assignation en cours...");
+        assignDeviceToMultipleGroups(
+          userAccount,
+          userUsername,
+          userPassword,
+          deviceID,
+          groupesSelectionnes
+        );
+      } else {
+        attempts++;
+        if (attempts >= maxRetries) {
+          clearInterval(interval);
+          console.error(
+            `Device non trouvé après ${attempts} tentatives. Assignation annulée.`
+          );
+          setError("Impossible d'assigner le véhicule : device non trouvé.");
+        }
+      }
+    }, 2000); // Vérifie toutes les 3 secondes
+  };
+
+  // Fonction pour supprimer un véhicule
+  const deleteVehicle = async (deviceID) => {
     console.log("++++++++++++++++ Requête effectué: deleteVehicle");
 
     // /////////
@@ -4171,11 +5418,9 @@ const DataContextProvider = ({ children }) => {
 
     const requestBody =
       `<GTSRequest command="dbdel">` +
-      `<Authorization account="${userAccount || account}" user="${
-        userUsername || username
-      }" password="${userPassword || password}"/>` +
+      `<Authorization account="${account}" user="${username}" password="${password}"/>` +
       `<RecordKey table="Device" partial="true">` +
-      `<Field name="accountID">${userAccount || account}</Field>` +
+      `<Field name="accountID">${account}</Field>` +
       `<Field name="deviceID">${deviceID}</Field>` +
       `</RecordKey>` +
       `</GTSRequest>`;
@@ -4194,13 +5439,168 @@ const DataContextProvider = ({ children }) => {
       // console.log("wait a little more.........");
 
       if (response.ok) {
-        if (userAccount && userUsername && userPassword) {
-          console.log("vehicule Delete avec successsssssssss...............");
-        } else {
-          console.log("Delete successsssssssss...............");
-          setVehicleData((prevVehicles) =>
-            prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
+        // if (userAccount && userUsername && userPassword) {
+        //   console.log("vehicule Delete avec successsssssssss...............");
+        // } else {
+        console.log("Delete successsssssssss...............");
+        setVehicleData((prevVehicles) =>
+          prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
+        );
+
+        //
+        // Supprimer le véhicule de IndexedDB
+        openDatabase().then((db) => {
+          const transaction = db.transaction(["mergedDataHome"], "readwrite");
+          const store = transaction.objectStore("mergedDataHome");
+
+          // Récupérer toutes les données actuelles
+          const getRequest = store.getAll();
+
+          getRequest.onsuccess = () => {
+            const existingData = getRequest.result || [];
+            const updatedData = existingData.filter(
+              (vehicle) => vehicle.deviceID !== deviceID
+            );
+
+            store.clear(); // Supprime les anciennes données
+            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+          };
+        });
+
+        // Supprimer le véhicule de IndexedDB
+        openDatabase().then((db) => {
+          const transaction = db.transaction(
+            ["donneeFusionnéForRapport"],
+            "readwrite"
           );
+          const store = transaction.objectStore("donneeFusionnéForRapport");
+
+          // Récupérer toutes les données actuelles
+          const getRequest = store.getAll();
+
+          getRequest.onsuccess = () => {
+            const existingData = getRequest.result || [];
+            const updatedData = existingData.filter(
+              (vehicle) => vehicle.deviceID !== deviceID
+            );
+
+            store.clear(); // Supprime les anciennes données
+            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+          };
+        });
+
+        // console.log("Véhicule supprimé avec succès.");
+        fetchVehicleData();
+        setSuccessDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        navigate("/home");
+        // }
+      } else {
+        console.error(
+          "Erreur lors de la suppression du véhicule:",
+          response.statusText
+        );
+        setErrorDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+      }
+
+      console.log("finish Deleting.........");
+    } catch (error) {
+      console.error(
+        "Erreur de connexion lors de la suppression du véhicule:",
+        error
+      );
+      setErrorDeleteVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const deleteVehicleEnGestionAccount = async (
+    deviceID,
+    userAccount,
+    userUsername,
+    userPassword
+  ) => {
+    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
+
+    // /////////
+    setCreateVéhiculeLoading(true);
+
+    const requestBody =
+      `<GTSRequest command="dbdel">` +
+      `<Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}"/>` +
+      `<RecordKey table="Device" partial="true">` +
+      `<Field name="accountID">${userAccount}</Field>` +
+      `<Field name="deviceID">${deviceID}</Field>` +
+      `</RecordKey>` +
+      `</GTSRequest>`;
+
+    console.log("requestBody", requestBody);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/xml",
+        },
+        body: requestBody,
+      });
+
+      console.log(response);
+      if (response.ok) {
+        if (userAccount && userUsername && userPassword) {
+          //   console.log("vehicule Delete avec successsssssssss...............");
+          // } else {
+          console.log("Delete successsssssssss...............");
+
+          setAccountDevices((prev) =>
+            prev.filter((v) => v.deviceID !== deviceID)
+          );
+          // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
+          setUserDevices((prev) =>
+            prev.map((user) => ({
+              ...user,
+              userDevices: user.userDevices.filter(
+                (device) => device.deviceID !== deviceID
+              ),
+            }))
+          );
+
+          // 🧠 Mise à jour d'IndexedDB
+          const db = await openDatabase();
+          const tx = db.transaction(
+            ["accountDevices", "userDevices"],
+            "readwrite"
+          );
+
+          const removeFromStore = async (storeName) => {
+            const store = tx.objectStore(storeName);
+            const getAllReq = store.getAll();
+            getAllReq.onsuccess = () => {
+              let updated;
+
+              if (storeName === "userDevices") {
+                // Suppression imbriquée dans chaque user
+                updated = (getAllReq.result || []).map((user) => ({
+                  ...user,
+                  userDevices: (user.userDevices || []).filter(
+                    (device) => device.deviceID !== deviceID
+                  ),
+                }));
+              } else {
+                // Suppression simple
+                updated = (getAllReq.result || []).filter(
+                  (v) => v.deviceID !== deviceID
+                );
+              }
+
+              store.clear();
+              updated.forEach((v) => store.put(v));
+            };
+          };
+
+          removeFromStore("accountDevices");
+          removeFromStore("userDevices");
 
           //
           // Supprimer le véhicule de IndexedDB
@@ -4222,33 +5622,9 @@ const DataContextProvider = ({ children }) => {
             };
           });
 
-          // Supprimer le véhicule de IndexedDB
-          openDatabase().then((db) => {
-            const transaction = db.transaction(
-              ["donneeFusionnéForRapport"],
-              "readwrite"
-            );
-            const store = transaction.objectStore("donneeFusionnéForRapport");
-
-            // Récupérer toutes les données actuelles
-            const getRequest = store.getAll();
-
-            getRequest.onsuccess = () => {
-              const existingData = getRequest.result || [];
-              const updatedData = existingData.filter(
-                (vehicle) => vehicle.deviceID !== deviceID
-              );
-
-              store.clear(); // Supprime les anciennes données
-              updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-            };
-          });
-
-          // console.log("Véhicule supprimé avec succès.");
-          fetchVehicleData();
           setSuccessDeleteVéhiculePopup(true);
           setCreateVéhiculeLoading(false);
-          navigate("/home");
+          // navigate("/home");
         }
       } else {
         console.error(
@@ -5419,6 +6795,24 @@ const DataContextProvider = ({ children }) => {
         listeGestionDesVehicules,
         setListeGestionDesVehicules,
         backToPagePrecedent,
+        fetchAllComptes,
+        createVehicleEnGestionAccount,
+        deleteVehicleEnGestionAccount,
+        currentSelectedDeviceGestion,
+        setCurrentSelectedDeviceGestion,
+        deviceListeTitleGestion,
+        setDeviceListeTitleGestion,
+        userDevices,
+        accountDevices,
+        currentSelectedGroupeGestion,
+        setCurrentSelectedGroupeGestion,
+        fetchAccountGroupes,
+        fetchGroupeDevices,
+        groupeDevices,
+        fetchUserDevices,
+        fetchAccountUsers,
+        createNewGroupeEnGestionAccount,
+        modifyGroupeEnGestionAccount,
       }}
     >
       {children}
@@ -5427,3 +6821,5 @@ const DataContextProvider = ({ children }) => {
 };
 
 export default DataContextProvider;
+
+// OctagonoGPSHaitiAdmin13@1919
