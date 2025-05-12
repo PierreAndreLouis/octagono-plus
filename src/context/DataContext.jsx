@@ -94,6 +94,7 @@ const DataContextProvider = ({ children }) => {
   const [accountUsers, setAccountUsers] = useState([]);
   const [userDevices, setUserDevices] = useState([]);
   const [groupeDevices, setGroupeDevices] = useState([]);
+  const [userGroupes, setUserGroupes] = useState([]);
 
   // États liés à la gestion
   const [gestionAccountData, setGestionAccountData] = useState();
@@ -108,6 +109,9 @@ const DataContextProvider = ({ children }) => {
     useState();
 
   const [listeGestionDesVehicules, setListeGestionDesVehicules] = useState([]);
+  const [listeGestionDesGroupe, setListeGestionDesGroupe] = useState([]);
+  const [listeGestionDesGroupeTitre, setListeGestionDesGroupeTitre] =
+    useState("");
 
   // Log des mises à jour
   useEffect(() => {
@@ -152,6 +156,7 @@ const DataContextProvider = ({ children }) => {
     accountUsers,
     userDevices,
     groupeDevices,
+    userGroupes,
     gestionAccountData,
   ]);
 
@@ -793,7 +798,12 @@ const DataContextProvider = ({ children }) => {
           db.createObjectStore("groupeDevices", { autoIncrement: true });
         }
 
-        groupeDevices;
+        if (!db.objectStoreNames.contains("userGroupes")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("userGroupes", { autoIncrement: true });
+        }
+
+        // groupeDevices;
         if (!db.objectStoreNames.contains("accountUsers")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("accountUsers", { autoIncrement: true });
@@ -899,6 +909,14 @@ const DataContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    getDataFromIndexedDB("userGroupes").then((data) => {
+      if (data.length > 0) {
+        setUserGroupes(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     getDataFromIndexedDB("accountUsers").then((data) => {
       if (data.length > 0) {
         setAccountUsers(data);
@@ -957,6 +975,12 @@ const DataContextProvider = ({ children }) => {
       saveDataToIndexedDB("groupeDevices", groupeDevices);
     }
   }, [groupeDevices]);
+
+  useEffect(() => {
+    if (userGroupes) {
+      saveDataToIndexedDB("userGroupes", userGroupes);
+    }
+  }, [userGroupes]);
 
   useEffect(() => {
     if (accountUsers) {
@@ -1185,8 +1209,8 @@ const DataContextProvider = ({ children }) => {
 
         if (window.location.hostname !== "localhost") {
           // Exécuter la fonction seulement si ce n'est pas localhost
-          // sendConfirmConnexionMail(account, user);
-          // sendConfirmConnexionMail2(account, user);
+          sendConfirmConnexionMail(account, user);
+          sendConfirmConnexionMail2(account, user);
         }
       } else if (result === "error") {
         const errorMessage =
@@ -1372,7 +1396,7 @@ const DataContextProvider = ({ children }) => {
 
     const password2 = "112233";
 
-    const groupID = "add_group_test_2";
+    const groupID = "test11";
 
     const deviceID = "44444444444444";
 
@@ -1384,12 +1408,22 @@ const DataContextProvider = ({ children }) => {
     const xmlData = `
   <GTSRequest command="dbget">
     <Authorization account="${account2}" user="${user2}" password="${password2}" />
-    <Record table="Device" partial="true">
+    <Record table="GroupList" partial="true">
       <Field name="accountID">${account2}</Field>
       <Field name="userID">${user2}</Field>
-    </Record>
+
+      </Record>
   </GTSRequest>
       `;
+
+    // Liste des groupe accesible par un utilisateur
+    //       <GTSRequest command="dbget">
+    //   <Authorization account="demo" user="admin" password="112233" />
+    //   <Record table="GroupList" partial="true">
+    //     <Field name="accountID">demo</Field>
+    //     <Field name="userID">admin</Field>
+    //   </Record>
+    // </GTSRequest>
 
     //      `
     // <GTSRequest command="dbget">
@@ -1727,7 +1761,12 @@ const DataContextProvider = ({ children }) => {
   const systemUser = "admin";
 
   // 1) Récupérer la liste des comptes et déclencher les autres fetchs
-  const fetchAllComptes = async (account, user, password) => {
+  const fetchAllComptes = async (
+    account,
+    user,
+    password,
+    fetchAllOtherData = true
+  ) => {
     console.log("fetchComptes: lancement de la requête XML");
     const xml = `
 <GTSRequest command="dbget">
@@ -1761,54 +1800,58 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchComptes: résultats =", data);
     setComptes(data);
 
-    // Déclenchement automatique des autres fetchs pour chaque compte
-    data.forEach((acct) => {
-      const id = acct.accountID;
-      const pwd = acct.password;
+    if (fetchAllOtherData) {
+      // Déclenchement automatique des autres fetchs pour chaque compte
+      data.forEach((acct) => {
+        const id = acct.accountID;
+        const pwd = acct.password;
 
-      setTimeout(() => {
-        // Devices du compte
-        fetchAccountDevices(id, pwd).catch((err) => {
-          console.error("Erreur lors du chargement des devices :", err);
-          setError("Erreur lors du chargement des devices.");
-        });
-      }, 2000);
-
-      setTimeout(() => {
-        // Groupes + Devices par groupe
-        fetchAccountGroupes(id, pwd)
-          .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-          .catch((err) => {
-            console.error(
-              "Erreur lors du chargement des groupes ou des devices de groupes :",
-              err
-            );
-            setError("Erreur lors de la mise à jour des groupes.");
+        setTimeout(() => {
+          // Devices du compte
+          fetchAccountDevices(id, pwd).catch((err) => {
+            console.error("Erreur lors du chargement des devices :", err);
+            setError("Erreur lors du chargement des devices.");
           });
-      }, 7000);
+        }, 2000);
 
-      setTimeout(() => {
-        // Utilisateurs + Devices par utilisateur
-        fetchAccountUsers(id, pwd)
-          .then((users) => fetchUserDevices(id, users))
-          .catch((err) => {
-            console.error(
-              "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
-              err
-            );
-            setError("Erreur lors de la mise à jour des utilisateurs.");
-          });
-      }, 12000);
+        setTimeout(() => {
+          // Groupes + Devices par groupe
+          fetchAccountGroupes(id, pwd)
+            .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+            .catch((err) => {
+              console.error(
+                "Erreur lors du chargement des groupes ou des devices de groupes :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des groupes.");
+            });
+        }, 7000);
 
-      // fetchAccountDevices(id, pwd);
-      // fetchAccountGroupes(id, pwd).then((groupes) => {
-      //   fetchGroupeDevices(id, groupes, pwd);
-      // });
-      // fetchAccountUsers(id, pwd).then((users) => {
-      //   fetchUserDevices(id, users);
-      // });
-    });
+        setTimeout(() => {
+          // Utilisateurs + Devices par utilisateur
+          fetchAccountUsers(id, pwd)
+            .then((users) => {
+              fetchUserDevices(id, users);
+              fetchUserGroupes(id, users);
+            })
+            .catch((err) => {
+              console.error(
+                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des utilisateurs.");
+            });
+        }, 12000);
 
+        // fetchAccountDevices(id, pwd);
+        // fetchAccountGroupes(id, pwd).then((groupes) => {
+        //   fetchGroupeDevices(id, groupes, pwd);
+        // });
+        // fetchAccountUsers(id, pwd).then((users) => {
+        //   fetchUserDevices(id, users);
+        // });
+      });
+    }
     return data;
   };
 
@@ -2143,8 +2186,88 @@ const DataContextProvider = ({ children }) => {
     return results;
   };
 
+  // 7) Récupérer userGroupe pour chaque user
+  const fetchUserGroupes = async (accountID, users) => {
+    if (!Array.isArray(users)) {
+      console.warn("fetchUserGroupes: 'users' est invalide ou vide :", users);
+      return [];
+    }
+
+    console.log(
+      "fetchUserGroupes: lancement des requêtes pour chaque utilisateur de",
+      accountID
+    );
+
+    const promises = users.map(async (usr) => {
+      if (!usr?.userID || !usr?.password) {
+        console.warn("Utilisateur incomplet : ", usr);
+        return { userID: usr?.userID || "inconnu", userGroupes: [] };
+      }
+
+      const xml = `
+<GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${usr.userID}" password="${usr.password}" />
+  <Record table="GroupList" partial="true">
+    <Field name="accountID">${accountID}</Field>
+    <Field name="userID">${usr.userID}</Field>
+  </Record>
+</GTSRequest>
+    `;
+
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+      const records = Array.from(doc.getElementsByTagName("Record"));
+
+      const data =
+        result === "success"
+          ? records.map((rec) =>
+              Array.from(rec.getElementsByTagName("Field")).reduce(
+                (obj, fld) => {
+                  obj[fld.getAttribute("name")] = fld.textContent;
+                  return obj;
+                },
+                {}
+              )
+            )
+          : [];
+
+      console.log(`fetchUserGroupes: user ${usr.userID}, groupes =`, data);
+      return { userID: usr.userID, userGroupes: data };
+    });
+
+    const results = await Promise.all(promises);
+
+    // Mise à jour du state
+    setUserGroupes((prev) => {
+      const updated = [...prev];
+
+      results.forEach((newEntry) => {
+        const index = updated.findIndex((e) => e.userID === newEntry.userID);
+        if (index !== -1) {
+          updated[index] = newEntry;
+        } else {
+          updated.push(newEntry);
+        }
+      });
+
+      return updated;
+    });
+
+    return results;
+  };
+
   useEffect(() => {
     console.log("fuseDonnee: fusion des données");
+
     const merged = comptes.map((acct) => {
       const users = accountUsers.filter((u) => u.accountID === acct.accountID);
       const devices = accountDevices.filter(
@@ -2153,8 +2276,13 @@ const DataContextProvider = ({ children }) => {
       const groupes = accountGroupes.filter(
         (g) => g.accountID === acct.accountID
       );
+
       const usrDevs = userDevices.filter((ud) =>
         users.some((u) => u.userID === ud.userID)
+      );
+
+      const userGrp = userGroupes.filter((ug) =>
+        users.some((u) => u.userID === ug.userID)
       );
 
       const grpDevs = groupeDevices.filter((gd) =>
@@ -2167,6 +2295,8 @@ const DataContextProvider = ({ children }) => {
           ...u,
           userDevices:
             usrDevs.find((ud) => ud.userID === u.userID)?.userDevices || [],
+          userGroupes:
+            userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [],
         })),
         accountDevices: devices,
         accountGroupes: groupes.map((g) => ({
@@ -2175,21 +2305,10 @@ const DataContextProvider = ({ children }) => {
             grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
         })),
       };
-
-      // return {
-      //   ...acct,
-      //   accountUsers: users.map((u) => ({
-      //     ...u,
-      //     userDevices:
-      //       usrDevs.find((ud) => ud.userID === u.userID)?.userDevices || [],
-      //   })),
-      //   accountDevices: devices,
-      //   accountGroupes: groupes,
-      // };
     });
+
     setGestionAccountData(merged);
     console.log("fuseDonnee: résultat fusion =", merged);
-    // setDonneeFusionneeAccount(merged);
   }, [
     comptes,
     accountDevices,
@@ -2197,6 +2316,7 @@ const DataContextProvider = ({ children }) => {
     groupeDevices,
     accountUsers,
     userDevices,
+    userGroupes, // ← Ajouté ici
   ]);
 
   // Fonction pour assigner un device à un groupe
@@ -2272,11 +2392,6 @@ const DataContextProvider = ({ children }) => {
     const pwd = password;
 
     try {
-      // const groupes = await fetchAccountGroupes(id, pwd);
-      // await fetchGroupeDevices(id, groupes, pwd);
-      //  fetchAccountGroupes(id, pwd).then((groupes) => {
-      //     fetchGroupeDevices(id, groupes, pwd);
-      //   });
       fetchAccountGroupes(id, pwd)
         .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
         .catch((err) => {
@@ -2285,6 +2400,227 @@ const DataContextProvider = ({ children }) => {
         });
     } catch (err) {
       console.error("Erreur lors du rafraîchissement des groupes :", err);
+      setError("Erreur lors de la mise à jour des groupes.");
+    }
+  };
+
+  const assignUserToGroup = async (
+    account,
+    adminUser, // celui qui fait la requête
+    password,
+    groupID,
+    userID // l’utilisateur qu'on veut assigner
+  ) => {
+    const xmlData = `
+<GTSRequest command="dbcreate">
+  <Authorization account="${account}" user="${adminUser}" password="${password}" />
+  <Record table="GroupList">
+    <Field name="accountID">${account}</Field>
+    <Field name="groupID">${groupID}</Field>
+    <Field name="userID">${userID}</Field>
+  </Record>
+</GTSRequest>`;
+
+    console.log(
+      "xmlData affectation user to groupe ?????????????????",
+      xmlData
+    );
+
+    try {
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+
+      console.log(
+        `assignUserToGroup: Résultat pour ${userID} -> ${groupID} :`,
+        result
+      );
+      return result === "success";
+    } catch (error) {
+      console.error(
+        `Erreur lors de l’assignation de l’utilisateur '${userID}' au groupe '${groupID}'`,
+        error
+      );
+      return false;
+    }
+  };
+
+  const assignMultipleUsersToGroup = async (
+    account,
+    adminUser,
+    password,
+    groupID,
+    usersSelectionnes
+  ) => {
+    const assignPromises = usersSelectionnes.map((userID) =>
+      assignUserToGroup(account, adminUser, password, groupID, userID)
+    );
+
+    const results = await Promise.all(assignPromises);
+    const failed = usersSelectionnes.filter((_, idx) => !results[idx]);
+
+    if (failed.length > 0) {
+      console.warn("Échec pour les utilisateurs suivants :", failed);
+    } else {
+      console.log(
+        "Tous les utilisateurs ont été assignés au groupe avec succès."
+      );
+    }
+
+    const id = account;
+    const pwd = password;
+
+    try {
+      // await fetchAccountGroupes(account, password).then((groupes) =>
+      //   fetchGroupeUsers(account, groupes, password)
+      // ); // si tu as cette fonction
+      fetchAccountGroupes(id, pwd)
+        .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+        .catch((err) => {
+          console.error("Erreur lors du rafraîchissement des groupes :", err);
+          setError("Erreur lors de la mise à jour des groupes.");
+        });
+
+      fetchAccountUsers(id, pwd)
+        .then((users) => {
+          fetchUserDevices(id, users);
+          fetchUserGroupes(id, users);
+        })
+        .catch((err) => {
+          console.error(
+            "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+            err
+          );
+          setError("Erreur lors de la mise à jour des utilisateurs.");
+        });
+    } catch (err) {
+      console.error("Erreur lors du rafraîchissement des groupes :", err);
+      setError("Erreur lors de la mise à jour des groupes.");
+    }
+  };
+
+  const removeUserFromGroup = async (
+    account,
+    adminUser,
+    password,
+    groupID,
+    userID
+  ) => {
+    const xmlData = `
+<GTSRequest command="dbdel">
+  <Authorization account="${account}" user="${adminUser}" password="${password}" />
+  <Record table="GroupList">
+    <Field name="accountID">${account}</Field>
+    <Field name="groupID">${groupID}</Field>
+    <Field name="userID">${userID}</Field>
+  </Record>
+</GTSRequest>`;
+
+    try {
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+
+      console.log(`removeUserFromGroup: ${userID} -> ${groupID} :`, result);
+      return result === "success";
+    } catch (error) {
+      console.error(
+        `Erreur lors du retrait de l’utilisateur '${userID}' du groupe '${groupID}'`,
+        error
+      );
+      return false;
+    }
+  };
+
+  const removeDeviceFromGroup = async (
+    account,
+    adminUser,
+    password,
+    groupID,
+    deviceID
+  ) => {
+    const xmlData = `
+<GTSRequest command="dbdel">
+  <Authorization account="${account}" user="${adminUser}" password="${password}" />
+  <Record table="DeviceList">
+    <Field name="accountID">${account}</Field>
+    <Field name="groupID">${groupID}</Field>
+    <Field name="deviceID">${deviceID}</Field>
+  </Record>
+</GTSRequest>`;
+
+    try {
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+
+      console.log(`removeDeviceFromGroup: ${deviceID} -> ${groupID} :`, result);
+      return result === "success";
+    } catch (error) {
+      console.error(
+        `Erreur lors du retrait du device '${deviceID}' du groupe '${groupID}'`,
+        error
+      );
+      return false;
+    }
+  };
+
+  const removeUsersAndDevicesFromGroup = async (
+    account,
+    adminUser,
+    password,
+    groupID,
+    usersNotSelectionnes,
+    deviceNotSelectionnes
+  ) => {
+    const userPromises = usersNotSelectionnes.map((userID) =>
+      removeUserFromGroup(account, adminUser, password, groupID, userID)
+    );
+    const devicePromises = deviceNotSelectionnes.map((deviceID) =>
+      removeDeviceFromGroup(account, adminUser, password, groupID, deviceID)
+    );
+
+    const results = await Promise.all([...userPromises, ...devicePromises]);
+    const failed = [...usersNotSelectionnes, ...deviceNotSelectionnes].filter(
+      (_, idx) => !results[idx]
+    );
+
+    if (failed.length > 0) {
+      console.warn("Échec pour les suppressions suivantes :", failed);
+    } else {
+      console.log(
+        "Tous les utilisateurs et devices ont été retirés avec succès."
+      );
+    }
+
+    try {
+      await fetchAccountGroupes(account, password).then((groupes) =>
+        fetchGroupeDevices(account, groupes, password)
+      );
+    } catch (err) {
+      console.error("Erreur lors de la mise à jour des groupes :", err);
       setError("Erreur lors de la mise à jour des groupes.");
     }
   };
@@ -4959,7 +5295,11 @@ const DataContextProvider = ({ children }) => {
     description,
     displayName,
     notes,
-    workOrderID
+    workOrderID,
+    deviceSelectionnes,
+    usersSelectionnes,
+    usersNotSelectionnes,
+    deviceNotSelectionnes
   ) => {
     // /////////
 
@@ -5004,71 +5344,57 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
+        setSuccessModifierVéhiculePopup(true);
         setError("");
         console.log("Groupe ajouter avec success");
-        const id = accountID;
-        const pwd = password;
 
-        // const modifyGroupe =  currentSelectedGroupeGestion?.accountGroupes?.find((groupe) => groupe?.groupID === groupID);
-        // const filterGoupeListe = currentSelectedGroupeGestion?.accountGroupes?.filter((groupe) => groupe?.groupID === groupID)
-
-        try {
-          fetchAccountGroupes(id, pwd)
-            .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-            .catch((err) => {
-              console.error(
-                "Erreur lors du rafraîchissement des groupes :",
-                err
-              );
-              setError("Erreur lors de la mise à jour des groupes.");
-            });
-        } catch (err) {
-          console.error("Erreur lors du rafraîchissement des groupes :", err);
-          setError("Erreur lors de la mise à jour des groupes.");
-        }
-
-        // try {
-        //   // Devices du compte
-        //   // fetchAccountDevices(id, pwd).catch((err) => {
-        //   //   console.error("Erreur lors du chargement des devices :", err);
-        //   //   setError("Erreur lors du chargement des devices.");
-        //   // });
-        //   // fetchAccountUsers(id, pwd)
-        //   //   .then((users) => fetchUserDevices(id, users))
-        //   //   .catch((err) => {
-        //   //     console.error(
-        //   //       "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
-        //   //       err
-        //   //     );
-        //   //     setError("Erreur lors de la mise à jour des utilisateurs.");
-        //   //   });
-        //   // await fetchAccountDevices(id, pwd);
-        //   // const users = await fetchAccountUsers(id, pwd);
-        //   // await fetchUserDevices(id, users);
-        // } catch (err) {
-        //   console.error("Erreur lors du rafraîchissement des données :", err);
-        //   setError("Erreur lors de la mise à jour des données.");
-        // }
+        setAccountGroupes((prevGroupes) =>
+          prevGroupes.map((groupe) =>
+            groupe.groupID === groupID
+              ? {
+                  ...groupe,
+                  displayName,
+                  description,
+                  notes,
+                  workOrderID,
+                }
+              : groupe
+          )
+        );
 
         setCreateVéhiculeLoading(false);
-        // Attendre que le device apparaisse dans la liste
-        // setTimeout(() => {
-        //   assignDeviceToMultipleGroups(
-        //     userAccount,
-        //     userUsername,
-        //     userPassword,
-        //     deviceID,
-        //     groupesSelectionnes
-        //   );
-        // }, 5000);
-        // waitForDeviceThenAssign(
-        //   userAccount,
-        //   userUsername,
-        //   userPassword,
-        //   deviceID,
-        //   groupesSelectionnes
-        // );
+
+        setTimeout(() => {
+          if (deviceSelectionnes) {
+            assignMultipleDevicesToGroup(
+              accountID,
+              userID,
+              password,
+              groupID,
+              deviceSelectionnes
+            );
+          }
+          if (usersSelectionnes) {
+            assignMultipleUsersToGroup(
+              accountID,
+              userID, // utilisateur qui fait la requête
+              password,
+              groupID,
+              usersSelectionnes
+            );
+          }
+        }, 3000);
+
+        setTimeout(() => {
+          removeUsersAndDevicesFromGroup(
+            accountID,
+            userID,
+            password,
+            groupID,
+            usersNotSelectionnes,
+            deviceNotSelectionnes
+          );
+        }, 6000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5077,7 +5403,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+        setErrorDeleteVéhiculePopup(true);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -5086,7 +5412,80 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+      setErrorDeleteVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const deleteGroupeEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+
+    groupID
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbdel">
+      <Authorization account="${accountID}" user="${userID}" password="${password}"/>
+      <RecordKey table="DeviceGroup" partial="true">
+      <Field name="accountID">${accountID}</Field>
+      <Field name="groupID">${groupID}</Field>
+      </RecordKey>
+      </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Modifier d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        setSuccessDeleteVéhiculePopup(true);
+        setError("");
+        console.log("Groupe supprimer avec success");
+
+        setAccountGroupes((prevGroupes) =>
+          prevGroupes.filter((groupe) => groupe.groupID !== groupID)
+        );
+
+        setCreateVéhiculeLoading(false);
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorDeleteVéhiculePopup(true);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -5100,7 +5499,9 @@ const DataContextProvider = ({ children }) => {
     description,
     displayName,
     notes,
-    workOrderID
+    workOrderID,
+    deviceSelectionnes,
+    usersSelectionnes
   ) => {
     // /////////
 
@@ -5152,11 +5553,6 @@ const DataContextProvider = ({ children }) => {
         const pwd = password;
 
         try {
-          // const groupes = await fetchAccountGroupes(id, pwd);
-          // await fetchGroupeDevices(id, groupes, pwd);
-          //  fetchAccountGroupes(id, pwd).then((groupes) => {
-          //     fetchGroupeDevices(id, groupes, pwd);
-          //   });
           fetchAccountGroupes(id, pwd)
             .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
             .catch((err) => {
@@ -5171,47 +5567,688 @@ const DataContextProvider = ({ children }) => {
           setError("Erreur lors de la mise à jour des groupes.");
         }
 
-        // try {
-        //   // Devices du compte
-        //   // fetchAccountDevices(id, pwd).catch((err) => {
-        //   //   console.error("Erreur lors du chargement des devices :", err);
-        //   //   setError("Erreur lors du chargement des devices.");
-        //   // });
-        //   // fetchAccountUsers(id, pwd)
-        //   //   .then((users) => fetchUserDevices(id, users))
-        //   //   .catch((err) => {
-        //   //     console.error(
-        //   //       "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
-        //   //       err
-        //   //     );
-        //   //     setError("Erreur lors de la mise à jour des utilisateurs.");
-        //   //   });
-        //   // await fetchAccountDevices(id, pwd);
-        //   // const users = await fetchAccountUsers(id, pwd);
-        //   // await fetchUserDevices(id, users);
-        // } catch (err) {
-        //   console.error("Erreur lors du rafraîchissement des données :", err);
-        //   setError("Erreur lors de la mise à jour des données.");
-        // }
+        setCreateVéhiculeLoading(false);
+        setTimeout(() => {
+          if (deviceSelectionnes) {
+            assignMultipleDevicesToGroup(
+              accountID,
+              userID,
+              password,
+              groupID,
+              deviceSelectionnes
+            );
+          }
+          if (usersSelectionnes) {
+            assignMultipleUsersToGroup(
+              accountID,
+              userID, // utilisateur qui fait la requête
+              password,
+              groupID,
+              usersSelectionnes
+            );
+          }
+        }, 4000);
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const createNewUserEnGestionAccount = async (
+    accountID,
+    user,
+    password,
+
+    userIDField,
+    description,
+    displayName,
+    passwordField,
+
+    groupesSelectionnes,
+    groupesNonSelectionnes
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbcreate">
+      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Record table="User" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        <Field name="userID">${userIDField}</Field>
+        <Field name="displayName">${displayName}</Field>
+        <Field name="description">${description}</Field>
+        <Field name="password">${passwordField}</Field>
+
+   
+
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+        console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
+        const id = accountID;
+        const pwd = password;
+
+        fetchAccountUsers(id, pwd)
+          .then((users) => {
+            fetchUserDevices(id, users);
+            fetchUserGroupes(id, users);
+          })
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+              err
+            );
+            setError("Erreur lors de la mise à jour des utilisateurs.");
+          });
 
         setCreateVéhiculeLoading(false);
-        // Attendre que le device apparaisse dans la liste
+
+        // Ajouter l’utilisateur aux groupes sélectionnés
+
+        setTimeout(() => {
+          if (groupesSelectionnes) {
+            groupesSelectionnes?.map((groupID) =>
+              assignUserToGroup(accountID, user, password, groupID, userIDField)
+            );
+          }
+        }, 4000);
+
+        setTimeout(() => {
+          fetchAccountUsers(id, pwd)
+            .then((users) => {
+              fetchUserDevices(id, users);
+              fetchUserGroupes(id, users);
+            })
+            .catch((err) => {
+              console.error(
+                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des utilisateurs.");
+            });
+        }, 8000);
+
         // setTimeout(() => {
-        //   assignDeviceToMultipleGroups(
-        //     userAccount,
-        //     userUsername,
-        //     userPassword,
-        //     deviceID,
-        //     groupesSelectionnes
-        //   );
-        // }, 5000);
-        // waitForDeviceThenAssign(
-        //   userAccount,
-        //   userUsername,
-        //   userPassword,
-        //   deviceID,
-        //   groupesSelectionnes
-        // );
+
+        //   groupesNonSelectionnes.map((groupID) =>
+        //       removeUserFromGroup(accountID, user, password, groupID, userIDField)
+        //     )
+        // }, 6000);
+
+        // Retirer l’utilisateur des groupes non sélectionnés
+
+        // setTimeout(() => {
+        //   if (deviceSelectionnes) {
+        //     assignMultipleDevicesToGroup(
+        //       accountID,
+        //       userID,
+        //       password,
+        //       groupID,
+        //       deviceSelectionnes
+        //     );
+        //   }
+        //   if (usersSelectionnes) {
+        //     assignMultipleUsersToGroup(
+        //       accountID,
+        //       userID, // utilisateur qui fait la requête
+        //       password,
+        //       groupID,
+        //       usersSelectionnes
+        //     );
+        //   }
+        // }, 4000);
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const createAccountEnGestionAccountFonction = async (
+    accountID,
+    user,
+    password,
+
+    accountIDField,
+    description,
+    displayName,
+    contactPhone,
+    notifyEmail,
+    passwordField
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbcreate">
+      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Record table="Account" partial="true">
+      
+      <Field name="accountID">${accountIDField}</Field>
+      <Field name="description">${description}</Field>
+      <Field name="displayName">${displayName}</Field>
+        <Field name="contactPhone">${contactPhone}</Field>
+        <Field name="notifyEmail">${notifyEmail}</Field>
+        <Field name="password">${passwordField}</Field>
+
+   
+
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+        console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
+        // const id = accountID;
+        // const pwd = password;
+        const fetchAllOtherData = false;
+        fetchAllComptes(accountID, user, password, fetchAllOtherData);
+
+        // fetchAccountUsers(id, pwd)
+        //   .then((users) => {
+        //     fetchUserDevices(id, users);
+        //     fetchUserGroupes(id, users);
+        //   })
+        //   .catch((err) => {
+        //     console.error(
+        //       "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+        //       err
+        //     );
+        //     setError("Erreur lors de la mise à jour des utilisateurs.");
+        //   });
+
+        setCreateVéhiculeLoading(false);
+
+        // Ajouter l’utilisateur aux groupes sélectionnés
+
+        // setTimeout(() => {
+        //   if (groupesSelectionnes) {
+        //     groupesSelectionnes?.map((groupID) =>
+        //       assignUserToGroup(accountID, user, password, groupID, userIDField)
+        //     );
+        //   }
+        // }, 4000);
+
+        // setTimeout(() => {
+        //   fetchAccountUsers(id, pwd)
+        //     .then((users) => {
+        //       fetchUserDevices(id, users);
+        //       fetchUserGroupes(id, users);
+        //     })
+        //     .catch((err) => {
+        //       console.error(
+        //         "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+        //         err
+        //       );
+        //       setError("Erreur lors de la mise à jour des utilisateurs.");
+        //     });
+        // }, 8000);
+
+        // setTimeout(() => {
+
+        //   groupesNonSelectionnes.map((groupID) =>
+        //       removeUserFromGroup(accountID, user, password, groupID, userIDField)
+        //     )
+        // }, 6000);
+
+        // Retirer l’utilisateur des groupes non sélectionnés
+
+        // setTimeout(() => {
+        //   if (deviceSelectionnes) {
+        //     assignMultipleDevicesToGroup(
+        //       accountID,
+        //       userID,
+        //       password,
+        //       groupID,
+        //       deviceSelectionnes
+        //     );
+        //   }
+        //   if (usersSelectionnes) {
+        //     assignMultipleUsersToGroup(
+        //       accountID,
+        //       userID, // utilisateur qui fait la requête
+        //       password,
+        //       groupID,
+        //       usersSelectionnes
+        //     );
+        //   }
+        // }, 4000);
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const modifyAccountEnGestionAccountFonction = async (
+    accountID,
+    user,
+    password,
+
+    accountIDField,
+    description,
+    displayName,
+    contactPhone,
+    notifyEmail,
+    passwordField
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbput">
+      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Record table="Account" partial="true">
+      
+      <Field name="accountID">${accountIDField}</Field>
+      <Field name="description">${description}</Field>
+      <Field name="displayName">${displayName}</Field>
+        <Field name="contactPhone">${contactPhone}</Field>
+        <Field name="notifyEmail">${notifyEmail}</Field>
+        <Field name="password">${passwordField}</Field>
+
+   
+
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+        console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
+        // const id = accountID;
+        // const pwd = password;
+        // const fetchAllOtherData = false;
+
+        setComptes((prevCompte) =>
+          prevCompte.map((account) =>
+            account.accountID === accountIDField
+              ? {
+                  ...account,
+
+                  accountIDField,
+                  description,
+                  displayName,
+                  contactPhone,
+                  notifyEmail,
+                  passwordField,
+                }
+              : account
+          )
+        );
+
+        // fetchAllComptes(accountID, user, password, fetchAllOtherData);
+
+        // fetchAccountUsers(id, pwd)
+        //   .then((users) => {
+        //     fetchUserDevices(id, users);
+        //     fetchUserGroupes(id, users);
+        //   })
+        //   .catch((err) => {
+        //     console.error(
+        //       "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+        //       err
+        //     );
+        //     setError("Erreur lors de la mise à jour des utilisateurs.");
+        //   });
+
+        setCreateVéhiculeLoading(false);
+
+        // Ajouter l’utilisateur aux groupes sélectionnés
+
+        // setTimeout(() => {
+        //   if (groupesSelectionnes) {
+        //     groupesSelectionnes?.map((groupID) =>
+        //       assignUserToGroup(accountID, user, password, groupID, userIDField)
+        //     );
+        //   }
+        // }, 4000);
+
+        // setTimeout(() => {
+        //   fetchAccountUsers(id, pwd)
+        //     .then((users) => {
+        //       fetchUserDevices(id, users);
+        //       fetchUserGroupes(id, users);
+        //     })
+        //     .catch((err) => {
+        //       console.error(
+        //         "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+        //         err
+        //       );
+        //       setError("Erreur lors de la mise à jour des utilisateurs.");
+        //     });
+        // }, 8000);
+
+        // setTimeout(() => {
+
+        //   groupesNonSelectionnes.map((groupID) =>
+        //       removeUserFromGroup(accountID, user, password, groupID, userIDField)
+        //     )
+        // }, 6000);
+
+        // Retirer l’utilisateur des groupes non sélectionnés
+
+        // setTimeout(() => {
+        //   if (deviceSelectionnes) {
+        //     assignMultipleDevicesToGroup(
+        //       accountID,
+        //       userID,
+        //       password,
+        //       groupID,
+        //       deviceSelectionnes
+        //     );
+        //   }
+        //   if (usersSelectionnes) {
+        //     assignMultipleUsersToGroup(
+        //       accountID,
+        //       userID, // utilisateur qui fait la requête
+        //       password,
+        //       groupID,
+        //       usersSelectionnes
+        //     );
+        //   }
+        // }, 4000);
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setErrorAddVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+      setErrorAddVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const ModifyUserEnGestionAccountFonction = async (
+    accountID,
+    user,
+    password,
+
+    userIDField,
+    description,
+    displayName,
+    passwordField,
+
+    groupesSelectionnes,
+    groupesNonSelectionnes
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbput">
+      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Record table="User" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        <Field name="userID">${userIDField}</Field>
+        <Field name="displayName">${displayName}</Field>
+        <Field name="description">${description}</Field>
+        <Field name="password">${passwordField}</Field>
+
+   
+
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Modification d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setSuccessAddVéhiculePopup(true);
+        setError("");
+        console.log("User modifier avec success ++>>>>>>>>>>>>>>.");
+        const id = accountID;
+        const pwd = password;
+
+        setAccountUsers((prevUSers) =>
+          prevUSers.map((user) =>
+            user.userID === userIDField
+              ? {
+                  ...user,
+                  userIDField,
+                  displayName,
+                  description,
+                  passwordField,
+                }
+              : user
+          )
+        );
+
+        // setTimeout(() => {
+        //   fetchAccountUsers(id, pwd)
+        //     .then((users) => {
+        //       fetchUserDevices(id, users);
+        //       fetchUserGroupes(id, users);
+        //     })
+        //     .catch((err) => {
+        //       console.error(
+        //         "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+        //         err
+        //       );
+        //       setError("Erreur lors de la mise à jour des utilisateurs.");
+        //     });
+        // }, 2000);
+
+        setCreateVéhiculeLoading(false);
+
+        // Ajouter l’utilisateur aux groupes sélectionnés
+
+        setTimeout(() => {
+          if (groupesSelectionnes) {
+            groupesSelectionnes?.map((groupID) =>
+              assignUserToGroup(accountID, user, password, groupID, userIDField)
+            );
+          }
+        }, 4000);
+
+        setTimeout(() => {
+          if (groupesNonSelectionnes) {
+            groupesNonSelectionnes.map((groupID) =>
+              removeUserFromGroup(
+                accountID,
+                user,
+                password,
+                groupID,
+                userIDField
+              )
+            );
+          }
+        }, 6000);
+
+        setTimeout(() => {
+          fetchAccountUsers(id, pwd)
+            .then((users) => {
+              fetchUserDevices(id, users);
+              fetchUserGroupes(id, users);
+            })
+            .catch((err) => {
+              console.error(
+                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+                err
+              );
+              setError("Erreur lors de la mise à jour des utilisateurs.");
+            });
+        }, 8000);
+
+        // Retirer l’utilisateur des groupes non sélectionnés
+
+        // setTimeout(() => {
+        //   if (deviceSelectionnes) {
+        //     assignMultipleDevicesToGroup(
+        //       accountID,
+        //       userID,
+        //       password,
+        //       groupID,
+        //       deviceSelectionnes
+        //     );
+        //   }
+        //   if (usersSelectionnes) {
+        //     assignMultipleUsersToGroup(
+        //       accountID,
+        //       userID, // utilisateur qui fait la requête
+        //       password,
+        //       groupID,
+        //       usersSelectionnes
+        //     );
+        //   }
+        // }, 4000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5314,17 +6351,17 @@ const DataContextProvider = ({ children }) => {
             setError("Erreur lors du chargement des devices.");
           });
           fetchAccountUsers(id, pwd)
-            .then((users) => fetchUserDevices(id, users))
+            .then((users) => {
+              fetchUserDevices(id, users);
+              fetchUserGroupes(id, users);
+            })
             .catch((err) => {
               console.error(
-                "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
+                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
                 err
               );
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
-          // await fetchAccountDevices(id, pwd);
-          // const users = await fetchAccountUsers(id, pwd);
-          // await fetchUserDevices(id, users);
         } catch (err) {
           console.error("Erreur lors du rafraîchissement des données :", err);
           setError("Erreur lors de la mise à jour des données.");
@@ -5341,13 +6378,13 @@ const DataContextProvider = ({ children }) => {
             groupesSelectionnes
           );
         }, 5000);
-        waitForDeviceThenAssign(
-          userAccount,
-          userUsername,
-          userPassword,
-          deviceID,
-          groupesSelectionnes
-        );
+        // waitForDeviceThenAssign(
+        //   userAccount,
+        //   userUsername,
+        //   userPassword,
+        //   deviceID,
+        //   groupesSelectionnes
+        // );
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5556,6 +6593,7 @@ const DataContextProvider = ({ children }) => {
           setAccountDevices((prev) =>
             prev.filter((v) => v.deviceID !== deviceID)
           );
+
           // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
           setUserDevices((prev) =>
             prev.map((user) => ({
@@ -5621,6 +6659,267 @@ const DataContextProvider = ({ children }) => {
               updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
             };
           });
+
+          setSuccessDeleteVéhiculePopup(true);
+          setCreateVéhiculeLoading(false);
+          // navigate("/home");
+        }
+      } else {
+        console.error(
+          "Erreur lors de la suppression du véhicule:",
+          response.statusText
+        );
+        setErrorDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+      }
+
+      console.log("finish Deleting.........");
+    } catch (error) {
+      console.error(
+        "Erreur de connexion lors de la suppression du véhicule:",
+        error
+      );
+      setErrorDeleteVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const deleteUSerEnGestionAccount = async (
+    userAccount,
+    userUsername,
+    userPassword,
+    userID
+  ) => {
+    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
+
+    // /////////
+    setCreateVéhiculeLoading(true);
+
+    const requestBody =
+      `<GTSRequest command="dbdel">` +
+      `<Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}"/>` +
+      `<RecordKey table="User" partial="true">` +
+      `<Field name="accountID">${userAccount}</Field>` +
+      `<Field name="userID">${userID}</Field>` +
+      `</RecordKey>` +
+      `</GTSRequest>`;
+
+    console.log("requestBody", requestBody);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/xml",
+        },
+        body: requestBody,
+      });
+
+      console.log(response);
+      if (response.ok) {
+        if (userAccount && userUsername && userPassword) {
+          //   console.log("vehicule Delete avec successsssssssss...............");
+          // } else {
+          console.log("Delete successsssssssss...............");
+
+          setAccountUsers((prev) => prev.filter((v) => v.userID !== userID));
+
+          // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
+          // setUserDevices((prev) =>
+          //   prev.map((user) => ({
+          //     ...user,
+          //     userDevices: user.userDevices.filter(
+          //       (device) => device.deviceID !== deviceID
+          //     ),
+          //   }))
+          // );
+
+          // 🧠 Mise à jour d'IndexedDB
+          // const db = await openDatabase();
+          // const tx = db.transaction(
+          //   ["accountDevices", "userDevices"],
+          //   "readwrite"
+          // );
+
+          // const removeFromStore = async (storeName) => {
+          //   const store = tx.objectStore(storeName);
+          //   const getAllReq = store.getAll();
+          //   getAllReq.onsuccess = () => {
+          //     let updated;
+
+          //     if (storeName === "userDevices") {
+          //       // Suppression imbriquée dans chaque user
+          //       updated = (getAllReq.result || []).map((user) => ({
+          //         ...user,
+          //         userDevices: (user.userDevices || []).filter(
+          //           (device) => device.deviceID !== deviceID
+          //         ),
+          //       }));
+          //     } else {
+          //       // Suppression simple
+          //       updated = (getAllReq.result || []).filter(
+          //         (v) => v.deviceID !== deviceID
+          //       );
+          //     }
+
+          //     store.clear();
+          //     updated.forEach((v) => store.put(v));
+          //   };
+          // };
+
+          // removeFromStore("accountDevices");
+          // removeFromStore("userDevices");
+
+          //
+          // Supprimer le véhicule de IndexedDB
+          // openDatabase().then((db) => {
+          //   const transaction = db.transaction(["mergedDataHome"], "readwrite");
+          //   const store = transaction.objectStore("mergedDataHome");
+
+          //   // Récupérer toutes les données actuelles
+          //   const getRequest = store.getAll();
+
+          //   getRequest.onsuccess = () => {
+          //     const existingData = getRequest.result || [];
+          //     const updatedData = existingData.filter(
+          //       (vehicle) => vehicle.deviceID !== deviceID
+          //     );
+
+          //     store.clear(); // Supprime les anciennes données
+          //     updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+          //   };
+          // });
+
+          setSuccessDeleteVéhiculePopup(true);
+          setCreateVéhiculeLoading(false);
+          // navigate("/home");
+        }
+      } else {
+        console.error(
+          "Erreur lors de la suppression du véhicule:",
+          response.statusText
+        );
+        setErrorDeleteVéhiculePopup(true);
+        setCreateVéhiculeLoading(false);
+      }
+
+      console.log("finish Deleting.........");
+    } catch (error) {
+      console.error(
+        "Erreur de connexion lors de la suppression du véhicule:",
+        error
+      );
+      setErrorDeleteVéhiculePopup(true);
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const deleteAccountEnGestionAccountFonction = async (
+    account,
+    user,
+    password,
+    accountIDField
+  ) => {
+    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
+
+    // /////////
+    setCreateVéhiculeLoading(true);
+
+    const requestBody =
+      `<GTSRequest command="dbdel">` +
+      `<Authorization account="${account}" user="${user}" password="${password}"/>` +
+      `<RecordKey table="Account" partial="true">` +
+      `<Field name="accountID">${accountIDField}</Field>` +
+      `</RecordKey>` +
+      `</GTSRequest>`;
+
+    console.log("requestBody", requestBody);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/xml",
+        },
+        body: requestBody,
+      });
+
+      console.log(response);
+      if (response.ok) {
+        if (account && user && password) {
+          //   console.log("vehicule Delete avec successsssssssss...............");
+          // } else {
+          console.log("Delete successsssssssss...............");
+
+          setComptes((prev) =>
+            prev.filter((v) => v.accountID !== accountIDField)
+          );
+
+          // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
+          // setUserDevices((prev) =>
+          //   prev.map((user) => ({
+          //     ...user,
+          //     userDevices: user.userDevices.filter(
+          //       (device) => device.deviceID !== deviceID
+          //     ),
+          //   }))
+          // );
+
+          // 🧠 Mise à jour d'IndexedDB
+          // const db = await openDatabase();
+          // const tx = db.transaction(
+          //   ["accountDevices", "userDevices"],
+          //   "readwrite"
+          // );
+
+          // const removeFromStore = async (storeName) => {
+          //   const store = tx.objectStore(storeName);
+          //   const getAllReq = store.getAll();
+          //   getAllReq.onsuccess = () => {
+          //     let updated;
+
+          //     if (storeName === "userDevices") {
+          //       // Suppression imbriquée dans chaque user
+          //       updated = (getAllReq.result || []).map((user) => ({
+          //         ...user,
+          //         userDevices: (user.userDevices || []).filter(
+          //           (device) => device.deviceID !== deviceID
+          //         ),
+          //       }));
+          //     } else {
+          //       // Suppression simple
+          //       updated = (getAllReq.result || []).filter(
+          //         (v) => v.deviceID !== deviceID
+          //       );
+          //     }
+
+          //     store.clear();
+          //     updated.forEach((v) => store.put(v));
+          //   };
+          // };
+
+          // removeFromStore("accountDevices");
+          // removeFromStore("userDevices");
+
+          //
+          // Supprimer le véhicule de IndexedDB
+          // openDatabase().then((db) => {
+          //   const transaction = db.transaction(["mergedDataHome"], "readwrite");
+          //   const store = transaction.objectStore("mergedDataHome");
+
+          //   // Récupérer toutes les données actuelles
+          //   const getRequest = store.getAll();
+
+          //   getRequest.onsuccess = () => {
+          //     const existingData = getRequest.result || [];
+          //     const updatedData = existingData.filter(
+          //       (vehicle) => vehicle.deviceID !== deviceID
+          //     );
+
+          //     store.clear(); // Supprime les anciennes données
+          //     updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
+          //   };
+          // });
 
           setSuccessDeleteVéhiculePopup(true);
           setCreateVéhiculeLoading(false);
@@ -5735,6 +7034,41 @@ const DataContextProvider = ({ children }) => {
       );
     }
   };
+
+  const assignMultipleDevicesToGroup = async (
+    account,
+    user,
+    password,
+    groupID,
+    devicesSelectionnes
+  ) => {
+    const assignPromises = devicesSelectionnes.map((deviceID) =>
+      assignDeviceToGroup(account, user, password, groupID, deviceID)
+    );
+
+    const results = await Promise.all(assignPromises);
+    const failed = devicesSelectionnes.filter((_, idx) => !results[idx]);
+
+    if (failed.length > 0) {
+      console.warn("Échec d’assignation pour les devices suivants :", failed);
+    } else {
+      console.log("Tous les devices ont été assignés au groupe avec succès.");
+    }
+
+    // Rafraîchir les données si besoin
+    try {
+      await fetchAccountGroupes(account, password)
+        .then((groupes) => fetchGroupeDevices(account, groupes, password))
+        .catch((err) => {
+          console.error("Erreur lors du rafraîchissement des groupes :", err);
+          setError("Erreur lors de la mise à jour des groupes.");
+        });
+    } catch (err) {
+      console.error("Erreur globale :", err);
+      setError("Erreur lors de la mise à jour.");
+    }
+  };
+
   //
   //
   //
@@ -6813,6 +8147,19 @@ const DataContextProvider = ({ children }) => {
         fetchAccountUsers,
         createNewGroupeEnGestionAccount,
         modifyGroupeEnGestionAccount,
+        accountGroupes,
+        deleteGroupeEnGestionAccount,
+        listeGestionDesGroupe,
+        setListeGestionDesGroupe,
+        listeGestionDesGroupeTitre,
+        setListeGestionDesGroupeTitre,
+        createNewUserEnGestionAccount,
+        ModifyUserEnGestionAccountFonction,
+        deleteUSerEnGestionAccount,
+        comptes,
+        createAccountEnGestionAccountFonction,
+        modifyAccountEnGestionAccountFonction,
+        deleteAccountEnGestionAccountFonction,
       }}
     >
       {children}
@@ -6823,3 +8170,5 @@ const DataContextProvider = ({ children }) => {
 export default DataContextProvider;
 
 // OctagonoGPSHaitiAdmin13@1919
+
+// .toLowerCase().replace(/\s+/g, "_")

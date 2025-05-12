@@ -21,6 +21,8 @@ import {
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
+import CreateNewUserGestion from "../components/gestion_des_comptes/CreateNewUserGestion";
+import ModifyUserGroupeGestion from "../components/gestion_des_comptes/ModifyUserGroupeGestion";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function ListeDesUtilisateur() {
@@ -143,10 +145,25 @@ function ListeDesUtilisateur() {
       )
     : gestionAccountData;
 
+  const [showCreateNewUserPage, setShowCreateNewUserPage] = useState(false);
+  const [showModifyUserPage, setShowModifyUserPage] = useState(false);
+
   return (
     <div>
       <GestionAccountOptionPopup />
-      <GestionUserOptionsPopup />
+      <GestionUserOptionsPopup setShowModifyUserPage={setShowModifyUserPage} />
+
+      {showCreateNewUserPage && (
+        <CreateNewUserGestion
+          setShowCreateNewUserPage={setShowCreateNewUserPage}
+        />
+      )}
+
+      {showModifyUserPage && (
+        <ModifyUserGroupeGestion
+          setShowModifyUserPage={setShowModifyUserPage}
+        />
+      )}
 
       {seConnecterAutreComptePopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
@@ -450,17 +467,24 @@ function ListeDesUtilisateur() {
               <IoArrowBack className="text-xl" />
               <p className="hidden md:block">Retour</p>
             </button>{" "}
-            <Link className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6">
+            <button
+              onClick={() => {
+                setShowCreateNewUserPage(true);
+              }}
+              className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+            >
               <div className="flex justify-center items-center gap-3 ">
                 <FaUserPlus className="text-2xl" />
-                <p className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
                   <span className="hidden md:inline">Ajouter un</span> nouveau
                   utilisateur
                 </p>
               </div>
-            </Link>{" "}
+            </button>{" "}
             <button
-              onClick={() => setShowAccountOptionsPopup(true)}
+              onClick={() => {
+                setShowAccountOptionsPopup(true);
+              }}
               className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
             >
               <p className="hidden md:block">Options</p>
@@ -517,10 +541,12 @@ function ListeDesUtilisateur() {
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
-                        <p className="font-bold- text-gray-700">Groupe :</p>
+                        <p className="font-bold- text-gray-700">
+                          Groupes affectés :
+                        </p>
                         <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
                           {/* {geozone?.description} */}
-                          {/* {user?.Grou} */}
+                          {user?.userGroupes?.length}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
@@ -562,6 +588,7 @@ function ListeDesUtilisateur() {
                   <button
                     onClick={() => {
                       setShowSelectedUserOptionsPopup(true);
+                      setCurrentSelectedUserToConnect(user);
                     }}
                     className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                   >

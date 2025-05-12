@@ -8,9 +8,9 @@ import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
-function CreateNewAccountPage({
-  setShowCreateNewAccountPopup,
-  showCreateNewAccountPopup,
+function CreateNewUserGestion({
+  setShowCreateNewUserPage,
+  showCreateNewUserPage,
 
   setChooseOtherDeviceGestion,
   setShowUserGroupeCategorieSection,
@@ -21,6 +21,7 @@ function CreateNewAccountPage({
     currentAccountSelected,
     //
     setError,
+    password,
     successAddVéhiculePopup,
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
@@ -33,11 +34,6 @@ function CreateNewAccountPage({
     currentSelectedGroupeGestion,
     createNewGroupeEnGestionAccount,
     createNewUserEnGestionAccount,
-    account,
-    username,
-    password,
-    comptes,
-    createAccountEnGestionAccountFonction,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -55,12 +51,10 @@ function CreateNewAccountPage({
   const [errorID, setErrorID] = useState("");
 
   // État pour chaque champ du formulaire
-  const [addNewAccountData, setAddNewAccountData] = useState({
-    accountID: "",
+  const [addNewUserData, setAddNewUserData] = useState({
+    userID: "",
     description: "",
     displayName: "",
-    contactPhone: "",
-    notifyEmail: "",
     password: "",
     password2: "",
   });
@@ -71,14 +65,14 @@ function CreateNewAccountPage({
 
     let newValue = value;
 
-    if (["accountID", "password", "password2"].includes(name)) {
+    if (["userID", "password", "password2"].includes(name)) {
       newValue = value.replace(/\s/g, "_"); // remplace les espaces par des underscores
     }
 
-    if (name === "accountID") {
+    if (name === "userID") {
       newValue = newValue.toLowerCase(); // convertit en minuscules uniquement pour userID
     }
-    setAddNewAccountData((prevData) => ({
+    setAddNewUserData((prevData) => ({
       ...prevData,
       [name]: newValue,
     }));
@@ -91,21 +85,21 @@ function CreateNewAccountPage({
     setError("");
 
     // Si deviceID est unique, créer le véhicule
-    const accountID = addNewAccountData.accountID;
+    const userID = addNewUserData.userID;
 
     // Vérification si groupID existe déjà
-    const accountExists = comptes?.some(
-      (account) => account?.accountID === accountID
+    const userExists = currentAccountSelected?.accountUsers?.some(
+      (user) => user?.userID === userID
     );
 
-    if (accountExists) {
+    if (userExists) {
       setErrorID(
-        "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre."
+        "Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre."
       );
       return;
     }
 
-    if (addNewAccountData?.password !== addNewAccountData?.password2) {
+    if (addNewUserData?.password !== addNewUserData?.password2) {
       setErrorID("Les mots de passe ne correspondent pas.");
       return;
     }
@@ -162,51 +156,41 @@ function CreateNewAccountPage({
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
-  //   (groupe) => groupe?.groupID
-  // );
+  const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
+    (groupe) => groupe?.groupID
+  );
 
-  // const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
-  //   (groupe) => groupe?.groupID
-  // );
-  // const [groupesSelectionnes, setGroupesSelectionnes] = useState(
-  //   groupeDuSelectedUser || []
-  // );
+  const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
+    (groupe) => groupe?.groupID
+  );
+  const [groupesSelectionnes, setGroupesSelectionnes] = useState(
+    groupeDuSelectedUser || []
+  );
   //
-  // const groupesNonSelectionnes = allGroupIDs?.filter(
-  //   (groupID) => !groupesSelectionnes.includes(groupID)
-  // );
+  const groupesNonSelectionnes = allGroupIDs?.filter(
+    (groupID) => !groupesSelectionnes.includes(groupID)
+  );
 
-  // const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
-  //   useState(false);
+  const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
+    useState(false);
 
-  // useEffect(() => {
-  //   console.log("groupesSelectionnes", groupesSelectionnes);
-  // }, [groupesSelectionnes]);
+  useEffect(() => {
+    console.log("groupesSelectionnes", groupesSelectionnes);
+  }, [groupesSelectionnes]);
 
-  // useEffect(() => {
-  //   setGroupesSelectionnes([]);
-  // }, [showCreateNewAccountPopup]);
+  useEffect(() => {
+    setGroupesSelectionnes([]);
+  }, [showCreateNewUserPage]);
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === password) {
-      const accountID = addNewAccountData.accountID;
-      const description = addNewAccountData.description;
-      const displayName = addNewAccountData.displayName;
-      const contactPhone = addNewAccountData.contactPhone;
-      const notifyEmail = addNewAccountData.notifyEmail;
-      const password2 = addNewAccountData.password2;
-
-      // accountID: "",
-      // description: "",
-      // displayName: "",
-      // contactPhone: "",
-      // notifyEmail: "",
-      // password: "",
-      // password2: "",
+      const userID = addNewUserData.userID;
+      const description = addNewUserData.description;
+      const displayName = addNewUserData.displayName;
+      const password2 = addNewUserData.password2;
 
       //   console.log(
       //    ,
@@ -230,31 +214,37 @@ function CreateNewAccountPage({
       //   console.log("Appareils sélectionnées", deviceSelectionnes);
       //   console.log("Utilisateurs sélectionnées", usersSelectionnes);
 
-      if (account && username && password) {
-        console.log(account);
-        console.log(username);
-        console.log(password);
+      if (
+        currentAccountSelected?.accountID &&
+        currentAccountSelected?.password
+      ) {
+        console.log("accountID", currentAccountSelected?.accountID);
+        console.log("user: admin");
+        console.log("password", currentAccountSelected?.password);
 
-        console.log(accountID);
-        console.log(description);
-        console.log(displayName);
-        console.log(contactPhone);
-        console.log(notifyEmail);
-        console.log(password2);
+        console.log("userID", userID);
+        console.log("description", description);
+        console.log("displayName", displayName);
+        console.log("passowrd2", password2);
 
-        createAccountEnGestionAccountFonction(
-          account,
-          username,
-          password,
-          accountID,
+        //
+        console.log("groupes Selectionnes", groupesSelectionnes);
+        console.log("groupes Non Selectionnes", groupesNonSelectionnes);
+
+        createNewUserEnGestionAccount(
+          currentAccountSelected?.accountID,
+          "admin",
+          currentAccountSelected?.password,
+
+          userID,
           description,
           displayName,
-          contactPhone,
-          notifyEmail,
-          password2
+          password2,
+          groupesSelectionnes,
+          groupesNonSelectionnes
         );
 
-        setShowCreateNewAccountPopup(false);
+        setShowCreateNewUserPage(false);
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -268,7 +258,7 @@ function CreateNewAccountPage({
   // Pour mettre a jour les nouvelle donnee du véhicule a modifier
   //   useEffect(() => {
   //     if (currentSelectedGroupeGestion) {
-  //       setAddNewAccountData({
+  //       setAddNewUserData({
   //         groupID: currentSelectedGroupeGestion.groupID || "",
   //         description: currentSelectedGroupeGestion.description || "",
   //         displayName: currentSelectedGroupeGestion.displayName || "",
@@ -288,7 +278,7 @@ function CreateNewAccountPage({
         </div>
       )}
 
-      {/* {showGroupesSelectionnesPopup && (
+      {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
             <h2
@@ -382,7 +372,7 @@ function CreateNewAccountPage({
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
       {/* Popup pour la confirmation du mot de passe */}
       <ConfirmationPassword
@@ -402,13 +392,13 @@ function CreateNewAccountPage({
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Ajouter un nouveau Compte
+                Ajouter un nouveau Utilisateur
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  setShowCreateNewAccountPopup(false);
+                  setShowCreateNewUserPage(false);
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -436,7 +426,7 @@ function CreateNewAccountPage({
               </h3>
               <FaChevronDown />
             </div> */}
-            {/* <p className="mb-2">
+            <p className="mb-2">
               Choisissez un ou plusieurs groupe pour affecter l'utilisateur
             </p>
             <div
@@ -454,37 +444,26 @@ function CreateNewAccountPage({
                 </span>
               </h3>
               <FaChevronDown />
-            </div> */}
+            </div>
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
                 {/* Champs du formulaire */}
-
                 {[
                   {
-                    id: "accountID",
-                    label: "ID du compte",
-                    placeholder: "ex: compte_victor",
+                    id: "userID",
+                    label: "ID de l'utilisateur",
+                    placeholder: "ex: Victor",
                   },
                   {
                     id: "description",
                     label: "Description",
-                    placeholder: "Description du compte",
+                    placeholder: "Description de l'utilisateur",
                   },
                   {
                     id: "displayName",
                     label: "DisplayName",
                     placeholder: "Nom a afficher",
-                  },
-                  {
-                    id: "contactPhone",
-                    label: "Telephone",
-                    placeholder: "le numero de telephone",
-                  },
-                  {
-                    id: "notifyEmail",
-                    label: "Email",
-                    placeholder: "email",
                   },
                   {
                     id: "password",
@@ -508,7 +487,7 @@ function CreateNewAccountPage({
                       className="block-- flex justify-between items-center text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
                     >
                       {field.label}{" "}
-                      {!addNewAccountData[field.id] && (
+                      {!addNewUserData[field.id] && (
                         <span className="text-red-600 text-lg"> *</span>
                       )}
                     </label>
@@ -517,9 +496,9 @@ function CreateNewAccountPage({
                       name={field.id}
                       type="text"
                       placeholder={field.placeholder}
-                      value={addNewAccountData[field.id]}
+                      value={addNewUserData[field.id]}
                       onChange={handleChange}
-                      // disabled={field.id === "accountID"}
+                      //   disabled={field.id === "userID"}
                       required
                       className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                     />
@@ -542,7 +521,7 @@ function CreateNewAccountPage({
                   </button>
                   <button
                     onClick={() => {
-                      setShowCreateNewAccountPopup(false);
+                      setShowCreateNewUserPage(false);
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
@@ -559,10 +538,8 @@ function CreateNewAccountPage({
   );
 }
 
-export default CreateNewAccountPage;
+export default CreateNewUserGestion;
 
-// export default CreateNewAccountPage;
+// export default CreateNewUserGestion;
 
-// export default CreateNewAccountPage
-
-// export default CreateNewAccountPage;
+// export default CreateNewUserGestion

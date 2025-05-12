@@ -83,6 +83,20 @@ function SuccèsÉchecMessagePopup({
                   "Suppression du geozone avec succès"}
                 {composant_from === "échec de la suppression du geozone" &&
                   "Échec de la suppression du geozone"}
+                {composant_from === "succès ajout de Groupe" &&
+                  "Creation du groupe avec succès"}
+                {composant_from === "échec ajout la creation du groupe" &&
+                  "Échec de la creation du groupe"}
+                {composant_from === "succès modification de Groupe" &&
+                  "Modification du Groupe avec succès"}
+                {composant_from === "échec modification du groupe" &&
+                  "Échec de la modification du groupe"}
+
+                {composant_from === "succès suppression de Groupe" &&
+                  "Suppression du groupe avec succès"}
+
+                {composant_from === "échec suppression du groupe" &&
+                  "Échec de la suppression du groupe"}
               </h3>
 
               {composant_from ===

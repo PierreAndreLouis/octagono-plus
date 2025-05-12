@@ -200,7 +200,9 @@ function CreateNewGroupeGestion({
           description,
           displayName,
           notes,
-          workOrderID
+          workOrderID,
+          deviceSelectionnes,
+          usersSelectionnes
         );
 
         setShowCreateNewGroupePage(false);
@@ -441,22 +443,6 @@ function CreateNewGroupeGestion({
         setErrorMessage={setErrorMessage}
         handlePasswordCheck={handlePasswordCheck}
         setIsPasswordConfirmed={setShowConfirmAddGroupeGestionPopup}
-      />
-
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={addNewGroupeData}
-        composant_from={"succès ajout de véhicule"}
-      />
-
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={addNewGroupeData}
-        composant_from={"échec ajout de véhicule"}
       />
 
       <div className="flex  w-full justify-center h-full mt-10 md:mt-20 ">

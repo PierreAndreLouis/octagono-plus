@@ -508,13 +508,7 @@ function ListeDesVehiculesGestion() {
       )}
 
       <div className="px-4 pb-40">
-        <h2
-          onClick={() => {
-            console.log("gestionAccountData", gestionAccountData);
-            console.log("groupeDevices", groupeDevices);
-          }}
-          className="mt-[10rem] text-2xl text-gray-700 text-center font-bold "
-        >
+        <h2 className="mt-[10rem] text-2xl text-gray-700 text-center font-bold ">
           Liste des Appareils
         </h2>
 
@@ -561,7 +555,7 @@ function ListeDesVehiculesGestion() {
             >
               <span className="flex justify-center items-center gap-3 ">
                 <FaUserPlus className="text-2xl" />
-                <span className="text-sm md:text-lg text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                <span className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
                   <span className="hidden md:inline">Ajouter un</span> Nouveau
                   Appareil
                 </span>

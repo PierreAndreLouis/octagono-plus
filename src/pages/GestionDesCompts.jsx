@@ -6,7 +6,8 @@ import { MdErrorOutline, MdSwitchAccount } from "react-icons/md";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffectCircle";
 import CreateNewAccountPage from "../components/gestion_des_comptes/CreateNewAccountPage";
-import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
+import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
+import ModifyAccountPage from "../components/gestion_des_comptes/ModifyAccountPage";
 
 function GestionDesCompts() {
   const {
@@ -32,6 +33,9 @@ function GestionDesCompts() {
   const [showCreateNewAccountPopup, setShowCreateNewAccountPopup] =
     useState(false);
 
+  const [showModifyAccountPagePopup, setShowModifyAccountPagePopup] =
+    useState(false);
+
   const [inputSearchItem, setInputSearchItem] = useState("");
 
   const filterListeDesCompte = inputSearchItem
@@ -50,10 +54,19 @@ function GestionDesCompts() {
           />
 
           {/* Composant pour créer un nouveau Compte */}
-          <CreateNewAccountPage
-            showCreateNewAccountPopup={showCreateNewAccountPopup}
-            setShowCreateNewAccountPopup={setShowCreateNewAccountPopup}
-          />
+          {showCreateNewAccountPopup && (
+            <CreateNewAccountPage
+              showCreateNewAccountPopup={showCreateNewAccountPopup}
+              setShowCreateNewAccountPopup={setShowCreateNewAccountPopup}
+            />
+          )}
+
+          {showModifyAccountPagePopup && (
+            <ModifyAccountPage
+              showModifyAccountPagePopup={showModifyAccountPagePopup}
+              setShowModifyAccountPagePopup={setShowModifyAccountPagePopup}
+            />
+          )}
 
           <div className="px-4 pb-40">
             <h2 className="mt-[10rem] text-lg text-center font-bold ">
@@ -61,27 +74,7 @@ function GestionDesCompts() {
             </h2>
             {/* <button
               onClick={() => {
-                fetchAccountUsers("demo", "112233")
-                  .then((users) => fetchUserDevices("demo", users))
-                  .catch((err) => {
-                    console.error(
-                      "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
-                      err
-                    );
-                    setError("Erreur lors de la mise à jour des utilisateurs.");
-                  });
-                // TestDeRequetteDevices();
-                // fetchAccountGroupes("demo", "112233")
-                //   .then((groupes) =>
-                //     fetchGroupeDevices("demo", groupes, "112233")
-                //   )
-                //   .catch((err) => {
-                //     console.error(
-                //       "Erreur lors du rafraîchissement des groupes :",
-                //       err
-                //     );
-                //     setError("Erreur lors de la mise à jour des groupes.");
-                //   });
+                TestDeRequetteDevices();
               }}
             >
               Test de requête
@@ -115,7 +108,7 @@ function GestionDesCompts() {
               >
                 <div className="flex justify-center items-center gap-3">
                   <FaPlusCircle className="text-2xl" />
-                  <p className="text-lg text-center">
+                  <p className="text-[1rem] text-center">
                     Ajouter un nouveau Compte
                   </p>
                 </div>
@@ -147,18 +140,18 @@ function GestionDesCompts() {
                     onClick={() => {
                       setCurrentAccountSelected(account);
                       setListeGestionDesVehicules(account?.accountDevices);
-                      setShowAccountOptionsPopup(true);
+                      // setShowAccountOptionsPopup(true);
                       setCurrentSelectedUserToConnect(null);
                     }}
-                    className="shadow-lg cursor-pointer bg-orange-50/50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                    className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                   >
                     <div className="bg-gray-100-- pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                       {index + 1}
                     </div>
-                    <div className="flex  gap-3  ">
+                    <div className="flex  gap-3  w-full">
                       <MdSwitchAccount className="text-[3rem] text-orange-500" />
-                      <div className=" w-full flex flex-wrap justify-between gap-x-4 ">
-                        <div>
+                      <div className=" w-full  flex flex-wrap sm:flex-nowrap justify-between items-end gap-x-4 ">
+                        <div className="w-full ">
                           <div className="flex flex-wrap">
                             <p className="font-bold- text-gray-700">
                               Nom du Compte :
@@ -215,6 +208,17 @@ function GestionDesCompts() {
                             </span>
                           </div>{" "}
                         </div>
+                        <div className="flex sm:justify-end w-full xs:justify-start justify-center">
+                          <button
+                            onClick={() => {
+                              setShowAccountOptionsPopup(true);
+                            }}
+                            className={`  bg-orange-500 text-white w-full cursor-pointer xs:w-auto mt-4 md:mt-0 text-sm- border-[0.02rem] border-gray-300- text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                          >
+                            <p className="text-[.8rem]">Options</p>
+                            <IoOptions className="text-xl" />
+                          </button>{" "}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -224,7 +228,9 @@ function GestionDesCompts() {
               {/*  */}
             </div>
             {/*  */}
-            <GestionAccountOptionPopup />
+            <GestionAccountOptionPopup
+              setShowModifyAccountPagePopup={setShowModifyAccountPagePopup}
+            />
           </div>
         </div>
       ) : (

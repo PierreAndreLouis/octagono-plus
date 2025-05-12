@@ -6,13 +6,18 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
 
-function GestionUserOptionsPopup() {
+function GestionUserOptionsPopup({ setShowModifyUserPage }) {
   const {
     currentSelectedUserToConnect,
     showSelectedUserOptionsPopup,
     setShowSelectedUserOptionsPopup,
     setListeGestionDesVehicules,
     setDeviceListeTitleGestion,
+    setListeGestionDesGroupeTitre,
+    setListeGestionDesGroupe,
+    deleteUSerEnGestionAccount,
+    currentAccountSelected,
+    password,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -20,12 +25,37 @@ function GestionUserOptionsPopup() {
 
   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
+  const [inputPassword, setInputPassword] = useState("");
+  const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
+
+  const deleteUSerEnGestionAccountFonction = (e) => {
+    e.preventDefault();
+    if (inputPassword === password) {
+      console.log(
+        currentAccountSelected?.accountID,
+        "admin",
+        currentAccountSelected?.password,
+        currentSelectedUserToConnect?.userID
+      );
+      setDeleteAccountPopup(false);
+
+      deleteUSerEnGestionAccount(
+        currentAccountSelected?.accountID,
+        "admin",
+        currentAccountSelected?.password,
+        currentSelectedUserToConnect?.userID
+      );
+    } else {
+      setErrorIncorrectPassword("Mot de passe incorrect");
+    }
+  };
+
   return (
     <div>
       {deleteAccountPopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
           <form
-            // onSubmit={handlePasswordCheck}
+            onSubmit={deleteUSerEnGestionAccountFonction}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
@@ -38,7 +68,9 @@ function GestionUserOptionsPopup() {
               >
                 Veuillez entrer votre mot de passe
               </label>
-
+              <p className="text-center text-red-500 px-4">
+                {errorIncorrectPassword}
+              </p>
               <div className="mt-2">
                 <input
                   id="password"
@@ -46,8 +78,11 @@ function GestionUserOptionsPopup() {
                   type="password"
                   placeholder="Mot de passe"
                   required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
+                  value={inputPassword}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+                    setErrorIncorrectPassword("");
+                  }}
                   className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
                 />
               </div>
@@ -149,27 +184,9 @@ function GestionUserOptionsPopup() {
               </h2>
             </div>
             <div
-              onClick={() => setShowSelectedUserOptionsPopup(false)}
+              // onClick={() => setShowSelectedUserOptionsPopup(false)}
               className="p-4 flex flex-col gap-4 py-6 pb-10"
             >
-              {/* {smsError && (
-                        <p className="flex items-start gap-0 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-50 py-2 px-4 rounded-md text-center">
-                          <MdErrorOutline className="text-2xl min-w-10 mt-0.5" />
-                          {smsError}
-                        </p>
-                      )} */}
-              {/* <Link
-                to="/liste_des_utilisateurs"
-                // onClick={() =>
-                //   envoyerSMS(currentVéhicule?.simPhoneNumber, "Stop123456")
-                // }
-                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
-              >
-                <FaUsers className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
-                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Gestion des utilisateurs
-                </h2>
-              </Link> */}
               {/*  */}
               {/*  */}
               {/*  */}
@@ -189,27 +206,54 @@ function GestionUserOptionsPopup() {
                       "Utilisateur : " +
                         currentSelectedUserToConnect?.description
                     );
-                  }, 500);
+                    setShowSelectedUserOptionsPopup(false);
+                  }, 100);
                   // navigate("/liste_des_vehicules");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Gestion des Appareils
+                  Liste des Appareils
                 </h2>
               </Link>
               {/*  */}
               {/*  */}
               {/*  */}
+              <Link
+                to="/liste_des_groupes"
+                onClick={() => {
+                  setTimeout(() => {
+                    setListeGestionDesGroupe(
+                      currentSelectedUserToConnect?.userGroupes
+                    );
+                    setListeGestionDesGroupeTitre(
+                      currentSelectedUserToConnect?.description
+                    );
 
+                    console.log(currentSelectedUserToConnect?.userGroupes);
+                    console.log(currentSelectedUserToConnect?.description);
+
+                    setShowSelectedUserOptionsPopup(false);
+                  }, 100);
+                  // navigate("/liste_des_vehicules");
+                }}
+                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+              >
+                <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                  Liste des Groupes affectés
+                </h2>
+              </Link>
               {/*  */}
               {/*  */}
               {/*  */}
               {/*  */}
               <div
                 onClick={() => {
-                  setEditAccountGestion(true);
+                  // setEditAccountGestion(true);
+                  setShowModifyUserPage(true);
+                  setShowSelectedUserOptionsPopup(false);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -221,6 +265,7 @@ function GestionUserOptionsPopup() {
               <div
                 onClick={() => {
                   setDeleteAccountPopup(true);
+                  setShowSelectedUserOptionsPopup(false);
                 }}
                 // onClick={() => lancerAppel(currentVéhicule?.simPhoneNumber)}
                 className="shadow-md cursor-pointer hover:bg-red-100 dark:hover:bg-gray-900 bg-red-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"

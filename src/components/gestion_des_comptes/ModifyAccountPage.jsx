@@ -8,8 +8,8 @@ import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
-function CreateNewAccountPage({
-  setShowCreateNewAccountPopup,
+function ModifyAccountPage({
+  setShowModifyAccountPagePopup,
   showCreateNewAccountPopup,
 
   setChooseOtherDeviceGestion,
@@ -38,6 +38,7 @@ function CreateNewAccountPage({
     password,
     comptes,
     createAccountEnGestionAccountFonction,
+    modifyAccountEnGestionAccountFonction,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -98,12 +99,12 @@ function CreateNewAccountPage({
       (account) => account?.accountID === accountID
     );
 
-    if (accountExists) {
-      setErrorID(
-        "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre."
-      );
-      return;
-    }
+    // if (accountExists) {
+    //   setErrorID(
+    //     "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre."
+    //   );
+    //   return;
+    // }
 
     if (addNewAccountData?.password !== addNewAccountData?.password2) {
       setErrorID("Les mots de passe ne correspondent pas.");
@@ -242,7 +243,7 @@ function CreateNewAccountPage({
         console.log(notifyEmail);
         console.log(password2);
 
-        createAccountEnGestionAccountFonction(
+        modifyAccountEnGestionAccountFonction(
           account,
           username,
           password,
@@ -254,7 +255,7 @@ function CreateNewAccountPage({
           password2
         );
 
-        setShowCreateNewAccountPopup(false);
+        setShowModifyAccountPagePopup(false);
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -266,17 +267,20 @@ function CreateNewAccountPage({
   };
 
   // Pour mettre a jour les nouvelle donnee du véhicule a modifier
-  //   useEffect(() => {
-  //     if (currentSelectedGroupeGestion) {
-  //       setAddNewAccountData({
-  //         groupID: currentSelectedGroupeGestion.groupID || "",
-  //         description: currentSelectedGroupeGestion.description || "",
-  //         displayName: currentSelectedGroupeGestion.displayName || "",
-  //         notes: currentSelectedGroupeGestion.notes || "",
-  //         workOrderID: currentSelectedGroupeGestion.workOrderID || "",
-  //       });
-  //     }
-  //   }, [currentSelectedGroupeGestion]);
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setAddNewAccountData({
+        accountID: currentAccountSelected.accountID || "",
+        description: currentAccountSelected.description || "",
+        displayName: currentAccountSelected.displayName || "",
+        contactPhone: currentAccountSelected.contactPhone || "",
+
+        notifyEmail: currentAccountSelected.notifyEmail || "",
+        password: currentAccountSelected.password || "",
+        password2: currentAccountSelected.password || "",
+      });
+    }
+  }, [currentAccountSelected]);
 
   return (
     <div className="px-3  fixed inset-0 h-screen overflow-scroll mb-40  z-[44444] bg-white">
@@ -408,7 +412,7 @@ function CreateNewAccountPage({
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  setShowCreateNewAccountPopup(false);
+                  setShowModifyAccountPagePopup(false);
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -519,7 +523,7 @@ function CreateNewAccountPage({
                       placeholder={field.placeholder}
                       value={addNewAccountData[field.id]}
                       onChange={handleChange}
-                      // disabled={field.id === "accountID"}
+                      disabled={field.id === "accountID"}
                       required
                       className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                     />
@@ -542,7 +546,7 @@ function CreateNewAccountPage({
                   </button>
                   <button
                     onClick={() => {
-                      setShowCreateNewAccountPopup(false);
+                      setShowModifyAccountPagePopup(false);
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
@@ -559,10 +563,14 @@ function CreateNewAccountPage({
   );
 }
 
-export default CreateNewAccountPage;
+export default ModifyAccountPage;
 
-// export default CreateNewAccountPage;
+// export default ModifyAccountPage;
 
-// export default CreateNewAccountPage
+// export default ModifyAccountPage
 
-// export default CreateNewAccountPage;
+// export default ModifyAccountPage;
+
+// export default ModifyAccountPage
+
+// export default ModifyAccountPage

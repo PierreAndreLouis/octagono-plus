@@ -95,9 +95,18 @@ function ModifyGroupeGestion({
     currentSelectedGroupeGestion?.groupeDevices?.map(
       (device) => device?.deviceID
     );
-  const userDuSelectedGroupe = currentAccountSelected?.accountUsers?.map(
-    (user) => user?.userID
-  );
+  // const userDuSelectedGroupe = currentAccountSelected?.accountUsers?.map(
+  //   (user) => user?.userID
+  // );
+
+  const userDuSelectedGroupe = currentAccountSelected?.accountUsers
+    ?.filter((user) => {
+      const groupes = user?.userGroupes || [];
+      return groupes?.some(
+        (group) => group?.groupID === currentSelectedGroupeGestion?.groupID
+      );
+    })
+    ?.map((user) => user?.userID);
   //
 
   const allDevicesIDs = currentAccountSelected?.accountDevices?.map(
@@ -140,7 +149,10 @@ function ModifyGroupeGestion({
 
   useEffect(() => {
     console.log("deviceSelectionnes", deviceSelectionnes);
-  }, [deviceSelectionnes]);
+    console.log("usersSelectionnes", usersSelectionnes);
+
+    console.log("user_______NonSelectionnes", userNonSelectionnes);
+  }, [deviceSelectionnes, usersSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
@@ -178,7 +190,9 @@ function ModifyGroupeGestion({
           description,
           displayName,
           notes,
-          workOrderID
+          workOrderID,
+          userNonSelectionnes,
+          deviceNonSelectionnes
         );
         setShowModifyNewGroupePage(false);
       }
@@ -543,7 +557,8 @@ function ModifyGroupeGestion({
                       placeholder={field.placeholder}
                       value={modifySelectedGroupeDataData[field.id]}
                       onChange={handleChange}
-                      required
+                      // { field.id === "groupID" && disable}
+                      disabled={field.id === "groupID"}
                       className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
