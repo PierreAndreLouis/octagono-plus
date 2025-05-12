@@ -25,6 +25,7 @@ function SideBar() {
     setHistoriqueSelectedLocationIndex,
     readDocumentation,
     setReadDocumentation,
+    account,
   } = useContext(DataContext);
   let x;
   //
@@ -197,19 +198,21 @@ function SideBar() {
           <IoEarth />
           <h3>Gestion des Geozones</h3>
         </Link>
-        {/* <Link
-          to="/gestion_des_comptes?tab=comptes"
-          onClick={() => {
-            setShowSideBar(true);
-            handleTabClick("comptes");
-          }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
-            tab === "comptes" ? "text-orange-500" : ""
-          } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
-        >
-          <MdSupervisorAccount />
-          <h3>Gestion des Comptes</h3>
-        </Link> */}
+        {account === "sysadmin" && (
+          <Link
+            to="/gestion_des_comptes?tab=comptes"
+            onClick={() => {
+              setShowSideBar(true);
+              handleTabClick("comptes");
+            }}
+            className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+              tab === "comptes" ? "text-orange-500" : ""
+            } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+          >
+            <MdSupervisorAccount />
+            <h3>Gestion des Comptes</h3>
+          </Link>
+        )}
 
         <Link
           // to="/gestion_geofences?tab=geozone"
