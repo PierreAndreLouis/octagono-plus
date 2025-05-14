@@ -333,7 +333,7 @@ function DashboardAdminPage() {
         <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
           <Link
             onClick={() => {
-              TestDeRequetteDevices();
+              // TestDeRequetteDevices();
             }}
             to="/dashboard_admin_page"
             className="flex items-center gap-3"
