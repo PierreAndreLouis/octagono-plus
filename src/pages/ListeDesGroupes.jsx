@@ -27,7 +27,7 @@ import ModifyGroupeGestion from "../components/gestion_des_comptes/ModifyGroupeG
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
-function ListeDesGroupes() {
+function ListeDesGroupes({ setDocumentationPage }) {
   const {
     ajouterGeofencePopup,
     setAjouterGeofencePopup,
@@ -177,8 +177,8 @@ function ListeDesGroupes() {
 
   return (
     <div>
-      <GestionAccountOptionPopup />
-      {showCreateNewGroupePage && (
+      <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
+      {/* {showCreateNewGroupePage && (
         <CreateNewGroupeGestion
           setShowCreateNewGroupePage={setShowCreateNewGroupePage}
         />
@@ -188,7 +188,7 @@ function ListeDesGroupes() {
         <ModifyGroupeGestion
           setShowModifyNewGroupePage={setShowModifyNewGroupePage}
         />
-      )}
+      )} */}
       {/* Popup pour Message de succès */}
       <SuccèsÉchecMessagePopup
         message={successAddVéhiculePopup}
@@ -235,6 +235,7 @@ function ListeDesGroupes() {
         showSelectedGroupeOptionsPopup={showSelectedGroupeOptionsPopup}
         setShowSelectedGroupeOptionsPopup={setShowSelectedGroupeOptionsPopup}
         setDeleteGroupeAccountPopup={setDeleteGroupeAccountPopup}
+        setDocumentationPage={setDocumentationPage}
       />
       {/* )} */}
 
@@ -285,12 +286,6 @@ function ListeDesGroupes() {
                       );
                       setListeGestionDesGroupeTitre("Tous les Groupes ");
                       setShowChooseOtherUserGroupePopup(false);
-                      // setDeviceListeTitleGestion("Tous les appareils");
-                      // setListeGestionDesVehicules(
-                      //   currentAccountSelected?.accountDevices
-                      // );
-                      // setChooseOtherAccountGestion(false);
-                      // setCurrentSelectedUserToConnect(null);
                     }
                   }}
                   className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
@@ -448,13 +443,8 @@ function ListeDesGroupes() {
           </form>
         </div>
       )}
-      <div className="px-4 pb-40">
-        <h2
-          onClick={() => {
-            console.log(currentAccountSelected);
-          }}
-          className="mt-[10rem] text-2xl text-gray-700 text-center font-bold "
-        >
+      <div className="px-4 pb-40 pt-10 bg-white rounded-lg">
+        <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
           Liste des groupes
         </h2>
         {/* <h3 className="mt-[10rem]-- mb-5 text-orange-600 text-lg text-center font-bold ">
@@ -483,7 +473,7 @@ function ListeDesGroupes() {
 
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           <div className="flex gap-2 justify-center mt-4">
-            <Link
+            {/* <button
               onClick={() => {
                 backToPagePrecedent();
               }}
@@ -491,10 +481,11 @@ function ListeDesGroupes() {
             >
               <IoArrowBack className="text-xl" />
               <p className="hidden md:block">Retour</p>
-            </Link>{" "}
+            </button>{" "} */}
             <div
               onClick={() => {
-                setShowCreateNewGroupePage(true);
+                // setShowCreateNewGroupePage(true);
+                setDocumentationPage("Ajouter_nouveau_groupe");
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -506,13 +497,13 @@ function ListeDesGroupes() {
                 </p>
               </div>
             </div>{" "}
-            <button
+            {/* <button
               onClick={() => setShowAccountOptionsPopup(true)}
               className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
             >
               <p className="hidden md:block">Options</p>
               <IoOptions className="text-xl" />
-            </button>{" "}
+            </button>{" "} */}
           </div>
 
           <div
@@ -609,9 +600,9 @@ function ListeDesGroupes() {
                     </div>
                   </div>
                   <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                    <Link
+                    <button
                       onClick={() => {
-                        // setEditAccountGestion(true);
+                        setDocumentationPage("Modifier_groupe");
                         setCurrentSelectedGroupeGestion(groupe);
                         setShowModifyNewGroupePage(true);
                       }}
@@ -619,7 +610,7 @@ function ListeDesGroupes() {
                     >
                       <p className="text-sm mr-2">Modifier</p>
                       <FaRegEdit />
-                    </Link>
+                    </button>
                     <button
                       onClick={() => {
                         setTimeout(() => {

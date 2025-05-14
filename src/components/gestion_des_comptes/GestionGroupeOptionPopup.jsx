@@ -17,6 +17,7 @@ function GestionGroupeOptionPopup({
   showSelectedGroupeOptionsPopup,
   setShowSelectedGroupeOptionsPopup,
   setDeleteGroupeAccountPopup,
+  setDocumentationPage,
 }) {
   const {
     currentSelectedUserToConnect,
@@ -56,7 +57,7 @@ function GestionGroupeOptionPopup({
   return (
     <div>
       {showSelectedGroupeOptionsPopup && (
-        <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
+        <div className="fixed flex justify-center items-center z-[199999999999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
           <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowSelectedGroupeOptionsPopup(false)}
@@ -99,14 +100,15 @@ function GestionGroupeOptionPopup({
               {/*  */}
               {/*  */}
               {/*  */}
-              <Link
-                to="/liste_des_vehicules"
+              <button
+                // to="/liste_des_vehicules"
                 onClick={() => {
                   currentSelectedGroupeGestionDevices();
                   setDeviceListeTitleGestion(
                     "Groupe : " + currentSelectedGroupeGestion?.description
                   );
                   setShowSelectedGroupeOptionsPopup(false);
+                  setDocumentationPage("Gestion_des_appareils");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -114,7 +116,7 @@ function GestionGroupeOptionPopup({
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Afficher Les Appareils
                 </h2>
-              </Link>
+              </button>
               {/*  */}
               {/*  */}
               {/*  */}

@@ -112,6 +112,7 @@ const DataContextProvider = ({ children }) => {
   const [listeGestionDesGroupe, setListeGestionDesGroupe] = useState([]);
   const [listeGestionDesGroupeTitre, setListeGestionDesGroupeTitre] =
     useState("");
+  const [listeGestionDesUsers, setListeGestionDesUsers] = useState([]);
 
   // Log des mises à jour
   useEffect(() => {
@@ -187,6 +188,56 @@ const DataContextProvider = ({ children }) => {
     console.log("📥 Mise à jour de listeGestionDesVehicules avec :", vehicules);
     setListeGestionDesVehicules(vehicules);
   }, [currentSelectedUserToConnect]);
+
+  const [dashboardLoadingEffect, setDashboardLoadingEffect] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDashboardLoadingEffect(false);
+    }, 3000);
+  }, [dashboardLoadingEffect]);
+
+  useEffect(() => {
+    setDashboardLoadingEffect(true);
+    setTimeout(() => {
+      setDashboardLoadingEffect(false);
+    }, 5000);
+  }, [
+    comptes,
+    accountDevices,
+    accountGroupes,
+    accountUsers,
+    userDevices,
+    groupeDevices,
+    userGroupes,
+    gestionAccountData,
+  ]);
+
+  // /////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////
+  // const [isAllAccountSelectedDashboard, setIsAllAccountSelectedDashboard] =
+  //   useState(true);
+  // const [usersListeSectionDashboard, setUsersListeSectionDashboard] = useState(
+  //   []
+  // );
+  // const [groupesListeSectionDashboard, setGroupesListeSectionDashboard] =
+  //   useState([]);
+  // const [devicesListeSectionDashboard, setDevicesListeSectionDashboard] =
+  //   useState([]);
+
+  // useEffect(() => {
+  //   if (isAllAccountSelectedDashboard) {
+  //     setUsersListeSectionDashboard(accountUsers);
+  //     setGroupesListeSectionDashboard(accountGroupes);
+  //     setDevicesListeSectionDashboard(accountDevices);
+  //   } else {
+  //     setUsersListeSectionDashboard(currentAccountSelected?.accountUsers);
+  //     setGroupesListeSectionDashboard(currentAccountSelected?.accountGroupes);
+  //     setDevicesListeSectionDashboard(currentAccountSelected?.accountDevices);
+  //   }
+  // }, [isAllAccountSelectedDashboard]);
 
   // Variables d’état pour chaque jeu de données
   // const [comptes, setComptes] = useState([]);
@@ -1188,7 +1239,7 @@ const DataContextProvider = ({ children }) => {
         console.log("userData", userData);
         // navigate("/home");
         if (account === "sysadmin") {
-          navigate("/gestion_des_comptes");
+          navigate("/dashboard_admin_page");
           fetchAllComptes(account, user, password);
         } else {
           navigate("/home");
@@ -1387,14 +1438,14 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const TestDeRequetteDevices = async (account, user, password) => {
+  const TestDeRequetteDevices = async (account, user, password2) => {
     console.log("Start........");
 
-    const account2 = "demo";
+    const accountID = "deka";
 
-    const user2 = "admin";
+    const userID = "admin";
 
-    const password2 = "112233";
+    const password = "Octa@112233";
 
     const groupID = "test11";
 
@@ -1405,16 +1456,35 @@ const DataContextProvider = ({ children }) => {
     const notes = "test d'ajout de groupe 22";
     const workOrderID = "234234234234";
 
-    const xmlData = `
-  <GTSRequest command="dbget">
-    <Authorization account="${account2}" user="${user2}" password="${password2}" />
-    <Record table="GroupList" partial="true">
-      <Field name="accountID">${account2}</Field>
-      <Field name="userID">${user2}</Field>
+    const xmlData = `<GTSRequest command="dbget">
+        <Authorization account="${accountID}" user="${userID}" password="${password}" />
+        <Record table="Device" partial="true">
+          <Field name="accountID">${accountID}</Field>
 
-      </Record>
-  </GTSRequest>
-      `;
+          <Field name="creationTime" />
+          <Field name="description" />
+          <Field name="deviceCode" />
+          <Field name="displayName" />
+          <Field name="equipmentType" />
+          <Field name="imeiNumber" />
+          <Field name="ipAddressCurrent" />
+          <Field name="isActive" />
+          <Field name="lastEventTimestamp" />
+          <Field name="lastGPSTimestamp" />
+          <Field name="lastOdometerKM" />
+          <Field name="lastStartTime" />
+          <Field name="lastStopTime" />
+          <Field name="lastTotalConnectTime" />
+          <Field name="lastUpdateTime" />
+          <Field name="lastValidLatitude" />
+          <Field name="lastValidLongitude" />
+          <Field name="licensePlate" />
+          <Field name="simPhoneNumber" />
+          <Field name="speedLimitKPH" />
+          <Field name="uniqueID" />
+          
+        </Record>
+      </GTSRequest>`;
 
     // Liste des groupe accesible par un utilisateur
     //       <GTSRequest command="dbget">
@@ -1548,8 +1618,9 @@ const DataContextProvider = ({ children }) => {
         }
 
         try {
-          setUserData(allUserData); // tableau de comptes
-          localStorage.setItem("userData", JSON.stringify(allUserData));
+          console.log("Data", allUserData);
+          // setUserData(allUserData); // tableau de comptes
+          // localStorage.setItem("userData", JSON.stringify(allUserData));
         } catch (error) {
           if (error.name === "QuotaExceededError") {
             console.error("Quota dépassé pour userData.");
@@ -1633,7 +1704,7 @@ const DataContextProvider = ({ children }) => {
   //       }, {});
   //     });
   //   };
-
+  // z-[
   //   // 1) on récupère la liste des utilisateurs de l'account
   //   const accountUsers = await fetchData({
   //     tableName: "User",
@@ -1641,7 +1712,6 @@ const DataContextProvider = ({ children }) => {
   //     authPassword: accountPassword,
   //     fields: { accountID },
   //   });
-
   //   // 2) pour chaque utilisateur, on récupère ses devices (sauf pour les comptes "deka" et "lacouronne")
   //   const accountUsersWithDevices = ["deka", "lacouronne"].includes(accountID)
   //     ? accountUsers.map((user) => ({
@@ -1798,6 +1868,17 @@ const DataContextProvider = ({ children }) => {
         : [];
 
     console.log("fetchComptes: résultats =", data);
+    setComptes((prev) => {
+      const updatedComptes = data.map((compte) => {
+        const existing = prev.find((c) => c.accountID === compte.accountID);
+        return existing ? { ...existing, ...compte } : compte;
+      });
+
+      const existingIDs = new Set(updatedComptes.map((c) => c.accountID));
+      const missingComptes = prev.filter((c) => !existingIDs.has(c.accountID));
+
+      return [...missingComptes, ...updatedComptes];
+    });
     setComptes(data);
 
     if (fetchAllOtherData) {
@@ -1842,14 +1923,6 @@ const DataContextProvider = ({ children }) => {
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
         }, 12000);
-
-        // fetchAccountDevices(id, pwd);
-        // fetchAccountGroupes(id, pwd).then((groupes) => {
-        //   fetchGroupeDevices(id, groupes, pwd);
-        // });
-        // fetchAccountUsers(id, pwd).then((users) => {
-        //   fetchUserDevices(id, users);
-        // });
       });
     }
     return data;
@@ -1866,6 +1939,30 @@ const DataContextProvider = ({ children }) => {
   <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
   <Record table="Device" partial="true">
     <Field name="accountID">${accountID}</Field>
+
+    
+     <Field name="creationTime" />
+          <Field name="description" />
+          <Field name="deviceCode" />
+          <Field name="displayName" />
+          <Field name="equipmentType" />
+          <Field name="imeiNumber" />
+          <Field name="ipAddressCurrent" />
+          <Field name="isActive" />
+          <Field name="lastEventTimestamp" />
+          <Field name="lastGPSTimestamp" />
+          <Field name="lastOdometerKM" />
+          <Field name="lastStartTime" />
+          <Field name="lastStopTime" />
+          <Field name="lastTotalConnectTime" />
+          <Field name="lastUpdateTime" />
+          <Field name="lastValidLatitude" />
+          <Field name="lastValidLongitude" />
+          <Field name="licensePlate" />
+          <Field name="simPhoneNumber" />
+          <Field name="speedLimitKPH" />
+          <Field name="uniqueID" />
+
   </Record>
 </GTSRequest>
   `;
@@ -1893,13 +1990,28 @@ const DataContextProvider = ({ children }) => {
         : [];
 
     console.log("fetchAccountDevices: résultats =", data);
-    // setAccountDevices((prev) => [...prev, ...data]);
     setAccountDevices((prev) => {
-      const newDevices = data.filter(
-        (device) => !prev.some((d) => d.creationTime === device.creationTime)
+      const updatedDevices = data.map((device) => {
+        const existing = prev.find(
+          (d) => d.creationTime === device.creationTime
+        );
+        return existing ? { ...existing, ...device } : device;
+      });
+
+      const existingTimes = new Set(updatedDevices.map((d) => d.creationTime));
+      const missingDevices = prev.filter(
+        (d) => !existingTimes.has(d.creationTime)
       );
-      return [...prev, ...newDevices];
+
+      return [...missingDevices, ...updatedDevices];
     });
+    // setAccountDevices((prev) => [...prev, ...data]);
+    // setAccountDevices((prev) => {
+    //   const newDevices = data.filter(
+    //     (device) => !prev.some((d) => d.creationTime === device.creationTime)
+    //   );
+    //   return [...prev, ...newDevices];
+    // });
 
     return data;
   };
@@ -1944,17 +2056,32 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchAccountGroupes: résultats =", data);
     // setAccountGroupes((prev) => [...prev, ...data]);
     setAccountGroupes((prev) => {
-      const newGroupes = data.filter(
-        (group) => !prev.some((g) => g.creationTime === group.creationTime)
+      const updatedGroupes = data.map((group) => {
+        const existing = prev.find(
+          (g) => g.creationTime === group.creationTime
+        );
+        return existing ? { ...existing, ...group } : group;
+      });
+
+      const existingTimes = new Set(updatedGroupes.map((g) => g.creationTime));
+      const missingGroupes = prev.filter(
+        (g) => !existingTimes.has(g.creationTime)
       );
-      return [...prev, ...newGroupes];
+
+      return [...missingGroupes, ...updatedGroupes];
     });
-    console.log("Resultat AccountGroupe :", (prev) => {
-      const newGroupes = data.filter(
-        (group) => !prev.some((g) => g.creationTime === group.creationTime)
-      );
-      return [...prev, ...newGroupes];
-    });
+    // setAccountGroupes((prev) => {
+    //   const newGroupes = data.filter(
+    //     (group) => !prev.some((g) => g.creationTime === group.creationTime)
+    //   );
+    //   return [...prev, ...newGroupes];
+    // });
+    // console.log("Resultat AccountGroupe :", (prev) => {
+    //   const newGroupes = data.filter(
+    //     (group) => !prev.some((g) => g.creationTime === group.creationTime)
+    //   );
+    //   return [...prev, ...newGroupes];
+    // });
 
     return data;
   };
@@ -1974,12 +2101,15 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
+    console.log(xml);
+
     const res = await fetch("/api/track/Service", {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
     const text = await res.text();
+    // console.log(text)
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -1998,12 +2128,28 @@ const DataContextProvider = ({ children }) => {
 
     console.log("fetchAccountUsers: résultats =", data);
     // setAccountUsers((prev) => [...prev, ...data]);
+    // setAccountUsers((prev) => {
+    //   const newUsers = data.filter(
+    //     (user) => !prev.some((u) => u.creationTime === user.creationTime)
+    //     // (user) => !prev.some((u) => u.userID === user.userID)
+    //   );
+    //   return [...prev, ...newUsers];
+    // });
     setAccountUsers((prev) => {
-      const newUsers = data.filter(
-        (user) => !prev.some((u) => u.creationTime === user.creationTime)
-        // (user) => !prev.some((u) => u.userID === user.userID)
+      const updatedUsers = data.map((user) => {
+        const existing = prev.find((u) => u.creationTime === user.creationTime);
+        return existing ? { ...existing, ...user } : user;
+      });
+
+      const existingCreationTimes = new Set(
+        updatedUsers.map((u) => u.creationTime)
       );
-      return [...prev, ...newUsers];
+
+      const missingUsers = prev.filter(
+        (u) => !existingCreationTimes.has(u.creationTime)
+      );
+
+      return [...missingUsers, ...updatedUsers];
     });
 
     return data;
@@ -2036,6 +2182,8 @@ const DataContextProvider = ({ children }) => {
     </Record>
   </GTSRequest>
       `;
+
+      console.log(xml);
 
       const res = await fetch("/api/track/Service", {
         method: "POST",
@@ -2070,20 +2218,55 @@ const DataContextProvider = ({ children }) => {
     const results = await Promise.all(promises);
 
     // Mise à jour sans doublon par userID
+    // Mise à jour avancée avec fusion des devices par utilisateur
     setUserDevices((prev) => {
       const updated = [...prev];
 
-      results.forEach((newEntry) => {
-        const index = updated.findIndex((e) => e.userID === newEntry.userID);
-        if (index !== -1) {
-          updated[index] = newEntry;
+      results.forEach(({ userID, userDevices: newDevices }) => {
+        const existingIndex = updated.findIndex((e) => e.userID === userID);
+
+        if (existingIndex !== -1) {
+          const existingDevices = updated[existingIndex].userDevices;
+
+          const mergedDevices = newDevices.map((dev) => {
+            const existing = existingDevices.find(
+              (d) => d.creationTime === dev.creationTime
+            );
+            return existing ? { ...existing, ...dev } : dev;
+          });
+
+          const existingTimes = new Set(
+            mergedDevices.map((d) => d.creationTime)
+          );
+          const preservedDevices = existingDevices.filter(
+            (d) => !existingTimes.has(d.creationTime)
+          );
+
+          updated[existingIndex] = {
+            userID,
+            userDevices: [...preservedDevices, ...mergedDevices],
+          };
         } else {
-          updated.push(newEntry);
+          updated.push({ userID, userDevices: newDevices });
         }
       });
 
       return updated;
     });
+    // setUserDevices((prev) => {
+    //   const updated = [...prev];
+
+    //   results.forEach((newEntry) => {
+    //     const index = updated.findIndex((e) => e.userID === newEntry.userID);
+    //     if (index !== -1) {
+    //       updated[index] = newEntry;
+    //     } else {
+    //       updated.push(newEntry);
+    //     }
+    //   });
+
+    //   return updated;
+    // });
 
     return results;
   };
@@ -2118,6 +2301,8 @@ const DataContextProvider = ({ children }) => {
   </Record>
 </GTSRequest>
     `;
+
+      console.log(xml);
 
       const res = await fetch("/api/track/Service", {
         method: "POST",
@@ -2170,18 +2355,59 @@ const DataContextProvider = ({ children }) => {
     //
     //
     //
+
+    // Mise à jour intelligente avec fusion des devices
     setGroupeDevices((prev) => {
       const updated = [...prev];
+
       results.forEach((newEntry) => {
         const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
         if (index !== -1) {
-          updated[index] = newEntry;
+          // Fusionner les devices sans doublon (selon creationTime)
+          const existingDevices = updated[index].groupeDevices || [];
+          const newDevices = newEntry.groupeDevices || [];
+
+          const mergedDevices = [...existingDevices];
+
+          newDevices.forEach((device) => {
+            const exists = existingDevices.some(
+              (d) => d.creationTime === device.creationTime
+            );
+            if (!exists) {
+              mergedDevices.push(device);
+            } else {
+              // Met à jour les champs de l'appareil existant
+              const i = mergedDevices.findIndex(
+                (d) => d.creationTime === device.creationTime
+              );
+              mergedDevices[i] = { ...mergedDevices[i], ...device };
+            }
+          });
+
+          updated[index] = {
+            groupID: newEntry.groupID,
+            groupeDevices: mergedDevices,
+          };
         } else {
+          // Nouveau groupe
           updated.push(newEntry);
         }
       });
+
       return updated;
     });
+    // setGroupeDevices((prev) => {
+    //   const updated = [...prev];
+    //   results.forEach((newEntry) => {
+    //     const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
+    //     if (index !== -1) {
+    //       updated[index] = newEntry;
+    //     } else {
+    //       updated.push(newEntry);
+    //     }
+    //   });
+    //   return updated;
+    // });
 
     return results;
   };
@@ -2252,15 +2478,35 @@ const DataContextProvider = ({ children }) => {
 
       results.forEach((newEntry) => {
         const index = updated.findIndex((e) => e.userID === newEntry.userID);
+
         if (index !== -1) {
-          updated[index] = newEntry;
+          // Fusionner les données existantes avec les nouvelles (mise à jour)
+          updated[index] = {
+            userID: newEntry.userID,
+            userGroupes: newEntry.userGroupes,
+          };
         } else {
+          // Ajout d'une nouvelle entrée
           updated.push(newEntry);
         }
       });
 
       return updated;
     });
+    // setUserGroupes((prev) => {
+    //   const updated = [...prev];
+
+    //   results.forEach((newEntry) => {
+    //     const index = updated.findIndex((e) => e.userID === newEntry.userID);
+    //     if (index !== -1) {
+    //       updated[index] = newEntry;
+    //     } else {
+    //       updated.push(newEntry);
+    //     }
+    //   });
+
+    //   return updated;
+    // });
 
     return results;
   };
@@ -3664,6 +3910,7 @@ const DataContextProvider = ({ children }) => {
         <Authorization account="${accountID}" user="${userID}" password="${password}" />
         <Record table="Device" partial="true">
           <Field name="accountID">${accountID}</Field>
+
           <Field name="creationTime" />
           <Field name="description" />
           <Field name="deviceCode" />
@@ -3685,6 +3932,7 @@ const DataContextProvider = ({ children }) => {
           <Field name="simPhoneNumber" />
           <Field name="speedLimitKPH" />
           <Field name="uniqueID" />
+          
         </Record>
       </GTSRequest>`;
 
@@ -7871,26 +8119,22 @@ const DataContextProvider = ({ children }) => {
   }, [location]);
 
   const backToPagePrecedent = () => {
-    const storedHistory =
-      JSON.parse(localStorage.getItem("customHistory")) || [];
-
-    if (storedHistory.length > 1) {
-      storedHistory.pop(); // Retire la page actuelle
-      const lastPath = storedHistory[storedHistory.length - 1];
-
-      // Mets à jour les données AVANT de rediriger
-      localStorage.setItem("customHistory", JSON.stringify(storedHistory));
-      sessionStorage.setItem("isGoingBack", "true");
-
-      console.log("Navigation vers :", lastPath);
-
-      // Petite astuce : on force une redirection propre
-      setTimeout(() => {
-        navigate(lastPath);
-      }, 0); // pour que sessionStorage soit bien pris en compte avant le render
-    } else {
-      navigate("/home");
-    }
+    // const storedHistory =
+    //   JSON.parse(localStorage.getItem("customHistory")) || [];
+    // if (storedHistory.length > 1) {
+    //   storedHistory.pop(); // Retire la page actuelle
+    //   const lastPath = storedHistory[storedHistory.length - 1];
+    //   // Mets à jour les données AVANT de rediriger
+    //   localStorage.setItem("customHistory", JSON.stringify(storedHistory));
+    //   sessionStorage.setItem("isGoingBack", "true");
+    //   console.log("Navigation vers :", lastPath);
+    //   // Petite astuce : on force une redirection propre
+    //   setTimeout(() => {
+    //     navigate(lastPath);
+    //   }, 0); // pour que sessionStorage soit bien pris en compte avant le render
+    // } else {
+    //   navigate("/home");
+    // }
   };
 
   // backToPagePrecedent
@@ -8153,13 +8397,22 @@ const DataContextProvider = ({ children }) => {
         setListeGestionDesGroupe,
         listeGestionDesGroupeTitre,
         setListeGestionDesGroupeTitre,
+        listeGestionDesUsers,
+        setListeGestionDesUsers,
         createNewUserEnGestionAccount,
         ModifyUserEnGestionAccountFonction,
         deleteUSerEnGestionAccount,
         comptes,
+        accountDevices,
+        accountGroupes,
+        accountUsers,
         createAccountEnGestionAccountFonction,
         modifyAccountEnGestionAccountFonction,
         deleteAccountEnGestionAccountFonction,
+        fetchAccountDevices,
+        fetchUserGroupes,
+        dashboardLoadingEffect,
+        setDashboardLoadingEffect,
       }}
     >
       {children}

@@ -9,7 +9,7 @@ import CreateNewAccountPage from "../components/gestion_des_comptes/CreateNewAcc
 import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
 import ModifyAccountPage from "../components/gestion_des_comptes/ModifyAccountPage";
 
-function GestionDesCompts() {
+function GestionDesCompts({ setDocumentationPage }) {
   const {
     FormatDateHeure,
     account,
@@ -28,6 +28,7 @@ function GestionDesCompts() {
     fetchGroupeDevices,
     fetchAccountUsers,
     fetchUserDevices,
+    accountUsers,
   } = useContext(DataContext);
 
   const [showCreateNewAccountPopup, setShowCreateNewAccountPopup] =
@@ -54,22 +55,22 @@ function GestionDesCompts() {
           />
 
           {/* Composant pour créer un nouveau Compte */}
-          {showCreateNewAccountPopup && (
+          {/* {showCreateNewAccountPopup && (
             <CreateNewAccountPage
               showCreateNewAccountPopup={showCreateNewAccountPopup}
               setShowCreateNewAccountPopup={setShowCreateNewAccountPopup}
             />
-          )}
+          )} */}
 
-          {showModifyAccountPagePopup && (
+          {/* {showModifyAccountPagePopup && (
             <ModifyAccountPage
               showModifyAccountPagePopup={showModifyAccountPagePopup}
               setShowModifyAccountPagePopup={setShowModifyAccountPagePopup}
             />
-          )}
+          )} */}
 
-          <div className="px-4 pb-40">
-            <h2 className="mt-[10rem] text-lg text-center font-bold ">
+          <div className="px-4 pt-10 mt-4-- pb-40 bg-white rounded-lg">
+            <h2 className="mt-[10rem]-- text-lg text-center font-bold ">
               Gestion Des Comptes
             </h2>
             {/* <button
@@ -99,12 +100,13 @@ function GestionDesCompts() {
             >
               Tous les donnees regrouper
             </button>{" "} */}
-            <div className="flex justify-center mt-4">
+            <div className="flex  justify-center mt-4">
               <button
                 onClick={() => {
-                  setShowCreateNewAccountPopup(true);
+                  // setShowCreateNewAccountPopup(true);
+                  setDocumentationPage("Ajouter_nouveau_compte");
                 }}
-                className="bg-orange-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+                className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
               >
                 <div className="flex justify-center items-center gap-3">
                   <FaPlusCircle className="text-2xl" />
@@ -140,7 +142,7 @@ function GestionDesCompts() {
                     onClick={() => {
                       setCurrentAccountSelected(account);
                       setListeGestionDesVehicules(account?.accountDevices);
-                      // setShowAccountOptionsPopup(true);
+                      setShowAccountOptionsPopup(true);
                       setCurrentSelectedUserToConnect(null);
                     }}
                     className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
@@ -230,6 +232,7 @@ function GestionDesCompts() {
             {/*  */}
             <GestionAccountOptionPopup
               setShowModifyAccountPagePopup={setShowModifyAccountPagePopup}
+              setDocumentationPage={setDocumentationPage}
             />
           </div>
         </div>

@@ -9,6 +9,7 @@ import { MdPassword, MdSwitchAccount } from "react-icons/md";
 
 function GestionAccountOptionPopup({
   setShowModifyAccountPagePopup,
+  setDocumentationPage,
   showCreateNewDevicePage,
   setShowCreateNewDevicePage,
 }) {
@@ -30,6 +31,7 @@ function GestionAccountOptionPopup({
     username,
     password,
     comptes,
+    scrollToTop,
   } = useContext(DataContext);
   const navigate = useNavigate(); // ✅ OK ici
 
@@ -59,7 +61,7 @@ function GestionAccountOptionPopup({
   return (
     <div>
       {deleteAccountPopup && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed  z-[999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={deleteAccountFonction}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
@@ -186,31 +188,40 @@ function GestionAccountOptionPopup({
               </h2>
             </div>
             <div
-              onClick={() => setShowAccountOptionsPopup(false)}
+              onClick={() => {
+                setShowAccountOptionsPopup(false);
+
+                scrollToTop();
+              }}
               className="p-4 flex flex-col gap-4 py-6 pb-10--"
             >
-              <Link
-                to="/liste_des_utilisateurs"
+              <button
+                // to="/liste_des_utilisateurs"
+                onClick={() => {
+                  setDocumentationPage("Gestion_des_utilisateurs");
+                }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
               >
                 <FaUsers className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Gestion des utilisateurs
                 </h2>
-              </Link>
+              </button>
               {/*  */}
               {/*  */}
               {/*  */}
               {/*  */}
-              <Link
-                to="/liste_des_vehicules"
+              <button
+                // to="/liste_des_vehicules"
+
                 onClick={() => {
                   setTimeout(() => {
                     setListeGestionDesVehicules(
                       currentAccountSelected?.accountDevices
                     );
                     setDeviceListeTitleGestion("Tous les Appareils");
-                  }, 500);
+                    setDocumentationPage("Gestion_des_appareils");
+                  }, 200);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -218,17 +229,18 @@ function GestionAccountOptionPopup({
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Gestion des Appareils
                 </h2>
-              </Link>
+              </button>
               {/*  */}
               {/*  */}
               {/*  */}
-              <Link
-                to="/liste_des_groupes"
+              <button
+                // to="/liste_des_groupes"
                 onClick={() => {
                   setListeGestionDesGroupe(
                     currentAccountSelected?.accountGroupes
                   );
                   setListeGestionDesGroupeTitre("Tous les groupes");
+                  setDocumentationPage("Gestion_des_groupes");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -236,7 +248,7 @@ function GestionAccountOptionPopup({
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Gestion des Groupes
                 </h2>
-              </Link>
+              </button>
               {/*  */}
               {/*  */}
               {/*  */}
@@ -244,7 +256,9 @@ function GestionAccountOptionPopup({
               <div
                 onClick={() => {
                   // setEditAccountGestion(true);
-                  setShowModifyAccountPagePopup(true);
+                  // setShowModifyAccountPagePopup(true);
+                  setDocumentationPage("Modifier_compte");
+                  // Modifier_compte
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >

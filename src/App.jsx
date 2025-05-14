@@ -63,6 +63,7 @@ import GestionDesCompts from "./pages/GestionDesCompts";
 import ListeDesUtilisateur from "./pages/ListeDesUtilisateur";
 import ListeDesVehiculesGestion from "./pages/ListeDesVehiculesGestion";
 import ListeDesGroupes from "./pages/ListeDesGroupes";
+import DashboardAdminPage from "./pages/DashboardAdminPage";
 
 function App() {
   const location = useLocation();
@@ -119,12 +120,13 @@ function App() {
     docRapportUniteRef,
     docRapportGroupeRef,
     docGestionGeozoneRef,
+    account,
   } = useContext(DataContext);
 
   React.useEffect(() => {
     // Redirige vers /home si l'utilisateur est authentifié et se rend sur "/login"
     if (isAuthenticated && location.pathname === "/login") {
-      navigate("/home"); // Utilisation correcte de navigate
+      navigate(account === "sysadmin" ? "/dashboard_admin_page" : "/home"); // Utilisation correcte de navigate
     }
   }, [isAuthenticated, location.pathname, navigate]);
 
@@ -254,7 +256,7 @@ function App() {
 
         {/* <Login2 /> */}
 
-        {/* {isOffline && window.location.hostname !== "localhost" && (
+        {isOffline && window.location.hostname !== "localhost" && (
           <div className="fixed z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/70">
             <div
               className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[90vw] `}
@@ -275,7 +277,7 @@ function App() {
               </div>
             </div>
           </div>
-        )} */}
+        )}
 
         {readDocumentation ? (
           <div className="transition-all">
@@ -1083,7 +1085,11 @@ function App() {
               path="/"
               element={
                 isAuthenticated ? (
-                  <Navigate to="/home" />
+                  <Navigate
+                    to={
+                      account === "sysadmin" ? "/dashboard_admin_page" : "/home"
+                    }
+                  />
                 ) : (
                   <Navigate to="/login" />
                 )
@@ -1095,6 +1101,12 @@ function App() {
               path="/home"
               element={<PrivateRoute element={<HomePage />} />}
             />
+
+            <Route
+              path="/dashboard_admin_page"
+              element={<PrivateRoute element={<DashboardAdminPage />} />}
+            />
+
             <Route
               path="/ajouter_vehicule"
               element={<PrivateRoute element={<AjouterPage />} />}

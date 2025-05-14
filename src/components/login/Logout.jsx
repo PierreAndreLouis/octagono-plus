@@ -5,7 +5,7 @@ function Logout({ setLogOutPopup }) {
   const { handleLogout } = useContext(DataContext);
 
   return (
-    <div className="fixed inset-0 z-10">
+    <div className="fixed inset-0 z-[999999999999999999999999999]">
       <div className="fixed inset-0 z-40 min-h-full overflow-y-auto overflow-x-hidden transition flex items-center">
         {/* <!-- overlay --> */}
         <div className="fixed inset-0 w-full h-full bg-black/50 cursor-pointer"></div>
@@ -40,7 +40,9 @@ function Logout({ setLogOutPopup }) {
                   Se Déconnecter
                 </h2>
 
-                <p className="text-gray-500">Êtes vous sur de te déconnecter ?</p>
+                <p className="text-gray-500">
+                  Êtes vous sur de te déconnecter ?
+                </p>
               </div>
             </div>
 

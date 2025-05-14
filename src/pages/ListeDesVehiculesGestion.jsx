@@ -25,7 +25,7 @@ import CreateNewDeviceGestion from "../components/gestion_des_comptes/CreateNewD
 import ModifyDeviceGestion from "../components/gestion_des_comptes/ModifyDeviceGestion";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
-function ListeDesVehiculesGestion() {
+function ListeDesVehiculesGestion({ setDocumentationPage }) {
   const {
     ajouterGeofencePopup,
     setAjouterGeofencePopup,
@@ -134,23 +134,23 @@ function ListeDesVehiculesGestion() {
   const [currentSelectedGroupeGestion, setCurrentSelectedGroupeGestion] =
     useState();
 
-  useEffect(() => {
-    // Crée un Set des deviceID de deviceInfo pour une recherche rapide
-    const deviceIDsInInfo = new Set(
-      currentSelectedGroupeGestion?.groupeDevices?.map(
-        (device) => device.deviceID
-      )
-    );
+  // useEffect(() => {
+  //   // Crée un Set des deviceID de deviceInfo pour une recherche rapide
+  //   const deviceIDsInInfo = new Set(
+  //     currentSelectedGroupeGestion?.groupeDevices?.map(
+  //       (device) => device.deviceID
+  //     )
+  //   );
 
-    // Filtre les éléments de deviceListe
-    const updateListe = currentAccountSelected?.accountDevices?.filter(
-      (device) => deviceIDsInInfo.has(device.deviceID)
-    );
+  //   // Filtre les éléments de deviceListe
+  //   const updateListe = currentAccountSelected?.accountDevices?.filter(
+  //     (device) => deviceIDsInInfo.has(device.deviceID)
+  //   );
 
-    // console.log(updateListe);
+  //   // console.log(updateListe);
 
-    setListeGestionDesVehicules(updateListe);
-  }, [currentSelectedGroupeGestion]);
+  //   setListeGestionDesVehicules(updateListe);
+  // }, [currentSelectedGroupeGestion]);
 
   const [showChooseUserMessage, setShowChooseUserMessage] = useState("");
 
@@ -159,21 +159,7 @@ function ListeDesVehiculesGestion() {
 
   return (
     <div>
-      <GestionAccountOptionPopup />
-      {showCreateNewDevicePage && (
-        <CreateNewDeviceGestion
-          setShowUserListeToSelectDevice={setShowUserListeToSelectDevice}
-          setShowUserGroupeCategorieSection={setShowUserGroupeCategorieSection}
-          setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-          setShowCreateNewDevicePage={setShowCreateNewDevicePage}
-        />
-      )}
-
-      {showModifyNewDevicePage && (
-        <ModifyDeviceGestion
-          setShowModifyNewDevicePage={setShowModifyNewDevicePage}
-        />
-      )}
+      <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
 
       {deleteAccountPopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
@@ -507,8 +493,8 @@ function ListeDesVehiculesGestion() {
         </div>
       )}
 
-      <div className="px-4 pb-40">
-        <h2 className="mt-[10rem] text-2xl text-gray-700 text-center font-bold ">
+      <div className="px-4 pb-40 bg-white pt-10 rounded-lg">
+        <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
           Liste des Appareils
         </h2>
 
@@ -530,7 +516,7 @@ function ListeDesVehiculesGestion() {
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           {/*  */}
           <div className="flex gap-2 justify-center mt-4">
-            <button
+            {/* <button
               onClick={() => {
                 backToPagePrecedent();
               }}
@@ -538,10 +524,11 @@ function ListeDesVehiculesGestion() {
             >
               <IoArrowBack className="text-xl" />
               <p className="hidden md:block">Retour</p>
-            </button>{" "}
+            </button>{" "} */}
             <button
               onClick={() => {
                 setShowCreateNewDevicePage(true);
+                setDocumentationPage("Ajouter_nouveau_appareil");
                 // if (!currentSelectedUserToConnect) {
                 //   setChooseOtherAccountGestion(true);
                 //   setShowChooseUserMessage(true);
@@ -561,13 +548,13 @@ function ListeDesVehiculesGestion() {
                 </span>
               </span>
             </button>{" "}
-            <button
+            {/* <button
               onClick={() => setShowAccountOptionsPopup(true)}
               className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
             >
               <p className="hidden md:block">Options</p>
               <IoOptions className="text-xl" />
-            </button>{" "}
+            </button>{" "} */}
           </div>
 
           <div
@@ -688,20 +675,21 @@ function ListeDesVehiculesGestion() {
                     </div>
                   </div>
                   <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
-                    <Link
+                    <button
                       onClick={() => {
                         // setEditAccountGestion(true);
                         setCurrentSelectedDeviceGestion(device);
 
                         setShowModifyNewDevicePage(true);
                         setShowUserGroupeCategorieSection(false);
+                        setDocumentationPage("Modifier_appareil");
                       }}
                       className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >
                       <p className="text-sm mr-2">Modifier</p>
 
                       <FaRegEdit />
-                    </Link>
+                    </button>
                     <button
                       onClick={() => {
                         setCurrentSelectedDeviceGestion(device);

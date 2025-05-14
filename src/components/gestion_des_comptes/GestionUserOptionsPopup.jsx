@@ -6,7 +6,10 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
 
-function GestionUserOptionsPopup({ setShowModifyUserPage }) {
+function GestionUserOptionsPopup({
+  setShowModifyUserPage,
+  setDocumentationPage,
+}) {
   const {
     currentSelectedUserToConnect,
     showSelectedUserOptionsPopup,
@@ -164,7 +167,7 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
       )}
 
       {showSelectedUserOptionsPopup && (
-        <div className="fixed flex justify-center items-center z-[1] inset-0 bg-black/50 dark:bg-black/70">
+        <div className="fixed flex justify-center items-center z-[9999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
           <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowSelectedUserOptionsPopup(false)}
@@ -191,15 +194,16 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
               {/*  */}
               {/*  */}
               {/*  */}
+
               <Link
-                to="/liste_des_vehicules"
+                // to="/liste_des_vehicules"
                 onClick={() => {
                   setTimeout(() => {
                     setListeGestionDesVehicules(
                       currentSelectedUserToConnect?.userDevices
                     );
                     console.log(
-                      "currentSelectedUserToConnect?.userDevices",
+                      "currentSelectedUserToConnect?.userDevices---------",
                       currentSelectedUserToConnect?.userDevices
                     );
                     setDeviceListeTitleGestion(
@@ -207,7 +211,8 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
                         currentSelectedUserToConnect?.description
                     );
                     setShowSelectedUserOptionsPopup(false);
-                  }, 100);
+                    setDocumentationPage("Gestion_des_appareils");
+                  }, 1000);
                   // navigate("/liste_des_vehicules");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -220,8 +225,8 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
               {/*  */}
               {/*  */}
               {/*  */}
-              <Link
-                to="/liste_des_groupes"
+              <button
+                // to="/liste_des_groupes"
                 onClick={() => {
                   setTimeout(() => {
                     setListeGestionDesGroupe(
@@ -235,6 +240,7 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
                     console.log(currentSelectedUserToConnect?.description);
 
                     setShowSelectedUserOptionsPopup(false);
+                    setDocumentationPage("Gestion_des_groupes");
                   }, 100);
                   // navigate("/liste_des_vehicules");
                 }}
@@ -244,7 +250,7 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Liste des Groupes affectés
                 </h2>
-              </Link>
+              </button>
               {/*  */}
               {/*  */}
               {/*  */}
@@ -254,6 +260,7 @@ function GestionUserOptionsPopup({ setShowModifyUserPage }) {
                   // setEditAccountGestion(true);
                   setShowModifyUserPage(true);
                   setShowSelectedUserOptionsPopup(false);
+                  setDocumentationPage("Modifier_utilisateur");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >

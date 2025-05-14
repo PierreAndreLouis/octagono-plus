@@ -25,7 +25,7 @@ import CreateNewUserGestion from "../components/gestion_des_comptes/CreateNewUse
 import ModifyUserGroupeGestion from "../components/gestion_des_comptes/ModifyUserGroupeGestion";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
-function ListeDesUtilisateur() {
+function ListeDesUtilisateur({ setDocumentationPage }) {
   const {
     ajouterGeofencePopup,
     setAjouterGeofencePopup,
@@ -54,6 +54,8 @@ function ListeDesUtilisateur() {
     currentAccountSelected,
     password,
     setCurrentAccountSelected,
+    listeGestionDesUsers,
+    setListeGestionDesUsers,
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
     handleLogout,
@@ -150,10 +152,14 @@ function ListeDesUtilisateur() {
 
   return (
     <div>
-      <GestionAccountOptionPopup />
-      <GestionUserOptionsPopup setShowModifyUserPage={setShowModifyUserPage} />
+      <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
 
-      {showCreateNewUserPage && (
+      <GestionUserOptionsPopup
+        setDocumentationPage={setDocumentationPage}
+        setShowModifyUserPage={setShowModifyUserPage}
+      />
+
+      {/* {showCreateNewUserPage && (
         <CreateNewUserGestion
           setShowCreateNewUserPage={setShowCreateNewUserPage}
         />
@@ -163,7 +169,7 @@ function ListeDesUtilisateur() {
         <ModifyUserGroupeGestion
           setShowModifyUserPage={setShowModifyUserPage}
         />
-      )}
+      )} */}
 
       {seConnecterAutreComptePopup && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
@@ -433,21 +439,8 @@ function ListeDesUtilisateur() {
         composant_from={"échec de la suppression du geozone"}
       /> */}
 
-      <div className="px-4 pb-40">
-        <h2
-          onClick={() => {
-            fetchAccountUsers("demo", "112233")
-              .then((users) => fetchUserDevices("demo", users))
-              .catch((err) => {
-                console.error(
-                  "Erreur lors du chargement des utilisateurs ou des devices d'utilisateurs :",
-                  err
-                );
-                setError("Erreur lors de la mise à jour des utilisateurs.");
-              });
-          }}
-          className="mt-[10rem] text-2xl text-gray-700 text-center font-bold "
-        >
+      <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
+        <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
           Liste des Utilisateur
         </h2>
 
@@ -458,7 +451,7 @@ function ListeDesUtilisateur() {
 
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           <div className="flex    gap-2 justify-between mt-4">
-            <button
+            {/* <button
               onClick={() => {
                 backToPagePrecedent();
               }}
@@ -466,10 +459,11 @@ function ListeDesUtilisateur() {
             >
               <IoArrowBack className="text-xl" />
               <p className="hidden md:block">Retour</p>
-            </button>{" "}
+            </button>{" "} */}
             <button
               onClick={() => {
-                setShowCreateNewUserPage(true);
+                // setShowCreateNewUserPage(true);
+                setDocumentationPage("Ajouter_nouveau_utilisateur");
               }}
               className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -481,7 +475,7 @@ function ListeDesUtilisateur() {
                 </p>
               </div>
             </button>{" "}
-            <button
+            {/* <button
               onClick={() => {
                 setShowAccountOptionsPopup(true);
               }}
@@ -489,7 +483,7 @@ function ListeDesUtilisateur() {
             >
               <p className="hidden md:block">Options</p>
               <IoOptions className="text-xl" />
-            </button>{" "}
+            </button>{" "} */}
           </div>
           <div
             onClick={() => {
@@ -506,7 +500,7 @@ function ListeDesUtilisateur() {
         </div>
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
-          {currentAccountSelected?.accountUsers?.map((user, index) => {
+          {listeGestionDesUsers?.map((user, index) => {
             return (
               <div
                 onClick={() => {
