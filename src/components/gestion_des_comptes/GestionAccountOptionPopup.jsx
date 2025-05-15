@@ -279,17 +279,7 @@ function GestionAccountOptionPopup({
                   Supprimer le compte
                 </h2>
               </div>
-              <div className="flex justify-end">
-                <Link
-                  to="/gestion_des_comptes"
-                  className="shadow-md mt-8 cursor-pointer bg-orange-500 text-white font-bold dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
-                >
-                  {/* <MdSwitchAccount className="text-[1.62rem] text-orange-400 dark:text-orange-50" /> */}
-                  <h2 className="font-semibold px-4">
-                    Retour a la Liste des Comptes
-                  </h2>
-                </Link>
-              </div>
+
               {/* callError, setCallError, lancerAppel, */}
             </div>
           </div>

@@ -10,8 +10,11 @@ function ChooseOtherAccountDashboard({
   setSearchInputTerm,
   filterGestionAccountData,
 }) {
-  const { setCurrentAccountSelected, setListeGestionDesVehicules } =
-    useContext(DataContext);
+  const {
+    setCurrentAccountSelected,
+    setListeGestionDesVehicules,
+    currentAccountSelected,
+  } = useContext(DataContext);
   return (
     <>
       {chooseOtherAccountGestion && (
@@ -63,6 +66,9 @@ function ChooseOtherAccountDashboard({
                   <div
                     key={index}
                     onClick={() => {
+                      console.log(account);
+                      console.log(currentAccountSelected);
+
                       setCurrentAccountSelected(account);
                       setListeGestionDesVehicules(account?.accountDevices);
                       setChooseOtherAccountGestion(false);

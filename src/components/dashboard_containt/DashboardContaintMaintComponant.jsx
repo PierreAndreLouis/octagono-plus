@@ -60,6 +60,9 @@ function DashboardContaintMaintComponant({
     dashboardLoadingEffect,
     setDashboardLoadingEffect,
     gestionAccountData,
+    setListeGestionDesGroupe,
+    setListeGestionDesGroupeTitre,
+    fetchAllComptes,
   } = useContext(DataContext);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -69,8 +72,8 @@ function DashboardContaintMaintComponant({
     return Math.floor(now.getTime() / 1000); // secondes
   };
 
-  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
   const todayTimestamp = getTodayTimestamp();
+  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
@@ -241,7 +244,9 @@ function DashboardContaintMaintComponant({
       name: item?.description.slice(0, 7), // 4 premières lettres
       fullName: item?.description,
       accountID: item?.accountID,
-      start: parseInt(item?.lastStartTime),
+      // start: parseInt(item?.lastStartTime),
+      start: parseInt(item?.lastStartTime) - 4 * 60 * 60,
+      // start: 2 * 60 * 60 * 60 * 60 *60,
       stop: parseInt(item?.lastStopTime),
     }));
 
@@ -415,29 +420,33 @@ function DashboardContaintMaintComponant({
     }, 5000);
     const id = account;
     const pwd = password;
-    fetchAccountDevices(id, pwd).catch((err) => {
-      console.error("Erreur lors du chargement des devices :", err);
-      setError("Erreur lors du chargement des devices.");
-    });
+    const user = "admin";
 
-    fetchAccountUsers(id, pwd)
-      .then((users) => {
-        fetchUserDevices(id, users);
-        fetchUserGroupes(id, users);
-      })
-      .catch((err) => {
-        console.error(
-          "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-          err
-        );
-        setError("Erreur lors de la mise à jour des utilisateurs.");
-      });
+    fetchAllComptes(account, user, password);
+
+    // fetchAccountDevices(id, pwd).catch((err) => {
+    //   console.error("Erreur lors du chargement des devices :", err);
+    //   setError("Erreur lors du chargement des devices.");
+    // });
+
+    // fetchAccountUsers(id, pwd)
+    //   .then((users) => {
+    //     fetchUserDevices(id, users);
+    //     fetchUserGroupes(id, users);
+    //   })
+    //   .catch((err) => {
+    //     console.error(
+    //       "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+    //       err
+    //     );
+    //     setError("Erreur lors de la mise à jour des utilisateurs.");
+    //   });
   };
 
   return (
-    <div className="pb-6">
+    <div className="pb-6-">
       {/* statistic box */}
-      <div className="md:px-4 pt-3">
+      <div className="md:px-4-- pt-3--">
         <div className="w-full h-full bg-white rounded-lg p-4">
           <div className=" relative mb-4 ">
             <div className="">
@@ -457,7 +466,7 @@ function DashboardContaintMaintComponant({
                   <MdUpdate className="sm:text-[1.5rem] min-w-8 text-[1.6rem] mt-1-- sm:mt-0" />
                 </div>
               </div>
-              <p className="  font-semibold text-orange-500">
+              <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
                 <span className="mr-1  text-gray-600">Compte :</span>
                 {currentAccountSelected
                   ? currentAccountSelected?.description
@@ -466,14 +475,14 @@ function DashboardContaintMaintComponant({
             </div>
             <div
               onClick={() => {
-                setChooseOtherAccountGestion(true);
+                // setChooseOtherAccountGestion(true);
               }}
-              className="sm:border sm:hover:bg-gray-100 sm:bg-gray-50 cursor-pointer flex gap-3 items-center absolute right-0 py-2 px-4 rounded-lg -bottom-2 sm:bottom-0"
+              className="sm:border sm:hover:bg-gray-100 sm:bg-gray-50 cursor-pointer flex gap-1 sm:gap-3 items-center absolute right-0 py-2 sm:px-4 rounded-lg -bottom-2 sm:bottom-0"
             >
               <p className="font-semibold hidden sm:block">
-                Sélectionner un autre compte
+                Sélectionner un Groupe
               </p>
-              <p className="font-semibold sm:hidden">Autre compte</p>
+              <p className="font-semibold sm:hidden">Groupe</p>
               <FaChevronDown className="mt-1" />
             </div>
           </div>
@@ -482,7 +491,7 @@ function DashboardContaintMaintComponant({
           <div className="grid grid-cols-2 gap-1.5 md:gap-4 md:grid-cols-4 items-center justify-between">
             {/*  */}
             <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
-              <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-blue-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
+              <div className="border border-blue-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-blue-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
@@ -503,7 +512,7 @@ function DashboardContaintMaintComponant({
               </div>
             </div>
             <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
-              <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-green-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
+              <div className="border border-green-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-green-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
@@ -524,7 +533,7 @@ function DashboardContaintMaintComponant({
               </div>
             </div>
             <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
-              <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-orange-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
+              <div className="border border-orange-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-orange-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
@@ -545,7 +554,7 @@ function DashboardContaintMaintComponant({
               </div>
             </div>
             <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
-              <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-purple-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
+              <div className="border border-purple-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-purple-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
@@ -570,7 +579,7 @@ function DashboardContaintMaintComponant({
         </div>{" "}
       </div>
       {/*  */}
-      <div className="md:px-4 pt-4">
+      <div className="md:px-4-- pt-4">
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-3 items-stretch justify-center  gap-4 ">
           {/* Graphe de déplacement */}
@@ -849,6 +858,7 @@ function DashboardContaintMaintComponant({
                     onClick={() => {
                       setShowSelectedUserOptionsPopup(true);
                       setCurrentSelectedUserToConnect(user);
+                      console.log("user", user);
                       // setCurrentAccountSelected(account);
                       // setListeGestionDesVehicules(account?.accountDevices);
                       // setChooseOtherAccountGestion(false);
@@ -902,11 +912,22 @@ function DashboardContaintMaintComponant({
               <button
                 onClick={() => {
                   if (currentAccountSelected) {
-                    setListeGestionDesUsers(
-                      currentAccountSelected?.accountUsers
+                    setListeGestionDesGroupe(
+                      currentAccountSelected?.accountGroupes
                     );
+                    setListeGestionDesGroupeTitre("Tous les Groupe");
                   } else {
-                    setListeGestionDesUsers(accountUsers);
+                    // setListeGestionDesGroupe(accountGroupes);
+                    setListeGestionDesGroupe(
+                      Array.from(
+                        new Map(
+                          gestionAccountData
+                            .flatMap((account) => account.accountGroupes)
+                            .map((group) => [group.groupID, group])
+                        ).values()
+                      )
+                    );
+                    setListeGestionDesGroupeTitre("Tous les Groupe");
                   }
                   setDocumentationPage("Gestion_des_groupes");
                   scrollToTop();
@@ -938,7 +959,10 @@ function DashboardContaintMaintComponant({
                     key={index}
                     onClick={() => {
                       // setShowSelectedUserOptionsPopup(true);
-                      // setCurrentSelectedUserToConnect(user);
+                      // setTimeout(() => {
+                      //   setCurrentSelectedUserToConnect(user);
+                      //   console.log("user", user);
+                      // }, 1000);
                       // setCurrentAccountSelected(account);
                       // setListeGestionDesVehicules(account?.accountDevices);
                       // setChooseOtherAccountGestion(false);

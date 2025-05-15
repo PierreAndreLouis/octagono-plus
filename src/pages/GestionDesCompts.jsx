@@ -141,7 +141,7 @@ function GestionDesCompts({ setDocumentationPage }) {
                     key={index}
                     onClick={() => {
                       setCurrentAccountSelected(account);
-                      setListeGestionDesVehicules(account?.accountDevices);
+                      // setListeGestionDesVehicules(account?.accountDevices);
                       setShowAccountOptionsPopup(true);
                       setCurrentSelectedUserToConnect(null);
                     }}

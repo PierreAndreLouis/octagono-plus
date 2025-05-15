@@ -315,22 +315,6 @@ function CreateNewDeviceGestion({
         setIsPasswordConfirmed={setShowConfirmAddVéhiculePopup}
       />
 
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"succès ajout de véhicule"}
-      />
-
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"échec ajout de véhicule"}
-      />
-
       <div className="flex  w-full justify-center h-full  ">
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">

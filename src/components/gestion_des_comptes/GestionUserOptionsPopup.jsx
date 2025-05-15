@@ -199,9 +199,29 @@ function GestionUserOptionsPopup({
                 // to="/liste_des_vehicules"
                 onClick={() => {
                   setTimeout(() => {
-                    setListeGestionDesVehicules(
-                      currentSelectedUserToConnect?.userDevices
-                    );
+                    // setListeGestionDesVehicules(
+                    //   currentSelectedUserToConnect?.userDevices
+                    // );
+                    if (currentSelectedUserToConnect?.userDevices?.length > 0) {
+                      setListeGestionDesVehicules(
+                        currentSelectedUserToConnect?.userDevices
+                      );
+                    } else if (
+                      currentSelectedUserToConnect?.userGroupes?.length > 0
+                    ) {
+                      setListeGestionDesVehicules(
+                        currentSelectedUserToConnect?.userDevices
+                      );
+                    } else {
+                      setListeGestionDesVehicules(
+                        currentAccountSelected?.accountDevices
+                      );
+                    }
+
+                    // {currentSelectedUserToConnect?.userGroupes?.length > 0
+                    //       ? currentSelectedUserToConnect?.userDevices
+                    //       : currentAccountSelected?.accountDevices}
+
                     console.log(
                       "currentSelectedUserToConnect?.userDevices---------",
                       currentSelectedUserToConnect?.userDevices

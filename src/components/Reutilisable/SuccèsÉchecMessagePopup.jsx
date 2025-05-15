@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 function SuccèsÉchecMessagePopup({
   message,
-  véhiculeData,
   setMessage,
+  véhiculeData,
   composant_from,
 }) {
   let body_bg;
@@ -32,7 +32,7 @@ function SuccèsÉchecMessagePopup({
   return (
     <>
       {message && (
-        <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed z-[9999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <div
             className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
           >
@@ -97,6 +97,29 @@ function SuccèsÉchecMessagePopup({
 
                 {composant_from === "échec suppression du groupe" &&
                   "Échec de la suppression du groupe"}
+
+                {composant_from === "succès creation de nouveau compte" &&
+                  "Creation du compte avec succès"}
+                {composant_from === "échec de creation de nouveau compte" &&
+                  "Échec de creation du nouveau compte"}
+
+                {composant_from === "succès modification de nouveau compte" &&
+                  "Modification du compte avec succès"}
+
+                {composant_from === "échec de modification de nouveau compte" &&
+                  "Échec de la modification du nouveau compte"}
+
+                {composant_from === "succès creation nouveau user" &&
+                  "Creation de l'utilisateur avec succès"}
+
+                {composant_from === "échec creation nouveau user" &&
+                  "Échec de la creation de l'utilisateur"}
+
+                {composant_from === "succès modification du user" &&
+                  "Modification de l'utilisateur avec succès"}
+
+                {composant_from === "échec modification du user" &&
+                  "Échec de la modification de l'utilisateur"}
               </h3>
 
               {composant_from ===

@@ -172,7 +172,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
       )} */}
 
       {seConnecterAutreComptePopup && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
@@ -289,7 +289,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
         </div>
       )}
 
-      {editAccountGestion && (
+      {/* {editAccountGestion && (
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
           <form
             // onSubmit={handlePasswordCheck}
@@ -340,10 +340,10 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
             </div>
           </form>
         </div>
-      )}
+      )} */}
 
       {chooseOtherAccountGestion && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-40">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999]">
           <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[70vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
@@ -493,7 +493,9 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
           >
             <h3 className="w-full text-center font-semibold">
               {/* Compte: */}
-              <span>{currentAccountSelected?.description}</span>
+              <span>
+                {currentAccountSelected?.description || "Choisissez un compte"}
+              </span>
             </h3>
             <FaChevronDown />
           </div>
@@ -540,7 +542,10 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                         </p>
                         <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
                           {/* {geozone?.description} */}
-                          {user?.userGroupes?.length}
+                          {/* {user?.userGroupes?.length} --------- */}
+                          {user?.userGroupes?.length > 0
+                            ? user?.userGroupes?.length
+                            : "Tous"}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
@@ -548,7 +553,26 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                           Nombre d'Appareils :
                         </p>
                         <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                          {user?.userDevices?.length}
+                          {/* {user?.userDevices?.length} */}
+                          {/* {user?.userGroupes?.length > 0
+                            ? user?.userDevices?.length
+                            : currentAccountSelected?.accountDevices?.length} */}
+
+                          {/* {user?.userDevices?.length > 0
+                            ? user?.userDevices?.length
+                            : ""}
+                            
+                          {user?.userDevices?.length <= 0 &&
+                          user?.userGroupes?.length <= 0
+                            ? currentAccountSelected?.accountDevices
+                            : ""} */}
+                          {user?.userDevices?.length > 0
+                            ? user.userDevices.length
+                            : user?.userDevices?.length <= 0 &&
+                              user?.userGroupes?.length <= 0
+                            ? currentAccountSelected?.accountDevices?.length ??
+                              ""
+                            : ""}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">

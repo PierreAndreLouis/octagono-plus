@@ -35,6 +35,13 @@ const DataContextProvider = ({ children }) => {
   // });
   const [updateAuto, setupdateAuto] = useState(false);
 
+  const [showConfirmationMessagePopup, setShowConfirmationMessagePopup] =
+    useState(false);
+  const [confirmationMessagePopupTexte, setConfirmationMessagePopupTexte] =
+    useState(false);
+  const [confirmationMessagePopupName, setConfirmationMessagePopupName] =
+    useState(false);
+
   // Sauvegarde dans localStorage à chaque changement
   useEffect(() => {
     localStorage.setItem("updateAuto", JSON.stringify(updateAuto));
@@ -3990,7 +3997,7 @@ const DataContextProvider = ({ children }) => {
     // console.log("++++++++++++++++ Requête effectué: fetchVehicleDetails");
 
     // /////////
-
+    //  "2020-05-14 21:00:00"
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -5508,6 +5515,13 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
         setSuccessAddVéhiculePopup(true);
+        
+  setShowConfirmationMessagePopup(true);
+  setConfirmationMessagePopupTexte("Vous avez ajouté l'appareil avec succès");
+  setConfirmationMessagePopupName(description);
+
+
+
         setError("");
         fetchVehicleData();
         setCreateVéhiculeLoading(false);
@@ -5858,6 +5872,10 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  const [successCreateUserGestionPopup, setSuccessCreateUserGestionPopup] =
+    useState(false);
+  const [echecCreateUserGestionPopup, setEchecCreateUserGestionPopup] =
+    useState(false);
   const createNewUserEnGestionAccount = async (
     accountID,
     user,
@@ -5915,7 +5933,7 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
+        setSuccessCreateUserGestionPopup(true);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
         const id = accountID;
@@ -5998,7 +6016,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+        setEchecCreateUserGestionPopup(true);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6007,11 +6025,17 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+      setEchecCreateUserGestionPopup(true);
       setCreateVéhiculeLoading(false);
     }
   };
 
+  const [
+    successCreateAccountGestionPoupu,
+    setSuccessCreateAccountGestionPoupu,
+  ] = useState(false);
+  const [echecCreateAccountGestionPoupu, setEchecCreateAccountGestionPoupu] =
+    useState(false);
   const createAccountEnGestionAccountFonction = async (
     accountID,
     user,
@@ -6069,7 +6093,6 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
         // const id = accountID;
@@ -6077,6 +6100,7 @@ const DataContextProvider = ({ children }) => {
         const fetchAllOtherData = false;
         fetchAllComptes(accountID, user, password, fetchAllOtherData);
 
+        setSuccessCreateAccountGestionPoupu(true);
         // fetchAccountUsers(id, pwd)
         //   .then((users) => {
         //     fetchUserDevices(id, users);
@@ -6154,7 +6178,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+        setEchecCreateAccountGestionPoupu(true);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6163,11 +6187,17 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+      setEchecCreateAccountGestionPoupu(true);
       setCreateVéhiculeLoading(false);
     }
   };
 
+  const [
+    successModifyAccountGestionPopup,
+    setSuccessModifyAccountGestionPopup,
+  ] = useState(false);
+  const [echecModifyAccountGestionPopup, setEchecModifyAccountGestionPopup] =
+    useState(false);
   const modifyAccountEnGestionAccountFonction = async (
     accountID,
     user,
@@ -6225,7 +6255,7 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
+        setSuccessModifyAccountGestionPopup(true);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
         // const id = accountID;
@@ -6328,7 +6358,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+        setEchecModifyAccountGestionPopup(true);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6337,11 +6367,15 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+      setEchecModifyAccountGestionPopup(true);
       setCreateVéhiculeLoading(false);
     }
   };
 
+  const [successModifyUserGestionPopup, setSuccessModifyUserGestionPopup] =
+    useState(false);
+  const [echecModifyUserGestionPopup, setEchecModifyUserGestionPopup] =
+    useState(false);
   const ModifyUserEnGestionAccountFonction = async (
     accountID,
     user,
@@ -6399,7 +6433,7 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
+        setSuccessModifyUserGestionPopup(true);
         setError("");
         console.log("User modifier avec success ++>>>>>>>>>>>>>>.");
         const id = accountID;
@@ -6505,7 +6539,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+        setEchecModifyUserGestionPopup(true);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6514,7 +6548,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+      setEchecModifyUserGestionPopup(true);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -8119,22 +8153,22 @@ const DataContextProvider = ({ children }) => {
   }, [location]);
 
   const backToPagePrecedent = () => {
-    // const storedHistory =
-    //   JSON.parse(localStorage.getItem("customHistory")) || [];
-    // if (storedHistory.length > 1) {
-    //   storedHistory.pop(); // Retire la page actuelle
-    //   const lastPath = storedHistory[storedHistory.length - 1];
-    //   // Mets à jour les données AVANT de rediriger
-    //   localStorage.setItem("customHistory", JSON.stringify(storedHistory));
-    //   sessionStorage.setItem("isGoingBack", "true");
-    //   console.log("Navigation vers :", lastPath);
-    //   // Petite astuce : on force une redirection propre
-    //   setTimeout(() => {
-    //     navigate(lastPath);
-    //   }, 0); // pour que sessionStorage soit bien pris en compte avant le render
-    // } else {
-    //   navigate("/home");
-    // }
+    const storedHistory =
+      JSON.parse(localStorage.getItem("customHistory")) || [];
+    if (storedHistory.length > 1) {
+      storedHistory.pop(); // Retire la page actuelle
+      const lastPath = storedHistory[storedHistory.length - 1];
+      // Mets à jour les données AVANT de rediriger
+      localStorage.setItem("customHistory", JSON.stringify(storedHistory));
+      sessionStorage.setItem("isGoingBack", "true");
+      console.log("Navigation vers :", lastPath);
+      // Petite astuce : on force une redirection propre
+      setTimeout(() => {
+        navigate(lastPath);
+      }, 0); // pour que sessionStorage soit bien pris en compte avant le render
+    } else {
+      navigate("/home");
+    }
   };
 
   // backToPagePrecedent
@@ -8413,6 +8447,30 @@ const DataContextProvider = ({ children }) => {
         fetchUserGroupes,
         dashboardLoadingEffect,
         setDashboardLoadingEffect,
+
+        successCreateAccountGestionPoupu,
+        setSuccessCreateAccountGestionPoupu,
+        echecCreateAccountGestionPoupu,
+        setEchecCreateAccountGestionPoupu,
+        successModifyAccountGestionPopup,
+        setSuccessModifyAccountGestionPopup,
+        echecModifyAccountGestionPopup,
+        setEchecModifyAccountGestionPopup,
+        successCreateUserGestionPopup,
+        setSuccessCreateUserGestionPopup,
+        echecCreateUserGestionPopup,
+        setEchecCreateUserGestionPopup,
+        successModifyUserGestionPopup,
+        setSuccessModifyUserGestionPopup,
+        echecModifyUserGestionPopup,
+        setEchecModifyUserGestionPopup,
+
+        showConfirmationMessagePopup,
+        setShowConfirmationMessagePopup,
+        confirmationMessagePopupTexte,
+        setConfirmationMessagePopupTexte,
+        confirmationMessagePopupName,
+        setConfirmationMessagePopupName,
       }}
     >
       {children}

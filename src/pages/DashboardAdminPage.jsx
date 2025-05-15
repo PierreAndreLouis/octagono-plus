@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import {
   IoCarSportOutline,
@@ -27,6 +27,7 @@ import {
 } from "recharts";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import {
+  FaArrowLeft,
   FaCar,
   FaChevronDown,
   FaSearch,
@@ -50,6 +51,7 @@ import ModifyDeviceGestion from "../components/gestion_des_comptes/ModifyDeviceG
 import ChooseOtherAccountDashboard from "../components/dashboard_containt/ChooseOtherAccountDashboard";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
 import Logout from "../components/login/Logout";
+import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function DashboardAdminPage() {
   const {
@@ -73,6 +75,26 @@ function DashboardAdminPage() {
     dashboardLoadingEffect,
     setDashboardLoadingEffect,
     TestDeRequetteDevices,
+    successCreateAccountGestionPoupu,
+    setSuccessCreateAccountGestionPoupu,
+    echecCreateAccountGestionPoupu,
+    setEchecCreateAccountGestionPoupu,
+    successModifyAccountGestionPopup,
+    setSuccessModifyAccountGestionPopup,
+    echecModifyAccountGestionPopup,
+    setEchecModifyAccountGestionPopup,
+    successCreateUserGestionPopup,
+    setSuccessCreateUserGestionPopup,
+    echecCreateUserGestionPopup,
+    setEchecCreateUserGestionPopup,
+    successModifyUserGestionPopup,
+    setSuccessModifyUserGestionPopup,
+    echecModifyUserGestionPopup,
+    setEchecModifyUserGestionPopup,
+    successAddVéhiculePopup,
+    setSuccessAddVéhiculePopup,
+    errorAddVéhiculePopup,
+    setErrorAddVéhiculePopup,
   } = useContext(DataContext);
 
   // Données des véhicules avec heures différentes
@@ -315,6 +337,37 @@ function DashboardAdminPage() {
 
   const [logOutPopup, setLogOutPopup] = useState(false);
 
+  /////////////////////////////////////////////////////////////////////////////
+
+  // Met à jour l'historique dans localStorage à chaque changement de page
+  useEffect(() => {
+    const storedHistory =
+      JSON.parse(localStorage.getItem("customHistory")) || [];
+
+    // Évite les doublons consécutifs dans l'historique
+    if (storedHistory[storedHistory.length - 1] !== documentationPage) {
+      storedHistory.push(documentationPage);
+      localStorage.setItem("customHistory", JSON.stringify(storedHistory));
+    }
+  }, [documentationPage]);
+
+  // Fonction pour revenir à la page précédente
+  const backToPagePrecedent = () => {
+    const storedHistory =
+      JSON.parse(localStorage.getItem("customHistory")) || [];
+
+    if (storedHistory.length > 1) {
+      storedHistory.pop(); // Enlève la page actuelle
+      const previousPage = storedHistory[storedHistory.length - 1];
+      localStorage.setItem("customHistory", JSON.stringify(storedHistory));
+      setDocumentationPage(previousPage);
+    } else {
+      // Pas d'historique, on revient au fallback "Dashboard"
+      setDocumentationPage("Dashboard");
+      localStorage.setItem("customHistory", JSON.stringify(["Dashboard"]));
+    }
+  };
+
   return (
     <div className="transition-all bg-gray-100">
       <ChooseOtherAccountDashboard
@@ -324,10 +377,82 @@ function DashboardAdminPage() {
         setSearchInputTerm={setSearchInputTerm}
         filterGestionAccountData={filterGestionAccountData}
       />
-      <GestionUserOptionsPopup
-        setDocumentationPage={setDocumentationPage}
-        // setShowModifyUserPage={setShowModifyUserPage}
+      <SuccèsÉchecMessagePopup
+        message={successCreateAccountGestionPoupu}
+        setMessage={setSuccessCreateAccountGestionPoupu}
+        véhiculeData={null}
+        composant_from={"succès creation de nouveau compte"}
       />
+      <SuccèsÉchecMessagePopup
+        message={echecCreateAccountGestionPoupu}
+        setMessage={setEchecCreateAccountGestionPoupu}
+        véhiculeData={null}
+        composant_from={"échec de creation de nouveau compte"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={successModifyAccountGestionPopup}
+        setMessage={setSuccessModifyAccountGestionPopup}
+        véhiculeData={null}
+        composant_from={"succès modification de nouveau compte"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={echecModifyAccountGestionPopup}
+        setMessage={setEchecModifyAccountGestionPopup}
+        véhiculeData={null}
+        composant_from={"échec de modification de nouveau compte"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={successCreateUserGestionPopup}
+        setMessage={setSuccessCreateUserGestionPopup}
+        véhiculeData={null}
+        composant_from={"succès creation nouveau user"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={echecCreateUserGestionPopup}
+        setMessage={setEchecCreateUserGestionPopup}
+        véhiculeData={null}
+        composant_from={"échec creation nouveau user"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={successModifyUserGestionPopup}
+        setMessage={setSuccessModifyUserGestionPopup}
+        véhiculeData={null}
+        composant_from={"succès modification du user"}
+      />
+      <SuccèsÉchecMessagePopup
+        message={echecModifyUserGestionPopup}
+        setMessage={setEchecModifyUserGestionPopup}
+        véhiculeData={null}
+        composant_from={"échec modification du user"}
+      />
+      {/* Popup pour Message de succès */}
+      <SuccèsÉchecMessagePopup
+        message={successAddVéhiculePopup}
+        setMessage={setSuccessAddVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"succès ajout de véhicule"}
+      />
+      {/* Popup pour Message de échec */}
+      <SuccèsÉchecMessagePopup
+        message={errorAddVéhiculePopup}
+        setMessage={setErrorAddVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"échec ajout de véhicule"}
+      />
+      {/* Popup pour Message de succès */}
+      {/* <SuccèsÉchecMessagePopup
+        message={successAddVéhiculePopup}
+        setMessage={setSuccessAddVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"succès ajout de véhicule"}
+      /> */}
+      {/* Popup pour Message de échec */}
+      {/* <SuccèsÉchecMessagePopup
+        message={errorAddVéhiculePopup}
+        setMessage={setErrorAddVéhiculePopup}
+        véhiculeData={null}
+        composant_from={"échec ajout de véhicule"}
+      /> */}
       {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
       <header className="fixed z-[9999] top-0 left-0 right-0 bg-white">
         <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
@@ -346,26 +471,25 @@ function DashboardAdminPage() {
           <div className="flex gap-4 items-center">
             <div
               onClick={() => {
-                setReadDocumentationSideBar(!readDocumentationSideBar);
-              }}
-              className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
-            >
-              <IoMenu className="text-[1.6rem] min-w-[1.5rem] text-orange-600" />
-              {/* <p className="text-[1rem] font-semibold md:text-[1.1rem]">Menu</p> */}
-            </div>
-            <div
-              onClick={() => {
                 setChooseOtherAccountGestion(true);
               }}
               className="flex cursor-pointer gap-2 items-center"
             >
               <FaUserCircle className="text-[1.4rem] text-gray-600" />
               <div className=" text-gray-800 flex flex-col gap-0">
-                <p className="font-semibold text-gray-600">
+                <p className="font-semibold max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
                   {currentAccountSelected?.description || "Tous les comptes"}
                 </p>
               </div>
               <FaChevronDown className="mt-1" />
+            </div>
+            <div
+              onClick={() => {
+                setReadDocumentationSideBar(!readDocumentationSideBar);
+              }}
+              className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
+            >
+              <IoMenu className="text-[1.6rem] min-w-[1.5rem] text-orange-600" />
             </div>
           </div>
         </div>
@@ -381,8 +505,18 @@ function DashboardAdminPage() {
             onClick={() => {
               setReadDocumentationSideBar(false);
             }}
-            className="text-3xl absolute top-[7.5rem]- top-3 right-5 lg:hidden-- text-red-600 cursor-pointer"
+            className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
           />
+          {documentationPage !== "Dashboard" && (
+            <button
+              onClick={backToPagePrecedent}
+              // disabled={historyRef.current.length === 0}
+              className="text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute top-[.5rem] md:top-[2rem] -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer"
+            >
+              <FaArrowLeft />
+              <span className="text-[1rem]">Retour</span>
+            </button>
+          )}
           {/*  */}
           {/*  */}
           {/*  */}
@@ -401,18 +535,13 @@ function DashboardAdminPage() {
               <div
                 onClick={() => {
                   setChooseOtherAccountGestion(true);
-                  //   scrollToTop();
-                  //   setDocumentationPage("Dashboard");
-                  //   closeSideBar();
                 }}
-                className={`${
-                  documentationPage === "Dashboard-" ? "bg-orange-50" : ""
-                } flex items-center justify-between ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                className={`$ flex items-center   justify-between  gap-2  border-b border-b-gray-200 py-4  cursor-pointer px-3`}
               >
                 <FaUserCircle className="text-[3rem] min-w-[1.5rem] text-gray-500" />
                 <div className="w-full">
                   <p className="text-gray-600 font-semibold">Compte Actuel</p>
-                  <p className="text-orange-500">
+                  <p className="text-orange-500 max-w-[10rem] whitespace-nowrap text-ellipsis overflow-hidden  ">
                     {currentAccountSelected
                       ? currentAccountSelected?.description
                       : "Tous les comptes"}
@@ -467,6 +596,7 @@ function DashboardAdminPage() {
               <div
                 onClick={() => {
                   if (currentAccountSelected) {
+                    console.log(currentAccountSelected?.accountUsers);
                     setListeGestionDesUsers(
                       currentAccountSelected?.accountUsers
                     );
@@ -490,7 +620,24 @@ function DashboardAdminPage() {
                             )
                       ),
                     ]);
-
+                    console.log([
+                      ...Array.from(
+                        new Map(
+                          gestionAccountData
+                            .flatMap((account) => account.accountUsers || [])
+                            .map((user) => [user.userID, user])
+                        ).values()
+                      ),
+                      ...accountUsers.filter(
+                        (user) =>
+                          !gestionAccountData
+                            .flatMap((account) => account.accountUsers || [])
+                            .some(
+                              (existingUser) =>
+                                existingUser.userID === user.userID
+                            )
+                      ),
+                    ]);
                     // setListeGestionDesUsers(
                     //   Array.from(
                     //     new Map(
@@ -649,9 +796,12 @@ function DashboardAdminPage() {
         ></div>
 
         <div
-          className="relative w-full pb-4 pt-4 rounded-lg bg-gray-100
+          className="relative w-full pb-4 mb-10 pt-4 rounded-lg bg-gray-100
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
+          <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
+            15/05/2025 _ 1
+          </p>
           {/* dashboardLoadingEffect */}
           {dashboardLoadingEffect && (
             <div className="fixed  shadow-lg shadow-black/10 max- w-[10rem]  rounded-full max- h-[10rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-gray-200/50">
