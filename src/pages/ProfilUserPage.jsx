@@ -74,13 +74,8 @@ function ProfilUserPage() {
 
   return (
     <div className="px-4 pb-20 min-h-screen">
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={changeTimeZoneMessage}
-        setMessage={setChangeTimeZoneMessage}
-        véhiculeData={null}
-        composant_from={"succès modification timezone"}
-      />
+ 
+ 
 
       {/* Log Out popup */}
       {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />}

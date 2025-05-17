@@ -239,37 +239,9 @@ function Modifier() {
         setIsPasswordConfirmed={setshowConfirmDeletePupup}
       />
 
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successModifierVéhiculePopup}
-        setMessage={setSuccessModifierVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"succès modification de véhicule"}
-      />
+  
 
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successDeleteVéhiculePopup}
-        setMessage={setSuccessDeleteVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"succès suppression de véhicule"}
-      />
-
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorModifierVéhiculePopup}
-        setMessage={setErrorModifierVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"échec modification de véhicule"}
-      />
-
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorDeleteVéhiculePopup}
-        setMessage={setErrorDeleteVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"échec suppression de véhicule"}
-      />
+    
 
       <div className="flex w-full justify-center h-full mt-16 pb-2 md:mt-20">
         <div className="w-full flex justify-center">

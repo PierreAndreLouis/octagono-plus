@@ -908,34 +908,7 @@ function MapComponent({ mapType }) {
             </div>
           )}
 
-          {/* Popup pour Message de échec */}
-          <SuccèsÉchecMessagePopup
-            message={errorCreateGeofencePopup}
-            setMessage={setErrorCreateGeofencePopup}
-            véhiculeData={null}
-            composant_from={"échec de la creation du geozone"}
-          />
-
-          <SuccèsÉchecMessagePopup
-            message={succesCreateGeofencePopup}
-            setMessage={setSuccesCreateGeofencePopup}
-            véhiculeData={null}
-            composant_from={"succès de creation du geozone"}
-          />
-
-          <SuccèsÉchecMessagePopup
-            message={succesModifierGeofencePopup}
-            setMessage={setSuccesModifierGeofencePopup}
-            véhiculeData={null}
-            composant_from={"succès de modification du geozone"}
-          />
-
-          <SuccèsÉchecMessagePopup
-            message={errorModifierGeofencePopup}
-            setMessage={setErrorModifierGeofencePopup}
-            véhiculeData={null}
-            composant_from={"échec de la modification du geozone"}
-          />
+       
 
           <div className="mx-auto relative   min-w-[90vw]-- w-full max-w-[40rem] rounded-lg p-4 bg-white">
             <div className="flex justify-between items-center gap-2">

@@ -92,7 +92,7 @@ function DashboardAdminPage() {
     echecModifyUserGestionPopup,
     setEchecModifyUserGestionPopup,
     successAddVéhiculePopup,
-    setSuccessAddVéhiculePopup,
+
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
   } = useContext(DataContext);
@@ -377,82 +377,6 @@ function DashboardAdminPage() {
         setSearchInputTerm={setSearchInputTerm}
         filterGestionAccountData={filterGestionAccountData}
       />
-      <SuccèsÉchecMessagePopup
-        message={successCreateAccountGestionPoupu}
-        setMessage={setSuccessCreateAccountGestionPoupu}
-        véhiculeData={null}
-        composant_from={"succès creation de nouveau compte"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={echecCreateAccountGestionPoupu}
-        setMessage={setEchecCreateAccountGestionPoupu}
-        véhiculeData={null}
-        composant_from={"échec de creation de nouveau compte"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={successModifyAccountGestionPopup}
-        setMessage={setSuccessModifyAccountGestionPopup}
-        véhiculeData={null}
-        composant_from={"succès modification de nouveau compte"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={echecModifyAccountGestionPopup}
-        setMessage={setEchecModifyAccountGestionPopup}
-        véhiculeData={null}
-        composant_from={"échec de modification de nouveau compte"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={successCreateUserGestionPopup}
-        setMessage={setSuccessCreateUserGestionPopup}
-        véhiculeData={null}
-        composant_from={"succès creation nouveau user"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={echecCreateUserGestionPopup}
-        setMessage={setEchecCreateUserGestionPopup}
-        véhiculeData={null}
-        composant_from={"échec creation nouveau user"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={successModifyUserGestionPopup}
-        setMessage={setSuccessModifyUserGestionPopup}
-        véhiculeData={null}
-        composant_from={"succès modification du user"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={echecModifyUserGestionPopup}
-        setMessage={setEchecModifyUserGestionPopup}
-        véhiculeData={null}
-        composant_from={"échec modification du user"}
-      />
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"succès ajout de véhicule"}
-      />
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"échec ajout de véhicule"}
-      />
-      {/* Popup pour Message de succès */}
-      {/* <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"succès ajout de véhicule"}
-      /> */}
-      {/* Popup pour Message de échec */}
-      {/* <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"échec ajout de véhicule"}
-      /> */}
       {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
       <header className="fixed z-[9999] top-0 left-0 right-0 bg-white">
         <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
@@ -800,7 +724,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            15/05/2025 _ 1
+            17/05/2025 _ 1
           </p>
           {/* dashboardLoadingEffect */}
           {dashboardLoadingEffect && (

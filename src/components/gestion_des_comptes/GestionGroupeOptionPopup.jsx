@@ -136,7 +136,7 @@ function GestionGroupeOptionPopup({
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
                 <h2 className="font-semibold text-red-900 dark:text-red-50">
-                  Supprimer l'utilisateur
+                  Supprimer le groupe
                 </h2>
               </div>
               {/* callError, setCallError, lancerAppel, */}

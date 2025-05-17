@@ -115,9 +115,9 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
       console.log("Permission de supprimer avec passowrd: ", inputPassword);
       deleteVehicleEnGestionAccount(
         currentSelectedDeviceGestion?.deviceID,
-        currentSelectedUserToConnect?.accountID,
-        currentSelectedUserToConnect?.userID,
-        currentSelectedUserToConnect?.password
+        currentAccountSelected?.accountID,
+        "admin",
+        currentAccountSelected?.password
       );
       setDeleteAccountPopup(false);
     } else {
@@ -162,7 +162,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
 
       {deleteAccountPopup && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed  z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={deleteVehicleFonction}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"

@@ -38,9 +38,9 @@ const DataContextProvider = ({ children }) => {
   const [showConfirmationMessagePopup, setShowConfirmationMessagePopup] =
     useState(false);
   const [confirmationMessagePopupTexte, setConfirmationMessagePopupTexte] =
-    useState(false);
+    useState("");
   const [confirmationMessagePopupName, setConfirmationMessagePopupName] =
-    useState(false);
+    useState("");
 
   // Sauvegarde dans localStorage à chaque changement
   useEffect(() => {
@@ -154,6 +154,9 @@ const DataContextProvider = ({ children }) => {
         compteMisAJour
       );
       setCurrentAccountSelected(compteMisAJour);
+      setListeGestionDesUsers(compteMisAJour?.accountUsers);
+      setListeGestionDesGroupe(compteMisAJour?.accountGroupes);
+      setListeGestionDesVehicules(compteMisAJour?.accountDevices);
     } else {
       console.warn("❌ Aucun compte trouvé avec cet ID.");
     }
@@ -167,6 +170,26 @@ const DataContextProvider = ({ children }) => {
     userGroupes,
     gestionAccountData,
   ]);
+
+  // setListeGestionDesUsers
+  // useEffect(() => {
+  //   if ( !currentAccountSelected) return;
+
+  //   const utilisateurActuel = currentAccountSelected?.accountUsers?.find(
+  //     (user) => user?.userID === currentSelectedUserToConnect?.userID
+  //   );
+
+  //   if (utilisateurActuel) {
+  //     console.log(
+  //       "📥 Mise à jour de currentSelectedUserToConnect avec :",
+  //       utilisateurActuel
+  //     );
+  //     setCurrentSelectedUserToConnect(utilisateurActuel);
+  //     setListeGestionDesUsers(utilisateurActuel?.accountUsers);
+  //   } else {
+  //     console.warn("❌ Utilisateur non trouvé dans le compte sélectionné.");
+  //   }
+  // }, [accountUsers, currentAccountSelected, listeGestionDesUsers, gestionAccountData]);
 
   // Quand currentAccountSelected est mis à jour, mettre à jour l'utilisateur sélectionné
   useEffect(() => {
@@ -188,13 +211,13 @@ const DataContextProvider = ({ children }) => {
   }, [currentAccountSelected]);
 
   // Quand currentSelectedUserToConnect est mis à jour, on met à jour la liste des véhicules
-  useEffect(() => {
-    if (!currentSelectedUserToConnect) return;
+  // useEffect(() => {
+  //   if (!currentSelectedUserToConnect) return;
 
-    const vehicules = currentSelectedUserToConnect?.userDevices || [];
-    console.log("📥 Mise à jour de listeGestionDesVehicules avec :", vehicules);
-    setListeGestionDesVehicules(vehicules);
-  }, [currentSelectedUserToConnect]);
+  //   const vehicules = currentSelectedUserToConnect?.userDevices || [];
+  //   console.log("📥 Mise à jour de listeGestionDesVehicules avec :", vehicules);
+  //   setListeGestionDesVehicules(vehicules);
+  // }, [currentSelectedUserToConnect]);
 
   const [dashboardLoadingEffect, setDashboardLoadingEffect] = useState(false);
 
@@ -598,28 +621,6 @@ const DataContextProvider = ({ children }) => {
 
   // to display error for creating véhicule or login
   const [error, setError] = useState(null);
-
-  // Pour afficher le popup succès apres ajoute d'un nouveau appareil
-  const [successAddVéhiculePopup, setSuccessAddVéhiculePopup] = useState(false);
-
-  // Pour afficher un popup d'erreur lors de L’échec de l'ajout d'un appareil
-  const [errorAddVéhiculePopup, setErrorAddVéhiculePopup] = useState(false);
-
-  // Pour afficher un popup succès apres ajoute d'un nouveau appareil
-  const [successModifierVéhiculePopup, setSuccessModifierVéhiculePopup] =
-    useState(false);
-
-  //  Pour afficher un popup d'erreur apres échec de modification d'un appareil
-  const [errorModifierVéhiculePopup, setErrorModifierVéhiculePopup] =
-    useState(false);
-
-  // Pour afficher un popup succès apres suppression d'un appareil
-  const [successDeleteVéhiculePopup, setSuccessDeleteVéhiculePopup] =
-    useState(false);
-
-  // Pour ajouter un popup échec apres échec de suppression d'un appareil
-  const [errorDeleteVéhiculePopup, setErrorDeleteVéhiculePopup] =
-    useState(false);
 
   // to show the confirm password popup in user page
   const [showChangePasswordPopup, setShowChangePasswordPopup] = useState(false);
@@ -3463,14 +3464,23 @@ const DataContextProvider = ({ children }) => {
         ]);
 
         setCreateGeofenceLoading(false);
-        setErrorCreateGeofencePopup(false);
-        setSuccesCreateGeofencePopup(true);
+        // setErrorCreateGeofencePopup(false);
+        // setSuccesCreateGeofencePopup(true);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Vous avez ajoutee le geofence avec succès."
+        );
+        setConfirmationMessagePopupName(description);
+
         GeofenceDataFonction();
         navigate("/gestion_geofences?tab=geozone");
       } else {
         console.log("Error occurred while creating Geofence...");
         setCreateGeofenceLoading(false);
-        setErrorCreateGeofencePopup(true);
+        // setErrorCreateGeofencePopup(true);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte("Échec de l'ajout du Geofence");
+        setConfirmationMessagePopupName(description);
 
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -3481,7 +3491,10 @@ const DataContextProvider = ({ children }) => {
       setError("Échec de la création du Geofence.");
       console.error("Échec de la création du Geofence", error);
       setCreateGeofenceLoading(false);
-      setErrorCreateGeofencePopup(true);
+      // setErrorCreateGeofencePopup(true);
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte("Échec de l'ajout du Geofence");
+      setConfirmationMessagePopupName(description);
     }
   };
 
@@ -3607,7 +3620,13 @@ const DataContextProvider = ({ children }) => {
           )
         );
 
-        setSuccesModifierGeofencePopup(true);
+        // setSuccesModifierGeofencePopup(true);
+        // succès  Échec
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Modification du geofence avec success"
+        );
+        setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
         setErrorModifierGeofencePopup(false);
         GeofenceDataFonction();
@@ -3621,13 +3640,23 @@ const DataContextProvider = ({ children }) => {
           response.statusText
         );
         console.log("Erreur lors de la modification du geofence");
-        setErrorModifierGeofencePopup(true);
+        // setErrorModifierGeofencePopup(true);
+        // succès  Échec
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Échec de la modification du geofence"
+        );
+        setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
         handleUserError(xmlDoc);
       }
     } catch (error) {
       console.log("Erreur lors de la modification du geofence");
-      setErrorModifierGeofencePopup(true);
+      // setErrorModifierGeofencePopup(true);
+      // succès  Échec
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte("Échec de la modification du geofence");
+      setConfirmationMessagePopupName(description);
       setCreateGeofenceLoading(false);
     }
   };
@@ -3695,7 +3724,14 @@ const DataContextProvider = ({ children }) => {
           geofences.filter((geofence) => geofence?.geozoneID !== geozoneID)
         );
 
-        setSuccesDeleteGeofencePopup(true);
+        // setSuccesDeleteGeofencePopup(true);
+
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Suppression du geofence avec succès "
+        );
+        setConfirmationMessagePopupName("");
+
         setCreateGeofenceLoading(false);
         setErrorDeleteGeofencePopup(false);
         // GeofenceDataFonction();
@@ -3739,12 +3775,19 @@ const DataContextProvider = ({ children }) => {
           response.statusText
         );
         console.log("Erreur lors de la Suppression du geofence");
-        setErrorDeleteGeofencePopup(true);
+        // setErrorDeleteGeofencePopup(true);
+        // succès  Échec
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte("Échec de la Suppression du geofence");
+        setConfirmationMessagePopupName("");
         setCreateGeofenceLoading(false);
       }
     } catch (error) {
       console.log("Erreur lors de la Suppression du geofence");
-      setErrorDeleteGeofencePopup(true);
+      // setErrorDeleteGeofencePopup(true);
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte("Échec de la Suppression du geofence");
+      setConfirmationMessagePopupName("");
       setCreateGeofenceLoading(false);
       handleUserError(xmlDoc);
     }
@@ -3837,6 +3880,12 @@ const DataContextProvider = ({ children }) => {
         // setCreateGeofenceLoading(false);
         // setErrorModifierGeofencePopup(false);
 
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Modification du geofence avec succès "
+        );
+        setConfirmationMessagePopupName(description);
+
         GeofenceDataFonction();
 
         navigate("/gestion_geofences?tab=geozone");
@@ -3858,7 +3907,12 @@ const DataContextProvider = ({ children }) => {
             isActiveValue === 1 ? "l'activation" : "la desactivation"
           } du geofence:`
         );
-        setErrorModifierGeofencePopup(true);
+        // setErrorModifierGeofencePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Échec de la Modification du geofence  "
+        );
+        setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
         handleUserError(xmlDoc);
       }
@@ -3868,7 +3922,12 @@ const DataContextProvider = ({ children }) => {
           isActiveValue === 1 ? "l'activation" : "la desactivation"
         } du geofence:`
       );
-      setErrorModifierGeofencePopup(true);
+      // setErrorModifierGeofencePopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        "Échec de la Modification du geofence  "
+      );
+      setConfirmationMessagePopupName(description);
       setCreateGeofenceLoading(false);
     }
   };
@@ -5514,13 +5573,12 @@ const DataContextProvider = ({ children }) => {
 
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
-        
-  setShowConfirmationMessagePopup(true);
-  setConfirmationMessagePopupTexte("Vous avez ajouté l'appareil avec succès");
-  setConfirmationMessagePopupName(description);
 
-
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Vous avez ajouté l'appareil avec succès"
+        );
+        setConfirmationMessagePopupName(description);
 
         setError("");
         fetchVehicleData();
@@ -5534,7 +5592,12 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+
+        setShowConfirmationMessagePopup(true);
+        //  succès
+        setConfirmationMessagePopupTexte("Échec de l'ajout du véhicule.");
+        setConfirmationMessagePopupName(description);
+
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -5543,7 +5606,12 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+
+      setShowConfirmationMessagePopup(true);
+      //  succès
+      setConfirmationMessagePopupTexte("Échec de l'ajout du véhicule.");
+      setConfirmationMessagePopupName(description);
+
       setCreateVéhiculeLoading(false);
     }
   };
@@ -5606,11 +5674,25 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessModifierVéhiculePopup(true);
+
         setError("");
         console.log("Groupe ajouter avec success");
 
         setAccountGroupes((prevGroupes) =>
+          prevGroupes.map((groupe) =>
+            groupe.groupID === groupID
+              ? {
+                  ...groupe,
+                  displayName,
+                  description,
+                  notes,
+                  workOrderID,
+                }
+              : groupe
+          )
+        );
+
+        setListeGestionDesGroupe((prevGroupes) =>
           prevGroupes.map((groupe) =>
             groupe.groupID === groupID
               ? {
@@ -5657,6 +5739,10 @@ const DataContextProvider = ({ children }) => {
             deviceNotSelectionnes
           );
         }, 6000);
+
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Creation du groupe avec  succès ");
+        setConfirmationMessagePopupName(description);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5665,7 +5751,10 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorDeleteVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de la Creation du groupe  ");
+        setConfirmationMessagePopupName(description);
+
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -5674,7 +5763,9 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorDeleteVéhiculePopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de la Creation du groupe  ");
+      setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -5721,7 +5812,6 @@ const DataContextProvider = ({ children }) => {
       setError("");
       console.log(result);
       if (result === "success") {
-        setSuccessDeleteVéhiculePopup(true);
         setError("");
         console.log("Groupe supprimer avec success");
 
@@ -5729,7 +5819,15 @@ const DataContextProvider = ({ children }) => {
           prevGroupes.filter((groupe) => groupe.groupID !== groupID)
         );
 
+        setListeGestionDesGroupe((prevGroupes) =>
+          prevGroupes.filter((groupe) => groupe.groupID !== groupID)
+        );
+
         setCreateVéhiculeLoading(false);
+
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Suppression du groupe avec  succès ");
+        setConfirmationMessagePopupName(description);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5738,7 +5836,10 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorDeleteVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
+        setConfirmationMessagePopupName(description);
+
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -5747,8 +5848,11 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorDeleteVéhiculePopup(true);
+
       setCreateVéhiculeLoading(false);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
+      setConfirmationMessagePopupName(description);
     }
   };
 
@@ -5808,7 +5912,12 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Creation du nouveau groupe avec  succès "
+        );
+        setConfirmationMessagePopupName(description);
+
         setError("");
         console.log("Groupe ajouter avec success");
         const id = accountID;
@@ -5856,9 +5965,12 @@ const DataContextProvider = ({ children }) => {
         setError(errorMessage || "Erreur lors de la création du véhicule.");
 
         handleUserError(xmlDoc);
-
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de la Creation du  groupe  ");
+        setConfirmationMessagePopupName(description);
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+
+        //////////////////
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -5867,7 +5979,11 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de la Creation du  groupe  ");
+      setConfirmationMessagePopupName(description);
+      //////////////////
       setCreateVéhiculeLoading(false);
     }
   };
@@ -5933,7 +6049,12 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessCreateUserGestionPopup(true);
+        // setSuccessCreateUserGestionPopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Creation du nouveau utilisateur avec  succès "
+        );
+        setConfirmationMessagePopupName(description);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
         const id = accountID;
@@ -6016,7 +6137,12 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setEchecCreateUserGestionPopup(true);
+        // setEchecCreateUserGestionPopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Échec de la Creation du l'utilisateur  "
+        );
+        setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6025,7 +6151,12 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setEchecCreateUserGestionPopup(true);
+      // setEchecCreateUserGestionPopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        "Échec de la Creation du l'utilisateur  "
+      );
+      setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -6100,7 +6231,13 @@ const DataContextProvider = ({ children }) => {
         const fetchAllOtherData = false;
         fetchAllComptes(accountID, user, password, fetchAllOtherData);
 
-        setSuccessCreateAccountGestionPoupu(true);
+        // setSuccessCreateAccountGestionPoupu(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Creation du nouveau compte avec succès  "
+        );
+        setConfirmationMessagePopupName(description);
+
         // fetchAccountUsers(id, pwd)
         //   .then((users) => {
         //     fetchUserDevices(id, users);
@@ -6178,7 +6315,10 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setEchecCreateAccountGestionPoupu(true);
+        // setEchecCreateAccountGestionPoupu(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de la Creation du compte  ");
+        setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6187,7 +6327,10 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setEchecCreateAccountGestionPoupu(true);
+      // setEchecCreateAccountGestionPoupu(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de la Creation du compte  ");
+      setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -6255,7 +6398,12 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessModifyAccountGestionPopup(true);
+        // setSuccessModifyAccountGestionPopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Modification du compte avec succès  "
+        );
+        setConfirmationMessagePopupName(description);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
         // const id = accountID;
@@ -6358,7 +6506,12 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setEchecModifyAccountGestionPopup(true);
+        // setEchecModifyAccountGestionPopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Échec de la  Modification du compte   "
+        );
+        setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6367,7 +6520,12 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setEchecModifyAccountGestionPopup(true);
+      // setEchecModifyAccountGestionPopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        "Échec de la  Modification du compte   "
+      );
+      setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -6433,7 +6591,12 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessModifyUserGestionPopup(true);
+        // setSuccessModifyUserGestionPopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Modification de l'utilisateur avec   succès "
+        );
+        setConfirmationMessagePopupName(description);
         setError("");
         console.log("User modifier avec success ++>>>>>>>>>>>>>>.");
         const id = accountID;
@@ -6452,6 +6615,36 @@ const DataContextProvider = ({ children }) => {
               : user
           )
         );
+        setTimeout(() => {
+          console.log(
+            "mise a jour de setListeGestionDesUsers : ",
+            (prevUSers) =>
+              prevUSers.map((user) =>
+                user.userID === userIDField
+                  ? {
+                      ...user,
+                      userIDField,
+                      displayName,
+                      description,
+                      passwordField,
+                    }
+                  : user
+              )
+          );
+          setListeGestionDesUsers((prevUSers) =>
+            prevUSers.map((user) =>
+              user.userID === userIDField
+                ? {
+                    ...user,
+                    userIDField,
+                    displayName,
+                    description,
+                    passwordField,
+                  }
+                : user
+            )
+          );
+        }, 1000);
 
         // setTimeout(() => {
         //   fetchAccountUsers(id, pwd)
@@ -6539,7 +6732,12 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setEchecModifyUserGestionPopup(true);
+        // setEchecModifyUserGestionPopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Échec de la Modification de l'utilisateur  "
+        );
+        setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6548,7 +6746,12 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setEchecModifyUserGestionPopup(true);
+      // setEchecModifyUserGestionPopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        "Échec de la Modification de l'utilisateur  "
+      );
+      setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
@@ -6620,7 +6823,12 @@ const DataContextProvider = ({ children }) => {
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
-        setSuccessAddVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Creation du nouveau appareil avec   succès"
+        );
+        setConfirmationMessagePopupName(description);
+
         setError("");
 
         const id = userAccount;
@@ -6675,7 +6883,10 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         // console.log("errorrrrrrrrr");
-        setErrorAddVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de la Creation de l'appareil ");
+        setConfirmationMessagePopupName(description);
+        //////////////////
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
@@ -6684,7 +6895,172 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
-      setErrorAddVéhiculePopup(true);
+
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de la Creation de l'appareil ");
+      setConfirmationMessagePopupName(description);
+      //////////////////
+      setCreateVéhiculeLoading(false);
+    }
+  };
+  const modifyVehicleEnGestionAccount = async (
+    userAccount,
+    userUsername,
+    userPassword,
+    deviceID,
+    imeiNumber,
+    uniqueIdentifier,
+    description,
+    displayName,
+    licensePlate,
+    equipmentType,
+    simPhoneNumber,
+    vehicleID,
+    groupesSelectionnes
+  ) => {
+    console.log(
+      userAccount,
+      userUsername,
+      userPassword,
+      deviceID,
+      groupesSelectionnes
+    );
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbput">
+      <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
+      <Record table="Device" partial="true">
+        <Field name="accountID">${userAccount}</Field>
+
+        <Field name="deviceID">${deviceID}</Field>
+        <Field name="description">${description}</Field>
+        <Field name="equipmentType">${equipmentType}</Field>
+        <Field name="uniqueID">${uniqueIdentifier}</Field>
+        <Field name="imeiNumber">${imeiNumber}</Field>
+        <Field name="vehicleID">${vehicleID}</Field>
+        <Field name="licensePlate">${licensePlate}</Field>
+        <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
+        <Field name="displayName">${displayName}</Field>
+        <Field name="isActive">1</Field>
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      // console.log("data from add véhicule", data);
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // console.log("Véhicule créé avec succès :");
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Modification de l'appareil avec  succès"
+        );
+        setConfirmationMessagePopupName(description);
+
+        setError("");
+
+        setAccountDevices((prevDevices) =>
+          prevDevices.map((device) =>
+            device.deviceID === deviceID
+              ? {
+                  ...device,
+                  displayName,
+                  description,
+                  equipmentType,
+                  uniqueIdentifier,
+                  imeiNumber,
+                  vehicleID,
+                  licensePlate,
+                  simPhoneNumber,
+                }
+              : device
+          )
+        );
+
+        setListeGestionDesVehicules((prevDevices) =>
+          prevDevices.map((device) =>
+            device.deviceID === deviceID
+              ? {
+                  ...device,
+                  displayName,
+                  description,
+                  equipmentType,
+                  uniqueIdentifier,
+                  imeiNumber,
+                  vehicleID,
+                  licensePlate,
+                  simPhoneNumber,
+                }
+              : device
+          )
+        );
+
+        // Attendre que le device apparaisse dans la liste
+        setTimeout(() => {
+          assignDeviceToMultipleGroups(
+            userAccount,
+            userUsername,
+            userPassword,
+            deviceID,
+            groupesSelectionnes
+          );
+        }, 5000);
+
+        // waitForDeviceThenAssign(
+        //   userAccount,
+        //   userUsername,
+        //   userPassword,
+        //   deviceID,
+        //   groupesSelectionnes
+        // );
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la modification du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        // console.log("errorrrrrrrrr");
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Échec de la modification de l'appareil "
+        );
+        setConfirmationMessagePopupName(description);
+        //////////////////
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la modification du véhicule", error);
+
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        "Échec de la modification de l'appareil "
+      );
+      setConfirmationMessagePopupName(description);
+      //////////////////
       setCreateVéhiculeLoading(false);
     }
   };
@@ -6758,9 +7134,12 @@ const DataContextProvider = ({ children }) => {
       // console.log("wait a little more.........");
 
       if (response.ok) {
-        // if (userAccount && userUsername && userPassword) {
-        //   console.log("vehicule Delete avec successsssssssss...............");
-        // } else {
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Vous avez supprimé le véhicule avec succès."
+        );
+        setConfirmationMessagePopupName("");
+
         console.log("Delete successsssssssss...............");
         setVehicleData((prevVehicles) =>
           prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
@@ -6810,7 +7189,7 @@ const DataContextProvider = ({ children }) => {
 
         // console.log("Véhicule supprimé avec succès.");
         fetchVehicleData();
-        setSuccessDeleteVéhiculePopup(true);
+
         setCreateVéhiculeLoading(false);
         navigate("/home");
         // }
@@ -6819,7 +7198,13 @@ const DataContextProvider = ({ children }) => {
           "Erreur lors de la suppression du véhicule:",
           response.statusText
         );
-        setErrorDeleteVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Échec de la suppression du véhicule."
+        );
+        setConfirmationMessagePopupName("");
+        //
+
         setCreateVéhiculeLoading(false);
       }
 
@@ -6829,7 +7214,11 @@ const DataContextProvider = ({ children }) => {
         "Erreur de connexion lors de la suppression du véhicule:",
         error
       );
-      setErrorDeleteVéhiculePopup(true);
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte("Échec de la suppression du véhicule.");
+      setConfirmationMessagePopupName("");
+      //
+
       setCreateVéhiculeLoading(false);
     }
   };
@@ -6871,6 +7260,11 @@ const DataContextProvider = ({ children }) => {
           //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
           console.log("Delete successsssssssss...............");
+          setShowConfirmationMessagePopup(true); // succès  Échec
+          setConfirmationMessagePopupTexte(
+            "Suppression de l'appareil avec  succès"
+          );
+          setConfirmationMessagePopupName("");
 
           setAccountDevices((prev) =>
             prev.filter((v) => v.deviceID !== deviceID)
@@ -6880,8 +7274,17 @@ const DataContextProvider = ({ children }) => {
           setUserDevices((prev) =>
             prev.map((user) => ({
               ...user,
-              userDevices: user.userDevices.filter(
+              userDevices: user?.userDevices?.filter(
                 (device) => device.deviceID !== deviceID
+              ),
+            }))
+          );
+
+          setListeGestionDesVehicules((prev) =>
+            prev.map((user) => ({
+              ...user,
+              userDevices: user?.userDevices?.filter(
+                (device) => device?.deviceID !== deviceID
               ),
             }))
           );
@@ -6942,7 +7345,6 @@ const DataContextProvider = ({ children }) => {
             };
           });
 
-          setSuccessDeleteVéhiculePopup(true);
           setCreateVéhiculeLoading(false);
           // navigate("/home");
         }
@@ -6951,7 +7353,9 @@ const DataContextProvider = ({ children }) => {
           "Erreur lors de la suppression du véhicule:",
           response.statusText
         );
-        setErrorDeleteVéhiculePopup(true);
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de Suppression de l'appareil ");
+        setConfirmationMessagePopupName("");
         setCreateVéhiculeLoading(false);
       }
 
@@ -6961,7 +7365,9 @@ const DataContextProvider = ({ children }) => {
         "Erreur de connexion lors de la suppression du véhicule:",
         error
       );
-      setErrorDeleteVéhiculePopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de Suppression de l'appareil ");
+      setConfirmationMessagePopupName("");
       setCreateVéhiculeLoading(false);
     }
   };
@@ -7003,8 +7409,19 @@ const DataContextProvider = ({ children }) => {
           //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
           console.log("Delete successsssssssss...............");
+          setShowConfirmationMessagePopup(true); // succès  Échec
+          setConfirmationMessagePopupTexte(
+            "Suppression de l'utilisateur avec succès "
+          );
+          setConfirmationMessagePopupName("");
 
           setAccountUsers((prev) => prev.filter((v) => v.userID !== userID));
+
+          setTimeout(() => {
+            setListeGestionDesUsers((prev) =>
+              prev.filter((v) => v.userID !== userID)
+            );
+          }, 1000);
 
           // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
           // setUserDevices((prev) =>
@@ -7072,7 +7489,6 @@ const DataContextProvider = ({ children }) => {
           //   };
           // });
 
-          setSuccessDeleteVéhiculePopup(true);
           setCreateVéhiculeLoading(false);
           // navigate("/home");
         }
@@ -7081,7 +7497,13 @@ const DataContextProvider = ({ children }) => {
           "Erreur lors de la suppression du véhicule:",
           response.statusText
         );
-        setErrorDeleteVéhiculePopup(true);
+
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          "Échec de Suppression de l'utilisateur  "
+        );
+        setConfirmationMessagePopupName("");
+
         setCreateVéhiculeLoading(false);
       }
 
@@ -7091,7 +7513,12 @@ const DataContextProvider = ({ children }) => {
         "Erreur de connexion lors de la suppression du véhicule:",
         error
       );
-      setErrorDeleteVéhiculePopup(true);
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        "Échec de Suppression de l'utilisateur  "
+      );
+      setConfirmationMessagePopupName("");
+
       setCreateVéhiculeLoading(false);
     }
   };
@@ -7132,6 +7559,12 @@ const DataContextProvider = ({ children }) => {
           //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
           console.log("Delete successsssssssss...............");
+
+          setShowConfirmationMessagePopup(true); // succès  Échec
+          setConfirmationMessagePopupTexte(
+            "Suppression du compte avec succès  "
+          );
+          setConfirmationMessagePopupName("");
 
           setComptes((prev) =>
             prev.filter((v) => v.accountID !== accountIDField)
@@ -7203,7 +7636,6 @@ const DataContextProvider = ({ children }) => {
           //   };
           // });
 
-          setSuccessDeleteVéhiculePopup(true);
           setCreateVéhiculeLoading(false);
           // navigate("/home");
         }
@@ -7212,7 +7644,11 @@ const DataContextProvider = ({ children }) => {
           "Erreur lors de la suppression du véhicule:",
           response.statusText
         );
-        setErrorDeleteVéhiculePopup(true);
+
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte("Échec de Suppression du compte   ");
+        setConfirmationMessagePopupName("");
+
         setCreateVéhiculeLoading(false);
       }
 
@@ -7222,7 +7658,10 @@ const DataContextProvider = ({ children }) => {
         "Erreur de connexion lors de la suppression du véhicule:",
         error
       );
-      setErrorDeleteVéhiculePopup(true);
+
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte("Échec de Suppression du compte   ");
+      setConfirmationMessagePopupName("");
       setCreateVéhiculeLoading(false);
     }
   };
@@ -7292,7 +7731,13 @@ const DataContextProvider = ({ children }) => {
           )
         );
         // console.log("Véhicule modifié avec succès.");
-        setSuccessModifierVéhiculePopup(true);
+
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Vous avez modifié le véhicule avec succès"
+        );
+        setConfirmationMessagePopupName(description);
+
         fetchVehicleData();
         setCreateVéhiculeLoading(false);
         navigate("/home");
@@ -7301,14 +7746,21 @@ const DataContextProvider = ({ children }) => {
           "Erreur lors de la modification du véhicule:",
           response.statusText
         );
-        setErrorModifierVéhiculePopup(true);
+
         setCreateVéhiculeLoading(false);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          "Échec de la modification du véhicule."
+        );
+        setConfirmationMessagePopupName(description);
       }
 
       // console.log("finish updating.....");
     } catch (error) {
-      setErrorModifierVéhiculePopup(true);
       setCreateVéhiculeLoading(false);
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte("Échec de la modification du véhicule.");
+      setConfirmationMessagePopupName(description);
 
       console.error(
         "Erreur de connexion lors de la modification du véhicule:",
@@ -8223,20 +8675,6 @@ const DataContextProvider = ({ children }) => {
         createVéhiculeLoading,
         setCreateVéhiculeLoading,
 
-        successAddVéhiculePopup,
-        setSuccessAddVéhiculePopup,
-        errorAddVéhiculePopup,
-        setErrorAddVéhiculePopup,
-
-        successModifierVéhiculePopup,
-        setSuccessModifierVéhiculePopup,
-        errorModifierVéhiculePopup,
-        setErrorModifierVéhiculePopup,
-
-        successDeleteVéhiculePopup,
-        setSuccessDeleteVéhiculePopup,
-        errorDeleteVéhiculePopup,
-        setErrorDeleteVéhiculePopup,
         //
         rapportVehicleDetails,
         fetchRapportVehicleDetails,
@@ -8306,24 +8744,24 @@ const DataContextProvider = ({ children }) => {
         setAjouterGeofencePopup,
         createGeofenceLoading,
         setCreateGeofenceLoading,
-        errorCreateGeofencePopup,
-        setErrorCreateGeofencePopup,
-        succesCreateGeofencePopup,
-        setSuccesCreateGeofencePopup,
+        // errorCreateGeofencePopup,
+        // setErrorCreateGeofencePopup,
+        // succesCreateGeofencePopup,
+        // setSuccesCreateGeofencePopup,
         currentGeozone,
         setCurrentGeozone,
         isEditingGeofence,
         setIsEditingGeofence,
         supprimerGeofence,
         activerOuDesactiverGeofence,
-        succesModifierGeofencePopup,
-        setSuccesModifierGeofencePopup,
-        errorModifierGeofencePopup,
-        setErrorModifierGeofencePopup,
-        succesDeleteGeofencePopup,
-        setSuccesDeleteGeofencePopup,
-        errorDeleteGeofencePopup,
-        setErrorDeleteGeofencePopup,
+        // succesModifierGeofencePopup,
+        // setSuccesModifierGeofencePopup,
+        // errorModifierGeofencePopup,
+        // setErrorModifierGeofencePopup,
+        // succesDeleteGeofencePopup,
+        // setSuccesDeleteGeofencePopup,
+        // errorDeleteGeofencePopup,
+        // setErrorDeleteGeofencePopup,
 
         vehiculeMouvementOrdered,
         vehiclesByDistance,
@@ -8448,22 +8886,22 @@ const DataContextProvider = ({ children }) => {
         dashboardLoadingEffect,
         setDashboardLoadingEffect,
 
-        successCreateAccountGestionPoupu,
-        setSuccessCreateAccountGestionPoupu,
-        echecCreateAccountGestionPoupu,
-        setEchecCreateAccountGestionPoupu,
-        successModifyAccountGestionPopup,
-        setSuccessModifyAccountGestionPopup,
-        echecModifyAccountGestionPopup,
-        setEchecModifyAccountGestionPopup,
-        successCreateUserGestionPopup,
-        setSuccessCreateUserGestionPopup,
-        echecCreateUserGestionPopup,
-        setEchecCreateUserGestionPopup,
-        successModifyUserGestionPopup,
-        setSuccessModifyUserGestionPopup,
-        echecModifyUserGestionPopup,
-        setEchecModifyUserGestionPopup,
+        // successCreateAccountGestionPoupu,
+        // setSuccessCreateAccountGestionPoupu,
+        // echecCreateAccountGestionPoupu,
+        // setEchecCreateAccountGestionPoupu,
+        // successModifyAccountGestionPopup,
+        // setSuccessModifyAccountGestionPopup,
+        // echecModifyAccountGestionPopup,
+        // setEchecModifyAccountGestionPopup,
+        // successCreateUserGestionPopup,
+        // setSuccessCreateUserGestionPopup,
+        // echecCreateUserGestionPopup,
+        // setEchecCreateUserGestionPopup,
+        // successModifyUserGestionPopup,
+        // setSuccessModifyUserGestionPopup,
+        // echecModifyUserGestionPopup,
+        // setEchecModifyUserGestionPopup,
 
         showConfirmationMessagePopup,
         setShowConfirmationMessagePopup,
@@ -8471,6 +8909,7 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupTexte,
         confirmationMessagePopupName,
         setConfirmationMessagePopupName,
+        modifyVehicleEnGestionAccount,
       }}
     >
       {children}

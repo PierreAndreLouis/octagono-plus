@@ -41,7 +41,7 @@ const Home = () => {
     setSuccessModifierVéhiculePopup,
     successDeleteVéhiculePopup,
     setSuccessDeleteVéhiculePopup,
-    setSuccessAddVéhiculePopup,
+
   } = useContext(DataContext);
 
   let x;
@@ -361,28 +361,8 @@ const Home = () => {
         <DashboardAdminPage />
       ) : (
         <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-[120vh]">
-          <SuccèsÉchecMessagePopup
-            message={successAddVéhiculePopup}
-            setMessage={setSuccessAddVéhiculePopup}
-            véhiculeData={null}
-            composant_from={"succès ajout de véhicule"}
-          />
-          {/* Popup pour Message de succès */}
-          <SuccèsÉchecMessagePopup
-            message={successModifierVéhiculePopup}
-            setMessage={setSuccessModifierVéhiculePopup}
-            véhiculeData={null}
-            composant_from={"succès modification de véhicule"}
-          />
-
-          {/* Popup pour Message de succès */}
-          <SuccèsÉchecMessagePopup
-            message={successDeleteVéhiculePopup}
-            setMessage={setSuccessDeleteVéhiculePopup}
-            véhiculeData={null}
-            composant_from={"succès suppression de véhicule"}
-          />
-          {/* Statistic component */}
+         
+         
           <Statistics />
           {/* Chargement quand on login */}
           {/* {isHomePageLoading && (

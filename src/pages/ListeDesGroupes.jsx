@@ -61,7 +61,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
     deleteGroupeEnGestionAccount,
     password,
     successAddVéhiculePopup,
-    setSuccessAddVéhiculePopup,
+
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
     successModifierVéhiculePopup,
@@ -178,57 +178,6 @@ function ListeDesGroupes({ setDocumentationPage }) {
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
-      {/* {showCreateNewGroupePage && (
-        <CreateNewGroupeGestion
-          setShowCreateNewGroupePage={setShowCreateNewGroupePage}
-        />
-      )}
-
-      {showModifyNewGroupePage && (
-        <ModifyGroupeGestion
-          setShowModifyNewGroupePage={setShowModifyNewGroupePage}
-        />
-      )} */}
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"succès ajout de Groupe"}
-      />
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"échec ajout la creation du groupe"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={successModifierVéhiculePopup}
-        setMessage={setSuccessModifierVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"succès modification de Groupe"}
-      />
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorModifierVéhiculePopup}
-        setMessage={setErrorModifierVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"échec modification du groupe"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={successDeleteVéhiculePopup}
-        setMessage={setSuccessDeleteVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"succès suppression de Groupe"}
-      />
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorDeleteVéhiculePopup}
-        setMessage={setErrorDeleteVéhiculePopup}
-        véhiculeData={null}
-        composant_from={"échec suppression du groupe"}
-      />
 
       {/* {showSelectedGroupeOptionsPopup && ( */}
       <GestionGroupeOptionPopup
@@ -342,7 +291,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
       )}
 
       {deleteGroupeAccountPopup && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"

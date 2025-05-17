@@ -232,7 +232,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
       )}
 
       {deleteAccountPopup && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed  z-[99999999999999999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             // onSubmit={handlePasswordCheck}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
@@ -413,31 +413,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
           </div>
         </div>
       )}
-
-      {/* <SuccèsÉchecMessagePopup
-        message={succesCreateGeofencePopup}
-        setMessage={setSuccesCreateGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de creation du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={succesModifierGeofencePopup}
-        setMessage={setSuccesModifierGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de modification du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={succesDeleteGeofencePopup}
-        setMessage={setSuccesDeleteGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de suppression du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={errorDeleteGeofencePopup}
-        setMessage={setErrorDeleteGeofencePopup}
-        véhiculeData={null}
-        composant_from={"échec de la suppression du geozone"}
-      /> */}
 
       <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
         <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">

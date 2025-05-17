@@ -14,7 +14,6 @@ function AjouterPage() {
     successAddVéhiculePopup,
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
-    setSuccessAddVéhiculePopup,
     createVéhiculeLoading,
     username,
   } = useContext(DataContext);
@@ -146,21 +145,7 @@ function AjouterPage() {
         setIsPasswordConfirmed={setShowConfirmAddVéhiculePopup}
       />
 
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"succès ajout de véhicule"}
-      />
-
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={addVéhiculeData}
-        composant_from={"échec ajout de véhicule"}
-      />
+     
 
       <div className="flex w-full justify-center h-full mt-10 md:mt-20 ">
         <div className="w-full flex justify-center">

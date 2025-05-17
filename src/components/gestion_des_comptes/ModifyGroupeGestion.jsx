@@ -25,7 +25,6 @@ function ModifyGroupeGestion({
     successAddVéhiculePopup,
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
-    setSuccessAddVéhiculePopup,
     createVéhiculeLoading,
     createVehicleEnGestionAccount,
     currentSelectedUserToConnect,
@@ -222,13 +221,13 @@ function ModifyGroupeGestion({
 
   return (
     <div className="px-3 rounded-lg bg-white">
-      {createVéhiculeLoading && (
+      {/* {createVéhiculeLoading && (
         <div className="fixed z-30 inset-0 bg-gray-200/50">
           <div className="w-full h-full flex justify-center items-center">
             <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
           </div>
         </div>
-      )}
+      )} */}
 
       {showDeviceSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
@@ -436,21 +435,7 @@ function ModifyGroupeGestion({
         setIsPasswordConfirmed={setShowConfirmModifyGroupeGestionPopup}
       />
 
-      {/* Popup pour Message de succès */}
-      <SuccèsÉchecMessagePopup
-        message={successAddVéhiculePopup}
-        setMessage={setSuccessAddVéhiculePopup}
-        véhiculeData={modifySelectedGroupeDataData}
-        composant_from={"succès ajout de véhicule"}
-      />
-
-      {/* Popup pour Message de échec */}
-      <SuccèsÉchecMessagePopup
-        message={errorAddVéhiculePopup}
-        setMessage={setErrorAddVéhiculePopup}
-        véhiculeData={modifySelectedGroupeDataData}
-        composant_from={"échec ajout de véhicule"}
-      />
+    
 
       <div className="flex  w-full justify-center h-full  ">
         <div className="w-full flex justify-center">

@@ -64,6 +64,8 @@ import ListeDesUtilisateur from "./pages/ListeDesUtilisateur";
 import ListeDesVehiculesGestion from "./pages/ListeDesVehiculesGestion";
 import ListeDesGroupes from "./pages/ListeDesGroupes";
 import DashboardAdminPage from "./pages/DashboardAdminPage";
+import SuccèsÉchecMessagePopup from "./components/Reutilisable/SuccèsÉchecMessagePopup";
+// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function App() {
   const location = useLocation();
@@ -278,7 +280,7 @@ function App() {
             </div>
           </div>
         )}
-
+        <SuccèsÉchecMessagePopup />
         {readDocumentation ? (
           <div className="transition-all">
             {/* télécharger */}

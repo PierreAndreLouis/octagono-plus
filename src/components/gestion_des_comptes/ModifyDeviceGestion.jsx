@@ -20,12 +20,12 @@ function ModifyDeviceGestion({
     successAddVéhiculePopup,
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
-    setSuccessAddVéhiculePopup,
     createVéhiculeLoading,
     createVehicleEnGestionAccount,
     currentSelectedUserToConnect,
     scrollToTop,
     currentSelectedDeviceGestion,
+    modifyVehicleEnGestionAccount,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -144,9 +144,8 @@ function ModifyDeviceGestion({
       const vehicleID = deviceID + uniqueIdentifier || "";
 
       console.log(
-        currentSelectedUserToConnect?.accountID,
-        currentSelectedUserToConnect?.userID,
-        currentSelectedUserToConnect?.password,
+        currentAccountSelected?.accountID,
+        currentAccountSelected?.password,
 
         deviceID,
         imeiNumber,
@@ -159,25 +158,24 @@ function ModifyDeviceGestion({
       );
 
       if (
-        currentSelectedUserToConnect?.accountID &&
-        currentSelectedUserToConnect?.userID &&
-        currentSelectedUserToConnect?.password
+        currentAccountSelected?.accountID &&
+        currentAccountSelected?.password
       ) {
-        // createVehicleEnGestionAccount(
-        //   currentSelectedUserToConnect?.accountID,
-        //   currentSelectedUserToConnect?.userID,
-        //   currentSelectedUserToConnect?.password,
-        //   deviceID,
-        //   imeiNumber,
-        //   uniqueIdentifier,
-        //   description,
-        //   displayName,
-        //   licensePlate,
-        //   equipmentType,
-        //   simPhoneNumber,
-        //   vehicleID,
-        //   groupesSelectionnes
-        // );
+        modifyVehicleEnGestionAccount(
+          currentAccountSelected?.accountID,
+          "admin",
+          currentAccountSelected?.password,
+          deviceID,
+          imeiNumber,
+          uniqueIdentifier,
+          description,
+          displayName,
+          licensePlate,
+          equipmentType,
+          simPhoneNumber,
+          vehicleID,
+          groupesSelectionnes
+        );
         // setShowModifyNewDevicePage(false);
         setDocumentationPage("Gestion_des_appareils");
       }
@@ -208,13 +206,13 @@ function ModifyDeviceGestion({
 
   return (
     <div className="px-3  rounded-lg bg-white">
-      {createVéhiculeLoading && (
+      {/* {createVéhiculeLoading && (
         <div className="fixed z-30 inset-0 bg-gray-200/50">
           <div className="w-full h-full flex justify-center items-center">
             <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
           </div>
         </div>
-      )}
+      )} */}
 
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[9999999999999999999999999999] flex justify-center items-center">

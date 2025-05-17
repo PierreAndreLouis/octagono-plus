@@ -56,7 +56,7 @@ function GestionUserOptionsPopup({
   return (
     <div>
       {deleteAccountPopup && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
+        <div className="fixed  z-[9999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={deleteUSerEnGestionAccountFonction}
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"

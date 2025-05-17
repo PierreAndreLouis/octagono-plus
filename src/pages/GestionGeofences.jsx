@@ -69,30 +69,7 @@ function GestionGeofences() {
 
   return (
     <div>
-      <SuccèsÉchecMessagePopup
-        message={succesCreateGeofencePopup}
-        setMessage={setSuccesCreateGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de creation du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={succesModifierGeofencePopup}
-        setMessage={setSuccesModifierGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de modification du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={succesDeleteGeofencePopup}
-        setMessage={setSuccesDeleteGeofencePopup}
-        véhiculeData={null}
-        composant_from={"succès de suppression du geozone"}
-      />
-      <SuccèsÉchecMessagePopup
-        message={errorDeleteGeofencePopup}
-        setMessage={setErrorDeleteGeofencePopup}
-        véhiculeData={null}
-        composant_from={"échec de la suppression du geozone"}
-      />
+   
 
       <div className="px-4 pb-40">
         <h2
