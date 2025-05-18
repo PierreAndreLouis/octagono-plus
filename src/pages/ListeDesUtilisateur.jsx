@@ -486,7 +486,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                   setListeGestionDesVehicules(user?.userDevices);
                 }}
                 key={index}
-                className="shadow-lg bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
               >
                 <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                   {index + 1}
@@ -572,7 +572,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                     }}
                     className={`${
                       true
-                        ? " bg-gray-50 text-gray-800"
+                        ? " bg-gray-200 text-gray-800"
                         : "text-gray-800 border-[0.02rem] border-gray-50 "
                     }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                   >

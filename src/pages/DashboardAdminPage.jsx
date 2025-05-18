@@ -52,6 +52,7 @@ import ChooseOtherAccountDashboard from "../components/dashboard_containt/Choose
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
 import Logout from "../components/login/Logout";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+import ChooseOtherGroupeDashboard from "../components/dashboard_containt/ChooseOtherGroupeDashboard";
 
 function DashboardAdminPage() {
   const {
@@ -209,6 +210,20 @@ function DashboardAdminPage() {
     },
   ];
 
+  const [allDevices, setAllDevices] = useState([]);
+
+  useEffect(() => {
+    setAllDevices(accountDevices);
+  }, [accountDevices]);
+
+  useEffect(() => {
+    setAllDevices(accountDevices);
+    console.log("reload...................................", accountDevices);
+    setTimeout(() => {
+      console.log("reload...................................", accountDevices);
+    }, 5000);
+  }, []);
+
   // Préparation des données pour le graphique
   const graphData = vehiculeData.map((item) => ({
     name: item.description.slice(0, 7), // 4 premières lettres
@@ -329,11 +344,42 @@ function DashboardAdminPage() {
   const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
     useState(false);
   const [searchInputTerm, setSearchInputTerm] = useState("");
+
   const filterGestionAccountData = searchInputTerm
-    ? gestionAccountData.filter((item) =>
+    ? gestionAccountData?.filter((item) =>
         item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
       )
     : gestionAccountData;
+
+  // const filterGestionGroupData = searchInputTerm
+  //   ? currentAccountSelected
+  //     ? currentAccountSelected?.accountGroupes?.filter((item) =>
+  //         item?.description
+  //           .toLowerCase()
+  //           .includes(searchInputTerm.toLowerCase())
+  //       )
+  //     : gestionAccountData?.accountGroupes?.filter((item) =>
+  //         item?.description
+  //           .toLowerCase()
+  //           .includes(searchInputTerm.toLowerCase())
+  //       )
+  //   : accountGroupes;
+
+  const noFilterGestionGroupData = currentAccountSelected
+    ? currentAccountSelected?.accountGroupes
+    : Array.from(
+        new Map(
+          gestionAccountData
+            .flatMap((account) => account.accountGroupes)
+            .map((group) => [group.groupID, group])
+        ).values()
+      );
+
+  const filterGestionGroupData = searchInputTerm
+    ? noFilterGestionGroupData?.filter((item) =>
+        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
+      )
+    : noFilterGestionGroupData;
 
   const [logOutPopup, setLogOutPopup] = useState(false);
 
@@ -368,6 +414,9 @@ function DashboardAdminPage() {
     }
   };
 
+  const [chosseOtherGroupeDashboard, setChosseOtherGroupeDashboard] =
+    useState(false);
+
   return (
     <div className="transition-all bg-gray-100">
       <ChooseOtherAccountDashboard
@@ -376,6 +425,15 @@ function DashboardAdminPage() {
         searchInputTerm={searchInputTerm}
         setSearchInputTerm={setSearchInputTerm}
         filterGestionAccountData={filterGestionAccountData}
+        setAllDevices={setAllDevices}
+      />
+      <ChooseOtherGroupeDashboard
+        chooseOtherAccountGestion={chosseOtherGroupeDashboard}
+        setChooseOtherAccountGestion={setChosseOtherGroupeDashboard}
+        searchInputTerm={searchInputTerm}
+        setSearchInputTerm={setSearchInputTerm}
+        filterGestionGroupData={filterGestionGroupData}
+        setAllDevices={setAllDevices}
       />
       {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
       <header className="fixed z-[9999] top-0 left-0 right-0 bg-white">
@@ -530,38 +588,38 @@ function DashboardAdminPage() {
                       ...Array.from(
                         new Map(
                           gestionAccountData
-                            .flatMap((account) => account.accountUsers || [])
-                            .map((user) => [user.userID, user])
+                            ?.flatMap((account) => account.accountUsers || [])
+                            ?.map((user) => [user.userID, user])
                         ).values()
                       ),
                       ...accountUsers.filter(
                         (user) =>
                           !gestionAccountData
-                            .flatMap((account) => account.accountUsers || [])
-                            .some(
+                            ?.flatMap((account) => account.accountUsers || [])
+                            ?.some(
                               (existingUser) =>
                                 existingUser.userID === user.userID
                             )
                       ),
                     ]);
-                    console.log([
-                      ...Array.from(
-                        new Map(
-                          gestionAccountData
-                            .flatMap((account) => account.accountUsers || [])
-                            .map((user) => [user.userID, user])
-                        ).values()
-                      ),
-                      ...accountUsers.filter(
-                        (user) =>
-                          !gestionAccountData
-                            .flatMap((account) => account.accountUsers || [])
-                            .some(
-                              (existingUser) =>
-                                existingUser.userID === user.userID
-                            )
-                      ),
-                    ]);
+                    // console.log([
+                    //   ...Array.from(
+                    //     new Map(
+                    //       gestionAccountData
+                    //         .flatMap((account) => account.accountUsers || [])
+                    //         .map((user) => [user.userID, user])
+                    //     ).values()
+                    //   ),
+                    //   ...accountUsers.filter(
+                    //     (user) =>
+                    //       !gestionAccountData
+                    //         .flatMap((account) => account.accountUsers || [])
+                    //         .some(
+                    //           (existingUser) =>
+                    //             existingUser.userID === user.userID
+                    //         )
+                    //   ),
+                    // ]);
                     // setListeGestionDesUsers(
                     //   Array.from(
                     //     new Map(
@@ -742,6 +800,8 @@ function DashboardAdminPage() {
             <DashboardContaintMaintComponant
               setChooseOtherAccountGestion={setChooseOtherAccountGestion}
               setDocumentationPage={setDocumentationPage}
+              setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
+              allDevices={allDevices}
             />
           )}
           {/*  */}

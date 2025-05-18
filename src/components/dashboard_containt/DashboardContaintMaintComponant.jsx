@@ -39,6 +39,8 @@ import { DataContext } from "../../context/DataContext";
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
   setDocumentationPage,
+  setChosseOtherGroupeDashboard,
+  allDevices,
 }) {
   const {
     scrollToTop,
@@ -77,9 +79,9 @@ function DashboardContaintMaintComponant({
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
-  const allDevices = currentAccountSelected
-    ? currentAccountSelected?.accountDevices
-    : accountDevices;
+  // const allDevices = currentAccountSelected
+  //   ? currentAccountSelected?.accountDevices
+  //   : accountDevices;
 
   const DeviceDéplacer = allDevices?.filter((device) => {
     return device?.lastStopTime > todayTimestamp;
@@ -267,8 +269,8 @@ function DashboardContaintMaintComponant({
 
   // Trouver les min/max des heures pour l'axe Y
   const allTimes = graphData?.flatMap((item) => [item?.start, item?.stop]);
-  const minTime = Math.min(...allTimes);
-  const maxTime = Math.max(...allTimes);
+  const minTime = allTimes && Math.min(...allTimes);
+  const maxTime = allTimes && Math.max(...allTimes);
 
   // Composant Tooltip personnalisé
   const CustomTooltip = ({ active, payload }) => {
@@ -475,7 +477,7 @@ function DashboardContaintMaintComponant({
             </div>
             <div
               onClick={() => {
-                // setChooseOtherAccountGestion(true);
+                setChosseOtherGroupeDashboard(true);
               }}
               className="sm:border sm:hover:bg-gray-100 sm:bg-gray-50 cursor-pointer flex gap-1 sm:gap-3 items-center absolute right-0 py-2 sm:px-4 rounded-lg -bottom-2 sm:bottom-0"
             >

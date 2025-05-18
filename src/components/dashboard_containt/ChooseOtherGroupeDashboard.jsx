@@ -3,12 +3,12 @@ import { IoClose } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
 
-function ChooseOtherAccountDashboard({
+function ChooseOtherGroupeDashboard({
   chooseOtherAccountGestion,
   setChooseOtherAccountGestion,
   searchInputTerm,
   setSearchInputTerm,
-  filterGestionAccountData,
+  filterGestionGroupData,
   setAllDevices,
 }) {
   const {
@@ -16,6 +16,8 @@ function ChooseOtherAccountDashboard({
     setListeGestionDesVehicules,
     currentAccountSelected,
     accountDevices,
+    groupeDevices,
+    scrollToTop,
   } = useContext(DataContext);
   return (
     <>
@@ -24,7 +26,7 @@ function ChooseOtherAccountDashboard({
           <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[70vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
-                Liste des Comptes
+                Liste des Groupes
               </h2>
 
               <IoClose
@@ -54,29 +56,33 @@ function ChooseOtherAccountDashboard({
               <button
                 onClick={() => {
                   {
-                    setCurrentAccountSelected(null);
-                    setAllDevices(accountDevices);
+                    // setCurrentAccountSelected(null);
+                    setAllDevices(
+                      // console.log(
+                      currentAccountSelected
+                        ? currentAccountSelected?.accountDevices
+                        : accountDevices
+                    );
+                    console.log("accountDevices", currentAccountSelected);
                     setChooseOtherAccountGestion(false);
+                    scrollToTop();
                   }
                 }}
                 className="font-bold bg-orange-500 text-white rounded-lg py-2 shadow-lg shadow-black/10"
               >
-                Tous les Comptes
+                Tous les Groupe
               </button>{" "}
               {/*  */}
-              {filterGestionAccountData?.map((account, index) => {
+              {filterGestionGroupData?.map((groupe, index) => {
                 return (
                   <div
                     key={index}
                     onClick={() => {
-                      console.log(account);
-                      console.log(currentAccountSelected);
-
-                      setCurrentAccountSelected(account);
-                      setListeGestionDesVehicules(account?.accountDevices);
-                      setAllDevices(account?.accountDevices);
-
+                      //   setCurrentAccountSelected(account);
+                      //   setListeGestionDesVehicules(account?.accountDevices);
+                      setAllDevices(groupe?.groupeDevices);
                       setChooseOtherAccountGestion(false);
+                      scrollToTop();
                     }}
                     className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center- rounded-lg py-2 px-2 "
                   >
@@ -86,28 +92,21 @@ function ChooseOtherAccountDashboard({
                     <FaUserCircle className="text-gray-500 text-[2.5rem] mt-1" />
                     <div>
                       <p className="text-gray-600">
-                        Nom du compte :{" "}
+                        Nom du Groupe :{" "}
                         <span className="font-bold">
-                          {account?.description}
+                          {groupe?.description || "Pas de nom disponible"}
+                        </span>{" "}
+                      </p>
+                      <p className="text-gray-600">
+                        ID du Compte :{" "}
+                        <span className="font-bold">
+                          {groupe?.accountID || ""}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Nombre d'appareil :{" "}
                         <span className="font-bold">
-                          {account?.accountDevices?.length}
-                        </span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'utilisateur :{" "}
-                        <span className="font-bold">
-                          {account?.accountUsers?.length}
-                        </span>{" "}
-                      </p>
-
-                      <p className="text-gray-600">
-                        Nombre de Groupe :{" "}
-                        <span className="font-bold">
-                          {account?.accountGroupes?.length}
+                          {groupe?.groupeDevices?.length}
                         </span>{" "}
                       </p>
                     </div>
@@ -123,4 +122,6 @@ function ChooseOtherAccountDashboard({
   );
 }
 
-export default ChooseOtherAccountDashboard;
+export default ChooseOtherGroupeDashboard;
+
+// export default ChooseOtherGroupeDashboard

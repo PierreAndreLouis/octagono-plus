@@ -67,6 +67,8 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
     setDeviceListeTitleGestion,
     gestionAccountData,
     groupeDevices,
+    listeGestionDesUsers,
+    listeGestionDesGroupe,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -93,16 +95,16 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
   const filterGestionAccountData = searchInputTerm
-    ? currentAccountSelected?.accountUsers?.filter((item) =>
+    ? listeGestionDesUsers?.filter((item) =>
         item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
       )
-    : currentAccountSelected?.accountUsers;
+    : listeGestionDesUsers;
 
   const filterGroupeAccountData = searchInputTerm
-    ? currentAccountSelected?.accountGroupes?.filter((item) =>
+    ? listeGestionDesGroupe?.filter((item) =>
         item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
       )
-    : currentAccountSelected?.accountGroupes;
+    : listeGestionDesGroupe;
 
   // const [selectedVehiculeAccount, setSelectedVehiculeAccount] = useState();
 
@@ -157,6 +159,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
   const [showUserGroupeCategorieSection, setShowUserGroupeCategorieSection] =
     useState(true);
 
+  const [showMoreDeviceInfo, setShowMoreDeviceInfo] = useState();
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
@@ -389,7 +392,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                             );
                             setShowChooseUserMessage(false);
                           }}
-                          className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
+                          className="shadow-lg- shadow-inner cursor-pointer relative overflow-hidden-- bg-gray-50  shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
                         >
                           <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                             {index + 1}
@@ -461,7 +464,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                               "Groupe : " + group?.description
                             );
                           }}
-                          className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
+                          className="shadow-lg- shadow-inner cursor-pointer relative overflow-hidden-- bg-gray-50  shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
                         >
                           <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                             {index + 1}
@@ -588,7 +591,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                     console.log(currentSelectedUserToConnect);
                   }}
                   key={index}
-                  className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                  className="shadow-inner bg-gray-50 shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                 >
                   <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                     {index + 1}
@@ -625,52 +628,81 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                             {device?.licensePlate}
                           </span>
                         </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Telephone :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.simPhoneNumber}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Type d'appareil :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.equipmentType}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">ImeiNumber :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.imeiNumber}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">
-                            Distance totale parcourue :
+                        <div
+                          className={`${
+                            showMoreDeviceInfo === index
+                              ? "max-h-[10rem]"
+                              : "max-h-0"
+                          }  overflow-hidden transition-all`}
+                        >
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Telephone :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {device?.simPhoneNumber}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Type d'appareil :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {device?.equipmentType}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">ImeiNumber :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {device?.imeiNumber}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">
+                              Distance totale parcourue :
+                            </p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {/* {device?.lastOdometerKM.toFixed(0)} */}
+                              {device?.lastOdometerKM &&
+                              !isNaN(Number(device?.lastOdometerKM))
+                                ? Number(device?.lastOdometerKM).toFixed(0) +
+                                  " km"
+                                : "Non disponible"}{" "}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">
+                              Numéro de la carte SIM :
+                            </p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              50941070132
+                              {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Date Creation :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {FormatDateHeure(device?.creationTime).date}
+                              <span className="px-2">/</span>{" "}
+                              {FormatDateHeure(device?.creationTime).time}
+                            </span>
+                          </div>{" "}
+                        </div>
+                        {showMoreDeviceInfo === index ? (
+                          <p
+                            onClick={() => {
+                              setShowMoreDeviceInfo();
+                            }}
+                            className="font-semibold mt-2 text-orange-500 cursor-pointer underline"
+                          >
+                            Voir moins
                           </p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {/* {device?.lastOdometerKM.toFixed(0)} */}
-                            {device?.lastOdometerKM &&
-                            !isNaN(Number(device?.lastOdometerKM))
-                              ? Number(device?.lastOdometerKM).toFixed(0) +
-                                " km"
-                              : "Non disponible"}{" "}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Numéro de la carte SIM :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            50941070132
-                            {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Date Creation :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {FormatDateHeure(device?.creationTime).date}
-                            <span className="px-2">/</span>{" "}
-                            {FormatDateHeure(device?.creationTime).time}
-                          </span>
-                        </div>{" "}
+                        ) : (
+                          <p
+                            onClick={() => {
+                              setShowMoreDeviceInfo(index);
+                            }}
+                            className="font-semibold mt-2 text-orange-500 cursor-pointer underline"
+                          >
+                            Voir plus
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -684,7 +716,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                         setShowUserGroupeCategorieSection(false);
                         setDocumentationPage("Modifier_appareil");
                       }}
-                      className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
+                      className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >
                       <p className="text-sm mr-2">Modifier</p>
 

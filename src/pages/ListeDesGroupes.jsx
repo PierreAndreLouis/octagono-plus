@@ -78,6 +78,8 @@ function ListeDesGroupes({ setDocumentationPage }) {
     setListeGestionDesGroupeTitre,
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
+    listeGestionDesUsers,
+    scrollToTop,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
@@ -167,10 +169,10 @@ function ListeDesGroupes({ setDocumentationPage }) {
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
   const filterGestionAccountData = searchInputTerm
-    ? currentAccountSelected?.accountUsers?.filter((item) =>
+    ? listeGestionDesUsers?.filter((item) =>
         item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
       )
-    : currentAccountSelected?.accountUsers;
+    : listeGestionDesUsers;
 
   const [showChooseOtherUserGroupePopup, setShowChooseOtherUserGroupePopup] =
     useState(false);
@@ -251,6 +253,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
                         setListeGestionDesGroupeTitre(user?.description);
                         setShowChooseOtherUserGroupePopup(false);
                         setCurrentSelectedUserToConnect(user);
+                        scrollToTop();
 
                         // }, 500);
                         // console.log(user);
@@ -493,7 +496,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
                     setCurrentSelectedGroupeGestion(groupe);
                   }}
                   key={index}
-                  className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                  className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                 >
                   <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                     {index + 1}
@@ -555,7 +558,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
                         setCurrentSelectedGroupeGestion(groupe);
                         setShowModifyNewGroupePage(true);
                       }}
-                      className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
+                      className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >
                       <p className="text-sm mr-2">Modifier</p>
                       <FaRegEdit />

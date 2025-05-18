@@ -243,6 +243,41 @@ const DataContextProvider = ({ children }) => {
     gestionAccountData,
   ]);
 
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
+      setListeGestionDesGroupe(currentAccountSelected?.accountGroupes);
+      setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+    } else {
+      setListeGestionDesVehicules(accountDevices);
+      setListeGestionDesGroupe(
+        Array.from(
+          new Map(
+            gestionAccountData
+              ?.flatMap((account) => account.accountGroupes)
+              ?.map((group) => [group.groupID, group])
+          ).values()
+        )
+      );
+
+      setListeGestionDesUsers([
+        ...Array.from(
+          new Map(
+            gestionAccountData
+              ?.flatMap((account) => account.accountUsers || [])
+              ?.map((user) => [user.userID, user])
+          ).values()
+        ),
+        ...accountUsers.filter(
+          (user) =>
+            !gestionAccountData
+              ?.flatMap((account) => account.accountUsers || [])
+              ?.some((existingUser) => existingUser.userID === user.userID)
+        ),
+      ]);
+    }
+  }, [currentAccountSelected]);
+
   // /////////////////////////////////////////////////////////////////////
   // /////////////////////////////////////////////////////////////////////
   // /////////////////////////////////////////////////////////////////////
@@ -6046,6 +6081,9 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
       // console.log("Almost thereeee..............");
       setError("");
+      console.log(
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      );
       console.log(result);
       if (result === "success") {
         // console.log("Véhicule créé avec succès :");
@@ -6135,6 +6173,9 @@ const DataContextProvider = ({ children }) => {
         setError(errorMessage || "Erreur lors de la création du véhicule.");
 
         handleUserError(xmlDoc);
+        console.log(
+          "8888888888888888888888888888888888888888888888888888888888"
+        );
 
         // console.log("errorrrrrrrrr");
         // setEchecCreateUserGestionPopup(true);
