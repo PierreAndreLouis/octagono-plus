@@ -1,46 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
-import { DataContext } from "../../context/DataContext";
+ import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
-import { Link } from "react-router-dom";
-import { MdErrorOutline } from "react-icons/md";
-import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
-import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
-import { IoClose } from "react-icons/io5";
+ import { MdErrorOutline } from "react-icons/md";
+import { FaArrowLeft,  } from "react-icons/fa";
+ 
 
 function ModifyAccountPage({
-  setShowModifyAccountPagePopup,
-  setDocumentationPage,
-  showCreateNewAccountPopup,
-
-  setChooseOtherDeviceGestion,
-  setShowUserGroupeCategorieSection,
-  setShowUserListeToSelectDevice,
+   setDocumentationPage, 
 }) {
   const {
-    setCurrentAccountSelected,
-    currentAccountSelected,
-    //
-    setError,
-    successAddVéhiculePopup,
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    createVéhiculeLoading,
-    createVehicleEnGestionAccount,
-    currentSelectedUserToConnect,
-    scrollToTop,
-    FormatDateHeure,
-    currentSelectedGroupeGestion,
-    createNewGroupeEnGestionAccount,
-    createNewUserEnGestionAccount,
+     currentAccountSelected,
+     setError,
+    scrollToTop, 
     account,
     username,
     password,
     comptes,
-    createAccountEnGestionAccountFonction,
-    modifyAccountEnGestionAccountFonction,
+     modifyAccountEnGestionAccountFonction,
   } = useContext(DataContext);
 
+ 
   // Pour afficher le popup de confirmation de password
   const [
     showConfirmAddGroupeGestionPopup,
@@ -77,13 +56,13 @@ function ModifyAccountPage({
     }
 
     if (name === "accountID") {
-      newValue = newValue.toLowerCase(); // convertit en minuscules uniquement pour userID
+      newValue = newValue.toLowerCase();  
     }
     setAddNewAccountData((prevData) => ({
       ...prevData,
       [name]: newValue,
     }));
-    setErrorID(""); // Réinitialise l'erreur lorsque l'utilisateur modifie l'entrée
+    setErrorID(""); 
   };
 
   // Gestion de la soumission du formulaire
@@ -98,13 +77,7 @@ function ModifyAccountPage({
     const accountExists = comptes?.some(
       (account) => account?.accountID === accountID
     );
-
-    // if (accountExists) {
-    //   setErrorID(
-    //     "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre."
-    //   );
-    //   return;
-    // }
+ 
 
     if (addNewAccountData?.password !== addNewAccountData?.password2) {
       setErrorID("Les mots de passe ne correspondent pas.");
@@ -114,81 +87,8 @@ function ModifyAccountPage({
     setShowConfirmAddGroupeGestionPopup(true);
   };
 
-  //   const deviceDuSelectedGroupe =
-  //     currentSelectedGroupeGestion?.groupeDevices?.map(
-  //       (device) => device?.deviceID
-  //     );
-  //   const userDuSelectedGroupe = currentAccountSelected?.accountUsers?.map(
-  //     (user) => user?.userID
-  //   );
-  //
-
-  //   const allDevicesIDs = currentAccountSelected?.accountDevices?.map(
-  //     (device) => device?.deviceID
-  //   );
-
-  //   const allUsersIDs = currentAccountSelected?.accountUsers?.map(
-  //     (user) => user?.userID
-  //   );
-  //
-  //   const [deviceSelectionnes, setDeviceSelectionnes] = useState(
-  //     deviceDuSelectedGroupe || []
-  //   );
-
-  //   const [usersSelectionnes, setUsersSelectionnes] = useState(
-  //     userDuSelectedGroupe || []
-  //   );
-
-  //
-
-  //
-  //   const deviceNonSelectionnes = allDevicesIDs?.filter(
-  //     (deviceID) => !deviceSelectionnes.includes(deviceID)
-  //   );
-  //   const userNonSelectionnes = allUsersIDs?.filter(
-  //     (userID) => !usersSelectionnes.includes(userID)
-  //   );
-  //
-
-  //   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
-  //     useState(false);
-
-  //   const [showUserSelectionnesPopup, setShowUSerSelectionnesPopup] =
-  //     useState(false);
-  //
-
-  //   useEffect(() => {
-  //     console.log("deviceSelectionnes", deviceSelectionnes);
-  //   }, [deviceSelectionnes]);
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
-  //   (groupe) => groupe?.groupID
-  // );
-
-  // const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
-  //   (groupe) => groupe?.groupID
-  // );
-  // const [groupesSelectionnes, setGroupesSelectionnes] = useState(
-  //   groupeDuSelectedUser || []
-  // );
-  //
-  // const groupesNonSelectionnes = allGroupIDs?.filter(
-  //   (groupID) => !groupesSelectionnes.includes(groupID)
-  // );
-
-  // const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
-  //   useState(false);
-
-  // useEffect(() => {
-  //   console.log("groupesSelectionnes", groupesSelectionnes);
-  // }, [groupesSelectionnes]);
-
-  // useEffect(() => {
-  //   setGroupesSelectionnes([]);
-  // }, [showCreateNewAccountPopup]);
-
+ 
+ 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
@@ -200,49 +100,9 @@ function ModifyAccountPage({
       const contactPhone = addNewAccountData.contactPhone;
       const notifyEmail = addNewAccountData.notifyEmail;
       const password2 = addNewAccountData.password2;
-
-      // accountID: "",
-      // description: "",
-      // displayName: "",
-      // contactPhone: "",
-      // notifyEmail: "",
-      // password: "",
-      // password2: "",
-
-      //   console.log(
-      //    ,
-      //     ,
-      //     ,
-
-      //    ,
-      //     ,
-      //    ,
-      //   ,
-
-      //   );
-      //   console.log("accountID", currentAccountSelected?.accountID);
-      //   console.log("user: admin");
-      //   console.log("password", currentAccountSelected?.password);
-      // //   console.log("groupID", groupID);
-      //   console.log("description", description);
-      //   console.log("displayName", displayName);
-
-      //
-      //   console.log("Appareils sélectionnées", deviceSelectionnes);
-      //   console.log("Utilisateurs sélectionnées", usersSelectionnes);
-
+ 
       if (account && username && password) {
-        console.log(account);
-        console.log(username);
-        console.log(password);
-
-        console.log(accountID);
-        console.log(description);
-        console.log(displayName);
-        console.log(contactPhone);
-        console.log(notifyEmail);
-        console.log(password2);
-
+         
         modifyAccountEnGestionAccountFonction(
           account,
           username,
@@ -253,10 +113,7 @@ function ModifyAccountPage({
           contactPhone,
           notifyEmail,
           password2
-        );
-
-        // setShowModifyAccountPagePopup(false);
-        // setDocumentationPage("Modifier_compte");
+        ); 
         setDocumentationPage("Gestion_des_comptes");
       }
 
@@ -286,110 +143,7 @@ function ModifyAccountPage({
 
   return (
     <div className="px-3 rounded-lg   bg-white">
-      {/* {createVéhiculeLoading && (
-        <div className="fixed z-30 inset-0 bg-gray-200/50">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
-          </div>
-        </div>
-      )} */}
-
-      {/* {showGroupesSelectionnesPopup && (
-        <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2
-              onClick={() => {
-                console.log("tous les Groupes: ", allGroupIDs);
-              }}
-              className="text-center py-4 bg-orange-300 font-bold text-lg"
-            >
-              Liste Des Groupe
-            </h2>
-            <IoClose
-              onClick={() => {
-                setShowGroupesSelectionnesPopup(false);
-              }}
-              className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
-            />
-            <p
-              onClick={() => {
-                console.log("groupesNonSelectionnes", groupesNonSelectionnes);
-              }}
-              className="mx-2 mb-3 text-center mt-4 text-lg"
-            >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
-            </p>
-
-            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
-              {currentAccountSelected?.accountGroupes?.map((groupe, index) => {
-                const isSelected = groupesSelectionnes.includes(groupe.groupID);
-
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setGroupesSelectionnes((prev) => {
-                        if (prev.includes(groupe.groupID)) {
-                          return prev.filter((id) => id !== groupe.groupID);
-                        } else {
-                          return [...prev, groupe.groupID];
-                        }
-                      });
-                    }}
-                    className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center rounded-lg py-2 px-2 ${
-                      isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
-                    }`}
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                      {index + 1}
-                    </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                    <div className="w-full">
-                      <p className="text-gray-600">
-                        Nom du Groupe :{" "}
-                        <span className="font-bold">{groupe?.description}</span>
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
-                        <span className="font-bold">
-                          {groupe?.groupeDevices?.length}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="min-w-[4rem]">
-                      {isSelected ? (
-                        <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
-                      ) : (
-                        <IoMdSquareOutline className="text-[2rem] text-red-400" />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
-              <button
-                onClick={() => {
-                  setShowGroupesSelectionnesPopup(false);
-                }}
-                className="py-2 text-white rounded-md bg-orange-600 font-bold"
-              >
-                Confirmer
-              </button>
-              <button
-                onClick={() => {
-                  setShowGroupesSelectionnesPopup(false);
-                }}
-                className="py-2  rounded-md bg-gray-200 font-bold"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-
+       
       {/* Popup pour la confirmation du mot de passe */}
       <ConfirmationPassword
         showConfirmPassword={showConfirmAddGroupeGestionPopup}
@@ -406,16 +160,14 @@ function ModifyAccountPage({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10-- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-              {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
-              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Modifier le Compte
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  // setShowModifyAccountPagePopup(false);
-                  setDocumentationPage("Gestion_des_comptes");
+                   setDocumentationPage("Gestion_des_comptes");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -424,44 +176,8 @@ function ModifyAccountPage({
               </button>
             </div>
 
-            {/* <p className="mb-2">
-              Choisissez des Appareils pour intégrer dans le groupe
-            </p>
-            <div
-              onClick={() => {
-                setShowDeviceSelectionnesPopup(true);
-              }}
-              className="w-full mb-4 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-            >
-              <h3 className="w-full text-center-- font-semibold">
-                <span>
-                  {deviceSelectionnes?.length +
-                    " Appareil" +
-                    (deviceSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas d'appareil sélectionner"}
-                </span>
-              </h3>
-              <FaChevronDown />
-            </div> */}
-            {/* <p className="mb-2">
-              Choisissez un ou plusieurs groupe pour affecter l'utilisateur
-            </p>
-            <div
-              onClick={() => {
-                setShowGroupesSelectionnesPopup(true);
-              }}
-              className="w-full mb-10 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-            >
-              <h3 className="w-full text-center-- font-semibold">
-                <span>
-                  {groupesSelectionnes?.length +
-                    " Groupe" +
-                    (groupesSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas de groupe sélectionner"}
-                </span>
-              </h3>
-              <FaChevronDown />
-            </div> */}
+         
+        
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
@@ -503,11 +219,7 @@ function ModifyAccountPage({
                     label: "confirmer le mot de passe",
                     placeholder: "Confirmer le mot de passe",
                   },
-                  //   {
-                  //     id: "workOrderID",
-                  //     label: "workOrderID",
-                  //     placeholder: "workOrderID",
-                  //   },
+                 
                 ].map((field) => (
                   <div key={field.id}>
                     <label
@@ -548,11 +260,8 @@ function ModifyAccountPage({
                     Enregistrer
                   </button>
                   <button
-                    onClick={() => {
-                      // setShowModifyAccountPagePopup(false);
-                      // setDocumentationPage("Modifier_compte");
-                      setDocumentationPage("Gestion_des_comptes");
-
+                    onClick={() => { 
+                      setDocumentationPage("Gestion_des_comptes"); 
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
@@ -569,14 +278,4 @@ function ModifyAccountPage({
   );
 }
 
-export default ModifyAccountPage;
-
-// export default ModifyAccountPage;
-
-// export default ModifyAccountPage
-
-// export default ModifyAccountPage;
-
-// export default ModifyAccountPage
-
-// export default ModifyAccountPage
+export default ModifyAccountPage; 

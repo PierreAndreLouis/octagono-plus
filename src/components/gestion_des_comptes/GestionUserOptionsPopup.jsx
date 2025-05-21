@@ -91,12 +91,7 @@ function GestionUserOptionsPopup({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  //   setDeleteAccountPopup(false);
-                }}
-                className="py-1 px-5 bg-red-500 rounded-lg text-white"
-              >
+              <button className="py-1 px-5 bg-red-500 rounded-lg text-white">
                 Confirmer
               </button>
 
@@ -105,59 +100,6 @@ function GestionUserOptionsPopup({
                   setDeleteAccountPopup(false);
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
-              >
-                Annuler
-              </h3>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {editAccountGestion && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
-          <form
-            // onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Modifier l'utilisateur ?
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                Veuillez entrer votre mot de passe
-              </label>
-
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Mot de passe"
-                  required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  //   setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 bg-orange-500 rounded-lg text-white"
-              >
-                Confirmer
-              </button>
-
-              <h3
-                onClick={() => {
-                  setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
               >
                 Annuler
               </h3>
@@ -186,22 +128,15 @@ function GestionUserOptionsPopup({
                 {currentSelectedUserToConnect?.description || "---"}
               </h2>
             </div>
-            <div
-              // onClick={() => setShowSelectedUserOptionsPopup(false)}
-              className="p-4 flex flex-col gap-4 py-6 pb-10"
-            >
+            <div className="p-4 flex flex-col gap-4 py-6 pb-10">
               {/*  */}
               {/*  */}
               {/*  */}
               {/*  */}
 
               <Link
-                // to="/liste_des_vehicules"
                 onClick={() => {
                   setTimeout(() => {
-                    // setListeGestionDesVehicules(
-                    //   currentSelectedUserToConnect?.userDevices
-                    // );
                     if (currentSelectedUserToConnect?.userDevices?.length > 0) {
                       setListeGestionDesVehicules(
                         currentSelectedUserToConnect?.userDevices
@@ -218,14 +153,6 @@ function GestionUserOptionsPopup({
                       );
                     }
 
-                    // {currentSelectedUserToConnect?.userGroupes?.length > 0
-                    //       ? currentSelectedUserToConnect?.userDevices
-                    //       : currentAccountSelected?.accountDevices}
-
-                    console.log(
-                      "currentSelectedUserToConnect?.userDevices---------",
-                      currentSelectedUserToConnect?.userDevices
-                    );
                     setDeviceListeTitleGestion(
                       "Utilisateur : " +
                         currentSelectedUserToConnect?.description
@@ -233,7 +160,6 @@ function GestionUserOptionsPopup({
                     setShowSelectedUserOptionsPopup(false);
                     setDocumentationPage("Gestion_des_appareils");
                   }, 1000);
-                  // navigate("/liste_des_vehicules");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -246,23 +172,22 @@ function GestionUserOptionsPopup({
               {/*  */}
               {/*  */}
               <button
-                // to="/liste_des_groupes"
                 onClick={() => {
                   setTimeout(() => {
                     setListeGestionDesGroupe(
-                      currentSelectedUserToConnect?.userGroupes
+                      currentAccountSelected?.accountGroupes?.filter((g) =>
+                        currentSelectedUserToConnect?.userGroupes?.some(
+                          (u) => u.groupID === g.groupID
+                        )
+                      )
                     );
                     setListeGestionDesGroupeTitre(
                       currentSelectedUserToConnect?.description
                     );
 
-                    console.log(currentSelectedUserToConnect?.userGroupes);
-                    console.log(currentSelectedUserToConnect?.description);
-
                     setShowSelectedUserOptionsPopup(false);
                     setDocumentationPage("Gestion_des_groupes");
                   }, 100);
-                  // navigate("/liste_des_vehicules");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -277,8 +202,7 @@ function GestionUserOptionsPopup({
               {/*  */}
               <div
                 onClick={() => {
-                  // setEditAccountGestion(true);
-                  setShowModifyUserPage(true);
+                  //  setShowModifyUserPage(true);
                   setShowSelectedUserOptionsPopup(false);
                   setDocumentationPage("Modifier_utilisateur");
                 }}
@@ -294,7 +218,6 @@ function GestionUserOptionsPopup({
                   setDeleteAccountPopup(true);
                   setShowSelectedUserOptionsPopup(false);
                 }}
-                // onClick={() => lancerAppel(currentVéhicule?.simPhoneNumber)}
                 className="shadow-md cursor-pointer hover:bg-red-100 dark:hover:bg-gray-900 bg-red-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
@@ -302,7 +225,6 @@ function GestionUserOptionsPopup({
                   Supprimer l'utilisateur
                 </h2>
               </div>
-              {/* callError, setCallError, lancerAppel, */}
             </div>
           </div>
         </div>

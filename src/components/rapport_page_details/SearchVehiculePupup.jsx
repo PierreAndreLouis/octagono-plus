@@ -58,7 +58,7 @@ function SearchVehiculePupup({
 
       const hasDetails =
         véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
-      const noDetails = véhicule?.véhiculeDetails.length <= 0;
+      const noDetails = véhicule?.véhiculeDetails?.length <= 0;
 
       // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
       const lastUpdateTimeMs = véhicule?.lastUpdateTime

@@ -20,15 +20,12 @@ function GestionGroupeOptionPopup({
   setDocumentationPage,
 }) {
   const {
-    currentSelectedUserToConnect,
-
     setListeGestionDesVehicules,
     setDeviceListeTitleGestion,
     currentAccountSelected,
     currentSelectedGroupeGestion,
-    setCurrentSelectedGroupeGestion,
+    setListeGestionDesUsers,
   } = useContext(DataContext);
-  const navigate = useNavigate();
 
   const currentSelectedGroupeGestionDevices = () => {
     console.log("currentSelectedGroupeGestion changer......");
@@ -50,9 +47,6 @@ function GestionGroupeOptionPopup({
       setListeGestionDesVehicules(updateListe);
     }, 500);
   };
-  //   const [deleteAccountPopup, setDeleteGroupeAccountPopup] = useState(false);
-
-  //   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
   return (
     <div>
@@ -76,32 +70,12 @@ function GestionGroupeOptionPopup({
                 {currentSelectedGroupeGestion?.description || "---"}
               </h2>
             </div>
-            <div
-              //   onClick={() => setShowSelectedGroupeOptionsPopup(false)}
-              className="p-4 flex flex-col gap-4 py-6 pb-10"
-            >
-              {/* <Link
-                to="/liste_des_vehicules"
-                onClick={() => {
-                  currentSelectedGroupeGestionDevices();
-                  setDeviceListeTitleGestion(
-                    "Groupe : " + currentSelectedGroupeGestion?.description
-                  );
-                  setShowSelectedGroupeOptionsPopup(false);
-                }}
-                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
-              >
-                <FaUserCircle className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
-                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Afficher Les Utilisateurs affectée
-                </h2>
-              </Link> */}
+            <div className="p-4 flex flex-col gap-4 py-6 pb-10">
               {/*  */}
               {/*  */}
               {/*  */}
               {/*  */}
               <button
-                // to="/liste_des_vehicules"
                 onClick={() => {
                   currentSelectedGroupeGestionDevices();
                   setDeviceListeTitleGestion(
@@ -115,6 +89,23 @@ function GestionGroupeOptionPopup({
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   Afficher Les Appareils
+                </h2>
+              </button>
+
+              <button
+                onClick={() => {
+                  // currentSelectedGroupeGestionDevices();
+                  // setDeviceListeTitleGestion(
+                  //   "Groupe : " + currentSelectedGroupeGestion?.description
+                  // );
+                  setShowSelectedGroupeOptionsPopup(false);
+                  setDocumentationPage("Gestion_des_utilisateurs");
+                }}
+                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+              >
+                <FaUsers className="text-[1.2rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                  Liste des utilisateurs affectés
                 </h2>
               </button>
               {/*  */}
@@ -131,7 +122,6 @@ function GestionGroupeOptionPopup({
                   setDeleteGroupeAccountPopup(true);
                   setShowSelectedGroupeOptionsPopup(false);
                 }}
-                // onClick={() => lancerAppel(currentVéhicule?.simPhoneNumber)}
                 className="shadow-md cursor-pointer hover:bg-red-100 dark:hover:bg-gray-900 bg-red-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
@@ -139,7 +129,6 @@ function GestionGroupeOptionPopup({
                   Supprimer le groupe
                 </h2>
               </div>
-              {/* callError, setCallError, lancerAppel, */}
             </div>
           </div>
         </div>
@@ -149,7 +138,3 @@ function GestionGroupeOptionPopup({
 }
 
 export default GestionGroupeOptionPopup;
-
-// export default GestionGroupeOptionPopup
-
-// export default GestionGroupeOptionPopup

@@ -27,7 +27,6 @@ import {
 } from "recharts";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import {
-  FaAngleDoubleRight,
   FaCar,
   FaChevronDown,
   FaSearch,
@@ -66,7 +65,6 @@ function DashboardContaintMaintComponant({
     setListeGestionDesGroupe,
     setListeGestionDesGroupeTitre,
     fetchAllComptes,
-    comptes,
   } = useContext(DataContext);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -97,77 +95,149 @@ function DashboardContaintMaintComponant({
     return currentTimeSec - device?.lastUpdateTime > twentyFourHoursInSec;
   });
 
-  const [animatedTotal, setAnimatedTotal] = useState(0);
-  const [animatedDeplaces, setAnimatedDeplaces] = useState(0);
-  const [animatedStationnement, setAnimatedStationnement] = useState(0);
-  const [animatedInactifs, setAnimatedInactifs] = useState(0);
+  // // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+  // const getTodayTimestamp = () => {
+  //   const now = new Date();
+  //   now.setHours(0, 0, 0, 0); // Minuit
+  //   return Math.floor(now.getTime() / 1000); // Convertir en secondes
+  // };
+  // const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+  // const todayTimestamp = getTodayTimestamp() * 1000;
+  // const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  // const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
 
-  // function animateValue(start, end, duration, setter) {
-  //   const startTime = performance.now();
+  // const allDevices = currentAccountSelected
+  //   ? currentAccountSelected?.accountDevices
+  //   : accountDevices;
 
-  //   function animate(currentTime) {
-  //     const elapsed = currentTime - startTime;
-  //     const progress = Math.min(elapsed / duration, 1);
-  //     const value = start + (end - start) * progress;
-  //     setter(parseFloat(value.toFixed(1)));
+  // const DeviceDéplacer = allDevices?.filter((device) => {
+  //   const déplacer = device?.lastStopTime > todayTimestamp;
+  //   return déplacer;
+  // });
 
-  //     if (progress < 1) {
-  //       requestAnimationFrame(animate);
-  //     }
-  //   }
+  // const DeviceEnStationnement = allDevices?.filter((device) => {
+  //   const stationnement =
+  //     currentTimeMs - device?.lastUpdateTime < twentyFourHoursInMs;
+  //   return stationnement;
+  // });
 
-  //   requestAnimationFrame(animate);
-  // }
+  // const DeviceInactifs = allDevices?.filter((device) => {
+  //   const stationnement =
+  //     currentTimeMs - device?.lastUpdateTime > twentyFourHoursInMs;
+  //   return stationnement;
+  // });
 
-  const animateValue = (start, end, duration, setter) => {
-    const startTime = performance.now();
-
-    const animate = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const value = Math.floor(start + (end - start) * progress);
-      setter(value);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
-  };
-
-  useEffect(() => {
-    animateValue(animatedTotal, allDevices.length, 1000, setAnimatedTotal);
-    animateValue(
-      animatedDeplaces,
-      DeviceDéplacer.length,
-      1000,
-      setAnimatedDeplaces
-    );
-    animateValue(
-      animatedStationnement,
-      DeviceEnStationnement.length,
-      1000,
-      setAnimatedStationnement
-    );
-    animateValue(
-      animatedInactifs,
-      DeviceInactifs.length,
-      1000,
-      setAnimatedInactifs
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allDevices]);
-
-  //
-  //
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //
+  // Données des véhicules avec heures différentes
+  // const vehiculeData = [
+  //   {
+  //     deviceID: "234234234",
+  //     description: "nissan xterra",
+  //     lastStartTime: "1746025200", // 06:00
+  //     lastStopTime: "1746032400", // 08:00
+  //   },
+  //   {
+  //     deviceID: "234234",
+  //     description: "Camion mack",
+  //     lastStartTime: "1746034200", // 08:30
+  //     lastStopTime: "1746041400", // 10:30
+  //   },
+  //   {
+  //     deviceID: "232344234",
+  //     description: "Caracol de Paule",
+  //     lastStartTime: "1746043200", // 11:00
+  //     lastStopTime: "1746050400", // 13:00
+  //   },
+  //   {
+  //     deviceID: "234234234",
+  //     description: "nissan xterra",
+  //     lastStartTime: "1746025200", // 06:00
+  //     lastStopTime: "1746032400", // 08:00
+  //   },
+  //   {
+  //     deviceID: "234234",
+  //     description: "Camion mack",
+  //     lastStartTime: "1746034200", // 08:30
+  //     lastStopTime: "1746041400", // 10:30
+  //   },
+  //   {
+  //     deviceID: "232344234",
+  //     description: "Caracol de Paule",
+  //     lastStartTime: "1746043200", // 11:00
+  //     lastStopTime: "1746050400", // 13:00
+  //   },
+  //   {
+  //     deviceID: "234234234",
+  //     description: "nissan xterra",
+  //     lastStartTime: "1746025200", // 06:00
+  //     lastStopTime: "1746032400", // 08:00
+  //   },
+  //   {
+  //     deviceID: "234234",
+  //     description: "Camion mack",
+  //     lastStartTime: "1746034200", // 08:30
+  //     lastStopTime: "1746041400", // 10:30
+  //   },
+  //   {
+  //     deviceID: "232344234",
+  //     description: "Caracol de Paule",
+  //     lastStartTime: "1746043200", // 11:00
+  //     lastStopTime: "1746050400", // 13:00
+  //   },
+  //   {
+  //     deviceID: "234234234",
+  //     description: "nissan xterra",
+  //     lastStartTime: "1746025200", // 06:00
+  //     lastStopTime: "1746032400", // 08:00
+  //   },
+  //   {
+  //     deviceID: "234234",
+  //     description: "Camion mack",
+  //     lastStartTime: "1746034200", // 08:30
+  //     lastStopTime: "1746041400", // 10:30
+  //   },
+  //   {
+  //     deviceID: "232344234",
+  //     description: "Caracol de Paule",
+  //     lastStartTime: "1746043200", // 11:00
+  //     lastStopTime: "1746050400", // 13:00
+  //   },
+  //   {
+  //     deviceID: "234234234",
+  //     description: "nissan xterra",
+  //     lastStartTime: "1746025200", // 06:00
+  //     lastStopTime: "1746032400", // 08:00
+  //   },
+  //   {
+  //     deviceID: "234234",
+  //     description: "Camion mack",
+  //     lastStartTime: "1746034200", // 08:30
+  //     lastStopTime: "1746041400", // 10:30
+  //   },
+  //   {
+  //     deviceID: "232344234",
+  //     description: "Caracol de Paule",
+  //     lastStartTime: "1746043200", // 11:00
+  //     lastStopTime: "1746050400", // 13:00
+  //   },
+  //   {
+  //     deviceID: "234234234",
+  //     description: "nissan xterra",
+  //     lastStartTime: "1746025200", // 06:00
+  //     lastStopTime: "1746032400", // 08:00
+  //   },
+  //   {
+  //     deviceID: "234234",
+  //     description: "Camion mack",
+  //     lastStartTime: "1746034200", // 08:30
+  //     lastStopTime: "1746041400", // 10:30
+  //   },
+  //   {
+  //     deviceID: "232344234",
+  //     description: "Caracol de Paule",
+  //     lastStartTime: "1746043200", // 11:00
+  //     lastStopTime: "1746050400", // 13:00
+  //   },
+  // ];
 
   // Préparation des données pour le graphique
   const graphData =
@@ -244,81 +314,15 @@ function DashboardContaintMaintComponant({
 
   /////////////////////////////////////
   /////////////////////////////////////
-
-  const MIN_DISPLAY = 5; // px ou unité relative
-
-  // const transformValue = (value) => {
-  //   if (value === 0) return MIN_DISPLAY;
-  //   if (value <= 10) return Math.max(value * 7.5, MIN_DISPLAY);
-  //   return Math.max(75 + (value - 10) * 0.5, MIN_DISPLAY);
-  // };
-
-  // const transformValue = (value) => {
-  //   if (value === 0) return MIN_DISPLAY;
-  //   if (value <= 20) return Math.max(value * 3.75, MIN_DISPLAY);
-  //   return Math.max(75 + (value - 20) * 0.5, MIN_DISPLAY);
-  // };
-  const transformValue = (value) => {
-    if (value === 0) return MIN_DISPLAY;
-    if (value <= 30) return Math.max(value * 2.5, MIN_DISPLAY);
-    return Math.max(75 + (value - 30) * 0.5, MIN_DISPLAY);
-  };
-
-  // Préparation des données
-  const formatBarData = (data) =>
-    data.map((account) => {
-      const devices = account.accountDevices || [];
-      const total = devices.length;
-      const actifs = devices.filter(
-        (d) => currentTimeSec - d?.lastUpdateTime < twentyFourHoursInSec
-      ).length;
-
-      const inactifs = total - actifs;
-
-      return {
-        name: account?.description, // fullName pour le popup
-        shortName: account?.description?.slice(0, 8), // 5 lettres pour l’axe X
-        total,
-        actifs,
-        inactifs,
-        totalDisplay: transformValue(total),
-        actifsDisplay: transformValue(actifs),
-        inactifsDisplay: transformValue(inactifs),
-      };
-    });
-
-  const graphData2 = formatBarData(gestionAccountData).sort(
-    (a, b) => b.total - a.total
-  );
-  const barSpacing2 = 70;
-  const fixedWidth2 = graphData.length * barSpacing;
-
-  // Custom Tooltip pour afficher les vraies valeurs
-  const CustomTooltip2 = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white shadow-lg rounded p-2 text-sm border border-gray-100">
-          <p className="font-semibold">{data.name}</p>
-          <p>
-            Total : <span className="font-bold">{data.total}</span>
-          </p>
-          <p>
-            Inactifs : <span className="font-bold">{data.inactifs}</span>
-          </p>
-          <p>
-            Actifs : <span className="font-bold">{data.actifs}</span>
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   /////////////////////////////////////
   /////////////////////////////////////
   /////////////////////////////////////
   /////////////////////////////////////
+
+  // const allVehicule = 100;
+  // const activeVehicule = 50;
+  // const inactivVehicule = 30;
+  // const parkingVehicule = 20;
 
   const allVehicule = allDevices?.length;
 
@@ -327,28 +331,6 @@ function DashboardContaintMaintComponant({
   const inactivVehicule = DeviceInactifs?.length;
 
   const parkingVehicule = DeviceEnStationnement?.length;
-
-  const [animatedActivePct, setAnimatedActivePct] = useState(0);
-  const [animatedInactivePct, setAnimatedInactivePct] = useState(0);
-  const [animatedParkingPct, setAnimatedParkingPct] = useState(0);
-
-  useEffect(() => {
-    if (allVehicule === 0) return;
-
-    // Réinitialise à zéro avant de lancer l’animation
-    setAnimatedActivePct(0);
-    setAnimatedInactivePct(0);
-    setAnimatedParkingPct(0);
-
-    // Attendre un petit moment pour laisser le temps au DOM de refléter le 0
-    const timeout = setTimeout(() => {
-      animateValue(0, activePct, 1000, setAnimatedActivePct);
-      animateValue(0, inactivPct, 1000, setAnimatedInactivePct);
-      animateValue(0, parkingPct, 1000, setAnimatedParkingPct);
-    }, 50); // 50ms de délai suffit souvent
-
-    return () => clearTimeout(timeout);
-  }, [allDevices]);
 
   // Pourcentage
   const activePct = (activeVehicule / allVehicule) * 100;
@@ -381,47 +363,23 @@ function DashboardContaintMaintComponant({
     buildCircle(
       90,
       14,
-      animatedInactivePct,
+      inactivPct,
       "rgba(147,51,234,1)",
       "rgba(147,51,234,0.1)"
     ), // purple
+    // buildCircle(90, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"), // green
+
     buildCircle(
       70,
       14,
-      animatedParkingPct,
+      parkingPct,
       "rgba(251,146,60,1)",
       "rgba(251,146,60,0.1)"
     ), // orange
-    buildCircle(
-      50,
-      14,
-      animatedActivePct,
-      "rgba(34,197,94,1)",
-      "rgba(34,197,94,0.1)"
-    ), // green
+    // buildCircle(70, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"),// green
+
+    buildCircle(50, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"), // green
   ];
-
-  // const layers = [
-  //   buildCircle(
-  //     90,
-  //     14,
-  //     inactivPct,
-  //     "rgba(147,51,234,1)",
-  //     "rgba(147,51,234,0.1)"
-  //   ), // purple
-  //   // buildCircle(90, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"), // green
-
-  //   buildCircle(
-  //     70,
-  //     14,
-  //     parkingPct,
-  //     "rgba(251,146,60,1)",
-  //     "rgba(251,146,60,0.1)"
-  //   ), // orange
-  //   // buildCircle(70, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"),// green
-
-  //   buildCircle(50, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"), // green
-  // ];
 
   ///////////////////////////////////////////////////
 
@@ -487,8 +445,6 @@ function DashboardContaintMaintComponant({
     //   });
   };
 
-  const [showFistGrapheOption, setShowFistGrapheOption] = useState(true);
-
   return (
     <div className="pb-6-">
       {/* statistic box */}
@@ -545,8 +501,7 @@ function DashboardContaintMaintComponant({
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {allDevices?.length} */}
-                    {animatedTotal}
+                    {allDevices?.length}
                   </h2>
                 </div>
                 <div className="absolute mt-1.5 right-4 bottom-4 ">
@@ -567,8 +522,7 @@ function DashboardContaintMaintComponant({
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {DeviceDéplacer?.length} */}
-                    {animatedDeplaces}
+                    {DeviceDéplacer?.length}
                   </h2>
                 </div>
                 <div className="absolute mt-1.5 right-4 bottom-4">
@@ -589,8 +543,7 @@ function DashboardContaintMaintComponant({
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {DeviceEnStationnement?.length} */}
-                    {animatedStationnement}
+                    {DeviceEnStationnement?.length}
                   </h2>
                 </div>
                 <div className="absolute mt-1.5 right-4 bottom-4 ">
@@ -611,8 +564,7 @@ function DashboardContaintMaintComponant({
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {DeviceInactifs?.length} */}
-                    {animatedInactifs}
+                    {DeviceInactifs?.length}
                   </h2>
                 </div>
                 <div className="absolute mt-1.5 right-4 bottom-4 ">
@@ -632,272 +584,116 @@ function DashboardContaintMaintComponant({
       <div className="md:px-4-- pt-4">
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-3 items-stretch justify-center  gap-4 ">
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
           {/* Graphe de déplacement */}
-          {(currentAccountSelected ||
-            (!showFistGrapheOption && !currentAccountSelected)) && (
-            <div className="bg-white md:col-span-2 justify-between flex flex-col   p-3 h-full rounded-lg">
-              {/* title section */}
-              <div className="flex  mb-4 justify-between items-end ">
-                <div className=" ">
-                  <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                    <h2>Graphe de déplacement </h2>
-                    {!currentAccountSelected && (
-                      <FaAngleDoubleRight
-                        onClick={() => {
-                          setShowFistGrapheOption(!showFistGrapheOption);
-                        }}
-                        className="text-xl ml-3 mt-1 cursor-pointer"
-                      />
-                    )}
-                  </div>
-                  <p className="text-gray-500">
-                    Appareils Déplacés ({DeviceDéplacer?.length})
-                  </p>
-                </div>
-                <div className="flex mb-1 text-[.8rem] flex-col sm:flex-row gap-0 text-gray-600  sm:gap-5  items-center">
-                  <div className="flex gap-1 items-center ">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Depart</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Arriver</p>
-                  </div>
-                </div>
-              </div>
+          <div className="bg-white md:col-span-2 justify-between flex flex-col   p-3 h-full rounded-lg">
+            {/* title section */}
+            <div className="flex  mb-4 justify-between items-end ">
               <div className=" ">
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-
-                {DeviceDéplacer.length > 0 ? (
-                  <div
-                    className="w-full  flex flex-col justify-end h-[250px] overflow-x-auto p-4 pb-0 pl-0 bg-gray-100- rounded-xl"
-                    style={{
-                      scrollbarWidth: "none",
-                      msOverflowStyle: "none",
-                    }}
-                  >
-                    <div
-                      // className="border-2 border-red-600 h-full"
-                      style={{ width: `${fixedWidth}px`, height: "100%" }}
-                    >
-                      <ResponsiveContainer
-                        //   className={"border-2 border-green-600"}
-                        width="100%"
-                        height="100%"
-                      >
-                        <BarChart
-                          // className="border-2 h-full border-purple-800"
-                          data={graphData}
-                          layout="horizontal"
-                          margin={{
-                            top: 20,
-                            right: 30,
-                            left: 0,
-                            bottom: -10,
-                          }}
-                          barCategoryGap={barSpacing - 10} // 10px barSize → 38px gap
-                        >
-                          <CartesianGrid
-                            vertical={false}
-                            strokeDasharray="3 3"
-                          />
-                          <XAxis
-                            dataKey="name"
-                            type="category"
-                            tick={{ fontSize: 12 }}
-                            interval={0}
-                          />
-                          <YAxis
-                            type="number"
-                            domain={[minTime - 600, maxTime]}
-                            tickFormatter={(tick) => FormatDateHeure(tick).time}
-                            tick={{ fontSize: 12 }}
-                            width={42}
-                          />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Bar
-                            dataKey="start"
-                            fill="#f97316"
-                            name="Heure de départ"
-                            radius={[8, 8, 0, 0]}
-                            barSize={8}
-                            animationDuration={1000}
-                          />
-                          <Bar
-                            dataKey="stop"
-                            fill="#22c55e"
-                            name="Heure d'arrivée"
-                            radius={[8, 8, 0, 0]}
-                            barSize={8}
-                            animationDuration={1000}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="w-full  min-h-full flex justify-center items-center">
-                    <p className="py-10 md:py-[6.8rem] font-semibold  text-lg text-gray-600">
-                      Pas d'appareil déplacés{" "}
-                    </p>
-                  </div>
-                )}
-
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
+                <h2 className="font-semibold text-lg mb-4-- text-gray-700">
+                  Graphe de déplacement
+                </h2>
+                <p className="text-gray-500">
+                  Appareils Déplacés ({DeviceDéplacer?.length})
+                </p>
+              </div>
+              <div className="flex mb-1 text-[.8rem] flex-col sm:flex-row gap-0 text-gray-600  sm:gap-5  items-center">
+                <div className="flex gap-1 items-center ">
+                  <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
+                    {" "}
+                  </p>{" "}
+                  <p>Depart</p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500">
+                    {" "}
+                  </p>{" "}
+                  <p>Arriver</p>
+                </div>
               </div>
             </div>
-          )}
+            <div className=" ">
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
 
-          {/* Graphe des comptes */}
-          {!currentAccountSelected && showFistGrapheOption && (
-            <div className="bg-white md:col-span-2 justify-between flex flex-col   p-3 h-full rounded-lg">
-              {/* title section */}
-              <div className="flex  mb-4 justify-between items-end- ">
-                <div className=" ">
-                  <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                    <h2>Graphe des Comptes </h2>
-                    {!currentAccountSelected && (
-                      <FaAngleDoubleRight
-                        onClick={() => {
-                          setShowFistGrapheOption(!showFistGrapheOption);
+              {DeviceDéplacer.length > 0 ? (
+                <div
+                  className="w-full  flex flex-col justify-end h-[250px] overflow-x-auto p-4 pb-0 pl-0 bg-gray-100- rounded-xl"
+                  style={{
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                  }}
+                >
+                  <div
+                    // className="border-2 border-red-600 h-full"
+                    style={{ width: `${fixedWidth}px`, height: "100%" }}
+                  >
+                    <ResponsiveContainer
+                      //   className={"border-2 border-green-600"}
+                      width="100%"
+                      height="100%"
+                    >
+                      <BarChart
+                        // className="border-2 h-full border-purple-800"
+                        data={graphData}
+                        layout="horizontal"
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 0,
+                          bottom: -10,
                         }}
-                        className="text-xl ml-3 mt-1 cursor-pointer"
-                      />
-                    )}
+                        barCategoryGap={barSpacing - 10} // 10px barSize → 38px gap
+                      >
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <XAxis
+                          dataKey="name"
+                          type="category"
+                          tick={{ fontSize: 12 }}
+                          interval={0}
+                        />
+                        <YAxis
+                          type="number"
+                          domain={[minTime - 600, maxTime]}
+                          tickFormatter={(tick) => FormatDateHeure(tick).time}
+                          tick={{ fontSize: 12 }}
+                          width={42}
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar
+                          dataKey="start"
+                          fill="#f97316"
+                          name="Heure de départ"
+                          radius={[8, 8, 0, 0]}
+                          barSize={8}
+                        />
+                        <Bar
+                          dataKey="stop"
+                          fill="#22c55e"
+                          name="Heure d'arrivée"
+                          radius={[8, 8, 0, 0]}
+                          barSize={8}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
-                  <p className="text-gray-500">
-                    Nombre de comptes ({comptes?.length})
+                </div>
+              ) : (
+                <div className="w-full  min-h-full flex justify-center items-center">
+                  <p className="py-10 md:py-[6.8rem] font-semibold  text-lg text-gray-600">
+                    Pas d'appareil déplacés{" "}
                   </p>
                 </div>
-                <div className="flex mb-1 text-[.8rem] flex-col sm:flex-row gap-0 text-gray-600  sm:gap-5  items-center">
-                  <div className="flex gap-1 items-center ">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Total</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Actif</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-purple-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Inactif</p>
-                  </div>
-                </div>
-              </div>
-              <div className=" h-[270px] overflow-hidden">
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-
-                {graphData2.length > 0 ? (
-                  <div
-                    className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                  >
-                    <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={graphData2}
-                          layout="horizontal"
-                          margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
-                          barCategoryGap={barSpacing2 - 10}
-                        >
-                          <CartesianGrid
-                            vertical={false}
-                            strokeDasharray="3 3"
-                          />
-                          <XAxis
-                            dataKey="shortName"
-                            type="category"
-                            tick={{ fontSize: 12 }}
-                            interval={0}
-                          />
-                          <YAxis hide={true} />
-                          <Tooltip content={<CustomTooltip2 />} />
-                          <Bar
-                            dataKey="totalDisplay"
-                            fill="#22c55e"
-                            name="Total"
-                            radius={[8, 8, 0, 0]}
-                            barSize={7}
-                            animationDuration={1000}
-                          />
-
-                          <Bar
-                            dataKey="inactifsDisplay"
-                            fill="#9333ea"
-                            name="Inactifs"
-                            radius={[8, 8, 0, 0]}
-                            barSize={7}
-                            animationDuration={1000}
-                          />
-
-                          <Bar
-                            dataKey="actifsDisplay"
-                            fill="#f97316"
-                            name="Actifs"
-                            radius={[8, 8, 0, 0]}
-                            barSize={7}
-                            animationDuration={1000}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="w-full min-h-full flex justify-center items-center">
-                    <p className="py-10 font-semibold text-lg text-gray-600">
-                      Pas de données disponibles
-                    </p>
-                  </div>
-                )}
-
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-              </div>
+              )}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
+              {/* Graphe ici... */}
             </div>
-          )}
-
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
+          </div>
           {/* Graphe des Appareils */}
           <div className="bg-white relative flex flex-col justify-between- p-3 md:col-span-1 rounded-lg">
             <h2 className="font-semibold text-lg mb-8 text-gray-700">
@@ -1043,15 +839,15 @@ function DashboardContaintMaintComponant({
                     ...Array.from(
                       new Map(
                         gestionAccountData
-                          ?.flatMap((account) => account.accountUsers || [])
-                          ?.map((user) => [user.userID, user])
+                          .flatMap((account) => account.accountUsers || [])
+                          .map((user) => [user.userID, user])
                       ).values()
                     ),
                     ...accountUsers.filter(
                       (user) =>
                         !gestionAccountData
-                          ?.flatMap((account) => account.accountUsers || [])
-                          ?.some(
+                          .flatMap((account) => account.accountUsers || [])
+                          .some(
                             (existingUser) =>
                               existingUser.userID === user.userID
                           )
@@ -1128,8 +924,8 @@ function DashboardContaintMaintComponant({
                       Array.from(
                         new Map(
                           gestionAccountData
-                            ?.flatMap((account) => account.accountGroupes)
-                            ?.map((group) => [group.groupID, group])
+                            .flatMap((account) => account.accountGroupes)
+                            .map((group) => [group.groupID, group])
                         ).values()
                       )
                     );
@@ -1155,8 +951,8 @@ function DashboardContaintMaintComponant({
                 : Array.from(
                     new Map(
                       gestionAccountData
-                        ?.flatMap((account) => account.accountGroupes)
-                        ?.map((group) => [group.groupID, group])
+                        .flatMap((account) => account.accountGroupes)
+                        .map((group) => [group.groupID, group])
                     ).values()
                   )
               )?.map((user, index) => {

@@ -1,39 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
-import { DataContext } from "../../context/DataContext";
+ import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
-import { Link } from "react-router-dom";
-import { MdErrorOutline } from "react-icons/md";
+ import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
-import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
+import { 
+  IoMdRadioButtonOff,
+  IoMdRadioButtonOn,
+ } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function ModifyUserGroupeGestion({
-  setShowModifyUserPage,
-  setDocumentationPage,
-  showCreateNewUserPage,
-
-  setChooseOtherDeviceGestion,
-  setShowUserGroupeCategorieSection,
-  setShowUserListeToSelectDevice,
+  setDocumentationPage, 
 }) {
   const {
-    setCurrentAccountSelected,
-    currentAccountSelected,
-    //
-    setError,
-    password,
-    successAddVéhiculePopup,
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    createVéhiculeLoading,
-    createVehicleEnGestionAccount,
+     currentAccountSelected,
+     setError,
+    password, 
     currentSelectedUserToConnect,
-    scrollToTop,
-    FormatDateHeure,
-    currentSelectedGroupeGestion,
-    createNewGroupeEnGestionAccount,
-    createNewUserEnGestionAccount,
+    scrollToTop, 
+    timeZoneData,
+    userRole,
     ModifyUserEnGestionAccountFonction,
   } = useContext(DataContext);
 
@@ -56,6 +42,14 @@ function ModifyUserGroupeGestion({
     userID: "",
     description: "",
     displayName: "",
+     contactEmail: "",
+    notifyEmail: "",
+    isActive: "true",
+    contactPhone: "",
+    contactName: "",
+    timeZone: "GMT-04:00",
+    maxAccessLevel: "2",
+    roleID: "!clientproprietaire",
     password: "",
     password2: "",
   });
@@ -73,7 +67,6 @@ function ModifyUserGroupeGestion({
     if (name === "userID") {
       newValue = newValue.toLowerCase(); // convertit en minuscules uniquement pour userID
     }
-
     setAddNewUserData((prevData) => ({
       ...prevData,
       [name]: newValue,
@@ -87,20 +80,13 @@ function ModifyUserGroupeGestion({
     setError("");
 
     // Si deviceID est unique, créer le véhicule
-    // const userID = addNewUserData.userID;
+    const userID = addNewUserData.userID;
 
     // Vérification si groupID existe déjà
-    // const userExists = currentAccountSelected?.accountUsers?.some(
-    //   (user) => user?.userID === userID
-    // );
-
-    // if (userExists) {
-    //   setErrorID(
-    //     "Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre."
-    //   );
-    //   return;
-    // }
-
+    const userExists = currentAccountSelected?.accountUsers?.some(
+      (user) => user?.userID === userID
+    );
+ 
     if (addNewUserData?.password !== addNewUserData?.password2) {
       setErrorID("Les mots de passe ne correspondent pas.");
       return;
@@ -109,53 +95,17 @@ function ModifyUserGroupeGestion({
     setShowConfirmAddGroupeGestionPopup(true);
   };
 
-  //   const deviceDuSelectedGroupe =
-  //     currentSelectedGroupeGestion?.groupeDevices?.map(
-  //       (device) => device?.deviceID
-  //     );
-  //   const userDuSelectedGroupe = currentAccountSelected?.accountUsers?.map(
-  //     (user) => user?.userID
-  //   );
-  //
+  const [showTimeZonePopup, setShowTimeZonePopup] = useState(false);
+  const [showUserRolePopup, setShowUserRolePopup] = useState(false);
+  const [maxAccessLevelText, setMaxAccessLevelText] = useState("Write/Edit");
+  const [showIsUserActivePopup, setShowIsUserActivePopup] = useState(false);
+  const [showIsUserActivePopupText, setShowIsUserActivePopupText] =
+    useState("true");
 
-  //   const allDevicesIDs = currentAccountSelected?.accountDevices?.map(
-  //     (device) => device?.deviceID
-  //   );
-
-  //   const allUsersIDs = currentAccountSelected?.accountUsers?.map(
-  //     (user) => user?.userID
-  //   );
-  //
-  //   const [deviceSelectionnes, setDeviceSelectionnes] = useState(
-  //     deviceDuSelectedGroupe || []
-  //   );
-
-  //   const [usersSelectionnes, setUsersSelectionnes] = useState(
-  //     userDuSelectedGroupe || []
-  //   );
-
-  //
-
-  //
-  //   const deviceNonSelectionnes = allDevicesIDs?.filter(
-  //     (deviceID) => !deviceSelectionnes.includes(deviceID)
-  //   );
-  //   const userNonSelectionnes = allUsersIDs?.filter(
-  //     (userID) => !usersSelectionnes.includes(userID)
-  //   );
-  //
-
-  //   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
-  //     useState(false);
-
-  //   const [showUserSelectionnesPopup, setShowUSerSelectionnesPopup] =
-  //     useState(false);
-  //
-
-  //   useEffect(() => {
-  //     console.log("deviceSelectionnes", deviceSelectionnes);
-  //   }, [deviceSelectionnes]);
-
+  const [showMaxAccessLevelPopup, setShowMaxAccessLevelPopup] = useState(false);
+ 
+ 
+ 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
@@ -166,12 +116,9 @@ function ModifyUserGroupeGestion({
     (groupe) => groupe?.groupID
   );
   const [groupesSelectionnes, setGroupesSelectionnes] = useState(
-    groupeDuSelectedUser || []
+    groupeDuSelectedUser?.[0] || ""
   );
-  //
-  const groupesNonSelectionnes = allGroupIDs?.filter(
-    (groupID) => !groupesSelectionnes.includes(groupID)
-  );
+ 
 
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
@@ -179,11 +126,7 @@ function ModifyUserGroupeGestion({
   useEffect(() => {
     console.log("groupesSelectionnes", groupesSelectionnes);
   }, [groupesSelectionnes]);
-
-  //   useEffect(() => {
-  //     setGroupesSelectionnes([]);
-  //   }, [showCreateNewUserPage]);
-
+ 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
@@ -192,47 +135,26 @@ function ModifyUserGroupeGestion({
       const userID = addNewUserData.userID;
       const description = addNewUserData.description;
       const displayName = addNewUserData.displayName;
+
+      const contactEmail = addNewUserData.contactEmail;
+      const notifyEmail = addNewUserData.notifyEmail;
+      const isActive = addNewUserData.isActive;
+      const contactPhone = addNewUserData.contactPhone;
+      const contactName = addNewUserData.contactName;
+      const timeZone = addNewUserData.timeZone;
+      const maxAccessLevel = addNewUserData.maxAccessLevel;
+      const roleID = addNewUserData.roleID;
+
       const password2 = addNewUserData.password2;
 
-      //   console.log(
-      //    ,
-      //     ,
-      //     ,
-
-      //    ,
-      //     ,
-      //    ,
-      //   ,
-
-      //   );
-      //   console.log("accountID", currentAccountSelected?.accountID);
-      //   console.log("user: admin");
-      //   console.log("password", currentAccountSelected?.password);
-      // //   console.log("groupID", groupID);
-      //   console.log("description", description);
-      //   console.log("displayName", displayName);
-
-      //
-      //   console.log("Appareils sélectionnées", deviceSelectionnes);
-      //   console.log("Utilisateurs sélectionnées", usersSelectionnes);
-
+ 
+   
       if (
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
       ) {
-        console.log("accountID", currentAccountSelected?.accountID);
-        console.log("user: admin");
-        console.log("password", currentAccountSelected?.password);
-
-        console.log("userID", userID);
-        console.log("description", description);
-        console.log("displayName", displayName);
-        console.log("passowrd2", password2);
-
-        //
-        console.log("groupes Selectionnes", groupesSelectionnes);
-        console.log("groupes Non Selectionnes", groupesNonSelectionnes);
-
+        
+        // console.log(
         ModifyUserEnGestionAccountFonction(
           currentAccountSelected?.accountID,
           "admin",
@@ -242,12 +164,19 @@ function ModifyUserGroupeGestion({
           description,
           displayName,
           password2,
-          groupesSelectionnes,
-          groupesNonSelectionnes
+           contactEmail,
+          notifyEmail,
+          isActive,
+          contactPhone,
+          contactName,
+          timeZone,
+          maxAccessLevel,
+          roleID,
+           groupesSelectionnes,
+          groupeDuSelectedUser
         );
 
-        // setShowModifyUserPage(false);
-        setDocumentationPage("Gestion_des_utilisateurs");
+         setDocumentationPage("Gestion_des_utilisateurs");
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -258,7 +187,7 @@ function ModifyUserGroupeGestion({
     }
   };
 
-  //   Pour mettre a jour les nouvelle donnee du véhicule a modifier
+   //   Pour mettre a jour les nouvelle donnee du véhicule a modifier
   useEffect(() => {
     if (currentSelectedUserToConnect) {
       console.log(
@@ -269,6 +198,16 @@ function ModifyUserGroupeGestion({
         userID: currentSelectedUserToConnect.userID || "",
         description: currentSelectedUserToConnect.description || "",
         displayName: currentSelectedUserToConnect.displayName || "",
+
+        contactEmail: currentSelectedUserToConnect.contactEmail || "",
+        notifyEmail: currentSelectedUserToConnect.notifyEmail || "",
+        isActive: currentSelectedUserToConnect.isActive || "",
+        contactPhone: currentSelectedUserToConnect.contactPhone || "",
+        contactName: currentSelectedUserToConnect.contactName || "",
+        timeZone: currentSelectedUserToConnect.timeZone || "",
+        maxAccessLevel: currentSelectedUserToConnect.maxAccessLevel || "",
+        roleID: currentSelectedUserToConnect.roleID || "",
+
         password: currentSelectedUserToConnect.password || "",
         password2: currentSelectedUserToConnect.password || "",
       });
@@ -277,21 +216,223 @@ function ModifyUserGroupeGestion({
 
   return (
     <div className="px-3 rounded-lg  bg-white">
-      {/* {createVéhiculeLoading && (
-        <div className="fixed z-30 inset-0 bg-gray-200/50">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
+      {showMaxAccessLevelPopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+          >
+            <IoClose
+              onClick={() => {
+                setShowMaxAccessLevelPopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Choisir un max access level:
+            </h2>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                maxAccessLevelText === "New/Delete"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setMaxAccessLevelText("New/Delete");
+                setAddNewUserData((prev) => ({
+                  ...prev,
+                  maxAccessLevel: "0",
+                }));
+                setShowMaxAccessLevelPopup(false);
+              }}
+            >
+              <p>New/Delete</p>
+              <p>0</p>
+            </div>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                maxAccessLevelText === "Read/View"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setMaxAccessLevelText("Read/View");
+                setAddNewUserData((prev) => ({
+                  ...prev,
+                  maxAccessLevel: "1",
+                }));
+                setShowMaxAccessLevelPopup(false);
+              }}
+            >
+              <p>Read/View</p>
+              <p>1</p>
+            </div>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                maxAccessLevelText === "Write/Edit"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setMaxAccessLevelText("Write/Edit");
+                setAddNewUserData((prev) => ({
+                  ...prev,
+                  maxAccessLevel: "2",
+                }));
+                setShowMaxAccessLevelPopup(false);
+              }}
+            >
+              <p>Write/Edit</p>
+              <p>2</p>
+            </div>
           </div>
         </div>
-      )} */}
+      )}
+      {showIsUserActivePopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+          >
+            <IoClose
+              onClick={() => {
+                setShowIsUserActivePopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
 
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Activation de l'utilisateur:
+            </h2>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                showIsUserActivePopupText === "true"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setShowIsUserActivePopupText("true");
+                setAddNewUserData((prev) => ({
+                  ...prev,
+                  isActive: "true",
+                }));
+                setShowIsUserActivePopup(false);
+              }}
+            >
+              <p>Oui</p>
+            </div>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                showIsUserActivePopupText === "false"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setShowIsUserActivePopupText("false");
+                setAddNewUserData((prev) => ({
+                  ...prev,
+                  isActive: "false",
+                }));
+                setShowIsUserActivePopup(false);
+              }}
+            >
+              <p>Non</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showTimeZonePopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+          >
+            <IoClose
+              onClick={() => {
+                setShowTimeZonePopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Choisir un TimeZone:
+            </h2>
+            <div className="max-h-[60vh] overflow-auto">
+              {timeZoneData?.map((zone, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`cursor-pointer border-b py-3 hover:bg-gray-100 flex justify-between items-center dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      addNewUserData.timeZone === `${zone?.region}:00`
+                        ? "bg-gray-100 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                       setAddNewUserData((prev) => ({
+                        ...prev,
+                        timeZone: zone?.region + ":00",
+                      }));
+                      setShowTimeZonePopup(false);
+                    }}
+                  >
+                    <p>{zone?.region + ":00"}</p>
+                   </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+      {showUserRolePopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+          >
+            <IoClose
+              onClick={() => {
+                setShowUserRolePopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Choisir un TimeZone:
+            </h2>
+            <div className="max-h-[60vh] overflow-auto">
+              {userRole?.map((role, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`cursor-pointer border-b py-3 hover:bg-gray-100 flex justify-between items-center dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      addNewUserData.roleID === role?.roleID
+                        ? "bg-gray-100 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setAddNewUserData((prev) => ({
+                        ...prev,
+                        roleID: role?.roleID,
+                      }));
+                      setShowUserRolePopup(false);
+                    }}
+                  >
+                    <p>{role?.description}</p>
+                    <p>{role?.roleID}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2
-              onClick={() => {
-                console.log("tous les Groupes: ", allGroupIDs);
-              }}
+            <h2 
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
               Liste Des Groupe
@@ -302,30 +443,25 @@ function ModifyUserGroupeGestion({
               }}
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
-            <p
-              onClick={() => {
-                console.log("groupesNonSelectionnes", groupesNonSelectionnes);
-              }}
+            <p 
               className="mx-2 mb-3 text-center mt-4 text-lg"
             >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
+              Choisis un Groupe pour intégrer l'appareil
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
               {currentAccountSelected?.accountGroupes?.map((groupe, index) => {
-                const isSelected = groupesSelectionnes.includes(groupe.groupID);
+                const isSelected = groupesSelectionnes === groupe.groupID;
 
                 return (
                   <div
                     key={index}
                     onClick={() => {
-                      setGroupesSelectionnes((prev) => {
-                        if (prev.includes(groupe.groupID)) {
-                          return prev.filter((id) => id !== groupe.groupID);
-                        } else {
-                          return [...prev, groupe.groupID];
-                        }
-                      });
+                      if (groupesSelectionnes === groupe.groupID) {
+                        setGroupesSelectionnes("");
+                      } else {
+                        setGroupesSelectionnes(groupe.groupID);
+                      }
                     }}
                     className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center rounded-lg py-2 px-2 ${
                       isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
@@ -349,9 +485,9 @@ function ModifyUserGroupeGestion({
                     </div>
                     <div className="min-w-[4rem]">
                       {isSelected ? (
-                        <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
+                        <IoMdRadioButtonOn className="text-[2rem] text-green-500" />
                       ) : (
-                        <IoMdSquareOutline className="text-[2rem] text-red-400" />
+                        <IoMdRadioButtonOff className="text-[2rem] text-red-400" />
                       )}
                     </div>
                   </div>
@@ -372,7 +508,7 @@ function ModifyUserGroupeGestion({
                 onClick={() => {
                   setShowGroupesSelectionnesPopup(false);
                 }}
-                className="py-2  rounded-md bg-gray-200 font-bold"
+                className="py-2  rounded-md bg-gray-100 font-bold"
               >
                 Annuler
               </button>
@@ -393,20 +529,19 @@ function ModifyUserGroupeGestion({
         setIsPasswordConfirmed={setShowConfirmAddGroupeGestionPopup}
       />
 
-      <div className="flex   w-full justify-center h-full  ">
+      <div className="flex  w-full justify-center h-full  ">
         <div className="w-full flex justify-center">
-          <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 border-- shadow-lg- overflow-auto-">
+          <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-              {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
-              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Modifier un Utilisateur
+               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+                Modifier l'utilisateur :{" "}
+                <span>{currentSelectedUserToConnect?.description}</span>
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  // setShowModifyUserPage(false);
-                  setDocumentationPage("Gestion_des_utilisateurs");
+                   setDocumentationPage("Gestion_des_utilisateurs");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -415,27 +550,8 @@ function ModifyUserGroupeGestion({
               </button>
             </div>
 
-            {/* <p className="mb-2">
-              Choisissez des Appareils pour intégrer dans le groupe
-            </p>
-            <div
-              onClick={() => {
-                setShowDeviceSelectionnesPopup(true);
-              }}
-              className="w-full mb-4 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-            >
-              <h3 className="w-full text-center-- font-semibold">
-                <span>
-                  {deviceSelectionnes?.length +
-                    " Appareil" +
-                    (deviceSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas d'appareil sélectionner"}
-                </span>
-              </h3>
-              <FaChevronDown />
-            </div> */}
             <p className="mb-2">
-              Choisissez un ou plusieurs groupe pour affecter l'utilisateur
+              Choisissez un groupe pour affecter l'utilisateur
             </p>
             <div
               onClick={() => {
@@ -445,10 +561,9 @@ function ModifyUserGroupeGestion({
             >
               <h3 className="w-full text-center-- font-semibold">
                 <span>
-                  {groupesSelectionnes?.length +
-                    " Groupe" +
-                    (groupesSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas de groupe sélectionner"}
+                  {groupesSelectionnes
+                    ? groupesSelectionnes
+                    : "Pad de groupe sélectionner"}
                 </span>
               </h3>
               <FaChevronDown />
@@ -473,6 +588,46 @@ function ModifyUserGroupeGestion({
                     label: "DisplayName",
                     placeholder: "Nom a afficher",
                   },
+                  //
+                  {
+                    id: "contactEmail",
+                    label: "contactEmail",
+                    placeholder: "Email",
+                  },
+                  {
+                    id: "notifyEmail",
+                    label: "notifyEmail",
+                    placeholder: "email",
+                  },
+
+                  {
+                    id: "contactPhone",
+                    label: "contactPhone",
+                    placeholder: "telephone",
+                  },
+                  {
+                    id: "isActive",
+                    label: "isActive",
+                    placeholder: "email",
+                  },
+
+                  {
+                    id: "timeZone",
+                    label: "timeZone",
+                    placeholder: "",
+                  },
+                  {
+                    id: "maxAccessLevel",
+                    label: "maxAccessLevel",
+                    placeholder: "",
+                  },
+                  {
+                    id: "roleID",
+                    label: "roleID",
+                    placeholder: "",
+                  },
+
+                  //
                   {
                     id: "password",
                     label: "Mot de passe",
@@ -483,11 +638,6 @@ function ModifyUserGroupeGestion({
                     label: "confirmer le mot de passe",
                     placeholder: "Confirmer le mot de passe",
                   },
-                  //   {
-                  //     id: "workOrderID",
-                  //     label: "workOrderID",
-                  //     placeholder: "workOrderID",
-                  //   },
                 ].map((field) => (
                   <div key={field.id}>
                     <label
@@ -499,19 +649,64 @@ function ModifyUserGroupeGestion({
                         <span className="text-red-600 text-lg"> *</span>
                       )}
                     </label>
-                    <input
-                      id={field.id}
-                      name={field.id}
-                      type="text"
-                      placeholder={field.placeholder}
-                      value={addNewUserData[field.id]}
-                      onChange={handleChange}
-                      required
-                      disabled={field.id === "userID"}
-                      className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                    />
+                    {/*  */}
+                    {field.id === "maxAccessLevel" ? (
+                      <div
+                        onClick={() => {
+                          setShowMaxAccessLevelPopup(true);
+                        }}
+                        className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>{maxAccessLevelText}</p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : field.id === "timeZone" ? (
+                      <div
+                        onClick={() => {
+                          setShowTimeZonePopup(true);
+                        }}
+                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>{addNewUserData?.timeZone}</p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : field.id === "roleID" ? (
+                      <div
+                        onClick={() => {
+                          setShowUserRolePopup(true);
+                        }}
+                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>{addNewUserData?.roleID}</p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : field.id === "isActive" ? (
+                      <div
+                        onClick={() => {
+                          setShowIsUserActivePopup(true);
+                        }}
+                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>
+                          {addNewUserData?.isActive === "true" ? "oui" : "non"}
+                        </p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : (
+                      <input
+                        id={field.id}
+                        name={field.id}
+                        type="text"
+                        placeholder={field.placeholder}
+                        value={addNewUserData[field.id]}
+                        onChange={handleChange}
+                        required
+                        className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                      />
+                    )}
                   </div>
                 ))}
+
                 {errorID && (
                   <p className="flex items-start gap-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 text-md translate-y-4 px-4 py-1 rounded-md text-center">
                     <MdErrorOutline className="text-2xl mt-0.5" />
@@ -529,10 +724,8 @@ function ModifyUserGroupeGestion({
                   </button>
                   <button
                     onClick={() => {
-                      // setShowModifyUserPage(false);
-                      setDocumentationPage("Gestion_des_utilisateurs");
-
-                      scrollToTop();
+                       setDocumentationPage("Gestion_des_utilisateurs");
+                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
@@ -549,9 +742,3 @@ function ModifyUserGroupeGestion({
 }
 
 export default ModifyUserGroupeGestion;
-
-// export default ModifyUserGroupeGestion;
-
-// export default ModifyUserGroupeGestion
-
-// export default ModifyUserGroupeGestion

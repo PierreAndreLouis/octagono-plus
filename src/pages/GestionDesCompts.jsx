@@ -2,40 +2,36 @@ import React, { useContext, useState } from "react";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import { FaArrowLeft, FaPlusCircle } from "react-icons/fa";
-import { MdErrorOutline, MdSwitchAccount } from "react-icons/md";
+import { MdErrorOutline, MdSwitchAccount, MdUpdate } from "react-icons/md";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffectCircle";
-import CreateNewAccountPage from "../components/gestion_des_comptes/CreateNewAccountPage";
 import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
-import ModifyAccountPage from "../components/gestion_des_comptes/ModifyAccountPage";
 
 function GestionDesCompts({ setDocumentationPage }) {
   const {
     FormatDateHeure,
     account,
     TestDeRequetteDevices,
-    getAllAccountsData,
     gestionAccountData,
     setCurrentAccountSelected,
     getAllAccountsDataLoading,
-    setListeGestionDesVehicules,
     setCurrentSelectedUserToConnect,
     setShowAccountOptionsPopup,
-    fetchAllComptes,
-    userDevices,
+    ListeDesRolePourLesUserFonction,
+    comptes,
     accountDevices,
+    accountGroupes,
+    accountUsers,
+    fetchAccountDevices,
     fetchAccountGroupes,
     fetchGroupeDevices,
     fetchAccountUsers,
     fetchUserDevices,
-    accountUsers,
+    fetchUserGroupes,
+    fetchAllComptes,
+    testFonctin,
+    password,
   } = useContext(DataContext);
-
-  const [showCreateNewAccountPopup, setShowCreateNewAccountPopup] =
-    useState(false);
-
-  const [showModifyAccountPagePopup, setShowModifyAccountPagePopup] =
-    useState(false);
 
   const [inputSearchItem, setInputSearchItem] = useState("");
 
@@ -44,6 +40,85 @@ function GestionDesCompts({ setDocumentationPage }) {
         item?.description.toLowerCase().includes(inputSearchItem.toLowerCase())
       )
     : gestionAccountData;
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+  const testFonction1 = () => {
+    // Déclenchement automatique des autres fetchs pour chaque compte
+    console.log("Start fonction 11111111");
+    // comptes?.forEach((acct) => {
+    const id = account;
+    const pwd = password;
+    const fetchAllOtherData = false;
+
+    fetchAllComptes(id, "admin", pwd, fetchAllOtherData);
+
+    console.log("end fonction..............");
+  };
+
+  const testFonction2 = (fetchAllOtherData) => {
+    // Déclenchement automatique des autres fetchs pour chaque compte
+    console.log("Start fonction");
+    comptes?.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
+
+      //////////////////////////////////////////
+      fetchAccountDevices(id, pwd).catch((err) => {
+        console.error("Erreur lors du chargement des devices :", err);
+        // setError("Erreur lors du chargement des devices.");
+      });
+    });
+
+    console.log("end fonction..............");
+  };
+
+  const testFonction3 = (fetchAllOtherData) => {
+    // Déclenchement automatique des autres fetchs pour chaque compte
+    console.log("Start fonction");
+    comptes?.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
+
+      ////////////////////////////////////////////////
+      fetchAccountGroupes(id, pwd)
+        .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+        .catch((err) => {
+          console.error(
+            "Erreur lors du chargement des groupes ou des devices de groupes :",
+            err
+          );
+          // setError("Erreur lors de la mise à jour des groupes.");
+        });
+    });
+
+    console.log("end fonction..............");
+  };
+
+  const testFonction4 = (fetchAllOtherData) => {
+    // Déclenchement automatique des autres fetchs pour chaque compte
+    console.log("Start fonction");
+    comptes?.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
+
+      ////////////////////////////////////////////////////
+      fetchAccountUsers(id, pwd)
+        .then((users) => {
+          fetchUserDevices(id, users);
+          fetchUserGroupes(id, users);
+        })
+        .catch((err) => {
+          console.error(
+            "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+            err
+          );
+          // setError("Erreur lors de la mise à jour des utilisateurs.");
+        });
+    });
+
+    console.log("end fonction..............");
+  };
 
   return (
     <div>
@@ -54,56 +129,65 @@ function GestionDesCompts({ setDocumentationPage }) {
             getAllAccountsDataLoading={getAllAccountsDataLoading}
           />
 
-          {/* Composant pour créer un nouveau Compte */}
-          {/* {showCreateNewAccountPopup && (
-            <CreateNewAccountPage
-              showCreateNewAccountPopup={showCreateNewAccountPopup}
-              setShowCreateNewAccountPopup={setShowCreateNewAccountPopup}
-            />
-          )} */}
-
-          {/* {showModifyAccountPagePopup && (
-            <ModifyAccountPage
-              showModifyAccountPagePopup={showModifyAccountPagePopup}
-              setShowModifyAccountPagePopup={setShowModifyAccountPagePopup}
-            />
-          )} */}
-
           <div className="px-4 pt-10 mt-4-- pb-40 bg-white rounded-lg">
-            <h2 className="mt-[10rem]-- text-lg text-center font-bold ">
-              Gestion Des Comptes
+            <h2
+              onClick={() => {
+                console.log("comptes", comptes);
+                console.log("accountDevices", accountDevices);
+                console.log("accountGroupes", accountGroupes);
+                console.log("accountUsers", accountUsers);
+              }}
+              className="mt-[10rem]-- text-lg text-center font-bold "
+            >
+              Gestion Des Comptes ({filterListeDesCompte?.length})
             </h2>
             {/* <button
               onClick={() => {
+                testFonction1();
+              }}
+            >
+              Test fonction 1
+            </button>{" "}
+            <br />
+            <button
+              onClick={() => {
+                testFonction2();
+              }}
+            >
+              Test fonction 2
+            </button>{" "}
+            <br />
+            <button
+              onClick={() => {
+                testFonction3();
+              }}
+            >
+              Test fonction 3
+            </button>{" "}
+            <br />
+            <button
+              onClick={() => {
+                testFonction4();
+              }}
+            >
+              Test fonction 4
+            </button>{" "}
+            <br /> */}
+            {/* <button
+              onClick={() => {
                 TestDeRequetteDevices();
+                ListeDesRolePourLesUserFonction(
+                  "sysadmin",
+                  "admin",
+                  "OctagonoGPSHaitiAdmin13@1919"
+                );
               }}
             >
               Test de requête
             </button>{" "} */}
-            {/* <br />
-            <button
-              onClick={() => {
-                // fetchAllComptes(
-                //   "sysadmin",
-                //   "admin",
-                //   "OctagonoGPSHaitiAdmin13@1919"
-                // );
-
-                console.log("accountDevices:", accountDevices);
-                console.log("userDevices:", userDevices);
-                // getAllAccountsData(
-                //   "sysadmin",
-                //   "admin",
-                //   "OctagonoGPSHaitiAdmin13@1919"
-                // );
-              }}
-            >
-              Tous les donnees regrouper
-            </button>{" "} */}
             <div className="flex  justify-center mt-4">
               <button
                 onClick={() => {
-                  // setShowCreateNewAccountPopup(true);
                   setDocumentationPage("Ajouter_nouveau_compte");
                 }}
                 className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
@@ -116,22 +200,33 @@ function GestionDesCompts({ setDocumentationPage }) {
                 </div>
               </button>{" "}
             </div>
-            <div className="mx-auto border border-gray-400 rounded-md flex items-center justify-between max-w-[30rem] mt-4">
-              <input
-                id="text"
-                name="text"
-                type="text"
-                placeholder="Rechercher un compte"
-                required
-                value={inputSearchItem}
-                onChange={(e) => setInputSearchItem(e.target.value)}
-                className=" px-3 w-full focus:outline-0  dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400   sm:text-sm sm:leading-6"
-              />
-              <IoCloseOutline
-                onClick={() => setInputSearchItem("")}
-                className="text-2xl min-w-[2rem] mr-2 cursor-pointer text-red-500"
-              />
-              <IoSearchOutline className="text-2xl text-gray-500 border-l-2 cursor-pointer border-l-gray-400 min-w-[3rem]" />
+
+            <div className="flex mt-4 max-w-[30rem] mx-auto justify-between items-center gap-2 ">
+              <div className="mx-auto border w-full border-gray-400 rounded-md flex items-center justify-between max-w-[30rem] ">
+                <input
+                  id="text"
+                  name="text"
+                  type="text"
+                  placeholder="Rechercher un compte"
+                  required
+                  value={inputSearchItem}
+                  onChange={(e) => setInputSearchItem(e.target.value)}
+                  className=" px-3 w-full focus:outline-0  dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400   sm:text-sm sm:leading-6"
+                />
+                {/* <IoCloseOutline
+                  onClick={() => setInputSearchItem("")}
+                  className="text-2xl min-w-[2rem] mr-2 cursor-pointer text-red-500"
+                /> */}
+                <IoSearchOutline className="text-2xl text-gray-500 border-l cursor-pointer border-l-gray-400 min-w-[3rem]" />
+              </div>
+              {/* <div
+                onClick={() => {
+                  // deviceUpdateFonction();
+                }}
+                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
+              >
+                <MdUpdate className="text-xl " />
+              </div> */}
             </div>
             {/* Liste des Comptes */}
             <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
@@ -141,7 +236,6 @@ function GestionDesCompts({ setDocumentationPage }) {
                     key={index}
                     onClick={() => {
                       setCurrentAccountSelected(account);
-                      // setListeGestionDesVehicules(account?.accountDevices);
                       setShowAccountOptionsPopup(true);
                       setCurrentSelectedUserToConnect(null);
                     }}
@@ -231,7 +325,6 @@ function GestionDesCompts({ setDocumentationPage }) {
             </div>
             {/*  */}
             <GestionAccountOptionPopup
-              setShowModifyAccountPagePopup={setShowModifyAccountPagePopup}
               setDocumentationPage={setDocumentationPage}
             />
           </div>

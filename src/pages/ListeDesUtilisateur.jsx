@@ -5,112 +5,37 @@ import {
   IoClose,
   IoEarth,
   IoOptions,
+  IoSearchOutline,
 } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
-import {
-  FaChevronDown,
-  FaPlusCircle,
-  FaRegEdit,
-  FaTrashAlt,
-  FaUserAlt,
-  FaUserCircle,
-  FaUserPlus,
-} from "react-icons/fa";
+import { FaChevronDown, FaUserCircle, FaUserPlus } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
-import CreateNewUserGestion from "../components/gestion_des_comptes/CreateNewUserGestion";
-import ModifyUserGroupeGestion from "../components/gestion_des_comptes/ModifyUserGroupeGestion";
-// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+import { MdUpdate } from "react-icons/md";
 
 function ListeDesUtilisateur({ setDocumentationPage }) {
   const {
-    ajouterGeofencePopup,
-    setAjouterGeofencePopup,
-    geofenceData,
     FormatDateHeure,
-    account,
-    currentGeozone,
-    setCurrentGeozone,
-    isEditingGeofence,
-    setIsEditingGeofence,
-    ModifierGeofence,
-    supprimerGeofence,
-    activerOuDesactiverGeofence,
-    succesCreateGeofencePopup,
-    setSuccesCreateGeofencePopup,
-    succesModifierGeofencePopup,
-    setSuccesModifierGeofencePopup,
-    errorModifierGeofencePopup,
-    setErrorModifierGeofencePopup,
-    succesDeleteGeofencePopup,
-    setSuccesDeleteGeofencePopup,
-    errorDeleteGeofencePopup,
-    setErrorDeleteGeofencePopup,
-    showAccountOptionsPopup,
-    setShowAccountOptionsPopup,
     currentAccountSelected,
     password,
     setCurrentAccountSelected,
     listeGestionDesUsers,
-    setListeGestionDesUsers,
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
-    handleLogout,
     handleLogin,
-    resetIndexedDB,
-    setGestionAccountData,
     setShowSelectedUserOptionsPopup,
-    listeGestionDesVehicules,
     setListeGestionDesVehicules,
     gestionAccountData,
-    backToPagePrecedent,
-    fetchAccountUsers,
-    fetchUserDevices,
   } = useContext(DataContext);
-  const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
-  //
-  //
-  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-  const lastUpdateTimeMs = currentGeozone?.lastUpdateTime
-    ? currentGeozone?.lastUpdateTime * 1000
-    : 0;
-  const isCurrentGeozoneActive =
-    currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-  const geozoneID =
-    currentGeozone?.geozoneID ||
-    `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
-
-  const supprimerOuModifierGeozone = () => {
-    // activerOuDesactiverGeofence(geozoneID, 0);
-
-    if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
-      supprimerGeofence(geozoneID);
-    }
-
-    if (
-      (isCurrentGeozoneActive || !isCurrentGeozoneActive) &&
-      currentGeozone?.isActive === 0
-    ) {
-      // activerOuDesactiverGeofence(geozoneID, 1);
-    }
-
-    if (!isCurrentGeozoneActive && currentGeozone?.isActive === 1) {
-      // activerOuDesactiverGeofence(geozoneID, 0);
-    }
-  };
 
   const [seConnecterAutreComptePopup, setSeConnecterAutreComptePopup] =
     useState(false);
-  const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
-
-  const [editAccountGestion, setEditAccountGestion] = useState(false);
 
   const [inputPassword, setInputPassword] = useState();
   const [errorMessage, setErrorMessage] = useState("");
@@ -121,10 +46,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
 
     if (inputPassword === password) {
       console.log("Clicked...... 222");
-
-      // resetIndexedDB();
-      // localStorage.removeItem("gestionAccountData");
-      // setGestionAccountData(null);
 
       handleLogin(
         currentSelectedUserToConnect?.accountID,
@@ -147,29 +68,22 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
       )
     : gestionAccountData;
 
-  const [showCreateNewUserPage, setShowCreateNewUserPage] = useState(false);
-  const [showModifyUserPage, setShowModifyUserPage] = useState(false);
+  const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
+  const [showFilterInputSection, setShowFilterInputSection] = useState(false);
+
+  const filterUserAccountData = searchGroupInputTerm
+    ? listeGestionDesUsers?.filter((item) =>
+        item?.description
+          .toLowerCase()
+          .includes(searchGroupInputTerm.toLowerCase())
+      )
+    : listeGestionDesUsers;
 
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
 
-      <GestionUserOptionsPopup
-        setDocumentationPage={setDocumentationPage}
-        setShowModifyUserPage={setShowModifyUserPage}
-      />
-
-      {/* {showCreateNewUserPage && (
-        <CreateNewUserGestion
-          setShowCreateNewUserPage={setShowCreateNewUserPage}
-        />
-      )}
-
-      {showModifyUserPage && (
-        <ModifyUserGroupeGestion
-          setShowModifyUserPage={setShowModifyUserPage}
-        />
-      )} */}
+      <GestionUserOptionsPopup setDocumentationPage={setDocumentationPage} />
 
       {seConnecterAutreComptePopup && (
         <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
@@ -208,13 +122,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  // setSeConnecterAutreComptePopup(false);
-                  //   changerDeCompte();
-                }}
-                className="py-1 px-5 bg-orange-500 rounded-lg text-white"
-              >
+              <button className="py-1 px-5 bg-orange-500 rounded-lg text-white">
                 Confirmer
               </button>
 
@@ -230,117 +138,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
           </form>
         </div>
       )}
-
-      {deleteAccountPopup && (
-        <div className="fixed  z-[99999999999999999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
-          <form
-            // onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Supprimer l'Utilisateur ?
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                Veuillez entrer votre mot de passe
-              </label>
-              {errorMessage && (
-                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-              )}
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Mot de passe"
-                  required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-              {/* {errorMessage && (
-                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-              )} */}
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  //   setDeleteAccountPopup(false);
-                }}
-                className="py-1 px-5 bg-red-500 rounded-lg text-white"
-              >
-                Confirmer
-              </button>
-
-              <h3
-                onClick={() => {
-                  setDeleteAccountPopup(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
-              >
-                Annuler
-              </h3>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* {editAccountGestion && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
-          <form
-            // onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Modifier l'utilisateur ?
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                Veuillez entrer votre mot de passe
-              </label>
-
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Mot de passe"
-                  required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  //   setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 bg-orange-500 rounded-lg text-white"
-              >
-                Confirmer
-              </button>
-
-              <h3
-                onClick={() => {
-                  setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
-              >
-                Annuler
-              </h3>
-            </div>
-          </form>
-        </div>
-      )} */}
 
       {chooseOtherAccountGestion && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999]">
@@ -368,10 +165,9 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                 }}
               />
 
-              <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
-                Rechercher
-              </p>
-              {/* </Tooltip> */}
+              <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
+                <IoSearchOutline className="text-xl " />
+              </div>
             </div>
             <div className="flex overflow-auto h-[45vh] pb-20 flex-col gap-4 mx-3">
               {/*  */}
@@ -419,25 +215,19 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
           Liste des Utilisateur
         </h2>
 
-        <h3 className=" text-orange-600 mb-10 text-md text-center font-bold-- ">
+        {/* <h3 className=" text-orange-600 mb-10-- text-md text-center font-bold-- ">
           <span className="text-gray-700">Compte :</span>{" "}
           {currentAccountSelected?.description}
+        </h3> */}
+        <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
+          <span className="text-gray-700">Nombre d'utilisateur :</span>{" "}
+          {filterUserAccountData?.length}
         </h3>
 
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           <div className="flex    gap-2 justify-between mt-4">
-            {/* <button
-              onClick={() => {
-                backToPagePrecedent();
-              }}
-              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-            >
-              <IoArrowBack className="text-xl" />
-              <p className="hidden md:block">Retour</p>
-            </button>{" "} */}
             <button
               onClick={() => {
-                // setShowCreateNewUserPage(true);
                 setDocumentationPage("Ajouter_nouveau_utilisateur");
               }}
               className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
@@ -450,34 +240,88 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                 </p>
               </div>
             </button>{" "}
-            {/* <button
-              onClick={() => {
-                setShowAccountOptionsPopup(true);
-              }}
-              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-            >
-              <p className="hidden md:block">Options</p>
-              <IoOptions className="text-xl" />
-            </button>{" "} */}
           </div>
-          <div
+          {/* <div
             onClick={() => {
               setChooseOtherAccountGestion(true);
             }}
             className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
           >
             <h3 className="w-full text-center font-semibold">
-              {/* Compte: */}
               <span>
                 {currentAccountSelected?.description || "Choisissez un compte"}
               </span>
             </h3>
             <FaChevronDown />
-          </div>
+          </div> */}
+
+          {!showFilterInputSection && (
+            <div className="flex gap-2 w-full justify-between items-center">
+              <div
+                onClick={() => {
+                  setChooseOtherAccountGestion(true);
+                }}
+                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+              >
+                <h3 className="w-full text-center font-semibold">
+                  {/* Compte: */}
+                  <span>
+                    {currentAccountSelected?.description ||
+                      "Choisissez un compte"}
+                  </span>
+                </h3>
+                <FaChevronDown />
+              </div>
+              <div
+                onClick={() => {
+                  setShowFilterInputSection(true);
+                }}
+                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+              >
+                <IoSearchOutline className="text-xl " />
+              </div>
+              {/* <div
+                onClick={() => {
+                  // deviceUpdateFonction();
+                }}
+                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
+              >
+                <MdUpdate className="text-xl " />
+              </div> */}
+            </div>
+          )}
+
+          {showFilterInputSection && (
+            <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+              <input
+                id="search"
+                name="search"
+                type="search"
+                placeholder="Recherche un utilisateur"
+                required
+                value={searchGroupInputTerm}
+                onChange={(e) => {
+                  setSearchGroupInputTerm(e.target.value);
+                }}
+                className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+              />
+              <div
+                onClick={() => {
+                  {
+                    setShowFilterInputSection(false);
+                    setSearchTermInput("");
+                  }
+                }}
+                className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+              >
+                <IoClose className="text-xl text-red-600" />
+              </div>
+            </div>
+          )}
         </div>
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
-          {listeGestionDesUsers?.map((user, index) => {
+          {filterUserAccountData?.map((user, index) => {
             return (
               <div
                 onClick={() => {
@@ -500,14 +344,12 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                           Nom Utilisateur :
                         </p>
                         <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                          {/* {geozone?.description} */}
                           {user?.description}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
                         <p className="font-bold- text-gray-700">UserID :</p>
                         <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                          {/* {geozone?.description} */}
                           {user?.userID}
                         </span>
                       </div>{" "}
@@ -516,8 +358,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                           Groupes affectés :
                         </p>
                         <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                          {/* {geozone?.description} */}
-                          {/* {user?.userGroupes?.length} --------- */}
                           {user?.userGroupes?.length > 0
                             ? user?.userGroupes?.length
                             : "Tous"}
@@ -528,19 +368,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                           Nombre d'Appareils :
                         </p>
                         <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                          {/* {user?.userDevices?.length} */}
-                          {/* {user?.userGroupes?.length > 0
-                            ? user?.userDevices?.length
-                            : currentAccountSelected?.accountDevices?.length} */}
-
-                          {/* {user?.userDevices?.length > 0
-                            ? user?.userDevices?.length
-                            : ""}
-                            
-                          {user?.userDevices?.length <= 0 &&
-                          user?.userGroupes?.length <= 0
-                            ? currentAccountSelected?.accountDevices
-                            : ""} */}
                           {user?.userDevices?.length > 0
                             ? user.userDevices.length
                             : user?.userDevices?.length <= 0 &&
@@ -587,28 +414,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                   >
                     <p>Options</p> <IoOptions className="text-xl" />
                   </button>
-                  {/* {isActive && geozone?.isActive === (0 || 1) && ( */}
-                  {/* )} */}
-                  {/* <Link
-                    onClick={() => {
-                      setEditAccountGestion(true);
-                    }}
-                    className="bg-gray-50 border border-gray-400 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-                  >
-                    <FaRegEdit />
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setDeleteAccountPopup(true);
-                    }}
-                    className={`${
-                      true
-                        ? " bg-red-500 text-white"
-                        : "text-red-600 border-[0.02rem] border-red-500 "
-                    }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-                  >
-                    <FaTrashAlt />
-                  </button> */}
                 </div>
               </div>
             );
@@ -622,5 +427,3 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
 }
 
 export default ListeDesUtilisateur;
-
-// export default ListeDesUtilisateur

@@ -9,25 +9,15 @@ import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function CreateNewDeviceGestion({
-  setShowCreateNewDevicePage,
   setDocumentationPage,
   documentationPage,
-  setChooseOtherAccountGestion,
-  setShowUserGroupeCategorieSection,
-  setShowUserListeToSelectDevice,
 }) {
   const {
     setCurrentAccountSelected,
     currentAccountSelected,
-    //
     setError,
     password,
-    
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    createVéhiculeLoading,
     createVehicleEnGestionAccount,
-    currentSelectedUserToConnect,
     scrollToTop,
     currentSelectedDeviceGestion,
   } = useContext(DataContext);
@@ -66,7 +56,7 @@ function CreateNewDeviceGestion({
       ...prevData,
       [name]: value,
     }));
-    setErrorID(""); // Réinitialise l'erreur lorsque l'utilisateur modifie l'entrée
+    setErrorID(""); 
   };
 
   // Gestion de la soumission du formulaire
@@ -104,6 +94,9 @@ function CreateNewDeviceGestion({
     setShowConfirmAddVéhiculePopup(true);
   };
 
+
+  // //////////////////////
+
   const selectedDeviceID = currentSelectedDeviceGestion?.deviceID;
 
   const groupeDuSelectedDevice = currentAccountSelected?.accountGroupes
@@ -134,6 +127,9 @@ function CreateNewDeviceGestion({
   useEffect(() => {
     setGroupesSelectionnes([]);
   }, [documentationPage]);
+
+////////////////////////////////////
+
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
@@ -184,7 +180,6 @@ function CreateNewDeviceGestion({
           vehicleID,
           groupesSelectionnes
         );
-        // setShowCreateNewDevicePage(false);
         setDocumentationPage("Gestion_des_appareils");
       }
 
@@ -198,14 +193,6 @@ function CreateNewDeviceGestion({
 
   return (
     <div className="px-3  rounded-lg bg-white">
-      {/* {createVéhiculeLoading && (
-        <div className="fixed z-30 inset-0 bg-gray-200/50">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
-          </div>
-        </div>
-      )} */}
-
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
@@ -318,7 +305,6 @@ function CreateNewDeviceGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-              {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Enregistrer un nouveau Appareil
               </h3>
@@ -326,7 +312,6 @@ function CreateNewDeviceGestion({
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  // setShowCreateNewDevicePage(false);
                   setDocumentationPage("Gestion_des_appareils");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
@@ -335,22 +320,7 @@ function CreateNewDeviceGestion({
                 Retour
               </button>
             </div>
-            {/* <p className="mb-2">Choisissez un Utilisateur</p>
-            <div
-              onClick={() => {
-                setChooseOtherAccountGestion(true);
-                setShowUserListeToSelectDevice(true);
-                setShowUserGroupeCategorieSection(false);
-              }}
-              className="w-full mb-4 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-            >
-              <h3 className="w-full text-center-- font-semibold">
-                <span>
-                  {currentSelectedUserToConnect?.description || "-----"}
-                </span>
-              </h3>
-              <FaChevronDown />
-            </div> */}
+          
             <p className="mb-2">Choisissez un Groupe</p>
             <div
               onClick={() => {
@@ -441,17 +411,7 @@ function CreateNewDeviceGestion({
                     {errorID}
                   </p>
                 )}
-                {/* {!currentSelectedUserToConnect && (
-                  <p
-                    onClick={() => {
-                      setChooseOtherAccountGestion(true);
-                    }}
-                    className="flex cursor-pointer items-start gap-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 text-md translate-y-4 px-4 py-1 rounded-md text-center"
-                  >
-                    <MdErrorOutline className="text-2xl mt-0.5" />
-                    Choisissez un Utilisateur Pour enregistrer
-                  </p>
-                )} */}
+               
 
                 <div className="grid  grid-cols-2 gap-2 pt-10 pb-10 pb-6-">
                   <button
@@ -463,9 +423,7 @@ function CreateNewDeviceGestion({
                   </button>
                   <button
                     onClick={() => {
-                      // setShowCreateNewDevicePage(false);
                       setDocumentationPage("Gestion_des_appareils");
-
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"

@@ -9,25 +9,12 @@ import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function ModifyGroupeGestion({
-  setShowModifyNewGroupePage,
-  setDocumentationPage,
-  showCreateNewGroupePage,
-  setChooseOtherDeviceGestion,
-  setShowUserGroupeCategorieSection,
-  setShowUserListeToSelectDevice,
+   setDocumentationPage, 
 }) {
   const {
-    setCurrentAccountSelected,
-    currentAccountSelected,
-    //
-    setError,
+     currentAccountSelected,
+     setError,
     password,
-    successAddVéhiculePopup,
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    createVéhiculeLoading,
-    createVehicleEnGestionAccount,
-    currentSelectedUserToConnect,
     scrollToTop,
     FormatDateHeure,
     currentSelectedGroupeGestion,
@@ -73,21 +60,6 @@ function ModifyGroupeGestion({
     e.preventDefault();
     setError("");
 
-    // Si deviceID est unique, créer le véhicule
-    // const groupID = modifySelectedGroupeDataData.groupID;
-
-    // // Vérification si groupID existe déjà
-    // const deviceExists = currentAccountSelected?.accountGroupes?.some(
-    //   (groupe) => groupe?.groupID === groupID
-    // );
-
-    // if (deviceExists) {
-    //   setErrorID(
-    //     "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre."
-    //   );
-    //   return;
-    // }
-
     setShowConfirmModifyGroupeGestionPopup(true);
   };
 
@@ -95,9 +67,7 @@ function ModifyGroupeGestion({
     currentSelectedGroupeGestion?.groupeDevices?.map(
       (device) => device?.deviceID
     );
-  // const userDuSelectedGroupe = currentAccountSelected?.accountUsers?.map(
-  //   (user) => user?.userID
-  // );
+
 
   const userDuSelectedGroupe = currentAccountSelected?.accountUsers
     ?.filter((user) => {
@@ -125,13 +95,7 @@ function ModifyGroupeGestion({
     userDuSelectedGroupe || []
   );
 
-  //
-
-  //   useEffect(() => {
-  //     setDeviceSelectionnes([]);
-  //     setUsersSelectionnes([]);
-  //   }, [showCreateNewGroupePage]);
-  //
+ 
   const deviceNonSelectionnes = allDevicesIDs?.filter(
     (deviceID) => !deviceSelectionnes.includes(deviceID)
   );
@@ -165,19 +129,7 @@ function ModifyGroupeGestion({
       const notes = modifySelectedGroupeDataData.notes;
       const workOrderID = modifySelectedGroupeDataData.workOrderID;
 
-      console.log("accountID", currentAccountSelected?.accountID);
-      console.log("user: admin");
-      console.log("password", currentAccountSelected?.password);
-      console.log("groupID", groupID);
-      console.log("description", description);
-      console.log("displayName", displayName);
-      console.log("notes", notes);
-      console.log("workOrderID", workOrderID);
-      //
-      console.log("Appareils sélectionnées", deviceSelectionnes);
-      console.log("Utilisateurs sélectionnées", usersSelectionnes);
-
-      if (
+       if (
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
       ) {
@@ -194,8 +146,7 @@ function ModifyGroupeGestion({
           userNonSelectionnes,
           deviceNonSelectionnes
         );
-        // setShowModifyNewGroupePage(false);
-        setDocumentationPage("Gestion_des_groupes");
+         setDocumentationPage("Gestion_des_groupes");
       }
 
       setShowConfirmModifyGroupeGestionPopup(false);
@@ -221,21 +172,11 @@ function ModifyGroupeGestion({
 
   return (
     <div className="px-3 rounded-lg bg-white">
-      {/* {createVéhiculeLoading && (
-        <div className="fixed z-30 inset-0 bg-gray-200/50">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
-          </div>
-        </div>
-      )} */}
-
+      
       {showDeviceSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2
-              onClick={() => {
-                // console.log("tous les Groupes: ", allGroupIDs);
-              }}
+            <h2 
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
               Liste Des Appareils
@@ -330,10 +271,7 @@ function ModifyGroupeGestion({
       {showUserSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2
-              onClick={() => {
-                // console.log("tous les Groupes: ", allGroupIDs);
-              }}
+            <h2 
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
               Liste Des Appareils
@@ -344,10 +282,7 @@ function ModifyGroupeGestion({
               }}
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
-            <p
-              onClick={() => {
-                console.log("deviceNonSelectionnes", deviceNonSelectionnes);
-              }}
+            <p 
               className="mx-2 mb-3 text-center mt-4 text-lg"
             >
               Choisis un ou plusieurs Groupe pour intégrer l'appareil
@@ -449,8 +384,7 @@ function ModifyGroupeGestion({
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  // setShowModifyNewGroupePage(false);
-                  setDocumentationPage("Gestion_des_groupes");
+                   setDocumentationPage("Gestion_des_groupes");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -568,10 +502,8 @@ function ModifyGroupeGestion({
                   </button>
                   <button
                     onClick={() => {
-                      // setShowModifyNewGroupePage(false);
-                      setDocumentationPage("Gestion_des_groupes");
-
-                      scrollToTop();
+                       setDocumentationPage("Gestion_des_groupes");
+                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >

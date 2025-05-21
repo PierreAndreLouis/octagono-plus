@@ -1,77 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  IoArrowBack,
-  IoChevronBackCircleOutline,
-  IoClose,
-  IoEarth,
-  IoOptions,
-} from "react-icons/io5";
+import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 import {
-  FaPlusCircle,
   FaRegEdit,
-  FaTrashAlt,
-  FaUserAlt,
-  FaCar,
   FaUserPlus,
   FaChevronDown,
   FaUserCircle,
 } from "react-icons/fa";
-import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { PiIntersectThreeBold } from "react-icons/pi";
-import CreateNewGroupeGestion from "../components/gestion_des_comptes/CreateNewGroupeGestion";
-import ModifyGroupeGestion from "../components/gestion_des_comptes/ModifyGroupeGestion";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
-// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+import { MdUpdate } from "react-icons/md";
 
 function ListeDesGroupes({ setDocumentationPage }) {
   const {
-    ajouterGeofencePopup,
-    setAjouterGeofencePopup,
-    geofenceData,
-    FormatDateHeure,
-    account,
-    currentGeozone,
-    setCurrentGeozone,
-    isEditingGeofence,
-    setIsEditingGeofence,
-    ModifierGeofence,
-    supprimerGeofence,
-    activerOuDesactiverGeofence,
-    succesCreateGeofencePopup,
-    setSuccesCreateGeofencePopup,
-    succesModifierGeofencePopup,
-    setSuccesModifierGeofencePopup,
-    errorModifierGeofencePopup,
-    setErrorModifierGeofencePopup,
-    succesDeleteGeofencePopup,
-    setSuccesDeleteGeofencePopup,
-    errorDeleteGeofencePopup,
-    setErrorDeleteGeofencePopup,
-    showAccountOptionsPopup,
-    setShowAccountOptionsPopup,
     currentAccountSelected,
-    backToPagePrecedent,
     currentSelectedGroupeGestion,
     setCurrentSelectedGroupeGestion,
-    accountGroupes,
     deleteGroupeEnGestionAccount,
     password,
-    successAddVéhiculePopup,
-
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    successModifierVéhiculePopup,
-    setSuccessModifierVéhiculePopup,
-    errorModifierVéhiculePopup,
-    setErrorModifierVéhiculePopup,
-    successDeleteVéhiculePopup,
-    setSuccessDeleteVéhiculePopup,
-    errorDeleteVéhiculePopup,
-    setErrorDeleteVéhiculePopup,
     listeGestionDesGroupe,
     setListeGestionDesGroupe,
     listeGestionDesGroupeTitre,
@@ -80,50 +28,15 @@ function ListeDesGroupes({ setDocumentationPage }) {
     setCurrentSelectedUserToConnect,
     listeGestionDesUsers,
     scrollToTop,
+    setListeGestionDesUsers,
+    fetchAccountGroupes,
   } = useContext(DataContext);
-  const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
-
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
-  //
-  //
-  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-  const lastUpdateTimeMs = currentGeozone?.lastUpdateTime
-    ? currentGeozone?.lastUpdateTime * 1000
-    : 0;
-  const isCurrentGeozoneActive =
-    currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-  const geozoneID =
-    currentGeozone?.geozoneID ||
-    `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
-
-  const supprimerOuModifierGeozone = () => {
-    // activerOuDesactiverGeofence(geozoneID, 0);
-
-    if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
-      supprimerGeofence(geozoneID);
-    }
-
-    if (
-      (isCurrentGeozoneActive || !isCurrentGeozoneActive) &&
-      currentGeozone?.isActive === 0
-    ) {
-      // activerOuDesactiverGeofence(geozoneID, 1);
-    }
-
-    if (!isCurrentGeozoneActive && currentGeozone?.isActive === 1) {
-      // activerOuDesactiverGeofence(geozoneID, 0);
-    }
-  };
 
   const [deleteGroupeAccountPopup, setDeleteGroupeAccountPopup] =
     useState(false);
 
   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
-  const [showCreateNewGroupePage, setShowCreateNewGroupePage] = useState(false);
-  const [showModifyNewGroupePage, setShowModifyNewGroupePage] = useState(false);
   const [inputPassword, setInputPassword] = useState("");
 
   const [errorPassord, setErrorPassord] = useState("");
@@ -131,12 +44,6 @@ function ListeDesGroupes({ setDocumentationPage }) {
   const handlePasswordCheck = (e) => {
     e.preventDefault();
     if (inputPassword === password) {
-      console.log(
-        currentAccountSelected?.accountID,
-        "admin",
-        currentAccountSelected?.password,
-        currentSelectedGroupeGestion?.groupID
-      );
       deleteGroupeEnGestionAccount(
         currentAccountSelected?.accountID,
         "admin",
@@ -176,6 +83,17 @@ function ListeDesGroupes({ setDocumentationPage }) {
 
   const [showChooseOtherUserGroupePopup, setShowChooseOtherUserGroupePopup] =
     useState(false);
+
+  const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
+  const [showFilterInputSection, setShowFilterInputSection] = useState(false);
+
+  const filterGroupeAccountData = searchGroupInputTerm
+    ? listeGestionDesGroupe?.filter((item) =>
+        item?.description
+          .toLowerCase()
+          .includes(searchGroupInputTerm.toLowerCase())
+      )
+    : listeGestionDesGroupe;
 
   return (
     <div>
@@ -221,9 +139,9 @@ function ListeDesGroupes({ setDocumentationPage }) {
                   }}
                 />
 
-                <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
-                  Rechercher
-                </p>
+                <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
+                  <IoSearchOutline className="text-xl " />
+                </div>
                 {/* </Tooltip> */}
               </div>
 
@@ -248,22 +166,11 @@ function ListeDesGroupes({ setDocumentationPage }) {
                     <div
                       key={index}
                       onClick={() => {
-                        // setTimeout(() => {
                         setListeGestionDesGroupe(user?.userGroupes);
                         setListeGestionDesGroupeTitre(user?.description);
                         setShowChooseOtherUserGroupePopup(false);
                         setCurrentSelectedUserToConnect(user);
                         scrollToTop();
-
-                        // }, 500);
-                        // console.log(user);
-                        // setListeGestionDesVehicules(user?.userDevices);
-                        // setCurrentSelectedUserToConnect(user);
-                        // setChooseOtherAccountGestion(false);
-                        // setDeviceListeTitleGestion(
-                        //   "Utilisateur : " + user?.description
-                        // );
-                        // setShowChooseUserMessage(false);
                       }}
                       className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
                     >
@@ -343,69 +250,21 @@ function ListeDesGroupes({ setDocumentationPage }) {
           </form>
         </div>
       )}
-      {editAccountGestion && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
-          <form
-            // onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Modifier le groupe ?
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                Veuillez entrer votre mot de passe
-              </label>
 
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Mot de passe"
-                  required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  //   setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 bg-orange-500 rounded-lg text-white"
-              >
-                Confirmer
-              </button>
-
-              <h3
-                onClick={() => {
-                  setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
-              >
-                Annuler
-              </h3>
-            </div>
-          </form>
-        </div>
-      )}
       <div className="px-4 pb-40 pt-10 bg-white rounded-lg">
-        <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+        <h2
+          onClick={() => {
+            fetchAccountGroupes();
+          }}
+          className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
+        >
           Liste des groupes
         </h2>
-        {/* <h3 className="mt-[10rem]-- mb-5 text-orange-600 text-lg text-center font-bold ">
-          {currentAccountSelected?.description}
-        </h3> */}
-        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+
+        {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
           <span className="text-gray-700">Compte :</span>{" "}
           {currentAccountSelected?.description}
-        </h3>
+        </h3> */}
         <h3 className=" text-orange-600 text-md text-center font-bold-- ">
           {currentSelectedUserToConnect?.description && (
             <span className="text-gray-700">Utilisateur :</span>
@@ -419,24 +278,14 @@ function ListeDesGroupes({ setDocumentationPage }) {
           {listeGestionDesGroupeTitre}
         </h3>
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-          <span className="text-gray-700">Nombre Appareil :</span>{" "}
-          {listeGestionDesGroupe?.length}
+          <span className="text-gray-700">Nombre de Groupe :</span>{" "}
+          {filterGroupeAccountData?.length}
         </h3>
 
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           <div className="flex gap-2 justify-center mt-4">
-            {/* <button
-              onClick={() => {
-                backToPagePrecedent();
-              }}
-              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-            >
-              <IoArrowBack className="text-xl" />
-              <p className="hidden md:block">Retour</p>
-            </button>{" "} */}
             <div
               onClick={() => {
-                // setShowCreateNewGroupePage(true);
                 setDocumentationPage("Ajouter_nouveau_groupe");
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
@@ -449,39 +298,90 @@ function ListeDesGroupes({ setDocumentationPage }) {
                 </p>
               </div>
             </div>{" "}
-            {/* <button
-              onClick={() => setShowAccountOptionsPopup(true)}
-              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-            >
-              <p className="hidden md:block">Options</p>
-              <IoOptions className="text-xl" />
-            </button>{" "} */}
           </div>
 
-          <div
+          {/* <div
             onClick={() => {
               setShowChooseOtherUserGroupePopup(true);
-
-              // setChooseOtherAccountGestion(true);
-              // setShowUserGroupeCategorieSection(true);
-              // console.log(currentSelectedUserToConnect);
             }}
             className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
           >
             <h3 className="w-full text-center font-semibold">
-              {/* Compte: */}
               <span>{listeGestionDesGroupeTitre || "Tous les Appareils"}</span>
             </h3>
             <FaChevronDown />
-          </div>
+          </div> */}
+
+          {!showFilterInputSection && (
+            <div className="flex gap-2 w-full justify-between items-center">
+              <div
+                onClick={() => {
+                  setShowChooseOtherUserGroupePopup(true);
+                }}
+                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+              >
+                <h3 className="w-full text-center font-semibold">
+                  {/* Compte: */}
+                  <span>
+                    {listeGestionDesGroupeTitre || "Tous les Groupes"}
+                  </span>
+                </h3>
+                <FaChevronDown />
+              </div>
+              <div
+                onClick={() => {
+                  setShowFilterInputSection(true);
+                }}
+                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+              >
+                <IoSearchOutline className="text-xl " />
+              </div>
+              {/* <div
+                onClick={() => {
+                  // deviceUpdateFonction();
+                }}
+                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
+              >
+                <MdUpdate className="text-xl " />
+              </div> */}
+            </div>
+          )}
+
+          {showFilterInputSection && (
+            <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+              <input
+                id="search"
+                name="search"
+                type="search"
+                placeholder="Recherche un Groupe"
+                required
+                value={searchGroupInputTerm}
+                onChange={(e) => {
+                  setSearchGroupInputTerm(e.target.value);
+                }}
+                className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+              />
+              <div
+                onClick={() => {
+                  {
+                    setShowFilterInputSection(false);
+                    setSearchTermInput("");
+                  }
+                }}
+                className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+              >
+                <IoClose className="text-xl text-red-600" />
+              </div>
+            </div>
+          )}
         </div>
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
           {/*  */}
           {/*  */}
 
-          {listeGestionDesGroupe?.length > 0 ? (
-            listeGestionDesGroupe?.map((groupe, index) => {
+          {filterGroupeAccountData?.length > 0 ? (
+            filterGroupeAccountData?.map((groupe, index) => {
               const userListeAffected =
                 currentAccountSelected?.accountUsers?.filter((user) => {
                   const groupes = user?.userGroupes || [];
@@ -510,7 +410,6 @@ function ListeDesGroupes({ setDocumentationPage }) {
                             Nom du Groupe :
                           </p>
                           <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {/* {geozone?.description} */}
                             {groupe?.description}
                           </span>
                         </div>{" "}
@@ -519,7 +418,6 @@ function ListeDesGroupes({ setDocumentationPage }) {
                             ID du Groupe :
                           </p>
                           <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {/* {geozone?.description} */}
                             {groupe?.groupID}
                           </span>
                         </div>{" "}
@@ -532,22 +430,26 @@ function ListeDesGroupes({ setDocumentationPage }) {
                           </span>
                         </div>{" "}
                         <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold- text-gray-700">
+                          <p
+                            onClick={() => {
+                              console.log(userListeAffected);
+                            }}
+                            className="font-bold- text-gray-700"
+                          >
                             Nombre Utilisateurs affectés :
                           </p>
                           <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                             {userListeAffected?.length}
-                            {/* {groupe?.groupeDevices?.length} */}
                           </span>
                         </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
+                        {/* <div className="flex flex-wrap border-b py-1">
                           <p className="font-bold- text-gray-700">
                             Dernière mise a jour :
                           </p>
                           <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                             21-04-2024 <span className="px-2">/</span> 05:34 PM
                           </span>
-                        </div>{" "}
+                        </div>{" "} */}
                       </div>
                     </div>
                   </div>
@@ -568,6 +470,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
                         setTimeout(() => {
                           setCurrentSelectedGroupeGestion(groupe);
                         }, 500);
+                        setListeGestionDesUsers(userListeAffected);
                         console.log(groupe);
                         setShowSelectedGroupeOptionsPopup(true);
                       }}
@@ -575,21 +478,6 @@ function ListeDesGroupes({ setDocumentationPage }) {
                     >
                       <p>Options</p> <IoOptions className="text-xl" />
                     </button>
-                    {/* <button
-                      onClick={() => {
-                        setDeleteGroupeAccountPopup(true);
-                        
-                      }}
-                      className={`${
-                        true
-                          ? " bg-red-500 text-white"
-                          : "text-red-600 border-[0.02rem] border-red-500 "
-                      }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-                    >
-                      <p className="text-sm mr-2">Supprimer</p>
-
-                      <FaTrashAlt />
-                    </button> */}
                   </div>
                 </div>
               );
@@ -602,13 +490,6 @@ function ListeDesGroupes({ setDocumentationPage }) {
 
           {/*  */}
           {/*  */}
-          {/*  */}
-          {/*  */}
-
-          {/*  */}
-          {/*  */}
-
-          {/*  */}
         </div>
       </div>
     </div>
@@ -616,9 +497,3 @@ function ListeDesGroupes({ setDocumentationPage }) {
 }
 
 export default ListeDesGroupes;
-
-// export default ListeDesGroupes
-
-// export default ListeDesGroupes
-
-// export default ListeDesGroupes

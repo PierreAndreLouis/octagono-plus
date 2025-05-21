@@ -31,7 +31,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
 });
 
-function MapComponent({ mapType }) {
+function MapComponent({ mapType, isDashBoardComptnent }) {
   const {
     selectedVehicleToShowInMap,
     currentDataFusionné,
@@ -43,37 +43,26 @@ function MapComponent({ mapType }) {
     ajouterGeofencePopup,
     setAjouterGeofencePopup,
     createGeofenceLoading,
-    setCreateGeofenceLoading,
-    errorCreateGeofence,
-    setErrorCreateGeofence,
-    errorCreateGeofencePopup,
-    setErrorCreateGeofencePopup,
-    succesCreateGeofencePopup,
-    setSuccesCreateGeofencePopup,
     currentGeozone,
     isEditingGeofence,
-    setIsEditingGeofence,
     ModifierGeofence,
-    succesModifierGeofencePopup,
-    setSuccesModifierGeofencePopup,
-    errorModifierGeofencePopup,
-    setErrorModifierGeofencePopup,
+    accountDevices,
+    currentAccountSelected,
   } = useContext(DataContext);
 
   // le data a utiliser
-  const dataFusionné = currentDataFusionné;
 
-  // filtrer pour avoir seulement les véhicules avec ces details
-  // const vehiculeActive = dataFusionné?.filter(
-  //   (véhicule) =>
-  //     véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
-  // );
+  const dataFusionné =
+    currentAccountSelected?.accountDevices ??
+    accountDevices ??
+    currentDataFusionné;
 
   const vehiculeActive = dataFusionné;
 
   // Formatage des donnee pour la  carte
   const véhiculeData = vehiculeActive?.map((véhicule) => ({
     deviceID: véhicule?.deviceID || "",
+    accountID: véhicule?.accountID || "",
     description: véhicule.description || "Véhicule",
     lastValidLatitude:
       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
@@ -176,62 +165,45 @@ function MapComponent({ mapType }) {
     // }, [selectedVehicleToShowInMap, vehicles]);
   }, [selectedVehicleToShowInMap]);
 
-  // const getMarkerIcon = (véhicule) => {
-  //   const speedKPH = véhicule.speedKPH;
-  //   const timestamp = véhicule.timestamp;
+  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
+  const getTodayTimestamp = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Minuit
+    return Math.floor(now.getTime() / 1000); // secondes
+  };
 
-  //   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  //   const currentTime = Date.now(); // Heure actuelle en millisecondes
-
-  //   // Fonction pour obtenir le timestamp actuel en millisecondes
-  //   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-
-  //   const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
-  //   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-
-  //   const lastUpdateTimestampMs = timestamp * 1000; // Convertir en millisecondes
-
-  //   const isStillSpeedActive =
-  //     lastUpdateTimestampMs &&
-  //     currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
-
-  //   if (speedKPH < 1 || !isStillSpeedActive) return iconLowSpeed;
-  //   if (speedKPH >= 1 && speedKPH <= 20 && isStillSpeedActive)
-  //     return iconMediumSpeed;
-  //   if (speedKPH > 20 && isStillSpeedActive) return iconMediumSpeed;
-  //   // return iconHighSpeed ;
-  // };
-
-  // const getMarkerIcon = (véhicule) => {
-  //   const speed = parseFloat(véhicule?.speedKPH);
-  //   const direction = Math.round(véhicule?.heading / 45.0) % 8;
-
-  //   if (speed <= 0) return "/pin/ping_red.png";
-  //   else if (speed > 0 && speed <= 20)
-  //     return `/pin/ping_yellow_h${direction}.png`;
-  //   else return `/pin/ping_green_h${direction}.png`;
-  // };
+  const todayTimestamp = getTodayTimestamp();
+  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
+  const twentyFourHoursInSec = 24 * 60 * 60;
+  const currentTimeSec = getCurrentTimestamp();
 
   const getMarkerIcon = (véhicule) => {
     const speed = parseFloat(véhicule?.speedKPH);
     const direction = Math.round(véhicule?.heading / 45.0) % 8;
     const timestamp = véhicule?.timestamp * 1000; // Convertir en millisecondes
+    const lastUpdateTime = véhicule?.timestamp;
 
     const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
     const currentTimeMs = Date.now();
 
+    const isRecentlyUpdate =
+      currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
+
+    const isNotRecentlyUpdate =
+      currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
+
     const isStillSpeedActive =
       timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
 
-    if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
-    if (speed > 0 && speed <= 20 && isStillSpeedActive)
-      return `/pin/ping_yellow_h${direction}.png`;
-    return `/pin/ping_green_h${direction}.png`;
-
-    // if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
-    // if (speed > 0 && speed <= 20 && isStillSpeedActive)
-    //   return `/pin/ping_yellow_h${direction}.png`;
-    // return `/pin/ping_green_h${direction}.png`;
+    if (currentAccountSelected?.accountDevices || accountDevices) {
+      if (isRecentlyUpdate) return "/pin/ping_red.png";
+      return "/pin/ping_purple.png";
+    } else {
+      if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+      if (speed > 0 && speed <= 20 && isStillSpeedActive)
+        return `/pin/ping_yellow_h${direction}.png`;
+      return `/pin/ping_green_h${direction}.png`;
+    }
   };
 
   const openGoogleMaps = (latitude, longitude) => {
@@ -489,53 +461,6 @@ function MapComponent({ mapType }) {
     clickedPosition7,
     clickedPosition8,
   ];
-
-  // const positionComponents = positions.map((position, index) => {
-  //   const positionNumber = index + 1;
-  //   return (
-  //     position && (
-  //       <Marker
-  //         key={positionNumber}
-  //         icon={L.icon({
-  //           iconUrl:
-  //             addOrEditPosition === `position${positionNumber}`
-  //               ? "/pin/ping_green.png"
-  //               : "/pin/ping_red.png",
-  //           iconSize: [25, 41],
-  //           iconAnchor: [12, 41],
-  //           popupAnchor: [1, -34],
-  //           shadowUrl:
-  //             "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-  //           shadowSize: [41, 41],
-  //         })}
-  //         position={[position.lat, position.lng]}
-  //       >
-  //         <Popup ref={popupRef}>
-  //           <div className="">
-  //             <div className="font-bold mb-1">Coordonnée #{positionNumber}</div>
-  //             Latitude: {position.lat.toFixed(6)} <br />
-  //             Longitude: {position.lng.toFixed(6)} <br />
-  //             <div
-  //               onClick={() => {
-  //                 setAddOrEditPosition(`position${positionNumber}`);
-  //                 if (popupRef.current) {
-  //                   popupRef.current.closePopup(); // Fermer le popup correctement
-  //                 }
-  //               }}
-  //               className={`${
-  //                 addOrEditPosition === `position${positionNumber}`
-  //                   ? "bg-green-500"
-  //                   : "bg-red-500"
-  //               } mt-2 cursor-pointer rounded-md text-white p-1 px-3`}
-  //             >
-  //               Modifier
-  //             </div>
-  //           </div>
-  //         </Popup>
-  //       </Marker>
-  //     )
-  //   );
-  // });
 
   const positionComponents = positions.map((position, index) => {
     const positionNumber = index + 1;
@@ -908,8 +833,6 @@ function MapComponent({ mapType }) {
             </div>
           )}
 
-       
-
           <div className="mx-auto relative   min-w-[90vw]-- w-full max-w-[40rem] rounded-lg p-4 bg-white">
             <div className="flex justify-between items-center gap-2">
               <h2 className="text-md font-semibold pb-2 border-b">
@@ -1219,6 +1142,11 @@ function MapComponent({ mapType }) {
                     <p className="font-bold text-[1rem]">
                       <span>Description :</span>{" "}
                       {véhicule.description || "Non disponible"}
+                    </p>
+
+                    <p>
+                      <strong>accountID :</strong>{" "}
+                      {véhicule.accountID || "Non disponible"}
                     </p>
 
                     <p>

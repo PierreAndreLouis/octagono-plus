@@ -9,11 +9,16 @@ function HeaderLocation({
   véhiculeData,
   setTypeDeVue,
   showAllVehicles,
+  isDashBoardComptnent = false,
 }) {
   const {} = useContext(DataContext);
   return (
     <>
-      <div className="fixed bg-white dark:bg-gray-800 md:bg-white/0 top-12  left-0 right-0 z-[1200] flex flex-col gap-2 p-4">
+      <div
+        className={`${
+          isDashBoardComptnent ? "absolute top-0" : "fixed top-12"
+        }  absolute bg-white dark:bg-gray-800 md:bg-white/0   left-0 right-0 z-[1200] flex flex-col gap-2 p-4`}
+      >
         {/* Pour choisir un véhicule */}
         <Tooltip
           PopperProps={{

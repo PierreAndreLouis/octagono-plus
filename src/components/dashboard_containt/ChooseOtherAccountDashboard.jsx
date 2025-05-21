@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
 
@@ -45,11 +45,10 @@ function ChooseOtherAccountDashboard({
                 }}
               />
 
-              <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
-                Rechercher
-              </p>
-              {/* </Tooltip> */}
-            </div>
+              <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
+                <IoSearchOutline className="text-xl " />
+              </div>
+             </div>
             <div className="flex overflow-auto h-[45vh] pb-20 flex-col gap-4 mx-3">
               <button
                 onClick={() => {
@@ -68,10 +67,7 @@ function ChooseOtherAccountDashboard({
                 return (
                   <div
                     key={index}
-                    onClick={() => {
-                      console.log(account);
-                      console.log(currentAccountSelected);
-
+                    onClick={() => { 
                       setCurrentAccountSelected(account);
                       setListeGestionDesVehicules(account?.accountDevices);
                       setAllDevices(account?.accountDevices);

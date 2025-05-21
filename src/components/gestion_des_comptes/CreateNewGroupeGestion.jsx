@@ -1,34 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
-import { Link } from "react-router-dom";
 import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function CreateNewGroupeGestion({
-  setShowCreateNewGroupePage,
-  showCreateNewGroupePage,
   setDocumentationPage,
   documentationPage,
-  setChooseOtherDeviceGestion,
-  setShowUserGroupeCategorieSection,
-  setShowUserListeToSelectDevice,
 }) {
   const {
-    setCurrentAccountSelected,
     currentAccountSelected,
-    //
     setError,
-    password,
-
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    createVéhiculeLoading,
-    createVehicleEnGestionAccount,
-    currentSelectedUserToConnect,
+    password, 
     scrollToTop,
     FormatDateHeure,
     currentSelectedGroupeGestion,
@@ -91,6 +76,9 @@ function CreateNewGroupeGestion({
     setShowConfirmAddGroupeGestionPopup(true);
   };
 
+
+  //////////////////////////////////////////////////
+
   const deviceDuSelectedGroupe =
     currentSelectedGroupeGestion?.groupeDevices?.map(
       (device) => device?.deviceID
@@ -129,7 +117,8 @@ function CreateNewGroupeGestion({
   const userNonSelectionnes = allUsersIDs?.filter(
     (userID) => !usersSelectionnes.includes(userID)
   );
-  //
+
+  ////////////////////////////////////////////////
 
   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
     useState(false);
@@ -152,45 +141,11 @@ function CreateNewGroupeGestion({
       const displayName = addNewGroupeData.displayName;
       const notes = addNewGroupeData.notes;
       const workOrderID = addNewGroupeData.workOrderID;
-
-      //   console.log(
-      //    ,
-      //     ,
-      //     ,
-
-      //    ,
-      //     ,
-      //    ,
-      //   ,
-
-      //   );
-      console.log("accountID", currentAccountSelected?.accountID);
-      console.log("user: admin");
-      console.log("password", currentAccountSelected?.password);
-      console.log("groupID", groupID);
-      console.log("description", description);
-      console.log("displayName", displayName);
-      console.log("notes", notes);
-      console.log("workOrderID", workOrderID);
-      //
-      console.log("Appareils sélectionnées", deviceSelectionnes);
-      console.log("Utilisateurs sélectionnées", usersSelectionnes);
-
+ 
       if (
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
-      ) {
-        console.log("accountID", currentAccountSelected?.accountID);
-        console.log("user: admin");
-        console.log("password", currentAccountSelected?.password);
-        console.log("groupID", groupID);
-        console.log("description", description);
-        console.log("displayName", displayName);
-        console.log("notes", notes);
-        console.log("workOrderID", workOrderID);
-        //
-        console.log("Appareils sélectionnées", deviceSelectionnes);
-        console.log("Utilisateurs sélectionnées", usersSelectionnes);
+      ) { 
 
         createNewGroupeEnGestionAccount(
           currentAccountSelected?.accountID,
@@ -206,8 +161,7 @@ function CreateNewGroupeGestion({
           usersSelectionnes
         );
 
-        // setShowCreateNewGroupePage(false);
-        setDocumentationPage("Gestion_des_groupes");
+         setDocumentationPage("Gestion_des_groupes");
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -218,36 +172,15 @@ function CreateNewGroupeGestion({
     }
   };
 
-  // Pour mettre a jour les nouvelle donnee du véhicule a modifier
-  //   useEffect(() => {
-  //     if (currentSelectedGroupeGestion) {
-  //       setAddNewGroupeData({
-  //         groupID: currentSelectedGroupeGestion.groupID || "",
-  //         description: currentSelectedGroupeGestion.description || "",
-  //         displayName: currentSelectedGroupeGestion.displayName || "",
-  //         notes: currentSelectedGroupeGestion.notes || "",
-  //         workOrderID: currentSelectedGroupeGestion.workOrderID || "",
-  //       });
-  //     }
-  //   }, [currentSelectedGroupeGestion]);
+ 
 
   return (
     <div className="px-3 rounded-lg  bg-white">
-      {/* {createVéhiculeLoading && (
-        <div className="fixed z-30 inset-0 bg-gray-200/50">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
-          </div>
-        </div>
-      )} */}
-
+     
       {showDeviceSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2
-              onClick={() => {
-                // console.log("tous les Groupes: ", allGroupIDs);
-              }}
+            <h2 
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
               Liste Des Appareils
@@ -342,10 +275,7 @@ function CreateNewGroupeGestion({
       {showUserSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2
-              onClick={() => {
-                // console.log("tous les Groupes: ", allGroupIDs);
-              }}
+            <h2 
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
               Liste Des Appareils
@@ -451,16 +381,14 @@ function CreateNewGroupeGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-              {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
-              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Ajouter un nouveau Groupe
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  // setShowCreateNewGroupePage(false);
-                  setDocumentationPage("Gestion_des_groupes");
+                   setDocumentationPage("Gestion_des_groupes");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -532,11 +460,7 @@ function CreateNewGroupeGestion({
                     label: "Notes",
                     placeholder: "Ajouter une petite note",
                   },
-                  //   {
-                  //     id: "workOrderID",
-                  //     label: "workOrderID",
-                  //     placeholder: "workOrderID",
-                  //   },
+                  
                 ].map((field) => (
                   <div key={field.id}>
                     <label
@@ -577,9 +501,7 @@ function CreateNewGroupeGestion({
                   </button>
                   <button
                     onClick={() => {
-                      // setShowCreateNewGroupePage(false);
                       setDocumentationPage("Gestion_des_groupes");
-
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
@@ -597,5 +519,3 @@ function CreateNewGroupeGestion({
 }
 
 export default CreateNewGroupeGestion;
-
-// export default CreateNewGroupeGestion;

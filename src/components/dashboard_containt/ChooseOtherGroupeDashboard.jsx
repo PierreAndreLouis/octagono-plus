@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
 
@@ -11,13 +11,10 @@ function ChooseOtherGroupeDashboard({
   filterGestionGroupData,
   setAllDevices,
 }) {
-  const {
-    setCurrentAccountSelected,
-    setListeGestionDesVehicules,
+  const { 
     currentAccountSelected,
     accountDevices,
-    groupeDevices,
-    scrollToTop,
+     scrollToTop,
   } = useContext(DataContext);
   return (
     <>
@@ -47,24 +44,20 @@ function ChooseOtherGroupeDashboard({
                 }}
               />
 
-              <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
-                Rechercher
-              </p>
-              {/* </Tooltip> */}
-            </div>
+              <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
+                <IoSearchOutline className="text-xl " />
+              </div>
+             </div>
             <div className="flex overflow-auto h-[45vh] pb-20 flex-col gap-4 mx-3">
               <button
                 onClick={() => {
                   {
-                    // setCurrentAccountSelected(null);
-                    setAllDevices(
-                      // console.log(
-                      currentAccountSelected
+                     setAllDevices(
+                       currentAccountSelected
                         ? currentAccountSelected?.accountDevices
                         : accountDevices
                     );
-                    console.log("accountDevices", currentAccountSelected);
-                    setChooseOtherAccountGestion(false);
+                     setChooseOtherAccountGestion(false);
                     scrollToTop();
                   }
                 }}
@@ -78,9 +71,7 @@ function ChooseOtherGroupeDashboard({
                   <div
                     key={index}
                     onClick={() => {
-                      //   setCurrentAccountSelected(account);
-                      //   setListeGestionDesVehicules(account?.accountDevices);
-                      setAllDevices(groupe?.groupeDevices);
+                       setAllDevices(groupe?.groupeDevices);
                       setChooseOtherAccountGestion(false);
                       scrollToTop();
                     }}
@@ -124,4 +115,4 @@ function ChooseOtherGroupeDashboard({
 
 export default ChooseOtherGroupeDashboard;
 
-// export default ChooseOtherGroupeDashboard
+ 

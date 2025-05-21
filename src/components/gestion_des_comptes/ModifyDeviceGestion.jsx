@@ -1,28 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
-import { DataContext } from "../../context/DataContext";
+ import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
-import { Link } from "react-router-dom";
-import { MdErrorOutline } from "react-icons/md";
+ import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 
 function ModifyDeviceGestion({
-  setShowModifyNewDevicePage,
-  setDocumentationPage,
+   setDocumentationPage,
 }) {
   const {
     setCurrentAccountSelected,
     currentAccountSelected,
-    //
-    setError,
-    password,
-    successAddVéhiculePopup,
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
-    createVéhiculeLoading,
-    createVehicleEnGestionAccount,
-    currentSelectedUserToConnect,
+     setError,
+    password, 
     scrollToTop,
     currentSelectedDeviceGestion,
     modifyVehicleEnGestionAccount,
@@ -142,21 +132,7 @@ function ModifyDeviceGestion({
       const equipmentType = addVéhiculeData.equipmentType;
       const simPhoneNumber = addVéhiculeData.simPhoneNumber;
       const vehicleID = deviceID + uniqueIdentifier || "";
-
-      console.log(
-        currentAccountSelected?.accountID,
-        currentAccountSelected?.password,
-
-        deviceID,
-        imeiNumber,
-        uniqueIdentifier,
-        description,
-        displayName,
-        licensePlate,
-        equipmentType,
-        simPhoneNumber
-      );
-
+ 
       if (
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
@@ -176,8 +152,7 @@ function ModifyDeviceGestion({
           vehicleID,
           groupesSelectionnes
         );
-        // setShowModifyNewDevicePage(false);
-        setDocumentationPage("Gestion_des_appareils");
+         setDocumentationPage("Gestion_des_appareils");
       }
 
       setShowConfirmAddVéhiculePopup(false);
@@ -206,14 +181,7 @@ function ModifyDeviceGestion({
 
   return (
     <div className="px-3  rounded-lg bg-white">
-      {/* {createVéhiculeLoading && (
-        <div className="fixed z-30 inset-0 bg-gray-200/50">
-          <div className="w-full h-full flex justify-center items-center">
-            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
-          </div>
-        </div>
-      )} */}
-
+    
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[9999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] bg-white rounded-lg">
@@ -320,16 +288,14 @@ function ModifyDeviceGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-              {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
-              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Modifier un Appareil
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                  // setShowModifyNewDevicePage(false);
-                  setDocumentationPage("Gestion_des_appareils");
+                   setDocumentationPage("Gestion_des_appareils");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -345,8 +311,7 @@ function ModifyDeviceGestion({
               className="w-full mb-10 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
             >
               <h3 className="w-full text-center-- font-semibold">
-                {/* Compte: */}
-                <span>{groupesSelectionnes.join(" - ") || "Défaut"}</span>
+                 <span>{groupesSelectionnes.join(" - ") || "Défaut"}</span>
               </h3>
               <FaChevronDown />
             </div>
@@ -458,5 +423,3 @@ function ModifyDeviceGestion({
 }
 
 export default ModifyDeviceGestion;
-
-// export default ModifyDeviceGestion

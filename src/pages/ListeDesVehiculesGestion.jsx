@@ -1,14 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  IoArrowBack,
-  IoChevronBackCircleOutline,
-  IoClose,
-  IoEarth,
-  IoOptions,
-} from "react-icons/io5";
+import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import { Link } from "react-router-dom";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 import {
   FaPlusCircle,
   FaRegEdit,
@@ -19,69 +11,39 @@ import {
   FaUserCircle,
   FaChevronDown,
 } from "react-icons/fa";
-import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
-import CreateNewDeviceGestion from "../components/gestion_des_comptes/CreateNewDeviceGestion";
-import ModifyDeviceGestion from "../components/gestion_des_comptes/ModifyDeviceGestion";
-// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+import { MdUpdate } from "react-icons/md";
 
 function ListeDesVehiculesGestion({ setDocumentationPage }) {
   const {
-    ajouterGeofencePopup,
-    setAjouterGeofencePopup,
-    geofenceData,
     FormatDateHeure,
-    account,
-    currentGeozone,
-    setCurrentGeozone,
-    isEditingGeofence,
-    setIsEditingGeofence,
-    ModifierGeofence,
-    supprimerGeofence,
-    activerOuDesactiverGeofence,
-    succesCreateGeofencePopup,
-    setSuccesCreateGeofencePopup,
-    succesModifierGeofencePopup,
-    setSuccesModifierGeofencePopup,
-    errorModifierGeofencePopup,
-    setErrorModifierGeofencePopup,
-    succesDeleteGeofencePopup,
-    setSuccesDeleteGeofencePopup,
-    errorDeleteGeofencePopup,
-    setErrorDeleteGeofencePopup,
-    showAccountOptionsPopup,
-    setShowAccountOptionsPopup,
     currentAccountSelected,
-    deleteVehicle,
     listeGestionDesVehicules,
     setListeGestionDesVehicules,
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
-    TestDeRequetteDevices,
-    backToPagePrecedent,
     password,
     deleteVehicleEnGestionAccount,
     currentSelectedDeviceGestion,
     setCurrentSelectedDeviceGestion,
     deviceListeTitleGestion,
     setDeviceListeTitleGestion,
-    gestionAccountData,
-    groupeDevices,
     listeGestionDesUsers,
     listeGestionDesGroupe,
+    scrollToTop,
+    comptes,
+    fetchAccountDevices,
+    fetchUserDevices,
+    fetchAccountUsers,
+    fetchAccountGroupes,
+    fetchGroupeDevices,
+    setDashboardLoadingEffect,
   } = useContext(DataContext);
-  const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
   //
   //
-  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-  const lastUpdateTimeMs = currentGeozone?.lastUpdateTime
-    ? currentGeozone?.lastUpdateTime * 1000
-    : 0;
-  const isCurrentGeozoneActive =
-    currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
   const [inputPassword, setInputPassword] = useState("");
 
@@ -106,15 +68,10 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
       )
     : listeGestionDesGroupe;
 
-  // const [selectedVehiculeAccount, setSelectedVehiculeAccount] = useState();
-
   const deleteVehicleFonction = (e) => {
     e.preventDefault();
-    console.log("asdsdfsdf");
-    console.log(inputPassword);
-    console.log(password);
+
     if (inputPassword === password) {
-      console.log("Permission de supprimer avec passowrd: ", inputPassword);
       deleteVehicleEnGestionAccount(
         currentSelectedDeviceGestion?.deviceID,
         currentAccountSelected?.accountID,
@@ -127,32 +84,11 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
     }
   };
 
-  const [showCreateNewDevicePage, setShowCreateNewDevicePage] = useState(false);
-  const [showModifyNewDevicePage, setShowModifyNewDevicePage] = useState(false);
-
   const [showUserListeToSelectDevice, setShowUserListeToSelectDevice] =
     useState(true);
 
   const [currentSelectedGroupeGestion, setCurrentSelectedGroupeGestion] =
     useState();
-
-  // useEffect(() => {
-  //   // Crée un Set des deviceID de deviceInfo pour une recherche rapide
-  //   const deviceIDsInInfo = new Set(
-  //     currentSelectedGroupeGestion?.groupeDevices?.map(
-  //       (device) => device.deviceID
-  //     )
-  //   );
-
-  //   // Filtre les éléments de deviceListe
-  //   const updateListe = currentAccountSelected?.accountDevices?.filter(
-  //     (device) => deviceIDsInInfo.has(device.deviceID)
-  //   );
-
-  //   // console.log(updateListe);
-
-  //   setListeGestionDesVehicules(updateListe);
-  // }, [currentSelectedGroupeGestion]);
 
   const [showChooseUserMessage, setShowChooseUserMessage] = useState("");
 
@@ -160,6 +96,63 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
     useState(true);
 
   const [showMoreDeviceInfo, setShowMoreDeviceInfo] = useState();
+  const [searchTermInput, setSearchTermInput] = useState("");
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+
+  const filteredListeGestionDesVehicules = searchTermInput
+    ? listeGestionDesVehicules?.filter(
+        (item) =>
+          item?.description
+            .toLowerCase()
+            .includes(searchTermInput.toLowerCase()) ||
+          item?.imeiNumber
+            .toLowerCase()
+            .includes(searchTermInput.toLowerCase()) ||
+          item?.simPhoneNumber
+            .toLowerCase()
+            .includes(searchTermInput.toLowerCase()) ||
+          item?.accountID.toLowerCase().includes(searchTermInput.toLowerCase())
+      )
+    : listeGestionDesVehicules;
+
+  const deviceUpdateFonction = () => {
+    comptes?.forEach((acct) => {
+      setDashboardLoadingEffect(true);
+      const id = acct.accountID;
+      const pwd = acct.password;
+
+      fetchAccountDevices(id, pwd).catch((err) => {
+        console.error("Erreur lors du chargement des devices :", err);
+      });
+
+      setTimeout(() => {
+        fetchAccountGroupes(id, pwd)
+          .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des groupes ou des devices de groupes :",
+              err
+            );
+          });
+      }, 3000);
+
+      setTimeout(() => {
+        fetchAccountUsers(id, pwd)
+          .then((users) => {
+            fetchUserDevices(id, users);
+            // fetchUserGroupes(id, users);
+          })
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+              err
+            );
+            // setError("Erreur lors de la mise à jour des utilisateurs.");
+          });
+      }, 6000);
+    });
+  };
+
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
@@ -197,20 +190,6 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button
                 type="submit"
-                onClick={() => {
-                  // console.log(
-                  //   selectedVehiculeAccount.deviceID,
-                  //   currentSelectedUserToConnect?.accountID,
-                  //   currentSelectedUserToConnect?.userID,
-                  //   currentSelectedUserToConnect?.password
-                  // );
-                  // deleteVehicle(
-                  //   selectedVehiculeAccount.deviceID,
-                  //   currentSelectedUserToConnect?.accountID,
-                  //   currentSelectedUserToConnect?.userID,
-                  //   currentSelectedUserToConnect?.password
-                  // );
-                }}
                 className="py-1 px-5 bg-red-500 rounded-lg text-white"
               >
                 Confirmer
@@ -219,62 +198,8 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
               <h3
                 onClick={() => {
                   setDeleteAccountPopup(false);
-                  // TestDeRequetteDevices();
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
-              >
-                Annuler
-              </h3>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {editAccountGestion && (
-        <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
-          <form
-            // onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Modifier l'appareil ?
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                Veuillez entrer votre mot de passe
-              </label>
-
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Mot de passe"
-                  required
-                  //   value={inputPassword}
-                  //   onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                onClick={() => {
-                  //   setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 bg-orange-500 rounded-lg text-white"
-              >
-                Confirmer
-              </button>
-
-              <h3
-                onClick={() => {
-                  setEditAccountGestion(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
               >
                 Annuler
               </h3>
@@ -343,9 +268,9 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                       }}
                     />
 
-                    <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
-                      Rechercher
-                    </p>
+                    <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
+                      <IoSearchOutline className="text-xl " />
+                    </div>
                     {/* </Tooltip> */}
                   </div>
                   {showChooseUserMessage && (
@@ -431,9 +356,9 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                       }}
                     />
 
-                    <p className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5">
-                      Rechercher
-                    </p>
+                    <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
+                      <IoSearchOutline className="text-xl " />
+                    </div>
                     {/* </Tooltip> */}
                   </div>
                   <div className="flex overflow-auto h-[60vh] max-h-[55vh] pb-20 flex-col gap-4 mx-3">
@@ -457,7 +382,6 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                         <div
                           key={index}
                           onClick={() => {
-                            // setCurrentSelectedUserToConnect(group);
                             setChooseOtherAccountGestion(false);
                             setCurrentSelectedGroupeGestion(group);
                             setDeviceListeTitleGestion(
@@ -501,10 +425,10 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
           Liste des Appareils
         </h2>
 
-        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+        {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
           <span className="text-gray-700">Compte :</span>{" "}
           {currentAccountSelected?.description}
-        </h3>
+        </h3> */}
         <h3 className=" text-orange-600 text-md text-center font-bold-- ">
           {currentSelectedUserToConnect?.description && (
             <span className="text-gray-700">Utilisateur :</span>
@@ -513,33 +437,17 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
         </h3>
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
           <span className="text-gray-700">Nombre Appareil :</span>{" "}
-          {listeGestionDesVehicules?.length}
+          {filteredListeGestionDesVehicules?.length}
         </h3>
 
         <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
           {/*  */}
           <div className="flex gap-2 justify-center mt-4">
-            {/* <button
-              onClick={() => {
-                backToPagePrecedent();
-              }}
-              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-            >
-              <IoArrowBack className="text-xl" />
-              <p className="hidden md:block">Retour</p>
-            </button>{" "} */}
             <button
               onClick={() => {
-                setShowCreateNewDevicePage(true);
+                // setShowCreateNewDevicePage(true);
+                scrollToTop();
                 setDocumentationPage("Ajouter_nouveau_appareil");
-                // if (!currentSelectedUserToConnect) {
-                //   setChooseOtherAccountGestion(true);
-                //   setShowChooseUserMessage(true);
-                //   setShowCreateNewDevicePage(true);
-                //   setShowUserGroupeCategorieSection(false);
-                //   setShowUserGroupeCategorieSection(false);
-                //   setShowUserListeToSelectDevice(true);
-                // }
               }}
               className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -551,45 +459,80 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                 </span>
               </span>
             </button>{" "}
-            {/* <button
-              onClick={() => setShowAccountOptionsPopup(true)}
-              className={`  bg-gray-50 text-gray-800 text-sm- border-[0.02rem] border-gray-300 text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-            >
-              <p className="hidden md:block">Options</p>
-              <IoOptions className="text-xl" />
-            </button>{" "} */}
           </div>
 
-          <div
-            onClick={() => {
-              setChooseOtherAccountGestion(true);
-              setShowUserGroupeCategorieSection(true);
+          {!showPasswordInput && (
+            <div className="flex gap-2 w-full justify-between items-center">
+              <div
+                onClick={() => {
+                  setChooseOtherAccountGestion(true);
+                  setShowUserGroupeCategorieSection(true);
 
-              console.log(currentSelectedUserToConnect);
-            }}
-            className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-          >
-            <h3 className="w-full text-center font-semibold">
-              {/* Compte: */}
-              <span>{deviceListeTitleGestion || "Tous les Appareils"}</span>
-            </h3>
-            <FaChevronDown />
-          </div>
+                  console.log(currentSelectedUserToConnect);
+                }}
+                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+              >
+                <h3 className="w-full text-center font-semibold">
+                  {/* Compte: */}
+                  <span>{deviceListeTitleGestion || "Tous les Appareils"}</span>
+                </h3>
+                <FaChevronDown />
+              </div>
+              <div
+                onClick={() => {
+                  setShowPasswordInput(true);
+                }}
+                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+              >
+                <IoSearchOutline className="text-xl " />
+              </div>
+              <div
+                onClick={() => {
+                  deviceUpdateFonction();
+                }}
+                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
+              >
+                <MdUpdate className="text-xl " />
+              </div>
+            </div>
+          )}
+
+          {showPasswordInput && (
+            <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+              <input
+                id="search"
+                name="search"
+                type="search"
+                placeholder="Recherche un appareil"
+                required
+                value={searchTermInput}
+                onChange={(e) => {
+                  setSearchTermInput(e.target.value);
+                }}
+                className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+              />
+              <div
+                onClick={() => {
+                  {
+                    setShowPasswordInput(false);
+                    setSearchTermInput("");
+                  }
+                }}
+                className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+              >
+                <IoClose className="text-xl text-red-600" />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
 
-          {listeGestionDesVehicules?.length > 0 ? (
-            listeGestionDesVehicules?.map((device, index) => {
+          {filteredListeGestionDesVehicules?.length > 0 ? (
+            filteredListeGestionDesVehicules?.map((device, index) => {
               return (
                 <div
-                  onClick={() => {
-                    // setCurrentSelectedDeviceGestion(device);
-                    console.log(device);
-                    console.log(currentAccountSelected);
-                    console.log(currentSelectedUserToConnect);
-                  }}
                   key={index}
                   className="shadow-inner bg-gray-50 shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                 >
@@ -608,12 +551,6 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                               "Pas de nom disponible"}
                           </span>
                         </div>{" "}
-                        {/* <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Groupe :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.groupeID || "Défaut"}
-                          </span>
-                        </div>{" "} */}
                         <div className="flex flex-wrap border-b py-1">
                           <p className="font-bold">Dernière mise a jour :</p>
                           <span className=" dark:text-orange-500 text-gray-600 pl-5">
@@ -623,9 +560,9 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                           </span>
                         </div>{" "}
                         <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Plaque du véhicule :</p>
+                          <p className="font-bold">Account ID :</p>
                           <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.licensePlate}
+                            {device?.accountID}
                           </span>
                         </div>{" "}
                         <div
@@ -635,6 +572,12 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                               : "max-h-0"
                           }  overflow-hidden transition-all`}
                         >
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Plaque du véhicule :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {device?.licensePlate}
+                            </span>
+                          </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Telephone :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
@@ -709,12 +652,10 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
                   <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
                     <button
                       onClick={() => {
-                        // setEditAccountGestion(true);
                         setCurrentSelectedDeviceGestion(device);
-
-                        setShowModifyNewDevicePage(true);
                         setShowUserGroupeCategorieSection(false);
                         setDocumentationPage("Modifier_appareil");
+                        scrollToTop();
                       }}
                       className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >
@@ -761,7 +702,3 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
 }
 
 export default ListeDesVehiculesGestion;
-
-// export default ListeDesVehiculesGestion
-
-// export default ListeDesVehiculesGestion

@@ -8,6 +8,7 @@ import {
 } from "react-icons/io5";
 import {
   MdInstallDesktop,
+  MdLocationPin,
   MdLogout,
   MdSpaceDashboard,
   MdSwitchAccount,
@@ -53,6 +54,8 @@ import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUs
 import Logout from "../components/login/Logout";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 import ChooseOtherGroupeDashboard from "../components/dashboard_containt/ChooseOtherGroupeDashboard";
+import LocationPage from "./LocationPage";
+import { FaLocationPin } from "react-icons/fa6";
 
 function DashboardAdminPage() {
   const {
@@ -233,7 +236,7 @@ function DashboardAdminPage() {
   }));
 
   // Trouver les min/max des heures pour l'axe Y
-  const allTimes = graphData.flatMap((item) => [item.start, item.stop]);
+  const allTimes = graphData?.flatMap((item) => [item.start, item.stop]);
   const minTime = Math.min(...allTimes);
   const maxTime = Math.max(...allTimes);
 
@@ -319,6 +322,10 @@ function DashboardAdminPage() {
   const [documentationPage, setDocumentationPage] = useState("Dashboard");
 
   useEffect(() => {
+    scrollToTop();
+  }, [documentationPage]);
+
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1025) {
         setReadDocumentationSideBar(true);
@@ -370,8 +377,8 @@ function DashboardAdminPage() {
     : Array.from(
         new Map(
           gestionAccountData
-            .flatMap((account) => account.accountGroupes)
-            .map((group) => [group.groupID, group])
+            ?.flatMap((account) => account.accountGroupes)
+            ?.map((group) => [group.groupID, group])
         ).values()
       );
 
@@ -416,6 +423,8 @@ function DashboardAdminPage() {
 
   const [chosseOtherGroupeDashboard, setChosseOtherGroupeDashboard] =
     useState(false);
+
+  const isDashBoardComptnent = true;
 
   return (
     <div className="transition-all bg-gray-100">
@@ -493,7 +502,11 @@ function DashboardAdminPage() {
             <button
               onClick={backToPagePrecedent}
               // disabled={historyRef.current.length === 0}
-              className="text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute top-[.5rem] md:top-[2rem] -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer"
+              className={` ${
+                documentationPage === "Localisation_devices"
+                  ? "top-[7rem] md:top-[2rem]"
+                  : "top-[.5rem] md:top-[2rem]"
+              } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
             >
               <FaArrowLeft />
               <span className="text-[1rem]">Retour</span>
@@ -659,6 +672,8 @@ function DashboardAdminPage() {
                     setListeGestionDesGroupe(
                       currentAccountSelected?.accountGroupes
                     );
+                    console.log(currentAccountSelected?.accountGroupes);
+                    console.log("x", currentAccountSelected?.accountGroupes);
                     setListeGestionDesGroupeTitre("Tous les Groupe");
                   } else {
                     // setListeGestionDesGroupe(accountGroupes);
@@ -666,8 +681,8 @@ function DashboardAdminPage() {
                       Array.from(
                         new Map(
                           gestionAccountData
-                            .flatMap((account) => account.accountGroupes)
-                            .map((group) => [group.groupID, group])
+                            ?.flatMap((account) => account.accountGroupes)
+                            ?.map((group) => [group.groupID, group])
                         ).values()
                       )
                     );
@@ -704,13 +719,6 @@ function DashboardAdminPage() {
                     );
                   } else {
                     setListeGestionDesVehicules(accountDevices);
-                    // setListeGestionDesVehicules( Array.from(
-                    //     new Map(
-                    //       gestionAccountData
-                    //         .flatMap((account) => account.accountDevices)
-                    //         .map((device) => [device.deviceID, device])
-                    //     ).values()
-                    //   ))
                   }
                   scrollToTop();
                   setDocumentationPage("Gestion_des_appareils");
@@ -726,6 +734,39 @@ function DashboardAdminPage() {
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     Gestion des Appareils (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountDevices?.length
+                      : accountDevices?.length}
+                    )
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <div
+                onClick={() => {
+                  if (currentAccountSelected) {
+                    setListeGestionDesVehicules(
+                      currentAccountSelected?.accountDevices
+                    );
+                  } else {
+                    setListeGestionDesVehicules(accountDevices);
+                  }
+                  scrollToTop();
+                  setDocumentationPage("Localisation_devices");
+                  closeSideBar();
+                }}
+                className={`${
+                  documentationPage === "Localisation_devices"
+                    ? "bg-orange-50"
+                    : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <MdLocationPin className="text-xl min-w-[1.5rem] text-gray-500" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    Localisation Appareils (
                     {currentAccountSelected
                       ? currentAccountSelected?.accountDevices?.length
                       : accountDevices?.length}
@@ -782,7 +823,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            18/05/2025 _ 1
+            20/05/2025 _ 1
           </p>
           {/* dashboardLoadingEffect */}
           {dashboardLoadingEffect && (
@@ -857,6 +898,13 @@ function DashboardAdminPage() {
           {documentationPage === "Modifier_appareil" && (
             <ModifyDeviceGestion setDocumentationPage={setDocumentationPage} />
           )}
+          {documentationPage === "Localisation_devices" && (
+            <LocationPage
+              isDashBoardComptnent={isDashBoardComptnent}
+              setDocumentationPage={setDocumentationPage}
+            />
+          )}
+          {/* <LocationPage /> */}
           {/* {showCreateNewDevicePage && (
         <CreateNewDeviceGestion
           setShowUserListeToSelectDevice={setShowUserListeToSelectDevice}

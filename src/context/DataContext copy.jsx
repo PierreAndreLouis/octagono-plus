@@ -1453,7 +1453,17 @@ const DataContextProvider = ({ children }) => {
         : [];
 
     console.log("fetchComptes: résultats =", data);
+    setComptes((prev) => {
+      const updatedComptes = data.map((compte) => {
+        const existing = prev.find((c) => c.accountID === compte.accountID);
+        return existing ? { ...existing, ...compte } : compte;
+      });
 
+      const existingIDs = new Set(updatedComptes.map((c) => c.accountID));
+      const missingComptes = prev.filter((c) => !existingIDs.has(c.accountID));
+
+      return [...missingComptes, ...updatedComptes];
+    });
     setComptes(data);
 
     if (fetchAllOtherData) {
@@ -1566,16 +1576,19 @@ const DataContextProvider = ({ children }) => {
 
     console.log("fetchAccountDevices: résultats =", data);
     setAccountDevices((prev) => {
-      const existingKeys = new Set(
-        prev.map((d) => `${d.creationTime}_${d.deviceID}`)
-      );
-
-      const newDevices = data.filter((d) => {
-        const key = `${d.creationTime}_${d.deviceID}`;
-        return !existingKeys.has(key);
+      const updatedDevices = data.map((device) => {
+        const existing = prev.find(
+          (d) => d.creationTime === device.creationTime
+        );
+        return existing ? { ...existing, ...device } : device;
       });
 
-      return [...prev, ...newDevices];
+      const existingTimes = new Set(updatedDevices.map((d) => d.creationTime));
+      const missingDevices = prev.filter(
+        (d) => !existingTimes.has(d.creationTime)
+      );
+
+      return [...missingDevices, ...updatedDevices];
     });
 
     return data;
@@ -1619,18 +1632,21 @@ const DataContextProvider = ({ children }) => {
         : [];
 
     console.log("fetchAccountGroupes: résultats =", data);
-
+    // setAccountGroupes((prev) => [...prev, ...data]);
     setAccountGroupes((prev) => {
-      const existingKeys = new Set(
-        prev.map((g) => `${g.creationTime}_${g.accountID}`)
-      );
-
-      const newGroupes = data.filter((g) => {
-        const key = `${g.creationTime}_${g.accountID}`;
-        return !existingKeys.has(key);
+      const updatedGroupes = data.map((group) => {
+        const existing = prev.find(
+          (g) => g.creationTime === group.creationTime
+        );
+        return existing ? { ...existing, ...group } : group;
       });
 
-      return [...prev, ...newGroupes];
+      const existingTimes = new Set(updatedGroupes.map((g) => g.creationTime));
+      const missingGroupes = prev.filter(
+        (g) => !existingTimes.has(g.creationTime)
+      );
+
+      return [...missingGroupes, ...updatedGroupes];
     });
 
     return data;
@@ -1679,16 +1695,20 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchAccountUsers: résultats =", data);
 
     setAccountUsers((prev) => {
-      const existingKeys = new Set(
-        prev.map((u) => `${u.creationTime}_${u.accountID}`)
-      );
-
-      const newUsers = data.filter((u) => {
-        const key = `${u.creationTime}_${u.accountID}`;
-        return !existingKeys.has(key);
+      const updatedUsers = data.map((user) => {
+        const existing = prev.find((u) => u.creationTime === user.creationTime);
+        return existing ? { ...existing, ...user } : user;
       });
 
-      return [...prev, ...newUsers];
+      const existingCreationTimes = new Set(
+        updatedUsers.map((u) => u.creationTime)
+      );
+
+      const missingUsers = prev.filter(
+        (u) => !existingCreationTimes.has(u.creationTime)
+      );
+
+      return [...missingUsers, ...updatedUsers];
     });
 
     return data;
@@ -1882,29 +1902,35 @@ const DataContextProvider = ({ children }) => {
 
       results.forEach((newEntry) => {
         const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
-        const newDevices = newEntry.groupeDevices || [];
-
-        // On crée une Map pour éviter les doublons
-        const deviceMap = new Map();
-        newDevices.forEach((device) => {
-          const key = `${device.creationTime}_${device.deviceID}`;
-          deviceMap.set(key, device);
-        });
-
-        const finalDevices = Array.from(deviceMap.values());
-
         if (index !== -1) {
-          // Groupe déjà présent, on le remplace complètement
+          // Fusionner les devices sans doublon (selon creationTime)
+          const existingDevices = updated[index].groupeDevices || [];
+          const newDevices = newEntry.groupeDevices || [];
+
+          const mergedDevices = [...existingDevices];
+
+          newDevices.forEach((device) => {
+            const exists = existingDevices.some(
+              (d) => d.creationTime === device.creationTime
+            );
+            if (!exists) {
+              mergedDevices.push(device);
+            } else {
+              // Met à jour les champs de l'appareil existant
+              const i = mergedDevices.findIndex(
+                (d) => d.creationTime === device.creationTime
+              );
+              mergedDevices[i] = { ...mergedDevices[i], ...device };
+            }
+          });
+
           updated[index] = {
             groupID: newEntry.groupID,
-            groupeDevices: finalDevices,
+            groupeDevices: mergedDevices,
           };
         } else {
           // Nouveau groupe
-          updated.push({
-            groupID: newEntry.groupID,
-            groupeDevices: finalDevices,
-          });
+          updated.push(newEntry);
         }
       });
 
@@ -1979,29 +2005,17 @@ const DataContextProvider = ({ children }) => {
       const updated = [...prev];
 
       results.forEach((newEntry) => {
-        const newGroupes = newEntry.userGroupes || [];
-
-        // Supprimer les doublons internes à newGroupes
-        const groupMap = new Map();
-        newGroupes.forEach((g) => {
-          groupMap.set(g.groupID, g);
-        });
-        const finalGroupes = Array.from(groupMap.values());
-
         const index = updated.findIndex((e) => e.userID === newEntry.userID);
 
         if (index !== -1) {
-          // Remplacer complètement les anciens groupes
+          // Fusionner les données existantes avec les nouvelles (mise à jour)
           updated[index] = {
             userID: newEntry.userID,
-            userGroupes: finalGroupes,
+            userGroupes: newEntry.userGroupes,
           };
         } else {
-          // Nouvel utilisateur
-          updated.push({
-            userID: newEntry.userID,
-            userGroupes: finalGroupes,
-          });
+          // Ajout d'une nouvelle entrée
+          updated.push(newEntry);
         }
       });
 
