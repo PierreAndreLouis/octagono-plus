@@ -13,7 +13,11 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
 import { MdUpdate } from "react-icons/md";
 
-function ListeDesGroupes({ setDocumentationPage }) {
+function ListeDesGroupes({
+  setDocumentationPage,
+  setChooseOtherAccountGestion,
+  setChooseOneAccountToContinue,
+}) {
   const {
     currentAccountSelected,
     currentSelectedGroupeGestion,
@@ -30,6 +34,7 @@ function ListeDesGroupes({ setDocumentationPage }) {
     scrollToTop,
     setListeGestionDesUsers,
     fetchAccountGroupes,
+    gestionAccountData,
   } = useContext(DataContext);
 
   const [deleteGroupeAccountPopup, setDeleteGroupeAccountPopup] =
@@ -45,9 +50,19 @@ function ListeDesGroupes({ setDocumentationPage }) {
     e.preventDefault();
     if (inputPassword === password) {
       deleteGroupeEnGestionAccount(
-        currentAccountSelected?.accountID,
+        currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedGroupeGestion?.accountID
+          )?.accountID,
+
         "admin",
-        currentAccountSelected?.password,
+
+        currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedGroupeGestion?.accountID
+          )?.password,
         currentSelectedGroupeGestion?.groupID
       );
       setDeleteGroupeAccountPopup(false);
@@ -286,7 +301,14 @@ function ListeDesGroupes({ setDocumentationPage }) {
           <div className="flex gap-2 justify-center mt-4">
             <div
               onClick={() => {
-                setDocumentationPage("Ajouter_nouveau_groupe");
+                // setDocumentationPage("Ajouter_nouveau_groupe");
+                if (!currentAccountSelected) {
+                  setChooseOneAccountToContinue(true);
+                  setChooseOtherAccountGestion(true);
+                  setDocumentationPage("Ajouter_nouveau_groupe");
+                } else {
+                  setDocumentationPage("Ajouter_nouveau_groupe");
+                }
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -382,13 +404,17 @@ function ListeDesGroupes({ setDocumentationPage }) {
 
           {filterGroupeAccountData?.length > 0 ? (
             filterGroupeAccountData?.map((groupe, index) => {
-              const userListeAffected =
-                currentAccountSelected?.accountUsers?.filter((user) => {
-                  const groupes = user?.userGroupes || [];
-                  return groupes?.some(
-                    (group) => group?.groupID === groupe?.groupID
-                  );
-                });
+              const userListeAffected = (
+                currentAccountSelected ||
+                gestionAccountData.find(
+                  (account) => account.accountID === groupe?.accountID
+                )
+              )?.accountUsers?.filter((user) => {
+                const groupes = user?.userGroupes || [];
+                return groupes?.some(
+                  (group) => group?.groupID === groupe?.groupID
+                );
+              });
 
               return (
                 <div

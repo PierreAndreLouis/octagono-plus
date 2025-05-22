@@ -11,6 +11,8 @@ import { IoClose } from "react-icons/io5";
 function CreateNewDeviceGestion({
   setDocumentationPage,
   documentationPage,
+  setChooseOtherAccountGestion,
+  setChooseOneAccountToContinue,
 }) {
   const {
     setCurrentAccountSelected,
@@ -56,7 +58,7 @@ function CreateNewDeviceGestion({
       ...prevData,
       [name]: value,
     }));
-    setErrorID(""); 
+    setErrorID("");
   };
 
   // Gestion de la soumission du formulaire
@@ -91,9 +93,14 @@ function CreateNewDeviceGestion({
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
+    if (!currentAccountSelected) {
+      setChooseOneAccountToContinue(true);
+      setChooseOtherAccountGestion(true);
+      return;
+    }
+
     setShowConfirmAddVéhiculePopup(true);
   };
-
 
   // //////////////////////
 
@@ -128,8 +135,7 @@ function CreateNewDeviceGestion({
     setGroupesSelectionnes([]);
   }, [documentationPage]);
 
-////////////////////////////////////
-
+  ////////////////////////////////////
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
@@ -320,7 +326,7 @@ function CreateNewDeviceGestion({
                 Retour
               </button>
             </div>
-          
+
             <p className="mb-2">Choisissez un Groupe</p>
             <div
               onClick={() => {
@@ -411,7 +417,6 @@ function CreateNewDeviceGestion({
                     {errorID}
                   </p>
                 )}
-               
 
                 <div className="grid  grid-cols-2 gap-2 pt-10 pb-10 pb-6-">
                   <button

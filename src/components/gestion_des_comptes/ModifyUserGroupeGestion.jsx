@@ -1,26 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
- import { DataContext } from "../../context/DataContext";
+import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
- import { MdErrorOutline } from "react-icons/md";
+import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
-import { 
-  IoMdRadioButtonOff,
-  IoMdRadioButtonOn,
- } from "react-icons/io";
+import { IoMdRadioButtonOff, IoMdRadioButtonOn } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
-function ModifyUserGroupeGestion({
-  setDocumentationPage, 
-}) {
+function ModifyUserGroupeGestion({ setDocumentationPage }) {
   const {
-     currentAccountSelected,
-     setError,
-    password, 
+    currentAccountSelected,
+    setError,
+    password,
     currentSelectedUserToConnect,
-    scrollToTop, 
+    scrollToTop,
     timeZoneData,
     userRole,
     ModifyUserEnGestionAccountFonction,
+    gestionAccountData,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -39,12 +35,13 @@ function ModifyUserGroupeGestion({
 
   // État pour chaque champ du formulaire
   const [addNewUserData, setAddNewUserData] = useState({
+    accountID: "",
     userID: "",
     description: "",
     displayName: "",
-     contactEmail: "",
+    contactEmail: "",
     notifyEmail: "",
-    isActive: "true",
+    isActive: "1",
     contactPhone: "",
     contactName: "",
     timeZone: "GMT-04:00",
@@ -86,7 +83,7 @@ function ModifyUserGroupeGestion({
     const userExists = currentAccountSelected?.accountUsers?.some(
       (user) => user?.userID === userID
     );
- 
+
     if (addNewUserData?.password !== addNewUserData?.password2) {
       setErrorID("Les mots de passe ne correspondent pas.");
       return;
@@ -103,9 +100,7 @@ function ModifyUserGroupeGestion({
     useState("true");
 
   const [showMaxAccessLevelPopup, setShowMaxAccessLevelPopup] = useState(false);
- 
- 
- 
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
@@ -118,20 +113,25 @@ function ModifyUserGroupeGestion({
   const [groupesSelectionnes, setGroupesSelectionnes] = useState(
     groupeDuSelectedUser?.[0] || ""
   );
- 
+
+  const groupesNonSelectionnes = allGroupIDs?.filter(
+    (userID) => !groupesSelectionnes.includes(userID)
+  );
 
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
 
   useEffect(() => {
     console.log("groupesSelectionnes", groupesSelectionnes);
+    console.log("groupesNonSelectionnes", groupesNonSelectionnes);
   }, [groupesSelectionnes]);
- 
+
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === password) {
+      const accountID = addNewUserData.userID;
       const userID = addNewUserData.userID;
       const description = addNewUserData.description;
       const displayName = addNewUserData.displayName;
@@ -147,24 +147,31 @@ function ModifyUserGroupeGestion({
 
       const password2 = addNewUserData.password2;
 
- 
-   
       if (
-        currentAccountSelected?.accountID &&
-        currentAccountSelected?.password
+        (currentAccountSelected?.accountID ||
+          gestionAccountData.find((account) => account.accountID === accountID)
+            ?.accountID) &&
+        (currentAccountSelected?.password ||
+          gestionAccountData.find((account) => account.accountID === accountID)
+            ?.password)
       ) {
-        
         // console.log(
         ModifyUserEnGestionAccountFonction(
-          currentAccountSelected?.accountID,
+          currentAccountSelected?.accountID ||
+            gestionAccountData.find(
+              (account) => account.accountID === accountID
+            )?.accountID,
           "admin",
-          currentAccountSelected?.password,
+          currentAccountSelected?.password ||
+            gestionAccountData.find(
+              (account) => account.accountID === accountID
+            )?.password,
 
           userID,
           description,
           displayName,
           password2,
-           contactEmail,
+          contactEmail,
           notifyEmail,
           isActive,
           contactPhone,
@@ -172,11 +179,12 @@ function ModifyUserGroupeGestion({
           timeZone,
           maxAccessLevel,
           roleID,
-           groupesSelectionnes,
-          groupeDuSelectedUser
+          groupesSelectionnes,
+          groupeDuSelectedUser,
+          groupesNonSelectionnes
         );
 
-         setDocumentationPage("Gestion_des_utilisateurs");
+        setDocumentationPage("Gestion_des_utilisateurs");
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -187,7 +195,7 @@ function ModifyUserGroupeGestion({
     }
   };
 
-   //   Pour mettre a jour les nouvelle donnee du véhicule a modifier
+  //   Pour mettre a jour les nouvelle donnee du véhicule a modifier
   useEffect(() => {
     if (currentSelectedUserToConnect) {
       console.log(
@@ -195,13 +203,16 @@ function ModifyUserGroupeGestion({
         currentSelectedUserToConnect
       );
       setAddNewUserData({
+        accountID: currentSelectedUserToConnect.accountID || "",
         userID: currentSelectedUserToConnect.userID || "",
         description: currentSelectedUserToConnect.description || "",
         displayName: currentSelectedUserToConnect.displayName || "",
 
         contactEmail: currentSelectedUserToConnect.contactEmail || "",
         notifyEmail: currentSelectedUserToConnect.notifyEmail || "",
-        isActive: currentSelectedUserToConnect.isActive || "",
+
+        isActive: currentSelectedUserToConnect.isActive === "true" ? "1" : "0",
+
         contactPhone: currentSelectedUserToConnect.contactPhone || "",
         contactName: currentSelectedUserToConnect.contactName || "",
         timeZone: currentSelectedUserToConnect.timeZone || "",
@@ -218,9 +229,7 @@ function ModifyUserGroupeGestion({
     <div className="px-3 rounded-lg  bg-white">
       {showMaxAccessLevelPopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
-          >
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowMaxAccessLevelPopup(false);
@@ -293,9 +302,7 @@ function ModifyUserGroupeGestion({
       )}
       {showIsUserActivePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
-          >
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowIsUserActivePopup(false);
@@ -317,7 +324,7 @@ function ModifyUserGroupeGestion({
                 setShowIsUserActivePopupText("true");
                 setAddNewUserData((prev) => ({
                   ...prev,
-                  isActive: "true",
+                  isActive: "1",
                 }));
                 setShowIsUserActivePopup(false);
               }}
@@ -335,7 +342,7 @@ function ModifyUserGroupeGestion({
                 setShowIsUserActivePopupText("false");
                 setAddNewUserData((prev) => ({
                   ...prev,
-                  isActive: "false",
+                  isActive: "0",
                 }));
                 setShowIsUserActivePopup(false);
               }}
@@ -348,9 +355,7 @@ function ModifyUserGroupeGestion({
 
       {showTimeZonePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
-          >
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowTimeZonePopup(false);
@@ -372,7 +377,7 @@ function ModifyUserGroupeGestion({
                         : ""
                     }`}
                     onClick={() => {
-                       setAddNewUserData((prev) => ({
+                      setAddNewUserData((prev) => ({
                         ...prev,
                         timeZone: zone?.region + ":00",
                       }));
@@ -380,7 +385,7 @@ function ModifyUserGroupeGestion({
                     }}
                   >
                     <p>{zone?.region + ":00"}</p>
-                   </div>
+                  </div>
                 );
               })}
             </div>
@@ -389,9 +394,7 @@ function ModifyUserGroupeGestion({
       )}
       {showUserRolePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
-          >
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowUserRolePopup(false);
@@ -432,9 +435,7 @@ function ModifyUserGroupeGestion({
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2 
-              className="text-center py-4 bg-orange-300 font-bold text-lg"
-            >
+            <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
               Liste Des Groupe
             </h2>
             <IoClose
@@ -443,9 +444,7 @@ function ModifyUserGroupeGestion({
               }}
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
-            <p 
-              className="mx-2 mb-3 text-center mt-4 text-lg"
-            >
+            <p className="mx-2 mb-3 text-center mt-4 text-lg">
               Choisis un Groupe pour intégrer l'appareil
             </p>
 
@@ -533,7 +532,7 @@ function ModifyUserGroupeGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Modifier l'utilisateur :{" "}
                 <span>{currentSelectedUserToConnect?.description}</span>
               </h3>
@@ -541,7 +540,7 @@ function ModifyUserGroupeGestion({
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                   setDocumentationPage("Gestion_des_utilisateurs");
+                  setDocumentationPage("Gestion_des_utilisateurs");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -688,7 +687,7 @@ function ModifyUserGroupeGestion({
                         className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                       >
                         <p>
-                          {addNewUserData?.isActive === "true" ? "oui" : "non"}
+                          {addNewUserData?.isActive === "1" ? "oui" : "non"}
                         </p>
                         <FaChevronDown className="text-gray-700 mr-4" />
                       </div>
@@ -700,6 +699,7 @@ function ModifyUserGroupeGestion({
                         placeholder={field.placeholder}
                         value={addNewUserData[field.id]}
                         onChange={handleChange}
+                        disabled={field.id === "userID"}
                         required
                         className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                       />
@@ -724,8 +724,8 @@ function ModifyUserGroupeGestion({
                   </button>
                   <button
                     onClick={() => {
-                       setDocumentationPage("Gestion_des_utilisateurs");
-                       scrollToTop();
+                      setDocumentationPage("Gestion_des_utilisateurs");
+                      scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >

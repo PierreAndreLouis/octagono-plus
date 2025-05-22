@@ -1,24 +1,24 @@
 import React, { useContext, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
- import { PiIntersectThreeBold } from "react-icons/pi"; 
+import { PiIntersectThreeBold } from "react-icons/pi";
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
- 
-function GestionAccountOptionPopup({
-   setDocumentationPage, 
-}) {
+import { IoEarth } from "react-icons/io5";
+
+function GestionAccountOptionPopup({ setDocumentationPage }) {
   const {
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
-     currentAccountSelected,
-     setListeGestionDesVehicules,
-     setDeviceListeTitleGestion,
-     setListeGestionDesGroupe,
-     setListeGestionDesGroupeTitre,
-     account,
+    currentAccountSelected,
+    setListeGestionDesVehicules,
+    setDeviceListeTitleGestion,
+    setListeGestionDesGroupe,
+    setListeGestionDesGroupeTitre,
+    account,
     username,
     password,
-     scrollToTop,
+    scrollToTop,
+    setListeGestionDesGeofences,
   } = useContext(DataContext);
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
@@ -38,7 +38,6 @@ function GestionAccountOptionPopup({
         currentAccountSelected?.accountID
       );
 
- 
       setDeleteAccountPopup(false);
     }
   };
@@ -77,9 +76,7 @@ function GestionAccountOptionPopup({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button 
-                className="py-1 px-5 bg-red-500 rounded-lg text-white"
-              >
+              <button className="py-1 px-5 bg-red-500 rounded-lg text-white">
                 Confirmer
               </button>
 
@@ -95,8 +92,6 @@ function GestionAccountOptionPopup({
           </form>
         </div>
       )}
-
-  
 
       {showAccountOptionsPopup && (
         <div className="fixed flex justify-center items-center z-[9999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
@@ -127,7 +122,7 @@ function GestionAccountOptionPopup({
               className="p-4 flex flex-col gap-4 py-6 pb-10--"
             >
               <button
-                 onClick={() => {
+                onClick={() => {
                   setDocumentationPage("Gestion_des_utilisateurs");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
@@ -141,7 +136,7 @@ function GestionAccountOptionPopup({
               {/*  */}
               {/*  */}
               {/*  */}
-              <button 
+              <button
                 onClick={() => {
                   setTimeout(() => {
                     setListeGestionDesVehicules(
@@ -162,7 +157,7 @@ function GestionAccountOptionPopup({
               {/*  */}
               {/*  */}
               <button
-                 onClick={() => {
+                onClick={() => {
                   setListeGestionDesGroupe(
                     currentAccountSelected?.accountGroupes
                   );
@@ -176,14 +171,29 @@ function GestionAccountOptionPopup({
                   Gestion des Groupes
                 </h2>
               </button>
+              <button
+                onClick={() => {
+                  setListeGestionDesGeofences(
+                    currentAccountSelected?.accountGeofences
+                  );
+                  // setListeGestionDesGroupeTitre("Tous les groupes");
+                  setDocumentationPage("Gestion_geofences");
+                }}
+                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+              >
+                <IoEarth className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                  Gestion des Geofences
+                </h2>
+              </button>
               {/*  */}
               {/*  */}
               {/*  */}
               {/*  */}
               <div
-                onClick={() => { 
+                onClick={() => {
                   setDocumentationPage("Modifier_compte");
-                 }}
+                }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaEdit className="text-[1.5rem] min-w-8 text-orange-400 dark:text-orange-50" />
@@ -195,15 +205,14 @@ function GestionAccountOptionPopup({
                 onClick={() => {
                   setDeleteAccountPopup(true);
                 }}
-                 className="shadow-md cursor-pointer hover:bg-red-100 dark:hover:bg-gray-900 bg-red-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+                className="shadow-md cursor-pointer hover:bg-red-100 dark:hover:bg-gray-900 bg-red-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
                 <h2 className="font-semibold text-red-900 dark:text-red-50">
                   Supprimer le compte
                 </h2>
               </div>
-
-             </div>
+            </div>
           </div>
         </div>
       )}

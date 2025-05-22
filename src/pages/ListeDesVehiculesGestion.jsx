@@ -14,7 +14,11 @@ import {
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { MdUpdate } from "react-icons/md";
 
-function ListeDesVehiculesGestion({ setDocumentationPage }) {
+function ListeDesVehiculesGestion({
+  setDocumentationPage,
+  setChooseOneAccountToContinue,
+  setChooseOtherAccountGestion,
+}) {
   const {
     FormatDateHeure,
     currentAccountSelected,
@@ -38,6 +42,7 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
     fetchAccountGroupes,
     fetchGroupeDevices,
     setDashboardLoadingEffect,
+    gestionAccountData,
   } = useContext(DataContext);
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
@@ -51,8 +56,8 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
 
   const [editAccountGestion, setEditAccountGestion] = useState(false);
 
-  const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
-    useState(false);
+  // const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
+  //   useState(false);
 
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
@@ -74,9 +79,18 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
     if (inputPassword === password) {
       deleteVehicleEnGestionAccount(
         currentSelectedDeviceGestion?.deviceID,
-        currentAccountSelected?.accountID,
+
+        currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedDeviceGestion?.accountID
+          )?.accountID,
         "admin",
-        currentAccountSelected?.password
+        currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedDeviceGestion?.accountID
+          )?.password
       );
       setDeleteAccountPopup(false);
     } else {
@@ -208,218 +222,6 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
         </div>
       )}
 
-      {chooseOtherAccountGestion && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[80vh] max-h-[90vh] rounded-lg">
-            <div className="relative">
-              <div className="text-center font-semibold text-lg bg-orange-100 py-4">
-                <h2 className="">Liste des Utilisateurs</h2>
-                <p className="text-center font-normal- text-orange-600 translate-x-11--  text-sm">
-                  {currentAccountSelected?.description}
-                </p>
-              </div>
-
-              <IoClose
-                onClick={() => {
-                  setChooseOtherAccountGestion(false);
-                }}
-                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4"
-              />
-            </div>
-            {showUserGroupeCategorieSection && (
-              <div className="grid grid-cols-2 mx-3 my-3 gap-2">
-                <button
-                  onClick={() => {
-                    setShowUserListeToSelectDevice(true);
-                  }}
-                  className={`${
-                    showUserListeToSelectDevice
-                      ? "bg-orange-300"
-                      : "bg-gray-200"
-                  } flex cursor-pointer justify-center items-center shadow-lg-- shadow-black/10 rounded-md  font-bold text-black py-2 `}
-                >
-                  Utilisateurs
-                </button>
-                <button
-                  onClick={() => {
-                    setShowUserListeToSelectDevice(false);
-                  }}
-                  className={`${
-                    !showUserListeToSelectDevice
-                      ? "bg-orange-300"
-                      : "bg-gray-200"
-                  }  font-bold cursor-pointer    flex  justify-center items-center shadow-lg-- shadow-black/10 rounded-md  py-2 `}
-                >
-                  Groupe
-                </button>
-              </div>
-            )}
-            <div>
-              {showUserListeToSelectDevice ? (
-                <div>
-                  <div className="flex mx-3 my-4 gap-2 justify-between items-center">
-                    <input
-                      className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
-                      type="text"
-                      placeholder="Rechercher un utilisateur"
-                      value={searchInputTerm}
-                      onChange={(e) => {
-                        setSearchInputTerm(e.target.value);
-                      }}
-                    />
-
-                    <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
-                      <IoSearchOutline className="text-xl " />
-                    </div>
-                    {/* </Tooltip> */}
-                  </div>
-                  {showChooseUserMessage && (
-                    <div className="px-3 flex justify-between items-start py-2 rounded-md border border-red-600 bg-red-200 font-semibold mx-3 mb-4">
-                      <p className="w-full text-red-700">
-                        Choisissez un utilisateur pour ajouter un nouveau
-                        Appareil
-                      </p>
-                      <IoClose
-                        className="text-[1.6rem] cursor-pointer text-red-500"
-                        onClick={() => {
-                          setShowChooseUserMessage(false);
-                        }}
-                      />
-                    </div>
-                  )}
-                  <div className="flex overflow-auto h-[60vh] max-h-[55vh] pb-20 flex-col gap-4 mx-3">
-                    {/*  */}
-                    <button
-                      onClick={() => {
-                        {
-                          setDeviceListeTitleGestion("Tous les appareils");
-                          setListeGestionDesVehicules(
-                            currentAccountSelected?.accountDevices
-                          );
-                          setChooseOtherAccountGestion(false);
-                          setCurrentSelectedUserToConnect(null);
-                        }
-                      }}
-                      className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
-                    >
-                      Tous les appareils
-                    </button>{" "}
-                    {filterGestionAccountData?.map((user, index) => {
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => {
-                            setListeGestionDesVehicules(user?.userDevices);
-                            setCurrentSelectedUserToConnect(user);
-                            setChooseOtherAccountGestion(false);
-                            setDeviceListeTitleGestion(
-                              "Utilisateur : " + user?.description
-                            );
-                            setShowChooseUserMessage(false);
-                          }}
-                          className="shadow-lg- shadow-inner cursor-pointer relative overflow-hidden-- bg-gray-50  shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
-                        >
-                          <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                            {index + 1}
-                          </p>
-                          <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                          <div>
-                            <p className="text-gray-600">
-                              Nom du compte :{" "}
-                              <span className="font-bold">
-                                {user?.description}
-                              </span>{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              Nombre d'appareil :{" "}
-                              <span className="font-bold">
-                                {user?.userDevices?.length}
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    {/*  */}
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="flex mx-3 my-4 gap-2 justify-between items-center">
-                    <input
-                      className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
-                      type="text"
-                      placeholder="Rechercher un groupe"
-                      value={searchInputTerm}
-                      onChange={(e) => {
-                        setSearchInputTerm(e.target.value);
-                      }}
-                    />
-
-                    <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
-                      <IoSearchOutline className="text-xl " />
-                    </div>
-                    {/* </Tooltip> */}
-                  </div>
-                  <div className="flex overflow-auto h-[60vh] max-h-[55vh] pb-20 flex-col gap-4 mx-3">
-                    {/*  */}
-                    <button
-                      onClick={() => {
-                        {
-                          setListeGestionDesVehicules(
-                            currentAccountSelected?.accountDevices
-                          );
-                          setChooseOtherAccountGestion(false);
-                          setCurrentSelectedUserToConnect(null);
-                        }
-                      }}
-                      className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
-                    >
-                      Tous les appareils
-                    </button>{" "}
-                    {filterGroupeAccountData?.map((group, index) => {
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => {
-                            setChooseOtherAccountGestion(false);
-                            setCurrentSelectedGroupeGestion(group);
-                            setDeviceListeTitleGestion(
-                              "Groupe : " + group?.description
-                            );
-                          }}
-                          className="shadow-lg- shadow-inner cursor-pointer relative overflow-hidden-- bg-gray-50  shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
-                        >
-                          <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                            {index + 1}
-                          </p>
-                          <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                          <div>
-                            <p className="text-gray-600">
-                              Nom du compte :{" "}
-                              <span className="font-bold">
-                                {group?.description}
-                              </span>{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              Nombre d'appareil :{" "}
-                              <span className="font-bold">
-                                {group?.groupeDevices?.length}
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    {/*  */}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="px-4 pb-40 bg-white pt-10 rounded-lg">
         <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
           Liste des Appareils
@@ -447,7 +249,14 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
               onClick={() => {
                 // setShowCreateNewDevicePage(true);
                 scrollToTop();
-                setDocumentationPage("Ajouter_nouveau_appareil");
+
+                if (!currentAccountSelected) {
+                  setChooseOneAccountToContinue(true);
+                  setChooseOtherAccountGestion(true);
+                  setDocumentationPage("Ajouter_nouveau_appareil");
+                } else {
+                  setDocumentationPage("Ajouter_nouveau_appareil");
+                }
               }}
               className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -474,7 +283,9 @@ function ListeDesVehiculesGestion({ setDocumentationPage }) {
               >
                 <h3 className="w-full text-center font-semibold">
                   {/* Compte: */}
-                  <span>{deviceListeTitleGestion || "Tous les Appareils"}</span>
+                  <span className="max-w-[13rem] overflow-hidden whitespace-nowrap text-ellipsis sm:max-w-full">
+                    {deviceListeTitleGestion || "Tous les Appareils"}
+                  </span>
                 </h3>
                 <FaChevronDown />
               </div>

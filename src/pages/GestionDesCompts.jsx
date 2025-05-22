@@ -31,6 +31,8 @@ function GestionDesCompts({ setDocumentationPage }) {
     fetchAllComptes,
     testFonctin,
     password,
+    fetchAccountGeofences,
+    accountGeofences,
   } = useContext(DataContext);
 
   const [inputSearchItem, setInputSearchItem] = useState("");
@@ -119,7 +121,22 @@ function GestionDesCompts({ setDocumentationPage }) {
 
     console.log("end fonction..............");
   };
+  const testFonction5 = (fetchAllOtherData) => {
+    // Déclenchement automatique des autres fetchs pour chaque compte
+    console.log("Start fonction");
+    comptes?.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
 
+      //////////////////////////////////////////
+      fetchAccountGeofences(id, pwd).catch((err) => {
+        console.error("Erreur lors du chargement des geofences :", err);
+        // setError("Erreur lors du chargement des devices.");
+      });
+    });
+
+    console.log("end fonction..............");
+  };
   return (
     <div>
       {account === "sysadmin" ? (
@@ -141,14 +158,21 @@ function GestionDesCompts({ setDocumentationPage }) {
             >
               Gestion Des Comptes ({filterListeDesCompte?.length})
             </h2>
-            {/* <button
+            <button
               onClick={() => {
-                testFonction1();
+                testFonction5();
               }}
             >
-              Test fonction 1
+              Test fonction 5
             </button>{" "}
-            <br />
+            <p
+              onClick={() => {
+                console.log(accountGeofences);
+              }}
+            >
+              accountGeofences
+            </p>
+            {/*  <br />
             <button
               onClick={() => {
                 testFonction2();
@@ -200,7 +224,6 @@ function GestionDesCompts({ setDocumentationPage }) {
                 </div>
               </button>{" "}
             </div>
-
             <div className="flex mt-4 max-w-[30rem] mx-auto justify-between items-center gap-2 ">
               <div className="mx-auto border w-full border-gray-400 rounded-md flex items-center justify-between max-w-[30rem] ">
                 <input
@@ -290,6 +313,14 @@ function GestionDesCompts({ setDocumentationPage }) {
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                               {account?.accountGroupes?.length}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap mt-1">
+                            <p className="font-bold- text-gray-700">
+                              Nombre de Geofences :
+                            </p>
+                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                              {account?.accountGeofences?.length}
                             </span>
                           </div>{" "}
                           {/*  */}

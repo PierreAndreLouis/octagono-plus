@@ -19,7 +19,7 @@ import { Polygon } from "react-leaflet";
 import { IoClose } from "react-icons/io5";
 import { useMapEvent } from "react-leaflet";
 import { FaPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 // import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
@@ -31,7 +31,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
 });
 
-function MapComponent({ mapType, isDashBoardComptnent }) {
+function MapComponent({
+  mapType,
+  isDashBoardComptnent,
+  isAddingNewGeofence,
+  setIsAddingNewGeofence,
+  setDocumentationPage,
+}) {
   const {
     selectedVehicleToShowInMap,
     currentDataFusionné,
@@ -48,9 +54,11 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
     ModifierGeofence,
     accountDevices,
     currentAccountSelected,
+    gestionAccountData,
   } = useContext(DataContext);
 
   // le data a utiliser
+  const navigate = useNavigate();
 
   const dataFusionné =
     currentAccountSelected?.accountDevices ??
@@ -296,8 +304,6 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
   ///////////////////////////////////////////
   ///////////////////////////////////////////
   ///////////////////////////////////////////
-
-  const [isAddingNewGeofence, setIsAddingNewGeofence] = useState(false);
 
   const popupRef = useRef(null);
 
@@ -587,7 +593,14 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
         pos7?.lat || "",
         pos7?.lng || "",
         pos8?.lat || "",
-        pos8?.lng || ""
+        pos8?.lng || "",
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.accountID,
+        "admin",
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.password
       );
     } else if (geofences?.coordinates.length >= 3 && isEditingGeofence) {
       const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
@@ -596,7 +609,6 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
       // console.log(
       ModifierGeofence(
         description,
-
         color,
         geozoneID,
         pos1?.lat || "",
@@ -614,7 +626,15 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
         pos7?.lat || "",
         pos7?.lng || "",
         pos8?.lat || "",
-        pos8?.lng || ""
+        pos8?.lng || "",
+        // ////////////////////
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.accountID,
+        "admin",
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.password
       );
     } else {
       console.log("pas d'assez de coordonnee...");
@@ -727,25 +747,58 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
     }
   };
 
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    if (!ref1.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+
+    observer.observe(ref1.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (ref2.current) {
+      ref2.current.style.width = `${width}px`;
+    }
+  }, [width]);
+
   return (
-    <div>
+    <div ref={ref1} className="relative">
       {isAddingNewGeofence && (
         <div className="fixed  z-[9999999999] shadow-lg right-[1rem] lg:right-[2rem] md:top-[5rem] top-[11rem]  ">
-          <Link
+          <button
             onClick={() => {
               setIsAddingNewGeofence(false);
               setAjouterGeofencePopup(false);
+              if (!isDashBoardComptnent) {
+                navigate("/gestion_geofences?tab=geozone");
+              }
+              setDocumentationPage("Gestion_geofences");
+
               // centrerSurGeofenceChoisis();
             }}
-            to="/gestion_geofences?tab=geozone"
+            // to="/gestion_geofences?tab=geozone"
             className="py-[.1rem] w-full flex justify-center items-center cursor-pointer px-3 bg-red-600 text-white rounded-lg"
           >
             Annuler
-          </Link>
+          </button>
         </div>
       )}
+
       {isAddingNewGeofence && (
-        <div className="fixed text-sm flex gap-2 z-[999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem] right-[.5rem] bg-white  ">
+        <div
+          ref={ref2}
+          className="fixed -- --absolute text-sm flex gap-2 z-[99999] shadow-lg bottom-[4rem] lg:bottom-[1rem] rounded-lg p-2 left-[.5rem]-- right-[.5rem] bg-white  "
+        >
           <div className="mx-auto flex flex-col xs:flex-row gap-3">
             {positionIndex < 8 && (
               <p
@@ -813,15 +866,22 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
           </div>
         </div>
       )}
-      {/* <div
-        onClick={() => {
-          setAjouterGeofencePopup(true);
-        }}
-        className="fixed z-[99999999999] bg-white top-[17rem] left-[1rem]"
-      >
-        {" "}
-        Add Geofence
-      </div> */}
+
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+
       {ajouterGeofencePopup && (
         <div className="fixed flex justify-center items-center z-[99999999999] inset-0 bg-black/30 px-2">
           {/* {true && ( */}
@@ -841,7 +901,15 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
                   (Separation sur la carte)
                 </span>
               </h2>
-              <Link to="/gestion_geofences?tab=geozone">
+              <button
+                onClick={() => {
+                  if (!isDashBoardComptnent) {
+                    navigate("/gestion_geofences?tab=geozone");
+                  }
+                  setDocumentationPage("Gestion_geofences");
+                }}
+                // to="/gestion_geofences?tab=geozone"
+              >
                 <IoClose
                   onClick={() => {
                     setAjouterGeofencePopup(false);
@@ -849,25 +917,9 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
                   }}
                   className="text-2xl cursor-pointer text-red-600"
                 />
-              </Link>
+              </button>
             </div>
             <form onSubmit={addGeofenceFonction} className="mt-4">
-              {/* <label
-                htmlFor="zoneName"
-                className="block text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
-              >
-                Nom de la Zone :
-              </label>
-              <input
-                id="zoneName"
-                name="zoneName"
-                type="text"
-                placeholder="Nom de la zone"
-                value={zoneName}
-                onChange={handleInputChange}
-                required
-                className="block px-3 w-full border-b pb-2 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-              /> */}
               <label
                 htmlFor="zoneDescription"
                 className="block mt-4 text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
@@ -948,24 +1000,22 @@ function MapComponent({ mapType, isDashBoardComptnent }) {
                 >
                   {isEditingGeofence ? "Modifier" : "Ajouter"}
                 </button>
-                {/* <button
-                  onClick={() => {
-                    createNewGeofence();
-                  }}
-                >
-                  createNewGeofence
-                </button> */}
 
-                <Link
+                <button
                   onClick={() => {
                     setIsAddingNewGeofence(false);
                     setAjouterGeofencePopup(false);
+
+                    if (!isDashBoardComptnent) {
+                      navigate("/gestion_geofences?tab=geozone");
+                    }
+                    setDocumentationPage("Gestion_geofences");
                   }}
-                  to="/gestion_geofences?tab=geozone"
+                  // to="/gestion_geofences?tab=geozone"
                   className="px-4 w-full text-center cursor-pointer py-1 rounded-lg bg-red-500 text-white"
                 >
                   Annuler
-                </Link>
+                </button>
               </div>
             </form>{" "}
             {/*  */}

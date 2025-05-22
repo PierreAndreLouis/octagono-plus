@@ -245,7 +245,7 @@ function DashboardContaintMaintComponant({
   /////////////////////////////////////
   /////////////////////////////////////
 
-  const MIN_DISPLAY = 5; // px ou unité relative
+  const MIN_DISPLAY = 2; // px ou unité relative
 
   // const transformValue = (value) => {
   //   if (value === 0) return MIN_DISPLAY;
@@ -266,7 +266,7 @@ function DashboardContaintMaintComponant({
 
   // Préparation des données
   const formatBarData = (data) =>
-    data.map((account) => {
+    data?.map((account) => {
       const devices = account.accountDevices || [];
       const total = devices.length;
       const actifs = devices.filter(
@@ -287,11 +287,11 @@ function DashboardContaintMaintComponant({
       };
     });
 
-  const graphData2 = formatBarData(gestionAccountData).sort(
+  const graphData2 = formatBarData(gestionAccountData)?.sort(
     (a, b) => b.total - a.total
   );
   const barSpacing2 = 70;
-  const fixedWidth2 = graphData.length * barSpacing;
+  const fixedWidth2 = graphData2?.length * barSpacing2;
 
   // Custom Tooltip pour afficher les vraies valeurs
   const CustomTooltip2 = ({ active, payload }) => {
@@ -496,7 +496,7 @@ function DashboardContaintMaintComponant({
         <div className="w-full h-full bg-white rounded-lg p-4">
           <div className=" relative mb-4 ">
             <div className="">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <h1 className="font-bold text-[1.1rem] md:text-xl text-gray-800">
                   {/* Statistiques pour les 7 derniers jours */}
                   Statistiques pour aujourd'hui
@@ -509,7 +509,7 @@ function DashboardContaintMaintComponant({
                     isLoading2 ? "animate-spin" : ""
                   }  text-orange-500 mt-1 min-w-8 min-h-6  cursor-pointer   dark:text-gray-200 `}
                 >
-                  <MdUpdate className="sm:text-[1.5rem] min-w-8 text-[1.6rem] mt-1-- sm:mt-0" />
+                  <MdUpdate className="sm:text-[1.5rem]  sm:min-w-8 text-[1.3rem]  sm:mt-0" />
                 </div>
               </div>
               <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
@@ -774,8 +774,8 @@ function DashboardContaintMaintComponant({
           {!currentAccountSelected && showFistGrapheOption && (
             <div className="bg-white md:col-span-2 justify-between flex flex-col   p-3 h-full rounded-lg">
               {/* title section */}
-              <div className="flex  mb-4 justify-between items-end- ">
-                <div className=" ">
+              <div className="flex relative   mb-4 justify-between items-end- ">
+                <div className="  min-w-[14rem]">
                   <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
                     <h2>Graphe des Comptes </h2>
                     {!currentAccountSelected && (
@@ -791,21 +791,21 @@ function DashboardContaintMaintComponant({
                     Nombre de comptes ({comptes?.length})
                   </p>
                 </div>
-                <div className="flex mb-1 text-[.8rem] flex-col sm:flex-row gap-0 text-gray-600  sm:gap-5  items-center">
+                <div className="flex   text-[.8rem] absolute bottom-[0rem] right-0 gap-2 sm:gap-4 text-gray-600  ">
                   <div className="flex gap-1 items-center ">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500">
+                    <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-green-500">
                       {" "}
                     </p>{" "}
                     <p>Total</p>
                   </div>
                   <div className="flex gap-1 items-center">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
+                    <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-orange-500">
                       {" "}
                     </p>{" "}
                     <p>Actif</p>
                   </div>
                   <div className="flex gap-1 items-center">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-purple-500">
+                    <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-purple-500">
                       {" "}
                     </p>{" "}
                     <p>Inactif</p>
@@ -818,7 +818,7 @@ function DashboardContaintMaintComponant({
                 {/* Graphe ici... */}
                 {/* Graphe ici... */}
 
-                {graphData2.length > 0 ? (
+                {graphData2?.length > 0 ? (
                   <div
                     className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}

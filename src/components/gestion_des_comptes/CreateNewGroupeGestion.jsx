@@ -9,11 +9,13 @@ import { IoClose } from "react-icons/io5";
 function CreateNewGroupeGestion({
   setDocumentationPage,
   documentationPage,
+  setChooseOneAccountToContinue,
+  setChooseOtherAccountGestion,
 }) {
   const {
     currentAccountSelected,
     setError,
-    password, 
+    password,
     scrollToTop,
     FormatDateHeure,
     currentSelectedGroupeGestion,
@@ -72,10 +74,14 @@ function CreateNewGroupeGestion({
       );
       return;
     }
+    if (!currentAccountSelected) {
+      setChooseOneAccountToContinue(true);
+      setChooseOtherAccountGestion(true);
+      return;
+    }
 
     setShowConfirmAddGroupeGestionPopup(true);
   };
-
 
   //////////////////////////////////////////////////
 
@@ -141,12 +147,11 @@ function CreateNewGroupeGestion({
       const displayName = addNewGroupeData.displayName;
       const notes = addNewGroupeData.notes;
       const workOrderID = addNewGroupeData.workOrderID;
- 
+
       if (
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
-      ) { 
-
+      ) {
         createNewGroupeEnGestionAccount(
           currentAccountSelected?.accountID,
           "admin",
@@ -161,7 +166,7 @@ function CreateNewGroupeGestion({
           usersSelectionnes
         );
 
-         setDocumentationPage("Gestion_des_groupes");
+        setDocumentationPage("Gestion_des_groupes");
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -172,17 +177,12 @@ function CreateNewGroupeGestion({
     }
   };
 
- 
-
   return (
     <div className="px-3 rounded-lg  bg-white">
-     
       {showDeviceSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2 
-              className="text-center py-4 bg-orange-300 font-bold text-lg"
-            >
+            <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
               Liste Des Appareils
             </h2>
             <IoClose
@@ -275,9 +275,7 @@ function CreateNewGroupeGestion({
       {showUserSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2 
-              className="text-center py-4 bg-orange-300 font-bold text-lg"
-            >
+            <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
               Liste Des Appareils
             </h2>
             <IoClose
@@ -381,14 +379,14 @@ function CreateNewGroupeGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Ajouter un nouveau Groupe
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                   setDocumentationPage("Gestion_des_groupes");
+                  setDocumentationPage("Gestion_des_groupes");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -460,7 +458,6 @@ function CreateNewGroupeGestion({
                     label: "Notes",
                     placeholder: "Ajouter une petite note",
                   },
-                  
                 ].map((field) => (
                   <div key={field.id}>
                     <label

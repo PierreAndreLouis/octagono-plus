@@ -21,6 +21,7 @@ function GestionUserOptionsPopup({
     deleteUSerEnGestionAccount,
     currentAccountSelected,
     password,
+    gestionAccountData,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -34,18 +35,20 @@ function GestionUserOptionsPopup({
   const deleteUSerEnGestionAccountFonction = (e) => {
     e.preventDefault();
     if (inputPassword === password) {
-      console.log(
-        currentAccountSelected?.accountID,
-        "admin",
-        currentAccountSelected?.password,
-        currentSelectedUserToConnect?.userID
-      );
       setDeleteAccountPopup(false);
 
       deleteUSerEnGestionAccount(
-        currentAccountSelected?.accountID,
+        currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedUserToConnect?.accountID
+          )?.accountID,
         "admin",
-        currentAccountSelected?.password,
+        currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedUserToConnect?.accountID
+          )?.password,
         currentSelectedUserToConnect?.userID
       );
     } else {
@@ -175,7 +178,14 @@ function GestionUserOptionsPopup({
                 onClick={() => {
                   setTimeout(() => {
                     setListeGestionDesGroupe(
-                      currentAccountSelected?.accountGroupes?.filter((g) =>
+                      (
+                        currentAccountSelected ||
+                        gestionAccountData.find(
+                          (account) =>
+                            account.accountID ===
+                            currentSelectedUserToConnect?.accountID
+                        )
+                      )?.accountGroupes?.filter((g) =>
                         currentSelectedUserToConnect?.userGroupes?.some(
                           (u) => u.groupID === g.groupID
                         )

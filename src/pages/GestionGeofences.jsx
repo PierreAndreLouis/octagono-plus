@@ -1,12 +1,19 @@
 import React, { useContext, useState } from "react";
-import { IoEarth } from "react-icons/io5";
+import { IoClose, IoEarth, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaChevronDown, FaPlusCircle, FaUserPlus } from "react-icons/fa";
+import ChooseOtherGeofenceDashboard from "../components/dashboard_containt/ChooseOtherGeofenceDashboard";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
-function GestionGeofences() {
+function GestionGeofences({
+  isDashBoardComptnent = false,
+  setChooseOtherAccountGestion,
+  setDocumentationPage,
+  setChooseOneAccountToContinue,
+  setChooseAccountFromGeozoneSection,
+}) {
   const {
     ajouterGeofencePopup,
     setAjouterGeofencePopup,
@@ -30,8 +37,14 @@ function GestionGeofences() {
     setSuccesDeleteGeofencePopup,
     errorDeleteGeofencePopup,
     setErrorDeleteGeofencePopup,
+    listeGestionDesGeofences,
+    gestionAccountData,
+    currentAccountSelected,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
+  const navigate = useNavigate();
+
+  const currentGeofenceData = geofenceData ?? listeGestionDesGeofences;
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -52,7 +65,17 @@ function GestionGeofences() {
     // activerOuDesactiverGeofence(geozoneID, 0);
 
     if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
-      supprimerGeofence(geozoneID);
+      supprimerGeofence(
+        geozoneID,
+
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.accountID,
+        "admin",
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.password
+      );
     }
 
     if (
@@ -67,20 +90,35 @@ function GestionGeofences() {
     }
   };
 
-  return (
-    <div>
-   
+  // /////////////////////////////////////////////////////////////////
 
-      <div className="px-4 pb-40">
-        <h2
-          onClick={() => {
-            console.log(geofenceData);
-          }}
-          className="mt-[6rem] text-lg text-center font-bold "
-        >
-          Geozones
-        </h2>
-        <div className="flex justify-center mt-4">
+  const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
+  const [showFilterInputSection, setShowFilterInputSection] = useState(false);
+
+  const filterGeofencesAccountData = searchGroupInputTerm
+    ? currentGeofenceData?.filter(
+        (item) =>
+          item?.description
+            .toLowerCase()
+            .includes(searchGroupInputTerm.toLowerCase()) ||
+          item?.accountID
+            .toLowerCase()
+            .includes(searchGroupInputTerm.toLowerCase())
+      )
+    : currentGeofenceData;
+
+  const [chooseOtherGeofencesGestion, setChooseOtherGeofencesGestion] =
+    useState(false);
+
+  return (
+    <div className=" bg-white border-white  border rounded-lg">
+      <div className="px-4 pb-40 ">
+        <ChooseOtherGeofenceDashboard
+          chooseOtherGeofencesGestion={chooseOtherGeofencesGestion}
+          setChooseOtherGeofencesGestion={setChooseOtherGeofencesGestion}
+        />
+        <h2 className="mt-[6rem] text-lg text-center font-bold ">Geozones</h2>
+        {/* <div className="flex justify-center mt-4">
           <Link
             to="/Groupe_vehicule_location?tab=localisation"
             onClick={() => {
@@ -95,15 +133,152 @@ function GestionGeofences() {
               <p className="text-lg text-center">Ajouter un nouveau Geozone</p>
             </div>
           </Link>{" "}
+        </div> */}
+
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+          <div className="flex gap-2 justify-center mt-4">
+            <div
+              onClick={() => {
+                if (!currentAccountSelected) {
+                  setChooseOneAccountToContinue(true);
+                  setChooseOtherAccountGestion(true);
+                  // setDocumentationPage("Localisation_devices");
+                } else {
+                  setDocumentationPage("Localisation_devices");
+                }
+                setAjouterGeofencePopup(true);
+                setIsEditingGeofence(false);
+                setCurrentGeozone();
+                // setDocumentationPage("Localisation_devices");
+
+                if (!isDashBoardComptnent) {
+                  navigate("/Groupe_vehicule_location?tab=localisation");
+                }
+
+                // if (!currentAccountSelected) {
+                //   setChooseOneAccountToContinue(true);
+                //   setChooseOtherAccountGestion(true);
+                //   setDocumentationPage("Ajouter_nouveau_groupe");
+                // } else {
+                // }
+              }}
+              className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+            >
+              <div className="flex justify-center items-center gap-3 ">
+                <FaUserPlus className="text-2xl" />
+                <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                  <span className="hidden md:inline">Ajouter un</span> Nouveau
+                  Geofence
+                </p>
+              </div>
+            </div>{" "}
+          </div>
+
+          {!showFilterInputSection && isDashBoardComptnent && (
+            <div className="flex gap-2 w-full justify-between items-center">
+              <div
+                onClick={() => {
+                  setDocumentationPage("Gestion_geofences");
+                  setChooseOtherAccountGestion(true);
+                  setChooseAccountFromGeozoneSection(true);
+                }}
+                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+              >
+                <h3 className="w-full text-center font-semibold">
+                  {/* Compte: */}
+                  <span>
+                    {/* {listeGestionDesGroupeTitre || "Tous les geofences"} */}
+                    Tous les geofences
+                  </span>
+                </h3>
+                <FaChevronDown />
+              </div>
+              <div
+                onClick={() => {
+                  setShowFilterInputSection(true);
+                }}
+                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+              >
+                <IoSearchOutline className="text-xl " />
+              </div>
+              {/* <div
+                        onClick={() => {
+                          // deviceUpdateFonction();
+                        }}
+                        className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
+                      >
+                        <MdUpdate className="text-xl " />
+                      </div> */}
+            </div>
+          )}
+
+          {(showFilterInputSection || !isDashBoardComptnent) && (
+            <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+              <input
+                id="search"
+                name="search"
+                type="search"
+                placeholder="Recherche un Groupe"
+                required
+                value={searchGroupInputTerm}
+                onChange={(e) => {
+                  setSearchGroupInputTerm(e.target.value);
+                }}
+                className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+              />
+              {isDashBoardComptnent && (
+                <div
+                  onClick={() => {
+                    {
+                      setShowFilterInputSection(false);
+                      setSearchTermInput("");
+                    }
+                  }}
+                  className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+                >
+                  <IoClose className="text-xl text-red-600" />
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="hidden-- flex mt-[2rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
+        <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {
             // ?.filter((item) =>
             //   item.geozoneID.endsWith(`_${account}`)
             // )
-            geofenceData?.length > 0 ? (
-              geofenceData
+            filterGeofencesAccountData?.length > 0 ? (
+              filterGeofencesAccountData
                 // ?.filter((item) => item.geozoneID.endsWith(`_${account}`))
                 .map((geozone, index) => {
                   //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
@@ -115,7 +290,7 @@ function GestionGeofences() {
 
                   return (
                     <div
-                      className="shadow-lg bg-orange-50/50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                      className="shadow-inner bg-gray-50 shadow-black/10 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                       key={index}
                     >
                       <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
@@ -132,6 +307,18 @@ function GestionGeofences() {
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap">
+                              <p className="font-bold">Id du geozone :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {geozone?.geozoneID}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap">
+                              <p className="font-bold">ID du compte :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {geozone?.accountID}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap">
                               <p className="font-bold">Date de creation :</p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 {FormatDateHeure(geozone?.lastUpdateTime).date}
@@ -142,7 +329,7 @@ function GestionGeofences() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                      <div className="flex  justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-end ">
                         {isActive && geozone?.isActive === (0 || 1) && (
                           <button
                             onClick={() => {
@@ -168,17 +355,23 @@ function GestionGeofences() {
                               "Désactiver"}
                           </button>
                         )}
-                        <Link
+                        <button
                           onClick={() => {
                             setCurrentGeozone(geozone);
                             setAjouterGeofencePopup(true);
                             setIsEditingGeofence(true);
+                            if (!isDashBoardComptnent) {
+                              navigate(
+                                "/Groupe_vehicule_location?tab=localisation"
+                              );
+                            }
+                            setDocumentationPage("Localisation_devices");
                           }}
-                          to="/Groupe_vehicule_location?tab=localisation"
+                          // to="/Groupe_vehicule_location?tab=localisation"
                           className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"
                         >
                           Modifier
-                        </Link>
+                        </button>
 
                         {/* {isActive && geozone?.isActive === (0 || 1) && (
                           <button

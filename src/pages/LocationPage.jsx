@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
 });
 
-const LocationPage = ({ isDashBoardComptnent }) => {
+const LocationPage = ({ isDashBoardComptnent, setDocumentationPage }) => {
   const {
     mergedDataHome,
     selectedVehicleToShowInMap,
@@ -196,16 +196,20 @@ const LocationPage = ({ isDashBoardComptnent }) => {
 
   x;
 
+  const [isAddingNewGeofence, setIsAddingNewGeofence] = useState(false);
+
   return (
     <div className="relative ">
-      <HeaderLocation
-        setShowVehiculeListe={setShowVehiculeListe}
-        selectedVehicleToShowInMap={selectedVehicleToShowInMap}
-        véhiculeData={véhiculeData}
-        setTypeDeVue={setTypeDeVue}
-        showAllVehicles={showAllVehicles}
-        isDashBoardComptnent={isDashBoardComptnent}
-      />
+      {!isAddingNewGeofence && (
+        <HeaderLocation
+          setShowVehiculeListe={setShowVehiculeListe}
+          selectedVehicleToShowInMap={selectedVehicleToShowInMap}
+          véhiculeData={véhiculeData}
+          setTypeDeVue={setTypeDeVue}
+          showAllVehicles={showAllVehicles}
+          isDashBoardComptnent={isDashBoardComptnent}
+        />
+      )}
 
       {showVehiculeListe && (
         <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-[14124124124124] shadow-xl border-- border-gray-100 rounded-md p-3">
@@ -234,6 +238,9 @@ const LocationPage = ({ isDashBoardComptnent }) => {
           mapType={mapType}
           tileLayers={tileLayers}
           isDashBoardComptnent={isDashBoardComptnent}
+          isAddingNewGeofence={isAddingNewGeofence}
+          setIsAddingNewGeofence={setIsAddingNewGeofence}
+          setDocumentationPage={setDocumentationPage}
         />
       </div>
     </div>

@@ -25,6 +25,7 @@ function GestionGroupeOptionPopup({
     currentAccountSelected,
     currentSelectedGroupeGestion,
     setListeGestionDesUsers,
+    gestionAccountData,
   } = useContext(DataContext);
 
   const currentSelectedGroupeGestionDevices = () => {
@@ -37,9 +38,13 @@ function GestionGroupeOptionPopup({
     );
 
     // Filtre les éléments de deviceListe
-    const updateListe = currentAccountSelected?.accountDevices?.filter(
-      (device) => deviceIDsInInfo.has(device.deviceID)
-    );
+    const updateListe = (
+      currentAccountSelected ||
+      gestionAccountData?.find(
+        (account) =>
+          account.accountID === currentSelectedGroupeGestion?.accountID
+      )
+    )?.accountDevices?.filter((device) => deviceIDsInInfo.has(device.deviceID));
 
     console.log("updateListe", updateListe);
 
@@ -94,10 +99,6 @@ function GestionGroupeOptionPopup({
 
               <button
                 onClick={() => {
-                  // currentSelectedGroupeGestionDevices();
-                  // setDeviceListeTitleGestion(
-                  //   "Groupe : " + currentSelectedGroupeGestion?.description
-                  // );
                   setShowSelectedGroupeOptionsPopup(false);
                   setDocumentationPage("Gestion_des_utilisateurs");
                 }}

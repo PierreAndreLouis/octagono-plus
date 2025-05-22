@@ -16,7 +16,11 @@ import GestionAccountOptionPopup from "../components/gestion_des_comptes/Gestion
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
 import { MdUpdate } from "react-icons/md";
 
-function ListeDesUtilisateur({ setDocumentationPage }) {
+function ListeDesUtilisateur({
+  setDocumentationPage,
+  setChooseOneAccountToContinue,
+  setChooseOtherAccountGestion,
+}) {
   const {
     FormatDateHeure,
     currentAccountSelected,
@@ -57,8 +61,8 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
     }
   };
 
-  const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
-    useState(false);
+  // const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
+  //   useState(false);
 
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
@@ -72,10 +76,17 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
 
   const filterUserAccountData = searchGroupInputTerm
-    ? listeGestionDesUsers?.filter((item) =>
-        item?.description
-          .toLowerCase()
-          .includes(searchGroupInputTerm.toLowerCase())
+    ? listeGestionDesUsers?.filter(
+        (item) =>
+          item?.description
+            .toLowerCase()
+            .includes(searchGroupInputTerm.toLowerCase()) ||
+          item?.accountID
+            .toLowerCase()
+            .includes(searchGroupInputTerm.toLowerCase()) ||
+          item?.userID
+            .toLowerCase()
+            .includes(searchGroupInputTerm.toLowerCase())
       )
     : listeGestionDesUsers;
 
@@ -139,9 +150,9 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
         </div>
       )}
 
-      {chooseOtherAccountGestion && (
+      {/* {chooseOtherAccountGestion && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[70vh] rounded-lg">
+          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[90vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
                 Liste des Comptes
@@ -169,9 +180,9 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                 <IoSearchOutline className="text-xl " />
               </div>
             </div>
-            <div className="flex overflow-auto h-[45vh] pb-20 flex-col gap-4 mx-3">
-              {/*  */}
-              {filterGestionAccountData?.map((account, index) => {
+            <div className="flex overflow-auto h-[66vh] pb-20 flex-col gap-4 mx-3">
+
+{filterGestionAccountData?.map((account, index) => {
                 return (
                   <div
                     key={index}
@@ -204,11 +215,11 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                 );
               })}
 
-              {/*  */}
-            </div>
+
+</div>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
         <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
@@ -228,7 +239,13 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
           <div className="flex    gap-2 justify-between mt-4">
             <button
               onClick={() => {
-                setDocumentationPage("Ajouter_nouveau_utilisateur");
+                if (!currentAccountSelected) {
+                  setChooseOneAccountToContinue(true);
+                  setChooseOtherAccountGestion(true);
+                  setDocumentationPage("Ajouter_nouveau_utilisateur");
+                } else {
+                  setDocumentationPage("Ajouter_nouveau_utilisateur");
+                }
               }}
               className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -280,14 +297,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
               >
                 <IoSearchOutline className="text-xl " />
               </div>
-              {/* <div
-                onClick={() => {
-                  // deviceUpdateFonction();
-                }}
-                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
-              >
-                <MdUpdate className="text-xl " />
-              </div> */}
             </div>
           )}
 
@@ -320,7 +329,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
           )}
         </div>
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-          {/*  */}
           {filterUserAccountData?.map((user, index) => {
             return (
               <div
@@ -354,6 +362,12 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
+                        <p className="font-bold- text-gray-700">AccountID :</p>
+                        <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          {user?.accountID}
+                        </span>
+                      </div>{" "}
+                      <div className="flex flex-wrap">
                         <p className="font-bold- text-gray-700">
                           Groupes affectés :
                         </p>
@@ -368,13 +382,7 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
                           Nombre d'Appareils :
                         </p>
                         <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                          {user?.userDevices?.length > 0
-                            ? user.userDevices.length
-                            : user?.userDevices?.length <= 0 &&
-                              user?.userGroupes?.length <= 0
-                            ? currentAccountSelected?.accountDevices?.length ??
-                              ""
-                            : ""}
+                          {user?.userDevices?.length || "0"}
                         </span>
                       </div>{" "}
                       <div className="flex flex-wrap">
@@ -418,8 +426,6 @@ function ListeDesUtilisateur({ setDocumentationPage }) {
               </div>
             );
           })}
-
-          {/*  */}
         </div>
       </div>
     </div>

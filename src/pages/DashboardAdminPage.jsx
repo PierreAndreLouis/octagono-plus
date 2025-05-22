@@ -4,6 +4,7 @@ import {
   IoCarSportOutline,
   IoChevronDown,
   IoClose,
+  IoEarth,
   IoMenu,
 } from "react-icons/io5";
 import {
@@ -56,6 +57,7 @@ import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecM
 import ChooseOtherGroupeDashboard from "../components/dashboard_containt/ChooseOtherGroupeDashboard";
 import LocationPage from "./LocationPage";
 import { FaLocationPin } from "react-icons/fa6";
+import GestionGeofences from "./GestionGeofences";
 
 function DashboardAdminPage() {
   const {
@@ -99,6 +101,9 @@ function DashboardAdminPage() {
 
     errorAddVéhiculePopup,
     setErrorAddVéhiculePopup,
+    accountGeofences,
+    listeGestionDesGeofences,
+    setListeGestionDesGeofences,
   } = useContext(DataContext);
 
   // Données des véhicules avec heures différentes
@@ -426,6 +431,12 @@ function DashboardAdminPage() {
 
   const isDashBoardComptnent = true;
 
+  const [chooseOneAccountToContinue, setChooseOneAccountToContinue] =
+    useState(false);
+
+  const [chooseAccountFromGeozoneSection, setChooseAccountFromGeozoneSection] =
+    useState(false);
+
   return (
     <div className="transition-all bg-gray-100">
       <ChooseOtherAccountDashboard
@@ -435,6 +446,10 @@ function DashboardAdminPage() {
         setSearchInputTerm={setSearchInputTerm}
         filterGestionAccountData={filterGestionAccountData}
         setAllDevices={setAllDevices}
+        chooseOneAccountToContinue={chooseOneAccountToContinue}
+        setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+        documentationPage={documentationPage}
+        chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
       />
       <ChooseOtherGroupeDashboard
         chooseOtherAccountGestion={chosseOtherGroupeDashboard}
@@ -463,6 +478,8 @@ function DashboardAdminPage() {
             <div
               onClick={() => {
                 setChooseOtherAccountGestion(true);
+                setChooseOneAccountToContinue(false);
+                setChooseAccountFromGeozoneSection(false);
               }}
               className="flex cursor-pointer gap-2 items-center"
             >
@@ -530,6 +547,9 @@ function DashboardAdminPage() {
               <div
                 onClick={() => {
                   setChooseOtherAccountGestion(true);
+                  setChooseOneAccountToContinue(false);
+                  setChooseAccountFromGeozoneSection(false);
+                  closeSideBar();
                 }}
                 className={`$ flex items-center   justify-between  gap-2  border-b border-b-gray-200 py-4  cursor-pointer px-3`}
               >
@@ -556,7 +576,7 @@ function DashboardAdminPage() {
                   documentationPage === "Dashboard" ? "bg-orange-50" : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <MdSpaceDashboard className="text-xl min-w-[1.5rem] text-gray-500" />
+                <MdSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">Dashboard</p>
                 </div>
@@ -578,7 +598,7 @@ function DashboardAdminPage() {
                       : ""
                   } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
                 >
-                  <MdSwitchAccount className="text-xl min-w-[1.5rem] text-gray-500" />
+                  <MdSwitchAccount className="text-xl min-w-[1.5rem] text-orange-600" />
                   <div className="flex w-full justify-between">
                     <p className="text-gray-600 font-semibold">
                       Gestion des comptes ({comptes?.length})
@@ -653,7 +673,7 @@ function DashboardAdminPage() {
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <FaUsers className="text-xl min-w-[1.5rem] text-gray-500" />
+                <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     Gestion des Utilisateurs (
@@ -698,7 +718,7 @@ function DashboardAdminPage() {
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-gray-500" />
+                <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     Gestion des Groupe (
@@ -730,13 +750,46 @@ function DashboardAdminPage() {
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <FaCar className="text-xl min-w-[1.5rem] text-gray-500" />
+                <FaCar className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     Gestion des Appareils (
                     {currentAccountSelected
                       ? currentAccountSelected?.accountDevices?.length
                       : accountDevices?.length}
+                    )
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <div
+                onClick={() => {
+                  if (currentAccountSelected) {
+                    setListeGestionDesGeofences(
+                      currentAccountSelected?.accountGeofences
+                    );
+                  } else {
+                    setListeGestionDesGeofences(accountGeofences);
+                  }
+                  scrollToTop();
+                  setDocumentationPage("Gestion_geofences");
+                  closeSideBar();
+                }}
+                className={`${
+                  documentationPage === "Gestion_geofences"
+                    ? "bg-orange-50"
+                    : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    Gestion des Geofences (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountGeofences?.length
+                      : accountGeofences?.length}
                     )
                   </p>
                 </div>
@@ -763,7 +816,7 @@ function DashboardAdminPage() {
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <MdLocationPin className="text-xl min-w-[1.5rem] text-gray-500" />
+                <MdLocationPin className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     Localisation Appareils (
@@ -823,7 +876,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            20/05/2025 _ 1
+            22/05/2025 _ 1
           </p>
           {/* dashboardLoadingEffect */}
           {dashboardLoadingEffect && (
@@ -865,12 +918,18 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           {documentationPage === "Gestion_des_utilisateurs" && (
-            <ListeDesUtilisateur setDocumentationPage={setDocumentationPage} />
+            <ListeDesUtilisateur
+              setDocumentationPage={setDocumentationPage}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+            />
           )}
           {documentationPage === "Ajouter_nouveau_utilisateur" && (
             <CreateNewUserGestion
               documentationPage={documentationPage}
               setDocumentationPage={setDocumentationPage}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
             />
           )}
           {documentationPage === "Modifier_utilisateur" && (
@@ -887,12 +946,16 @@ function DashboardAdminPage() {
           {documentationPage === "Gestion_des_appareils" && (
             <ListeDesVehiculesGestion
               setDocumentationPage={setDocumentationPage}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
             />
           )}
           {documentationPage === "Ajouter_nouveau_appareil" && (
             <CreateNewDeviceGestion
               setDocumentationPage={setDocumentationPage}
               documentationPage={documentationPage}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
             />
           )}
           {documentationPage === "Modifier_appareil" && (
@@ -926,16 +989,40 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           {documentationPage === "Gestion_des_groupes" && (
-            <ListeDesGroupes setDocumentationPage={setDocumentationPage} />
+            <ListeDesGroupes
+              setDocumentationPage={setDocumentationPage}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+            />
           )}{" "}
           {documentationPage === "Ajouter_nouveau_groupe" && (
             <CreateNewGroupeGestion
               setDocumentationPage={setDocumentationPage}
               documentationPage={documentationPage}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
             />
           )}{" "}
           {documentationPage === "Modifier_groupe" && (
             <ModifyGroupeGestion setDocumentationPage={setDocumentationPage} />
+          )}{" "}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {documentationPage === "Gestion_geofences" && (
+            <GestionGeofences
+              setDocumentationPage={setDocumentationPage}
+              isDashBoardComptnent={isDashBoardComptnent}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
+              setChooseAccountFromGeozoneSection={
+                setChooseAccountFromGeozoneSection
+              }
+            />
           )}{" "}
           {/*  */}
           {/*  */}

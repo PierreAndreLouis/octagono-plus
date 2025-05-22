@@ -1,21 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
- import { DataContext } from "../../context/DataContext";
+import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
- import { MdErrorOutline } from "react-icons/md";
+import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 
-function ModifyDeviceGestion({
-   setDocumentationPage,
-}) {
+function ModifyDeviceGestion({ setDocumentationPage }) {
   const {
     setCurrentAccountSelected,
     currentAccountSelected,
-     setError,
-    password, 
+    setError,
+    password,
     scrollToTop,
     currentSelectedDeviceGestion,
     modifyVehicleEnGestionAccount,
+    gestionAccountData,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -35,6 +34,7 @@ function ModifyDeviceGestion({
 
   // État pour chaque champ du formulaire
   const [addVéhiculeData, setAddVehicleData] = useState({
+    accountID: "",
     deviceID: "",
     description: "",
     equipmentType: "",
@@ -123,6 +123,7 @@ function ModifyDeviceGestion({
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === password) {
+      const accountID = addVéhiculeData.accountID;
       const deviceID = addVéhiculeData.deviceID;
       const imeiNumber = addVéhiculeData.imeiNumber;
       const uniqueIdentifier = addVéhiculeData.uniqueIdentifier;
@@ -132,15 +133,25 @@ function ModifyDeviceGestion({
       const equipmentType = addVéhiculeData.equipmentType;
       const simPhoneNumber = addVéhiculeData.simPhoneNumber;
       const vehicleID = deviceID + uniqueIdentifier || "";
- 
+
       if (
-        currentAccountSelected?.accountID &&
-        currentAccountSelected?.password
+        (currentAccountSelected?.accountID ||
+          gestionAccountData.find((account) => account.accountID === accountID)
+            ?.accountID) &&
+        (currentAccountSelected?.password ||
+          gestionAccountData.find((account) => account.accountID === accountID)
+            ?.password)
       ) {
         modifyVehicleEnGestionAccount(
-          currentAccountSelected?.accountID,
+          currentAccountSelected?.accountID ||
+            gestionAccountData.find(
+              (account) => account.accountID === accountID
+            )?.accountID,
           "admin",
-          currentAccountSelected?.password,
+          currentAccountSelected?.password ||
+            gestionAccountData.find(
+              (account) => account.accountID === accountID
+            )?.password,
           deviceID,
           imeiNumber,
           uniqueIdentifier,
@@ -152,7 +163,7 @@ function ModifyDeviceGestion({
           vehicleID,
           groupesSelectionnes
         );
-         setDocumentationPage("Gestion_des_appareils");
+        setDocumentationPage("Gestion_des_appareils");
       }
 
       setShowConfirmAddVéhiculePopup(false);
@@ -167,6 +178,7 @@ function ModifyDeviceGestion({
   useEffect(() => {
     if (currentSelectedDeviceGestion) {
       setAddVehicleData({
+        accountID: currentSelectedDeviceGestion.accountID || "",
         deviceID: currentSelectedDeviceGestion.deviceID || "",
         description: currentSelectedDeviceGestion.description || "",
         equipmentType: currentSelectedDeviceGestion.equipmentType || "",
@@ -181,7 +193,6 @@ function ModifyDeviceGestion({
 
   return (
     <div className="px-3  rounded-lg bg-white">
-    
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[9999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] bg-white rounded-lg">
@@ -288,14 +299,14 @@ function ModifyDeviceGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Modifier un Appareil
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                   setDocumentationPage("Gestion_des_appareils");
+                  setDocumentationPage("Gestion_des_appareils");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -311,7 +322,7 @@ function ModifyDeviceGestion({
               className="w-full mb-10 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
             >
               <h3 className="w-full text-center-- font-semibold">
-                 <span>{groupesSelectionnes.join(" - ") || "Défaut"}</span>
+                <span>{groupesSelectionnes.join(" - ") || "Défaut"}</span>
               </h3>
               <FaChevronDown />
             </div>

@@ -1,24 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
- import { DataContext } from "../../context/DataContext";
+import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
- import { MdErrorOutline } from "react-icons/md";
+import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
-import {
-  IoMdRadioButtonOff,
-  IoMdRadioButtonOn,
- } from "react-icons/io";
+import { IoMdRadioButtonOff, IoMdRadioButtonOn } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function CreateNewUserGestion({
   setDocumentationPage,
-  documentationPage, 
+  documentationPage,
+  setChooseOneAccountToContinue,
+  setChooseOtherAccountGestion,
 }) {
   const {
-     currentAccountSelected,
+    currentAccountSelected,
     setError,
-    password, 
+    password,
     currentSelectedUserToConnect,
-    scrollToTop, 
+    scrollToTop,
     createNewUserEnGestionAccount,
     timeZoneData,
     userRole,
@@ -42,14 +41,14 @@ function CreateNewUserGestion({
   const [addNewUserData, setAddNewUserData] = useState({
     userID: "",
     description: "",
-    displayName: "", 
+    displayName: "",
     contactEmail: "",
     notifyEmail: "",
-    isActive: "true",
+    isActive: 1,
     contactPhone: "",
     contactName: "",
     timeZone: "GMT-04:00",
-    maxAccessLevel: "2", 
+    maxAccessLevel: "2",
     password: "",
     password2: "",
     roleID: "!clientproprietaire",
@@ -100,6 +99,12 @@ function CreateNewUserGestion({
       return;
     }
 
+    if (!currentAccountSelected) {
+      setChooseOneAccountToContinue(true);
+      setChooseOtherAccountGestion(true);
+      return;
+    }
+
     setShowConfirmAddGroupeGestionPopup(true);
   };
 
@@ -111,7 +116,7 @@ function CreateNewUserGestion({
     useState("true");
 
   const [showMaxAccessLevelPopup, setShowMaxAccessLevelPopup] = useState(false);
- 
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
@@ -122,7 +127,7 @@ function CreateNewUserGestion({
     (groupe) => groupe?.groupID
   );
   const [groupesSelectionnes, setGroupesSelectionnes] = useState("");
- 
+
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
 
@@ -134,9 +139,7 @@ function CreateNewUserGestion({
     setGroupesSelectionnes("");
   }, [documentationPage]);
 
-
   //////////////////////////////////////////////////////////
-
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
@@ -157,12 +160,11 @@ function CreateNewUserGestion({
       const roleID = addNewUserData.roleID;
 
       const password2 = addNewUserData.password2;
-  
+
       if (
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
       ) {
-       
         // console.log(
         createNewUserEnGestionAccount(
           currentAccountSelected?.accountID,
@@ -173,7 +175,7 @@ function CreateNewUserGestion({
           description,
           displayName,
           password2,
-           contactEmail,
+          contactEmail,
           notifyEmail,
           isActive,
           contactPhone,
@@ -181,10 +183,10 @@ function CreateNewUserGestion({
           timeZone,
           maxAccessLevel,
           roleID,
-           groupesSelectionnes
-         );
+          groupesSelectionnes
+        );
 
-         setDocumentationPage("Gestion_des_utilisateurs");
+        setDocumentationPage("Gestion_des_utilisateurs");
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -194,8 +196,6 @@ function CreateNewUserGestion({
       setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
     }
   };
-
- 
 
   return (
     <div className="px-3 rounded-lg  bg-white">
@@ -358,7 +358,7 @@ function CreateNewUserGestion({
                         : ""
                     }`}
                     onClick={() => {
-                       setAddNewUserData((prev) => ({
+                      setAddNewUserData((prev) => ({
                         ...prev,
                         timeZone: zone?.region + ":00",
                       }));
@@ -366,7 +366,7 @@ function CreateNewUserGestion({
                     }}
                   >
                     <p>{zone?.region + ":00"}</p>
-                   </div>
+                  </div>
                 );
               })}
             </div>
@@ -433,9 +433,7 @@ function CreateNewUserGestion({
               }}
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
-            <p 
-              className="mx-2 mb-3 text-center mt-4 text-lg"
-            >
+            <p className="mx-2 mb-3 text-center mt-4 text-lg">
               Choisis un Groupe pour intégrer l'appareil
             </p>
 
@@ -523,14 +521,14 @@ function CreateNewUserGestion({
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
-               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
+              <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Ajouter un nouveau Utilisateur
               </h3>
             </div>
             <div className="flex justify-center mb-10">
               <button
                 onClick={() => {
-                   setDocumentationPage("Gestion_des_utilisateurs");
+                  setDocumentationPage("Gestion_des_utilisateurs");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -689,6 +687,8 @@ function CreateNewUserGestion({
                         placeholder={field.placeholder}
                         value={addNewUserData[field.id]}
                         onChange={handleChange}
+                        // { field.id === "groupID" && disable}
+                        // disabled={field.id === "userID"}
                         required
                         className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                       />
@@ -713,7 +713,7 @@ function CreateNewUserGestion({
                   </button>
                   <button
                     onClick={() => {
-                       setDocumentationPage("Gestion_des_utilisateurs");
+                      setDocumentationPage("Gestion_des_utilisateurs");
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
