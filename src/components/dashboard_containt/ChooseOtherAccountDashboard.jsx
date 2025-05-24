@@ -21,7 +21,7 @@ function ChooseOtherAccountDashboard({
     currentAccountSelected,
     accountDevices,
     setListeGestionDesGeofences,
-    ScrollToTop,
+    scrollToTop,
     accountGeofences,
   } = useContext(DataContext);
   return (
@@ -99,7 +99,7 @@ function ChooseOtherAccountDashboard({
                       setAllDevices(account?.accountDevices);
 
                       setChooseOtherAccountGestion(false);
-                      ScrollToTop();
+                      scrollToTop();
                     }}
                     className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center- rounded-lg py-2 px-2 "
                   >

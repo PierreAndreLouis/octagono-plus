@@ -158,7 +158,7 @@ function GestionDesCompts({ setDocumentationPage }) {
             >
               Gestion Des Comptes ({filterListeDesCompte?.length})
             </h2>
-            <button
+            {/* <button
               onClick={() => {
                 testFonction5();
               }}
@@ -171,7 +171,7 @@ function GestionDesCompts({ setDocumentationPage }) {
               }}
             >
               accountGeofences
-            </p>
+            </p> */}
             {/*  <br />
             <button
               onClick={() => {

@@ -484,7 +484,7 @@ function ListeDesGroupes({
                       onClick={() => {
                         setDocumentationPage("Modifier_groupe");
                         setCurrentSelectedGroupeGestion(groupe);
-                        setShowModifyNewGroupePage(true);
+                        // setShowModifyNewGroupePage(true);
                       }}
                       className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
                     >

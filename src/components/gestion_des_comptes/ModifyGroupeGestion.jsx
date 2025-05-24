@@ -111,9 +111,9 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
 
   useEffect(() => {
     console.log("deviceSelectionnes", deviceSelectionnes);
-    console.log("usersSelectionnes", usersSelectionnes);
+    // console.log("usersSelectionnes", usersSelectionnes);
 
-    console.log("user_______NonSelectionnes", userNonSelectionnes);
+    console.log("Device_______NonSelectionnes", deviceNonSelectionnes);
   }, [deviceSelectionnes, usersSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
@@ -152,7 +152,8 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
           displayName,
           notes,
           workOrderID,
-          userNonSelectionnes,
+          //
+          deviceSelectionnes,
           deviceNonSelectionnes
         );
         setDocumentationPage("Gestion_des_groupes");
@@ -413,7 +414,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
               </h3>
               <FaChevronDown />
             </div>
-            <p className="mb-2">
+            {/* <p className="mb-2">
               Choisissez des Utilisateurs pour avoir accès a ce groupe
             </p>
             <div
@@ -431,7 +432,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                 </span>
               </h3>
               <FaChevronDown />
-            </div>
+            </div> */}
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">

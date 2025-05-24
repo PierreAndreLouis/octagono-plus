@@ -594,14 +594,20 @@ function MapComponent({
         pos7?.lng || "",
         pos8?.lat || "",
         pos8?.lng || "",
-        gestionAccountData.find(
-          (account) => account.accountID === currentGeozone?.accountID
-        )?.accountID,
+        currentAccountSelected?.accountID,
+        // gestionAccountData.find(
+        //   (account) => account.accountID === currentAccountSelected?.accountID
+        // )?.accountID,
         "admin",
-        gestionAccountData.find(
-          (account) => account.accountID === currentGeozone?.accountID
-        )?.password
+        currentAccountSelected?.password
+        // gestionAccountData.find(
+        //   (account) => account.accountID === currentAccountSelected?.accountID
+        // )?.password
       );
+
+      // setTimeout(() => {
+      setDocumentationPage("Gestion_geofences");
+      // }, 1000);
     } else if (geofences?.coordinates.length >= 3 && isEditingGeofence) {
       const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
         geofences?.coordinates;
@@ -628,14 +634,12 @@ function MapComponent({
         pos8?.lat || "",
         pos8?.lng || "",
         // ////////////////////
-        gestionAccountData.find(
-          (account) => account.accountID === currentGeozone?.accountID
-        )?.accountID,
+        currentAccountSelected?.accountID,
         "admin",
-        gestionAccountData.find(
-          (account) => account.accountID === currentGeozone?.accountID
-        )?.password
+        currentAccountSelected?.password
       );
+
+      setDocumentationPage("Gestion_geofences");
     } else {
       console.log("pas d'assez de coordonnee...");
       setPasAssezDePositionAjouterErreur(true);

@@ -33,6 +33,7 @@ function ListeDesUtilisateur({
     setShowSelectedUserOptionsPopup,
     setListeGestionDesVehicules,
     gestionAccountData,
+    TestDeRequetteDevices,
   } = useContext(DataContext);
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
@@ -150,86 +151,19 @@ function ListeDesUtilisateur({
         </div>
       )}
 
-      {/* {chooseOtherAccountGestion && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[90vh] rounded-lg">
-            <div className="relative">
-              <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
-                Liste des Comptes
-              </h2>
-
-              <IoClose
-                onClick={() => {
-                  setChooseOtherAccountGestion(false);
-                }}
-                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4"
-              />
-            </div>
-            <div className="flex mx-3 my-4 gap-2 justify-between items-center">
-              <input
-                className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
-                type="text"
-                placeholder="Rechercher un compte"
-                value={searchInputTerm}
-                onChange={(e) => {
-                  setSearchInputTerm(e.target.value);
-                }}
-              />
-
-              <div className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100">
-                <IoSearchOutline className="text-xl " />
-              </div>
-            </div>
-            <div className="flex overflow-auto h-[66vh] pb-20 flex-col gap-4 mx-3">
-
-{filterGestionAccountData?.map((account, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setCurrentAccountSelected(account);
-                      setListeGestionDesVehicules(account?.accountDevices);
-                      setChooseOtherAccountGestion(false);
-                    }}
-                    className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                      {index + 1}
-                    </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                    <div>
-                      <p className="text-gray-600">
-                        Nom du compte :{" "}
-                        <span className="font-bold">
-                          {account?.description}
-                        </span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'utilisateur :{" "}
-                        <span className="font-bold">
-                          {account?.accountUsers?.length}
-                        </span>{" "}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-
-
-</div>
-          </div>
-        </div>
-      )} */}
-
       <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
         <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
           Liste des Utilisateur
         </h2>
 
-        {/* <h3 className=" text-orange-600 mb-10-- text-md text-center font-bold-- ">
-          <span className="text-gray-700">Compte :</span>{" "}
-          {currentAccountSelected?.description}
-        </h3> */}
+        <p
+          onClick={() => {
+            TestDeRequetteDevices();
+          }}
+        >
+          test liste groupe user
+        </p>
+
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
           <span className="text-gray-700">Nombre d'utilisateur :</span>{" "}
           {filterUserAccountData?.length}

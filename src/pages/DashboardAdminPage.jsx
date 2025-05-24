@@ -770,6 +770,10 @@ function DashboardAdminPage() {
                     setListeGestionDesGeofences(
                       currentAccountSelected?.accountGeofences
                     );
+                    console.log(
+                      "xxxxxxxxxxxxxxxxxx",
+                      currentAccountSelected?.accountGeofences
+                    );
                   } else {
                     setListeGestionDesGeofences(accountGeofences);
                   }
@@ -876,7 +880,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            22/05/2025 _ 1
+            23/05/2025 _ 1
           </p>
           {/* dashboardLoadingEffect */}
           {dashboardLoadingEffect && (

@@ -40,6 +40,8 @@ function GestionGeofences({
     listeGestionDesGeofences,
     gestionAccountData,
     currentAccountSelected,
+    accountGeofences,
+    setAccountGeofences,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
   const navigate = useNavigate();
@@ -64,7 +66,10 @@ function GestionGeofences({
   const supprimerOuModifierGeozone = () => {
     // activerOuDesactiverGeofence(geozoneID, 0);
 
-    if (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) {
+    if (
+      (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) ||
+      isDashBoardComptnent
+    ) {
       supprimerGeofence(
         geozoneID,
 
@@ -117,7 +122,14 @@ function GestionGeofences({
           chooseOtherGeofencesGestion={chooseOtherGeofencesGestion}
           setChooseOtherGeofencesGestion={setChooseOtherGeofencesGestion}
         />
-        <h2 className="mt-[6rem] text-lg text-center font-bold ">Geozones</h2>
+        <h2
+          onClick={() => {
+            console.log(accountGeofences);
+          }}
+          className="mt-[6rem] text-lg text-center font-bold "
+        >
+          Geozones
+        </h2>
         {/* <div className="flex justify-center mt-4">
           <Link
             to="/Groupe_vehicule_location?tab=localisation"
@@ -330,31 +342,37 @@ function GestionGeofences({
                         </div>
                       </div>
                       <div className="flex  justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-end ">
-                        {isActive && geozone?.isActive === (0 || 1) && (
-                          <button
-                            onClick={() => {
-                              setCurrentGeozone(geozone);
-                              setSupprimerGeozonePopup(true);
-                            }}
-                            className={`${
-                              isActive
-                                ? " bg-red-500 text-white"
-                                : "text-red-600 border-[0.02rem] border-red-500 "
-                            }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
-                          >
-                            {isActive &&
-                              geozone?.isActive === (0 || 1) &&
-                              "Supprimer"}
+                        {
+                          // (isActive && geozone?.isActive === (0 || 1)) ||
+                          isDashBoardComptnent && (
+                            <button
+                              onClick={() => {
+                                setCurrentGeozone(geozone);
+                                setSupprimerGeozonePopup(true);
+                              }}
+                              className={`${
+                                true
+                                  ? " bg-red-500 text-white"
+                                  : "text-red-600 border-[0.02rem] border-red-500 "
+                              }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
+                            >
+                              Supprimer
+                              {/* {isActive ||
+                                (isDashBoardComptnent &&
+                                  geozone?.isActive === (0 || 1) &&
+                                  "Supprimer")}
 
-                            {(isActive || !isActive) &&
-                              geozone?.isActive === 0 &&
-                              "Activer"}
 
-                            {!isActive &&
-                              geozone?.isActive === 1 &&
-                              "Désactiver"}
-                          </button>
-                        )}
+                              {(isActive || !isActive) &&
+                                geozone?.isActive === 0 &&
+                                "Activer"}
+
+                              {!isActive &&
+                                geozone?.isActive === 1 &&
+                                "Désactiver"} */}
+                            </button>
+                          )
+                        }
                         <button
                           onClick={() => {
                             setCurrentGeozone(geozone);
@@ -426,13 +444,17 @@ function GestionGeofences({
                       className="text-xl font-bold tracking-tight"
                       id="page-action.heading"
                     >
-                      {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"}
+                      {isCurrentGeozoneActive || isDashBoardComptnent
+                        ? "Supprimer"
+                        : "Désactiver"}
                     </h2>
 
                     <p className="text-gray-500">
                       Êtes-vous sûr de{" "}
-                      {isCurrentGeozoneActive ? "Supprimer" : "Désactiver"} le
-                      geozone ? ?
+                      {isCurrentGeozoneActive || isDashBoardComptnent
+                        ? "Supprimer"
+                        : "Désactiver"}{" "}
+                      le geozone ? ?
                     </p>
                     <p className="text-red-500 font-semibold">
                       {currentGeozone?.description}
@@ -465,7 +487,7 @@ function GestionGeofences({
                       >
                         <span className="flex items-center gap-1">
                           <span className="">
-                            {isCurrentGeozoneActive
+                            {isCurrentGeozoneActive || isDashBoardComptnent
                               ? "Supprimer"
                               : "Désactiver"}
                           </span>

@@ -414,10 +414,10 @@ function CreateNewGroupeGestion({
               </h3>
               <FaChevronDown />
             </div>
-            <p className="mb-2">
+            {/* <p className="mb-2">
               Choisissez des Utilisateurs pour avoir accès a ce groupe
-            </p>
-            <div
+            </p> */}
+            {/* <div
               onClick={() => {
                 setShowUSerSelectionnesPopup(true);
               }}
@@ -432,7 +432,7 @@ function CreateNewGroupeGestion({
                 </span>
               </h3>
               <FaChevronDown />
-            </div>
+            </div> */}
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
