@@ -36,6 +36,8 @@ import {
 } from "react-icons/fa";
 import { GoDot } from "react-icons/go";
 import { DataContext } from "../../context/DataContext";
+import LocationPage from "../../pages/LocationPage";
+import ListeDesVehiculesGestion from "../../pages/ListeDesVehiculesGestion";
 
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
@@ -81,10 +83,6 @@ function DashboardContaintMaintComponant({
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
-  // const allDevices = currentAccountSelected
-  //   ? currentAccountSelected?.accountDevices
-  //   : accountDevices;
-
   const DeviceDéplacer = allDevices?.filter((device) => {
     return device?.lastStopTime > todayTimestamp;
   });
@@ -101,6 +99,8 @@ function DashboardContaintMaintComponant({
   const [animatedDeplaces, setAnimatedDeplaces] = useState(0);
   const [animatedStationnement, setAnimatedStationnement] = useState(0);
   const [animatedInactifs, setAnimatedInactifs] = useState(0);
+
+  const preparationDownloadPDF = false;
 
   // function animateValue(start, end, duration, setter) {
   //   const startTime = performance.now();
@@ -487,10 +487,483 @@ function DashboardContaintMaintComponant({
     //   });
   };
 
-  const [showFistGrapheOption, setShowFistGrapheOption] = useState(true);
+  const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
+  const [showFistGrapheOption2, setShowFistGrapheOption2] = useState(false);
+
+  function TableauRecapitulatifComptes() {
+    return (
+      <div className={`w-full  overflow-x-auto overflow-y-hidden h-[20rem]`}>
+        {/* fixed header */}
+        <thead>
+          <div className="h-auto border-l-2-- border-red-600- min- w-full -w-[150rem] w-full-">
+            <tr className="bg-orange-100 border-2 border-green-600 relative z-20 text-gray-700 dark:bg-gray-900 dark:text-gray-100">
+              {/* <th className="border min-w-[.4rem] dark:border-gray-600 py-2 ----- --px-1"></th> */}
+              <th className="border  min-w-[3.21rem]  dark:border-gray-600 py-2 ---- px-2">
+                #
+              </th>
+              <th className="border min-w-[12rem] dark:border-gray-600 py-2 ---- px-2">
+                Compte
+              </th>
+              <th className="border dark:border-gray-600 min-w-[6rem] py-2 ---- px-2">
+                Total
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Déplacés
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Actifs
+              </th>
+
+              <th className="border  min-w-[8rem] dark:border-gray-600 py-2 ---- px-2">
+                Hors service
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Utilisateurs
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Groupes
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Geofences
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Type
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Manager
+              </th>
+              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
+                Activer
+              </th>
+            </tr>
+          </div>
+        </thead>
+
+        <div
+          className={`border-2 pb-10 -translate-y-[3.1rem] w-full min-w-[78rem] overflow-y-auto overflow-x-hidden ${
+            preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem]"
+          }`}
+        >
+          {/* en-tête PDF, téléchargement… */}
+
+          <table
+            id="myTable"
+            className="w-full-- text-left dark:bg-gray-800 dark:text-gray-200 border-2 border-red-500-- "
+          >
+            {/* second fixed header */}
+            <thead>
+              <tr className="bg-orange-50 h-[2.8rem]   text-gray-700 dark:bg-gray-900 dark:text-gray-100">
+                {/* <th className=""></th> */}
+                <th className="">#</th>
+                <th className="">Compte</th>
+                <th className="">Total </th>
+                <th className="">Déplacés</th>
+                <th className="">Actifs</th>
+                <th className="">Hors service</th>
+                <th className="">Utilisateurs</th>
+                <th className="">Groupes</th>
+                <th className="">Geofences</th>
+                <th className="">Type</th>
+                <th className="">Manager</th>
+                <th className="">Actif</th>
+              </tr>
+            </thead>
+            <tbody>
+              {gestionAccountData
+                ?.slice()
+                .sort(
+                  (a, b) =>
+                    (b.accountDevices?.length || 0) -
+                    (a.accountDevices?.length || 0)
+                )
+                .map((acct, i) => {
+                  const totalDevices = acct.accountDevices?.length || 0;
+                  const movedDevices = acct.accountDevices?.filter(
+                    (d) => d.lastStopTime > todayTimestamp
+                  ).length;
+                  const activeDevices = acct.accountDevices?.filter(
+                    (d) =>
+                      currentTimeSec - d.lastUpdateTime < twentyFourHoursInSec
+                  ).length;
+                  const inactiveDevices = acct.accountDevices?.filter(
+                    (d) =>
+                      currentTimeSec - d.lastUpdateTime >= twentyFourHoursInSec
+                  ).length;
+                  const nbUsers = acct.accountUsers?.length || 0;
+                  const nbGroups = acct.accountGroupes?.length || 0;
+                  const nbGeofences = acct.accountGeofences?.length || 0;
+
+                  return (
+                    <tr key={i} className="border dark:border-gray-600">
+                      {/* <td className="border-l-4 w-0"></td> */}
+                      <td className="py-3  w-[3rem] px-2 border">{i + 1}</td>
+                      <td className="py-3 px-2 w-[12rem] border">
+                        {acct.accountID}
+                      </td>
+                      <td className="py-3 w-[6rem] px-2 border">
+                        {totalDevices}
+                      </td>
+                      <td className="py-3 px-2 border w-[6rem]">
+                        {movedDevices}
+                      </td>
+                      <td className="py-3 px-2 border w-[6rem]">
+                        {activeDevices}
+                      </td>
+                      <td className="py-3 px-2 border w-[8rem]">
+                        {inactiveDevices}
+                      </td>
+                      <td className="py-3 px-2 border w-[6rem]">{nbUsers}</td>
+                      <td className="py-3 px-2 border w-[6rem]">{nbGroups}</td>
+                      <td className="py-3 px-2 border w-[6rem]">
+                        {nbGeofences}
+                      </td>
+                      <td className="py-3 px-2 border w-[6rem]">
+                        {acct.accountType}
+                      </td>
+                      <td className="py-3 px-2 border w-[6rem]">
+                        {acct.isAccountManager}
+                      </td>
+                      <td className="py-3 min-w-[5rem] px-2">
+                        {acct.isActive}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+
+  function GrapheCirculaireDevices() {
+    return (
+      <div className="w-64- pb-10  w-full h-full h-64- flex items-center justify-center relative">
+        <div className="w-full max-w-[13rem]  aspect-square flex items-center justify-center relative">
+          <svg
+            viewBox="0 0 200 200"
+            className="w-full h-full absolute"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <circle
+              cx="100"
+              cy="100"
+              r="95"
+              fill="none"
+              stroke="white"
+              strokeWidth="14"
+            />
+
+            {layers.map((layer, index) => (
+              <g key={index}>
+                <circle
+                  cx={layer.cx}
+                  cy={layer.cy}
+                  r={layer.r}
+                  fill="none"
+                  stroke={layer.trackColor}
+                  strokeWidth={layer.strokeWidth}
+                />
+                <circle
+                  cx={layer.cx}
+                  cy={layer.cy}
+                  r={layer.r}
+                  fill="none"
+                  stroke={layer.stroke}
+                  strokeWidth={layer.strokeWidth}
+                  strokeDasharray={layer.strokeDasharray}
+                  strokeDashoffset={layer.strokeDashoffset}
+                  strokeLinecap={layer.strokeLinecap}
+                  transform="rotate(-90 100 100)"
+                />
+              </g>
+            ))}
+          </svg>
+
+          <div className="absolute text-center">
+            <p className="text-gray-500 text-sm">Total</p>
+            <p className="text-2xl font-bold">{allVehicule}</p>
+          </div>
+        </div>
+
+        <div className="absolute text-center">
+          <p className="text-gray-500 text-sm">Total</p>
+          <p className="text-2xl font-bold">{allVehicule}</p>
+        </div>
+      </div>
+    );
+  }
+
+  function Graphe3BatonnetComptes() {
+    return (
+      <div>
+        {graphData2?.length > 0 ? (
+          <div
+            className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={graphData2}
+                  layout="horizontal"
+                  margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
+                  barCategoryGap={barSpacing2 - 10}
+                >
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="shortName"
+                    type="category"
+                    tick={{ fontSize: 12 }}
+                    interval={0}
+                  />
+                  <YAxis hide={true} />
+                  <Tooltip content={<CustomTooltip2 />} />
+                  <Bar
+                    dataKey="totalDisplay"
+                    fill="#22c55e"
+                    name="Total"
+                    radius={[8, 8, 0, 0]}
+                    barSize={7}
+                    animationDuration={1000}
+                  />
+
+                  <Bar
+                    dataKey="inactifsDisplay"
+                    fill="#9333ea"
+                    name="Inactifs"
+                    radius={[8, 8, 0, 0]}
+                    barSize={7}
+                    animationDuration={1000}
+                  />
+
+                  <Bar
+                    dataKey="actifsDisplay"
+                    fill="#f97316"
+                    name="Actifs"
+                    radius={[8, 8, 0, 0]}
+                    barSize={7}
+                    animationDuration={1000}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ) : (
+          <div className="w-full min-h-full flex justify-center items-center">
+            <p className="py-10 font-semibold text-lg text-gray-600">
+              Pas de données disponibles
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function GrapheDeDeplacementDesAppareils() {
+    return (
+      <div className="bg-white md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
+        {/* title section */}
+        <div className="flex  mb-4 justify-between items-end ">
+          <div className=" ">
+            <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
+              <h2>Graphe de déplacement </h2>
+              {!currentAccountSelected && (
+                <FaAngleDoubleRight
+                  onClick={() => {
+                    setShowFistGrapheOption(!showFistGrapheOption);
+                  }}
+                  className="text-xl ml-3 mt-1 cursor-pointer"
+                />
+              )}
+            </div>
+            <p className="text-gray-500">
+              Appareils Déplacés ({DeviceDéplacer?.length})
+            </p>
+          </div>
+          <div className="flex mb-1 text-[.8rem] flex-col sm:flex-row gap-0 text-gray-600  sm:gap-5  items-center">
+            <div className="flex gap-1 items-center ">
+              <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
+                {" "}
+              </p>{" "}
+              <p>Depart</p>
+            </div>
+            <div className="flex gap-1 items-center">
+              <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500"> </p>{" "}
+              <p>Arriver</p>
+            </div>
+          </div>
+        </div>
+        <div className=" ">
+          {DeviceDéplacer.length > 0 ? (
+            <div
+              className="w-full  flex flex-col justify-end h-[250px] overflow-x-auto p-4 pb-0 pl-0 bg-gray-100- rounded-xl"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
+            >
+              <div
+                // className="border-2 border-red-600 h-full"
+                style={{ width: `${fixedWidth}px`, height: "100%" }}
+              >
+                <ResponsiveContainer
+                  //   className={"border-2 border-green-600"}
+                  width="100%"
+                  height="100%"
+                >
+                  <BarChart
+                    // className="border-2 h-full border-purple-800"
+                    data={graphData}
+                    layout="horizontal"
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 0,
+                      bottom: -10,
+                    }}
+                    barCategoryGap={barSpacing - 10} // 10px barSize → 38px gap
+                  >
+                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="name"
+                      type="category"
+                      tick={{ fontSize: 12 }}
+                      interval={0}
+                    />
+                    <YAxis
+                      type="number"
+                      domain={[minTime - 600, maxTime]}
+                      tickFormatter={(tick) => FormatDateHeure(tick).time}
+                      tick={{ fontSize: 12 }}
+                      width={42}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar
+                      dataKey="start"
+                      fill="#f97316"
+                      name="Heure de départ"
+                      radius={[8, 8, 0, 0]}
+                      barSize={8}
+                      animationDuration={1000}
+                    />
+                    <Bar
+                      dataKey="stop"
+                      fill="#22c55e"
+                      name="Heure d'arrivée"
+                      radius={[8, 8, 0, 0]}
+                      barSize={8}
+                      animationDuration={1000}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full  min-h-full flex justify-center items-center">
+              <p className="py-10 md:py-[6.8rem] font-semibold  text-lg text-gray-600">
+                Pas d'appareil déplacés{" "}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  function DeviceListeDashboard() {
+    return (
+      <div className=" flex flex-col gap-4  h-full max-h-[20rem] overflow-y-auto">
+        {(currentAccountSelected
+          ? currentAccountSelected?.accountDevices
+          : Array.from(
+              new Map(
+                gestionAccountData
+                  ?.flatMap((account) => account.accountDevices)
+                  ?.map((device) => [device.deviceID, device])
+              ).values()
+            )
+        )?.map((device, index) => {
+          return (
+            <div
+              key={index}
+              onClick={() => {}}
+              className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
+            >
+              <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                {index + 1}
+              </p>
+              <FaCar className="text-orange-500/80 text-[2rem] mt-1" />
+              <div>
+                <p className="text-gray-600">
+                  Nom du Groupe :{" "}
+                  <span className="font-bold">{device?.description}</span>{" "}
+                </p>
+                <p className="text-gray-600">
+                  Dernière Date :{" "}
+                  <span className="font-bold">
+                    {FormatDateHeure(device?.lastUpdateTime)?.date}
+                  </span>{" "}
+                </p>
+                <p className="text-gray-600">
+                  Derniere Heure :{" "}
+                  <span className="font-bold">
+                    {FormatDateHeure(device?.lastUpdateTime)?.time}
+                  </span>{" "}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  const fromDashboard = true;
+  const [
+    showStatisticDeviceListeDashboard,
+    setShowStatisticDeviceListeDashboard,
+  ] = useState(false);
+
+  const [statisticFilteredDeviceListe, setStatisticFilteredDeviceListe] =
+    useState([]);
+  const [
+    statisticFilteredDeviceListeText,
+    setStatisticFilteredDeviceListeText,
+  ] = useState("");
 
   return (
     <div className="pb-6-">
+      {showStatisticDeviceListeDashboard && (
+        <div className="fixed px-3 inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
+          <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw]">
+            <div className="absolute flex justify-center items-center top-0 left-0 right-0 h-[4rem] bg-orange-200 z-[999]">
+              <h2 className="font-bold text-lg">
+                {statisticFilteredDeviceListeText} - (
+                {statisticFilteredDeviceListe?.length})
+              </h2>
+            </div>
+            <IoClose
+              onClick={() => {
+                setShowStatisticDeviceListeDashboard(false);
+                scrollToTop();
+              }}
+              className="absolute top-5 right-4 z-[99999999999] text-[1.6rem] cursor-pointer text-red-600"
+            />
+            <div className=" min-h-[80vh] max-h-[90vh] overflow-auto">
+              <div>
+                <ListeDesVehiculesGestion
+                  setDocumentationPage={setDocumentationPage}
+                  fromDashboard={fromDashboard}
+                  statisticFilteredDeviceListe={statisticFilteredDeviceListe}
+                  // setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  // setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* statistic box */}
       <div className="md:px-4-- pt-3--">
         <div className="w-full h-full bg-white rounded-lg p-4">
@@ -536,7 +1009,14 @@ function DashboardContaintMaintComponant({
           {/* Liste des statistics */}
           <div className="grid grid-cols-2 gap-1.5 md:gap-4 md:grid-cols-4 items-center justify-between">
             {/*  */}
-            <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
+            <div
+              onClick={() => {
+                setShowStatisticDeviceListeDashboard(true);
+                setStatisticFilteredDeviceListe(allDevices);
+                setStatisticFilteredDeviceListeText("Tous les Appareils");
+              }}
+              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
+            >
               <div className="border border-blue-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-blue-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
@@ -558,7 +1038,14 @@ function DashboardContaintMaintComponant({
                 </div>
               </div>
             </div>
-            <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
+            <div
+              onClick={() => {
+                setShowStatisticDeviceListeDashboard(true);
+                setStatisticFilteredDeviceListe(DeviceDéplacer);
+                setStatisticFilteredDeviceListeText("Appareils Déplacer");
+              }}
+              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
+            >
               <div className="border border-green-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-green-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
@@ -580,7 +1067,16 @@ function DashboardContaintMaintComponant({
                 </div>
               </div>
             </div>
-            <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
+            <div
+              onClick={() => {
+                setShowStatisticDeviceListeDashboard(true);
+                setStatisticFilteredDeviceListe(DeviceEnStationnement);
+                setStatisticFilteredDeviceListeText(
+                  "Appareils En Stationnement"
+                );
+              }}
+              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
+            >
               <div className="border border-orange-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-orange-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
@@ -602,7 +1098,14 @@ function DashboardContaintMaintComponant({
                 </div>
               </div>
             </div>
-            <div className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg">
+            <div
+              onClick={() => {
+                setShowStatisticDeviceListeDashboard(true);
+                setStatisticFilteredDeviceListe(DeviceInactifs);
+                setStatisticFilteredDeviceListeText("Appareils Inactifs");
+              }}
+              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
+            >
               <div className="border border-purple-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-purple-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
                 <div>
                   <div className="flex items-center  gap-2">
@@ -631,7 +1134,7 @@ function DashboardContaintMaintComponant({
       {/*  */}
       <div className="md:px-4-- pt-4">
         {/* Graphe deplacement et graphe des véhicules */}
-        <div className="grid grid-cols-1  md:grid-cols-3 items-stretch justify-center  gap-4 ">
+        <div className="grid grid-cols-1  md:grid-cols-2 items-stretch justify-center  gap-4 ">
           {/*  */}
           {/*  */}
           {/*  */}
@@ -643,141 +1146,21 @@ function DashboardContaintMaintComponant({
           {/*  */}
           {/*  */}
           {/* Graphe de déplacement */}
-          {(currentAccountSelected ||
+          {/* {(currentAccountSelected ||
             (!showFistGrapheOption && !currentAccountSelected)) && (
-            <div className="bg-white md:col-span-2 justify-between flex flex-col   p-3 h-full rounded-lg">
-              {/* title section */}
-              <div className="flex  mb-4 justify-between items-end ">
-                <div className=" ">
-                  <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                    <h2>Graphe de déplacement </h2>
-                    {!currentAccountSelected && (
-                      <FaAngleDoubleRight
-                        onClick={() => {
-                          setShowFistGrapheOption(!showFistGrapheOption);
-                        }}
-                        className="text-xl ml-3 mt-1 cursor-pointer"
-                      />
-                    )}
-                  </div>
-                  <p className="text-gray-500">
-                    Appareils Déplacés ({DeviceDéplacer?.length})
-                  </p>
-                </div>
-                <div className="flex mb-1 text-[.8rem] flex-col sm:flex-row gap-0 text-gray-600  sm:gap-5  items-center">
-                  <div className="flex gap-1 items-center ">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Depart</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Arriver</p>
-                  </div>
-                </div>
-              </div>
-              <div className=" ">
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-
-                {DeviceDéplacer.length > 0 ? (
-                  <div
-                    className="w-full  flex flex-col justify-end h-[250px] overflow-x-auto p-4 pb-0 pl-0 bg-gray-100- rounded-xl"
-                    style={{
-                      scrollbarWidth: "none",
-                      msOverflowStyle: "none",
-                    }}
-                  >
-                    <div
-                      // className="border-2 border-red-600 h-full"
-                      style={{ width: `${fixedWidth}px`, height: "100%" }}
-                    >
-                      <ResponsiveContainer
-                        //   className={"border-2 border-green-600"}
-                        width="100%"
-                        height="100%"
-                      >
-                        <BarChart
-                          // className="border-2 h-full border-purple-800"
-                          data={graphData}
-                          layout="horizontal"
-                          margin={{
-                            top: 20,
-                            right: 30,
-                            left: 0,
-                            bottom: -10,
-                          }}
-                          barCategoryGap={barSpacing - 10} // 10px barSize → 38px gap
-                        >
-                          <CartesianGrid
-                            vertical={false}
-                            strokeDasharray="3 3"
-                          />
-                          <XAxis
-                            dataKey="name"
-                            type="category"
-                            tick={{ fontSize: 12 }}
-                            interval={0}
-                          />
-                          <YAxis
-                            type="number"
-                            domain={[minTime - 600, maxTime]}
-                            tickFormatter={(tick) => FormatDateHeure(tick).time}
-                            tick={{ fontSize: 12 }}
-                            width={42}
-                          />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Bar
-                            dataKey="start"
-                            fill="#f97316"
-                            name="Heure de départ"
-                            radius={[8, 8, 0, 0]}
-                            barSize={8}
-                            animationDuration={1000}
-                          />
-                          <Bar
-                            dataKey="stop"
-                            fill="#22c55e"
-                            name="Heure d'arrivée"
-                            radius={[8, 8, 0, 0]}
-                            barSize={8}
-                            animationDuration={1000}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="w-full  min-h-full flex justify-center items-center">
-                    <p className="py-10 md:py-[6.8rem] font-semibold  text-lg text-gray-600">
-                      Pas d'appareil déplacés{" "}
-                    </p>
-                  </div>
-                )}
-
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-              </div>
-            </div>
-          )}
+            <GrapheDeDeplacementDesAppareils />
+          )} */}
 
           {/* Graphe des comptes */}
-          {!currentAccountSelected && showFistGrapheOption && (
-            <div className="bg-white md:col-span-2 justify-between flex flex-col   p-3 h-full rounded-lg">
-              {/* title section */}
-              <div className="flex relative   mb-4 justify-between items-end- ">
+          {/* {!currentAccountSelected && showFistGrapheOption && ( */}
+          <div className="bg-white md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
+            {/* title section */}
+            <div className="flex relative   mb-4 justify-between items-end- ">
+              {((showFistGrapheOption && !currentAccountSelected) ||
+                currentAccountSelected) && (
                 <div className="  min-w-[14rem]">
                   <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                    <h2>Graphe des Comptes </h2>
+                    <h2>Position des Positions </h2>
                     {!currentAccountSelected && (
                       <FaAngleDoubleRight
                         onClick={() => {
@@ -788,108 +1171,72 @@ function DashboardContaintMaintComponant({
                     )}
                   </div>
                   <p className="text-gray-500">
-                    Nombre de comptes ({comptes?.length})
+                    Nombre d'appareils ({accountDevices?.length})
                   </p>
                 </div>
-                <div className="flex   text-[.8rem] absolute bottom-[0rem] right-0 gap-2 sm:gap-4 text-gray-600  ">
-                  <div className="flex gap-1 items-center ">
-                    <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-green-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Total</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-orange-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Actif</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-purple-500">
-                      {" "}
-                    </p>{" "}
-                    <p>Inactif</p>
-                  </div>
-                </div>
-              </div>
-              <div className=" h-[270px] overflow-hidden">
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
+              )}
 
-                {graphData2?.length > 0 ? (
-                  <div
-                    className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                  >
-                    <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={graphData2}
-                          layout="horizontal"
-                          margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
-                          barCategoryGap={barSpacing2 - 10}
-                        >
-                          <CartesianGrid
-                            vertical={false}
-                            strokeDasharray="3 3"
-                          />
-                          <XAxis
-                            dataKey="shortName"
-                            type="category"
-                            tick={{ fontSize: 12 }}
-                            interval={0}
-                          />
-                          <YAxis hide={true} />
-                          <Tooltip content={<CustomTooltip2 />} />
-                          <Bar
-                            dataKey="totalDisplay"
-                            fill="#22c55e"
-                            name="Total"
-                            radius={[8, 8, 0, 0]}
-                            barSize={7}
-                            animationDuration={1000}
-                          />
-
-                          <Bar
-                            dataKey="inactifsDisplay"
-                            fill="#9333ea"
-                            name="Inactifs"
-                            radius={[8, 8, 0, 0]}
-                            barSize={7}
-                            animationDuration={1000}
-                          />
-
-                          <Bar
-                            dataKey="actifsDisplay"
-                            fill="#f97316"
-                            name="Actifs"
-                            radius={[8, 8, 0, 0]}
-                            barSize={7}
-                            animationDuration={1000}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
+              {!showFistGrapheOption && !currentAccountSelected && (
+                <div>
+                  <div className="  min-w-[14rem]">
+                    <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
+                      <h2>Graphe des Comptes </h2>
+                      {!currentAccountSelected && (
+                        <FaAngleDoubleRight
+                          onClick={() => {
+                            setShowFistGrapheOption(!showFistGrapheOption);
+                          }}
+                          className="text-xl ml-3 mt-1 cursor-pointer"
+                        />
+                      )}
                     </div>
-                  </div>
-                ) : (
-                  <div className="w-full min-h-full flex justify-center items-center">
-                    <p className="py-10 font-semibold text-lg text-gray-600">
-                      Pas de données disponibles
+                    <p className="text-gray-500">
+                      Nombre de comptes ({comptes?.length})
                     </p>
                   </div>
-                )}
-
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-                {/* Graphe ici... */}
-              </div>
+                  <div className="flex   text-[.8rem] absolute bottom-[0rem] right-0 gap-2 sm:gap-4 text-gray-600  ">
+                    <div className="flex gap-1 items-center ">
+                      <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-green-500">
+                        {" "}
+                      </p>{" "}
+                      <p>Total</p>
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-orange-500">
+                        {" "}
+                      </p>{" "}
+                      <p>Actif</p>
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-purple-500">
+                        {" "}
+                      </p>{" "}
+                      <p>Inactif</p>
+                    </div>
+                  </div>{" "}
+                </div>
+              )}
             </div>
-          )}
+            <div className=" max-h-[20rem] flex flex-col justify-between items-start overflow-x-auto overflow-y-hidden">
+              {!showFistGrapheOption && !currentAccountSelected && (
+                <div>
+                  <div>
+                    <p>.</p>
+                    <p>.</p>
+                  </div>
+
+                  <Graphe3BatonnetComptes />
+                </div>
+              )}
+              {((showFistGrapheOption && !currentAccountSelected) ||
+                currentAccountSelected) && (
+                <div className="w-full h-[15rem]-- overflow-hidden rounded-md">
+                  <LocationPage fromDashboard="true" />
+                </div>
+              )}
+            </div>
+          </div>
+          {/* )} */}
 
           {/*  */}
           {/*  */}
@@ -899,99 +1246,73 @@ function DashboardContaintMaintComponant({
           {/*  */}
           {/*  */}
           {/* Graphe des Appareils */}
-          <div className="bg-white relative flex flex-col justify-between- p-3 md:col-span-1 rounded-lg">
-            <h2 className="font-semibold text-lg mb-8 text-gray-700">
-              Tous les appareils
-            </h2>
-            <div className="  h-[15rem]-- ">
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
+          <div className="bg-white relative flex flex-col justify-between- p-3 md:col-span-1- rounded-lg">
+            <div className="flex items-center- items-start   mb-8">
+              {showFistGrapheOption2 && (
+                <h2 className="font-semibold text-lg text-gray-700">
+                  Tous les appareils
+                </h2>
+              )}
+              {!showFistGrapheOption2 && !currentAccountSelected && (
+                <h2 className="font-semibold text-lg text-gray-700">
+                  Tableau des comptes
+                </h2>
+              )}
 
-              <div className="w-64- pb-10  w-full h-full h-64- flex items-center justify-center relative">
-                <div className="w-full max-w-[13rem]  aspect-square flex items-center justify-center relative">
-                  <svg
-                    viewBox="0 0 200 200"
-                    className="w-full h-full absolute"
-                    preserveAspectRatio="xMidYMid meet"
-                  >
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="95"
-                      fill="none"
-                      stroke="white"
-                      strokeWidth="14"
-                    />
-
-                    {layers.map((layer, index) => (
-                      <g key={index}>
-                        <circle
-                          cx={layer.cx}
-                          cy={layer.cy}
-                          r={layer.r}
-                          fill="none"
-                          stroke={layer.trackColor}
-                          strokeWidth={layer.strokeWidth}
-                        />
-                        <circle
-                          cx={layer.cx}
-                          cy={layer.cy}
-                          r={layer.r}
-                          fill="none"
-                          stroke={layer.stroke}
-                          strokeWidth={layer.strokeWidth}
-                          strokeDasharray={layer.strokeDasharray}
-                          strokeDashoffset={layer.strokeDashoffset}
-                          strokeLinecap={layer.strokeLinecap}
-                          transform="rotate(-90 100 100)"
-                        />
-                      </g>
-                    ))}
-                  </svg>
-
-                  <div className="absolute text-center">
-                    <p className="text-gray-500 text-sm">Total</p>
-                    <p className="text-2xl font-bold">{allVehicule}</p>
-                  </div>
+              {!showFistGrapheOption2 && currentAccountSelected && (
+                <div>
+                  <h2 className="font-semibold text-lg text-gray-700">
+                    Liste des Appareils
+                  </h2>
+                  <p className="text-gray-500">
+                    Nombre d'appareils ({accountDevices?.length})
+                  </p>
                 </div>
+              )}
+              {/* {!currentAccountSelected && ( */}
+              <FaAngleDoubleRight
+                onClick={() => {
+                  setShowFistGrapheOption2(!showFistGrapheOption2);
+                }}
+                className="text-xl ml-3 mt-1.5 cursor-pointer"
+              />
+              {/* )} */}
+            </div>
+            <div className="  rounded-md overflow-hidden ">
+              {!showFistGrapheOption2 && !currentAccountSelected && (
+                <TableauRecapitulatifComptes />
+              )}
+              {!showFistGrapheOption2 && currentAccountSelected && (
+                <DeviceListeDashboard />
+              )}
 
-                <div className="absolute text-center">
-                  <p className="text-gray-500 text-sm">Total</p>
-                  <p className="text-2xl font-bold">{allVehicule}</p>
-                </div>
-              </div>
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
-              {/* Graphe ici... */}
+              {showFistGrapheOption2 && <GrapheCirculaireDevices />}
             </div>
             {/*  */}
             {/*  */}
             {/*  */}
-            <div className="flex  border-- border-purple-500 p-2 rounded-md bg-white/50-- shadow-lg- shadow-black/10 absolute left-1 right-1- top-[.7rem]- bottom-1 text-xs mt-6 flex-col- flex-wrap text-gray-600  gap-3 gap-y-0 items-start">
-              <div className="flex  gap-1 items-center">
-                <p className="w-[.6rem] h-[.6rem] rounded-full bg-purple-500">
-                  {" "}
-                </p>{" "}
-                <p>Hors service ({DeviceInactifs?.length})</p>
+            {showFistGrapheOption2 && (
+              <div className="flex  border-- border-purple-500 p-2 rounded-md bg-white/50-- shadow-lg- shadow-black/10 absolute left-1 right-1- top-[.7rem]- bottom-1 text-xs mt-6 flex-col- flex-wrap text-gray-600  gap-3 gap-y-0 items-start">
+                <div className="flex  gap-1 items-center">
+                  <p className="w-[.6rem] h-[.6rem] rounded-full bg-purple-500">
+                    {" "}
+                  </p>{" "}
+                  <p>Hors service ({DeviceInactifs?.length})</p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  <p className="w-[.6rem] h-[.6rem] rounded-full bg-green-500">
+                    {" "}
+                  </p>{" "}
+                  <p>Déplacés ({DeviceDéplacer?.length})</p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  <p className="w-[.6rem] h-[.6rem] rounded-full bg-orange-500">
+                    {" "}
+                  </p>{" "}
+                  <p>En stationnement ({DeviceEnStationnement?.length})</p>
+                </div>
               </div>
-              <div className="flex gap-1 items-center">
-                <p className="w-[.6rem] h-[.6rem] rounded-full bg-green-500">
-                  {" "}
-                </p>{" "}
-                <p>Déplacés ({DeviceDéplacer?.length})</p>
-              </div>
-              <div className="flex gap-1 items-center">
-                <p className="w-[.6rem] h-[.6rem] rounded-full bg-orange-500">
-                  {" "}
-                </p>{" "}
-                <p>En stationnement ({DeviceEnStationnement?.length})</p>
-              </div>
-            </div>
+            )}
           </div>
           {/*  */}
 
@@ -1000,9 +1321,7 @@ function DashboardContaintMaintComponant({
 
         {/* Other info */}
         <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
-          {/* Graphe de déplacement */}
           <div className="bg-white md:col-span-2-  p-3 h-full rounded-lg">
-            {/* title section */}
             <div className="flex mb-4 justify-between items-end ">
               <div className=" flex w-full justify-between items-center">
                 <h2 className="font-semibold text-lg mb-4-- text-gray-700">
@@ -1031,12 +1350,6 @@ function DashboardContaintMaintComponant({
               </div>
             </div>
             <div className="h-full max-h-[20rem] flex flex-col gap-4 overflow-auto">
-              {/*  */}
-              {/*  */}
-              {/*  */}
-              {/*  */}
-              {/*  */}
-
               {(currentAccountSelected
                 ? currentAccountSelected?.accountUsers
                 : [
@@ -1097,15 +1410,9 @@ function DashboardContaintMaintComponant({
                   </div>
                 );
               })}
-              {/*  */}
-              {/*  */}
-              {/*  */}
-              {/*  */}
-              {/*  */}
-              {/*  */}
             </div>
           </div>
-          {/* Graphe des Appareils */}
+
           <div className="bg-white flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
             <div className=" flex pb-4 w-full justify-between items-center">
               <h2 className="font-semibold text-lg mb-4-- text-gray-700">
@@ -1144,12 +1451,6 @@ function DashboardContaintMaintComponant({
               </button>
             </div>
             <div className=" flex flex-col gap-4  h-full max-h-[20rem] overflow-y-auto">
-              {/* ... */}
-              {/* ... */}
-              {/* ... */}
-              {/* ... */}
-              {/* ... */}
-
               {(currentAccountSelected
                 ? currentAccountSelected?.accountGroupes
                 : Array.from(
@@ -1190,50 +1491,12 @@ function DashboardContaintMaintComponant({
                           {user?.groupeDevices?.length}
                         </span>{" "}
                       </p>
-
-                      {/* <p className="text-gray-600">
-                        Nombre d'utilisateur :{" "}
-                        <span className="font-bold">
-                          {user?.userGroupes?.length}
-                        </span>{" "}
-                      </p> */}
                     </div>
                   </div>
                 );
               })}
-              {/* ... */}
-              {/* ... */}
-              {/* ... */}
-              {/* ... */}
-              {/* ... */}
             </div>
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* <div className="flex text-xs mt-6 flex-row flex-wrap text-gray-600  gap-3 gap-y-0 items-center">
-              <div className="flex gap-1 items-center">
-                <p className="w-[.7rem] h-[.7rem] rounded-full bg-green-500">
-                  {" "}
-                </p>{" "}
-                <p>Déplacé</p>
-              </div>
-              <div className="flex gap-1 items-center">
-                <p className="w-[.7rem] h-[.7rem] rounded-full bg-orange-500">
-                  {" "}
-                </p>{" "}
-                <p>En stationnement</p>
-              </div>
-              <div className="flex gap-1 items-center">
-                <p className="w-[.7rem] h-[.7rem] rounded-full bg-purple-500">
-                  {" "}
-                </p>{" "}
-                <p>Hors service</p>
-              </div>
-            </div> */}
           </div>
-          {/*  */}
-
-          {/*  */}
         </div>
       </div>
     </div>

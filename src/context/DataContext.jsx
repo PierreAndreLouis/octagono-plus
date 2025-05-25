@@ -1492,6 +1492,8 @@ const DataContextProvider = ({ children }) => {
 
     setComptes(data);
 
+    ListeDesRolePourLesUserFonction(account, user, password);
+
     if (fetchAllOtherData) {
       // Déclenchement automatique des autres fetchs pour chaque compte
       data.forEach((acct) => {
@@ -5365,7 +5367,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte("Suppression du groupe avec  succès ");
-        setConfirmationMessagePopupName(description);
+        setConfirmationMessagePopupName("");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5376,7 +5378,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
-        setConfirmationMessagePopupName(description);
+        setConfirmationMessagePopupName("");
 
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
@@ -5390,7 +5392,7 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
-      setConfirmationMessagePopupName(description);
+      setConfirmationMessagePopupName("");
     }
   };
 
@@ -5543,6 +5545,10 @@ const DataContextProvider = ({ children }) => {
     maxAccessLevel,
     roleID,
     //
+    addressCity,
+    addressCountry,
+    userType,
+    //
 
     groupesSelectionnes,
     groupesNonSelectionnes
@@ -5577,7 +5583,10 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactName">${contactName}</Field>
         <Field name="timeZone">${timeZone}</Field>
         <Field name="maxAccessLevel">${maxAccessLevel}</Field>
- 
+        
+        <Field name="addressCity">${addressCity}</Field>
+        <Field name="addressCountry">${addressCountry}</Field>
+        <Field name="userType">${userType}</Field>
    
 
         <Field name="isActive">1</Field>
@@ -5740,25 +5749,26 @@ const DataContextProvider = ({ children }) => {
   const [echecCreateAccountGestionPoupu, setEchecCreateAccountGestionPoupu] =
     useState(false);
   const createAccountEnGestionAccountFonction = async (
-    accountID,
-    user,
-    password,
+    // accountID,
+    // user,
+    // password,
 
     accountIDField,
     description,
     displayName,
     contactPhone,
     notifyEmail,
-    passwordField
+    passwordField,
+    isActive,
+    isAccountManager,
+    contactName,
+    contactEmail,
+    addressCity,
+    addressCountry,
+    timeZone
   ) => {
-    // /////////
-
-    setError("");
-    setCreateVéhiculeLoading(true);
-    //  <Field name="GroupList">${userAccount}</Field>
-    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbcreate">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Authorization account="${account}" user="${username}" password="${password}" />
       <Record table="Account" partial="true">
       
       <Field name="accountID">${accountIDField}</Field>
@@ -5767,6 +5777,14 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactPhone">${contactPhone}</Field>
         <Field name="notifyEmail">${notifyEmail}</Field>
         <Field name="password">${passwordField}</Field>
+
+            <Field name="isActive">${isActive}</Field>
+    <Field name="isAccountManager">${isAccountManager}</Field>
+    <Field name="contactName">${contactName}</Field>
+    <Field name="contactEmail">${contactEmail}</Field>
+    <Field name="addressCity">${addressCity}</Field>
+    <Field name="addressCountry">${addressCountry}</Field>
+    <Field name="timeZone">${timeZone}</Field>
 
    
 
@@ -5801,7 +5819,7 @@ const DataContextProvider = ({ children }) => {
         // const id = accountID;
         // const pwd = password;
         const fetchAllOtherData = false;
-        fetchAllComptes(accountID, user, password, fetchAllOtherData);
+        fetchAllComptes(account, username, password, fetchAllOtherData);
 
         // setSuccessCreateAccountGestionPoupu(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
@@ -5914,16 +5932,23 @@ const DataContextProvider = ({ children }) => {
   const [echecModifyAccountGestionPopup, setEchecModifyAccountGestionPopup] =
     useState(false);
   const modifyAccountEnGestionAccountFonction = async (
-    accountID,
-    user,
-    password,
+    // accountID,
+    // user,
+    // password,
 
     accountIDField,
     description,
     displayName,
     contactPhone,
     notifyEmail,
-    passwordField
+    passwordField,
+    isActive,
+    isAccountManager,
+    contactName,
+    contactEmail,
+    addressCity,
+    addressCountry,
+    timeZone
   ) => {
     // /////////
 
@@ -5932,7 +5957,7 @@ const DataContextProvider = ({ children }) => {
     //  <Field name="GroupList">${userAccount}</Field>
     // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbput">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Authorization account="${account}" user="${username}" password="${password}" />
       <Record table="Account" partial="true">
       
       <Field name="accountID">${accountIDField}</Field>
@@ -5941,6 +5966,14 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactPhone">${contactPhone}</Field>
         <Field name="notifyEmail">${notifyEmail}</Field>
         <Field name="password">${passwordField}</Field>
+
+               <Field name="isActive">${isActive}</Field>
+    <Field name="isAccountManager">${isAccountManager}</Field>
+    <Field name="contactName">${contactName}</Field>
+    <Field name="contactEmail">${contactEmail}</Field>
+    <Field name="addressCity">${addressCity}</Field>
+    <Field name="addressCountry">${addressCountry}</Field>
+    <Field name="timeZone">${timeZone}</Field>
 
    
 
@@ -5994,6 +6027,13 @@ const DataContextProvider = ({ children }) => {
                   contactPhone,
                   notifyEmail,
                   passwordField,
+                  isActive,
+                  isAccountManager,
+                  contactName,
+                  contactEmail,
+                  addressCity,
+                  addressCountry,
+                  timeZone,
                 }
               : account
           )
@@ -6044,7 +6084,7 @@ const DataContextProvider = ({ children }) => {
         // setTimeout(() => {
 
         //   groupesNonSelectionnes.map((groupID) =>
-        removeUserFromGroup(accountID, user, password, groupID, userIDField);
+        // removeUserFromGroup(accountID, user, password, groupID, userIDField);
         //     )
         // }, 6000);
 
@@ -6126,9 +6166,11 @@ const DataContextProvider = ({ children }) => {
     maxAccessLevel,
     roleID,
     //
+    userType,
+    addressCity,
+    addressCountry,
 
     groupesSelectionnes,
-    groupeDuSelectedUser,
     groupesNonSelectionnes
   ) => {
     // /////////
@@ -6156,10 +6198,12 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactName">${contactName}</Field>
         <Field name="timeZone">${timeZone}</Field>
         <Field name="maxAccessLevel">${maxAccessLevel}</Field>
-
-   
-
-        <Field name="isActive">1</Field>
+        
+        
+        <Field name="userType">${userType}</Field>
+        <Field name="addressCity">${addressCity}</Field>
+        <Field name="addressCountry">${addressCountry}</Field>
+        
       </Record>
     </GTSRequest>`;
 
@@ -7145,9 +7189,9 @@ const DataContextProvider = ({ children }) => {
   };
 
   const deleteAccountEnGestionAccountFonction = async (
-    account,
-    user,
-    password,
+    // account,
+    // user,
+    // password,
     accountIDField
   ) => {
     console.log("++++++++++++++++ Requête effectué: deleteVehicle");
@@ -7157,7 +7201,7 @@ const DataContextProvider = ({ children }) => {
 
     const requestBody =
       `<GTSRequest command="dbdel">` +
-      `<Authorization account="${account}" user="${user}" password="${password}"/>` +
+      `<Authorization account="${account}" user="${username}" password="${password}"/>` +
       `<RecordKey table="Account" partial="true">` +
       `<Field name="accountID">${accountIDField}</Field>` +
       `</RecordKey>` +
@@ -7176,7 +7220,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log(response);
       if (response.ok) {
-        if (account && user && password) {
+        if (account && username && password) {
           //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
           console.log("Delete successsssssssss...............");
@@ -7262,7 +7306,7 @@ const DataContextProvider = ({ children }) => {
         }
       } else {
         console.error(
-          "Erreur lors de la suppression du véhicule:",
+          "Erreur lors de la mise a jour de la suppression du véhicule:",
           response.statusText
         );
 
@@ -8543,7 +8587,3 @@ const DataContextProvider = ({ children }) => {
 };
 
 export default DataContextProvider;
-
-// OctagonoGPSHaitiAdmin13@1919
-
-// .toLowerCase().replace(/\s+/g, "_")

@@ -1097,9 +1097,9 @@ const DataContextProvider = ({ children }) => {
   };
 
   const TestDeRequetteDevices = async (account, user, password2) => {
-    const accountID = "sysadmin";
+    const accountID = "kk";
     const userID = "admin";
-    const password = "OctagonoGPSHaitiAdmin13@1919";
+    const password = "kk@1919";
 
     const userID2 = "admin";
 
@@ -8232,7 +8232,3 @@ const DataContextProvider = ({ children }) => {
 };
 
 export default DataContextProvider;
-
-// OctagonoGPSHaitiAdmin13@1919
-
-// .toLowerCase().replace(/\s+/g, "_")

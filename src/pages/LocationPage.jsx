@@ -17,7 +17,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
 });
 
-const LocationPage = ({ isDashBoardComptnent, setDocumentationPage }) => {
+const LocationPage = ({
+  isDashBoardComptnent,
+  setDocumentationPage,
+  fromDashboard,
+}) => {
   const {
     mergedDataHome,
     selectedVehicleToShowInMap,
@@ -200,16 +204,19 @@ const LocationPage = ({ isDashBoardComptnent, setDocumentationPage }) => {
 
   return (
     <div className="relative ">
-      {!isAddingNewGeofence && (
-        <HeaderLocation
-          setShowVehiculeListe={setShowVehiculeListe}
-          selectedVehicleToShowInMap={selectedVehicleToShowInMap}
-          véhiculeData={véhiculeData}
-          setTypeDeVue={setTypeDeVue}
-          showAllVehicles={showAllVehicles}
-          isDashBoardComptnent={isDashBoardComptnent}
-        />
-      )}
+      {!isAddingNewGeofence &&
+        (fromDashboard === "true" ? (
+          ""
+        ) : (
+          <HeaderLocation
+            setShowVehiculeListe={setShowVehiculeListe}
+            selectedVehicleToShowInMap={selectedVehicleToShowInMap}
+            véhiculeData={véhiculeData}
+            setTypeDeVue={setTypeDeVue}
+            showAllVehicles={showAllVehicles}
+            isDashBoardComptnent={isDashBoardComptnent}
+          />
+        ))}
 
       {showVehiculeListe && (
         <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-[14124124124124] shadow-xl border-- border-gray-100 rounded-md p-3">

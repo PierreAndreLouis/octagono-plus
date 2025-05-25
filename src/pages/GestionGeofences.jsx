@@ -26,17 +26,7 @@ function GestionGeofences({
     setIsEditingGeofence,
     ModifierGeofence,
     supprimerGeofence,
-    activerOuDesactiverGeofence,
-    succesCreateGeofencePopup,
-    setSuccesCreateGeofencePopup,
-    succesModifierGeofencePopup,
-    setSuccesModifierGeofencePopup,
-    errorModifierGeofencePopup,
-    setErrorModifierGeofencePopup,
-    succesDeleteGeofencePopup,
-    setSuccesDeleteGeofencePopup,
-    errorDeleteGeofencePopup,
-    setErrorDeleteGeofencePopup,
+  
     listeGestionDesGeofences,
     gestionAccountData,
     currentAccountSelected,
@@ -130,22 +120,8 @@ function GestionGeofences({
         >
           Geozones
         </h2>
-        {/* <div className="flex justify-center mt-4">
-          <Link
-            to="/Groupe_vehicule_location?tab=localisation"
-            onClick={() => {
-              setAjouterGeofencePopup(true);
-              setIsEditingGeofence(false);
-              setCurrentGeozone();
-            }}
-            className="bg-orange-500 shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
-          >
-            <div className="flex justify-center items-center gap-3">
-              <FaPlusCircle className="text-2xl" />
-              <p className="text-lg text-center">Ajouter un nouveau Geozone</p>
-            </div>
-          </Link>{" "}
-        </div> */}
+   
+   
 
         {/*  */}
         {/*  */}
@@ -170,7 +146,7 @@ function GestionGeofences({
                 if (!currentAccountSelected) {
                   setChooseOneAccountToContinue(true);
                   setChooseOtherAccountGestion(true);
-                  // setDocumentationPage("Localisation_devices");
+
                 } else {
                   setDocumentationPage("Localisation_devices");
                 }
@@ -183,12 +159,8 @@ function GestionGeofences({
                   navigate("/Groupe_vehicule_location?tab=localisation");
                 }
 
-                // if (!currentAccountSelected) {
-                //   setChooseOneAccountToContinue(true);
-                //   setChooseOtherAccountGestion(true);
-                //   setDocumentationPage("Ajouter_nouveau_groupe");
-                // } else {
-                // }
+              
+                
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >

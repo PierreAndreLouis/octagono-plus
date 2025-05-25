@@ -29,6 +29,8 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: customMarkerIcon,
   iconUrl: customMarkerIcon,
   shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+  // shadowSize: [41, 41],
+  shadowSize: [1, 1],
 });
 
 function MapComponent({
@@ -517,7 +519,8 @@ function MapComponent({
             popupAnchor: [1, -34],
             shadowUrl:
               "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-            shadowSize: [41, 41],
+            shadowSize: [1, 1],
+            // shadowSize: [41, 41],
           })}
           position={[position.lat, position.lng]}
           draggable={true} // Active le déplacement du marqueur
@@ -1188,7 +1191,8 @@ function MapComponent({
                   popupAnchor: [1, -34],
                   shadowUrl:
                     "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-                  shadowSize: [41, 41],
+                  // shadowSize: [41, 41],
+                  shadowSize: [1, 1],
                 })}
               >
                 <Popup>

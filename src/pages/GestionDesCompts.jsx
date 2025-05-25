@@ -197,18 +197,7 @@ function GestionDesCompts({ setDocumentationPage }) {
               Test fonction 4
             </button>{" "}
             <br /> */}
-            {/* <button
-              onClick={() => {
-                TestDeRequetteDevices();
-                ListeDesRolePourLesUserFonction(
-                  "sysadmin",
-                  "admin",
-                  "OctagonoGPSHaitiAdmin13@1919"
-                );
-              }}
-            >
-              Test de requête
-            </button>{" "} */}
+
             <div className="flex  justify-center mt-4">
               <button
                 onClick={() => {

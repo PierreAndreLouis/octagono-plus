@@ -58,6 +58,7 @@ function MapComponent({ mapType }) {
     setSuccesModifierGeofencePopup,
     errorModifierGeofencePopup,
     setErrorModifierGeofencePopup,
+    gestionAccountData
   } = useContext(DataContext);
 
   // le data a utiliser
@@ -533,7 +534,17 @@ function MapComponent({ mapType }) {
         pos7?.lat || "",
         pos7?.lng || "",
         pos8?.lat || "",
-        pos8?.lng || ""
+        pos8?.lng || "",
+
+        // 
+        //  gestionAccountData.find(
+        //       (geofence) => geofence.accountID === accountID
+        //     )?.accountID,
+        //     "admin"
+        //     ,
+        // gestionAccountData.find(
+        //       (geofence) => geofence.accountID === accountID
+        //     )?.password
       );
     } else if (geofences?.coordinates.length >= 3 && isEditingGeofence) {
       const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
@@ -560,7 +571,15 @@ function MapComponent({ mapType }) {
         pos7?.lat || "",
         pos7?.lng || "",
         pos8?.lat || "",
-        pos8?.lng || ""
+        pos8?.lng || "",
+        //   gestionAccountData.find(
+        //       (geofence) => geofence.accountID === accountID
+        //     )?.accountID,
+        //     "admin"
+        //     ,
+        // gestionAccountData.find(
+        //       (geofence) => geofence.accountID === accountID
+        //     )?.password
       );
     } else {
       console.log("pas d'assez de coordonnee...");

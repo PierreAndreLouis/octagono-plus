@@ -18,6 +18,8 @@ function ListeDesVehiculesGestion({
   setDocumentationPage,
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
+  fromDashboard = false,
+  statisticFilteredDeviceListe,
 }) {
   const {
     FormatDateHeure,
@@ -113,8 +115,12 @@ function ListeDesVehiculesGestion({
   const [searchTermInput, setSearchTermInput] = useState("");
   const [showPasswordInput, setShowPasswordInput] = useState(false);
 
+  const currentListe = fromDashboard
+    ? statisticFilteredDeviceListe
+    : listeGestionDesVehicules;
+
   const filteredListeGestionDesVehicules = searchTermInput
-    ? listeGestionDesVehicules?.filter(
+    ? currentListe?.filter(
         (item) =>
           item?.description
             .toLowerCase()
@@ -127,7 +133,7 @@ function ListeDesVehiculesGestion({
             .includes(searchTermInput.toLowerCase()) ||
           item?.accountID.toLowerCase().includes(searchTermInput.toLowerCase())
       )
-    : listeGestionDesVehicules;
+    : currentListe;
 
   const deviceUpdateFonction = () => {
     comptes?.forEach((acct) => {
@@ -223,120 +229,123 @@ function ListeDesVehiculesGestion({
       )}
 
       <div className="px-4 pb-40 bg-white pt-10 rounded-lg">
-        <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
-          Liste des Appareils
-        </h2>
+        {!fromDashboard && (
+          <div>
+            <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+              Liste des Appareils
+            </h2>
 
-        {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+            {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
           <span className="text-gray-700">Compte :</span>{" "}
           {currentAccountSelected?.description}
         </h3> */}
-        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-          {currentSelectedUserToConnect?.description && (
-            <span className="text-gray-700">Utilisateur :</span>
-          )}{" "}
-          {currentSelectedUserToConnect?.description}
-        </h3>
-        <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-          <span className="text-gray-700">Nombre Appareil :</span>{" "}
-          {filteredListeGestionDesVehicules?.length}
-        </h3>
+            <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+              {currentSelectedUserToConnect?.description && (
+                <span className="text-gray-700">Utilisateur :</span>
+              )}{" "}
+              {currentSelectedUserToConnect?.description}
+            </h3>
+            <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
+              <span className="text-gray-700">Nombre Appareil :</span>{" "}
+              {filteredListeGestionDesVehicules?.length}
+            </h3>
 
-        <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
-          {/*  */}
-          <div className="flex gap-2 justify-center mt-4">
-            <button
-              onClick={() => {
-                // setShowCreateNewDevicePage(true);
-                scrollToTop();
+            <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+              {/*  */}
+              <div className="flex gap-2 justify-center mt-4">
+                <button
+                  onClick={() => {
+                    // setShowCreateNewDevicePage(true);
+                    scrollToTop();
 
-                if (!currentAccountSelected) {
-                  setChooseOneAccountToContinue(true);
-                  setChooseOtherAccountGestion(true);
-                  setDocumentationPage("Ajouter_nouveau_appareil");
-                } else {
-                  setDocumentationPage("Ajouter_nouveau_appareil");
-                }
-              }}
-              className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
-            >
-              <span className="flex justify-center items-center gap-3 ">
-                <FaUserPlus className="text-2xl" />
-                <span className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                  <span className="hidden md:inline">Ajouter un</span> Nouveau
-                  Appareil
-                </span>
-              </span>
-            </button>{" "}
-          </div>
-
-          {!showPasswordInput && (
-            <div className="flex gap-2 w-full justify-between items-center">
-              <div
-                onClick={() => {
-                  setChooseOtherAccountGestion(true);
-                  setShowUserGroupeCategorieSection(true);
-
-                  console.log(currentSelectedUserToConnect);
-                }}
-                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-              >
-                <h3 className="w-full text-center font-semibold">
-                  {/* Compte: */}
-                  <span className="max-w-[13rem] overflow-hidden whitespace-nowrap text-ellipsis sm:max-w-full">
-                    {deviceListeTitleGestion || "Tous les Appareils"}
+                    if (!currentAccountSelected) {
+                      setChooseOneAccountToContinue(true);
+                      setChooseOtherAccountGestion(true);
+                      setDocumentationPage("Ajouter_nouveau_appareil");
+                    } else {
+                      setDocumentationPage("Ajouter_nouveau_appareil");
+                    }
+                  }}
+                  className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+                >
+                  <span className="flex justify-center items-center gap-3 ">
+                    <FaUserPlus className="text-2xl" />
+                    <span className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                      <span className="hidden md:inline">Ajouter un</span>{" "}
+                      Nouveau Appareil
+                    </span>
                   </span>
-                </h3>
-                <FaChevronDown />
+                </button>{" "}
               </div>
-              <div
-                onClick={() => {
-                  setShowPasswordInput(true);
-                }}
-                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
-              >
-                <IoSearchOutline className="text-xl " />
-              </div>
-              <div
-                onClick={() => {
-                  deviceUpdateFonction();
-                }}
-                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
-              >
-                <MdUpdate className="text-xl " />
-              </div>
-            </div>
-          )}
 
-          {showPasswordInput && (
-            <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
-              <input
-                id="search"
-                name="search"
-                type="search"
-                placeholder="Recherche un appareil"
-                required
-                value={searchTermInput}
-                onChange={(e) => {
-                  setSearchTermInput(e.target.value);
-                }}
-                className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
-              />
-              <div
-                onClick={() => {
-                  {
-                    setShowPasswordInput(false);
-                    setSearchTermInput("");
-                  }
-                }}
-                className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
-              >
-                <IoClose className="text-xl text-red-600" />
-              </div>
-            </div>
-          )}
-        </div>
+              {!showPasswordInput && (
+                <div className="flex gap-2 w-full justify-between items-center">
+                  <div
+                    onClick={() => {
+                      setChooseOtherAccountGestion(true);
+                      setShowUserGroupeCategorieSection(true);
 
+                      console.log(currentSelectedUserToConnect);
+                    }}
+                    className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+                  >
+                    <h3 className="w-full text-center font-semibold">
+                      {/* Compte: */}
+                      <span className="max-w-[13rem] overflow-hidden whitespace-nowrap text-ellipsis sm:max-w-full">
+                        {deviceListeTitleGestion || "Tous les Appareils"}
+                      </span>
+                    </h3>
+                    <FaChevronDown />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setShowPasswordInput(true);
+                    }}
+                    className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+                  >
+                    <IoSearchOutline className="text-xl " />
+                  </div>
+                  <div
+                    onClick={() => {
+                      deviceUpdateFonction();
+                    }}
+                    className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
+                  >
+                    <MdUpdate className="text-xl " />
+                  </div>
+                </div>
+              )}
+
+              {showPasswordInput && (
+                <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+                  <input
+                    id="search"
+                    name="search"
+                    type="search"
+                    placeholder="Recherche un appareil"
+                    required
+                    value={searchTermInput}
+                    onChange={(e) => {
+                      setSearchTermInput(e.target.value);
+                    }}
+                    className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                  />
+                  <div
+                    onClick={() => {
+                      {
+                        setShowPasswordInput(false);
+                        setSearchTermInput("");
+                      }
+                    }}
+                    className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+                  >
+                    <IoClose className="text-xl text-red-600" />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
 

@@ -3,6 +3,7 @@ import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
 import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 function CreateNewAccountPage({ setDocumentationPage }) {
   const {
@@ -13,6 +14,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     password,
     comptes,
     createAccountEnGestionAccountFonction,
+    timeZoneData,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -35,7 +37,14 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     description: "",
     displayName: "",
     contactPhone: "",
+    contactName: "",
+    contactEmail: "",
+    addressCity: "",
+    addressCountry: "",
     notifyEmail: "",
+    isActive: "true",
+    isAccountManager: "true",
+    timeZone: "GMT-04:00",
     password: "",
     password2: "",
   });
@@ -60,28 +69,53 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     setErrorID(""); // Réinitialise l'erreur lorsque l'utilisateur modifie l'entrée
   };
 
-  // Gestion de la soumission du formulaire
+  const isValid = () => {
+    const phoneRegex = /^\+?\d{6,15}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const errors = [];
+
+    if (!phoneRegex.test(addNewAccountData.contactPhone)) {
+      errors.push("Le téléphone n'est pas valide.");
+    }
+
+    if (!emailRegex.test(addNewAccountData.contactEmail)) {
+      errors.push("L'email de contact n'est pas valide.");
+    }
+
+    if (!emailRegex.test(addNewAccountData.notifyEmail)) {
+      errors.push("L'email de notification n'est pas valide.");
+    }
+
+    if (addNewAccountData.password.length < 6) {
+      errors.push("Le mot de passe doit contenir au moins 6 caractères.");
+    }
+
+    return errors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
 
-    // Si deviceID est unique, créer le véhicule
-    const accountID = addNewAccountData.accountID;
+    const formatErrors = isValid();
+    if (formatErrors.length > 0) {
+      setErrorID(formatErrors[0]); // affiche seulement le premier
+      return;
+    }
 
-    // Vérification si groupID existe déjà
+    if (addNewAccountData?.password !== addNewAccountData?.password2) {
+      setErrorID("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
     const accountExists = comptes?.some(
-      (account) => account?.accountID === accountID
+      (account) => account?.accountID === addNewAccountData.accountID
     );
 
     if (accountExists) {
       setErrorID(
         "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre."
       );
-      return;
-    }
-
-    if (addNewAccountData?.password !== addNewAccountData?.password2) {
-      setErrorID("Les mots de passe ne correspondent pas.");
       return;
     }
 
@@ -97,25 +131,41 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       const description = addNewAccountData.description;
       const displayName = addNewAccountData.displayName;
       const contactPhone = addNewAccountData.contactPhone;
+      const contactName = addNewAccountData.contactName;
+      const contactEmail = addNewAccountData.contactEmail;
+      const addressCity = addNewAccountData.addressCity;
+      const addressCountry = addNewAccountData.addressCountry;
       const notifyEmail = addNewAccountData.notifyEmail;
+      const isActive = addNewAccountData.isActive;
+      const isAccountManager = addNewAccountData.isAccountManager;
+      const timeZone = addNewAccountData.timeZone;
+      const password = addNewAccountData.password;
       const password2 = addNewAccountData.password2;
 
       if (account && username && password) {
+        // console.log(
         createAccountEnGestionAccountFonction(
-          account,
-          username,
-          password,
+          // account,
+          // username,
+          // password,
+
           accountID,
           description,
           displayName,
           contactPhone,
           notifyEmail,
-          password2
+          password2,
+          isActive,
+          isAccountManager,
+          contactName,
+          contactEmail,
+          addressCity,
+          addressCountry,
+          timeZone
         );
 
         setDocumentationPage("Gestion_des_comptes");
       }
-
       setShowConfirmAddGroupeGestionPopup(false);
       setErrorMessage("");
       setInputPassword("");
@@ -123,6 +173,22 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
     }
   };
+
+  const [isActivePopup, setIsActivePopup] = useState(false);
+  const [isAccountManager, setIsAccountManager] = useState(false);
+  const [showTimeZonePopup, setShowTimeZonePopup] = useState(false);
+
+  const requiredFields = [
+    "accountID",
+    "description",
+    "displayName",
+    "contactPhone",
+    "contactName",
+    "contactEmail",
+    "notifyEmail",
+    "password",
+    "password2",
+  ];
 
   return (
     <div className="px-3 rounded-lg  bg-white">
@@ -137,6 +203,156 @@ function CreateNewAccountPage({ setDocumentationPage }) {
         handlePasswordCheck={handlePasswordCheck}
         setIsPasswordConfirmed={setShowConfirmAddGroupeGestionPopup}
       />
+
+      {isActivePopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            id="mapType"
+          >
+            <IoClose
+              onClick={() => {
+                setIsActivePopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Activation du compte:
+            </h2>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                addNewAccountData?.isActive === "true"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setAddNewAccountData((prev) => ({
+                  ...prev,
+                  isActive: "true",
+                }));
+                setIsActivePopup(false);
+              }}
+            >
+              <p>true</p>
+            </div>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                addNewAccountData?.isActive === "false"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setAddNewAccountData((prev) => ({
+                  ...prev,
+                  isActive: "false",
+                }));
+                setIsActivePopup(false);
+              }}
+            >
+              <p>false</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {isAccountManager && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            id="mapType"
+          >
+            <IoClose
+              onClick={() => {
+                setIsAccountManager(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Droit de manager:
+            </h2>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                addNewAccountData?.isAccountManager === "true"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setAddNewAccountData((prev) => ({
+                  ...prev,
+                  isAccountManager: "true",
+                }));
+                setIsAccountManager(false);
+              }}
+            >
+              <p>true</p>
+            </div>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                addNewAccountData?.isAccountManager === "false"
+                  ? "bg-gray-100 dark:bg-gray-800/70"
+                  : ""
+              }`}
+              onClick={() => {
+                setAddNewAccountData((prev) => ({
+                  ...prev,
+                  isAccountManager: "false",
+                }));
+                setIsAccountManager(false);
+              }}
+            >
+              <p>false</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showTimeZonePopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            id="mapType"
+          >
+            <IoClose
+              onClick={() => {
+                setShowTimeZonePopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              Choisir un TimeZone:
+            </h2>
+            <div className="max-h-[60vh] overflow-auto">
+              {timeZoneData?.map((zone, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`cursor-pointer border-b py-3 hover:bg-gray-100 flex justify-between items-center dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      addNewAccountData.timeZone === `${zone?.region}:00`
+                        ? "bg-gray-100 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setAddNewAccountData((prev) => ({
+                        ...prev,
+                        timeZone: zone?.region + ":00",
+                      }));
+                      setShowTimeZonePopup(false);
+                    }}
+                  >
+                    <p>{zone?.region + ":00"}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex  w-full justify-center h-full  ">
         <div className="w-full flex justify-center">
@@ -160,8 +376,6 @@ function CreateNewAccountPage({ setDocumentationPage }) {
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
-                {/* Champs du formulaire */}
-
                 {[
                   {
                     id: "accountID",
@@ -184,10 +398,48 @@ function CreateNewAccountPage({ setDocumentationPage }) {
                     placeholder: "le numero de telephone",
                   },
                   {
+                    id: "contactName",
+                    label: "contactName",
+                    placeholder: "contactName",
+                  },
+
+                  {
+                    id: "contactEmail",
+                    label: "contactEmail",
+                    placeholder: "contactEmail",
+                  },
+                  {
+                    id: "addressCity",
+                    label: "addressCity",
+                    placeholder: "addressCity",
+                  },
+                  {
+                    id: "addressCountry",
+                    label: "addressCountry",
+                    placeholder: "addressCountry",
+                  },
+
+                  {
                     id: "notifyEmail",
                     label: "Email",
                     placeholder: "email",
                   },
+                  {
+                    id: "isActive",
+                    label: "isActive",
+                    placeholder: "isActive",
+                  },
+                  {
+                    id: "isAccountManager",
+                    label: "isAccountManager",
+                    placeholder: "isAccountManager",
+                  },
+                  {
+                    id: "timeZone",
+                    label: "timeZone",
+                    placeholder: "",
+                  },
+
                   {
                     id: "password",
                     label: "Mot de passe",
@@ -205,20 +457,54 @@ function CreateNewAccountPage({ setDocumentationPage }) {
                       className="block-- flex justify-between items-center text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
                     >
                       {field.label}{" "}
-                      {!addNewAccountData[field.id] && (
-                        <span className="text-red-600 text-lg"> *</span>
-                      )}
+                      {requiredFields.includes(field.id) &&
+                        !addNewAccountData[field.id] && (
+                          <span className="text-red-600 text-lg"> *</span>
+                        )}
                     </label>
-                    <input
-                      id={field.id}
-                      name={field.id}
-                      type="text"
-                      placeholder={field.placeholder}
-                      value={addNewAccountData[field.id]}
-                      onChange={handleChange}
-                      required
-                      className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                    />
+
+                    {field.id === "isAccountManager" ? (
+                      <div
+                        onClick={() => {
+                          setIsAccountManager(true);
+                        }}
+                        className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>{addNewAccountData?.isAccountManager}</p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : field.id === "isActive" ? (
+                      <div
+                        onClick={() => {
+                          setIsActivePopup(true);
+                        }}
+                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>{addNewAccountData?.isActive}</p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : field.id === "timeZone" ? (
+                      <div
+                        onClick={() => {
+                          setShowTimeZonePopup(true);
+                        }}
+                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      >
+                        <p>{addNewAccountData?.timeZone}</p>
+                        <FaChevronDown className="text-gray-700 mr-4" />
+                      </div>
+                    ) : (
+                      <input
+                        id={field.id}
+                        name={field.id}
+                        type="text"
+                        placeholder={field.placeholder}
+                        value={addNewAccountData[field.id]}
+                        onChange={handleChange}
+                        required={requiredFields.includes(field.id)}
+                        className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                      />
+                    )}
                   </div>
                 ))}
                 {errorID && (

@@ -156,13 +156,13 @@ function ListeDesUtilisateur({
           Liste des Utilisateur
         </h2>
 
-        <p
+        {/* <p
           onClick={() => {
             TestDeRequetteDevices();
           }}
         >
           test liste groupe user
-        </p>
+        </p> */}
 
         <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
           <span className="text-gray-700">Nombre d'utilisateur :</span>{" "}

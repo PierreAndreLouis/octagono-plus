@@ -40,9 +40,9 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
       );
 
       deleteAccountEnGestionAccountFonction(
-        account,
-        username,
-        password,
+        // account,
+        // username,
+        // password,
         currentAccountSelected?.accountID
       );
 
