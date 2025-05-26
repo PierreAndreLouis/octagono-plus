@@ -713,11 +713,6 @@ function CreateNewUserGestion({
                     label: "contactName",
                     placeholder: "contactName",
                   },
-                  {
-                    id: "userType",
-                    label: "userType",
-                    placeholder: "userType",
-                  },
 
                   {
                     id: "addressCity",
@@ -728,6 +723,11 @@ function CreateNewUserGestion({
                     id: "addressCountry",
                     label: "addressCountry",
                     placeholder: "addressCountry",
+                  },
+                  {
+                    id: "userType",
+                    label: "userType",
+                    placeholder: "userType",
                   },
 
                   {

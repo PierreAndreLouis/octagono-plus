@@ -403,72 +403,75 @@ function ListeDesGroupes({
           {/*  */}
 
           {filterGroupeAccountData?.length > 0 ? (
-            filterGroupeAccountData?.map((groupe, index) => {
-              const userListeAffected = (
-                currentAccountSelected ||
-                gestionAccountData.find(
-                  (account) => account.accountID === groupe?.accountID
-                )
-              )?.accountUsers?.filter((user) => {
-                const groupes = user?.userGroupes || [];
-                return groupes?.some(
-                  (group) => group?.groupID === groupe?.groupID
-                );
-              });
+            filterGroupeAccountData
+              ?.slice()
+              .sort((a, b) => b?.creationTime - a?.creationTime)
+              ?.map((groupe, index) => {
+                const userListeAffected = (
+                  currentAccountSelected ||
+                  gestionAccountData.find(
+                    (account) => account.accountID === groupe?.accountID
+                  )
+                )?.accountUsers?.filter((user) => {
+                  const groupes = user?.userGroupes || [];
+                  return groupes?.some(
+                    (group) => group?.groupID === groupe?.groupID
+                  );
+                });
 
-              return (
-                <div
-                  onClick={() => {
-                    setCurrentSelectedGroupeGestion(groupe);
-                  }}
-                  key={index}
-                  className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
-                >
-                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                    {index + 1}
-                  </div>
-                  <div className="flex  gap-3  ">
-                    <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
-                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                      <div>
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold- text-gray-700">
-                            Nom du Groupe :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {groupe?.description}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold- text-gray-700">
-                            ID du Groupe :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {groupe?.groupID}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold- text-gray-700">
-                            Nombre d'appareil :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {groupe?.groupeDevices?.length}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p
-                            onClick={() => {
-                              console.log(userListeAffected);
-                            }}
-                            className="font-bold- text-gray-700"
-                          >
-                            Nombre Utilisateurs affectés :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {userListeAffected?.length}
-                          </span>
-                        </div>{" "}
-                        {/* <div className="flex flex-wrap border-b py-1">
+                return (
+                  <div
+                    onClick={() => {
+                      setCurrentSelectedGroupeGestion(groupe);
+                    }}
+                    key={index}
+                    className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                  >
+                    <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                      {index + 1}
+                    </div>
+                    <div className="flex  gap-3  ">
+                      <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
+                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                        <div>
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold- text-gray-700">
+                              Nom du Groupe :
+                            </p>
+                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                              {groupe?.description}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold- text-gray-700">
+                              ID du Groupe :
+                            </p>
+                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                              {groupe?.groupID}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold- text-gray-700">
+                              Nombre d'appareil :
+                            </p>
+                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                              {groupe?.groupeDevices?.length}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p
+                              onClick={() => {
+                                console.log(userListeAffected);
+                              }}
+                              className="font-bold- text-gray-700"
+                            >
+                              Nombre Utilisateurs affectés :
+                            </p>
+                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                              {userListeAffected?.length}
+                            </span>
+                          </div>{" "}
+                          {/* <div className="flex flex-wrap border-b py-1">
                           <p className="font-bold- text-gray-700">
                             Dernière mise a jour :
                           </p>
@@ -476,38 +479,38 @@ function ListeDesGroupes({
                             21-04-2024 <span className="px-2">/</span> 05:34 PM
                           </span>
                         </div>{" "} */}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                    <button
-                      onClick={() => {
-                        setDocumentationPage("Modifier_groupe");
-                        setCurrentSelectedGroupeGestion(groupe);
-                        // setShowModifyNewGroupePage(true);
-                      }}
-                      className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-                    >
-                      <p className="text-sm mr-2">Modifier</p>
-                      <FaRegEdit />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setTimeout(() => {
+                    <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                      <button
+                        onClick={() => {
+                          setDocumentationPage("Modifier_groupe");
                           setCurrentSelectedGroupeGestion(groupe);
-                        }, 500);
-                        setListeGestionDesUsers(userListeAffected);
-                        console.log(groupe);
-                        setShowSelectedGroupeOptionsPopup(true);
-                      }}
-                      className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                    >
-                      <p>Options</p> <IoOptions className="text-xl" />
-                    </button>
+                          // setShowModifyNewGroupePage(true);
+                        }}
+                        className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
+                      >
+                        <p className="text-sm mr-2">Modifier</p>
+                        <FaRegEdit />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setTimeout(() => {
+                            setCurrentSelectedGroupeGestion(groupe);
+                          }, 500);
+                          setListeGestionDesUsers(userListeAffected);
+                          console.log(groupe);
+                          setShowSelectedGroupeOptionsPopup(true);
+                        }}
+                        className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                      >
+                        <p>Options</p> <IoOptions className="text-xl" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })
           ) : (
             <div className="flex justify-center font-semibold text-lg">
               Pas de résultat

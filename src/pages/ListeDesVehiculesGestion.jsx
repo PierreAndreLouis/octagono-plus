@@ -363,177 +363,184 @@ function ListeDesVehiculesGestion({
           {/*  */}
 
           {filteredListeGestionDesVehicules?.length > 0 ? (
-            filteredListeGestionDesVehicules?.map((device, index) => {
-              let bg_color = "bg-gray-50";
-              let text_color = "text-orange-500/80";
-              if (device?.lastStopTime > todayTimestamp) {
-                bg_color = "bg-green-50";
-                text_color = "text-green-500";
-              } else if (
-                currentTimeSec - device?.lastUpdateTime <
-                twentyFourHoursInSec
-              ) {
-                bg_color = "bg-orange-50";
-                text_color = "text-orange-500";
-              } else if (
-                currentTimeSec - device?.lastUpdateTime >
-                twentyFourHoursInSec
-              ) {
-                bg_color = "bg-purple-50";
-                text_color = "text-purple-500";
-              }
-              return (
-                <div
-                  key={index}
-                  className={`${bg_color} shadow-inner  shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4`}
-                >
-                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                    {index + 1}
-                  </div>
-                  <div className="flex  gap-3  ">
-                    <FaCar className={`${text_color} text-[3rem]  md:mr-4 `} />
-                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                      <div>
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Description :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.description ||
-                              device?.displayName ||
-                              "Pas de nom disponible"}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Dernière mise a jour :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {FormatDateHeure(device?.lastUpdateTime).date}
-                            <span className="px-2">/</span>{" "}
-                            {FormatDateHeure(device?.lastUpdateTime).time}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold">Account ID :</p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {device?.accountID}
-                          </span>
-                        </div>{" "}
-                        <div
-                          className={`${
-                            showMoreDeviceInfo === index
-                              ? "max-h-[20rem]"
-                              : "max-h-0"
-                          }  overflow-hidden transition-all`}
-                        >
+            filteredListeGestionDesVehicules
+              ?.slice()
+              .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
+              ?.map((device, index) => {
+                let border_color = "bg-gray-50";
+                let text_color = "text-orange-500/80";
+                if (
+                  currentTimeSec - device?.lastUpdateTime <
+                  twentyFourHoursInSec
+                ) {
+                  border_color = "border-l-[.4rem] border-orange-300";
+                  text_color = "text-orange-500";
+                } else if (
+                  currentTimeSec - device?.lastUpdateTime >
+                  twentyFourHoursInSec
+                ) {
+                  border_color = "border-l-[.4rem] border-purple-300";
+                  text_color = "text-purple-500";
+                }
+
+                if (device?.lastStopTime > todayTimestamp) {
+                  border_color = "border-l-[.4rem] border-green-300";
+                  text_color = "text-green-500";
+                }
+                return (
+                  <div
+                    key={index}
+                    className={`${border_color} bg-gray-50 shadow-inner  shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4`}
+                  >
+                    <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                      {index + 1}
+                    </div>
+                    <div className="flex  gap-3  ">
+                      <FaCar
+                        className={`text-orange-500/80 text-[3rem]  md:mr-4 `}
+                      />
+                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                        <div>
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Plaque du véhicule :</p>
+                            <p className="font-bold">Description :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.licensePlate}
+                              {device?.description ||
+                                device?.displayName ||
+                                "Pas de nom disponible"}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Telephone :</p>
+                            <p className="font-bold">Dernière mise a jour :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.simPhoneNumber}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Type d'appareil :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.equipmentType}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">ImeiNumber :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.imeiNumber}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">
-                              Distance totale parcourue :
-                            </p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {/* {device?.lastOdometerKM.toFixed(0)} */}
-                              {device?.lastOdometerKM &&
-                              !isNaN(Number(device?.lastOdometerKM))
-                                ? Number(device?.lastOdometerKM).toFixed(0) +
-                                  " km"
-                                : "Non disponible"}{" "}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">
-                              Numéro de la carte SIM :
-                            </p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              50941070132
-                              {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Date Creation :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {FormatDateHeure(device?.creationTime).date}
+                              {FormatDateHeure(device?.lastUpdateTime).date}
                               <span className="px-2">/</span>{" "}
-                              {FormatDateHeure(device?.creationTime).time}
+                              {FormatDateHeure(device?.lastUpdateTime).time}
                             </span>
                           </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Account ID :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {device?.accountID}
+                            </span>
+                          </div>{" "}
+                          <div
+                            className={`${
+                              showMoreDeviceInfo === index
+                                ? "max-h-[20rem]"
+                                : "max-h-0"
+                            }  overflow-hidden transition-all`}
+                          >
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">Plaque du véhicule :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.licensePlate}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">Telephone :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.simPhoneNumber}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">Type d'appareil :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.equipmentType}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">ImeiNumber :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.imeiNumber}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">
+                                Distance totale parcourue :
+                              </p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {/* {device?.lastOdometerKM.toFixed(0)} */}
+                                {device?.lastOdometerKM &&
+                                !isNaN(Number(device?.lastOdometerKM))
+                                  ? Number(device?.lastOdometerKM).toFixed(0) +
+                                    " km"
+                                  : "Non disponible"}{" "}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">
+                                Numéro de la carte SIM :
+                              </p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                50941070132
+                                {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">Date Creation :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {FormatDateHeure(device?.creationTime).date}
+                                <span className="px-2">/</span>{" "}
+                                {FormatDateHeure(device?.creationTime).time}
+                              </span>
+                            </div>{" "}
+                          </div>
+                          {showMoreDeviceInfo === index ? (
+                            <p
+                              onClick={() => {
+                                setShowMoreDeviceInfo();
+                              }}
+                              className={`text-orange-500 font-semibold mt-2  cursor-pointer underline`}
+                            >
+                              Voir moins
+                            </p>
+                          ) : (
+                            <p
+                              onClick={() => {
+                                setShowMoreDeviceInfo(index);
+                              }}
+                              className={` text-orange-500 font-semibold mt-2  cursor-pointer underline`}
+                            >
+                              Voir plus
+                            </p>
+                          )}
                         </div>
-                        {showMoreDeviceInfo === index ? (
-                          <p
-                            onClick={() => {
-                              setShowMoreDeviceInfo();
-                            }}
-                            className={`${text_color} font-semibold mt-2  cursor-pointer underline`}
-                          >
-                            Voir moins
-                          </p>
-                        ) : (
-                          <p
-                            onClick={() => {
-                              setShowMoreDeviceInfo(index);
-                            }}
-                            className={`${text_color} font-semibold mt-2  cursor-pointer underline`}
-                          >
-                            Voir plus
-                          </p>
-                        )}
                       </div>
                     </div>
+                    <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
+                      <button
+                        onClick={() => {
+                          setCurrentSelectedDeviceGestion(device);
+                          setShowUserGroupeCategorieSection(false);
+                          setDocumentationPage("Modifier_appareil");
+                          scrollToTop();
+                        }}
+                        className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-1.5 pl-2.5 pr-1.5 flex justify-center items-center"
+                      >
+                        <p className="text-sm mr-2">Modifier</p>
+
+                        <FaRegEdit />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setCurrentSelectedDeviceGestion(device);
+
+                          setDeleteAccountPopup(true);
+                        }}
+                        className={`${
+                          true
+                            ? " bg-orange-500 text-white"
+                            : "text-orange-600 border-[0.02rem] border-orange-500 "
+                        }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-2 flex justify-center items-center`}
+                      >
+                        <p className="text-sm mr-2">Supprimer</p>
+
+                        <FaTrashAlt />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
-                    <button
-                      onClick={() => {
-                        setCurrentSelectedDeviceGestion(device);
-                        setShowUserGroupeCategorieSection(false);
-                        setDocumentationPage("Modifier_appareil");
-                        scrollToTop();
-                      }}
-                      className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-                    >
-                      <p className="text-sm mr-2">Modifier</p>
-
-                      <FaRegEdit />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setCurrentSelectedDeviceGestion(device);
-
-                        setDeleteAccountPopup(true);
-                      }}
-                      className={`${
-                        true
-                          ? " bg-red-500 text-white"
-                          : "text-red-600 border-[0.02rem] border-red-500 "
-                      }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-2 px-2 flex justify-center items-center`}
-                    >
-                      <p className="text-sm mr-2">Supprimer</p>
-
-                      <FaTrashAlt />
-                    </button>
-                  </div>
-                </div>
-              );
-            })
+                );
+              })
           ) : (
             <div className="flex justify-center font-semibold text-lg">
               Pas de résultat

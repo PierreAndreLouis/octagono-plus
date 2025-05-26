@@ -887,58 +887,65 @@ function DashboardContaintMaintComponant({
                   ?.map((device) => [device.deviceID, device])
               ).values()
             )
-        )?.map((device, index) => {
-          let bg_color;
-          let text_color;
-          if (device?.lastStopTime > todayTimestamp) {
-            bg_color = "bg-green-50";
-            text_color = "text-green-500";
-          } else if (
-            currentTimeSec - device?.lastUpdateTime <
-            twentyFourHoursInSec
-          ) {
-            bg_color = "bg-orange-50";
-            text_color = "text-orange-500/80";
-          } else if (
-            currentTimeSec - device?.lastUpdateTime >
-            twentyFourHoursInSec
-          ) {
-            bg_color = "bg-purple-50";
-            text_color = "text-purple-700/80";
-          }
-          return (
-            <div
-              key={index}
-              onClick={() => {}}
-              className={`${bg_color} shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 `}
-            >
-              <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                {index + 1}
-              </p>
-              <FaCar
-                className={`${text_color} text-[2rem] min-w-[2.5rem] mt-1`}
-              />
-              <div>
-                <p className="text-gray-600">
-                  Nom du Groupe :{" "}
-                  <span className="font-bold">{device?.description}</span>{" "}
+        )
+          ?.slice()
+          .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
+          ?.map((device, index) => {
+            let border_color = "bg-gray-50";
+            let text_color = "text-orange-500/80";
+
+            if (
+              currentTimeSec - device?.lastUpdateTime <
+              twentyFourHoursInSec
+            ) {
+              border_color = "border-l-[.4rem] border-orange-400";
+              text_color = "text-orange-400";
+            } else if (
+              currentTimeSec - device?.lastUpdateTime >
+              twentyFourHoursInSec
+            ) {
+              border_color = "border-l-[.4rem] border-purple-300";
+              text_color = "text-purple-400";
+            }
+
+            if (device?.lastStopTime > todayTimestamp) {
+              border_color = "border-l-[.4rem] border-green-500";
+              text_color = "text-green-400";
+            }
+
+            return (
+              <div
+                key={index}
+                onClick={() => {}}
+                className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 `}
+              >
+                <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                  {index + 1}
                 </p>
-                <p className="text-gray-600">
-                  Dernière Date :{" "}
-                  <span className="font-bold">
-                    {FormatDateHeure(device?.lastUpdateTime)?.date}
-                  </span>{" "}
-                </p>
-                <p className="text-gray-600">
-                  Derniere Heure :{" "}
-                  <span className="font-bold">
-                    {FormatDateHeure(device?.lastUpdateTime)?.time}
-                  </span>{" "}
-                </p>
+                <FaCar
+                  className={`${text_color} text-[2rem] min-w-[2.5rem] mt-1`}
+                />
+                <div>
+                  <p className="text-gray-600">
+                    Nom du Groupe :{" "}
+                    <span className="font-bold">{device?.description}</span>{" "}
+                  </p>
+                  <p className="text-gray-600">
+                    Dernière Date :{" "}
+                    <span className="font-bold">
+                      {FormatDateHeure(device?.lastUpdateTime)?.date}
+                    </span>{" "}
+                  </p>
+                  <p className="text-gray-600">
+                    Derniere Heure :{" "}
+                    <span className="font-bold">
+                      {FormatDateHeure(device?.lastUpdateTime)?.time}
+                    </span>{" "}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     );
   }
@@ -955,6 +962,52 @@ function DashboardContaintMaintComponant({
     statisticFilteredDeviceListeText,
     setStatisticFilteredDeviceListeText,
   ] = useState("");
+
+  //
+  //
+  //
+  // Fonction pour avoir le dernier timestamp, pour calculer la dernière mise a jour
+  // function getMostRecentTimestamp(data) {
+  //   // Filtrer les entrées avec un tableau véhiculeDetails valide et non vide
+  //   const validTimestamps = data
+  //     .filter(
+  //       (véhicule) =>
+  //         Array.isArray(véhicule?.véhiculeDetails) &&
+  //         véhicule?.véhiculeDetails.length > 0
+  //     )
+  //     .map((véhicule) => parseInt(véhicule?.véhiculeDetails[0].timestamp));
+
+  //   // Trouver le timestamp le plus récent
+  //   const mostRecentTimestamp = Math.max(...validTimestamps);
+
+  //   return { mostRecentTimestamp };
+  // }
+
+  function getMostRecentTimestamp(data) {
+    if (data) {
+      console.log("data...............", data);
+      const validTimestamps = data
+        .map((véhicule) => parseInt(véhicule?.lastUpdateTime))
+        .filter((timestamp) => !isNaN(timestamp));
+
+      const mostRecentTimestamp =
+        validTimestamps.length > 0 ? Math.max(...validTimestamps) : null; // ou une autre valeur par défaut
+
+      return { mostRecentTimestamp };
+    } else {
+      console.log("Pas de donnees");
+    }
+  }
+
+  // Pour stocker le timestamp le plus récent lorsque "data" change
+  const [lastUpdate, setLastUpdate] = useState(null);
+
+  // Mettre à jour le timestamp le plus récent lorsque "data" change
+  useEffect(() => {
+    const result = getMostRecentTimestamp(listeGestionDesVehicules);
+    setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
+    console.log("result", result);
+  }, [listeGestionDesVehicules]);
 
   return (
     <div className="pb-6-">
@@ -994,20 +1047,12 @@ function DashboardContaintMaintComponant({
           <div className=" relative mb-4 ">
             <div className="">
               <div className="flex items-center gap-2 sm:gap-3">
-                <h1 className="font-bold text-[1.1rem] md:text-xl text-gray-800">
-                  {/* Statistiques pour les 7 derniers jours */}
+                <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
+                  Pour Aujourd'hui
+                </h1>
+                <h1 className="font-bold hidden md:block text-[1.1rem] md:text-xl text-gray-800">
                   Statistiques pour aujourd'hui
                 </h1>
-                <div
-                  onClick={() => {
-                    fetchNewDataDevices();
-                  }}
-                  className={`${
-                    isLoading2 ? "animate-spin" : ""
-                  }  text-orange-500 mt-1 min-w-8 min-h-6  cursor-pointer   dark:text-gray-200 `}
-                >
-                  <MdUpdate className="sm:text-[1.5rem]  sm:min-w-8 text-[1.3rem]  sm:mt-0" />
-                </div>
               </div>
               <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
                 <span className="mr-1  text-gray-600">Compte :</span>
@@ -1016,17 +1061,38 @@ function DashboardContaintMaintComponant({
                   : "Tous les comptes"}
               </p>
             </div>
-            <div
-              onClick={() => {
-                setChosseOtherGroupeDashboard(true);
-              }}
-              className="sm:border sm:hover:bg-gray-100 sm:bg-gray-50 cursor-pointer flex gap-1 sm:gap-3 items-center absolute right-0 py-2 sm:px-4 rounded-lg -bottom-2 sm:bottom-0"
-            >
-              <p className="font-semibold hidden sm:block">
-                Sélectionner un Groupe
-              </p>
-              <p className="font-semibold sm:hidden">Groupe</p>
-              <FaChevronDown className="mt-1" />
+            {currentAccountSelected && (
+              <div
+                onClick={() => {
+                  setChosseOtherGroupeDashboard(true);
+                }}
+                className=" cursor-pointer text-orange-500 flex gap-1 sm:gap-3 items-center absolute right-0  rounded-lg -bottom-0 sm:bottom-0"
+              >
+                <p className="font-semibold hidden sm:block">
+                  Sélectionner un Groupe
+                </p>
+                <p className="font-semibold sm:hidden">Groupe</p>
+                <FaChevronDown className="mt-1" />
+              </div>
+            )}
+
+            <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
+              <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
+                <span className="hidden md:block mr-2">Last Update</span>
+                {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
+                {" / "}
+                {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}
+              </p>{" "}
+              <div
+                onClick={() => {
+                  fetchNewDataDevices();
+                }}
+                className={`${
+                  isLoading2 ? "animate-spin" : ""
+                }  text-orange-500 min-w-2  translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
+              >
+                <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
+              </div>
             </div>
           </div>
 

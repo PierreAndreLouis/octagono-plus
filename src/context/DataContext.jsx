@@ -2231,22 +2231,22 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       //
-      if (!comptes) return;
-      //
-      comptes.forEach((acct) => {
+
+      // console.log("comptes:", comptes);
+
+      comptes?.forEach((acct) => {
         const id = acct.accountID;
         const pwd = acct.password;
-
+        // console.log("Raffraichir les device de :", acct?.description);
         // Devices du compte
         fetchAccountDevices(id, pwd).catch((err) => {
           console.error("Erreur lors du chargement des devices :", err);
-          setError("Erreur lors du chargement des devices.");
         });
       });
-    }, 1000 * 60 * 5);
+    }, 1000 * 60 * 2);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [comptes]);
 
   //
   //

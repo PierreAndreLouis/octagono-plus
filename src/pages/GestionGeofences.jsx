@@ -26,7 +26,7 @@ function GestionGeofences({
     setIsEditingGeofence,
     ModifierGeofence,
     supprimerGeofence,
-  
+
     listeGestionDesGeofences,
     gestionAccountData,
     currentAccountSelected,
@@ -120,8 +120,6 @@ function GestionGeofences({
         >
           Geozones
         </h2>
-   
-   
 
         {/*  */}
         {/*  */}
@@ -146,7 +144,6 @@ function GestionGeofences({
                 if (!currentAccountSelected) {
                   setChooseOneAccountToContinue(true);
                   setChooseOtherAccountGestion(true);
-
                 } else {
                   setDocumentationPage("Localisation_devices");
                 }
@@ -158,9 +155,6 @@ function GestionGeofences({
                 if (!isDashBoardComptnent) {
                   navigate("/Groupe_vehicule_location?tab=localisation");
                 }
-
-              
-                
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -263,7 +257,8 @@ function GestionGeofences({
             // )
             filterGeofencesAccountData?.length > 0 ? (
               filterGeofencesAccountData
-                // ?.filter((item) => item.geozoneID.endsWith(`_${account}`))
+                ?.slice()
+                .sort((a, b) => b?.lastUpdateTime - a?.lastUpdateTime)
                 .map((geozone, index) => {
                   //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
                   const lastUpdateTimeMs = geozone?.lastUpdateTime
