@@ -47,8 +47,21 @@ function ListeDesVehiculesGestion({
     gestionAccountData,
   } = useContext(DataContext);
 
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
+  //
+  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
+  const getTodayTimestamp = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Minuit
+    return Math.floor(now.getTime() / 1000); // secondes
+  };
+
+  const todayTimestamp = getTodayTimestamp();
+  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
+  const twentyFourHoursInSec = 24 * 60 * 60;
+  const currentTimeSec = getCurrentTimestamp();
+
+  //
+  //
   //
   //
 
@@ -351,16 +364,34 @@ function ListeDesVehiculesGestion({
 
           {filteredListeGestionDesVehicules?.length > 0 ? (
             filteredListeGestionDesVehicules?.map((device, index) => {
+              let bg_color = "bg-gray-50";
+              let text_color = "text-orange-500/80";
+              if (device?.lastStopTime > todayTimestamp) {
+                bg_color = "bg-green-50";
+                text_color = "text-green-500";
+              } else if (
+                currentTimeSec - device?.lastUpdateTime <
+                twentyFourHoursInSec
+              ) {
+                bg_color = "bg-orange-50";
+                text_color = "text-orange-500";
+              } else if (
+                currentTimeSec - device?.lastUpdateTime >
+                twentyFourHoursInSec
+              ) {
+                bg_color = "bg-purple-50";
+                text_color = "text-purple-500";
+              }
               return (
                 <div
                   key={index}
-                  className="shadow-inner bg-gray-50 shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                  className={`${bg_color} shadow-inner  shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4`}
                 >
                   <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                     {index + 1}
                   </div>
                   <div className="flex  gap-3  ">
-                    <FaCar className="text-[3rem] text-orange-500 md:mr-4" />
+                    <FaCar className={`${text_color} text-[3rem]  md:mr-4 `} />
                     <div className=" w-full flex flex-wrap justify-between gap-x-4">
                       <div>
                         <div className="flex flex-wrap border-b py-1">
@@ -388,7 +419,7 @@ function ListeDesVehiculesGestion({
                         <div
                           className={`${
                             showMoreDeviceInfo === index
-                              ? "max-h-[10rem]"
+                              ? "max-h-[20rem]"
                               : "max-h-0"
                           }  overflow-hidden transition-all`}
                         >
@@ -452,7 +483,7 @@ function ListeDesVehiculesGestion({
                             onClick={() => {
                               setShowMoreDeviceInfo();
                             }}
-                            className="font-semibold mt-2 text-orange-500 cursor-pointer underline"
+                            className={`${text_color} font-semibold mt-2  cursor-pointer underline`}
                           >
                             Voir moins
                           </p>
@@ -461,7 +492,7 @@ function ListeDesVehiculesGestion({
                             onClick={() => {
                               setShowMoreDeviceInfo(index);
                             }}
-                            className="font-semibold mt-2 text-orange-500 cursor-pointer underline"
+                            className={`${text_color} font-semibold mt-2  cursor-pointer underline`}
                           >
                             Voir plus
                           </p>

@@ -277,7 +277,11 @@ function DashboardContaintMaintComponant({
 
       return {
         name: account?.description, // fullName pour le popup
-        shortName: account?.description?.slice(0, 8), // 5 lettres pour l’axe X
+        shortName:
+          account?.description?.slice(0, 6) +
+          "(" +
+          account?.accountDevices?.length +
+          ")", // 5 lettres pour l’axe X
         total,
         actifs,
         inactifs,
@@ -884,16 +888,36 @@ function DashboardContaintMaintComponant({
               ).values()
             )
         )?.map((device, index) => {
+          let bg_color;
+          let text_color;
+          if (device?.lastStopTime > todayTimestamp) {
+            bg_color = "bg-green-50";
+            text_color = "text-green-500";
+          } else if (
+            currentTimeSec - device?.lastUpdateTime <
+            twentyFourHoursInSec
+          ) {
+            bg_color = "bg-orange-50";
+            text_color = "text-orange-500/80";
+          } else if (
+            currentTimeSec - device?.lastUpdateTime >
+            twentyFourHoursInSec
+          ) {
+            bg_color = "bg-purple-50";
+            text_color = "text-purple-700/80";
+          }
           return (
             <div
               key={index}
               onClick={() => {}}
-              className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
+              className={`${bg_color} shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 `}
             >
               <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                 {index + 1}
               </p>
-              <FaCar className="text-orange-500/80 text-[2rem] mt-1" />
+              <FaCar
+                className={`${text_color} text-[2rem] min-w-[2.5rem] mt-1`}
+              />
               <div>
                 <p className="text-gray-600">
                   Nom du Groupe :{" "}
@@ -1071,9 +1095,7 @@ function DashboardContaintMaintComponant({
               onClick={() => {
                 setShowStatisticDeviceListeDashboard(true);
                 setStatisticFilteredDeviceListe(DeviceEnStationnement);
-                setStatisticFilteredDeviceListeText(
-                  "Appareils En Stationnement"
-                );
+                setStatisticFilteredDeviceListeText("Appareils Actifs");
               }}
               className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
             >
@@ -1081,7 +1103,7 @@ function DashboardContaintMaintComponant({
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      En Stationnement
+                      Actifs
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
@@ -1153,14 +1175,22 @@ function DashboardContaintMaintComponant({
 
           {/* Graphe des comptes */}
           {/* {!currentAccountSelected && showFistGrapheOption && ( */}
-          <div className="bg-white md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
+          <div className="bg-white relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
             {/* title section */}
             <div className="flex relative   mb-4 justify-between items-end- ">
               {((showFistGrapheOption && !currentAccountSelected) ||
                 currentAccountSelected) && (
                 <div className="  min-w-[14rem]">
                   <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                    <h2>Position des Positions </h2>
+                    <h2>Position des appareils </h2>
+                    <p
+                      onClick={() => {
+                        setDocumentationPage("Localisation_devices");
+                      }}
+                      className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
+                    >
+                      Voir tous
+                    </p>
                     {!currentAccountSelected && (
                       <FaAngleDoubleRight
                         onClick={() => {
@@ -1171,7 +1201,7 @@ function DashboardContaintMaintComponant({
                     )}
                   </div>
                   <p className="text-gray-500">
-                    Nombre d'appareils ({accountDevices?.length})
+                    Nombre d'appareils ({listeGestionDesVehicules?.length})
                   </p>
                 </div>
               )}
@@ -1264,8 +1294,17 @@ function DashboardContaintMaintComponant({
                   <h2 className="font-semibold text-lg text-gray-700">
                     Liste des Appareils
                   </h2>
+                  <p
+                    onClick={() => {
+                      setDocumentationPage("Gestion_des_appareils");
+                    }}
+                    className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"
+                  >
+                    Voir tous
+                  </p>
+
                   <p className="text-gray-500">
-                    Nombre d'appareils ({accountDevices?.length})
+                    Nombre d'appareils ({listeGestionDesVehicules?.length})
                   </p>
                 </div>
               )}
@@ -1309,7 +1348,7 @@ function DashboardContaintMaintComponant({
                   <p className="w-[.6rem] h-[.6rem] rounded-full bg-orange-500">
                     {" "}
                   </p>{" "}
-                  <p>En stationnement ({DeviceEnStationnement?.length})</p>
+                  <p>Actifs ({DeviceEnStationnement?.length})</p>
                 </div>
               </div>
             )}

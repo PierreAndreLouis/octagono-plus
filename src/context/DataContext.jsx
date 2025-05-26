@@ -2228,109 +2228,31 @@ const DataContextProvider = ({ children }) => {
     userGroupes,
   ]);
 
-  // useEffect(() => {
-  //   console.log("fuseDonnee: fusion des données");
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      //
+      if (!comptes) return;
+      //
+      comptes.forEach((acct) => {
+        const id = acct.accountID;
+        const pwd = acct.password;
 
-  //   const merged = comptes.map((acct) => {
-  //     const users = accountUsers.filter((u) => u.accountID === acct.accountID);
-  //     const devices = accountDevices.filter(
-  //       (d) => d.accountID === acct.accountID
-  //     );
-  //     const groupes = accountGroupes.filter(
-  //       (g) => g.accountID === acct.accountID
-  //     );
+        // Devices du compte
+        fetchAccountDevices(id, pwd).catch((err) => {
+          console.error("Erreur lors du chargement des devices :", err);
+          setError("Erreur lors du chargement des devices.");
+        });
+      });
+    }, 1000 * 60 * 5);
 
-  //     const usrDevs = userDevices.filter((ud) =>
-  //       users.some((u) => u.userID === ud.userID)
-  //     );
+    return () => clearInterval(intervalId);
+  }, []);
 
-  //     const userGrp = userGroupes.filter((ug) =>
-  //       users.some((u) => u.userID === ug.userID)
-  //     );
-
-  //     const grpDevs = groupeDevices.filter((gd) =>
-  //       groupes.some((g) => g.groupID === gd.groupID)
-  //     );
-
-  //     return {
-  //       ...acct,
-  //       accountUsers: users.map((u) => ({
-  //         ...u,
-  //         userDevices: [],
-  //         userGroupes:
-  //           userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [],
-  //       })),
-  //       accountDevices: devices,
-  //       accountGroupes: groupes.map((g) => ({
-  //         ...g,
-  //         groupeDevices:
-  //           grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
-  //       })),
-  //     };
-  //   });
-
-  //   setGestionAccountData(merged);
-  //   console.log("fuseDonnee: résultat fusion =", merged);
-  // }, [
-  //   comptes,
-  //   accountDevices,
-  //   accountGroupes,
-  //   groupeDevices,
-  //   accountUsers,
-  //   userDevices,
-  //   userGroupes,
-  // ]);
-
-  // // Pour ajouter des device au user en fonction des groupes qu'il font partie
-  // useEffect(() => {
-  //   const enrichUsersWithDevices = () => {
-  //     const newData = gestionAccountData?.map((account) => {
-  //       if (!account.accountUsers || !account.accountGroupes) return account;
-
-  //       const groupMap = {};
-  //       account?.accountGroupes.forEach((group) => {
-  //         groupMap[group.groupID] = group.groupeDevices || [];
-  //       });
-
-  //       const updatedUsers = account?.accountUsers.map((user) => {
-  //         if (!user.userGroupes) return { ...user, userDevices: [] };
-
-  //         const devicesFromGroups = user?.userGroupes.flatMap(
-  //           (groupLink) => groupMap[groupLink.groupID] || []
-  //         );
-
-  //         const uniqueDevices = Object.values(
-  //           devicesFromGroups.reduce((acc, device) => {
-  //             acc[device.deviceID] = device;
-  //             return acc;
-  //           }, {})
-  //         );
-
-  //         return { ...user, userDevices: uniqueDevices };
-  //       });
-
-  //       return { ...account, accountUsers: updatedUsers };
-  //     });
-
-  //     if (newData) {
-  //       setGestionAccountData(newData);
-  //     }
-
-  //     console.log("newData.....................", newData);
-  //   };
-
-  //   enrichUsersWithDevices();
-  // }, [
-  //   accountDevices,
-  //   accountGroupes,
-  //   groupeDevices,
-  //   accountUsers,
-  //   userDevices,
-  //   userGroupes,
-  // ]);
-
-  // Fonction pour assigner un device à un groupe
-
+  //
+  //
+  //
+  //
+  //
   const assignDeviceToGroup = async (
     account,
     user,
