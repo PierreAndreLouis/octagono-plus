@@ -57,15 +57,29 @@ function MapComponent({
     accountDevices,
     currentAccountSelected,
     gestionAccountData,
+    setIsDashboardHomePage,
+    isDashboardHomePage,
   } = useContext(DataContext);
 
   // le data a utiliser
   const navigate = useNavigate();
 
-  const dataFusionné =
-    currentAccountSelected?.accountDevices ??
-    accountDevices ??
-    currentDataFusionné;
+  // const dataFusionné =
+  //   (isDashboardHomePage && currentAccountSelected?.accountDevices) ??
+  //   (isDashboardHomePage && accountDevices) ??
+  //   currentDataFusionné;
+
+  let dataFusionné;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    dataFusionné = currentAccountSelected?.accountDevices;
+  } else if (isDashboardHomePage && accountDevices && !currentAccountSelected) {
+    dataFusionné = accountDevices;
+  } else if (!isDashboardHomePage) {
+    dataFusionné = currentDataFusionné;
+  }
+
+  // dataFusionné = currentDataFusionné;
 
   const vehiculeActive = dataFusionné;
 
@@ -205,7 +219,10 @@ function MapComponent({
     const isStillSpeedActive =
       timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
 
-    if (currentAccountSelected?.accountDevices || accountDevices) {
+    if (
+      (currentAccountSelected?.accountDevices || accountDevices) &&
+      isDashboardHomePage
+    ) {
       if (isRecentlyUpdate) return "/pin/ping_red.png";
       return "/pin/ping_purple.png";
     } else {

@@ -45,6 +45,7 @@ function ListeDesVehiculesGestion({
     fetchGroupeDevices,
     setDashboardLoadingEffect,
     gestionAccountData,
+    adminPassword,
   } = useContext(DataContext);
 
   //
@@ -91,7 +92,7 @@ function ListeDesVehiculesGestion({
   const deleteVehicleFonction = (e) => {
     e.preventDefault();
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       deleteVehicleEnGestionAccount(
         currentSelectedDeviceGestion?.deviceID,
 
@@ -374,18 +375,18 @@ function ListeDesVehiculesGestion({
                   twentyFourHoursInSec
                 ) {
                   border_color = "border-l-[.4rem] border-orange-300";
-                  text_color = "text-orange-500";
+                  text_color = "text-orange-500/80";
                 } else if (
                   currentTimeSec - device?.lastUpdateTime >
                   twentyFourHoursInSec
                 ) {
                   border_color = "border-l-[.4rem] border-purple-300";
-                  text_color = "text-purple-500";
+                  text_color = "text-purple-500/80";
                 }
 
                 if (device?.lastStopTime > todayTimestamp) {
                   border_color = "border-l-[.4rem] border-green-300";
-                  text_color = "text-green-500";
+                  text_color = "text-green-500/80";
                 }
                 return (
                   <div
@@ -397,7 +398,7 @@ function ListeDesVehiculesGestion({
                     </div>
                     <div className="flex  gap-3  ">
                       <FaCar
-                        className={`text-orange-500/80 text-[3rem]  md:mr-4 `}
+                        className={`${text_color} text-[3rem]  md:mr-4 `}
                       />
                       <div className=" w-full flex flex-wrap justify-between gap-x-4">
                         <div>
@@ -490,7 +491,7 @@ function ListeDesVehiculesGestion({
                               onClick={() => {
                                 setShowMoreDeviceInfo();
                               }}
-                              className={`text-orange-500 font-semibold mt-2  cursor-pointer underline`}
+                              className={`${text_color} font-semibold mt-2  cursor-pointer underline`}
                             >
                               Voir moins
                             </p>
@@ -499,7 +500,7 @@ function ListeDesVehiculesGestion({
                               onClick={() => {
                                 setShowMoreDeviceInfo(index);
                               }}
-                              className={` text-orange-500 font-semibold mt-2  cursor-pointer underline`}
+                              className={` ${text_color} font-semibold mt-2  cursor-pointer underline`}
                             >
                               Voir plus
                             </p>

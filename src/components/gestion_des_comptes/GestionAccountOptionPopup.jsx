@@ -20,6 +20,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
     scrollToTop,
     setListeGestionDesGeofences,
     deleteAccountEnGestionAccountFonction,
+    adminPassword,
   } = useContext(DataContext);
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
@@ -30,21 +31,8 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
 
   const deleteAccountFonction = (e) => {
     e.preventDefault();
-    if (inputPassword === password) {
-      console.log("account : ", account);
-      console.log("user :", username);
-      console.log("password : ", password);
-      console.log(
-        "ID du compte a supprimer",
-        currentAccountSelected?.accountID
-      );
-
-      deleteAccountEnGestionAccountFonction(
-        // account,
-        // username,
-        // password,
-        currentAccountSelected?.accountID
-      );
+    if (inputPassword === adminPassword) {
+      deleteAccountEnGestionAccountFonction(currentAccountSelected?.accountID);
 
       setDeleteAccountPopup(false);
     }

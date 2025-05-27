@@ -30,6 +30,7 @@ const LocationPage = ({
     currentDataFusionné,
     accountDevices,
     currentAccountSelected,
+    isDashboardHomePage,
   } = useContext(DataContext);
   let x;
   //
@@ -50,30 +51,39 @@ const LocationPage = ({
   // Le data converti en Objet
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-  const vehiculeActive =
-    currentAccountSelected?.accountDevices ??
-    accountDevices ??
-    currentDataFusionné;
+  let vehiculeActive;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    vehiculeActive = currentAccountSelected?.accountDevices;
+  } else if (isDashboardHomePage && accountDevices && !currentAccountSelected) {
+    vehiculeActive = accountDevices;
+  } else if (!isDashboardHomePage) {
+    vehiculeActive = currentDataFusionné;
+  }
+
+  // vehiculeActive = currentDataFusionné;
 
   // le formatage des véhicules afficher sur la carte
-  const véhiculeData = vehiculeActive?.map((véhicule) => ({
-    deviceID: véhicule?.deviceID || "---",
-    description: véhicule.description || "Véhicule",
-    lastValidLatitude:
-      véhicule?.véhiculeDetails?.[0]?.latitude ||
-      véhicule?.lastValidLatitude ||
-      "",
-    lastValidLongitude:
-      véhicule?.véhiculeDetails?.[0]?.longitude ||
-      véhicule?.lastValidLongitude ||
-      "",
-    address: véhicule?.véhiculeDetails?.[0]?.address || "",
-    imeiNumber: véhicule?.imeiNumber || "",
-    isActive: véhicule?.isActive || "",
-    licensePlate: véhicule?.licensePlate || "",
-    simPhoneNumber: véhicule?.simPhoneNumber || "",
-    speedKPH: véhicule?.véhiculeDetails?.[0]?.speedKPH || 0,
-  }));
+  const véhiculeData =
+    vehiculeActive &&
+    vehiculeActive?.map((véhicule) => ({
+      deviceID: véhicule?.deviceID || "---",
+      description: véhicule.description || "Véhicule",
+      lastValidLatitude:
+        véhicule?.véhiculeDetails?.[0]?.latitude ||
+        véhicule?.lastValidLatitude ||
+        "",
+      lastValidLongitude:
+        véhicule?.véhiculeDetails?.[0]?.longitude ||
+        véhicule?.lastValidLongitude ||
+        "",
+      address: véhicule?.véhiculeDetails?.[0]?.address || "",
+      imeiNumber: véhicule?.imeiNumber || "",
+      isActive: véhicule?.isActive || "",
+      licensePlate: véhicule?.licensePlate || "",
+      simPhoneNumber: véhicule?.simPhoneNumber || "",
+      speedKPH: véhicule?.véhiculeDetails?.[0]?.speedKPH || 0,
+    }));
 
   // Pour afficher une seule véhicule sur la carte
   const handleVehicleClick = (véhicule) => {

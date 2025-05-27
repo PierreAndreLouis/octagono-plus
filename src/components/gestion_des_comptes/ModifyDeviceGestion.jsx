@@ -15,6 +15,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
     currentSelectedDeviceGestion,
     modifyVehicleEnGestionAccount,
     gestionAccountData,
+    adminPassword,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -122,7 +123,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       const accountID = addVéhiculeData.accountID;
       const deviceID = addVéhiculeData.deviceID;
       const imeiNumber = addVéhiculeData.imeiNumber;

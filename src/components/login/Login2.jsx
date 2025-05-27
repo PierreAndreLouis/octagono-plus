@@ -7,8 +7,13 @@ import { Link } from "react-router-dom";
 import { FaAddressBook, FaBook } from "react-icons/fa";
 
 function Login2() {
-  const { handleLogin, error, isHomePageLoading, setReadDocumentation } =
-    useContext(DataContext);
+  const {
+    handleLogin,
+    error,
+    adminAccount,
+    isHomePageLoading,
+    setReadDocumentation,
+  } = useContext(DataContext);
   let x;
   //
   //
@@ -79,7 +84,12 @@ function Login2() {
             src="/img/cars/logo.png"
             className="mx-auto h-20 w-auto"
           />
-          <h2 className="mt-4 dark:text-gray-100 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2
+            onClick={() => {
+              console.log(adminAccount);
+            }}
+            className="mt-4 dark:text-gray-100 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+          >
             Bienvenue à Octagono Plus
           </h2>
           <div className="flex justify-center items-center gap-2">

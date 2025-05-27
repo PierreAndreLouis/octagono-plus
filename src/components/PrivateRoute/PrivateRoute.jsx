@@ -1,22 +1,17 @@
 import { Navigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { DataContext } from "../../context/DataContext";
 
 const PrivateRoute = ({ element }) => {
-  const { userData } = useContext(DataContext); // vérifier si userData est bien défini
+  const { userData, account, isAuthenticated, adminAccount, adminUserData } =
+    useContext(DataContext); // vérifier si userData est bien défini
 
   // Vérifie l'authentification en consultant localStorage si userData est absent
-  // const isAuthenticated = true;
-  const isAuthenticated = userData || localStorage.getItem("userData");
 
   return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
-
-
-
-
 
 // import { Navigate } from "react-router-dom";
 // import { useContext } from "react";

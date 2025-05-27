@@ -123,14 +123,18 @@ function App() {
     docRapportGroupeRef,
     docGestionGeozoneRef,
     account,
+    error,
+    setError,
+    isDashboardHomePage,
+    setIsDashboardHomePage,
   } = useContext(DataContext);
 
   React.useEffect(() => {
     // Redirige vers /home si l'utilisateur est authentifié et se rend sur "/login"
     if (isAuthenticated && location.pathname === "/login") {
-      navigate(account === "sysadmin" ? "/dashboard_admin_page" : "/home"); // Utilisation correcte de navigate
+      navigate(isDashboardHomePage ? "/dashboard_admin_page" : "/home"); // Utilisation correcte de navigate
     }
-  }, [isAuthenticated, location.pathname, navigate]);
+  }, [isAuthenticated, isDashboardHomePage, location.pathname, navigate]);
 
   // Liste des chemins où le footer ne doit pas apparaître
   const hideComponentRoutes = ["/login"];
@@ -238,6 +242,25 @@ function App() {
     };
   }, []);
 
+  //
+  const [errors, setErrors] = useState([]);
+
+  const addError = (message) => {
+    const id = Date.now() + Math.random();
+    setErrors((prev) => [...prev, { id, message }]);
+
+    setTimeout(() => {
+      setErrors((prev) => prev.filter((err) => err.id !== id));
+    }, 10000);
+  };
+
+  useEffect(() => {
+    if (error) {
+      addError(error);
+      setError(null); // évite de l'ajouter plusieurs fois
+    }
+  }, [error]);
+
   return (
     <div className="dark:bg-gray-700 min-h-screen">
       <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800">
@@ -253,6 +276,23 @@ function App() {
             {!shouldHideComponent && <Header />}
             {!shouldHideComponent && <Navigation_bar />}
             {!shouldHideComponent && <SideBar />}
+          </div>
+        )}
+
+        {errors && (
+          <div className="space-y-2 fixed flex justify-center w-full left-0 right-0  top-[3rem] z-[9999999999999999999999999999999999999999999999999999999999999999999999999]">
+            {errors?.map((err) => (
+              <div
+                key={err.id}
+                className="relative w-full max-w-[30rem] p-4 py-2 bg-red-100 text-red-800 rounded shadow-lg shadow-black/20"
+              >
+                {err.message}
+                <div
+                  className="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress"
+                  style={{ width: "100%" }}
+                />
+              </div>
+            ))}
           </div>
         )}
 
@@ -1088,9 +1128,8 @@ function App() {
               element={
                 isAuthenticated ? (
                   <Navigate
-                    to={
-                      account === "sysadmin" ? "/dashboard_admin_page" : "/home"
-                    }
+                    // to={isDashboardHomePage ? "/home" : "/home"}
+                    to={isDashboardHomePage ? "/dashboard_admin_page" : "/home"}
                   />
                 ) : (
                   <Navigate to="/login" />

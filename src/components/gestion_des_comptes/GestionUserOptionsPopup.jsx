@@ -22,6 +22,7 @@ function GestionUserOptionsPopup({
     currentAccountSelected,
     password,
     gestionAccountData,
+    adminPassword,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -34,7 +35,7 @@ function GestionUserOptionsPopup({
 
   const deleteUSerEnGestionAccountFonction = (e) => {
     e.preventDefault();
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       setDeleteAccountPopup(false);
 
       deleteUSerEnGestionAccount(

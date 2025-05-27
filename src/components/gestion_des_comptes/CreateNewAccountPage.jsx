@@ -15,6 +15,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     comptes,
     createAccountEnGestionAccountFonction,
     timeZoneData,
+    adminPassword,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -126,7 +127,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       const accountID = addNewAccountData.accountID;
       const description = addNewAccountData.description;
       const displayName = addNewAccountData.displayName;
@@ -142,30 +143,24 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       const password = addNewAccountData.password;
       const password2 = addNewAccountData.password2;
 
-      if (account && username && password) {
-        // console.log(
-        createAccountEnGestionAccountFonction(
-          // account,
-          // username,
-          // password,
+      // console.log(
+      createAccountEnGestionAccountFonction(
+        accountID,
+        description,
+        displayName,
+        contactPhone,
+        notifyEmail,
+        password2,
+        isActive,
+        isAccountManager,
+        contactName,
+        contactEmail,
+        addressCity,
+        addressCountry,
+        timeZone
+      );
 
-          accountID,
-          description,
-          displayName,
-          contactPhone,
-          notifyEmail,
-          password2,
-          isActive,
-          isAccountManager,
-          contactName,
-          contactEmail,
-          addressCity,
-          addressCountry,
-          timeZone
-        );
-
-        setDocumentationPage("Gestion_des_comptes");
-      }
+      setDocumentationPage("Gestion_des_comptes");
       setShowConfirmAddGroupeGestionPopup(false);
       setErrorMessage("");
       setInputPassword("");

@@ -4,7 +4,11 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
-import { MdLogout, MdSupervisorAccount } from "react-icons/md";
+import {
+  MdLogout,
+  MdSpaceDashboard,
+  MdSupervisorAccount,
+} from "react-icons/md";
 import { DataContext } from "../../context/DataContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logout from "../login/Logout";
@@ -26,6 +30,9 @@ function SideBar() {
     readDocumentation,
     setReadDocumentation,
     account,
+    adminUsername,
+    adminAccount,
+    setIsDashboardHomePage,
   } = useContext(DataContext);
   let x;
   //
@@ -70,7 +77,33 @@ function SideBar() {
         {/*  */}
         {/*  */}
         {/*  */}
+        {/* <p
+          onClick={() => {
+            console.log("adminUsername", username);
+            console.log(adminUsername);
+          }}
+        >
+          {" "}
+          asdfasd
+        </p> */}
 
+        {(account === "sysadmin" || adminAccount === "sysadmin") && (
+          // {adminAccount === "sysadmin" && (
+          <Link
+            to="/dashboard_admin_page"
+            onClick={() => {
+              setShowSideBar(true);
+              handleTabClick("dashboard");
+              setIsDashboardHomePage(true);
+            }}
+            className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+              tab === "dashboard" ? "text-orange-500" : ""
+            } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+          >
+            <MdSpaceDashboard />
+            <h3>Dashboard</h3>
+          </Link>
+        )}
         <Link
           to="/home?tab=acceuil"
           onClick={() => {

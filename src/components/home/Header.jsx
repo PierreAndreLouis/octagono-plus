@@ -24,6 +24,7 @@ function Header() {
     username,
     account,
     setHistoriqueSelectedLocationIndex,
+    isDashboardHomePage,
   } = useContext(DataContext);
 
   let x;
@@ -87,7 +88,7 @@ function Header() {
   return (
     // En-tête fixe avec barre de recherche conditionnelle et navigation utilisateur
     <div>
-      {account !== "sysadmin" && (
+      {!isDashboardHomePage && (
         <div className="fixed   md:shadow-md md:py-1 md:px-20 z-50 bg-white dark:bg-gray-800 top-0 left-0 right-0 pb-2">
           {/*  */}
           {/*  */}

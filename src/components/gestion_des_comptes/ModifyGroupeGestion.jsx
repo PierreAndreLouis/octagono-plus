@@ -18,6 +18,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
     currentSelectedGroupeGestion,
     modifyGroupeEnGestionAccount,
     gestionAccountData,
+    adminPassword,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -120,7 +121,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       const accountID = modifySelectedGroupeDataData.accountID;
       const groupID = modifySelectedGroupeDataData.groupID;
       const description = modifySelectedGroupeDataData.description;

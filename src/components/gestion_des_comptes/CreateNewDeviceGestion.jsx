@@ -22,6 +22,7 @@ function CreateNewDeviceGestion({
     createVehicleEnGestionAccount,
     scrollToTop,
     currentSelectedDeviceGestion,
+    adminPassword,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -141,7 +142,7 @@ function CreateNewDeviceGestion({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       const deviceID = addVéhiculeData.deviceID;
       const imeiNumber = addVéhiculeData.imeiNumber;
       const uniqueIdentifier = addVéhiculeData.uniqueIdentifier;

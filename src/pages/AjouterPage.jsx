@@ -145,8 +145,6 @@ function AjouterPage() {
         setIsPasswordConfirmed={setShowConfirmAddVéhiculePopup}
       />
 
-     
-
       <div className="flex w-full justify-center h-full mt-10 md:mt-20 ">
         <div className="w-full flex justify-center">
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-20 border-- shadow-lg overflow-auto">

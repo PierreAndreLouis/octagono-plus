@@ -8,6 +8,8 @@ function Statistics() {
     setStatisticFilterInHomePage,
     setStatisticFilterTextInHomePage,
     statisticFilterTextInHomePage,
+    isDashboardHomePage,
+    setIsDashboardHomePage,
   } = useContext(DataContext);
 
   const vehicleArray = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -227,6 +229,7 @@ function Statistics() {
         >
           <div
             onClick={() => {
+              console.log("isDashboardHomePage", isDashboardHomePage);
               setStatisticFilterInHomePage(vehicleArray);
               setStatisticFilterTextInHomePage("tout");
             }}

@@ -69,6 +69,9 @@ function DashboardContaintMaintComponant({
     setListeGestionDesGroupeTitre,
     fetchAllComptes,
     comptes,
+    adminAccount,
+    adminUser,
+    adminPassword,
   } = useContext(DataContext);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -470,7 +473,7 @@ function DashboardContaintMaintComponant({
     const pwd = password;
     const user = "admin";
 
-    fetchAllComptes(account, user, password);
+    fetchAllComptes(adminAccount, adminUser, adminPassword);
 
     // fetchAccountDevices(id, pwd).catch((err) => {
     //   console.error("Erreur lors du chargement des devices :", err);
@@ -1277,14 +1280,14 @@ function DashboardContaintMaintComponant({
                   <div className="  min-w-[14rem]">
                     <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
                       <h2>Graphe des Comptes </h2>
-                      {!currentAccountSelected && (
+                      {/* {!currentAccountSelected && (
                         <FaAngleDoubleRight
                           onClick={() => {
                             setShowFistGrapheOption(!showFistGrapheOption);
                           }}
                           className="text-xl ml-3 mt-1 cursor-pointer"
                         />
-                      )}
+                      )} */}
                     </div>
                     <p className="text-gray-500">
                       Nombre de comptes ({comptes?.length})
@@ -1314,7 +1317,8 @@ function DashboardContaintMaintComponant({
               )}
             </div>
             <div className=" max-h-[20rem] flex flex-col justify-between items-start overflow-x-auto overflow-y-hidden">
-              {!showFistGrapheOption && !currentAccountSelected && (
+              {/* {!showFistGrapheOption && !currentAccountSelected && ( */}
+              {!currentAccountSelected && (
                 <div>
                   <div>
                     <p>.</p>
@@ -1324,12 +1328,14 @@ function DashboardContaintMaintComponant({
                   <Graphe3BatonnetComptes />
                 </div>
               )}
-              {((showFistGrapheOption && !currentAccountSelected) ||
-                currentAccountSelected) && (
-                <div className="w-full h-[15rem]-- overflow-hidden rounded-md">
-                  <LocationPage fromDashboard="true" />
-                </div>
-              )}
+              {
+                // {((showFistGrapheOption && !currentAccountSelected) ||
+                currentAccountSelected && (
+                  <div className="w-full h-[15rem]-- overflow-hidden rounded-md">
+                    <LocationPage fromDashboard="true" />
+                  </div>
+                )
+              }
             </div>
           </div>
           {/* )} */}
@@ -1355,7 +1361,7 @@ function DashboardContaintMaintComponant({
                 </h2>
               )}
 
-              {!showFistGrapheOption2 && currentAccountSelected && (
+              {currentAccountSelected && (
                 <div>
                   <h2 className="font-semibold text-lg text-gray-700">
                     Liste des Appareils
@@ -1375,23 +1381,19 @@ function DashboardContaintMaintComponant({
                 </div>
               )}
               {/* {!currentAccountSelected && ( */}
-              <FaAngleDoubleRight
+              {/* <FaAngleDoubleRight
                 onClick={() => {
                   setShowFistGrapheOption2(!showFistGrapheOption2);
                 }}
                 className="text-xl ml-3 mt-1.5 cursor-pointer"
-              />
+              /> */}
               {/* )} */}
             </div>
             <div className="  rounded-md overflow-hidden ">
-              {!showFistGrapheOption2 && !currentAccountSelected && (
-                <TableauRecapitulatifComptes />
-              )}
-              {!showFistGrapheOption2 && currentAccountSelected && (
-                <DeviceListeDashboard />
-              )}
+              {!currentAccountSelected && <TableauRecapitulatifComptes />}
+              {currentAccountSelected && <DeviceListeDashboard />}
 
-              {showFistGrapheOption2 && <GrapheCirculaireDevices />}
+              {/* {showFistGrapheOption2 && <GrapheCirculaireDevices />} */}
             </div>
             {/*  */}
             {/*  */}
@@ -1423,6 +1425,14 @@ function DashboardContaintMaintComponant({
 
           {/*  */}
         </div>
+
+        {!currentAccountSelected && (
+          <div className="w-full bg-white min-h-[15rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
+            <div className="w-full overflow-hidden rounded-md">
+              <LocationPage fromDashboard="true" />
+            </div>
+          </div>
+        )}
 
         {/* Other info */}
         <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">

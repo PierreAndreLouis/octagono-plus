@@ -34,6 +34,7 @@ function ListeDesUtilisateur({
     setListeGestionDesVehicules,
     gestionAccountData,
     TestDeRequetteDevices,
+    adminPassword,
   } = useContext(DataContext);
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
@@ -49,13 +50,17 @@ function ListeDesUtilisateur({
     event.preventDefault(); // Prevents the form from submitting
     console.log("Clicked......");
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       console.log("Clicked...... 222");
+
+      const sendConnectionMail = false;
+      setSeConnecterAutreComptePopup(false);
 
       handleLogin(
         currentSelectedUserToConnect?.accountID,
         currentSelectedUserToConnect?.userID,
-        currentSelectedUserToConnect?.password
+        currentSelectedUserToConnect?.password,
+        sendConnectionMail
       );
     } else {
       setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");

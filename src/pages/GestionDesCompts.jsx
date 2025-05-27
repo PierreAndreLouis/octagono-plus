@@ -33,6 +33,9 @@ function GestionDesCompts({ setDocumentationPage }) {
     password,
     fetchAccountGeofences,
     accountGeofences,
+    adminAccount,
+    adminUser,
+    adminPassword,
   } = useContext(DataContext);
 
   const [inputSearchItem, setInputSearchItem] = useState("");
@@ -45,98 +48,8 @@ function GestionDesCompts({ setDocumentationPage }) {
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const testFonction1 = () => {
-    // Déclenchement automatique des autres fetchs pour chaque compte
-    console.log("Start fonction 11111111");
-    // comptes?.forEach((acct) => {
-    const id = account;
-    const pwd = password;
-    const fetchAllOtherData = false;
 
-    fetchAllComptes(id, "admin", pwd, fetchAllOtherData);
 
-    console.log("end fonction..............");
-  };
-
-  const testFonction2 = (fetchAllOtherData) => {
-    // Déclenchement automatique des autres fetchs pour chaque compte
-    console.log("Start fonction");
-    comptes?.forEach((acct) => {
-      const id = acct.accountID;
-      const pwd = acct.password;
-
-      //////////////////////////////////////////
-      fetchAccountDevices(id, pwd).catch((err) => {
-        console.error("Erreur lors du chargement des devices :", err);
-        // setError("Erreur lors du chargement des devices.");
-      });
-    });
-
-    console.log("end fonction..............");
-  };
-
-  const testFonction3 = (fetchAllOtherData) => {
-    // Déclenchement automatique des autres fetchs pour chaque compte
-    console.log("Start fonction");
-    comptes?.forEach((acct) => {
-      const id = acct.accountID;
-      const pwd = acct.password;
-
-      ////////////////////////////////////////////////
-      fetchAccountGroupes(id, pwd)
-        .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-        .catch((err) => {
-          console.error(
-            "Erreur lors du chargement des groupes ou des devices de groupes :",
-            err
-          );
-          // setError("Erreur lors de la mise à jour des groupes.");
-        });
-    });
-
-    console.log("end fonction..............");
-  };
-
-  const testFonction4 = (fetchAllOtherData) => {
-    // Déclenchement automatique des autres fetchs pour chaque compte
-    console.log("Start fonction");
-    comptes?.forEach((acct) => {
-      const id = acct.accountID;
-      const pwd = acct.password;
-
-      ////////////////////////////////////////////////////
-      fetchAccountUsers(id, pwd)
-        .then((users) => {
-          fetchUserDevices(id, users);
-          fetchUserGroupes(id, users);
-        })
-        .catch((err) => {
-          console.error(
-            "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-            err
-          );
-          // setError("Erreur lors de la mise à jour des utilisateurs.");
-        });
-    });
-
-    console.log("end fonction..............");
-  };
-  const testFonction5 = (fetchAllOtherData) => {
-    // Déclenchement automatique des autres fetchs pour chaque compte
-    console.log("Start fonction");
-    comptes?.forEach((acct) => {
-      const id = acct.accountID;
-      const pwd = acct.password;
-
-      //////////////////////////////////////////
-      fetchAccountGeofences(id, pwd).catch((err) => {
-        console.error("Erreur lors du chargement des geofences :", err);
-        // setError("Erreur lors du chargement des devices.");
-      });
-    });
-
-    console.log("end fonction..............");
-  };
   return (
     <div>
       {account === "sysadmin" ? (

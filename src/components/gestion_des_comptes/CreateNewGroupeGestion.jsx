@@ -20,6 +20,7 @@ function CreateNewGroupeGestion({
     FormatDateHeure,
     currentSelectedGroupeGestion,
     createNewGroupeEnGestionAccount,
+    adminPassword,
   } = useContext(DataContext);
 
   // Pour afficher le popup de confirmation de password
@@ -141,7 +142,7 @@ function CreateNewGroupeGestion({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       const groupID = addNewGroupeData.groupID;
       const description = addNewGroupeData.description;
       const displayName = addNewGroupeData.displayName;

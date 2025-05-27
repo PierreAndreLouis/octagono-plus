@@ -97,6 +97,7 @@ const DataContextProvider = ({ children }) => {
   // États de base
   const [comptes, setComptes] = useState([]);
   const [accountDevices, setAccountDevices] = useState([]);
+  const [accountGeofences, setAccountGeofences] = useState([]);
   const [accountGroupes, setAccountGroupes] = useState([]);
   const [accountUsers, setAccountUsers] = useState([]);
   const [userDevices, setUserDevices] = useState([]);
@@ -116,6 +117,7 @@ const DataContextProvider = ({ children }) => {
     useState();
 
   const [listeGestionDesVehicules, setListeGestionDesVehicules] = useState([]);
+  const [listeGestionDesGeofences, setListeGestionDesGeofences] = useState([]);
   const [listeGestionDesGroupe, setListeGestionDesGroupe] = useState([]);
   const [listeGestionDesGroupeTitre, setListeGestionDesGroupeTitre] =
     useState("");
@@ -157,12 +159,14 @@ const DataContextProvider = ({ children }) => {
       setListeGestionDesUsers(compteMisAJour?.accountUsers);
       setListeGestionDesGroupe(compteMisAJour?.accountGroupes);
       setListeGestionDesVehicules(compteMisAJour?.accountDevices);
+      setListeGestionDesGeofences(compteMisAJour?.accountGeofences);
     } else {
       console.warn("❌ Aucun compte trouvé avec cet ID.");
     }
   }, [
     comptes,
     accountDevices,
+    accountGeofences,
     accountGroupes,
     accountUsers,
     userDevices,
@@ -206,6 +210,7 @@ const DataContextProvider = ({ children }) => {
   }, [
     comptes,
     accountDevices,
+    accountGeofences,
     accountGroupes,
     accountUsers,
     userDevices,
@@ -216,11 +221,13 @@ const DataContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (currentAccountSelected) {
+      setListeGestionDesGeofences(currentAccountSelected?.accountGeofences);
       setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
       setListeGestionDesGroupe(currentAccountSelected?.accountGroupes);
       setListeGestionDesUsers(currentAccountSelected?.accountUsers);
     } else {
       setListeGestionDesVehicules(accountDevices);
+      setListeGestionDesGeofences(accountGeofences);
       setListeGestionDesGroupe(
         Array.from(
           new Map(
@@ -269,6 +276,10 @@ const DataContextProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [adminAccount, setAdminAccount] = useState("");
+  const [adminUsername, setAdminUsername] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
 
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
 
@@ -636,7 +647,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 4);
+      const request = indexedDB.open("MyDatabase", 5);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -659,6 +670,11 @@ const DataContextProvider = ({ children }) => {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("accountDevices", { autoIncrement: true });
         }
+        if (!db.objectStoreNames.contains("accountGeofences")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("accountGeofences", { autoIncrement: true });
+        }
+
         if (!db.objectStoreNames.contains("accountGroupes")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("accountGroupes", { autoIncrement: true });
@@ -763,6 +779,15 @@ const DataContextProvider = ({ children }) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    getDataFromIndexedDB("accountGeofences").then((data) => {
+      if (data.length > 0) {
+        setAccountGeofences(data);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     getDataFromIndexedDB("accountGroupes").then((data) => {
       if (data.length > 0) {
@@ -833,6 +858,11 @@ const DataContextProvider = ({ children }) => {
       saveDataToIndexedDB("accountDevices", accountDevices);
     }
   }, [accountDevices]);
+  useEffect(() => {
+    if (accountGeofences) {
+      saveDataToIndexedDB("accountGeofences", accountGeofences);
+    }
+  }, [accountGeofences]);
 
   useEffect(() => {
     if (accountGroupes) {
@@ -1053,18 +1083,29 @@ const DataContextProvider = ({ children }) => {
         if (account === "sysadmin") {
           navigate("/dashboard_admin_page");
           fetchAllComptes(account, user, password);
+          localStorage.setItem("adminAccount", account);
+          localStorage.setItem("adminUsername", user);
+          localStorage.setItem("adminPassword", password);
+
+          setAccount(localStorage.getItem("adminAccount") || "");
+          setUsername(localStorage.getItem("adminUsername") || "");
+          setPassword(localStorage.getItem("adminPassword") || "");
         } else {
           navigate("/home");
+          // Stocker les informations de connexion en local
+          localStorage.setItem("account", account);
+          localStorage.setItem("username", user);
+          localStorage.setItem("password", password);
+
+          setAccount(localStorage.getItem("account") || "");
+          setUsername(localStorage.getItem("username") || "");
+          setPassword(localStorage.getItem("password") || "");
         }
 
-        // Stocker les informations de connexion en local
+        ///////// a supprimer
         localStorage.setItem("account", account);
         localStorage.setItem("username", user);
         localStorage.setItem("password", password);
-
-        console.log("account", account);
-        console.log("username", user);
-        console.log("password", password);
 
         setAccount(localStorage.getItem("account") || "");
         setUsername(localStorage.getItem("username") || "");
@@ -1097,22 +1138,32 @@ const DataContextProvider = ({ children }) => {
   };
 
   const TestDeRequetteDevices = async (account, user, password2) => {
-    const accountID = "kk";
-    const userID = "admin";
-    const password = "kk@1919";
+    const accountID = "test_create_account2";
+    const userID = "test4";
+    const password = "test4";
 
     const userID2 = "admin";
 
+    //   const xmlData2 = `
+    // <GTSRequest command="dbget">
+    //   <Authorization account="${accountID}" user="${userID}" password="${password}" />
+
+    //   <Record table="Role" partial="true">
+    //     <Field name="accountID">${accountID}</Field>
+
+    //     </Record>
+    // </GTSRequest>
+    //     `;
+
     const xmlData = `
-  <GTSRequest command="dbget">
-    <Authorization account="${accountID}" user="${userID}" password="${password}" />
-
-    <Record table="Role" partial="true">
-      <Field name="accountID">${accountID}</Field>
-
-      </Record>
-  </GTSRequest>
-      `;
+<GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  <Record table="GroupList" partial="true">
+    <Field name="accountID">${accountID}</Field>
+    <Field name="userID">${userID}</Field>
+  </Record>
+</GTSRequest>
+    `;
 
     // const xmlData = `<GTSRequest command="dbget">
     //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -1453,18 +1504,10 @@ const DataContextProvider = ({ children }) => {
         : [];
 
     console.log("fetchComptes: résultats =", data);
-    setComptes((prev) => {
-      const updatedComptes = data.map((compte) => {
-        const existing = prev.find((c) => c.accountID === compte.accountID);
-        return existing ? { ...existing, ...compte } : compte;
-      });
 
-      const existingIDs = new Set(updatedComptes.map((c) => c.accountID));
-      const missingComptes = prev.filter((c) => !existingIDs.has(c.accountID));
-
-      return [...missingComptes, ...updatedComptes];
-    });
     setComptes(data);
+
+    ListeDesRolePourLesUserFonction(account, user, password);
 
     if (fetchAllOtherData) {
       // Déclenchement automatique des autres fetchs pour chaque compte
@@ -1508,6 +1551,13 @@ const DataContextProvider = ({ children }) => {
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
         }, 12000);
+
+        setTimeout(() => {
+          fetchAccountGeofences(id, pwd).catch((err) => {
+            console.error("Erreur lors du chargement des geofences :", err);
+            setError("Erreur lors du chargement des geofences.");
+          });
+        }, 16000);
       });
     }
     return data;
@@ -1576,19 +1626,8 @@ const DataContextProvider = ({ children }) => {
 
     console.log("fetchAccountDevices: résultats =", data);
     setAccountDevices((prev) => {
-      const updatedDevices = data.map((device) => {
-        const existing = prev.find(
-          (d) => d.creationTime === device.creationTime
-        );
-        return existing ? { ...existing, ...device } : device;
-      });
-
-      const existingTimes = new Set(updatedDevices.map((d) => d.creationTime));
-      const missingDevices = prev.filter(
-        (d) => !existingTimes.has(d.creationTime)
-      );
-
-      return [...missingDevices, ...updatedDevices];
+      const filtered = prev?.filter((d) => d.accountID !== accountID);
+      return [...filtered, ...data];
     });
 
     return data;
@@ -1609,12 +1648,15 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
+    console.log("xml", xml);
+
     const res = await fetch("/api/track/Service", {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
     const text = await res.text();
+    console.log("result..........", text);
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -1632,21 +1674,12 @@ const DataContextProvider = ({ children }) => {
         : [];
 
     console.log("fetchAccountGroupes: résultats =", data);
-    // setAccountGroupes((prev) => [...prev, ...data]);
+
     setAccountGroupes((prev) => {
-      const updatedGroupes = data.map((group) => {
-        const existing = prev.find(
-          (g) => g.creationTime === group.creationTime
-        );
-        return existing ? { ...existing, ...group } : group;
-      });
-
-      const existingTimes = new Set(updatedGroupes.map((g) => g.creationTime));
-      const missingGroupes = prev.filter(
-        (g) => !existingTimes.has(g.creationTime)
-      );
-
-      return [...missingGroupes, ...updatedGroupes];
+      // Supprimer tous les groupes de ce compte
+      const filtered = prev?.filter((g) => g.accountID !== accountID);
+      // Ajouter les nouveaux groupes
+      return [...filtered, ...data];
     });
 
     return data;
@@ -1695,20 +1728,10 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchAccountUsers: résultats =", data);
 
     setAccountUsers((prev) => {
-      const updatedUsers = data.map((user) => {
-        const existing = prev.find((u) => u.creationTime === user.creationTime);
-        return existing ? { ...existing, ...user } : user;
-      });
-
-      const existingCreationTimes = new Set(
-        updatedUsers.map((u) => u.creationTime)
-      );
-
-      const missingUsers = prev.filter(
-        (u) => !existingCreationTimes.has(u.creationTime)
-      );
-
-      return [...missingUsers, ...updatedUsers];
+      // Supprimer tous les users de ce compte
+      const filtered = prev?.filter((u) => u.accountID !== accountID);
+      // Ajouter les nouveaux users
+      return [...filtered, ...data];
     });
 
     return data;
@@ -1813,6 +1836,7 @@ const DataContextProvider = ({ children }) => {
 
   // 6) Récupérer groupeDevices pour chaque groupe
   const fetchGroupeDevices = async (accountID, groupes, accountPassword) => {
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     if (!Array.isArray(groupes)) {
       console.warn(
         "fetchGroupeDevices: 'groupes' est invalide ou vide :",
@@ -1851,6 +1875,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const text = await res.text();
+      console.log("text........", text);
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
@@ -1896,45 +1921,16 @@ const DataContextProvider = ({ children }) => {
     //
     //
 
-    // Mise à jour intelligente avec fusion des devices
+    // Mise à jour globale en remplaçant les groupes concernés
     setGroupeDevices((prev) => {
-      const updated = [...prev];
+      // On récupère les groupIDs reçus
+      const updatedGroupIDs = new Set(results.map((r) => r.groupID));
 
-      results.forEach((newEntry) => {
-        const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
-        if (index !== -1) {
-          // Fusionner les devices sans doublon (selon creationTime)
-          const existingDevices = updated[index].groupeDevices || [];
-          const newDevices = newEntry.groupeDevices || [];
+      // On filtre les groupes dans prev qui ne sont pas dans les résultats (on les garde)
+      const filteredPrev = prev?.filter((g) => !updatedGroupIDs.has(g.groupID));
 
-          const mergedDevices = [...existingDevices];
-
-          newDevices.forEach((device) => {
-            const exists = existingDevices.some(
-              (d) => d.creationTime === device.creationTime
-            );
-            if (!exists) {
-              mergedDevices.push(device);
-            } else {
-              // Met à jour les champs de l'appareil existant
-              const i = mergedDevices.findIndex(
-                (d) => d.creationTime === device.creationTime
-              );
-              mergedDevices[i] = { ...mergedDevices[i], ...device };
-            }
-          });
-
-          updated[index] = {
-            groupID: newEntry.groupID,
-            groupeDevices: mergedDevices,
-          };
-        } else {
-          // Nouveau groupe
-          updated.push(newEntry);
-        }
-      });
-
-      return updated;
+      // On ajoute les groupes mis à jour (complètement remplacés)
+      return [...filteredPrev, ...results];
     });
 
     return results;
@@ -2000,77 +1996,246 @@ const DataContextProvider = ({ children }) => {
 
     const results = await Promise.all(promises);
 
-    // Mise à jour du state
+    // Mise à jour globale en remplaçant les groupes des utilisateurs concernés
     setUserGroupes((prev) => {
-      const updated = [...prev];
-
-      results.forEach((newEntry) => {
-        const index = updated.findIndex((e) => e.userID === newEntry.userID);
-
-        if (index !== -1) {
-          // Fusionner les données existantes avec les nouvelles (mise à jour)
-          updated[index] = {
-            userID: newEntry.userID,
-            userGroupes: newEntry.userGroupes,
+      const updatedUserIDs = new Set(results.map((r) => r.userID));
+      // On retire les entrées des users concernés (à remplacer)
+      const filteredPrev = prev?.filter((e) => !updatedUserIDs.has(e.userID));
+      // On ajoute les nouveaux résultats complets
+      return [
+        ...filteredPrev,
+        ...results.map(({ userID, userGroupes }) => {
+          // Supprimer doublons internes à userGroupes par groupID
+          const groupMap = new Map();
+          (userGroupes || []).forEach((g) => groupMap.set(g.groupID, g));
+          return {
+            userID,
+            userGroupes: Array.from(groupMap.values()),
           };
-        } else {
-          // Ajout d'une nouvelle entrée
-          updated.push(newEntry);
-        }
-      });
-
-      return updated;
+        }),
+      ];
     });
 
     return results;
   };
 
-  useEffect(() => {
-    console.log("fuseDonnee: fusion des données");
+  // 8)
+  const fetchAccountGeofences = async (accountID, password) => {
+    // /////////
+    console.log("Startttttt geofence");
+    const username = "admin";
 
-    const merged = comptes.map((acct) => {
-      const users = accountUsers.filter((u) => u.accountID === acct.accountID);
-      const devices = accountDevices.filter(
+    const xmlData = `<GTSRequest command="dbget">
+      <Authorization account="${accountID}" user="${username}" password="${password}" />
+      <Record table="Geozone" partial="true">
+        <Field name="accountID">${accountID}</Field>
+        <Field name="descriptionZone" />
+      </Record>
+    </GTSRequest>`;
+
+    console.log("xmlData", xmlData);
+
+    try {
+      const response = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const xmlText = await response.text();
+      console.log("Received XML Data:", xmlText);
+
+      // Convert XML to JSON
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+      // Extract records from the XML response
+      const records = Array.from(xmlDoc.getElementsByTagName("Record")).map(
+        (record) => {
+          const fields = Array.from(
+            record.getElementsByTagName("Field")
+          ).reduce((acc, field) => {
+            const name = field.getAttribute("name");
+            const value =
+              field.textContent || field.firstChild?.nodeValue || null;
+            acc[name] = value;
+            return acc;
+          }, {});
+          return fields;
+        }
+      );
+
+      console.log("Geofence Data:", records);
+
+      // Map records to geofence structure
+      const geofences = records.map((record, index) => ({
+        description: record.description,
+        geozoneID: record.geozoneID,
+        radius: record.radius,
+        zoneType: record.zoneType,
+        zoomRegion: record.zoomRegion,
+        lastUpdateTime: record.lastUpdateTime,
+        accountID: record.accountID || "",
+        isActive: record.isActive || 1,
+        color: record.shapeColor || "", // Use shapeColor for consistency
+
+        coordinates: [
+          {
+            lat: parseFloat(record.latitude1),
+            lng: parseFloat(record.longitude1),
+          },
+          {
+            lat: parseFloat(record.latitude2),
+            lng: parseFloat(record.longitude2),
+          },
+          {
+            lat: parseFloat(record.latitude3),
+            lng: parseFloat(record.longitude3),
+          },
+          {
+            lat: parseFloat(record.latitude4),
+            lng: parseFloat(record.longitude4),
+          },
+          {
+            lat: parseFloat(record.latitude5),
+            lng: parseFloat(record.longitude5),
+          },
+          {
+            lat: parseFloat(record.latitude6),
+            lng: parseFloat(record.longitude6),
+          },
+          {
+            lat: parseFloat(record.latitude7),
+            lng: parseFloat(record.longitude7),
+          },
+          {
+            lat: parseFloat(record.latitude8),
+            lng: parseFloat(record.longitude8),
+          },
+        ].filter((point) => !isNaN(point.lat) && !isNaN(point.lng)), // Filter invalid points
+      }));
+
+      console.log("Mapped Geofence Data:", geofences);
+
+      setAccountGeofences((prev) => {
+        // Supprimer tous les groupes de ce compte
+        const filtered = prev?.filter((g) => g.accountID !== accountID);
+        // Ajouter les nouveaux groupes
+
+        console.log("[...filtered, ...geofences]", [...filtered, ...geofences]);
+        return [...filtered, ...geofences];
+      });
+
+      try {
+        // setGeofenceData(geofences); // Mise à jour de la variable
+        // localStorage.setItem("geofenceData", JSON.stringify(geofences));
+      } catch (error) {
+        if (error.name === "QuotaExceededError") {
+          console.error(
+            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
+          );
+        } else {
+          console.error("Erreur de stockage : ", error);
+        }
+      }
+
+      // setGeofenceData(geofences); // Mise à jour de la variable
+
+      handleUserError(xmlDoc);
+      /////////////////////////////////////////////////////
+
+      return geofences;
+    } catch (error) {
+      console.error("Error fetching or parsing geofence data:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("🔄 Fusion + enrichissement des données");
+    if (!comptes.length) return;
+
+    const merged = comptes?.map((acct) => {
+      const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
+
+      const devices = accountDevices?.filter(
         (d) => d.accountID === acct.accountID
       );
-      const groupes = accountGroupes.filter(
+
+      const geofences = accountGeofences?.filter(
+        (d) => d.accountID === acct.accountID
+      );
+
+      const groupes = accountGroupes?.filter(
         (g) => g.accountID === acct.accountID
       );
 
-      const usrDevs = userDevices.filter((ud) =>
+      const usrDevs = userDevices?.filter((ud) =>
         users.some((u) => u.userID === ud.userID)
       );
 
-      const userGrp = userGroupes.filter((ug) =>
+      const userGrp = userGroupes?.filter((ug) =>
         users.some((u) => u.userID === ug.userID)
       );
 
-      const grpDevs = groupeDevices.filter((gd) =>
+      const grpDevs = groupeDevices?.filter((gd) =>
         groupes.some((g) => g.groupID === gd.groupID)
       );
 
+      // Création d’une map des devices de groupes
+      const groupMap = {};
+      groupes?.forEach((group) => {
+        groupMap[group.groupID] =
+          grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
+          [];
+      });
+
+      // Enrichissement des utilisateurs avec les groupes et les devices des groupes
+      const updatedUsers = users?.map((u) => {
+        const groupesDuUser =
+          userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
+
+        const devicesFromGroups =
+          groupesDuUser?.length > 0
+            ? groupesDuUser.flatMap(
+                (groupLink) => groupMap[groupLink.groupID] || []
+              )
+            : devices || [];
+
+        const uniqueDevices = Object.values(
+          devicesFromGroups?.reduce((acc, device) => {
+            acc[device.deviceID] = device;
+            return acc;
+          }, {})
+        );
+
+        return {
+          ...u,
+          userGroupes: groupesDuUser,
+          userDevices: uniqueDevices,
+        };
+      });
+
+      const updatedGroupes = groupes.map((g) => ({
+        ...g,
+        groupeDevices:
+          grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
+      }));
+
       return {
         ...acct,
-        accountUsers: users.map((u) => ({
-          ...u,
-          userDevices: [],
-          userGroupes:
-            userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [],
-        })),
+        accountUsers: updatedUsers,
         accountDevices: devices,
-        accountGroupes: groupes.map((g) => ({
-          ...g,
-          groupeDevices:
-            grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
-        })),
+        accountGeofences: geofences,
+        accountGroupes: updatedGroupes,
       };
     });
 
     setGestionAccountData(merged);
-    console.log("fuseDonnee: résultat fusion =", merged);
+    console.log("✅ Résultat fusionné et enrichi :", merged);
   }, [
     comptes,
     accountDevices,
+    accountGeofences,
     accountGroupes,
     groupeDevices,
     accountUsers,
@@ -2078,63 +2243,31 @@ const DataContextProvider = ({ children }) => {
     userGroupes,
   ]);
 
-  // Pour ajouter des device au user en fonction des groupes qu'il font partie
   useEffect(() => {
-    const enrichUsersWithDevices = () => {
-      const newData = gestionAccountData?.map((account) => {
-        if (!account.accountUsers || !account.accountGroupes) return account;
+    const intervalId = setInterval(() => {
+      //
 
-        const groupMap = {};
-        account?.accountGroupes.forEach((group) => {
-          groupMap[group.groupID] = group.groupeDevices || [];
+      // console.log("comptes:", comptes);
+
+      comptes?.forEach((acct) => {
+        const id = acct.accountID;
+        const pwd = acct.password;
+        // console.log("Raffraichir les device de :", acct?.description);
+        // Devices du compte
+        fetchAccountDevices(id, pwd).catch((err) => {
+          console.error("Erreur lors du chargement des devices :", err);
         });
-
-        const updatedUsers = account?.accountUsers.map((user) => {
-          if (!user.userGroupes) return { ...user, userDevices: [] };
-
-          const devicesFromGroups = user?.userGroupes.flatMap(
-            (groupLink) => groupMap[groupLink.groupID] || []
-          );
-
-          const uniqueDevices = Object.values(
-            devicesFromGroups.reduce((acc, device) => {
-              acc[device.deviceID] = device;
-              return acc;
-            }, {})
-          );
-
-          return { ...user, userDevices: uniqueDevices };
-        });
-
-        return { ...account, accountUsers: updatedUsers };
       });
+    }, 1000 * 60 * 2);
 
-      setTimeout(() => {
-        if (newData) {
-          setGestionAccountData(newData);
-        }
-      }, 3000);
+    return () => clearInterval(intervalId);
+  }, [comptes]);
 
-      setTimeout(() => {
-        if (newData) {
-          setGestionAccountData(newData);
-        }
-      }, 5000);
-      console.log("newData.....................", newData);
-    };
-
-    enrichUsersWithDevices();
-  }, [
-    accountDevices,
-    accountGroupes,
-    groupeDevices,
-    accountUsers,
-    userDevices,
-    userGroupes,
-  ]);
-
-  // Fonction pour assigner un device à un groupe
-
+  //
+  //
+  //
+  //
+  //
   const assignDeviceToGroup = async (
     account,
     user,
@@ -2228,14 +2361,42 @@ const DataContextProvider = ({ children }) => {
     key = "dbcreate" // l’utilisateur qu'on veut assigner
   ) => {
     const xmlData = `
-<GTSRequest command=${key}>
+<GTSRequest command="${key}">
   <Authorization account="${account}" user="${adminUser}" password="${password}" />
-  <Record table="GroupList">
+  <Record table="GroupList" partial="true">
+
     <Field name="accountID">${account}</Field>
-    <Field name="groupID">${groupID}</Field>
     <Field name="userID">${userID}</Field>
+
+    <Field name="groupID">${groupID}</Field>
+
   </Record>
 </GTSRequest>`;
+    // <Field name="groupID">${groupID1}</Field>
+
+    // `
+    // <GTSRequest command="dbput">
+    //       <Authorization account="foodforthepoor" user="admin" password="Octa@112233" />
+    //       <Record table="User" partial="true">
+    //         <Field name="accountID">foodforthepoor</Field>
+
+    //         <Field name="userID">mdireny</Field>
+    //         <Field name="displayName">Maly Direny</Field>
+    //         <Field name="description">Maly Direny</Field>
+    //         <Field name="password">mdireny@#2023</Field>
+
+    //           <Field name="roleID">!clientproprietaire</Field>
+    //         <Field name="contactEmail">mdireny@foodforthepoorhaiti.org</Field>
+    //         <Field name="notifyEmail">malydireny@gmail.com</Field>
+    //         <Field name="isActive">1</Field>
+    //         <Field name="contactPhone">50934232343</Field>
+    //         <Field name="contactName"></Field>
+    //         <Field name="timeZone">GMT-05:00</Field>
+    //         <Field name="maxAccessLevel">3</Field>
+
+    //         <Field name="isActive">1</Field>
+    //       </Record>
+    //     </GTSRequest>`
 
     console.log(
       "xmlData affectation user to groupe ?????????????????",
@@ -2250,6 +2411,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const text = await res.text();
+      console.log("Resultat............", text);
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
@@ -2327,15 +2489,37 @@ const DataContextProvider = ({ children }) => {
     groupID,
     userID
   ) => {
+    // <Field name="groupID">${groupID}</Field>
     const xmlData = `
 <GTSRequest command="dbdel">
   <Authorization account="${account}" user="${adminUser}" password="${password}" />
-  <Record table="GroupList">
+
+    <RecordKey table="GroupList">
+
     <Field name="accountID">${account}</Field>
-    <Field name="groupID">${groupID}</Field>
     <Field name="userID">${userID}</Field>
-  </Record>
+    <Field name="groupID">${groupID}</Field>
+
+    </RecordKey>
+
 </GTSRequest>`;
+
+    //     const xmlData = `
+    // <GTSRequest command="dbdel">
+    //   <Authorization account="${account}" user="${adminUser}" password="${password}" />
+    //   <Record table="GroupList">
+    //     <RecordKey>
+
+    //     <Field name="accountID">${account}</Field>
+    //     <Field name="userID">${userID}</Field>
+    // <Field name="groupID">${groupID}</Field>
+
+    //     </RecordKey>
+
+    //   </Record>
+    // </GTSRequest>`;
+
+    console.log("xmlData", xmlData);
 
     try {
       const res = await fetch("/api/track/Service", {
@@ -2344,6 +2528,7 @@ const DataContextProvider = ({ children }) => {
         body: xmlData,
       });
       const text = await res.text();
+      console.log("resultat......", text);
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
@@ -2370,12 +2555,14 @@ const DataContextProvider = ({ children }) => {
     const xmlData = `
 <GTSRequest command="dbdel">
   <Authorization account="${account}" user="${adminUser}" password="${password}" />
-  <Record table="DeviceList">
+  <RecordKey table="DeviceList">
     <Field name="accountID">${account}</Field>
     <Field name="groupID">${groupID}</Field>
     <Field name="deviceID">${deviceID}</Field>
-  </Record>
+  </RecordKey>
 </GTSRequest>`;
+
+    console.log("xmlData", xmlData);
 
     try {
       const res = await fetch("/api/track/Service", {
@@ -2384,6 +2571,7 @@ const DataContextProvider = ({ children }) => {
         body: xmlData,
       });
       const text = await res.text();
+      console.log("Result........................", text);
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
@@ -2405,20 +2593,24 @@ const DataContextProvider = ({ children }) => {
     adminUser,
     password,
     groupID,
-    usersNotSelectionnes,
+    // usersNotSelectionnes,
     deviceNotSelectionnes
   ) => {
-    const userPromises = usersNotSelectionnes.map((userID) =>
-      removeUserFromGroup(account, adminUser, password, groupID, userID)
-    );
+    // const userPromises = usersNotSelectionnes.map((userID) =>
+    //   removeUserFromGroup(account, adminUser, password, groupID, userID)
+    // );
     const devicePromises = deviceNotSelectionnes.map((deviceID) =>
       removeDeviceFromGroup(account, adminUser, password, groupID, deviceID)
     );
 
-    const results = await Promise.all([...userPromises, ...devicePromises]);
-    const failed = [...usersNotSelectionnes, ...deviceNotSelectionnes].filter(
-      (_, idx) => !results[idx]
-    );
+    const results = await Promise.all([
+      // ...userPromises,
+      ...devicePromises,
+    ]);
+    const failed = [
+      // ...usersNotSelectionnes,
+      ...deviceNotSelectionnes,
+    ].filter((_, idx) => !results[idx]);
 
     if (failed.length > 0) {
       console.warn("Échec pour les suppressions suivantes :", failed);
@@ -2462,6 +2654,14 @@ const DataContextProvider = ({ children }) => {
     setAccount(localStorage.getItem("account") || "");
     setUsername(localStorage.getItem("username") || "");
     setPassword(localStorage.getItem("password") || "");
+  }, []);
+
+  // pour stoker les donnees de l'utilisateur en local
+  useEffect(() => {
+    // Récupérer les informations de localStorage
+    setAccount(localStorage.getItem("adminAccount") || "");
+    setUsername(localStorage.getItem("adminUsername") || "");
+    setPassword(localStorage.getItem("adminPassword") || "");
   }, []);
 
   // Fonction pour se déconnecter de l’application
@@ -2516,6 +2716,15 @@ const DataContextProvider = ({ children }) => {
 
     localStorage.removeItem("password");
     setPassword("");
+
+    localStorage.removeItem("adminAccount");
+    setAdminAccount("");
+
+    localStorage.removeItem("adminUsername");
+    setAdminUsername("");
+
+    localStorage.removeItem("adminPassword");
+    setAdminPassword("");
 
     setStatisticFilterInHomePage();
     setStatisticFilterTextInHomePage("");
@@ -2815,7 +3024,10 @@ const DataContextProvider = ({ children }) => {
     lat7,
     lng7,
     lat8,
-    lng8
+    lng8,
+    accountIDProp,
+    userProp,
+    passwordProp
   ) => {
     if (!userData) return;
     // Pour suivre le nombre de requête
@@ -2836,9 +3048,15 @@ const DataContextProvider = ({ children }) => {
     const isActive = 0;
 
     const xmlData = `<GTSRequest command="dbcreate">
-      <Authorization account="${account}" user="${username}" password="${password}" />
+      <Authorization account="${
+        accountIDProp ? accountIDProp : account
+      }" user="${userProp ? userProp : username}" password="${
+      passwordProp ? passwordProp : password
+    }" />
       <Record table="Geozone" partial="false">
-        <Field name="accountID">${account}</Field>
+        <Field name="accountID">${
+          accountIDProp ? accountIDProp : account
+        }</Field>
 
 
         <Field name="description">${description}</Field>
@@ -2887,34 +3105,44 @@ const DataContextProvider = ({ children }) => {
 
       if (result === "success") {
         console.log("Geofence created successfully...");
-        setGeofenceData((prevGeofences) => [
-          ...prevGeofences,
-          {
-            description,
-            geozoneID,
-            sortID,
-            color,
-            lat1,
-            lng1,
-            lat2,
-            lng2,
-            lat3,
-            lng3,
-            lat4,
-            lng4,
-            lat5,
-            lng5,
-            lat6,
-            lng6,
-            lat7,
-            lng7,
-            lat8,
-            lng8,
-            isActive,
-          },
-        ]);
 
-        setCreateGeofenceLoading(false);
+        if (accountIDProp || userProp || passwordProp) {
+          console.log("1111111111111111111111111111111111111111111111");
+          fetchAccountGeofences(accountIDProp, passwordProp);
+          setCreateGeofenceLoading(false);
+        } else {
+          console.log("2222222222222222222222222222222222222222222222");
+          setGeofenceData((prevGeofences) => [
+            ...prevGeofences,
+            {
+              description,
+              geozoneID,
+              sortID,
+              color,
+              lat1,
+              lng1,
+              lat2,
+              lng2,
+              lat3,
+              lng3,
+              lat4,
+              lng4,
+              lat5,
+              lng5,
+              lat6,
+              lng6,
+              lat7,
+              lng7,
+              lat8,
+              lng8,
+              isActive,
+            },
+          ]);
+
+          setCreateGeofenceLoading(false);
+          navigate("/gestion_geofences?tab=geozone");
+          GeofenceDataFonction();
+        }
 
         // setSuccesCreateGeofencePopup(true);
         setShowConfirmationMessagePopup(true);
@@ -2922,9 +3150,6 @@ const DataContextProvider = ({ children }) => {
           "Vous avez ajoutee le geofence avec succès."
         );
         setConfirmationMessagePopupName(description);
-
-        GeofenceDataFonction();
-        navigate("/gestion_geofences?tab=geozone");
       } else {
         console.log("Error occurred while creating Geofence...");
         setCreateGeofenceLoading(false);
@@ -2968,7 +3193,10 @@ const DataContextProvider = ({ children }) => {
     lat7,
     lng7,
     lat8,
-    lng8
+    lng8,
+    accountIDProp,
+    userProp,
+    passwordProp
   ) => {
     if (!userData) return;
     // Pour suivre le nombre de requête
@@ -2988,9 +3216,11 @@ const DataContextProvider = ({ children }) => {
     // const description = "Test ajout";
 
     const requestBody = `<GTSRequest command="dbput">
-    <Authorization account="${account}" user="${username}" password="${password}" />
-    <Record table="Geozone" partial="false">
-    <Field name="accountID">${account}</Field>
+    <Authorization account="${accountIDProp ? accountIDProp : account}" user="${
+      userProp ? userProp : username
+    }" password="${passwordProp ? passwordProp : password}" />
+    <Record table="Geozone" partial="true">
+    <Field name="accountID">${accountIDProp ? accountIDProp : account}</Field>
     
     <Field name="geozoneID">${geozoneID}</Field>
     <Field name="sortID">${geozoneID}</Field>
@@ -3019,6 +3249,8 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
+    console.log("requestBody", requestBody);
+
     try {
       const response = await fetch("/api/track/Service", {
         method: "POST",
@@ -3030,7 +3262,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      // console.log("Response text:", data);
+      console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3041,48 +3273,74 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         // console.log("Réponse serveur:", await response.text());
         console.log("Réponse serveur:", data);
+        const coordinates = [
+          { lat: lat1, lng: lng1 },
+          { lat: lat2, lng: lng2 },
+          { lat: lat3, lng: lng3 },
+          { lat: lat4, lng: lng4 },
+          { lat: lat5, lng: lng5 },
+          { lat: lat6, lng: lng6 },
+          { lat: lat7, lng: lng7 },
+          { lat: lat8, lng: lng8 },
+        ];
 
-        setGeofenceData((geofences) =>
-          geofences.map((geofence) =>
-            geofence?.geozoneID === geozoneID
-              ? {
-                  ...geofence,
-                  description,
-                  isActive,
-                  color,
-                  lat1,
-                  lng1,
-                  lat2,
-                  lng2,
-                  lat3,
-                  lng3,
-                  lat4,
-                  lng4,
-                  lat5,
-                  lng5,
-                  lat6,
-                  lng6,
-                  lat7,
-                  lng7,
-                  lat8,
-                  lng8,
-                }
-              : geofence
-          )
-        );
+        if (accountIDProp || userProp || passwordProp) {
+          setAccountGeofences((prevGeofences) =>
+            prevGeofences?.map((geofence) =>
+              geofence.geozoneID === geozoneID
+                ? {
+                    ...geofence,
+                    description,
+                    isActive,
+                    color,
+                    coordinates,
+                  }
+                : geofence
+            )
+          );
+          setCreateGeofenceLoading(false);
+        } else {
+          setGeofenceData((geofences) =>
+            geofences.map((geofence) =>
+              geofence?.geozoneID === geozoneID
+                ? {
+                    ...geofence,
+                    description,
+                    isActive,
+                    color,
+                    lat1,
+                    lng1,
+                    lat2,
+                    lng2,
+                    lat3,
+                    lng3,
+                    lat4,
+                    lng4,
+                    lat5,
+                    lng5,
+                    lat6,
+                    lng6,
+                    lat7,
+                    lng7,
+                    lat8,
+                    lng8,
+                  }
+                : geofence
+            )
+          );
+          navigate("/gestion_geofences?tab=geozone");
+          GeofenceDataFonction();
+        }
 
         // setSuccesModifierGeofencePopup(true);
         // succès  Échec
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Modification du geofence avec success"
+          "Modification du geofence avec succès"
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
         setErrorModifierGeofencePopup(false);
-        GeofenceDataFonction();
-
-        navigate("/gestion_geofences?tab=geozone");
 
         console.log("Geofence modifié avec succès.");
       } else {
@@ -3112,11 +3370,14 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const supprimerGeofence = async (geozoneID) => {
-    if (!userData) return;
+  const supprimerGeofence = async (
+    geozoneID,
+    accountIDProp,
+    userProp,
+    passwordProp
+  ) => {
+    // if (!userData) return;
     // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log("++++++++++++++++ Requête effectué: supprimerGeofence");
 
     // /////////
 
@@ -3127,26 +3388,35 @@ const DataContextProvider = ({ children }) => {
     const password = localStorage.getItem("password") || "";
 
     const requestBody = `<GTSRequest command="dbdel">
-    <Authorization account="${account}" user="${username}" password="${password}" />
-
-    <Record table="Geozone" partial="false">
-    <Field name="accountID">${account}</Field>
-
+  <Authorization account="${accountIDProp || account}" user="${
+      userProp || username
+    }" password="${passwordProp || password}" />
+  <RecordKey table="Geozone" partial="false">
+    <Field name="accountID">${accountIDProp || account}</Field>
     <Field name="geozoneID">${geozoneID}</Field>
     <Field name="sortID">${geozoneID}</Field>
+  </RecordKey>
+</GTSRequest>`;
 
-      </Record>
+    // const requestBody = `<GTSRequest command="dbdel">
+    // <Authorization account="${accountIDProp ? accountIDProp : account}" user="${
+    //   userProp ? userProp : username
+    // }" password="${passwordProp ? passwordProp : password}" />
 
+    // <Record table="Geozone" partial="false">
+    // <Field name="accountID">${accountIDProp ? accountIDProp : account}</Field>
 
+    // <Field name="geozoneID">${geozoneID}</Field>
+    // <Field name="sortID">${geozoneID}</Field>
+    //   </Record>
+    //    <RecordKey table="Geozone" partial="false">
+    // <Field name="accountID">${account}</Field>
+    // <Field name="geozoneID">${geozoneID}</Field>
+    // <Field name="sortID">${geozoneID}</Field>
+    //   </RecordKey>
+    // </GTSRequest>`;
 
-       <RecordKey table="Geozone" partial="false">
-    <Field name="accountID">${account}</Field>
-
-    <Field name="geozoneID">${geozoneID}</Field>
-    <Field name="sortID">${geozoneID}</Field>
-
-      </RecordKey>
-    </GTSRequest>`;
+    console.log("requestBody", requestBody);
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -3159,7 +3429,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      // console.log("Response text:", data);
+      console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3171,9 +3441,45 @@ const DataContextProvider = ({ children }) => {
         // console.log("Réponse serveur:", await response.text());
         console.log("Réponse serveur:", data);
 
-        setGeofenceData((geofences) =>
-          geofences.filter((geofence) => geofence?.geozoneID !== geozoneID)
-        );
+        if (accountIDProp || userProp || passwordProp) {
+          setAccountGeofences((prevGeofence) =>
+            prevGeofence.filter((geofence) => geofence.geozoneID !== geozoneID)
+          );
+        } else {
+          setGeofenceData((geofences) =>
+            geofences.filter((geofence) => geofence?.geozoneID !== geozoneID)
+          );
+          // Supprimer la geozone de IndexedDB
+          openDatabase().then((db) => {
+            const transaction = db.transaction(["geofenceData"], "readwrite");
+            const store = transaction.objectStore("geofenceData");
+
+            const deleteRequest = store.openCursor();
+            deleteRequest.onsuccess = (event) => {
+              const cursor = event.target.result;
+              if (cursor) {
+                if (cursor.value.geozoneID === geozoneID) {
+                  cursor.delete();
+                }
+                cursor.continue();
+              }
+            };
+
+            transaction.oncomplete = () => {
+              console.log("Geozone supprimée de IndexedDB.");
+            };
+
+            transaction.onerror = () => {
+              console.error(
+                "Erreur lors de la suppression de la geozone dans IndexedDB."
+              );
+            };
+          });
+
+          //
+
+          navigate("/gestion_geofences?tab=geozone");
+        }
 
         // setSuccesDeleteGeofencePopup(true);
 
@@ -3188,36 +3494,6 @@ const DataContextProvider = ({ children }) => {
         // GeofenceDataFonction();
 
         //
-        // Supprimer la geozone de IndexedDB
-        openDatabase().then((db) => {
-          const transaction = db.transaction(["geofenceData"], "readwrite");
-          const store = transaction.objectStore("geofenceData");
-
-          const deleteRequest = store.openCursor();
-          deleteRequest.onsuccess = (event) => {
-            const cursor = event.target.result;
-            if (cursor) {
-              if (cursor.value.geozoneID === geozoneID) {
-                cursor.delete();
-              }
-              cursor.continue();
-            }
-          };
-
-          transaction.oncomplete = () => {
-            console.log("Geozone supprimée de IndexedDB.");
-          };
-
-          transaction.onerror = () => {
-            console.error(
-              "Erreur lors de la suppression de la geozone dans IndexedDB."
-            );
-          };
-        });
-
-        //
-
-        navigate("/gestion_geofences?tab=geozone");
 
         console.log("Geofence Supprimer avec succès.");
       } else {
@@ -4850,17 +5126,12 @@ const DataContextProvider = ({ children }) => {
     displayName,
     notes,
     workOrderID,
+    //
     deviceSelectionnes,
-    usersSelectionnes,
-    usersNotSelectionnes,
-    deviceNotSelectionnes
+    deviceNonSelectionnes
   ) => {
-    // /////////
-
     setError("");
     setCreateVéhiculeLoading(true);
-    //  <Field name="GroupList">${userAccount}</Field>
-    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbput">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <Record table="DeviceGroup" partial="true">
@@ -4893,12 +5164,10 @@ const DataContextProvider = ({ children }) => {
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
+
       setError("");
       console.log(result);
       if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
-
         setError("");
         console.log("Groupe ajouter avec success");
 
@@ -4934,47 +5203,50 @@ const DataContextProvider = ({ children }) => {
 
         setTimeout(() => {
           if (deviceSelectionnes) {
-            assignMultipleDevicesToGroup(
+            deviceSelectionnes?.map((deviceID) =>
+              assignDeviceToGroup(
+                accountID,
+                userID,
+                password,
+                groupID,
+                deviceID
+              )
+            );
+          }
+
+          deviceNonSelectionnes?.map((deviceID) => {
+            removeDeviceFromGroup(
               accountID,
               userID,
               password,
               groupID,
-              deviceSelectionnes
+              deviceID
             );
-          }
-          if (usersSelectionnes) {
-            assignMultipleUsersToGroup(
-              accountID,
-              userID, // utilisateur qui fait la requête
-              password,
-              groupID,
-              usersSelectionnes
-            );
-          }
+          });
         }, 3000);
 
         setTimeout(() => {
-          removeUsersAndDevicesFromGroup(
-            accountID,
-            userID,
-            password,
-            groupID,
-            usersNotSelectionnes,
-            deviceNotSelectionnes
-          );
+          try {
+            fetchAccountGroupes(accountID, password).then((groupes) =>
+              fetchGroupeDevices(accountID, groupes, password)
+            );
+          } catch (err) {
+            console.error("Erreur lors de la mise à jour des groupes :", err);
+            setError("Erreur lors de la mise à jour des groupes.");
+          }
         }, 6000);
 
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Creation du groupe avec  succès ");
+        setConfirmationMessagePopupTexte(
+          "Modification du groupe avec  succès "
+        );
         setConfirmationMessagePopupName(description);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la création du véhicule.");
-
         handleUserError(xmlDoc);
 
-        // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte("Échec de la Creation du groupe  ");
         setConfirmationMessagePopupName(description);
@@ -4982,8 +5254,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -5051,7 +5321,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte("Suppression du groupe avec  succès ");
-        setConfirmationMessagePopupName(description);
+        setConfirmationMessagePopupName("");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5062,7 +5332,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
-        setConfirmationMessagePopupName(description);
+        setConfirmationMessagePopupName("");
 
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
@@ -5076,7 +5346,7 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
-      setConfirmationMessagePopupName(description);
+      setConfirmationMessagePopupName("");
     }
   };
 
@@ -5093,12 +5363,9 @@ const DataContextProvider = ({ children }) => {
     deviceSelectionnes,
     usersSelectionnes
   ) => {
-    // /////////
-
     setError("");
     setCreateVéhiculeLoading(true);
-    //  <Field name="GroupList">${userAccount}</Field>
-    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+
     const xmlData = `<GTSRequest command="dbcreate">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
       <Record table="DeviceGroup" partial="true">
@@ -5131,11 +5398,10 @@ const DataContextProvider = ({ children }) => {
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
+
       setError("");
       console.log(result);
       if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           "Creation du nouveau groupe avec  succès "
@@ -5146,21 +5412,6 @@ const DataContextProvider = ({ children }) => {
         console.log("Groupe ajouter avec success");
         const id = accountID;
         const pwd = password;
-
-        try {
-          fetchAccountGroupes(id, pwd)
-            .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-            .catch((err) => {
-              console.error(
-                "Erreur lors du rafraîchissement des groupes :",
-                err
-              );
-              setError("Erreur lors de la mise à jour des groupes.");
-            });
-        } catch (err) {
-          console.error("Erreur lors du rafraîchissement des groupes :", err);
-          setError("Erreur lors de la mise à jour des groupes.");
-        }
 
         setCreateVéhiculeLoading(false);
         setTimeout(() => {
@@ -5183,6 +5434,23 @@ const DataContextProvider = ({ children }) => {
             );
           }
         }, 4000);
+
+        setTimeout(() => {
+          try {
+            fetchAccountGroupes(id, pwd)
+              .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+              .catch((err) => {
+                console.error(
+                  "Erreur lors du rafraîchissement des groupes :",
+                  err
+                );
+                setError("Erreur lors de la mise à jour des groupes.");
+              });
+          } catch (err) {
+            console.error("Erreur lors du rafraîchissement des groupes :", err);
+            setError("Erreur lors de la mise à jour des groupes.");
+          }
+        }, 8000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -5192,14 +5460,10 @@ const DataContextProvider = ({ children }) => {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte("Échec de la Creation du  groupe  ");
         setConfirmationMessagePopupName(description);
-        // console.log("errorrrrrrrrr");
 
-        //////////////////
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -5207,7 +5471,6 @@ const DataContextProvider = ({ children }) => {
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte("Échec de la Creation du  groupe  ");
       setConfirmationMessagePopupName(description);
-      //////////////////
       setCreateVéhiculeLoading(false);
     }
   };
@@ -5235,6 +5498,10 @@ const DataContextProvider = ({ children }) => {
     timeZone,
     maxAccessLevel,
     roleID,
+    //
+    addressCity,
+    addressCountry,
+    userType,
     //
 
     groupesSelectionnes,
@@ -5270,7 +5537,10 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactName">${contactName}</Field>
         <Field name="timeZone">${timeZone}</Field>
         <Field name="maxAccessLevel">${maxAccessLevel}</Field>
- 
+        
+        <Field name="addressCity">${addressCity}</Field>
+        <Field name="addressCountry">${addressCountry}</Field>
+        <Field name="userType">${userType}</Field>
    
 
         <Field name="isActive">1</Field>
@@ -5313,18 +5583,21 @@ const DataContextProvider = ({ children }) => {
         const id = accountID;
         const pwd = password;
 
-        fetchAccountUsers(id, pwd)
-          .then((users) => {
-            fetchUserDevices(id, users);
-            fetchUserGroupes(id, users);
-          })
-          .catch((err) => {
-            console.error(
-              "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-              err
-            );
-            setError("Erreur lors de la mise à jour des utilisateurs.");
-          });
+        // setTimeout(() => {
+
+        //   fetchAccountUsers(id, pwd)
+        //   .then((users) => {
+        //     fetchUserDevices(id, users);
+        //     fetchUserGroupes(id, users);
+        //   })
+        //   .catch((err) => {
+        //     console.error(
+        //       "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+        //       err
+        //     );
+        //     setError("Erreur lors de la mise à jour des utilisateurs.");
+        //   });
+        //   }, 10000);
 
         setCreateVéhiculeLoading(false);
 
@@ -5342,7 +5615,7 @@ const DataContextProvider = ({ children }) => {
             );
             // );
           }
-        }, 4000);
+        }, 6000);
 
         setTimeout(() => {
           fetchAccountUsers(id, pwd)
@@ -5357,7 +5630,7 @@ const DataContextProvider = ({ children }) => {
               );
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
-        }, 8000);
+        }, 10000);
 
         // setTimeout(() => {
 
@@ -5430,25 +5703,26 @@ const DataContextProvider = ({ children }) => {
   const [echecCreateAccountGestionPoupu, setEchecCreateAccountGestionPoupu] =
     useState(false);
   const createAccountEnGestionAccountFonction = async (
-    accountID,
-    user,
-    password,
+    // accountID,
+    // user,
+    // password,
 
     accountIDField,
     description,
     displayName,
     contactPhone,
     notifyEmail,
-    passwordField
+    passwordField,
+    isActive,
+    isAccountManager,
+    contactName,
+    contactEmail,
+    addressCity,
+    addressCountry,
+    timeZone
   ) => {
-    // /////////
-
-    setError("");
-    setCreateVéhiculeLoading(true);
-    //  <Field name="GroupList">${userAccount}</Field>
-    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbcreate">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Authorization account="${account}" user="${username}" password="${password}" />
       <Record table="Account" partial="true">
       
       <Field name="accountID">${accountIDField}</Field>
@@ -5457,6 +5731,14 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactPhone">${contactPhone}</Field>
         <Field name="notifyEmail">${notifyEmail}</Field>
         <Field name="password">${passwordField}</Field>
+
+            <Field name="isActive">${isActive}</Field>
+    <Field name="isAccountManager">${isAccountManager}</Field>
+    <Field name="contactName">${contactName}</Field>
+    <Field name="contactEmail">${contactEmail}</Field>
+    <Field name="addressCity">${addressCity}</Field>
+    <Field name="addressCountry">${addressCountry}</Field>
+    <Field name="timeZone">${timeZone}</Field>
 
    
 
@@ -5491,7 +5773,7 @@ const DataContextProvider = ({ children }) => {
         // const id = accountID;
         // const pwd = password;
         const fetchAllOtherData = false;
-        fetchAllComptes(accountID, user, password, fetchAllOtherData);
+        fetchAllComptes(account, username, password, fetchAllOtherData);
 
         // setSuccessCreateAccountGestionPoupu(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
@@ -5604,16 +5886,23 @@ const DataContextProvider = ({ children }) => {
   const [echecModifyAccountGestionPopup, setEchecModifyAccountGestionPopup] =
     useState(false);
   const modifyAccountEnGestionAccountFonction = async (
-    accountID,
-    user,
-    password,
+    // accountID,
+    // user,
+    // password,
 
     accountIDField,
     description,
     displayName,
     contactPhone,
     notifyEmail,
-    passwordField
+    passwordField,
+    isActive,
+    isAccountManager,
+    contactName,
+    contactEmail,
+    addressCity,
+    addressCountry,
+    timeZone
   ) => {
     // /////////
 
@@ -5622,7 +5911,7 @@ const DataContextProvider = ({ children }) => {
     //  <Field name="GroupList">${userAccount}</Field>
     // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbput">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Authorization account="${account}" user="${username}" password="${password}" />
       <Record table="Account" partial="true">
       
       <Field name="accountID">${accountIDField}</Field>
@@ -5631,6 +5920,14 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactPhone">${contactPhone}</Field>
         <Field name="notifyEmail">${notifyEmail}</Field>
         <Field name="password">${passwordField}</Field>
+
+               <Field name="isActive">${isActive}</Field>
+    <Field name="isAccountManager">${isAccountManager}</Field>
+    <Field name="contactName">${contactName}</Field>
+    <Field name="contactEmail">${contactEmail}</Field>
+    <Field name="addressCity">${addressCity}</Field>
+    <Field name="addressCountry">${addressCountry}</Field>
+    <Field name="timeZone">${timeZone}</Field>
 
    
 
@@ -5684,6 +5981,13 @@ const DataContextProvider = ({ children }) => {
                   contactPhone,
                   notifyEmail,
                   passwordField,
+                  isActive,
+                  isAccountManager,
+                  contactName,
+                  contactEmail,
+                  addressCity,
+                  addressCountry,
+                  timeZone,
                 }
               : account
           )
@@ -5734,7 +6038,7 @@ const DataContextProvider = ({ children }) => {
         // setTimeout(() => {
 
         //   groupesNonSelectionnes.map((groupID) =>
-        //       removeUserFromGroup(accountID, user, password, groupID, userIDField)
+        // removeUserFromGroup(accountID, user, password, groupID, userIDField);
         //     )
         // }, 6000);
 
@@ -5816,9 +6120,12 @@ const DataContextProvider = ({ children }) => {
     maxAccessLevel,
     roleID,
     //
+    userType,
+    addressCity,
+    addressCountry,
 
     groupesSelectionnes,
-    groupeDuSelectedUser
+    groupesNonSelectionnes
   ) => {
     // /////////
 
@@ -5845,10 +6152,12 @@ const DataContextProvider = ({ children }) => {
         <Field name="contactName">${contactName}</Field>
         <Field name="timeZone">${timeZone}</Field>
         <Field name="maxAccessLevel">${maxAccessLevel}</Field>
-
-   
-
-        <Field name="isActive">1</Field>
+        
+        
+        <Field name="userType">${userType}</Field>
+        <Field name="addressCity">${addressCity}</Field>
+        <Field name="addressCountry">${addressCountry}</Field>
+        
       </Record>
     </GTSRequest>`;
 
@@ -5956,49 +6265,45 @@ const DataContextProvider = ({ children }) => {
 
         // Ajouter l’utilisateur aux groupes sélectionnés
 
-        let key;
-        let groupe;
-        if (groupeDuSelectedUser !== groupesSelectionnes) {
-          key = "dbput";
-          groupe = groupesSelectionnes;
-        } else if (!groupesSelectionnes && groupeDuSelectedUser) {
-          key = "dbdel";
-          groupe = groupeDuSelectedUser;
-        }
-        // groupeDuSelectedUser
-        setTimeout(() => {
-          if (
-            groupesSelectionnes &&
-            groupeDuSelectedUser !== groupesSelectionnes
-          ) {
-            // groupesSelectionnes?.map((groupID) =>
-            assignUserToGroup(
-              accountID,
-              user,
-              password,
-              groupesSelectionnes,
-              userIDField
-              // key
-            );
-            // );
-          }
-        }, 4000);
+        // let key;
+        // let groupe;
+
+        // if (groupeDuSelectedUser !== groupesSelectionnes) {
+        //   key = "dbput";
+        //   groupe = groupesSelectionnes;
+        // } else if (!groupesSelectionnes && groupeDuSelectedUser) {
+        //   key = "dbdel";
+        //   groupe = groupeDuSelectedUser;
+        // }
 
         setTimeout(() => {
-          if (
-            groupeDuSelectedUser &&
-            groupeDuSelectedUser !== groupesSelectionnes
-          ) {
-            // groupesNonSelectionnes.map((groupID) =>
-            removeUserFromGroup(
-              accountID,
-              user,
-              password,
-              groupeDuSelectedUser,
-              userIDField
-            );
-            // );
-          }
+          groupesNonSelectionnes.map((groupID) =>
+            removeUserFromGroup(accountID, user, password, groupID, userIDField)
+          );
+        }, 3000);
+
+        let key = "dbcreate";
+
+        // if (groupesSelectionnes) {
+        //   key = "dbput";
+        // } else {
+        //   key = "dbcreate";
+        // }
+
+        // if (groupeDuSelectedUser !== groupesSelectionnes) {
+        //   key = "dbput";
+        // } else if (groupesSelectionnes && !groupeDuSelectedUser) {
+        //   key = "dbcreate";
+        // }
+
+        setTimeout(() => {
+          assignUserToGroup(
+            accountID,
+            user,
+            password,
+            groupesSelectionnes,
+            userIDField
+          );
         }, 6000);
 
         setTimeout(() => {
@@ -6014,7 +6319,7 @@ const DataContextProvider = ({ children }) => {
               );
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
-        }, 8000);
+        }, 10000);
 
         // Retirer l’utilisateur des groupes non sélectionnés
 
@@ -6581,10 +6886,10 @@ const DataContextProvider = ({ children }) => {
           setConfirmationMessagePopupName("");
 
           setAccountDevices((prev) =>
-            prev.filter((v) => v.deviceID !== deviceID)
+            prev?.filter((v) => v.deviceID !== deviceID)
           );
 
-          // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
+          // setUserDevices((prev) => prev?.filter((v) => v.deviceID !== deviceID));
           setUserDevices((prev) =>
             prev.map((user) => ({
               ...user,
@@ -6729,15 +7034,15 @@ const DataContextProvider = ({ children }) => {
           );
           setConfirmationMessagePopupName("");
 
-          setAccountUsers((prev) => prev.filter((v) => v.userID !== userID));
+          setAccountUsers((prev) => prev?.filter((v) => v.userID !== userID));
 
           setTimeout(() => {
             setListeGestionDesUsers((prev) =>
-              prev.filter((v) => v.userID !== userID)
+              prev?.filter((v) => v.userID !== userID)
             );
           }, 1000);
 
-          // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
+          // setUserDevices((prev) => prev?.filter((v) => v.deviceID !== deviceID));
           // setUserDevices((prev) =>
           //   prev.map((user) => ({
           //     ...user,
@@ -6838,9 +7143,9 @@ const DataContextProvider = ({ children }) => {
   };
 
   const deleteAccountEnGestionAccountFonction = async (
-    account,
-    user,
-    password,
+    // account,
+    // user,
+    // password,
     accountIDField
   ) => {
     console.log("++++++++++++++++ Requête effectué: deleteVehicle");
@@ -6850,7 +7155,7 @@ const DataContextProvider = ({ children }) => {
 
     const requestBody =
       `<GTSRequest command="dbdel">` +
-      `<Authorization account="${account}" user="${user}" password="${password}"/>` +
+      `<Authorization account="${account}" user="${username}" password="${password}"/>` +
       `<RecordKey table="Account" partial="true">` +
       `<Field name="accountID">${accountIDField}</Field>` +
       `</RecordKey>` +
@@ -6869,7 +7174,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log(response);
       if (response.ok) {
-        if (account && user && password) {
+        if (account && username && password) {
           //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
           console.log("Delete successsssssssss...............");
@@ -6881,10 +7186,10 @@ const DataContextProvider = ({ children }) => {
           setConfirmationMessagePopupName("");
 
           setComptes((prev) =>
-            prev.filter((v) => v.accountID !== accountIDField)
+            prev?.filter((v) => v.accountID !== accountIDField)
           );
 
-          // setUserDevices((prev) => prev.filter((v) => v.deviceID !== deviceID));
+          // setUserDevices((prev) => prev?.filter((v) => v.deviceID !== deviceID));
           // setUserDevices((prev) =>
           //   prev.map((user) => ({
           //     ...user,
@@ -6955,7 +7260,7 @@ const DataContextProvider = ({ children }) => {
         }
       } else {
         console.error(
-          "Erreur lors de la suppression du véhicule:",
+          "Erreur lors de la mise a jour de la suppression du véhicule:",
           response.statusText
         );
 
@@ -7974,6 +8279,9 @@ const DataContextProvider = ({ children }) => {
         account,
         username,
         password,
+        adminAccount,
+        adminUsername,
+        adminPassword,
         isPasswordConfirmed,
         setIsPasswordConfirmed,
         showChangePasswordPopup,
@@ -8164,7 +8472,6 @@ const DataContextProvider = ({ children }) => {
         deviceListeTitleGestion,
         setDeviceListeTitleGestion,
         userDevices,
-        accountDevices,
         currentSelectedGroupeGestion,
         setCurrentSelectedGroupeGestion,
         fetchAccountGroupes,
@@ -8174,7 +8481,6 @@ const DataContextProvider = ({ children }) => {
         fetchAccountUsers,
         createNewGroupeEnGestionAccount,
         modifyGroupeEnGestionAccount,
-        accountGroupes,
         deleteGroupeEnGestionAccount,
         listeGestionDesGroupe,
         setListeGestionDesGroupe,
@@ -8189,6 +8495,7 @@ const DataContextProvider = ({ children }) => {
         accountDevices,
         accountGroupes,
         accountUsers,
+        accountGeofences,
         createAccountEnGestionAccountFonction,
         modifyAccountEnGestionAccountFonction,
         deleteAccountEnGestionAccountFonction,
@@ -8224,6 +8531,11 @@ const DataContextProvider = ({ children }) => {
         fetchUserDevices,
         userRole,
         ListeDesRolePourLesUserFonction,
+        fetchAccountGeofences,
+        listeGestionDesGeofences,
+        setListeGestionDesGeofences,
+        accountGeofences,
+        setAccountGeofences,
       }}
     >
       {children}
