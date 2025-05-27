@@ -286,9 +286,10 @@ function ListeDesUtilisateur({
                     {index + 1}
                   </div>
                   <div className="flex  gap-3  ">
-                    <FaUserCircle className="text-[3rem] text-gray-500 md:mr-4" />
+                    <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
                     <div className=" w-full flex flex-wrap justify-between gap-x-4">
                       <div>
+                        <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
                         <div className="flex flex-wrap">
                           <p className="font-bold- text-gray-700">
                             Nom Utilisateur :

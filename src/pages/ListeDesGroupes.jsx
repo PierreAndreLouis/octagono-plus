@@ -431,9 +431,10 @@ function ListeDesGroupes({
                       {index + 1}
                     </div>
                     <div className="flex  gap-3  ">
-                      <PiIntersectThreeBold className="text-[3rem] text-orange-500 md:mr-4" />
+                      <PiIntersectThreeBold className="text-[3rem] hidden sm:block text-orange-500 md:mr-4" />
                       <div className=" w-full flex flex-wrap justify-between gap-x-4">
                         <div>
+                          <PiIntersectThreeBold className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
                               Nom du Groupe :
@@ -483,7 +484,7 @@ function ListeDesGroupes({
                       </div>
                     </div>
                     <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                      <button
+                      {/* <button
                         onClick={() => {
                           setDocumentationPage("Modifier_groupe");
                           setCurrentSelectedGroupeGestion(groupe);
@@ -493,7 +494,7 @@ function ListeDesGroupes({
                       >
                         <p className="text-sm mr-2">Modifier</p>
                         <FaRegEdit />
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => {
                           setTimeout(() => {

@@ -398,10 +398,13 @@ function ListeDesVehiculesGestion({
                     </div>
                     <div className="flex  gap-3  ">
                       <FaCar
-                        className={`${text_color} text-[3rem]  md:mr-4 `}
+                        className={`${text_color} text-[3rem] hidden sm:block  md:mr-4 `}
                       />
                       <div className=" w-full flex flex-wrap justify-between gap-x-4">
                         <div>
+                          <FaCar
+                            className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
+                          />
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Description :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">

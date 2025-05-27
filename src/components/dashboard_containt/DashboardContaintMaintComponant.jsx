@@ -926,25 +926,38 @@ function DashboardContaintMaintComponant({
                   {index + 1}
                 </p>
                 <FaCar
-                  className={`${text_color} text-[2rem] min-w-[2.5rem] mt-1`}
+                  className={`${text_color} text-[2rem] hidden sm:block min-w-[2.5rem] mt-1`}
                 />
-                <div>
-                  <p className="text-gray-600">
+                <div className="flex flex-col gap-1 ">
+                  <FaCar
+                    className={`${text_color} text-[2rem] sm:hidden min-w-[2.5rem] mt-1`}
+                  />
+                  <p className="text-gray-600 font-bold">
                     Nom du Groupe :{" "}
-                    <span className="font-bold">{device?.description}</span>{" "}
-                  </p>
-                  <p className="text-gray-600">
-                    Dernière Date :{" "}
-                    <span className="font-bold">
-                      {FormatDateHeure(device?.lastUpdateTime)?.date}
+                    <span className="font-normal text-gray-500 ml-2">
+                      {device?.description}
                     </span>{" "}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 font-bold">
+                    Last Update :{" "}
+                    <span className="font-normal text-gray-500 ml-2">
+                      {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
+                      {FormatDateHeure(device?.lastUpdateTime)?.time}
+                    </span>{" "}
+                  </p>
+                  <p className="text-gray-600 font-bold">
+                    Arrivée : {/* Dernière Arrêt :{" "} */}
+                    <span className="font-normal text-gray-500 ml-2">
+                      {FormatDateHeure(device?.lastStopTime)?.date} {" / "}
+                      {FormatDateHeure(device?.lastStopTime)?.time}
+                    </span>{" "}
+                  </p>
+                  {/* <p className="text-gray-600">
                     Derniere Heure :{" "}
                     <span className="font-bold">
                       {FormatDateHeure(device?.lastUpdateTime)?.time}
                     </span>{" "}
-                  </p>
+                  </p> */}
                 </div>
               </div>
             );
@@ -1003,14 +1016,17 @@ function DashboardContaintMaintComponant({
   }
 
   // Pour stocker le timestamp le plus récent lorsque "data" change
-  const [lastUpdate, setLastUpdate] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState();
+  const data = currentAccountSelected?.accountDevices || accountDevices;
 
   // Mettre à jour le timestamp le plus récent lorsque "data" change
   useEffect(() => {
-    const result = getMostRecentTimestamp(listeGestionDesVehicules);
-    setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
+    const result = getMostRecentTimestamp(data);
+    if (result) {
+      setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
+    }
     console.log("result", result);
-  }, [listeGestionDesVehicules]);
+  }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
   return (
     <div className="pb-6-">
@@ -1080,12 +1096,14 @@ function DashboardContaintMaintComponant({
             )}
 
             <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
-              <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
-                <span className="hidden md:block mr-2">Last Update</span>
-                {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
-                {" / "}
-                {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}
-              </p>{" "}
+              {lastUpdate?.mostRecentTimestamp && (
+                <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
+                  <span className="hidden md:block mr-2">Last Update</span>
+                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
+                  {" / "}
+                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}/{" "}
+                </p>
+              )}
               <div
                 onClick={() => {
                   fetchNewDataDevices();
@@ -1464,7 +1482,7 @@ function DashboardContaintMaintComponant({
                 </button>
               </div>
             </div>
-            <div className="h-full max-h-[20rem] flex flex-col gap-4 overflow-auto">
+            <div className="h-full max-h-[20rem] flex flex-col gap-4 overflow-auto-- overflow-hidden">
               {(currentAccountSelected
                 ? currentAccountSelected?.accountUsers
                 : [
@@ -1485,46 +1503,48 @@ function DashboardContaintMaintComponant({
                           )
                     ),
                   ]
-              )?.map((user, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setShowSelectedUserOptionsPopup(true);
-                      setCurrentSelectedUserToConnect(user);
-                      console.log("user", user);
-                      // setCurrentAccountSelected(account);
-                      // setListeGestionDesVehicules(account?.accountDevices);
-                      // setChooseOtherAccountGestion(false);
-                    }}
-                    className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-2 px-2 "
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                      {index + 1}
-                    </p>
-                    <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
-                    <div>
-                      <p className="text-gray-600">
-                        Nom de l'utilisateur :{" "}
-                        <span className="font-bold">{user?.description}</span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
-                        <span className="font-bold">
-                          {user?.userDevices?.length}
-                        </span>{" "}
-                      </p>
+              )
+                ?.slice(0, 3)
+                .map((user, index) => {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        // setShowSelectedUserOptionsPopup(true);
+                        // setCurrentSelectedUserToConnect(user);
+                        // console.log("user", user);
+                        // setCurrentAccountSelected(account);
+                        // setListeGestionDesVehicules(account?.accountDevices);
+                        // setChooseOtherAccountGestion(false);
+                      }}
+                      className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.65rem] px-2 "
+                    >
+                      {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                        {index + 1}
+                      </p> */}
+                      <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
+                      <div>
+                        <p className="text-gray-600">
+                          Nom de l'utilisateur :{" "}
+                          <span className="font-bold">{user?.description}</span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Nombre d'appareil :{" "}
+                          <span className="font-bold">
+                            {user?.userDevices?.length}
+                          </span>{" "}
+                        </p>
 
-                      <p className="text-gray-600">
-                        Nombre de Groupe :{" "}
-                        <span className="font-bold">
-                          {user?.userGroupes?.length}
-                        </span>{" "}
-                      </p>
+                        <p className="text-gray-600">
+                          Nombre de Groupe :{" "}
+                          <span className="font-bold">
+                            {user?.userGroupes?.length}
+                          </span>{" "}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
 
@@ -1575,41 +1595,43 @@ function DashboardContaintMaintComponant({
                         ?.map((group) => [group.groupID, group])
                     ).values()
                   )
-              )?.map((user, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      // setShowSelectedUserOptionsPopup(true);
-                      // setTimeout(() => {
-                      //   setCurrentSelectedUserToConnect(user);
-                      //   console.log("user", user);
-                      // }, 1000);
-                      // setCurrentAccountSelected(account);
-                      // setListeGestionDesVehicules(account?.accountDevices);
-                      // setChooseOtherAccountGestion(false);
-                    }}
-                    className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                      {index + 1}
-                    </p>
-                    <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
-                    <div>
-                      <p className="text-gray-600">
-                        Nom du Groupe :{" "}
-                        <span className="font-bold">{user?.description}</span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
-                        <span className="font-bold">
-                          {user?.groupeDevices?.length}
-                        </span>{" "}
-                      </p>
+              )
+                ?.slice(0, 4)
+                ?.map((user, index) => {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        // setShowSelectedUserOptionsPopup(true);
+                        // setTimeout(() => {
+                        //   setCurrentSelectedUserToConnect(user);
+                        //   console.log("user", user);
+                        // }, 1000);
+                        // setCurrentAccountSelected(account);
+                        // setListeGestionDesVehicules(account?.accountDevices);
+                        // setChooseOtherAccountGestion(false);
+                      }}
+                      className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
+                    >
+                      {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                        {index + 1}
+                      </p> */}
+                      <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
+                      <div>
+                        <p className="text-gray-600">
+                          Nom du Groupe :{" "}
+                          <span className="font-bold">{user?.description}</span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Nombre d'appareil :{" "}
+                          <span className="font-bold">
+                            {user?.groupeDevices?.length}
+                          </span>{" "}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         </div>

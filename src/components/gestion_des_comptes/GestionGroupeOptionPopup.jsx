@@ -7,6 +7,7 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 import {
   FaCar,
   FaEdit,
+  FaRegEdit,
   FaTrashAlt,
   FaUser,
   FaUserCircle,
@@ -26,6 +27,7 @@ function GestionGroupeOptionPopup({
     currentSelectedGroupeGestion,
     setListeGestionDesUsers,
     gestionAccountData,
+    setCurrentSelectedGroupeGestion,
   } = useContext(DataContext);
 
   const currentSelectedGroupeGestionDevices = () => {
@@ -112,6 +114,20 @@ function GestionGroupeOptionPopup({
               {/*  */}
               {/*  */}
               {/*  */}
+              <button
+                onClick={() => {
+                  setShowSelectedGroupeOptionsPopup(false);
+
+                  setDocumentationPage("Modifier_groupe");
+                  // setCurrentSelectedGroupeGestion(groupe);
+                }}
+                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+              >
+                <FaRegEdit className="text-[1.2rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                  Modifier le groupe
+                </h2>
+              </button>
 
               {/*  */}
               {/*  */}

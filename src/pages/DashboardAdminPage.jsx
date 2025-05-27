@@ -104,6 +104,7 @@ function DashboardAdminPage() {
     accountGeofences,
     listeGestionDesGeofences,
     setListeGestionDesGeofences,
+    adminAccount,
   } = useContext(DataContext);
 
   // Données des véhicules avec heures différentes
@@ -219,17 +220,14 @@ function DashboardAdminPage() {
   ];
 
   const [allDevices, setAllDevices] = useState([]);
+  const data = currentAccountSelected?.accountDevices || accountDevices;
 
   useEffect(() => {
-    setAllDevices(accountDevices);
-  }, [accountDevices]);
+    setAllDevices(data);
+  }, [accountDevices, currentAccountSelected, accountDevices]);
 
   useEffect(() => {
-    setAllDevices(accountDevices);
-    console.log("reload...................................", accountDevices);
-    setTimeout(() => {
-      console.log("reload...................................", accountDevices);
-    }, 5000);
+    setAllDevices(data);
   }, []);
 
   // Préparation des données pour le graphique
@@ -438,422 +436,436 @@ function DashboardAdminPage() {
     useState(false);
 
   return (
-    <div className="transition-all bg-gray-100">
-      <ChooseOtherAccountDashboard
-        chooseOtherAccountGestion={chooseOtherAccountGestion}
-        setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-        searchInputTerm={searchInputTerm}
-        setSearchInputTerm={setSearchInputTerm}
-        filterGestionAccountData={filterGestionAccountData}
-        setAllDevices={setAllDevices}
-        chooseOneAccountToContinue={chooseOneAccountToContinue}
-        setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-        documentationPage={documentationPage}
-        chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
-      />
-      <ChooseOtherGroupeDashboard
-        chooseOtherAccountGestion={chosseOtherGroupeDashboard}
-        setChooseOtherAccountGestion={setChosseOtherGroupeDashboard}
-        searchInputTerm={searchInputTerm}
-        setSearchInputTerm={setSearchInputTerm}
-        filterGestionGroupData={filterGestionGroupData}
-        setAllDevices={setAllDevices}
-      />
-      {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
-      <header className="fixed z-[9999] top-0 left-0 right-0 bg-white">
-        <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
-          <Link
-            onClick={() => {
-              // TestDeRequetteDevices();
-            }}
-            to="/dashboard_admin_page"
-            className="flex items-center gap-3"
-          >
-            <img src="/img/cars/logo.png" className="w-7" alt="Logo" />
-            <h2 className="text-md hidden md:block sm:text-xl font-bold opacity-70">
-              Octagono<span className="text-orange-600">PLus</span>
-            </h2>
-          </Link>
-          <div className="flex gap-4 items-center">
-            <div
-              onClick={() => {
-                setChooseOtherAccountGestion(true);
-                setChooseOneAccountToContinue(false);
-                setChooseAccountFromGeozoneSection(false);
-              }}
-              className="flex cursor-pointer gap-2 items-center"
-            >
-              <FaUserCircle className="text-[1.4rem] text-gray-600" />
-              <div className=" text-gray-800 flex flex-col gap-0">
-                <p className="font-semibold max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
-                  {currentAccountSelected?.description || "Tous les comptes"}
-                </p>
-              </div>
-              <FaChevronDown className="mt-1" />
-            </div>
-            <div
-              onClick={() => {
-                setReadDocumentationSideBar(!readDocumentationSideBar);
-              }}
-              className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
-            >
-              <IoMenu className="text-[1.6rem] min-w-[1.5rem] text-orange-600" />
-            </div>
-          </div>
-        </div>
-      </header>
-      <div className="flex gap-5 bg-white">
-        {/* Side Bar */}
-        <div
-          className={`${
-            readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
-          }  transition-all lg:translate-x-0-- bg-white fixed   lg:relative-- left-0 top-[3rem] p-4 pt-3 z-[5999] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] max-w-[18rem] min-h-[100vh]`}
-        >
-          <IoClose
-            onClick={() => {
-              setReadDocumentationSideBar(false);
-            }}
-            className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
+    <>
+      {adminAccount === "sysadmin" ? (
+        <div className="transition-all bg-gray-100">
+          <ChooseOtherAccountDashboard
+            chooseOtherAccountGestion={chooseOtherAccountGestion}
+            setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+            searchInputTerm={searchInputTerm}
+            setSearchInputTerm={setSearchInputTerm}
+            filterGestionAccountData={filterGestionAccountData}
+            setAllDevices={setAllDevices}
+            chooseOneAccountToContinue={chooseOneAccountToContinue}
+            setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+            documentationPage={documentationPage}
+            chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
           />
-          {documentationPage !== "Dashboard" && (
-            <button
-              onClick={backToPagePrecedent}
-              // disabled={historyRef.current.length === 0}
-              className={` ${
-                documentationPage === "Localisation_devices"
-                  ? "top-[7rem] md:top-[2rem]"
-                  : "top-[.5rem] md:top-[2rem]"
-              } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
-            >
-              <FaArrowLeft />
-              <span className="text-[1rem]">Retour</span>
-            </button>
-          )}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          <div
-            onClick={() => {
-              scrollToTop();
-            }}
-            className="h-[105vh] pb-52 mt-5 font-semibold-- flex flex-col overflow-auto"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
+          <ChooseOtherGroupeDashboard
+            chooseOtherAccountGestion={chosseOtherGroupeDashboard}
+            setChooseOtherAccountGestion={setChosseOtherGroupeDashboard}
+            searchInputTerm={searchInputTerm}
+            setSearchInputTerm={setSearchInputTerm}
+            filterGestionGroupData={filterGestionGroupData}
+            setAllDevices={setAllDevices}
+          />
+          {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
+          <header className="fixed z-[9999] top-0 left-0 right-0 bg-white">
+            <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
+              <Link
                 onClick={() => {
-                  setChooseOtherAccountGestion(true);
-                  setChooseOneAccountToContinue(false);
-                  setChooseAccountFromGeozoneSection(false);
-                  closeSideBar();
+                  // TestDeRequetteDevices();
                 }}
-                className={`$ flex items-center   justify-between  gap-2  border-b border-b-gray-200 py-4  cursor-pointer px-3`}
+                to="/dashboard_admin_page"
+                className="flex items-center gap-3"
               >
-                <FaUserCircle className="text-[3rem] min-w-[1.5rem] text-gray-500" />
-                <div className="w-full">
-                  <p className="text-gray-600 font-semibold">Compte Actuel</p>
-                  <p className="text-orange-500 max-w-[10rem] whitespace-nowrap text-ellipsis overflow-hidden  ">
-                    {currentAccountSelected
-                      ? currentAccountSelected?.description
-                      : "Tous les comptes"}
-                  </p>
-                </div>
-                <FaChevronDown className="text-lg" />
-              </div>
-            </div>
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("Dashboard");
-                  closeSideBar();
-                }}
-                className={`${
-                  documentationPage === "Dashboard" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <MdSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">Dashboard</p>
-                </div>
-              </div>
-            </div>
-            {!currentAccountSelected && (
-              <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                <img src="/img/cars/logo.png" className="w-7" alt="Logo" />
+                <h2 className="text-md hidden md:block sm:text-xl font-bold opacity-70">
+                  Octagono<span className="text-orange-600">PLus</span>
+                </h2>
+              </Link>
+              <div className="flex gap-4 items-center">
                 <div
                   onClick={() => {
-                    scrollToTop();
-                    setDocumentationPage("Gestion_des_comptes");
-                    closeSideBar();
+                    setChooseOtherAccountGestion(true);
+                    setChooseOneAccountToContinue(false);
+                    setChooseAccountFromGeozoneSection(false);
                   }}
-                  className={`${
-                    documentationPage === "Gestion_des_comptes" ||
-                    documentationPage === "Ajouter_nouveau_compte" ||
-                    documentationPage === "Modifier_compte"
-                      ? "bg-orange-50"
-                      : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  className="flex cursor-pointer gap-2 items-center"
                 >
-                  <MdSwitchAccount className="text-xl min-w-[1.5rem] text-orange-600" />
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      Gestion des comptes ({comptes?.length})
+                  <FaUserCircle className="text-[1.4rem] text-gray-600" />
+                  <div className=" text-gray-800 flex flex-col gap-0">
+                    <p className="font-semibold max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
+                      {currentAccountSelected?.description ||
+                        "Tous les comptes"}
                     </p>
                   </div>
+                  <FaChevronDown className="mt-1" />
                 </div>
-              </div>
-            )}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    console.log(currentAccountSelected?.accountUsers);
-                    setListeGestionDesUsers(
-                      currentAccountSelected?.accountUsers
-                    );
-                  } else {
-                    // setListeGestionDesUsers(accountUsers);
-                    setListeGestionDesUsers([
-                      ...Array.from(
-                        new Map(
-                          gestionAccountData
-                            ?.flatMap((account) => account.accountUsers || [])
-                            ?.map((user) => [user.userID, user])
-                        ).values()
-                      ),
-                      ...accountUsers.filter(
-                        (user) =>
-                          !gestionAccountData
-                            ?.flatMap((account) => account.accountUsers || [])
-                            ?.some(
-                              (existingUser) =>
-                                existingUser.userID === user.userID
-                            )
-                      ),
-                    ]);
-                    // console.log([
-                    //   ...Array.from(
-                    //     new Map(
-                    //       gestionAccountData
-                    //         .flatMap((account) => account.accountUsers || [])
-                    //         .map((user) => [user.userID, user])
-                    //     ).values()
-                    //   ),
-                    //   ...accountUsers.filter(
-                    //     (user) =>
-                    //       !gestionAccountData
-                    //         .flatMap((account) => account.accountUsers || [])
-                    //         .some(
-                    //           (existingUser) =>
-                    //             existingUser.userID === user.userID
-                    //         )
-                    //   ),
-                    // ]);
-                    // setListeGestionDesUsers(
-                    //   Array.from(
-                    //     new Map(
-                    //       gestionAccountData
-                    //         .flatMap((account) => account.accountUsers)
-                    //         .map((user) => [user.userID, user])
-                    //     ).values()
-                    //   )
-                    // );
-                  }
-                  scrollToTop();
-                  setDocumentationPage("Gestion_des_utilisateurs");
-                  closeSideBar();
-                }}
-                className={`${
-                  documentationPage === "Gestion_des_utilisateurs"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    Gestion des Utilisateurs (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountUsers?.length
-                      : accountUsers?.length}
-                    )
-                  </p>
+                <div
+                  onClick={() => {
+                    setReadDocumentationSideBar(!readDocumentationSideBar);
+                  }}
+                  className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
+                >
+                  <IoMenu className="text-[1.6rem] min-w-[1.5rem] text-orange-600" />
                 </div>
               </div>
             </div>
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+          </header>
+          <div className="flex gap-5 bg-white">
+            {/* Side Bar */}
+            <div
+              className={`${
+                readDocumentationSideBar
+                  ? "translate-x-0"
+                  : "-translate-x-[100%]"
+              }  transition-all lg:translate-x-0-- bg-white fixed   lg:relative-- left-0 top-[3rem] p-4 pt-3 z-[5999] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] max-w-[18rem] min-h-[100vh]`}
+            >
+              <IoClose
+                onClick={() => {
+                  setReadDocumentationSideBar(false);
+                }}
+                className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
+              />
+              {documentationPage !== "Dashboard" && (
+                <button
+                  onClick={backToPagePrecedent}
+                  // disabled={historyRef.current.length === 0}
+                  className={` ${
+                    documentationPage === "Localisation_devices"
+                      ? "top-[7rem] md:top-[2rem]"
+                      : "top-[.5rem] md:top-[2rem]"
+                  } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
+                >
+                  <FaArrowLeft />
+                  <span className="text-[1rem]">Retour</span>
+                </button>
+              )}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
               <div
                 onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesGroupe(
-                      currentAccountSelected?.accountGroupes
-                    );
-                    console.log(currentAccountSelected?.accountGroupes);
-                    console.log("x", currentAccountSelected?.accountGroupes);
-                    setListeGestionDesGroupeTitre("Tous les Groupe");
-                  } else {
-                    // setListeGestionDesGroupe(accountGroupes);
-                    setListeGestionDesGroupe(
-                      Array.from(
-                        new Map(
-                          gestionAccountData
-                            ?.flatMap((account) => account.accountGroupes)
-                            ?.map((group) => [group.groupID, group])
-                        ).values()
-                      )
-                    );
-                    setListeGestionDesGroupeTitre("Tous les Groupe");
-                  }
                   scrollToTop();
-                  setDocumentationPage("Gestion_des_groupes");
-                  closeSideBar();
                 }}
-                className={`${
-                  documentationPage === "Gestion_des_groupes"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                className="h-[105vh] pb-52 mt-5 font-semibold-- flex flex-col overflow-auto"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
-                <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    Gestion des Groupe (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountGroupes?.length
-                      : accountGroupes?.length}
-                    )
-                  </p>
+                {/* Debut */}
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      setChooseOtherAccountGestion(true);
+                      setChooseOneAccountToContinue(false);
+                      setChooseAccountFromGeozoneSection(false);
+                      closeSideBar();
+                    }}
+                    className={`$ flex items-center   justify-between  gap-2  border-b border-b-gray-200 py-4  cursor-pointer px-3`}
+                  >
+                    <FaUserCircle className="text-[3rem] min-w-[1.5rem] text-gray-500" />
+                    <div className="w-full">
+                      <p className="text-gray-600 font-semibold">
+                        Compte Actuel
+                      </p>
+                      <p className="text-orange-500 max-w-[10rem] whitespace-nowrap text-ellipsis overflow-hidden  ">
+                        {currentAccountSelected
+                          ? currentAccountSelected?.description
+                          : "Tous les comptes"}
+                      </p>
+                    </div>
+                    <FaChevronDown className="text-lg" />
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesVehicules(
-                      currentAccountSelected?.accountDevices
-                    );
-                  } else {
-                    setListeGestionDesVehicules(accountDevices);
-                  }
-                  scrollToTop();
-                  setDocumentationPage("Gestion_des_appareils");
-                  closeSideBar();
-                }}
-                className={`${
-                  documentationPage === "Gestion_des_appareils"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <FaCar className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    Gestion des Appareils (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountDevices?.length
-                      : accountDevices?.length}
-                    )
-                  </p>
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      scrollToTop();
+                      setDocumentationPage("Dashboard");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Dashboard" ? "bg-orange-50" : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <MdSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">Dashboard</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+                {!currentAccountSelected && (
+                  <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                    <div
+                      onClick={() => {
+                        scrollToTop();
+                        setDocumentationPage("Gestion_des_comptes");
+                        closeSideBar();
+                      }}
+                      className={`${
+                        documentationPage === "Gestion_des_comptes" ||
+                        documentationPage === "Ajouter_nouveau_compte" ||
+                        documentationPage === "Modifier_compte"
+                          ? "bg-orange-50"
+                          : ""
+                      } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                    >
+                      <MdSwitchAccount className="text-xl min-w-[1.5rem] text-orange-600" />
+                      <div className="flex w-full justify-between">
+                        <p className="text-gray-600 font-semibold">
+                          Gestion des comptes ({comptes?.length})
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        console.log(currentAccountSelected?.accountUsers);
+                        setListeGestionDesUsers(
+                          currentAccountSelected?.accountUsers
+                        );
+                      } else {
+                        // setListeGestionDesUsers(accountUsers);
+                        setListeGestionDesUsers([
+                          ...Array.from(
+                            new Map(
+                              gestionAccountData
+                                ?.flatMap(
+                                  (account) => account.accountUsers || []
+                                )
+                                ?.map((user) => [user.userID, user])
+                            ).values()
+                          ),
+                          ...accountUsers.filter(
+                            (user) =>
+                              !gestionAccountData
+                                ?.flatMap(
+                                  (account) => account.accountUsers || []
+                                )
+                                ?.some(
+                                  (existingUser) =>
+                                    existingUser.userID === user.userID
+                                )
+                          ),
+                        ]);
+                        // console.log([
+                        //   ...Array.from(
+                        //     new Map(
+                        //       gestionAccountData
+                        //         .flatMap((account) => account.accountUsers || [])
+                        //         .map((user) => [user.userID, user])
+                        //     ).values()
+                        //   ),
+                        //   ...accountUsers.filter(
+                        //     (user) =>
+                        //       !gestionAccountData
+                        //         .flatMap((account) => account.accountUsers || [])
+                        //         .some(
+                        //           (existingUser) =>
+                        //             existingUser.userID === user.userID
+                        //         )
+                        //   ),
+                        // ]);
+                        // setListeGestionDesUsers(
+                        //   Array.from(
+                        //     new Map(
+                        //       gestionAccountData
+                        //         .flatMap((account) => account.accountUsers)
+                        //         .map((user) => [user.userID, user])
+                        //     ).values()
+                        //   )
+                        // );
+                      }
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_utilisateurs");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_utilisateurs"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        Gestion des Utilisateurs (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountUsers?.length
+                          : accountUsers?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        setListeGestionDesGroupe(
+                          currentAccountSelected?.accountGroupes
+                        );
+                        console.log(currentAccountSelected?.accountGroupes);
+                        console.log(
+                          "x",
+                          currentAccountSelected?.accountGroupes
+                        );
+                        setListeGestionDesGroupeTitre("Tous les Groupe");
+                      } else {
+                        // setListeGestionDesGroupe(accountGroupes);
+                        setListeGestionDesGroupe(
+                          Array.from(
+                            new Map(
+                              gestionAccountData
+                                ?.flatMap((account) => account.accountGroupes)
+                                ?.map((group) => [group.groupID, group])
+                            ).values()
+                          )
+                        );
+                        setListeGestionDesGroupeTitre("Tous les Groupe");
+                      }
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_groupes");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_groupes"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        Gestion des Groupe (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountGroupes?.length
+                          : accountGroupes?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        setListeGestionDesVehicules(
+                          currentAccountSelected?.accountDevices
+                        );
+                      } else {
+                        setListeGestionDesVehicules(accountDevices);
+                      }
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_appareils");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_appareils"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <FaCar className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        Gestion des Appareils (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountDevices?.length
+                          : accountDevices?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesGeofences(
-                      currentAccountSelected?.accountGeofences
-                    );
-                    console.log(
-                      "xxxxxxxxxxxxxxxxxx",
-                      currentAccountSelected?.accountGeofences
-                    );
-                  } else {
-                    setListeGestionDesGeofences(accountGeofences);
-                  }
-                  scrollToTop();
-                  setDocumentationPage("Gestion_geofences");
-                  closeSideBar();
-                }}
-                className={`${
-                  documentationPage === "Gestion_geofences"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    Gestion des Geofences (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountGeofences?.length
-                      : accountGeofences?.length}
-                    )
-                  </p>
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        setListeGestionDesGeofences(
+                          currentAccountSelected?.accountGeofences
+                        );
+                        console.log(
+                          "xxxxxxxxxxxxxxxxxx",
+                          currentAccountSelected?.accountGeofences
+                        );
+                      } else {
+                        setListeGestionDesGeofences(accountGeofences);
+                      }
+                      scrollToTop();
+                      setDocumentationPage("Gestion_geofences");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_geofences"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        Gestion des Geofences (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountGeofences?.length
+                          : accountGeofences?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesVehicules(
-                      currentAccountSelected?.accountDevices
-                    );
-                  } else {
-                    setListeGestionDesVehicules(accountDevices);
-                  }
-                  scrollToTop();
-                  setDocumentationPage("Localisation_devices");
-                  closeSideBar();
-                }}
-                className={`${
-                  documentationPage === "Localisation_devices"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <MdLocationPin className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    Localisation Appareils (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountDevices?.length
-                      : accountDevices?.length}
-                    )
-                  </p>
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        setListeGestionDesVehicules(
+                          currentAccountSelected?.accountDevices
+                        );
+                      } else {
+                        setListeGestionDesVehicules(accountDevices);
+                      }
+                      scrollToTop();
+                      setDocumentationPage("Localisation_devices");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Localisation_devices"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <MdLocationPin className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        Localisation Appareils (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountDevices?.length
+                          : accountDevices?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  // scrollToTop();
-                  //   setDocumentationPage("installation");
-                  closeSideBar();
-                  setLogOutPopup(true);
-                }}
-                className={`${
-                  documentationPage === "installation" ? "bg-orange-50" : ""
-                } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <MdLogout className="text-xl min-w-[1.5rem] text-red-500" />
-                <div className="flex w-full justify-between">
-                  <p className="text-red-600 text-[1rem] font-semibold">
-                    Déconnexion
-                  </p>
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      // scrollToTop();
+                      //   setDocumentationPage("installation");
+                      closeSideBar();
+                      setLogOutPopup(true);
+                    }}
+                    className={`${
+                      documentationPage === "installation" ? "bg-orange-50" : ""
+                    } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <MdLogout className="text-xl min-w-[1.5rem] text-red-500" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-red-600 text-[1rem] font-semibold">
+                        Déconnexion
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            {/* <div
+                {/* <div
               onClick={() => {
                 // setLogOutPopup(true);
               }}
@@ -863,116 +875,124 @@ function DashboardAdminPage() {
               <h3>Déconnexion</h3>
             </div> */}
 
-            {/*  */}
-          </div>
-        </div>
-        {/* Side Bar 2 */}
-        <div
-          className={`${
-            readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
-          } ${
-            !readDocumentationSideBar ? "hidden" : "lg:flex"
-          } transition-all lg:translate-x-0-- bg-white hidden --  lg:relative left-0 top-[5rem] p-4 z-[0]  min-w-[17rem] max-w-[17rem] min-h-[100vh]`}
-        ></div>
-
-        <div
-          className="relative w-full pb-4 mb-10 pt-4 rounded-lg bg-gray-100
-          md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
-        >
-          <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            26/05/2025 _ 2
-          </p>
-          {/* dashboardLoadingEffect */}
-          {dashboardLoadingEffect && (
-            <div className="fixed  shadow-lg shadow-black/10 max- w-[10rem]  rounded-full max- h-[10rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-gray-200/50">
-              <div className="w-full h-full flex justify-center items-center">
-                <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
+                {/*  */}
               </div>
             </div>
-          )}
-          {/* <div className="bg-white rounded-lg"> */}
-          {/* container */}
-          {/* <GestionDesCompts /> */}
-          {/* <DashboardContaintMaintComponant /> */}
-          {documentationPage === "Dashboard" && (
-            <DashboardContaintMaintComponant
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-              setDocumentationPage={setDocumentationPage}
-              setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
-              allDevices={allDevices}
-            />
-          )}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {documentationPage === "Gestion_des_comptes" && (
-            <GestionDesCompts setDocumentationPage={setDocumentationPage} />
-          )}
-          {documentationPage === "Ajouter_nouveau_compte" && (
-            <CreateNewAccountPage setDocumentationPage={setDocumentationPage} />
-          )}
-          {documentationPage === "Modifier_compte" && (
-            <ModifyAccountPage setDocumentationPage={setDocumentationPage} />
-          )}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {documentationPage === "Gestion_des_utilisateurs" && (
-            <ListeDesUtilisateur
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Ajouter_nouveau_utilisateur" && (
-            <CreateNewUserGestion
-              documentationPage={documentationPage}
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Modifier_utilisateur" && (
-            <ModifyUserGroupeGestion
-              setDocumentationPage={setDocumentationPage}
-            />
-          )}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/* ListeDesUtilisateur */}
-          {documentationPage === "Gestion_des_appareils" && (
-            <ListeDesVehiculesGestion
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Ajouter_nouveau_appareil" && (
-            <CreateNewDeviceGestion
-              setDocumentationPage={setDocumentationPage}
-              documentationPage={documentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Modifier_appareil" && (
-            <ModifyDeviceGestion setDocumentationPage={setDocumentationPage} />
-          )}
-          {documentationPage === "Localisation_devices" && (
-            <LocationPage
-              isDashBoardComptnent={isDashBoardComptnent}
-              setDocumentationPage={setDocumentationPage}
-            />
-          )}
-          {/* <LocationPage /> */}
-          {/* {showCreateNewDevicePage && (
+            {/* Side Bar 2 */}
+            <div
+              className={`${
+                readDocumentationSideBar
+                  ? "translate-x-0"
+                  : "-translate-x-[100%]"
+              } ${
+                !readDocumentationSideBar ? "hidden" : "lg:flex"
+              } transition-all lg:translate-x-0-- bg-white hidden --  lg:relative left-0 top-[5rem] p-4 z-[0]  min-w-[17rem] max-w-[17rem] min-h-[100vh]`}
+            ></div>
+
+            <div
+              className="relative w-full pb-4 mb-10 pt-4 rounded-lg bg-gray-100
+          md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
+            >
+              <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
+                27/05/2025 _ 1
+              </p>
+              {/* dashboardLoadingEffect */}
+              {dashboardLoadingEffect && (
+                <div className="fixed  shadow-lg shadow-black/10 max- w-[10rem]  rounded-full max- h-[10rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-gray-200/50">
+                  <div className="w-full h-full flex justify-center items-center">
+                    <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
+                  </div>
+                </div>
+              )}
+              {/* <div className="bg-white rounded-lg"> */}
+              {/* container */}
+              {/* <GestionDesCompts /> */}
+              {/* <DashboardContaintMaintComponant /> */}
+              {documentationPage === "Dashboard" && (
+                <DashboardContaintMaintComponant
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                  setDocumentationPage={setDocumentationPage}
+                  setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
+                  allDevices={allDevices}
+                />
+              )}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {documentationPage === "Gestion_des_comptes" && (
+                <GestionDesCompts setDocumentationPage={setDocumentationPage} />
+              )}
+              {documentationPage === "Ajouter_nouveau_compte" && (
+                <CreateNewAccountPage
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}
+              {documentationPage === "Modifier_compte" && (
+                <ModifyAccountPage
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {documentationPage === "Gestion_des_utilisateurs" && (
+                <ListeDesUtilisateur
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}
+              {documentationPage === "Ajouter_nouveau_utilisateur" && (
+                <CreateNewUserGestion
+                  documentationPage={documentationPage}
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}
+              {documentationPage === "Modifier_utilisateur" && (
+                <ModifyUserGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/* ListeDesUtilisateur */}
+              {documentationPage === "Gestion_des_appareils" && (
+                <ListeDesVehiculesGestion
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}
+              {documentationPage === "Ajouter_nouveau_appareil" && (
+                <CreateNewDeviceGestion
+                  setDocumentationPage={setDocumentationPage}
+                  documentationPage={documentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}
+              {documentationPage === "Modifier_appareil" && (
+                <ModifyDeviceGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}
+              {documentationPage === "Localisation_devices" && (
+                <LocationPage
+                  isDashBoardComptnent={isDashBoardComptnent}
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}
+              {/* <LocationPage /> */}
+              {/* {showCreateNewDevicePage && (
         <CreateNewDeviceGestion
           setShowUserListeToSelectDevice={setShowUserListeToSelectDevice}
           setShowUserGroupeCategorieSection={setShowUserGroupeCategorieSection}
@@ -986,55 +1006,59 @@ function DashboardAdminPage() {
           setShowModifyNewDevicePage={setShowModifyNewDevicePage}
         />
       )} */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {documentationPage === "Gestion_des_groupes" && (
-            <ListeDesGroupes
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}{" "}
-          {documentationPage === "Ajouter_nouveau_groupe" && (
-            <CreateNewGroupeGestion
-              setDocumentationPage={setDocumentationPage}
-              documentationPage={documentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}{" "}
-          {documentationPage === "Modifier_groupe" && (
-            <ModifyGroupeGestion setDocumentationPage={setDocumentationPage} />
-          )}{" "}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {documentationPage === "Gestion_geofences" && (
-            <GestionGeofences
-              setDocumentationPage={setDocumentationPage}
-              isDashBoardComptnent={isDashBoardComptnent}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
-              setChooseAccountFromGeozoneSection={
-                setChooseAccountFromGeozoneSection
-              }
-            />
-          )}{" "}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-        </div>
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {documentationPage === "Gestion_des_groupes" && (
+                <ListeDesGroupes
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}{" "}
+              {documentationPage === "Ajouter_nouveau_groupe" && (
+                <CreateNewGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                  documentationPage={documentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}{" "}
+              {documentationPage === "Modifier_groupe" && (
+                <ModifyGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}{" "}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {documentationPage === "Gestion_geofences" && (
+                <GestionGeofences
+                  setDocumentationPage={setDocumentationPage}
+                  isDashBoardComptnent={isDashBoardComptnent}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  chooseAccountFromGeozoneSection={
+                    chooseAccountFromGeozoneSection
+                  }
+                  setChooseAccountFromGeozoneSection={
+                    setChooseAccountFromGeozoneSection
+                  }
+                />
+              )}{" "}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+            </div>
 
-        {/* {showCreateNewGroupePage && (
+            {/* {showCreateNewGroupePage && (
                 <CreateNewGroupeGestion
                   setShowCreateNewGroupePage={setShowCreateNewGroupePage}
                 />
@@ -1045,9 +1069,23 @@ function DashboardAdminPage() {
                   setShowModifyNewGroupePage={setShowModifyNewGroupePage}
                 />
               )} */}
-        {/* </div> */}
-      </div>
-    </div>
+            {/* </div> */}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6 justify-center items-center w-full min-h-screen">
+          <h1 className="font-semibold text-2xl">
+            Tu n'es pas autoriser a acceder a cette page
+          </h1>
+          <Link
+            to="/home"
+            className="px-4 py-2 rounded-lg text-white bg-orange-600"
+          >
+            Retour a la page d’accueil
+          </Link>
+        </div>
+      )}
+    </>
   );
 }
 
