@@ -894,7 +894,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                27/05/2025 _ 1
+                27/05/2025 _ 2
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (
@@ -1074,15 +1074,25 @@ function DashboardAdminPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-6 justify-center items-center w-full min-h-screen">
-          <h1 className="font-semibold text-2xl">
+          {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
+          <h1 className="font-semibold text-center px-2  text-2xl">
             Tu n'es pas autoriser a acceder a cette page
           </h1>
           <Link
             to="/home"
-            className="px-4 py-2 rounded-lg text-white bg-orange-600"
+            className="px-4 py-2 rounded-lg text-ornage font-bold bg-white border-2 text-orange-500 border-orange-500"
           >
             Retour a la page d’accueil
           </Link>
+          <button
+            onClick={() => {
+              closeSideBar();
+              setLogOutPopup(true);
+            }}
+            className="px-4 py-2 rounded-lg text-white bg-orange-600"
+          >
+            Se deconnecter
+          </button>
         </div>
       )}
     </>
@@ -1090,77 +1100,3 @@ function DashboardAdminPage() {
 }
 
 export default DashboardAdminPage;
-
-{
-  /* Debut */
-}
-{
-  /* <div className="ajouter-appareil-container transition-all hover:border-b  ">
-  <div
-    onClick={() => {
-      scrollToTop();
-      setDocumentationPage("gestionAppareil");
-    }}
-    className={`${
-      documentationPage === "gestionAppareil" ? "bg-orange-50" : ""
-    } flex items-center-- ajouter-appareil-container-2 gap-4  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-  >
-    <IoCarSportOutline className="text-2xl min-w-[1.5rem] text-orange-600" />
-    <div className="flex w-full justify-between">
-      <p className="text-gray-600 font-semibold">Gestion des appareils</p>
-
-      <IoChevronDown
-        className={`${
-          documentationPage === "gestionAppareil" ? "rotate-180" : "rotate-0"
-        } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-      />
-    </div>
-  </div> */
-}
-{
-  /* <div
-                className={`${
-                  documentationPage === "gestionAppareil"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    // setTimeout(() => {
-                    //   scrollToTitle(ajouter_nouveau_appareil_section_ref);
-                    // }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p>Ajouter un nouvel appareil</p>
-                </div>
-                <div
-                  onClick={() => {
-                    // setTimeout(() => {
-                    //   scrollToTitle(modidier_appareil_section_ref);
-                    // }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p>Modifier un appareil</p>
-                </div>
-                <div
-                  onClick={() => {
-                    // setTimeout(() => {
-                    //   scrollToTitle(supprimer_appareil_section_ref);
-                    // }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p>Supprimer un appareil</p>
-                </div>
-              </div> */
-}
-// </div>;
-{
-  /* Fin */
-}

@@ -10,6 +10,8 @@ import { FaSquareXmark } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 import DashboardAdminPage from "./DashboardAdminPage";
+import Logout from "../components/login/Logout";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const {
@@ -41,6 +43,7 @@ const Home = () => {
     setSuccessModifierVéhiculePopup,
     successDeleteVéhiculePopup,
     setSuccessDeleteVéhiculePopup,
+    isDashboardHomePage,
   } = useContext(DataContext);
 
   let x;
@@ -334,6 +337,8 @@ const Home = () => {
     text_color = "text-red-600";
   }
 
+  const [logOutPopup, setLogOutPopup] = useState(false);
+
   // const previousDataRef = useRef(JSON.stringify(mergedDataHome)); // Utilisation de useRef
 
   // useEffect(() => {
@@ -488,8 +493,26 @@ const Home = () => {
       >
         localStorage
       </button> */}
-
         {/* Liste des véhiculés */}
+        {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
+        {isDashboardHomePage && (
+          <div className="flex max-w-[40rem] mx-auto flex-col px-2 justify-center w-full">
+            <Link
+              to={"/dashboard_admin_page"}
+              className="px-4 py-2 text-center mt-6 w-full font-bold rounded-lg text-orange-500 border-2 border-orange-500 bg-white"
+            >
+              Dashboard
+            </Link>
+            <button
+              onClick={() => {
+                setLogOutPopup(true);
+              }}
+              className="px-4 py-2 mt-2 w-full font-bold rounded-lg text-white bg-orange-600"
+            >
+              Se deconnecter
+            </button>
+          </div>
+        )}
         <Liste setShowListOption={setShowListOption} />
         {/* Option pour chaque véhicule */}
         {showListeOption && <Liste_options />}
