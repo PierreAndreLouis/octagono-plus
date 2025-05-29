@@ -280,11 +280,11 @@ function App() {
         )}
 
         {errors && (
-          <div className="space-y-2 fixed flex justify-center w-full left-0 right-0  top-[3rem] z-[9999999999999999999999999999999999999999999999999999999999999999999999999]">
+          <div className="space-y-2 fixed flex flex-col items-center justify-center w-full left-0 right-0  top-[3rem] z-[9999999999999999999999999999999999999999999999999999999999999999999999999]">
             {errors?.map((err) => (
               <div
                 key={err.id}
-                className="relative w-full max-w-[30rem] p-4 py-2 bg-red-100 text-red-800 rounded shadow-lg shadow-black/20"
+                className="relative w-full  mx-auto max-w-[30rem] p-4 py-2 bg-red-100 text-red-800 rounded shadow-lg shadow-black/20"
               >
                 {err.message}
                 <div

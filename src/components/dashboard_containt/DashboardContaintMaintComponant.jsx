@@ -880,7 +880,7 @@ function DashboardContaintMaintComponant({
 
   function DeviceListeDashboard() {
     return (
-      <div className=" flex flex-col gap-4  h-full max-h-[20rem] overflow-y-auto">
+      <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto-">
         {(currentAccountSelected
           ? currentAccountSelected?.accountDevices
           : Array.from(
@@ -891,7 +891,7 @@ function DashboardContaintMaintComponant({
               ).values()
             )
         )
-          ?.slice()
+          ?.slice(0, 3)
           .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
           ?.map((device, index) => {
             let border_color = "bg-gray-50";
@@ -920,11 +920,11 @@ function DashboardContaintMaintComponant({
               <div
                 key={index}
                 onClick={() => {}}
-                className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 `}
+                className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-[1rem] px-2 `}
               >
-                <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                   {index + 1}
-                </p>
+                </p> */}
                 <FaCar
                   className={`${text_color} text-[2rem] hidden sm:block min-w-[2.5rem] mt-1`}
                 />
@@ -945,13 +945,13 @@ function DashboardContaintMaintComponant({
                       {FormatDateHeure(device?.lastUpdateTime)?.time}
                     </span>{" "}
                   </p>
-                  <p className="text-gray-600 font-bold">
-                    Arrivée : {/* Dernière Arrêt :{" "} */}
+                  {/* <p className="text-gray-600 font-bold">
+                    Arrivée : 
                     <span className="font-normal text-gray-500 ml-2">
                       {FormatDateHeure(device?.lastStopTime)?.date} {" / "}
                       {FormatDateHeure(device?.lastStopTime)?.time}
                     </span>{" "}
-                  </p>
+                  </p> */}
                   {/* <p className="text-gray-600">
                     Derniere Heure :{" "}
                     <span className="font-bold">
@@ -1101,7 +1101,7 @@ function DashboardContaintMaintComponant({
                   <span className="hidden md:block mr-2">Last Update</span>
                   {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
                   {" / "}
-                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}/{" "}
+                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
                 </p>
               )}
               <div

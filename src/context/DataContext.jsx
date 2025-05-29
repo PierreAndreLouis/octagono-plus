@@ -782,79 +782,79 @@ const DataContextProvider = ({ children }) => {
 
   useEffect(() => {
     getDataFromIndexedDB("geofenceData").then((data) => {
-      if (data.length > 0) {
-        setGeofenceData(data);
-      }
+      // if (data.length > 0) {
+      setGeofenceData(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("comptes").then((data) => {
-      if (data.length > 0) {
-        setComptes(data);
-      }
+      // if (data.length > 0) {
+      setComptes(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountDevices").then((data) => {
-      if (data.length > 0) {
-        setAccountDevices(data);
-      }
+      // if (data.length > 0) {
+      setAccountDevices(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountGeofences").then((data) => {
-      if (data.length > 0) {
-        setAccountGeofences(data);
-      }
+      // if (data.length > 0) {
+      setAccountGeofences(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountGroupes").then((data) => {
-      if (data.length > 0) {
-        setAccountGroupes(data);
-      }
+      // if (data.length > 0) {
+      setAccountGroupes(data);
+      // }
     });
   }, []);
   useEffect(() => {
     getDataFromIndexedDB("groupeDevices").then((data) => {
-      if (data.length > 0) {
-        setGroupeDevices(data);
-      }
+      // if (data.length > 0) {
+      setGroupeDevices(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("userGroupes").then((data) => {
-      if (data.length > 0) {
-        setUserGroupes(data);
-      }
+      // if (data.length > 0) {
+      setUserGroupes(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountUsers").then((data) => {
-      if (data.length > 0) {
-        setAccountUsers(data);
-      }
+      // if (data.length > 0) {
+      setAccountUsers(data);
+      // }
     });
   }, []);
   useEffect(() => {
     getDataFromIndexedDB("userDevices").then((data) => {
-      if (data.length > 0) {
-        setUserDevices(data);
-      }
+      // if (data.length > 0) {
+      setUserDevices(data);
+      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
-      if (data.length > 0) {
-        setDonneeFusionnéForRapport(data);
-      }
+      // if (data.length > 0) {
+      setDonneeFusionnéForRapport(data);
+      // }
     });
   }, []);
 
@@ -930,6 +930,35 @@ const DataContextProvider = ({ children }) => {
     indexedDB.deleteDatabase("MyDatabase");
     console.log("IndexedDB a été réinitialisé.");
   };
+
+  const clearDataIndexedbStore = async (storeName) => {
+    try {
+      const db = await openDatabase();
+      const tx = db.transaction([storeName], "readwrite");
+      const store = tx.objectStore(storeName);
+      store.clear();
+      tx.oncomplete = () => console.log(`✅ Store "${storeName}" vidé.`);
+      tx.onerror = () => console.error(`❌ Erreur en vidant "${storeName}".`);
+
+      setTimeout(() => {
+        //
+        if (storeName === "mergedDataHome") {
+          setMergedDataHome([]);
+        }
+        if (storeName === "geofenceData") {
+          setGeofenceData([]);
+        }
+        if (storeName === "donneeFusionnéForRapport") {
+          setDonneeFusionnéForRapport([]);
+        }
+        //
+      }, 3000);
+      //
+    } catch (error) {
+      console.error("Erreur d'ouverture de la base :", error);
+    }
+  };
+
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -8473,6 +8502,7 @@ const DataContextProvider = ({ children }) => {
         setAccountGeofences,
         isDashboardHomePage,
         setIsDashboardHomePage,
+        clearDataIndexedbStore,
       }}
     >
       {children}

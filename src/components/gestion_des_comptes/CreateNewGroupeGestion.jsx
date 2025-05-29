@@ -2,7 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
 import { MdErrorOutline } from "react-icons/md";
-import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaCar,
+  FaChevronDown,
+  FaUserCircle,
+} from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
@@ -130,8 +135,8 @@ function CreateNewGroupeGestion({
   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
     useState(false);
 
-  const [showUserSelectionnesPopup, setShowUSerSelectionnesPopup] =
-    useState(false);
+  // const [showUserSelectionnesPopup, setShowUSerSelectionnesPopup] =
+  //   useState(false);
   //
 
   useEffect(() => {
@@ -217,15 +222,27 @@ function CreateNewGroupeGestion({
                         }
                       });
                     }}
-                    className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center rounded-lg py-2 px-2 ${
+                    className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center-- rounded-lg py-2 px-2 ${
                       isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
                     }`}
                   >
                     <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                       {index + 1}
                     </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
+
+                    <FaCar className="text-gray-500 hidden sm:block text-[2.5rem]" />
                     <div className="w-full">
+                      <div className="flex justify-between items-center">
+                        <FaCar className="text-gray-500  sm:hidden text-[2.5rem]" />
+                        <div className="min-w-[4rem] sm:hidden ">
+                          {isSelected ? (
+                            <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
+                          ) : (
+                            <IoMdSquareOutline className="text-[2rem] text-red-400" />
+                          )}
+                        </div>
+                      </div>
+
                       <p className="text-gray-600">
                         Nom de l'appareil :{" "}
                         <span className="font-bold">{device?.description}</span>
@@ -239,7 +256,7 @@ function CreateNewGroupeGestion({
                         </span>
                       </p>
                     </div>
-                    <div className="min-w-[4rem]">
+                    <div className="min-w-[4rem] hidden sm:block">
                       {isSelected ? (
                         <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
                       ) : (
@@ -273,7 +290,7 @@ function CreateNewGroupeGestion({
         </div>
       )}
 
-      {showUserSelectionnesPopup && (
+      {/* {showUserSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
             <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
@@ -362,7 +379,7 @@ function CreateNewGroupeGestion({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Popup pour la confirmation du mot de passe */}
       <ConfirmationPassword

@@ -73,9 +73,16 @@ function Statistics() {
       currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
+
     const lastUpdateTimeMs = véhicule?.lastUpdateTime
       ? véhicule?.lastUpdateTime * 1000
       : 0;
+    // const lastUpdateTimeMs =
+    //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
+    //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
+    //       véhicule?.lastUpdateTime * 1000
+    //     : 0;
+
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     // Le véhicule doit être actif selon la vitesse et la mise à jour
@@ -106,6 +113,13 @@ function Statistics() {
     const lastUpdateTimeMs = véhicule?.lastUpdateTime
       ? véhicule?.lastUpdateTime * 1000
       : 0;
+
+    // const lastUpdateTimeMs =
+    //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
+    //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
+    //       véhicule?.lastUpdateTime * 1000
+    //     : 0;
+
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     const lastUpdateTimestampMs =
@@ -152,7 +166,13 @@ function Statistics() {
       !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
 
     // Vérifier si le véhicule est inactif
-    const lastUpdateTime = véhicule?.lastUpdateTime;
+    // const lastUpdateTime = véhicule?.lastUpdateTime;
+
+    const lastUpdateTime =
+      véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
+        ? véhicule?.véhiculeDetails?.[0]?.timestamp || véhicule?.lastUpdateTime
+        : 0;
+
     const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
     const isInactive =
       lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;

@@ -62,6 +62,7 @@ const LocationPage = ({
   }
 
   // vehiculeActive = currentDataFusionné;
+  // vehiculeActive = currentDataFusionné;
 
   // le formatage des véhicules afficher sur la carte
   const véhiculeData =

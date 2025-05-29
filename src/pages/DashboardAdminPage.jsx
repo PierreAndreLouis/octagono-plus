@@ -108,116 +108,6 @@ function DashboardAdminPage() {
   } = useContext(DataContext);
 
   // Données des véhicules avec heures différentes
-  const vehiculeData = [
-    {
-      deviceID: "234234234",
-      description: "nissan xterra",
-      lastStartTime: "1746025200", // 06:00
-      lastStopTime: "1746032400", // 08:00
-    },
-    {
-      deviceID: "234234",
-      description: "Camion mack",
-      lastStartTime: "1746034200", // 08:30
-      lastStopTime: "1746041400", // 10:30
-    },
-    {
-      deviceID: "232344234",
-      description: "Caracol de Paule",
-      lastStartTime: "1746043200", // 11:00
-      lastStopTime: "1746050400", // 13:00
-    },
-    {
-      deviceID: "234234234",
-      description: "nissan xterra",
-      lastStartTime: "1746025200", // 06:00
-      lastStopTime: "1746032400", // 08:00
-    },
-    {
-      deviceID: "234234",
-      description: "Camion mack",
-      lastStartTime: "1746034200", // 08:30
-      lastStopTime: "1746041400", // 10:30
-    },
-    {
-      deviceID: "232344234",
-      description: "Caracol de Paule",
-      lastStartTime: "1746043200", // 11:00
-      lastStopTime: "1746050400", // 13:00
-    },
-    {
-      deviceID: "234234234",
-      description: "nissan xterra",
-      lastStartTime: "1746025200", // 06:00
-      lastStopTime: "1746032400", // 08:00
-    },
-    {
-      deviceID: "234234",
-      description: "Camion mack",
-      lastStartTime: "1746034200", // 08:30
-      lastStopTime: "1746041400", // 10:30
-    },
-    {
-      deviceID: "232344234",
-      description: "Caracol de Paule",
-      lastStartTime: "1746043200", // 11:00
-      lastStopTime: "1746050400", // 13:00
-    },
-    {
-      deviceID: "234234234",
-      description: "nissan xterra",
-      lastStartTime: "1746025200", // 06:00
-      lastStopTime: "1746032400", // 08:00
-    },
-    {
-      deviceID: "234234",
-      description: "Camion mack",
-      lastStartTime: "1746034200", // 08:30
-      lastStopTime: "1746041400", // 10:30
-    },
-    {
-      deviceID: "232344234",
-      description: "Caracol de Paule",
-      lastStartTime: "1746043200", // 11:00
-      lastStopTime: "1746050400", // 13:00
-    },
-    {
-      deviceID: "234234234",
-      description: "nissan xterra",
-      lastStartTime: "1746025200", // 06:00
-      lastStopTime: "1746032400", // 08:00
-    },
-    {
-      deviceID: "234234",
-      description: "Camion mack",
-      lastStartTime: "1746034200", // 08:30
-      lastStopTime: "1746041400", // 10:30
-    },
-    {
-      deviceID: "232344234",
-      description: "Caracol de Paule",
-      lastStartTime: "1746043200", // 11:00
-      lastStopTime: "1746050400", // 13:00
-    },
-    {
-      deviceID: "234234234",
-      description: "nissan xterra",
-      lastStartTime: "1746025200", // 06:00
-      lastStopTime: "1746032400", // 08:00
-    },
-    {
-      deviceID: "234234",
-      description: "Camion mack",
-      lastStartTime: "1746034200", // 08:30
-      lastStopTime: "1746041400", // 10:30
-    },
-    {
-      deviceID: "232344234",
-      description: "Caracol de Paule",
-      lastStartTime: "1746043200", // 11:00
-      lastStopTime: "1746050400", // 13:00
-    },
-  ];
 
   const [allDevices, setAllDevices] = useState([]);
   const data = currentAccountSelected?.accountDevices || accountDevices;
@@ -229,42 +119,6 @@ function DashboardAdminPage() {
   useEffect(() => {
     setAllDevices(data);
   }, []);
-
-  // Préparation des données pour le graphique
-  const graphData = vehiculeData.map((item) => ({
-    name: item.description.slice(0, 7), // 4 premières lettres
-    fullName: item.description,
-    start: parseInt(item.lastStartTime),
-    stop: parseInt(item.lastStopTime),
-  }));
-
-  // Trouver les min/max des heures pour l'axe Y
-  const allTimes = graphData?.flatMap((item) => [item.start, item.stop]);
-  const minTime = Math.min(...allTimes);
-  const maxTime = Math.max(...allTimes);
-
-  // Composant Tooltip personnalisé
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      const fullName = data.fullName;
-      const startTime = FormatDateHeure(data.start).time;
-      const stopTime = FormatDateHeure(data.stop).time;
-
-      return (
-        <div className="bg-white shadow-lg rounded p-2 text-sm border border-gray-100">
-          <p className="text-gray-700 font-semibold">{fullName}</p>
-          <p className="text-gray-600">Départ : {startTime}</p>
-          <p className="text-gray-600">Arrivée : {stopTime}</p>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const barSpacing = 50; // 3rem en px
-  const barCount = graphData.length;
-  const fixedWidth = barCount * barSpacing;
 
   /////////////////////////////////////
 
@@ -894,7 +748,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                27/05/2025 _ 2
+                28/05/2025 _ 1
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (

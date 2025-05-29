@@ -33,6 +33,10 @@ function SideBar() {
     adminUsername,
     adminAccount,
     setIsDashboardHomePage,
+    clearDataIndexedbStore,
+    setMergedDataHome,
+    setGeofenceData,
+    setDonneeFusionnéForRapport,
   } = useContext(DataContext);
   let x;
   //
@@ -73,19 +77,19 @@ function SideBar() {
           className="absolute top-20 right-5 text-2xl text-red-500 cursor-pointer"
         />
 
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/* <p
+        <Link
+          to="/home?tab=acceuil"
           onClick={() => {
-            console.log("adminUsername", username);
-            console.log(adminUsername);
+            setShowSideBar(true);
+            handleTabClick("acceuil");
           }}
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+            tab === "acceuil" ? "text-orange-500" : ""
+          } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
-          {" "}
-          asdfasd
-        </p> */}
+          <IoHomeOutline />
+          <h3 className="font-semibold text-[1.1rem]">Accueil</h3>
+        </Link>
 
         {(account === "sysadmin" || adminAccount === "sysadmin") && (
           // {adminAccount === "sysadmin" && (
@@ -95,28 +99,23 @@ function SideBar() {
               setShowSideBar(true);
               handleTabClick("dashboard");
               setIsDashboardHomePage(true);
+
+              clearDataIndexedbStore("mergedDataHome");
+              clearDataIndexedbStore("geofenceData");
+              clearDataIndexedbStore("donneeFusionnéForRapport");
+
+              // setMergedDataHome();
+              // setGeofenceData();
+              // setDonneeFusionnéForRapport();
             }}
-            className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+            className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
               tab === "dashboard" ? "text-orange-500" : ""
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <MdSpaceDashboard />
-            <h3>Dashboard</h3>
+            <h3 className="font-semibold text-[1.1rem]">Dashboard</h3>
           </Link>
         )}
-        <Link
-          to="/home?tab=acceuil"
-          onClick={() => {
-            setShowSideBar(true);
-            handleTabClick("acceuil");
-          }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
-            tab === "acceuil" ? "text-orange-500" : ""
-          } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
-        >
-          <IoHomeOutline />
-          <h3>Accueil</h3>
-        </Link>
 
         {/*  */}
         {/*  */}
@@ -129,12 +128,12 @@ function SideBar() {
             setShowSideBar(true);
             handleTabClick("profile");
           }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
             tab === "profile" ? "text-orange-500" : ""
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaRegUser />
-          <h3>Mon profil</h3>
+          <h3 className="font-semibold text-[1.1rem]">Mon profil</h3>
         </Link>
 
         {/*  */}
@@ -149,12 +148,12 @@ function SideBar() {
               setShowSideBar(true);
               handleTabClick("ajouter");
             }}
-            className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+            className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
               tab === "ajouter" ? "text-orange-500" : ""
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <IoMdAddCircleOutline />
-            <h3>Ajouter un véhicule</h3>
+            <h3 className="font-semibold text-[1.1rem]">Ajouter un véhicule</h3>
           </Link>
         )}
 
@@ -170,12 +169,14 @@ function SideBar() {
               setShowSideBar(true);
               handleTabClick("modifier");
             }}
-            className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+            className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
               tab === "modifier" ? "text-orange-500" : ""
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <FaRegEdit />
-            <h3>Modifier ou supprimer un véhicule</h3>
+            <h3 className="font-semibold text-[1.1rem]">
+              Modifier ou supprimer un véhicule
+            </h3>
           </Link>
         )}
 
@@ -191,12 +192,14 @@ function SideBar() {
             setShowSideBar(true);
             handleTabClick("localisation");
           }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
             tab === "localisation" ? "text-orange-500" : ""
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <LuMapPin />
-          <h3>Localisation des véhicules</h3>
+          <h3 className="font-semibold text-[1.1rem]">
+            Localisation des véhicules
+          </h3>
         </Link>
 
         {/*  */}
@@ -210,12 +213,12 @@ function SideBar() {
             setShowSideBar(true);
             handleTabClick("rapport");
           }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
             tab === "rapport" ? "text-orange-500" : ""
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaCar />
-          <h3>Rapport des véhicules</h3>
+          <h3 className="font-semibold text-[1.1rem]">Rapport des véhicules</h3>
         </Link>
 
         <Link
@@ -224,12 +227,12 @@ function SideBar() {
             setShowSideBar(true);
             handleTabClick("geozone");
           }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
             tab === "geozone" ? "text-orange-500" : ""
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <IoEarth />
-          <h3>Gestion des Geozones</h3>
+          <h3 className="font-semibold text-[1.1rem]">Gestion des Geozones</h3>
         </Link>
         {account === "sysadmin" && (
           <Link
@@ -238,12 +241,12 @@ function SideBar() {
               setShowSideBar(true);
               handleTabClick("comptes");
             }}
-            className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
+            className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center ${
               tab === "comptes" ? "text-orange-500" : ""
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <MdSupervisorAccount />
-            <h3>Gestion des Comptes</h3>
+            <h3 className="font-semibold text-[1.1rem]">Gestion des Comptes</h3>
           </Link>
         )}
 
@@ -254,10 +257,10 @@ function SideBar() {
             setShowSideBar(true);
             // handleTabClick("geozone");
           }}
-          className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaBook />
-          <h3>Manuel d'utilisation</h3>
+          <h3 className="font-semibold text-[1.1rem]">Manuel d'utilisation</h3>
         </Link>
 
         {/*  */}
@@ -278,10 +281,10 @@ function SideBar() {
           onClick={() => {
             setLogOutPopup(true);
           }}
-          className="flex text-red-600 font-semibold border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center dark:text-red-400 dark:border-gray-600 dark:hover:text-orange-400"
+          className="flex text-red-600 font-semibold border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center dark:text-red-400 dark:border-gray-600 dark:hover:text-orange-400"
         >
           <MdLogout />
-          <h3>Déconnexion</h3>
+          <h3 className="font-semibold text-[1.1rem]">Déconnexion</h3>
         </div>
 
         {/*  */}

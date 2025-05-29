@@ -4,6 +4,7 @@ import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
 import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
+import { PiIntersectThreeBold } from "react-icons/pi";
 
 function ModifyDeviceGestion({ setDocumentationPage }) {
   const {
@@ -237,7 +238,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                     <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                       {index + 1}
                     </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
+                    <PiIntersectThreeBold className="text-gray-500 text-[2.5rem]" />
                     <div className="w-full">
                       <p className="text-gray-600">
                         Nom du compte :{" "}

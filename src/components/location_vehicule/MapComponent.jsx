@@ -80,6 +80,7 @@ function MapComponent({
   }
 
   // dataFusionné = currentDataFusionné;
+  // dataFusionné = currentDataFusionné;
 
   const vehiculeActive = dataFusionné;
 
@@ -214,21 +215,19 @@ function MapComponent({
       currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
 
     const isNotRecentlyUpdate =
-      currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
+      currentTimeSec - lastUpdateTime > twentyFourHoursInSec;
 
     const isStillSpeedActive =
       timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
 
-    if (
-      (currentAccountSelected?.accountDevices || accountDevices) &&
-      isDashboardHomePage
-    ) {
+    if (isDashboardHomePage) {
       if (isRecentlyUpdate) return "/pin/ping_red.png";
       return "/pin/ping_purple.png";
     } else {
-      if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+      if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
       if (speed > 0 && speed <= 20 && isStillSpeedActive)
         return `/pin/ping_yellow_h${direction}.png`;
+      if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
       return `/pin/ping_green_h${direction}.png`;
     }
   };
