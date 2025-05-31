@@ -480,9 +480,13 @@ function DashboardContaintMaintComponant({
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
   const [showFistGrapheOption2, setShowFistGrapheOption2] = useState(false);
 
-  function TableauRecapitulatifComptes() {
+  function TableauRecapitulatifComptes({ isLongueur }) {
     return (
-      <div className={`w-full  overflow-x-auto overflow-y-hidden h-[20rem]`}>
+      <div
+        className={`w-full  overflow-x-auto overflow-y-hidden ${
+          isLongueur === "true" ? "" : " h-[20rem] "
+        } `}
+      >
         {/* fixed header */}
         <thead>
           <div className="h-auto border-l-2-- border-red-600- min- w-full -w-[150rem] w-full-">
@@ -491,7 +495,7 @@ function DashboardContaintMaintComponant({
               <th className="border  min-w-[3.21rem]  dark:border-gray-600 py-2 ---- px-2">
                 #
               </th>
-              <th className="border min-w-[13rem] dark:border-gray-600 py-2 ---- px-2">
+              <th className="border min-w-[11.94rem] dark:border-gray-600 py-2 ---- px-2">
                 Compte
               </th>
               <th className="border dark:border-gray-600 min-w-[6rem] py-2 ---- px-2">
@@ -530,9 +534,8 @@ function DashboardContaintMaintComponant({
         </thead>
 
         <div
-          className={`border-2 pb-10 -translate-y-[3.1rem] w-full min-w-[78rem] overflow-y-auto overflow-x-hidden ${
-            preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem]"
-          }`}
+          className={`border-2 pb-10 -translate-y-[3.1rem] w-full min-w-[78rem] overflow-y-auto overflow-x-hidden ${(isLongueur =
+            "true" ? "h-[75vh] " : "md:h-[25rem] h-[20rem]")}`}
         >
           {/* en-tête PDF, téléchargement… */}
 
@@ -1049,7 +1052,7 @@ function DashboardContaintMaintComponant({
       {expandSection && (
         <div className="fixed  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
           {/* <div className="bg-white rounded-lg overflow-hidden max-w-[90vw] flex flex-col justify-center w-full"> */}
-          <div className="w-full mx-4 md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
+          <div className="w-full  mx-4 md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
             <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
               <IoClose
                 onClick={() => {
@@ -1068,7 +1071,9 @@ function DashboardContaintMaintComponant({
             {expandSection === "graphe" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                  <h2 className="">Graphe des Comptes ({comptes?.length})</h2>
+                  <h2 className="mb-16">
+                    Graphe des Comptes ({comptes?.length})
+                  </h2>
                 </div>
                 <Graphe3BatonnetComptes />
               </div>
@@ -1076,9 +1081,11 @@ function DashboardContaintMaintComponant({
             {expandSection === "tableau" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                  <h2 className="">Tableau des Comptes ({comptes?.length})</h2>
+                  <h2 className="mb-10">
+                    Tableau des Comptes ({comptes?.length})
+                  </h2>
                 </div>
-                <TableauRecapitulatifComptes />
+                <TableauRecapitulatifComptes isLongueur="true" />
               </div>
             )}
 
@@ -1456,7 +1463,9 @@ function DashboardContaintMaintComponant({
               {/* )} */}
             </div>
             <div className="  rounded-md overflow-hidden ">
-              {!currentAccountSelected && <TableauRecapitulatifComptes />}
+              {!currentAccountSelected && (
+                <TableauRecapitulatifComptes isLongueur="false" />
+              )}
               {currentAccountSelected && <DeviceListeDashboard />}
 
               {/* {showFistGrapheOption2 && <GrapheCirculaireDevices />} */}
