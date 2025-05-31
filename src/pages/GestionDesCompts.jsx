@@ -36,6 +36,7 @@ function GestionDesCompts({ setDocumentationPage }) {
     adminAccount,
     adminUser,
     adminPassword,
+    véhiculeDetails,
   } = useContext(DataContext);
 
   const [inputSearchItem, setInputSearchItem] = useState("");
@@ -69,20 +70,20 @@ function GestionDesCompts({ setDocumentationPage }) {
           >
             Gestion Des Comptes ({filterListeDesCompte?.length})
           </h2>
-          {/* <button
-              onClick={() => {
-                testFonction5();
-              }}
-            >
-              Test fonction 5
-            </button>{" "}
-            <p
-              onClick={() => {
-                console.log(accountGeofences);
-              }}
-            >
-              accountGeofences
-            </p> */}
+          <button
+            onClick={() => {
+              console.log(véhiculeDetails);
+            }}
+          >
+            Test
+          </button>{" "}
+          <p
+            onClick={() => {
+              console.log(accountDevices);
+            }}
+          >
+            accountDevices
+          </p>
           {/*  <br />
             <button
               onClick={() => {
@@ -108,7 +109,6 @@ function GestionDesCompts({ setDocumentationPage }) {
               Test fonction 4
             </button>{" "}
             <br /> */}
-
           <div className="flex  justify-center mt-4">
             <button
               onClick={() => {

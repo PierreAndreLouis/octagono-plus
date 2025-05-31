@@ -55,7 +55,7 @@ const LocationPage = ({
 
   if (isDashboardHomePage && currentAccountSelected) {
     vehiculeActive = currentAccountSelected?.accountDevices;
-  } else if (isDashboardHomePage && accountDevices && !currentAccountSelected) {
+  } else if (isDashboardHomePage && !currentAccountSelected) {
     vehiculeActive = accountDevices;
   } else if (!isDashboardHomePage) {
     vehiculeActive = currentDataFusionné;
@@ -67,24 +67,32 @@ const LocationPage = ({
   // le formatage des véhicules afficher sur la carte
   const véhiculeData =
     vehiculeActive &&
-    vehiculeActive?.map((véhicule) => ({
-      deviceID: véhicule?.deviceID || "---",
-      description: véhicule.description || "Véhicule",
-      lastValidLatitude:
-        véhicule?.véhiculeDetails?.[0]?.latitude ||
-        véhicule?.lastValidLatitude ||
-        "",
-      lastValidLongitude:
-        véhicule?.véhiculeDetails?.[0]?.longitude ||
-        véhicule?.lastValidLongitude ||
-        "",
-      address: véhicule?.véhiculeDetails?.[0]?.address || "",
-      imeiNumber: véhicule?.imeiNumber || "",
-      isActive: véhicule?.isActive || "",
-      licensePlate: véhicule?.licensePlate || "",
-      simPhoneNumber: véhicule?.simPhoneNumber || "",
-      speedKPH: véhicule?.véhiculeDetails?.[0]?.speedKPH || 0,
-    }));
+    vehiculeActive
+      ?.map((véhicule) => ({
+        deviceID: véhicule?.deviceID || "---",
+        description: véhicule.description || "Véhicule",
+        lastValidLatitude:
+          véhicule?.véhiculeDetails?.[0]?.latitude ||
+          véhicule?.lastValidLatitude ||
+          "",
+        lastValidLongitude:
+          véhicule?.véhiculeDetails?.[0]?.longitude ||
+          véhicule?.lastValidLongitude ||
+          "",
+        address: véhicule?.véhiculeDetails?.[0]?.address || "",
+        imeiNumber: véhicule?.imeiNumber || "",
+        isActive: véhicule?.isActive || "",
+        licensePlate: véhicule?.licensePlate || "",
+        simPhoneNumber: véhicule?.simPhoneNumber || "",
+        speedKPH: véhicule?.véhiculeDetails?.[0]?.speedKPH || 0,
+      }))
+      .filter(
+        (v) =>
+          v.lastValidLatitude !== "0.0" &&
+          v.lastValidLongitude !== "0.0" &&
+          v.lastValidLatitude !== "" &&
+          v.lastValidLongitude !== ""
+      );
 
   // Pour afficher une seule véhicule sur la carte
   const handleVehicleClick = (véhicule) => {

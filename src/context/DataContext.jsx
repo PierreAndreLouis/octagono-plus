@@ -117,8 +117,9 @@ const DataContextProvider = ({ children }) => {
   const [accountGroupes, setAccountGroupes] = useState([]);
   const [accountUsers, setAccountUsers] = useState([]);
   const [userDevices, setUserDevices] = useState([]);
-  const [groupeDevices, setGroupeDevices] = useState([]);
   const [userGroupes, setUserGroupes] = useState([]);
+  const [véhiculeDetails, setVehiculeDetails] = useState([]);
+  const [groupeDevices, setGroupeDevices] = useState([]);
 
   // États liés à la gestion
   const [gestionAccountData, setGestionAccountData] = useState();
@@ -138,6 +139,37 @@ const DataContextProvider = ({ children }) => {
   const [listeGestionDesGroupeTitre, setListeGestionDesGroupeTitre] =
     useState("");
   const [listeGestionDesUsers, setListeGestionDesUsers] = useState([]);
+
+  // Pour ajouter les véhiculeDetails pour chaque device
+
+  // useEffect(() => {
+  //   setAccountDevices((prevDevices) =>
+  //     prevDevices.map((device) => {
+  //       const matchingVehiculeDetails = véhiculeDetails.find(
+  //         (v) => v.deviceID === device.deviceID
+  //       );
+  //       return {
+  //         ...device,
+  //         véhiculeDetails: matchingVehiculeDetails?.véhiculeDetails || [],
+  //       };
+  //     })
+  //   );
+  // }, [véhiculeDetails]);
+
+  // const updateAccountDevicesWidthvéhiculeDetailsFonction = () => {
+  //   if (!véhiculeDetails || !accountDevices) return;
+  //   setAccountDevices((prevDevices) =>
+  //     prevDevices?.map((device) => {
+  //       const matchingVehiculeDetails = véhiculeDetails?.find(
+  //         (v) => v?.deviceID === device?.deviceID
+  //       );
+  //       return {
+  //         ...device,
+  //         véhiculeDetails: matchingVehiculeDetails?.véhiculeDetails || [],
+  //       };
+  //     })
+  //   );
+  // };
 
   // Log des mises à jour
   useEffect(() => {
@@ -185,8 +217,9 @@ const DataContextProvider = ({ children }) => {
     accountGeofences,
     accountGroupes,
     accountUsers,
-    userDevices,
+    // userDevices,
     groupeDevices,
+    // véhiculeDetails,
     userGroupes,
     gestionAccountData,
   ]);
@@ -229,8 +262,9 @@ const DataContextProvider = ({ children }) => {
     accountGeofences,
     accountGroupes,
     accountUsers,
-    userDevices,
+    // userDevices,
     groupeDevices,
+    // véhiculeDetails,
     userGroupes,
     gestionAccountData,
   ]);
@@ -671,7 +705,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 5);
+      const request = indexedDB.open("MyDatabase", 6);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -707,21 +741,24 @@ const DataContextProvider = ({ children }) => {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("groupeDevices", { autoIncrement: true });
         }
+        // if (!db.objectStoreNames.contains("véhiculeDetails")) {
+        //   // Auto-incrémente sans keyPath pour stocker uniquement les données
+        //   db.createObjectStore("véhiculeDetails", { autoIncrement: true });
+        // }
 
         if (!db.objectStoreNames.contains("userGroupes")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("userGroupes", { autoIncrement: true });
         }
 
-        // groupeDevices;
         if (!db.objectStoreNames.contains("accountUsers")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("accountUsers", { autoIncrement: true });
         }
-        if (!db.objectStoreNames.contains("userDevices")) {
-          // Auto-incrémente sans keyPath pour stocker uniquement les données
-          db.createObjectStore("userDevices", { autoIncrement: true });
-        }
+        // if (!db.objectStoreNames.contains("userDevices")) {
+        //   // Auto-incrémente sans keyPath pour stocker uniquement les données
+        //   db.createObjectStore("userDevices", { autoIncrement: true });
+        // }
 
         if (!db.objectStoreNames.contains("donneeFusionnéForRapport")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
@@ -827,6 +864,14 @@ const DataContextProvider = ({ children }) => {
     });
   }, []);
 
+  // useEffect(() => {
+  //   getDataFromIndexedDB("véhiculeDetails").then((data) => {
+  //     // if (data.length > 0) {
+  //     setVehiculeDetails(data);
+  //     // }
+  //   });
+  // }, []);
+
   useEffect(() => {
     getDataFromIndexedDB("userGroupes").then((data) => {
       // if (data.length > 0) {
@@ -842,13 +887,13 @@ const DataContextProvider = ({ children }) => {
       // }
     });
   }, []);
-  useEffect(() => {
-    getDataFromIndexedDB("userDevices").then((data) => {
-      // if (data.length > 0) {
-      setUserDevices(data);
-      // }
-    });
-  }, []);
+  // useEffect(() => {
+  //   getDataFromIndexedDB("userDevices").then((data) => {
+  //     // if (data.length > 0) {
+  //     setUserDevices(data);
+  //     // }
+  //   });
+  // }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
@@ -900,6 +945,12 @@ const DataContextProvider = ({ children }) => {
     }
   }, [groupeDevices]);
 
+  // useEffect(() => {
+  //   if (véhiculeDetails) {
+  //     saveDataToIndexedDB("véhiculeDetails", véhiculeDetails);
+  //   }
+  // }, [véhiculeDetails]);
+
   useEffect(() => {
     if (userGroupes) {
       saveDataToIndexedDB("userGroupes", userGroupes);
@@ -912,11 +963,11 @@ const DataContextProvider = ({ children }) => {
     }
   }, [accountUsers]);
 
-  useEffect(() => {
-    if (userDevices) {
-      saveDataToIndexedDB("userDevices", userDevices);
-    }
-  }, [userDevices]);
+  // useEffect(() => {
+  //   if (userDevices) {
+  //     saveDataToIndexedDB("userDevices", userDevices);
+  //   }
+  // }, [userDevices]);
 
   useEffect(() => {
     // console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
@@ -1411,7 +1462,9 @@ const DataContextProvider = ({ children }) => {
   const ListeDesRolePourLesUserFonction = async (account, user, password) => {
     const xmlData = `
   <GTSRequest command="dbget">
-    <Authorization account="${account}" user="${user}" password="${password}" />
+    <Authorization account="${account}" user="${
+      user || systemUser
+    }" password="${password}" />
 
     <Record table="Role" partial="true">
       <Field name="accountID">${account}</Field>
@@ -1524,10 +1577,14 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchComptes: lancement de la requête XML");
     const xml = `
 <GTSRequest command="dbget">
-  <Authorization account="${account}" user="${user}" password="${password}" />
+  <Authorization account="${account}" user="${
+      user || systemUser
+    }" password="${password}" />
   <Record table="Account" partial="true" />
 </GTSRequest>
   `;
+
+    console.log("requete +++++++++++++++++++++++++", xml);
 
     const res = await fetch("/api/track/Service", {
       method: "POST",
@@ -1535,6 +1592,7 @@ const DataContextProvider = ({ children }) => {
       body: xml,
     });
     const text = await res.text();
+    console.log("result :", text);
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -1555,21 +1613,23 @@ const DataContextProvider = ({ children }) => {
 
     setComptes(data);
 
-    ListeDesRolePourLesUserFonction(account, user, password);
-
     if (fetchAllOtherData) {
       // Déclenchement automatique des autres fetchs pour chaque compte
-      data.forEach((acct) => {
+      ListeDesRolePourLesUserFonction(account, user, password);
+      data?.forEach((acct) => {
         const id = acct.accountID;
         const pwd = acct.password;
 
-        setTimeout(() => {
-          // Devices du compte
-          fetchAccountDevices(id, pwd).catch((err) => {
-            console.error("Erreur lors du chargement des devices :", err);
-            setError("Erreur lors du chargement des devices.");
+        // setTimeout(() => {
+        fetchAccountDevices(id, pwd)
+          .then((devices) => {
+            fetchVehiculeDetails(id, devices, pwd);
+          })
+          .catch((err) => {
+            console.error("Erreur lors du chargement des véhicules :", err);
+            setError("Erreur lors du chargement des véhicules.");
           });
-        }, 2000);
+        // }, 500);
 
         setTimeout(() => {
           // Groupes + Devices par groupe
@@ -1582,7 +1642,7 @@ const DataContextProvider = ({ children }) => {
               );
               setError("Erreur lors de la mise à jour des groupes.");
             });
-        }, 7000);
+        }, 1000);
 
         setTimeout(() => {
           // Utilisateurs + Devices par utilisateur
@@ -1598,14 +1658,14 @@ const DataContextProvider = ({ children }) => {
               );
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
-        }, 12000);
+        }, 2000);
 
         setTimeout(() => {
           fetchAccountGeofences(id, pwd).catch((err) => {
             console.error("Erreur lors du chargement des geofences :", err);
             setError("Erreur lors du chargement des geofences.");
           });
-        }, 16000);
+        }, 3000);
       });
     }
     return data;
@@ -1672,10 +1732,27 @@ const DataContextProvider = ({ children }) => {
           )
         : [];
 
+    const vehDetails = await fetchVehiculeDetails(accountID, data, password);
+
+    const enrichedData = data.map((device) => {
+      const found = vehDetails.find((v) => v.deviceID === device.deviceID);
+      return {
+        ...device,
+        véhiculeDetails: found?.véhiculeDetails || [],
+      };
+    });
+
     setAccountDevices((prev) => {
       const filtered = prev?.filter((d) => d.accountID !== accountID);
-      return [...filtered, ...data];
+      return [...filtered, ...enrichedData];
     });
+
+    return enrichedData;
+
+    // setAccountDevices((prev) => {
+    //   const filtered = prev?.filter((d) => d.accountID !== accountID);
+    //   return [...filtered, ...data];
+    // });
 
     return data;
   };
@@ -1785,101 +1862,7 @@ const DataContextProvider = ({ children }) => {
   };
 
   // 5) Récupérer userDevices pour chaque user
-  const fetchUserDevices = async (accountID, users) => {
-    //   if (!Array.isArray(users)) {
-    //     console.warn("fetchUserDevices: 'users' est invalide ou vide :", users);
-    //     return [];
-    //   }
-    //   console.log(
-    //     "fetchUserDevices: lancement des requêtes pour chaque utilisateur de",
-    //     accountID
-    //   );
-    //   const promises = users.map(async (usr) => {
-    //     if (!usr?.userID || !usr?.password) {
-    //       console.warn("Utilisateur incomplet : ", usr);
-    //       return { userID: usr?.userID || "inconnu", userDevices: [] };
-    //     }
-    //     const xml = `
-    // <GTSRequest command="dbget">
-    //   <Authorization account="${accountID}" user="${usr.userID}" password="${usr.password}" />
-    //   <Record table="Device" partial="true">
-    //     <Field name="accountID">${accountID}</Field>
-    //     <Field name="userID">${usr.userID}</Field>
-    //   </Record>
-    // </GTSRequest>
-    //     `;
-    //     console.log("Requette envoyer pour liste device par user", xml);
-    //     const res = await fetch("/api/track/Service", {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/xml" },
-    //       body: xml,
-    //     });
-    //     const text = await res.text();
-    //     const doc = new DOMParser().parseFromString(text, "application/xml");
-    //     const result = doc
-    //       .getElementsByTagName("GTSResponse")[0]
-    //       ?.getAttribute("result");
-    //     const records = Array.from(doc.getElementsByTagName("Record"));
-    //     const data =
-    //       result === "success"
-    //         ? records.map((rec) =>
-    //             Array.from(rec.getElementsByTagName("Field")).reduce(
-    //               (obj, fld) => {
-    //                 obj[fld.getAttribute("name")] = fld.textContent;
-    //                 return obj;
-    //               },
-    //               {}
-    //             )
-    //           )
-    //         : [];
-    //     console.log(`fetchUserDevices: user ${usr.userID}, devices =`, data);
-    //     return { userID: usr.userID, userDevices: data };
-    //   });
-    //   const results = await Promise.all(promises);
-    //   // Mise à jour sans doublon par userID
-    //   // Mise à jour avancée avec fusion des devices par utilisateur
-    //   setUserDevices((prev) => {
-    //     const updated = [...prev];
-    //     results.forEach(({ userID, userDevices: newDevices }) => {
-    //       const existingIndex = updated.findIndex((e) => e.userID === userID);
-    //       if (existingIndex !== -1) {
-    //         const existingDevices = updated[existingIndex].userDevices;
-    //         const mergedDevices = newDevices.map((dev) => {
-    //           const existing = existingDevices.find(
-    //             (d) => d.creationTime === dev.creationTime
-    //           );
-    //           return existing ? { ...existing, ...dev } : dev;
-    //         });
-    //         const existingTimes = new Set(
-    //           mergedDevices.map((d) => d.creationTime)
-    //         );
-    //         const preservedDevices = existingDevices.filter(
-    //           (d) => !existingTimes.has(d.creationTime)
-    //         );
-    //         updated[existingIndex] = {
-    //           userID,
-    //           userDevices: [...preservedDevices, ...mergedDevices],
-    //         };
-    //       } else {
-    //         updated.push({ userID, userDevices: newDevices });
-    //       }
-    //     });
-    //     return updated;
-    //   });
-    //   // setUserDevices((prev) => {
-    //   //   const updated = [...prev];
-    //   //   results.forEach((newEntry) => {
-    //   //     const index = updated.findIndex((e) => e.userID === newEntry.userID);
-    //   //     if (index !== -1) {
-    //   //       updated[index] = newEntry;
-    //   //     } else {
-    //   //       updated.push(newEntry);
-    //   //     }
-    //   //   });
-    //   //   return updated;
-    //   // });
-    //   return results;
-  };
+  const fetchUserDevices = async (accountID, users) => {};
 
   // 6) Récupérer groupeDevices pour chaque groupe
   const fetchGroupeDevices = async (accountID, groupes, accountPassword) => {
@@ -2197,6 +2180,297 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  const fetchVehiculeDetails = async (accountID, devices, password) => {
+    if (!Array.isArray(devices)) {
+      console.warn("fetchVehiculeDetails: devices est invalide :", devices);
+      return [];
+    }
+
+    console.log("fetchVehiculeDetails: lancement pour", accountID);
+
+    const adjustedTimeFrom = "2020-01-01 21:00:00";
+    const adjustedTimeTo = "2030-05-14 21:00:00";
+
+    const promises = devices.map(async (device) => {
+      if (!device?.deviceID)
+        return { deviceID: "inconnu", véhiculeDetails: [] };
+
+      const xml = `
+<GTSRequest command="eventdata">
+  <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+  <EventData>
+    <Device>${device.deviceID}</Device>
+    <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+    <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
+    <GPSRequired>false</GPSRequired>
+    <StatusCode>false</StatusCode>
+    <Limit type="last">2</Limit>
+    <Ascending>false</Ascending>
+    <Field name="latitude" />
+    <Field name="longitude" />
+    <Field name="address" />
+    <Field name="speedKPH" />
+    <Field name="timestamp" />
+    <Field name="heading" />
+    <Field name="city" />
+    <Field name="creationMillis" />
+    <Field name="creationTime" />
+    <Field name="odometerKM" />
+    <Field name="stateProvince" />
+    <Field name="statusCode" />
+    <Field name="streetAddress" />
+  </EventData>
+</GTSRequest>
+    `;
+
+      const res = await fetch("/api/track/Service", {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xml,
+      });
+
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, "application/xml");
+      const result = doc
+        .getElementsByTagName("GTSResponse")[0]
+        ?.getAttribute("result");
+      const records = Array.from(doc.getElementsByTagName("Record"));
+
+      const data =
+        result === "success"
+          ? records.map((rec) =>
+              Array.from(rec.getElementsByTagName("Field")).reduce(
+                (obj, fld) => {
+                  obj[fld.getAttribute("name")] = fld.textContent;
+                  return obj;
+                },
+                {}
+              )
+            )
+          : [];
+
+      return { deviceID: device.deviceID, véhiculeDetails: data };
+    });
+
+    const results = await Promise.all(promises);
+
+    // Mise à jour de l'état
+    setVehiculeDetails((prev) => {
+      const updatedDeviceIDs = new Set(results.map((r) => r.deviceID));
+      const filtered = prev?.filter((v) => !updatedDeviceIDs.has(v.deviceID));
+      return [...filtered, ...results];
+    });
+
+    return results;
+  };
+
+  // useEffect(() => {
+  //   console.log("🔄 Fusion + enrichissement des données");
+  //   if (!comptes.length) return;
+
+  //   const merged = comptes?.map((acct) => {
+  //     const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
+
+  //     const devices = accountDevices?.filter(
+  //       (d) => d.accountID === acct.accountID
+  //     );
+
+  //     const geofences = accountGeofences?.filter(
+  //       (d) => d.accountID === acct.accountID
+  //     );
+
+  //     const groupes = accountGroupes?.filter(
+  //       (g) => g.accountID === acct.accountID
+  //     );
+
+  //     const usrDevs = userDevices?.filter((ud) =>
+  //       users.some((u) => u.userID === ud.userID)
+  //     );
+
+  //     const userGrp = userGroupes?.filter((ug) =>
+  //       users.some((u) => u.userID === ug.userID)
+  //     );
+
+  //     const grpDevs = groupeDevices?.filter((gd) =>
+  //       groupes.some((g) => g.groupID === gd.groupID)
+  //     );
+
+  // const vehDetails = véhiculeDetails?.filter((v) =>
+  //   devices.some((d) => d.deviceID === v.deviceID)
+  // );
+
+  //     // Map des groupes -> devices
+  //     const groupMap = {};
+  //     groupes?.forEach((group) => {
+  //       groupMap[group.groupID] =
+  //         grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
+  //         [];
+  //     });
+
+  //     // Map des devices -> véhiculeDetails
+  //     const deviceMap = {};
+  //     devices?.forEach((dev) => {
+  //       deviceMap[dev.deviceID] =
+  //         vehDetails.find((v) => v.deviceID === dev.deviceID)
+  //           ?.véhiculeDetails || [];
+  //     });
+
+  //     // Enrichir les users avec leurs groupes et devices
+  //     const updatedUsers = users?.map((u) => {
+  //       const userGroupes =
+  //         userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
+  //       const userDevices =
+  //         usrDevs.find((ud) => ud.userID === u.userID)?.userDevices || [];
+  //       return {
+  //         ...u,
+  //         userGroupes,
+  //         userDevices,
+  //       };
+  //     });
+
+  //     // Enrichir les groupes avec les devices
+  //     const updatedGroupes = groupes?.map((g) => ({
+  //       ...g,
+  //       groupeDevices: groupMap[g.groupID] || [],
+  //     }));
+
+  //     // Enrichir les devices avec les véhiculeDetails
+  //     const updatedDevices = devices?.map((d) => ({
+  //       ...d,
+  //       véhiculeDetails: deviceMap[d.deviceID] || [],
+  //     }));
+
+  //     return {
+  //       ...acct,
+  //       users: updatedUsers,
+  //       devices: updatedDevices,
+  //       geofences,
+  //       groupes: updatedGroupes,
+  //     };
+  //   });
+
+  //   setComptes(merged);
+  // }, [
+  //   comptes,
+  //   accountUsers,
+  //   accountDevices,
+  //   accountGeofences,
+  //   accountGroupes,
+  //   userDevices,
+  //   userGroupes,
+  //   groupeDevices,
+  //   véhiculeDetails,
+  // ]);
+
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // useEffect(() => {
+  //   console.log("🔄 Fusion + enrichissement des données");
+  //   if (!comptes.length) return;
+
+  //   const merged = comptes?.map((acct) => {
+  //     const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
+
+  //     const devices = accountDevices?.filter(
+  //       (d) => d.accountID === acct.accountID
+  //     );
+
+  //     const geofences = accountGeofences?.filter(
+  //       (d) => d.accountID === acct.accountID
+  //     );
+
+  //     const groupes = accountGroupes?.filter(
+  //       (g) => g.accountID === acct.accountID
+  //     );
+
+  //     // const vehDetails = véhiculeDetails?.filter((v) =>
+  //     //   devices.some((d) => d.deviceID === v.deviceID)
+  //     // );
+
+  //     const enrichedDevices = devices?.map((device) => ({
+  //       ...device,
+  //       véhiculeDetails:
+  //         véhiculeDetails?.find((v) => v.deviceID === device.deviceID)
+  //           ?.véhiculeDetails || [],
+  //     }));
+
+  //     const userGrp = userGroupes?.filter((ug) =>
+  //       users.some((u) => u.userID === ug.userID)
+  //     );
+
+  //     const grpDevs = groupeDevices?.filter((gd) =>
+  //       groupes.some((g) => g.groupID === gd.groupID)
+  //     );
+
+  //     // Création d’une map des devices de groupes
+  //     const groupMap = {};
+  //     groupes?.forEach((group) => {
+  //       groupMap[group.groupID] =
+  //         grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
+  //         [];
+  //     });
+
+  //     // Enrichissement des utilisateurs avec les groupes et les devices des groupes
+  //     const updatedUsers = users?.map((u) => {
+  //       const groupesDuUser =
+  //         userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
+
+  //       const devicesFromGroups =
+  //         groupesDuUser?.length > 0
+  //           ? groupesDuUser.flatMap(
+  //               (groupLink) => groupMap[groupLink.groupID] || []
+  //             )
+  //           : devices || [];
+
+  //       const uniqueDevices = Object.values(
+  //         devicesFromGroups?.reduce((acc, device) => {
+  //           acc[device.deviceID] = device;
+  //           return acc;
+  //         }, {})
+  //       );
+
+  //       return {
+  //         ...u,
+  //         userGroupes: groupesDuUser,
+  //         userDevices: uniqueDevices,
+  //       };
+  //     });
+
+  //     const updatedGroupes = groupes.map((g) => ({
+  //       ...g,
+  //       groupeDevices:
+  //         grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
+  //     }));
+
+  //     return {
+  //       ...acct,
+  //       accountUsers: updatedUsers,
+  //       accountDevices: enrichedDevices,
+  //       accountGeofences: geofences,
+  //       accountGroupes: updatedGroupes,
+  //     };
+  //   });
+
+  //   setGestionAccountData(merged);
+  //   console.log("✅ Résultat fusionné et enrichi :", merged);
+  // }, [
+  //   comptes,
+  //   accountDevices,
+  //   accountGeofences,
+  //   accountGroupes,
+  //   groupeDevices,
+  //   accountUsers,
+  //   userDevices,
+  //   userGroupes,
+  //   véhiculeDetails,
+  // ]);
+
+  x;
   useEffect(() => {
     console.log("🔄 Fusion + enrichissement des données");
     if (!comptes.length) return;
@@ -2216,9 +2490,9 @@ const DataContextProvider = ({ children }) => {
         (g) => g.accountID === acct.accountID
       );
 
-      const usrDevs = userDevices?.filter((ud) =>
-        users.some((u) => u.userID === ud.userID)
-      );
+      // const usrDevs = userDevices?.filter((ud) =>
+      //   users.some((u) => u.userID === ud.userID)
+      // );
 
       const userGrp = userGroupes?.filter((ug) =>
         users.some((u) => u.userID === ug.userID)
@@ -2286,26 +2560,22 @@ const DataContextProvider = ({ children }) => {
     accountGroupes,
     groupeDevices,
     accountUsers,
-    userDevices,
+    // userDevices,
     userGroupes,
   ]);
 
+  x;
   useEffect(() => {
     const intervalId = setInterval(() => {
-      //
-
-      // console.log("comptes:", comptes);
-
       comptes?.forEach((acct) => {
         const id = acct.accountID;
         const pwd = acct.password;
-        // console.log("Raffraichir les device de :", acct?.description);
         // Devices du compte
         fetchAccountDevices(id, pwd).catch((err) => {
           console.error("Erreur lors du chargement des devices :", err);
         });
       });
-    }, 1000 * 60 * 2);
+    }, 1000 * 60 * 5);
 
     return () => clearInterval(intervalId);
   }, [comptes]);
@@ -3584,9 +3854,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("Véhicule créé avec succès :");
         // setSuccessModifyAccountGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte(
-          "Modification du compte avec succès  "
-        );
+        setConfirmationMessagePopupTexte("Compte modifié avec succès  ");
         setConfirmationMessagePopupName(description);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
@@ -3688,9 +3956,7 @@ const DataContextProvider = ({ children }) => {
           console.log("Delete successsssssssss...............");
 
           setShowConfirmationMessagePopup(true); // succès  Échec
-          setConfirmationMessagePopupTexte(
-            "Suppression du compte avec succès  "
-          );
+          setConfirmationMessagePopupTexte("Compte supprimer avec succès  ");
           setConfirmationMessagePopupName("");
 
           setComptes((prev) =>
@@ -5765,56 +6031,168 @@ const DataContextProvider = ({ children }) => {
   };
 
   // Requête pour rechercher les details des véhicule dans la page home
+  // const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
+  //   // /////////
+  //   //  "2020-05-14 21:00:00"
+  //   // Ajuste les heures de TimeFrom et TimeTo
+  //   const adjustTime = (time, hours) => {
+  //     const date = new Date(time);
+  //     date.setHours(date.getHours() + hours);
+  //     return date.toISOString().replace("T", " ").split(".")[0];
+  //   };
+
+  //   const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
+  //   const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
+
+  //   // const { accountID, userID, password } = userData;
+  //   const accountID = account || localStorage.getItem("account") || "";
+  //   const userID = username || localStorage.getItem("username") || "";
+  //   const password = localStorage.getItem("password") || "";
+
+  //   const xmlData = `<GTSRequest command="eventdata">
+  //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  //     <EventData>
+  //       <Device>${Device}</Device>
+  //       <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+  //       <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
+
+  //       <GPSRequired>false</GPSRequired>
+  //       <StatusCode>false</StatusCode>
+  //       <Limit type="last">4</Limit>
+  //       <Ascending>false</Ascending>
+  //       <Field name="latitude" />
+  //       <Field name="longitude" />
+  //       <Field name="address" />
+  //       <Field name="speedKPH" />
+  //       <Field name="timestamp" />
+  //       <Field name="heading" />
+  //       <Field name="city" />
+  //       <Field name="creationMillis" />
+  //       <Field name="creationTime" />
+  //       <Field name="odometerKM" />
+  //       <Field name="stateProvince" />
+  //       <Field name="statusCode" />
+  //       <Field name="streetAddress" />
+
+  //     </EventData>
+  //   </GTSRequest>`;
+
+  //   try {
+  //     const response = await fetch("/api/track/Service", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     const data = await response.text();
+  //     // console.log("data brut de :", fetchVehicleDetails);
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const records = xmlDoc.getElementsByTagName("Record");
+
+  //     const newVehicleDetails = [];
+  //     for (let i = 0; i < records.length; i++) {
+  //       const fields = records[i].getElementsByTagName("Field");
+  //       const details = { Device }; // Ajoute l'identifiant du véhicule pour regrouper les événements
+
+  //       for (let j = 0; j < fields.length; j++) {
+  //         const fieldName = fields[j].getAttribute("name");
+  //         let fieldValue = fields[j].textContent;
+
+  //         // // Si le champ est un timestamp, ajoute 4 heures
+  //         if (fieldName === "timestamp") {
+  //           // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
+  //           let timestamp = parseInt(fieldValue, 10);
+  //           timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
+  //           fieldValue = timestamp.toString(); // Reconvertir en chaîne
+  //         }
+  //         details[fieldName] = fieldValue;
+  //       }
+
+  //       details.backupAddress = "";
+
+  //       newVehicleDetails.push(details);
+  //     }
+
+  //     // Filtrage des timestamps
+  //     const timeFromTimestamp = new Date(TimeFrom).getTime();
+  //     const timeToTimestamp = new Date(TimeTo).getTime();
+
+  //     const filteredVehicleDetails = newVehicleDetails.filter((detail) => {
+  //       const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
+  //       return (
+  //         recordTimestamp >= timeFromTimestamp &&
+  //         recordTimestamp <= timeToTimestamp
+  //       );
+  //     });
+
+  //     setVehicleDetails((prevDetails) => {
+  //       const updatedDetails = prevDetails?.map((detail) => {
+  //         if (detail.Device === Device) {
+  //           return filteredVehicleDetails.length > 0
+  //             ? { ...detail, véhiculeDetails: [...filteredVehicleDetails] }
+  //             : detail;
+  //         }
+  //         return detail;
+  //       });
+
+  //       // Si le véhicule n'est pas trouvé, ajoute-le
+  //       if (!updatedDetails.some((detail) => detail.Device === Device)) {
+  //         updatedDetails.push({
+  //           Device,
+  //           véhiculeDetails: [...filteredVehicleDetails],
+  //         });
+  //       }
+
+  //       return [...updatedDetails];
+  //     });
+
+  //     handleUserError(xmlDoc);
+
+  //     // mergeVehicleDataWithEvents();
+  //   } catch (error) {
+  //     console.error(
+  //       "Erreur lors de la récupération des détails du véhicule",
+  //       error
+  //     );
+  //   }
+  // };
+
+  // Requête pour rechercher les détails des véhicules dans la page home
   const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-    // if (!userData) return;
-    // Pour suivre le nombre de requête
-    incrementerRequête();
-    // console.log("++++++++++++++++ Requête effectué: fetchVehicleDetails");
-
-    // /////////
-    //  "2020-05-14 21:00:00"
-    // Ajuste les heures de TimeFrom et TimeTo
-    const adjustTime = (time, hours) => {
-      const date = new Date(time);
-      date.setHours(date.getHours() + hours);
-      return date.toISOString().replace("T", " ").split(".")[0];
-    };
-
-    const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
-    const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
-
-    // const { accountID, userID, password } = userData;
     const accountID = account || localStorage.getItem("account") || "";
     const userID = username || localStorage.getItem("username") || "";
     const password = localStorage.getItem("password") || "";
 
+    const adjustedTimeFrom = "2020-01-01 21:00:00";
+    const adjustedTimeTo = "2030-05-14 21:00:00";
+
     const xmlData = `<GTSRequest command="eventdata">
-      <Authorization account="${accountID}" user="${userID}" password="${password}" />
-      <EventData>
-        <Device>${Device}</Device>
-        <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
-        <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
+    <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    <EventData>
+      <Device>${Device}</Device>
+      <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
+      <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
 
-        <GPSRequired>false</GPSRequired>
-        <StatusCode>false</StatusCode>
-        <Limit type="last">4</Limit>
-        <Ascending>true</Ascending>
-        <Field name="latitude" />
-        <Field name="longitude" />
-        <Field name="address" />
-        <Field name="speedKPH" />
-        <Field name="timestamp" />
-        <Field name="heading" />
-        <Field name="city" />
-        <Field name="creationMillis" />
-        <Field name="creationTime" />
-        <Field name="odometerKM" />
-        <Field name="stateProvince" />
-        <Field name="statusCode" />
-        <Field name="streetAddress" />
-
-      </EventData>
-    </GTSRequest>`;
+      <GPSRequired>false</GPSRequired>
+      <StatusCode>false</StatusCode>
+      <Limit type="last">4</Limit>
+      <Ascending>false</Ascending>
+      <Field name="latitude" />
+      <Field name="longitude" />
+      <Field name="address" />
+      <Field name="speedKPH" />
+      <Field name="timestamp" />
+      <Field name="heading" />
+      <Field name="city" />
+      <Field name="creationMillis" />
+      <Field name="creationTime" />
+      <Field name="odometerKM" />
+      <Field name="stateProvince" />
+      <Field name="statusCode" />
+      <Field name="streetAddress" />
+    </EventData>
+  </GTSRequest>`;
 
     try {
       const response = await fetch("/api/track/Service", {
@@ -5824,7 +6202,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("data brut de :", fetchVehicleDetails);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -5832,54 +6209,38 @@ const DataContextProvider = ({ children }) => {
       const newVehicleDetails = [];
       for (let i = 0; i < records.length; i++) {
         const fields = records[i].getElementsByTagName("Field");
-        const details = { Device }; // Ajoute l'identifiant du véhicule pour regrouper les événements
+        const details = { Device };
 
         for (let j = 0; j < fields.length; j++) {
           const fieldName = fields[j].getAttribute("name");
           let fieldValue = fields[j].textContent;
 
-          // // Si le champ est un timestamp, ajoute 4 heures
           if (fieldName === "timestamp") {
-            // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
             let timestamp = parseInt(fieldValue, 10);
-            timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
-            fieldValue = timestamp.toString(); // Reconvertir en chaîne
+            timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60;
+            fieldValue = timestamp.toString();
           }
           details[fieldName] = fieldValue;
         }
 
         details.backupAddress = "";
-
         newVehicleDetails.push(details);
       }
-
-      // Filtrage des timestamps
-      const timeFromTimestamp = new Date(TimeFrom).getTime();
-      const timeToTimestamp = new Date(TimeTo).getTime();
-
-      const filteredVehicleDetails = newVehicleDetails.filter((detail) => {
-        const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
-        return (
-          recordTimestamp >= timeFromTimestamp &&
-          recordTimestamp <= timeToTimestamp
-        );
-      });
 
       setVehicleDetails((prevDetails) => {
         const updatedDetails = prevDetails?.map((detail) => {
           if (detail.Device === Device) {
-            return filteredVehicleDetails.length > 0
-              ? { ...detail, véhiculeDetails: [...filteredVehicleDetails] }
+            return newVehicleDetails.length > 0
+              ? { ...detail, véhiculeDetails: [...newVehicleDetails] }
               : detail;
           }
           return detail;
         });
 
-        // Si le véhicule n'est pas trouvé, ajoute-le
         if (!updatedDetails.some((detail) => detail.Device === Device)) {
           updatedDetails.push({
             Device,
-            véhiculeDetails: [...filteredVehicleDetails],
+            véhiculeDetails: [...newVehicleDetails],
           });
         }
 
@@ -5887,8 +6248,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       handleUserError(xmlDoc);
-
-      // mergeVehicleDataWithEvents();
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
@@ -8503,6 +8862,9 @@ const DataContextProvider = ({ children }) => {
         isDashboardHomePage,
         setIsDashboardHomePage,
         clearDataIndexedbStore,
+        véhiculeDetails,
+
+        // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >
       {children}

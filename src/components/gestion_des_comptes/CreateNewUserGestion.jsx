@@ -707,7 +707,7 @@ function CreateNewUserGestion({
 
                   {
                     id: "contactPhone",
-                    label: "contactPhone",
+                    label: "Phone Number",
                     placeholder: "telephone",
                   },
                   {
@@ -726,11 +726,11 @@ function CreateNewUserGestion({
                     label: "addressCountry",
                     placeholder: "addressCountry",
                   },
-                  {
-                    id: "userType",
-                    label: "userType",
-                    placeholder: "userType",
-                  },
+                  // {
+                  //   id: "userType",
+                  //   label: "userType",
+                  //   placeholder: "userType",
+                  // },
 
                   {
                     id: "isActive",
@@ -743,11 +743,11 @@ function CreateNewUserGestion({
                     label: "timeZone",
                     placeholder: "",
                   },
-                  {
-                    id: "maxAccessLevel",
-                    label: "maxAccessLevel",
-                    placeholder: "",
-                  },
+                  // {
+                  //   id: "maxAccessLevel",
+                  //   label: "maxAccessLevel",
+                  //   placeholder: "",
+                  // },
                   {
                     id: "roleID",
                     label: "roleID",
@@ -807,21 +807,22 @@ function CreateNewUserGestion({
                         <p>{addNewUserData?.roleID}</p>
                         <FaChevronDown className="text-gray-700 mr-4" />
                       </div>
-                    ) : field.id === "userType" ? (
-                      <div
-                        onClick={() => {
-                          setShowUserTypePopup(true);
-                        }}
-                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>
-                          {addNewUserData?.userType === "1"
-                            ? "Utilisateur standard / limité"
-                            : "Utilisateur Administrateur / Superviseur"}
-                        </p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : field.id === "isActive" ? (
+                    ) : // : field.id === "userType" ? (
+                    //   <div
+                    //     onClick={() => {
+                    //       setShowUserTypePopup(true);
+                    //     }}
+                    //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                    //   >
+                    //     <p>
+                    //       {addNewUserData?.userType === "1"
+                    //         ? "Utilisateur standard / limité"
+                    //         : "Utilisateur Administrateur / Superviseur"}
+                    //     </p>
+                    //     <FaChevronDown className="text-gray-700 mr-4" />
+                    //   </div>
+                    // )
+                    field.id === "isActive" ? (
                       <div
                         onClick={() => {
                           setShowIsUserActivePopup(true);

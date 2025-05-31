@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
+import { ImEnlarge } from "react-icons/im";
+
 import {
   IoCarSportOutline,
   IoChevronDown,
@@ -469,29 +471,10 @@ function DashboardContaintMaintComponant({
     setTimeout(() => {
       setIsLoading2(false);
     }, 5000);
-    const id = account;
-    const pwd = password;
-    const user = "admin";
 
-    fetchAllComptes(adminAccount, adminUser, adminPassword);
+    const fetchAllOtherData = true;
 
-    // fetchAccountDevices(id, pwd).catch((err) => {
-    //   console.error("Erreur lors du chargement des devices :", err);
-    //   setError("Erreur lors du chargement des devices.");
-    // });
-
-    // fetchAccountUsers(id, pwd)
-    //   .then((users) => {
-    //     fetchUserDevices(id, users);
-    //     fetchUserGroupes(id, users);
-    //   })
-    //   .catch((err) => {
-    //     console.error(
-    //       "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-    //       err
-    //     );
-    //     setError("Erreur lors de la mise à jour des utilisateurs.");
-    //   });
+    fetchAllComptes(adminAccount, adminUser, adminPassword, fetchAllOtherData);
   };
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
@@ -508,7 +491,7 @@ function DashboardContaintMaintComponant({
               <th className="border  min-w-[3.21rem]  dark:border-gray-600 py-2 ---- px-2">
                 #
               </th>
-              <th className="border min-w-[12rem] dark:border-gray-600 py-2 ---- px-2">
+              <th className="border min-w-[13rem] dark:border-gray-600 py-2 ---- px-2">
                 Compte
               </th>
               <th className="border dark:border-gray-600 min-w-[6rem] py-2 ---- px-2">
@@ -1027,6 +1010,7 @@ function DashboardContaintMaintComponant({
     }
     console.log("result", result);
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
+  const [expandSection, setExpandSection] = useState("");
 
   return (
     <div className="pb-6-">
@@ -1060,6 +1044,51 @@ function DashboardContaintMaintComponant({
           </div>
         </div>
       )}
+
+      {/*  */}
+      {expandSection && (
+        <div className="fixed  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
+          {/* <div className="bg-white rounded-lg overflow-hidden max-w-[90vw] flex flex-col justify-center w-full"> */}
+          <div className="w-full mx-4 md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
+            <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
+              <IoClose
+                onClick={() => {
+                  setExpandSection("");
+                }}
+              />
+            </div>
+            {expandSection === "carte" && (
+              <div className="relative  translate-y-10--">
+                <div className="w-full h-[15rem]-- overflow-hidden rounded-md ">
+                  <LocationPage fromDashboard="false" />
+                </div>
+              </div>
+            )}
+
+            {expandSection === "graphe" && (
+              <div className="h-full flex justify-between flex-col">
+                <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
+                  <h2 className="">Graphe des Comptes ({comptes?.length})</h2>
+                </div>
+                <Graphe3BatonnetComptes />
+              </div>
+            )}
+            {expandSection === "tableau" && (
+              <div className="h-full flex justify-between flex-col">
+                <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
+                  <h2 className="">Tableau des Comptes ({comptes?.length})</h2>
+                </div>
+                <TableauRecapitulatifComptes />
+              </div>
+            )}
+
+            {/* {expandSection === "tableau" && <TableauRecapitulatifComptes />} */}
+          </div>
+          {/* </div> */}
+        </div>
+      )}
+
+      {/*  */}
       {/* statistic box */}
       <div className="md:px-4-- pt-3--">
         <div className="w-full h-full bg-white rounded-lg p-4">
@@ -1272,11 +1301,11 @@ function DashboardContaintMaintComponant({
                     <h2>Position des appareils </h2>
                     <p
                       onClick={() => {
-                        setDocumentationPage("Localisation_devices");
+                        setExpandSection("carte");
                       }}
                       className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
                     >
-                      Voir tous
+                      Full Screen
                     </p>
                     {!currentAccountSelected && (
                       <FaAngleDoubleRight
@@ -1298,6 +1327,14 @@ function DashboardContaintMaintComponant({
                   <div className="  min-w-[14rem]">
                     <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
                       <h2>Graphe des Comptes </h2>
+                      <p
+                        onClick={() => {
+                          setExpandSection("graphe");
+                        }}
+                        className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
+                      >
+                        Full Screen
+                      </p>
                       {/* {!currentAccountSelected && (
                         <FaAngleDoubleRight
                           onClick={() => {
@@ -1374,9 +1411,19 @@ function DashboardContaintMaintComponant({
                 </h2>
               )}
               {!showFistGrapheOption2 && !currentAccountSelected && (
-                <h2 className="font-semibold text-lg text-gray-700">
-                  Tableau des comptes
-                </h2>
+                <div className="flex w-full justify-between items-center">
+                  <h2 className="font-semibold text-lg text-gray-700">
+                    Tableau des comptes
+                  </h2>
+                  <p
+                    onClick={() => {
+                      setExpandSection("tableau");
+                    }}
+                    className="font-semibold absolute-- top-4 right-4 text-sm underline cursor-pointer text-orange-500"
+                  >
+                    Full Screen
+                  </p>
+                </div>
               )}
 
               {currentAccountSelected && (
@@ -1386,6 +1433,7 @@ function DashboardContaintMaintComponant({
                   </h2>
                   <p
                     onClick={() => {
+                      // setExpandSection("tableau");
                       setDocumentationPage("Gestion_des_appareils");
                     }}
                     className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"
@@ -1445,10 +1493,21 @@ function DashboardContaintMaintComponant({
         </div>
 
         {!currentAccountSelected && (
-          <div className="w-full bg-white min-h-[15rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
+          <div className="w-full relative bg-white min-h-[15rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
             <div className="w-full overflow-hidden rounded-md">
               <LocationPage fromDashboard="true" />
             </div>
+
+            {!expandSection && (
+              <div
+                onClick={() => {
+                  setExpandSection("carte");
+                }}
+                className="absolute w-[3rem] h-[3rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[99999999999] top-5 right-5 cursor-pointer"
+              >
+                <ImEnlarge className="text-[1.2rem]" />
+              </div>
+            )}
           </div>
         )}
 
@@ -1527,6 +1586,10 @@ function DashboardContaintMaintComponant({
                         <p className="text-gray-600">
                           Nom de l'utilisateur :{" "}
                           <span className="font-bold">{user?.description}</span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Account ID :{" "}
+                          <span className="font-bold">{user?.accountID}</span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Nombre d'appareil :{" "}
@@ -1621,6 +1684,10 @@ function DashboardContaintMaintComponant({
                         <p className="text-gray-600">
                           Nom du Groupe :{" "}
                           <span className="font-bold">{user?.description}</span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Account ID :{" "}
+                          <span className="font-bold">{user?.accountID}</span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Nombre d'appareil :{" "}

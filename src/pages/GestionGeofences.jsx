@@ -32,11 +32,23 @@ function GestionGeofences({
     currentAccountSelected,
     accountGeofences,
     setAccountGeofences,
+    //
+    isDashboardHomePage,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
   const navigate = useNavigate();
 
-  const currentGeofenceData = geofenceData ?? listeGestionDesGeofences;
+  let currentGeofenceData;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    currentGeofenceData = currentAccountSelected?.accountGeofences;
+  } else if (isDashboardHomePage && !currentAccountSelected) {
+    currentGeofenceData = accountGeofences;
+  } else if (!isDashboardHomePage) {
+    currentGeofenceData = geofenceData;
+  }
+
+  //  currentGeofenceData = geofenceData ?? listeGestionDesGeofences;
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes

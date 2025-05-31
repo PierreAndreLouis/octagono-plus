@@ -414,6 +414,23 @@ function ListeDesVehiculesGestion({
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
+                            <p
+                              onClick={() => {
+                                console.log(
+                                  device?.véhiculeDetails[0]?.address
+                                );
+                              }}
+                              className="font-bold"
+                            >
+                              Adresse :
+                            </p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {device?.véhiculeDetails?.length >= 0
+                                ? device?.véhiculeDetails[0]?.address
+                                : "Pas de nom disponible"}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Dernière mise a jour :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
                               {FormatDateHeure(device?.lastUpdateTime).date}

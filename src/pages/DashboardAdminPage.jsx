@@ -105,6 +105,7 @@ function DashboardAdminPage() {
     listeGestionDesGeofences,
     setListeGestionDesGeofences,
     adminAccount,
+    // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   // Données des véhicules avec heures différentes
@@ -357,7 +358,12 @@ function DashboardAdminPage() {
               </div>
             </div>
           </header>
-          <div className="flex gap-5 bg-white">
+          <div
+            // onClick={() => {
+            //   updateAccountDevicesWidthvéhiculeDetailsFonction();
+            // }}
+            className="flex gap-5 bg-white"
+          >
             {/* Side Bar */}
             <div
               className={`${
@@ -632,15 +638,18 @@ function DashboardAdminPage() {
                 <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
                     onClick={() => {
+                      console.log(
+                        "xxxxxxxxxxxxxxxxxx",
+                        currentAccountSelected?.accountGeofences
+                      );
+                      console.log("eeeeeeeeeeeeeeeeee", accountGeofences);
                       if (currentAccountSelected) {
                         setListeGestionDesGeofences(
                           currentAccountSelected?.accountGeofences
                         );
-                        console.log(
-                          "xxxxxxxxxxxxxxxxxx",
-                          currentAccountSelected?.accountGeofences
-                        );
+                        console.log("Non...............");
                       } else {
+                        console.log("Oui...............");
                         setListeGestionDesGeofences(accountGeofences);
                       }
                       scrollToTop();
@@ -678,6 +687,7 @@ function DashboardAdminPage() {
                       }
                       scrollToTop();
                       setDocumentationPage("Localisation_devices");
+                      // updateAccountDevicesWidthvéhiculeDetailsFonction();
                       closeSideBar();
                     }}
                     className={`${
@@ -748,13 +758,13 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                28/05/2025 _ 1
+                31/05/2025 _ 1
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (
-                <div className="fixed  shadow-lg shadow-black/10 max- w-[10rem]  rounded-full max- h-[10rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-gray-200/50">
+                <div className="fixed  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/30 -200/50">
                   <div className="w-full h-full flex justify-center items-center">
-                    <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
+                    <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
                   </div>
                 </div>
               )}

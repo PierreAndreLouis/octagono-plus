@@ -65,7 +65,9 @@ function DashboardContaintMaintComponant({
     setListeGestionDesGroupe,
     setListeGestionDesGroupeTitre,
     fetchAllComptes,
-    adminAccount, adminUser, adminPassword
+    adminAccount,
+    adminUser,
+    adminPassword,
   } = useContext(DataContext);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -421,8 +423,9 @@ function DashboardContaintMaintComponant({
     setTimeout(() => {
       setIsLoading2(false);
     }, 5000);
- 
-    fetchAllComptes(adminAccount, adminUser, adminPassword);
+    const fetchAllOtherData = true;
+
+    fetchAllComptes(adminAccount, adminUser, adminPassword, fetchAllOtherData);
 
     // fetchAccountDevices(id, pwd).catch((err) => {
     //   console.error("Erreur lors du chargement des devices :", err);

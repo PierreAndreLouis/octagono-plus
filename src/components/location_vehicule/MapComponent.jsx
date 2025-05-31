@@ -59,6 +59,9 @@ function MapComponent({
     gestionAccountData,
     setIsDashboardHomePage,
     isDashboardHomePage,
+    adminUsername,
+
+    // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   // le data a utiliser
@@ -73,7 +76,7 @@ function MapComponent({
 
   if (isDashboardHomePage && currentAccountSelected) {
     dataFusionné = currentAccountSelected?.accountDevices;
-  } else if (isDashboardHomePage && accountDevices && !currentAccountSelected) {
+  } else if (isDashboardHomePage && !currentAccountSelected) {
     dataFusionné = accountDevices;
   } else if (!isDashboardHomePage) {
     dataFusionné = currentDataFusionné;
@@ -85,42 +88,50 @@ function MapComponent({
   const vehiculeActive = dataFusionné;
 
   // Formatage des donnee pour la  carte
-  const véhiculeData = vehiculeActive?.map((véhicule) => ({
-    deviceID: véhicule?.deviceID || "",
-    accountID: véhicule?.accountID || "",
-    description: véhicule.description || "Véhicule",
-    lastValidLatitude:
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.latitude ||
-      véhicule?.lastValidLatitude ||
-      "",
-    lastValidLongitude:
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.longitude ||
-      véhicule?.lastValidLongitude ||
-      "",
-    address:
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.backupAddress ||
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.address ||
-      "",
-    imeiNumber: véhicule?.imeiNumber || "",
-    isActive: véhicule?.isActive || "",
-    licensePlate: véhicule?.licensePlate || "",
-    simPhoneNumber: véhicule?.simPhoneNumber || "",
-    timestamp:
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.timestamp ||
-      véhicule?.lastUpdateTime ||
-      "",
-    speedKPH:
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.speedKPH,
-    heading:
-      véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-        ?.heading || 0,
-  }));
+  const véhiculeData = vehiculeActive
+    ?.map((véhicule) => ({
+      deviceID: véhicule?.deviceID || "",
+      accountID: véhicule?.accountID || "",
+      description: véhicule.description || "Véhicule",
+      lastValidLatitude:
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.latitude ||
+        véhicule?.lastValidLatitude ||
+        "",
+      lastValidLongitude:
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.longitude ||
+        véhicule?.lastValidLongitude ||
+        "",
+      address:
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.backupAddress ||
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.address ||
+        "",
+      imeiNumber: véhicule?.imeiNumber || "",
+      isActive: véhicule?.isActive || "",
+      licensePlate: véhicule?.licensePlate || "",
+      simPhoneNumber: véhicule?.simPhoneNumber || "",
+      timestamp:
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.timestamp ||
+        véhicule?.lastUpdateTime ||
+        "",
+      speedKPH:
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.speedKPH,
+      heading:
+        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+          ?.heading || 0,
+    }))
+    ?.filter(
+      (v) =>
+        v.lastValidLatitude !== "0.0" &&
+        v.lastValidLongitude !== "0.0" &&
+        v.lastValidLatitude !== "" &&
+        v.lastValidLongitude !== ""
+    );
 
   // une reference pour la carte
   const mapRef = useRef(null);
@@ -795,7 +806,13 @@ function MapComponent({
   }, [width]);
 
   return (
-    <div ref={ref1} className="relative">
+    <div
+      onClick={() => {
+        // updateAccountDevicesWidthvéhiculeDetailsFonction();
+      }}
+      ref={ref1}
+      className="relative"
+    >
       {isAddingNewGeofence && (
         <div className="fixed  z-[9999999999] shadow-lg right-[1rem] lg:right-[2rem] md:top-[5rem] top-[11rem]  ">
           <button
@@ -1227,12 +1244,11 @@ function MapComponent({
                       <strong>Adresse :</strong>{" "}
                       {véhicule.address || "Non disponible"}
                     </p>
-                    {username === "admin" && (
-                      <p>
-                        <strong>IMEI Number :</strong>{" "}
-                        {véhicule.imeiNumber || "Chargement..."}
-                      </p>
-                    )}
+                    {/* <p>
+                      <strong>Date creation :</strong>{" "}
+                      {véhicule.address || "Non disponible"}
+                    </p> */}
+
                     <p>
                       <strong>Vitesse :</strong>{" "}
                       {véhicule.speedKPH && !isNaN(Number(véhicule.speedKPH))
@@ -1240,14 +1256,6 @@ function MapComponent({
                         : "Non disponible"}
                     </p>
 
-                    <p>
-                      <strong>Date :</strong>{" "}
-                      {véhicule.timestamp
-                        ? FormatDateHeureTimestamp.date
-                        : "Pas de date disponible"}
-                      <span className="px-3">/</span>
-                      {FormatDateHeureTimestamp.time}
-                    </p>
                     <p>
                       <strong>Statut : </strong>
                       {véhicule.speedKPH ? "" : "Hors service"}
@@ -1259,8 +1267,27 @@ function MapComponent({
                     </p>
                     <p>
                       <strong>Plaque d'immatriculation :</strong>{" "}
-                      {véhicule.licensePlate || "Chargement..."}
+                      {véhicule?.licensePlate || "Chargement..."}
                     </p>
+                    {(username === "admin" || adminUsername === "admin") && (
+                      <p>
+                        <strong>IMEI Number :</strong>{" "}
+                        {véhicule.imeiNumber || "Chargement..."}
+                      </p>
+                    )}
+                    <p>
+                      <strong>Telephone :</strong>{" "}
+                      {véhicule?.simPhoneNumber || "Chargement..."}
+                    </p>
+                    <p>
+                      <strong>Date creation :</strong>{" "}
+                      {véhicule.timestamp
+                        ? FormatDateHeureTimestamp.date
+                        : "Pas de date disponible"}
+                      <span className="px-3">/</span>
+                      {FormatDateHeureTimestamp.time}
+                    </p>
+
                     <button
                       onClick={() =>
                         openGoogleMaps(
