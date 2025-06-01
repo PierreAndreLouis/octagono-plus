@@ -60,7 +60,7 @@ function MapComponent({
     setIsDashboardHomePage,
     isDashboardHomePage,
     adminUsername,
-
+    accountGeofences,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
@@ -73,13 +73,17 @@ function MapComponent({
   //   currentDataFusionné;
 
   let dataFusionné;
+  let CurrentGeofenceData;
 
   if (isDashboardHomePage && currentAccountSelected) {
     dataFusionné = currentAccountSelected?.accountDevices;
+    CurrentGeofenceData = currentAccountSelected?.accountGeofences;
   } else if (isDashboardHomePage && !currentAccountSelected) {
     dataFusionné = accountDevices;
+    CurrentGeofenceData = [];
   } else if (!isDashboardHomePage) {
     dataFusionné = currentDataFusionné;
+    CurrentGeofenceData = geofenceData;
   }
 
   // dataFusionné = currentDataFusionné;
@@ -1147,63 +1151,61 @@ function MapComponent({
         {/* Composant qui gère le clic sur la carte */}
 
         {!isAddingNewGeofence &&
-          geofenceData
-            ?.filter((isActiveGeofence) => {
-              const activeGeofence = isActiveGeofence?.isActive === 1;
-              return activeGeofence;
-            })
-            ?.map((geofence, index) => {
-              // Filtrer les coordonnées valides
-              const validCoordinates = geofence?.coordinates?.filter(
-                (point) =>
-                  point.lat !== null &&
-                  point.lng !== null &&
-                  point.lat !== "" &&
-                  point.lng !== "" &&
-                  point.lat !== 0 &&
-                  point.lng !== 0
-              );
+          CurrentGeofenceData?.filter((isActiveGeofence) => {
+            const activeGeofence = isActiveGeofence?.isActive === 1;
+            return activeGeofence;
+          })?.map((geofence, index) => {
+            // Filtrer les coordonnées valides
+            const validCoordinates = geofence?.coordinates?.filter(
+              (point) =>
+                point.lat !== null &&
+                point.lng !== null &&
+                point.lat !== "" &&
+                point.lng !== "" &&
+                point.lat !== 0 &&
+                point.lng !== 0
+            );
 
-              if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
+            if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
 
-              // Calculer le centre du geofence
-              const latitudes = validCoordinates?.map((point) => point.lat);
-              const longitudes = validCoordinates?.map((point) => point.lng);
-              const center = [
-                (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
-                (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-              ];
+            // Calculer le centre du geofence
+            const latitudes = validCoordinates?.map((point) => point.lat);
+            const longitudes = validCoordinates?.map((point) => point.lng);
+            const center = [
+              (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+              (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+            ];
 
-              return (
-                <React.Fragment key={index}>
-                  <Polygon
-                    positions={validCoordinates?.map((point) => [
-                      point.lat,
-                      point.lng,
-                    ])}
-                    pathOptions={{
-                      color: geofence?.color || "", // Couleur de la bordure
-                      fillColor: geofence?.color || "#000000", // Couleur du fond
-                      fillOpacity: 0.1, // Opacité du fond
-                      weight: 1, // Épaisseur des lignes
-                    }}
-                  />
+            return (
+              <React.Fragment key={index}>
+                <Polygon
+                  positions={validCoordinates?.map((point) => [
+                    point.lat,
+                    point.lng,
+                  ])}
+                  pathOptions={{
+                    color: geofence?.color || "", // Couleur de la bordure
+                    fillColor: geofence?.color || "#000000", // Couleur du fond
+                    fillOpacity: 0.1, // Opacité du fond
+                    weight: 1, // Épaisseur des lignes
+                  }}
+                />
 
-                  <Marker
-                    position={center}
-                    icon={L.divIcon({
-                      className: "geofence-label",
-                      html: `<div 
+                <Marker
+                  position={center}
+                  icon={L.divIcon({
+                    className: "geofence-label",
+                    html: `<div 
                            class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                            
                            style="font-size: ${textSize}; width: ${widthSize}; color: #706f6f; {geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                            ${geofence?.description}
                            </div>`,
-                    })}
-                  />
-                </React.Fragment>
-              );
-            })}
+                  })}
+                />
+              </React.Fragment>
+            );
+          })}
 
         {!isAddingNewGeofence &&
           vehicles?.map((véhicule, index) => {

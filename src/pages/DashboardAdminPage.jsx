@@ -701,8 +701,26 @@ function DashboardAdminPage() {
                       <p className="text-gray-600 font-semibold">
                         Localisation Appareils (
                         {currentAccountSelected
-                          ? currentAccountSelected?.accountDevices?.length
-                          : accountDevices?.length}
+                          ? currentAccountSelected?.accountDevices.filter(
+                              (v) =>
+                                !(
+                                  v.lastValidLatitude === "0.0" ||
+                                  v.lastValidLongitude === "0.0" ||
+                                  v.lastValidLatitude === "" ||
+                                  v.lastValidLongitude === "" ||
+                                  v.véhiculeDetails.length <= 0
+                                )
+                            )?.length
+                          : accountDevices.filter(
+                              (v) =>
+                                !(
+                                  v.lastValidLatitude === "0.0" ||
+                                  v.lastValidLongitude === "0.0" ||
+                                  v.lastValidLatitude === "" ||
+                                  v.lastValidLongitude === "" ||
+                                  v.véhiculeDetails.length <= 0
+                                )
+                            )?.length}
                         )
                       </p>
                     </div>
@@ -758,11 +776,11 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                31/05/2025 _ 2
+                01/06/2025 _ 1
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (
-                <div className="fixed  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/30 -200/50">
+                <div className="fixed  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
                   <div className="w-full h-full flex justify-center items-center">
                     <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
                   </div>

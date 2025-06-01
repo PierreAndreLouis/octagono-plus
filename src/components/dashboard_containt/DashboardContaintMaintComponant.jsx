@@ -1063,7 +1063,7 @@ function DashboardContaintMaintComponant({
             {expandSection === "carte" && (
               <div className="relative  translate-y-10--">
                 <div className="w-full h-[15rem]-- overflow-hidden rounded-md ">
-                  <LocationPage fromDashboard="false" />
+                  <LocationPage fromDashboard="true" />
                 </div>
               </div>
             )}
@@ -1081,9 +1081,7 @@ function DashboardContaintMaintComponant({
             {expandSection === "tableau" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                  <h2 className="mb-10">
-                    Tableau des Comptes ({comptes?.length})
-                  </h2>
+                  <h2 className="mb-10">Tableau des Comptes</h2>
                 </div>
                 <TableauRecapitulatifComptes isLongueur="true" />
               </div>
@@ -1324,7 +1322,20 @@ function DashboardContaintMaintComponant({
                     )}
                   </div>
                   <p className="text-gray-500">
-                    Nombre d'appareils ({listeGestionDesVehicules?.length})
+                    Nombre d'appareils (
+                    {
+                      listeGestionDesVehicules.filter(
+                        (v) =>
+                          !(
+                            v.lastValidLatitude === "0.0" ||
+                            v.lastValidLongitude === "0.0" ||
+                            v.lastValidLatitude === "" ||
+                            v.lastValidLongitude === "" ||
+                            v.véhiculeDetails.length <= 0
+                          )
+                      )?.length
+                    }
+                    )
                   </p>
                 </div>
               )}
@@ -1420,7 +1431,7 @@ function DashboardContaintMaintComponant({
               {!showFistGrapheOption2 && !currentAccountSelected && (
                 <div className="flex w-full justify-between items-center">
                   <h2 className="font-semibold text-lg text-gray-700">
-                    Tableau des comptes
+                    Tableau des comptes ({comptes?.length})
                   </h2>
                   <p
                     onClick={() => {
