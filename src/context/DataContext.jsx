@@ -29,6 +29,8 @@ const DataContextProvider = ({ children }) => {
 
   // mise a jour auto des donnees des devices
   const [updateAuto, setupdateAuto] = useState(false);
+  const [chooseOtherLanguagePopup, setChooseOtherLanguagePopup] =
+    useState(false);
 
   const [showConfirmationMessagePopup, setShowConfirmationMessagePopup] =
     useState(false);
@@ -8866,6 +8868,8 @@ const DataContextProvider = ({ children }) => {
         véhiculeDetails,
         showGeofenceInCarte,
         setShowGeofenceInCarte,
+        chooseOtherLanguagePopup,
+        setChooseOtherLanguagePopup,
 
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}

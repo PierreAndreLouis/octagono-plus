@@ -508,23 +508,23 @@ function DashboardContaintMaintComponant({
                 Total
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Déplacés
+                Déplacé
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Actifs
+                Actif
               </th>
 
               <th className="border  min-w-[8rem] dark:border-gray-600 py-2 ---- px-2">
                 Hors service
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Utilisateurs
+                Utilisateur
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Groupes
+                Groupe
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Geofences
+                Geofence
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
                 Type
@@ -533,7 +533,7 @@ function DashboardContaintMaintComponant({
                 Manager
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Activer
+                IsActif
               </th>
             </tr>
           </div>
@@ -596,7 +596,7 @@ function DashboardContaintMaintComponant({
                     <tr key={i} className="border dark:border-gray-600">
                       {/* <td className="border-l-4 w-0"></td> */}
                       <td className="py-3  w-[3rem] px-2 border">{i + 1}</td>
-                      <td className="py-3 px-2 w-[12rem] border">
+                      <td className="notranslate py-3 px-2 w-[12rem] border">
                         {acct.accountID}
                       </td>
                       <td className="py-3 w-[6rem] px-2 border">
@@ -1561,9 +1561,9 @@ function DashboardContaintMaintComponant({
               onClick={() => {
                 setExpandSection("carte");
               }}
-              className="absolute w-[3rem] h-[3rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-5 right-5 cursor-pointer"
+              className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-5 right-5 cursor-pointer"
             >
-              <ImEnlarge className="text-[1.2rem]" />
+              <ImEnlarge className="text-[1.1rem]" />
             </div>
             {/* )} */}
           </div>

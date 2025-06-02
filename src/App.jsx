@@ -65,6 +65,7 @@ import ListeDesVehiculesGestion from "./pages/ListeDesVehiculesGestion";
 import ListeDesGroupes from "./pages/ListeDesGroupes";
 import DashboardAdminPage from "./pages/DashboardAdminPage";
 import SuccèsÉchecMessagePopup from "./components/Reutilisable/SuccèsÉchecMessagePopup";
+import GoogleTranslate from "./components/home/GoogleTranslate";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function App() {
@@ -127,6 +128,8 @@ function App() {
     setError,
     isDashboardHomePage,
     setIsDashboardHomePage,
+    chooseOtherLanguagePopup,
+    setChooseOtherLanguagePopup,
   } = useContext(DataContext);
 
   React.useEffect(() => {
@@ -269,6 +272,7 @@ function App() {
 
         {/* Composant pour faire défiler vers le haut */}
         <ScrollToTop />
+        {chooseOtherLanguagePopup && <GoogleTranslate />}
 
         {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
         {!readDocumentation && (

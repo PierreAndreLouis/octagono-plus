@@ -160,7 +160,7 @@ function ListeDesUtilisateur({
       <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
         {fromExpandSectionDashboard === "false" && (
           <div className="mb-[4rem]">
-            <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+            <h2 className="notranslate mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
               Liste des Utilisateur
             </h2>
 
