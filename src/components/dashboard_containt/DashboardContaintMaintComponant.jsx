@@ -40,6 +40,8 @@ import { GoDot } from "react-icons/go";
 import { DataContext } from "../../context/DataContext";
 import LocationPage from "../../pages/LocationPage";
 import ListeDesVehiculesGestion from "../../pages/ListeDesVehiculesGestion";
+import ListeDesUtilisateur from "../../pages/ListeDesUtilisateur";
+import ListeDesGroupes from "../../pages/ListeDesGroupes";
 
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
@@ -75,6 +77,8 @@ function DashboardContaintMaintComponant({
     adminUser,
     adminPassword,
   } = useContext(DataContext);
+
+  const [expandSection, setExpandSection] = useState("");
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
   const getTodayTimestamp = () => {
@@ -283,7 +287,9 @@ function DashboardContaintMaintComponant({
       return {
         name: account?.description, // fullName pour le popup
         shortName:
-          account?.description?.slice(0, 6) +
+          (expandSection === "graphe"
+            ? account?.description?.slice(0, 26)
+            : account?.description?.slice(0, 6)) +
           "(" +
           account?.accountDevices?.length +
           ")", // 5 lettres pour l’axe X
@@ -299,7 +305,7 @@ function DashboardContaintMaintComponant({
   const graphData2 = formatBarData(gestionAccountData)?.sort(
     (a, b) => b.total - a.total
   );
-  const barSpacing2 = 70;
+  const barSpacing2 = expandSection === "graphe" ? 160 : 70;
   const fixedWidth2 = graphData2?.length * barSpacing2;
 
   // Custom Tooltip pour afficher les vraies valeurs
@@ -1013,7 +1019,6 @@ function DashboardContaintMaintComponant({
     }
     console.log("result", result);
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
-  const [expandSection, setExpandSection] = useState("");
 
   return (
     <div className="pb-6-">
@@ -1067,7 +1072,6 @@ function DashboardContaintMaintComponant({
                 </div>
               </div>
             )}
-
             {expandSection === "graphe" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
@@ -1086,7 +1090,41 @@ function DashboardContaintMaintComponant({
                 <TableauRecapitulatifComptes isLongueur="true" />
               </div>
             )}
-
+            {expandSection === "userListe" && (
+              <div className="overflow-auto min- h-[90vh]">
+                <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
+                  <h2 className="mb-0">
+                    Liste des utilisateurs ({" "}
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountUsers?.length
+                      : accountUsers?.length}
+                    )
+                  </h2>
+                </div>
+                <ListeDesUtilisateur
+                  setDocumentationPage={setDocumentationPage}
+                  fromExpandSectionDashboard="true"
+                />
+              </div>
+            )}
+            {expandSection === "userGroupe" && (
+              <div className="overflow-auto min- h-[90vh]">
+                <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
+                  <h2 className="mb-0">
+                    Liste des Groupes ({" "}
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountGroupes?.length
+                      : accountGroupes?.length}
+                    )
+                  </h2>
+                </div>
+                <ListeDesGroupes
+                  setDocumentationPage={setDocumentationPage}
+                  fromExpandSectionDashboard="true"
+                />
+              </div>
+            )}
+            {/* uuuuuuuuuuuu */}
             {/* {expandSection === "tableau" && <TableauRecapitulatifComptes />} */}
           </div>
           {/* </div> */}
@@ -1518,16 +1556,16 @@ function DashboardContaintMaintComponant({
               <LocationPage fromDashboard="true" />
             </div>
 
-            {!expandSection && (
-              <div
-                onClick={() => {
-                  setExpandSection("carte");
-                }}
-                className="absolute w-[3rem] h-[3rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[99999999999] top-5 right-5 cursor-pointer"
-              >
-                <ImEnlarge className="text-[1.2rem]" />
-              </div>
-            )}
+            {/* {!expandSection && ( */}
+            <div
+              onClick={() => {
+                setExpandSection("carte");
+              }}
+              className="absolute w-[3rem] h-[3rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-5 right-5 cursor-pointer"
+            >
+              <ImEnlarge className="text-[1.2rem]" />
+            </div>
+            {/* )} */}
           </div>
         )}
 
@@ -1552,8 +1590,9 @@ function DashboardContaintMaintComponant({
                     } else {
                       setListeGestionDesUsers(accountUsers);
                     }
-                    setDocumentationPage("Gestion_des_utilisateurs");
-                    scrollToTop();
+                    setExpandSection("userListe");
+                    // setDocumentationPage("Gestion_des_utilisateurs");
+                    // scrollToTop();
                   }}
                   className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
                 >
@@ -1561,7 +1600,7 @@ function DashboardContaintMaintComponant({
                 </button>
               </div>
             </div>
-            <div className="h-full max-h-[20rem] flex flex-col gap-4 overflow-auto-- overflow-hidden">
+            <div className="h-full max-h-[20rem]-- flex flex-col gap-4 overflow-auto-- overflow-hidden--">
               {(currentAccountSelected
                 ? currentAccountSelected?.accountUsers
                 : [
@@ -1596,7 +1635,7 @@ function DashboardContaintMaintComponant({
                         // setListeGestionDesVehicules(account?.accountDevices);
                         // setChooseOtherAccountGestion(false);
                       }}
-                      className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.65rem] px-2 "
+                      className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
                     >
                       {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                         {index + 1}
@@ -1660,15 +1699,16 @@ function DashboardContaintMaintComponant({
                     );
                     setListeGestionDesGroupeTitre("Tous les Groupe");
                   }
-                  setDocumentationPage("Gestion_des_groupes");
-                  scrollToTop();
+                  setExpandSection("userGroupe");
+                  // setDocumentationPage("Gestion_des_groupes");
+                  // scrollToTop();
                 }}
                 className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
               >
                 Voir tous
               </button>
             </div>
-            <div className=" flex flex-col gap-4  h-full max-h-[20rem] overflow-y-auto">
+            <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto--">
               {(currentAccountSelected
                 ? currentAccountSelected?.accountGroupes
                 : Array.from(

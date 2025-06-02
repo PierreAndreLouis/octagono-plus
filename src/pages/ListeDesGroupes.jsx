@@ -17,6 +17,7 @@ function ListeDesGroupes({
   setDocumentationPage,
   setChooseOtherAccountGestion,
   setChooseOneAccountToContinue,
+  fromExpandSectionDashboard = "false",
 }) {
   const {
     currentAccountSelected,
@@ -267,62 +268,60 @@ function ListeDesGroupes({
       )}
 
       <div className="px-4 pb-40 pt-10 bg-white rounded-lg">
-        <h2
-          onClick={() => {
-            fetchAccountGroupes();
-          }}
-          className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
-        >
-          Liste des groupes
-        </h2>
-
-        {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-          <span className="text-gray-700">Compte :</span>{" "}
-          {currentAccountSelected?.description}
-        </h3> */}
-        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-          {currentSelectedUserToConnect?.description && (
-            <span className="text-gray-700">Utilisateur :</span>
-          )}{" "}
-          {currentSelectedUserToConnect?.description}
-        </h3>
-        <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-          {listeGestionDesGroupeTitre && (
-            <span className="text-gray-700">Groupe :</span>
-          )}{" "}
-          {listeGestionDesGroupeTitre}
-        </h3>
-        <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-          <span className="text-gray-700">Nombre de Groupe :</span>{" "}
-          {filterGroupeAccountData?.length}
-        </h3>
-
-        <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
-          <div className="flex gap-2 justify-center mt-4">
-            <div
+        {fromExpandSectionDashboard === "false" && (
+          <div>
+            <h2
               onClick={() => {
-                // setDocumentationPage("Ajouter_nouveau_groupe");
-                if (!currentAccountSelected) {
-                  setChooseOneAccountToContinue(true);
-                  setChooseOtherAccountGestion(true);
-                  setDocumentationPage("Ajouter_nouveau_groupe");
-                } else {
-                  setDocumentationPage("Ajouter_nouveau_groupe");
-                }
+                fetchAccountGroupes();
               }}
-              className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+              className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
             >
-              <div className="flex justify-center items-center gap-3 ">
-                <FaUserPlus className="text-2xl" />
-                <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                  <span className="hidden md:inline">Ajouter un</span> Nouveau
-                  Groupe
-                </p>
-              </div>
-            </div>{" "}
-          </div>
+              Liste des groupes
+            </h2>
 
-          {/* <div
+            <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+              {currentSelectedUserToConnect?.description && (
+                <span className="text-gray-700">Utilisateur :</span>
+              )}{" "}
+              {currentSelectedUserToConnect?.description}
+            </h3>
+            <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+              {listeGestionDesGroupeTitre && (
+                <span className="text-gray-700">Groupe :</span>
+              )}{" "}
+              {listeGestionDesGroupeTitre}
+            </h3>
+            <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
+              <span className="text-gray-700">Nombre de Groupe :</span>{" "}
+              {filterGroupeAccountData?.length}
+            </h3>
+
+            <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+              <div className="flex gap-2 justify-center mt-4">
+                <div
+                  onClick={() => {
+                    // setDocumentationPage("Ajouter_nouveau_groupe");
+                    if (!currentAccountSelected) {
+                      setChooseOneAccountToContinue(true);
+                      setChooseOtherAccountGestion(true);
+                      setDocumentationPage("Ajouter_nouveau_groupe");
+                    } else {
+                      setDocumentationPage("Ajouter_nouveau_groupe");
+                    }
+                  }}
+                  className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+                >
+                  <div className="flex justify-center items-center gap-3 ">
+                    <FaUserPlus className="text-2xl" />
+                    <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                      <span className="hidden md:inline">Ajouter un</span>{" "}
+                      Nouveau Groupe
+                    </p>
+                  </div>
+                </div>{" "}
+              </div>
+
+              {/* <div
             onClick={() => {
               setShowChooseOtherUserGroupePopup(true);
             }}
@@ -334,31 +333,31 @@ function ListeDesGroupes({
             <FaChevronDown />
           </div> */}
 
-          {!showFilterInputSection && (
-            <div className="flex gap-2 w-full justify-between items-center">
-              <div
-                onClick={() => {
-                  setShowChooseOtherUserGroupePopup(true);
-                }}
-                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-              >
-                <h3 className="w-full text-center font-semibold">
-                  {/* Compte: */}
-                  <span>
-                    {listeGestionDesGroupeTitre || "Tous les Groupes"}
-                  </span>
-                </h3>
-                <FaChevronDown />
-              </div>
-              <div
-                onClick={() => {
-                  setShowFilterInputSection(true);
-                }}
-                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
-              >
-                <IoSearchOutline className="text-xl " />
-              </div>
-              {/* <div
+              {!showFilterInputSection && (
+                <div className="flex gap-2 w-full justify-between items-center">
+                  <div
+                    onClick={() => {
+                      setShowChooseOtherUserGroupePopup(true);
+                    }}
+                    className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+                  >
+                    <h3 className="w-full text-center font-semibold">
+                      {/* Compte: */}
+                      <span>
+                        {listeGestionDesGroupeTitre || "Tous les Groupes"}
+                      </span>
+                    </h3>
+                    <FaChevronDown />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setShowFilterInputSection(true);
+                    }}
+                    className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+                  >
+                    <IoSearchOutline className="text-xl " />
+                  </div>
+                  {/* <div
                 onClick={() => {
                   // deviceUpdateFonction();
                 }}
@@ -366,37 +365,40 @@ function ListeDesGroupes({
               >
                 <MdUpdate className="text-xl " />
               </div> */}
-            </div>
-          )}
+                </div>
+              )}
 
-          {showFilterInputSection && (
-            <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
-              <input
-                id="search"
-                name="search"
-                type="search"
-                placeholder="Recherche un Groupe"
-                required
-                value={searchGroupInputTerm}
-                onChange={(e) => {
-                  setSearchGroupInputTerm(e.target.value);
-                }}
-                className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
-              />
-              <div
-                onClick={() => {
-                  {
-                    setShowFilterInputSection(false);
-                    setSearchTermInput("");
-                  }
-                }}
-                className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
-              >
-                <IoClose className="text-xl text-red-600" />
-              </div>
+              {showFilterInputSection && (
+                <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+                  <input
+                    id="search"
+                    name="search"
+                    type="search"
+                    placeholder="Recherche un Groupe"
+                    required
+                    value={searchGroupInputTerm}
+                    onChange={(e) => {
+                      setSearchGroupInputTerm(e.target.value);
+                    }}
+                    className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                  />
+                  <div
+                    onClick={() => {
+                      {
+                        setShowFilterInputSection(false);
+                        setSearchTermInput("");
+                      }
+                    }}
+                    className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+                  >
+                    <IoClose className="text-xl text-red-600" />
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
           {/*  */}

@@ -16,7 +16,7 @@ import iconMediumSpeed from "/pin/ping_yellow.png";
 import iconHighSpeed from "/pin/ping_green.png";
 import { DataContext } from "../../context/DataContext";
 import { Polygon } from "react-leaflet";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoEarth } from "react-icons/io5";
 import { useMapEvent } from "react-leaflet";
 import { FaPlus } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -61,6 +61,9 @@ function MapComponent({
     isDashboardHomePage,
     adminUsername,
     accountGeofences,
+    // showGeofenceInCarte,
+    // setShowGeofenceInCarte,
+
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
@@ -80,7 +83,7 @@ function MapComponent({
     CurrentGeofenceData = currentAccountSelected?.accountGeofences;
   } else if (isDashboardHomePage && !currentAccountSelected) {
     dataFusionné = accountDevices;
-    CurrentGeofenceData = [];
+    CurrentGeofenceData = accountGeofences || [];
   } else if (!isDashboardHomePage) {
     dataFusionné = currentDataFusionné;
     CurrentGeofenceData = geofenceData;
@@ -470,8 +473,6 @@ function MapComponent({
       .filter(Boolean)
       .map((pos) => ({ lat: pos.lat, lng: pos.lng })); // Assure une structure propre
 
-    // setGeofence(newGeofence);
-    // if (coordinates.length > 2) {
     setGeofence({
       coordinates, // Tableau d'objets { lat, lng }
       color: ajouterCouleurGeofenceCodeCouleurRef.current, // Couleur par défaut
@@ -501,67 +502,76 @@ function MapComponent({
     clickedPosition8,
   ];
 
-  const positionComponents = positions.map((position, index) => {
-    const positionNumber = index + 1;
+  const positionComponents = positions
+    ?.filter(
+      (point) =>
+        point &&
+        point.lat !== 0 &&
+        point.lng !== 0 &&
+        point.lat !== "" &&
+        point.lng !== ""
+    )
+    .map((position, index) => {
+      const positionNumber = index + 1;
 
-    const handleDragEnd = (event) => {
-      const { lat, lng } = event.target.getLatLng();
-      switch (positionNumber) {
-        case 1:
-          setClickedPosition1({ lat, lng });
-          break;
-        case 2:
-          setClickedPosition2({ lat, lng });
-          break;
-        case 3:
-          setClickedPosition3({ lat, lng });
-          break;
-        case 4:
-          setClickedPosition4({ lat, lng });
-          break;
-        case 5:
-          setClickedPosition5({ lat, lng });
-          break;
-        case 6:
-          setClickedPosition6({ lat, lng });
-          break;
-        case 7:
-          setClickedPosition7({ lat, lng });
-          break;
-        case 8:
-          setClickedPosition8({ lat, lng });
-          break;
-        default:
-          break;
-      }
-    };
+      const handleDragEnd = (event) => {
+        const { lat, lng } = event.target.getLatLng();
+        switch (positionNumber) {
+          case 1:
+            setClickedPosition1({ lat, lng });
+            break;
+          case 2:
+            setClickedPosition2({ lat, lng });
+            break;
+          case 3:
+            setClickedPosition3({ lat, lng });
+            break;
+          case 4:
+            setClickedPosition4({ lat, lng });
+            break;
+          case 5:
+            setClickedPosition5({ lat, lng });
+            break;
+          case 6:
+            setClickedPosition6({ lat, lng });
+            break;
+          case 7:
+            setClickedPosition7({ lat, lng });
+            break;
+          case 8:
+            setClickedPosition8({ lat, lng });
+            break;
+          default:
+            break;
+        }
+      };
 
-    return (
-      position && (
-        <Marker
-          key={positionNumber}
-          icon={L.icon({
-            iconUrl:
-              addOrEditPosition === `position${positionNumber}`
-                ? "/pin/ping_green.png"
-                : "/pin/ping_red.png",
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowUrl:
-              "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-            shadowSize: [1, 1],
-            // shadowSize: [41, 41],
-          })}
-          position={[position.lat, position.lng]}
-          draggable={true} // Active le déplacement du marqueur
-          eventHandlers={{
-            dragend: handleDragEnd, // Met à jour la position après le déplacement
-          }}
-        ></Marker>
-      )
-    );
-  });
+      return (
+        position && (
+          <Marker
+            key={positionNumber}
+            icon={L.icon({
+              iconUrl:
+                addOrEditPosition === `position${positionNumber}`
+                  ? "/pin/ping_green.png"
+                  : "/pin/ping_red.png",
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowUrl:
+                "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+              shadowSize: [1, 1],
+              // shadowSize: [41, 41],
+            })}
+            position={[position.lat, position.lng]}
+            draggable={true} // Active le déplacement du marqueur
+            eventHandlers={{
+              dragend: handleDragEnd, // Met à jour la position après le déplacement
+            }}
+          ></Marker>
+        )
+      );
+    });
 
   const [zoneName, setZoneName] = useState("");
   const [zoneDescription, setZoneDescription] = useState("");
@@ -680,66 +690,113 @@ function MapComponent({
     }
   };
 
+  // const setCurrentGeozoneFonction = () => {
+  //   setZoneDescription(currentGeozone?.description);
+  //   setAjouterCouleurGeofenceCodeCouleur(currentGeozone?.color);
+  //   setAjouterCouleurGeofenceEnText("");
+  //   setClickedPosition1(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[0].lat,
+  //       currentGeozone?.coordinates[0].lng
+  //     )
+  //   );
+
+  //   setClickedPosition2(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[1].lat,
+  //       currentGeozone?.coordinates[1].lng
+  //     )
+  //   );
+
+  //   setClickedPosition3(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[2].lat,
+  //       currentGeozone?.coordinates[2].lng
+  //     )
+  //   );
+
+  //   setClickedPosition4(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[3].lat,
+  //       currentGeozone?.coordinates[3].lng
+  //     )
+  //   );
+
+  //   setClickedPosition5(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[4].lat,
+  //       currentGeozone?.coordinates[4].lng
+  //     )
+  //   );
+
+  //   setClickedPosition6(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[5].lat,
+  //       currentGeozone?.coordinates[5].lng
+  //     )
+  //   );
+
+  //   setClickedPosition7(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[6].lat,
+  //       currentGeozone?.coordinates[6].lng
+  //     )
+  //   );
+
+  //   setClickedPosition8(
+  //     L.latLng(
+  //       currentGeozone?.coordinates[7].lat,
+  //       currentGeozone?.coordinates[7].lng
+  //     )
+  //   );
+  // };
+
+  // const setCurrentGeozoneFonction = () => {
+  //   setZoneDescription(currentGeozone?.description);
+  //   setAjouterCouleurGeofenceCodeCouleur(currentGeozone?.color);
+  //   setAjouterCouleurGeofenceEnText("");
+
+  //   const coords = currentGeozone?.coordinates?.map((point) => ({
+  //     lat: point?.lat === 0 || point?.lat === "" ? undefined : point.lat,
+  //     lng: point?.lng === 0 || point?.lng === "" ? undefined : point.lng,
+  //   }));
+
+  //   setClickedPosition1(L.latLng(coords[0]?.lat, coords[0]?.lng));
+  //   setClickedPosition2(L.latLng(coords[1]?.lat, coords[1]?.lng));
+  //   setClickedPosition3(L.latLng(coords[2]?.lat, coords[2]?.lng));
+  //   setClickedPosition4(L.latLng(coords[3]?.lat, coords[3]?.lng));
+  //   setClickedPosition5(L.latLng(coords[4]?.lat, coords[4]?.lng));
+  //   setClickedPosition6(L.latLng(coords[5]?.lat, coords[5]?.lng));
+  //   setClickedPosition7(L.latLng(coords[6]?.lat, coords[6]?.lng));
+  //   setClickedPosition8(L.latLng(coords[7]?.lat, coords[7]?.lng));
+  // };
+
   const setCurrentGeozoneFonction = () => {
-    // setZoneName(currentGeozone?.description)
+    if (!Array.isArray(currentGeozone?.coordinates)) return;
+
+    const coords = currentGeozone.coordinates.map((point) => ({
+      lat: point?.lat === 0 || point?.lat === "" ? undefined : point.lat,
+      lng: point?.lng === 0 || point?.lng === "" ? undefined : point.lng,
+    }));
+
+    const setPos = (i, setter) => {
+      if (coords[i]?.lat !== undefined && coords[i]?.lng !== undefined) {
+        setter(L.latLng(coords[i].lat, coords[i].lng));
+      }
+    };
+
     setZoneDescription(currentGeozone?.description);
     setAjouterCouleurGeofenceCodeCouleur(currentGeozone?.color);
     setAjouterCouleurGeofenceEnText("");
-    setClickedPosition1(
-      L.latLng(
-        currentGeozone?.coordinates[0].lat,
-        currentGeozone?.coordinates[0].lng
-      )
-    );
 
-    setClickedPosition2(
-      L.latLng(
-        currentGeozone?.coordinates[1].lat,
-        currentGeozone?.coordinates[1].lng
-      )
-    );
-
-    setClickedPosition3(
-      L.latLng(
-        currentGeozone?.coordinates[2].lat,
-        currentGeozone?.coordinates[2].lng
-      )
-    );
-
-    setClickedPosition4(
-      L.latLng(
-        currentGeozone?.coordinates[3].lat,
-        currentGeozone?.coordinates[3].lng
-      )
-    );
-
-    setClickedPosition5(
-      L.latLng(
-        currentGeozone?.coordinates[4].lat,
-        currentGeozone?.coordinates[4].lng
-      )
-    );
-
-    setClickedPosition6(
-      L.latLng(
-        currentGeozone?.coordinates[5].lat,
-        currentGeozone?.coordinates[5].lng
-      )
-    );
-
-    setClickedPosition7(
-      L.latLng(
-        currentGeozone?.coordinates[6].lat,
-        currentGeozone?.coordinates[6].lng
-      )
-    );
-
-    setClickedPosition8(
-      L.latLng(
-        currentGeozone?.coordinates[7].lat,
-        currentGeozone?.coordinates[7].lng
-      )
-    );
+    setPos(0, setClickedPosition1);
+    setPos(1, setClickedPosition2);
+    setPos(2, setClickedPosition3);
+    setPos(3, setClickedPosition4);
+    setPos(4, setClickedPosition5);
+    setPos(5, setClickedPosition6);
+    setPos(6, setClickedPosition7);
+    setPos(7, setClickedPosition8);
   };
 
   useEffect(() => {
@@ -808,6 +865,10 @@ function MapComponent({
       ref2.current.style.width = `${width}px`;
     }
   }, [width]);
+
+  const [showGeofenceInCartePopup, setShowGeofenceInCartePopup] =
+    useState(false);
+  const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(true);
 
   return (
     <div
@@ -906,6 +967,72 @@ function MapComponent({
               >
                 Continue
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div
+        onClick={() => {
+          setShowGeofenceInCartePopup(true);
+        }}
+        className="border overflow-hidden absolute right-4 top-[10rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+      >
+        <div className="relative">
+          {!showGeofenceInCarte && (
+            <>
+              <div className="absolute text-orange-400 -top-10 -bottom-10 left-[45%] rotate-45 w-[.1rem] bg-red-400">
+                .
+              </div>
+              <div className="absolute text-orange-400 -top-10 -bottom-10 left-[45%] -rotate-45 w-[.1rem] bg-red-400">
+                .
+              </div>
+            </>
+          )}
+          <IoEarth
+            className={`${
+              showGeofenceInCarte ? "text-green-500" : "text-orange-500"
+            } text-2xl `}
+          />
+        </div>
+      </div>
+
+      {showGeofenceInCartePopup && (
+        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
+            <IoClose
+              onClick={() => {
+                setShowGeofenceInCartePopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+
+            <h2 className="border-b  border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-6 font-semibold">
+              Affichage des geofences dans la carte ?
+            </h2>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                showGeofenceInCarte ? "bg-gray-100 dark:bg-gray-800/70" : ""
+              }`}
+              onClick={() => {
+                setShowGeofenceInCarte(true);
+                setShowGeofenceInCartePopup(false);
+              }}
+            >
+              <p>Oui</p>
+            </div>
+
+            <div
+              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                !showGeofenceInCarte ? "bg-gray-100 dark:bg-gray-800/70" : ""
+              }`}
+              onClick={() => {
+                setShowGeofenceInCarte(false);
+                setShowGeofenceInCartePopup(false);
+              }}
+            >
+              <p>Non</p>
             </div>
           </div>
         </div>
@@ -1151,6 +1278,7 @@ function MapComponent({
         {/* Composant qui gère le clic sur la carte */}
 
         {!isAddingNewGeofence &&
+          showGeofenceInCarte &&
           CurrentGeofenceData?.filter((isActiveGeofence) => {
             const activeGeofence = isActiveGeofence?.isActive === 1;
             return activeGeofence;
@@ -1282,7 +1410,7 @@ function MapComponent({
                       {véhicule?.simPhoneNumber || "Chargement..."}
                     </p>
                     <p>
-                      <strong>Date creation :</strong>{" "}
+                      <strong>Last Update :</strong>{" "}
                       {véhicule.timestamp
                         ? FormatDateHeureTimestamp.date
                         : "Pas de date disponible"}
@@ -1325,10 +1453,16 @@ function MapComponent({
         {isAddingNewGeofence && (
           <React.Fragment>
             <Polygon
-              positions={geofences?.coordinates?.map((point) => [
-                point.lat,
-                point.lng,
-              ])}
+              positions={geofences?.coordinates
+                ?.filter(
+                  (point) =>
+                    point &&
+                    point.lat !== 0 &&
+                    point.lng !== 0 &&
+                    point.lat !== "" &&
+                    point.lng !== ""
+                )
+                ?.map((point) => [point.lat, point.lng])}
               pathOptions={{
                 color:
                   geofences?.color ||
@@ -1342,7 +1476,16 @@ function MapComponent({
             />
 
             <Marker
-              position={calculatePolygonCenter(geofences?.coordinates || [])}
+              position={calculatePolygonCenter(
+                geofences?.coordinates?.filter(
+                  (point) =>
+                    point &&
+                    point.lat !== 0 &&
+                    point.lng !== 0 &&
+                    point.lat !== "" &&
+                    point.lng !== ""
+                ) || []
+              )}
               icon={L.divIcon({
                 className: "geofence-label",
                 html: `<div 

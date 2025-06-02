@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { IoClose, IoEarth, IoSearchOutline } from "react-icons/io5";
+import { IoClose, IoEar, IoEarth, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link, useNavigate } from "react-router-dom";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
@@ -34,6 +34,8 @@ function GestionGeofences({
     setAccountGeofences,
     //
     isDashboardHomePage,
+    showGeofenceInCarte,
+    setShowGeofenceInCarte,
   } = useContext(DataContext);
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
   const navigate = useNavigate();
@@ -116,6 +118,9 @@ function GestionGeofences({
 
   const [chooseOtherGeofencesGestion, setChooseOtherGeofencesGestion] =
     useState(false);
+  // const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(true);
+  const [showGeofenceInCartePopup, setShowGeofenceInCartePopup] =
+    useState(false);
 
   return (
     <div className=" bg-white border-white  border rounded-lg">
@@ -124,6 +129,46 @@ function GestionGeofences({
           chooseOtherGeofencesGestion={chooseOtherGeofencesGestion}
           setChooseOtherGeofencesGestion={setChooseOtherGeofencesGestion}
         />
+        {/* {showGeofenceInCartePopup && (
+          <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+            <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
+              <IoClose
+                onClick={() => {
+                  setShowGeofenceInCartePopup(false);
+                }}
+                className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+              />
+
+              <h2 className="border-b  border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-6 font-semibold">
+                Affichage des geofences dans la carte ?
+              </h2>
+
+              <div
+                className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                  showGeofenceInCarte ? "bg-gray-100 dark:bg-gray-800/70" : ""
+                }`}
+                onClick={() => {
+                  setShowGeofenceInCarte(true);
+                  setShowGeofenceInCartePopup(false);
+                }}
+              >
+                <p>Oui</p>
+              </div>
+
+              <div
+                className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                  !showGeofenceInCarte ? "bg-gray-100 dark:bg-gray-800/70" : ""
+                }`}
+                onClick={() => {
+                  setShowGeofenceInCarte(false);
+                  setShowGeofenceInCartePopup(false);
+                }}
+              >
+                <p>Non</p>
+              </div>
+            </div>
+          </div>
+        )} */}
         <h2
           onClick={() => {
             console.log(accountGeofences);
@@ -199,6 +244,14 @@ function GestionGeofences({
                 </h3>
                 <FaChevronDown />
               </div>
+              {/* <div
+                onClick={() => {
+                  setShowGeofenceInCartePopup(true);
+                }}
+                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+              >
+                <IoEarth className="text-xl text-orange-500" />
+              </div> */}
               <div
                 onClick={() => {
                   setShowFilterInputSection(true);

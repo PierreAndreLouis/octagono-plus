@@ -120,6 +120,7 @@ const DataContextProvider = ({ children }) => {
   const [userGroupes, setUserGroupes] = useState([]);
   const [véhiculeDetails, setVehiculeDetails] = useState([]);
   const [groupeDevices, setGroupeDevices] = useState([]);
+  const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(true);
 
   // États liés à la gestion
   const [gestionAccountData, setGestionAccountData] = useState();
@@ -8863,6 +8864,8 @@ const DataContextProvider = ({ children }) => {
         setIsDashboardHomePage,
         clearDataIndexedbStore,
         véhiculeDetails,
+        showGeofenceInCarte,
+        setShowGeofenceInCarte,
 
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
