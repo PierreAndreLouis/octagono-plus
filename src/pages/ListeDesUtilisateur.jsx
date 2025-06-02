@@ -159,7 +159,7 @@ function ListeDesUtilisateur({
 
       <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
         {fromExpandSectionDashboard === "false" && (
-          <div>
+          <div className="mb-[4rem]">
             <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
               Liste des Utilisateur
             </h2>
@@ -264,7 +264,7 @@ function ListeDesUtilisateur({
             </div>
           </div>
         )}
-        <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+        <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {filterUserAccountData
             ?.slice()
             .sort((a, b) => b?.creationTime - a?.creationTime)

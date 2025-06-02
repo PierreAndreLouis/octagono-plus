@@ -269,7 +269,7 @@ function ListeDesGroupes({
 
       <div className="px-4 pb-40 pt-10 bg-white rounded-lg">
         {fromExpandSectionDashboard === "false" && (
-          <div>
+          <div className="mb-[4rem]">
             <h2
               onClick={() => {
                 fetchAccountGroupes();
@@ -320,18 +320,6 @@ function ListeDesGroupes({
                   </div>
                 </div>{" "}
               </div>
-
-              {/* <div
-            onClick={() => {
-              setShowChooseOtherUserGroupePopup(true);
-            }}
-            className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-          >
-            <h3 className="w-full text-center font-semibold">
-              <span>{listeGestionDesGroupeTitre || "Tous les Appareils"}</span>
-            </h3>
-            <FaChevronDown />
-          </div> */}
 
               {!showFilterInputSection && (
                 <div className="flex gap-2 w-full justify-between items-center">
@@ -399,7 +387,7 @@ function ListeDesGroupes({
           </div>
         )}
 
-        <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+        <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
           {/*  */}
           {/*  */}
