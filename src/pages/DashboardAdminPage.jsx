@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import {
+  IoAlertCircle,
   IoCarSportOutline,
   IoChevronDown,
   IoClose,
@@ -60,6 +61,8 @@ import LocationPage from "./LocationPage";
 import { FaLocationPin } from "react-icons/fa6";
 import GestionGeofences from "./GestionGeofences";
 import GoogleTranslate from "../components/home/GoogleTranslate";
+import ListeDesAlertsGestion from "./ListeDesAlertsGestion";
+import { FiAlertCircle } from "react-icons/fi";
 
 function DashboardAdminPage() {
   const {
@@ -319,7 +322,7 @@ function DashboardAdminPage() {
             setAllDevices={setAllDevices}
           />
           {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
-          <header className="fixed z-[9999999999999999999999] top-0 left-0 right-0 bg-white">
+          <header className="fixed z-[999999999999999999999] top-0 left-0 right-0 bg-white">
             <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-10 px-4 py-2">
               <Link
                 onClick={() => {
@@ -639,6 +642,50 @@ function DashboardAdminPage() {
                   </div>
                 </div>
 
+                {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        setListeGestionDesVehicules(
+                          currentAccountSelected?.accountDevices
+                        );
+                      } else {
+                        setListeGestionDesVehicules(accountDevices);
+                      }
+
+                      // {
+                      //   accountDevices?.flatMap(
+                      //     (device) => device?.véhiculeDetails[0] || []
+                      //   )?.length;
+                      // }
+
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_alerts");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_alerts"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <IoAlertCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        Gestion des Alerts (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountDevices?.flatMap(
+                              (device) => device?.véhiculeDetails[0] || []
+                            )?.length
+                          : accountDevices?.flatMap(
+                              (device) => device?.véhiculeDetails[0] || []
+                            )?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
+                </div> */}
+
                 <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
                     onClick={() => {
@@ -734,6 +781,25 @@ function DashboardAdminPage() {
                 <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
                     onClick={() => {
+                      closeSideBar();
+                      setChooseOtherLanguagePopup(true);
+                    }}
+                    className={`${
+                      documentationPage === "installation" ? "bg-orange-50" : ""
+                    } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <MdGTranslate className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 text-[1rem] font-semibold">
+                        Traduction
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
                       // scrollToTop();
                       //   setDocumentationPage("installation");
                       closeSideBar();
@@ -747,25 +813,6 @@ function DashboardAdminPage() {
                     <div className="flex w-full justify-between">
                       <p className="text-red-600 text-[1rem] font-semibold">
                         Déconnexion
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="ajouter-appareil-container transition-all hover:border-b  ">
-                  <div
-                    onClick={() => {
-                      closeSideBar();
-                      setChooseOtherLanguagePopup(true);
-                    }}
-                    className={`${
-                      documentationPage === "installation" ? "bg-orange-50" : ""
-                    } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                  >
-                    <MdGTranslate className="text-xl min-w-[1.5rem] text-red-500" />
-                    <div className="flex w-full justify-between">
-                      <p className="text-red-600 text-[1rem] font-semibold">
-                        Traduction
                       </p>
                     </div>
                   </div>
@@ -800,7 +847,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                02/06/2025 _ 4
+                03/06/2025 _ 1
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (
@@ -873,6 +920,13 @@ function DashboardAdminPage() {
               {/* ListeDesUtilisateur */}
               {documentationPage === "Gestion_des_appareils" && (
                 <ListeDesVehiculesGestion
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}
+              {documentationPage === "Gestion_des_alerts" && (
+                <ListeDesAlertsGestion
                   setDocumentationPage={setDocumentationPage}
                   setChooseOneAccountToContinue={setChooseOneAccountToContinue}
                   setChooseOtherAccountGestion={setChooseOtherAccountGestion}

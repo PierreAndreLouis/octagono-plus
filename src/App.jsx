@@ -272,7 +272,19 @@ function App() {
 
         {/* Composant pour faire défiler vers le haut */}
         <ScrollToTop />
-        {chooseOtherLanguagePopup && <GoogleTranslate />}
+
+        {/* {chooseOtherLanguagePopup &&  */}
+        {/* <div
+          // className={`${
+          //   chooseOtherLanguagePopup
+          //     ? "translate-y-[50%]"
+          //     : "-translate-y-[50%]"
+          // }`}
+          className="translate-x-4"
+        > */}
+        <GoogleTranslate />
+        {/* </div> */}
+        {/* } */}
 
         {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
         {!readDocumentation && (

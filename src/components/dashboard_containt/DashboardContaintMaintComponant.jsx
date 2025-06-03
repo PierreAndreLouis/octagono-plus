@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import { ImEnlarge } from "react-icons/im";
+import { FiAlertCircle } from "react-icons/fi";
 
 import {
   IoCarSportOutline,
@@ -76,6 +77,7 @@ function DashboardContaintMaintComponant({
     adminAccount,
     adminUser,
     adminPassword,
+    véhiculeDetails,
   } = useContext(DataContext);
 
   const [expandSection, setExpandSection] = useState("");
@@ -1020,6 +1022,57 @@ function DashboardContaintMaintComponant({
     console.log("result", result);
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
+  const statusDescriptions = {
+    0x0000: "Code de statut non spécifié",
+    0xf020: "Localisation - En mouvement",
+    0xf021: "Localisation - Arrêté",
+    0xf022: "Localisation - Parking",
+    0xf100: "Localisation - Odomètre",
+    0xf110: "Localisation - Heures moteur",
+    0xf120: "Localisation - Niveau de carburant",
+    0xf200: "Changement d'état d'entrée",
+    0xf201: "Entrée activée",
+    0xf202: "Entrée désactivée",
+    0xf210: "Contact allumé",
+    0xf211: "Contact éteint",
+    0xf301: "Alimentation activée",
+    0xf302: "Alimentation désactivée",
+    0xf310: "Batterie faible",
+    0xf311: "Batterie OK",
+    0xf320: "En charge",
+    0xf321: "Non en charge",
+    0xf400: "Détection de remorquage",
+    0xf500: "Détection de collision",
+    0xf600: "Excès de vitesse",
+    0xf601: "Vitesse normale",
+    0xf700: "Entrée dans une zone géographique",
+    0xf701: "Sortie d'une zone géographique",
+    0xf800: "Informations de diagnostic",
+    0xf900: "Signal de vie",
+    0xfa00: "Connexion du conducteur",
+    0xfa01: "Déconnexion du conducteur",
+    0xfb00: "Alerte de panique",
+    0xfc00: "Rappel de maintenance",
+    // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
+  };
+
+  const getBackgroundColor = (code) => {
+    switch (code) {
+      case 0xf020:
+        return "#d1f7c4"; // Vert clair - en mouvement
+      case 0xf021:
+        return "#ffe6cc"; // Orange - arrêté
+      case 0xf022:
+        return "#f0f0f0"; // Gris - parking
+      case 0xf600:
+        return "#ffcccc"; // Rouge - excès de vitesse
+      case 0xfb00:
+        return "#ffb3b3"; // Rouge foncé - alerte
+      default:
+        return "#e0e0e0"; // Gris par défaut
+    }
+  };
+
   return (
     <div className="pb-6-">
       {showStatisticDeviceListeDashboard && (
@@ -1569,6 +1622,91 @@ function DashboardContaintMaintComponant({
           </div>
         )}
 
+        <div className="bg-orange-100 mt-4 p-3 rounded-lg">
+          <div className="flex mb-4 justify-between items-center ">
+            <h2 className="font-semibold text-lg mb-4-- text-gray-700">
+              Tous les Alerts (
+              {
+                accountDevices?.flatMap(
+                  (device) => device?.véhiculeDetails[0] || []
+                )?.length
+              }
+              )
+            </h2>
+            <button
+              onClick={() => {
+                // if (currentAccountSelected) {
+                //   setListeGestionDesUsers(
+                //     currentAccountSelected?.accountUsers
+                //   );
+                // } else {
+                //   setListeGestionDesUsers(accountUsers);
+                // }
+                // setExpandSection("userListe");
+              }}
+              className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
+            >
+              Voir tous
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/*  */}
+            {accountDevices
+              ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+              ?.slice(0, 4)
+              ?.map((details, index) => {
+                const code = parseInt(details.statusCode, 16);
+                const codeDescription =
+                  statusDescriptions[code] || "Statut inconnu";
+                const bgColor = getBackgroundColor(code);
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {}}
+                    className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
+                    style={
+                      {
+                        // backgroundColor: bgColor,
+                        // borderRadius: 10,
+                        // padding: 15,
+                        // marginBottom: 10,
+                        // boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                      }
+                    }
+                  >
+                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                      {index + 1}
+                    </p>
+                    <FiAlertCircle className="text-orange-500/80 min-w-[2.5rem] text-[2.5rem] mt-1" />
+                    <div>
+                      <p className="text-gray-600">
+                        Alert :{" "}
+                        <span className="font-bold">{codeDescription}</span>{" "}
+                      </p>
+                      <p className="text-gray-600">
+                        Code :{" "}
+                        <span className="font-bold">{details?.statusCode}</span>{" "}
+                      </p>
+                      <p className="text-gray-600">
+                        Account ID :{" "}
+                        <span className="font-bold">{details?.accountID}</span>{" "}
+                      </p>
+                      <p className="text-gray-600">
+                        Adresse :{" "}
+                        <span className="font-bold">{details?.address}</span>{" "}
+                      </p>
+                      {/* <p><strong>Timestamp :</strong> {item.timestamp}</p> */}
+                      {/* <p><strong>Statut :</strong> {description}</p> */}
+                      {/* <p><strong>Adresse :</strong> {item.address}</p> */}
+                    </div>
+                  </div>
+                );
+              })}
+
+            {/*  */}
+          </div>
+        </div>
+
         {/* Other info */}
         <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
           <div className="bg-white md:col-span-2-  p-3 h-full rounded-lg">
@@ -1627,14 +1765,7 @@ function DashboardContaintMaintComponant({
                   return (
                     <div
                       key={index}
-                      onClick={() => {
-                        // setShowSelectedUserOptionsPopup(true);
-                        // setCurrentSelectedUserToConnect(user);
-                        // console.log("user", user);
-                        // setCurrentAccountSelected(account);
-                        // setListeGestionDesVehicules(account?.accountDevices);
-                        // setChooseOtherAccountGestion(false);
-                      }}
+                      onClick={() => {}}
                       className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
                     >
                       {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">

@@ -1612,14 +1612,23 @@ const DataContextProvider = ({ children }) => {
           )
         : [];
 
-    console.log("fetchComptes: résultats =", data);
+    let newData;
+    if (user === "admin") {
+      newData = data;
+    } else if (user === "ht") {
+      newData = data?.filter((account) => account?.notes === "ht");
+    } else if (user === "rd") {
+      newData = data?.filter((account) => account?.notes === "rd");
+    }
 
-    setComptes(data);
+    console.log("fetchComptes: résultats =", newData);
+
+    setComptes(newData);
 
     if (fetchAllOtherData) {
       // Déclenchement automatique des autres fetchs pour chaque compte
       ListeDesRolePourLesUserFonction(account, user, password);
-      data?.forEach((acct) => {
+      newData?.forEach((acct) => {
         const id = acct.accountID;
         const pwd = acct.password;
 
@@ -1671,7 +1680,7 @@ const DataContextProvider = ({ children }) => {
         }, 3000);
       });
     }
-    return data;
+    return newData;
   };
 
   // 2) Récupérer accountDevices
@@ -8870,6 +8879,8 @@ const DataContextProvider = ({ children }) => {
         setShowGeofenceInCarte,
         chooseOtherLanguagePopup,
         setChooseOtherLanguagePopup,
+        véhiculeDetails,
+        setVehiculeDetails,
 
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}

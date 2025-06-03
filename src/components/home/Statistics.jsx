@@ -136,11 +136,6 @@ function Statistics() {
       lastUpdateTimestampMs &&
       currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
-    // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
-    // return hasDetails && noSpeed && isActive;
-    // Inclure les véhicules :
-    // - Soit ils ont noSpeed et sont actifs
-    // - Soit ils sont isSpeedActive mais isNotStillSpeedActive
     return (
       hasDetails &&
       isActive &&
