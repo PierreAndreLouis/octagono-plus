@@ -43,6 +43,7 @@ import LocationPage from "../../pages/LocationPage";
 import ListeDesVehiculesGestion from "../../pages/ListeDesVehiculesGestion";
 import ListeDesUtilisateur from "../../pages/ListeDesUtilisateur";
 import ListeDesGroupes from "../../pages/ListeDesGroupes";
+import ListeDesAlertsGestion from "../../pages/ListeDesAlertsGestion";
 
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
@@ -78,6 +79,7 @@ function DashboardContaintMaintComponant({
     adminUser,
     adminPassword,
     véhiculeDetails,
+    setListeGestionDesVehicules,
   } = useContext(DataContext);
 
   const [expandSection, setExpandSection] = useState("");
@@ -230,7 +232,8 @@ function DashboardContaintMaintComponant({
         <div className="bg-white shadow-lg rounded p-2 mb-5 text-sm border border-gray-100">
           <p className="text-gray-700 font-semibold">{fullName}</p>
           <p className="text-gray-700 font-semibold--">
-            AccountID : <span className="font-bold">{accountID}</span>{" "}
+            AccountID :{" "}
+            <span className="font-bold notranslate">{accountID}</span>{" "}
           </p>
           <p className="text-gray-600">
             {" "}
@@ -1177,6 +1180,27 @@ function DashboardContaintMaintComponant({
                 />
               </div>
             )}
+
+            {expandSection === "deviceAlerts" && (
+              <div className="overflow-auto min- h-[90vh]">
+                <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
+                  <h2 className="mb-0">
+                    Liste des Alerts (
+                    {
+                      listeGestionDesVehicules?.flatMap(
+                        (device) => device?.véhiculeDetails[0] || []
+                      )?.length
+                    }
+                    )
+                  </h2>
+                </div>
+                <ListeDesAlertsGestion
+                  setDocumentationPage={setDocumentationPage}
+                  fromExpandSectionDashboard="true"
+                />
+              </div>
+            )}
+
             {/* uuuuuuuuuuuu */}
             {/* {expandSection === "tableau" && <TableauRecapitulatifComptes />} */}
           </div>
@@ -1187,7 +1211,7 @@ function DashboardContaintMaintComponant({
       {/*  */}
       {/* statistic box */}
       <div className="md:px-4-- pt-3--">
-        <div className="w-full h-full bg-white rounded-lg p-4">
+        <div className="w-full h-full shadow-lg shadow-black/5 bg-white rounded-lg p-4">
           <div className=" relative mb-4 ">
             <div className="">
               <div className="flex items-center gap-2 sm:gap-3">
@@ -1387,7 +1411,7 @@ function DashboardContaintMaintComponant({
 
           {/* Graphe des comptes */}
           {/* {!currentAccountSelected && showFistGrapheOption && ( */}
-          <div className="bg-white relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
+          <div className="bg-white shadow-lg shadow-black/5 relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
             {/* title section */}
             <div className="flex relative   mb-4 justify-between items-end- ">
               {((showFistGrapheOption && !currentAccountSelected) ||
@@ -1512,7 +1536,7 @@ function DashboardContaintMaintComponant({
           {/*  */}
           {/*  */}
           {/* Graphe des Appareils */}
-          <div className="bg-white relative flex flex-col justify-between- p-3 md:col-span-1- rounded-lg">
+          <div className="bg-white shadow-lg shadow-black/5 relative flex flex-col justify-between- p-3 md:col-span-1- rounded-lg">
             <div className="flex items-center- items-start   mb-8">
               {showFistGrapheOption2 && (
                 <h2 className="font-semibold text-lg text-gray-700">
@@ -1622,12 +1646,12 @@ function DashboardContaintMaintComponant({
           </div>
         )}
 
-        <div className="bg-orange-100 mt-4 p-3 rounded-lg">
+        <div className="bg-orange-100 shadow-inner shadow-orange-300/80 mt-6 p-3 rounded-lg">
           <div className="flex mb-4 justify-between items-center ">
             <h2 className="font-semibold text-lg mb-4-- text-gray-700">
               Tous les Alerts (
               {
-                accountDevices?.flatMap(
+                listeGestionDesVehicules?.flatMap(
                   (device) => device?.véhiculeDetails[0] || []
                 )?.length
               }
@@ -1635,14 +1659,14 @@ function DashboardContaintMaintComponant({
             </h2>
             <button
               onClick={() => {
-                // if (currentAccountSelected) {
-                //   setListeGestionDesUsers(
-                //     currentAccountSelected?.accountUsers
-                //   );
-                // } else {
-                //   setListeGestionDesUsers(accountUsers);
-                // }
-                // setExpandSection("userListe");
+                if (currentAccountSelected) {
+                  setListeGestionDesVehicules(
+                    currentAccountSelected?.accountDevices
+                  );
+                } else {
+                  setListeGestionDesVehicules(accountDevices);
+                }
+                setExpandSection("deviceAlerts");
               }}
               className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
             >
@@ -1651,7 +1675,7 @@ function DashboardContaintMaintComponant({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/*  */}
-            {accountDevices
+            {listeGestionDesVehicules
               ?.flatMap((device) => device?.véhiculeDetails[0] || [])
               ?.slice(0, 4)
               ?.map((details, index) => {
@@ -1689,7 +1713,9 @@ function DashboardContaintMaintComponant({
                       </p>
                       <p className="text-gray-600">
                         Account ID :{" "}
-                        <span className="font-bold">{details?.accountID}</span>{" "}
+                        <span className="font-bold notranslate ">
+                          {details?.accountID}
+                        </span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Adresse :{" "}
@@ -1709,7 +1735,7 @@ function DashboardContaintMaintComponant({
 
         {/* Other info */}
         <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
-          <div className="bg-white md:col-span-2-  p-3 h-full rounded-lg">
+          <div className="bg-white shadow-lg shadow-black/5 md:col-span-2-  p-3 h-full rounded-lg">
             <div className="flex mb-4 justify-between items-end ">
               <div className=" flex w-full justify-between items-center">
                 <h2 className="font-semibold text-lg mb-4-- text-gray-700">
@@ -1779,7 +1805,9 @@ function DashboardContaintMaintComponant({
                         </p>
                         <p className="text-gray-600">
                           Account ID :{" "}
-                          <span className="font-bold">{user?.accountID}</span>{" "}
+                          <span className="font-bold notranslate">
+                            {user?.accountID}
+                          </span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Nombre d'appareil :{" "}
@@ -1801,7 +1829,7 @@ function DashboardContaintMaintComponant({
             </div>
           </div>
 
-          <div className="bg-white flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
+          <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
             <div className=" flex pb-4 w-full justify-between items-center">
               <h2 className="font-semibold text-lg mb-4-- text-gray-700">
                 Tous les Groupes (
@@ -1878,7 +1906,9 @@ function DashboardContaintMaintComponant({
                         </p>
                         <p className="text-gray-600">
                           Account ID :{" "}
-                          <span className="font-bold">{user?.accountID}</span>{" "}
+                          <span className="font-bold notranslate notranslate">
+                            {user?.accountID}
+                          </span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Nombre d'appareil :{" "}

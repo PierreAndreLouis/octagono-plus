@@ -292,7 +292,8 @@ function DashboardContaintMaintComponant({
         <div className="bg-white shadow-lg rounded p-2 mb-5 text-sm border border-gray-100">
           <p className="text-gray-700 font-semibold">{fullName}</p>
           <p className="text-gray-700 font-semibold--">
-            AccountID : <span className="font-bold">{accountID}</span>{" "}
+            AccountID :{" "}
+            <span className="font-bold notranslate">{accountID}</span>{" "}
           </p>
           <p className="text-gray-600">
             {" "}

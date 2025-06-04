@@ -93,18 +93,22 @@ function ChooseOtherGeofenceDashboard({
                     <div>
                       <p className="text-gray-600">
                         Nom du compte :{" "}
-                        <span className="font-bold">
+                        <span className="font-bold notranslate">
                           {geofence?.description}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
                         ID du geofence :{" "}
-                        <span className="font-bold">{geofence?.geozoneID}</span>{" "}
+                        <span className="font-bold notranslate">
+                          {geofence?.geozoneID}
+                        </span>{" "}
                       </p>
 
                       <p className="text-gray-600">
                         ID du compte :{" "}
-                        <span className="font-bold">{geofence?.accountID}</span>{" "}
+                        <span className="font-bold notranslate">
+                          {geofence?.accountID}
+                        </span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Nombre de coordonnées :{" "}

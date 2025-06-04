@@ -1,25 +1,44 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IoClose, IoSearchOutline } from "react-icons/io5";
+import {
+  IoAlertCircleOutline,
+  IoClose,
+  IoSearchOutline,
+} from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import {
   FaPlusCircle,
   FaRegEdit,
   FaTrashAlt,
   FaUserAlt,
-  FaCar,
   FaUserPlus,
   FaUserCircle,
   FaChevronDown,
 } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { MdUpdate } from "react-icons/md";
-
+import {
+  FaCar,
+  FaMapMarkerAlt,
+  FaChargingStation,
+  FaBatteryFull,
+  FaBatteryQuarter,
+  FaBolt,
+  FaExclamationTriangle,
+  FaTools,
+  FaUser,
+  FaPowerOff,
+  FaLifeRing,
+  FaLockOpen,
+  FaLock,
+  FaTachometerAlt,
+} from "react-icons/fa";
 function ListeDesAlertsGestion({
   setDocumentationPage,
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
   fromDashboard = false,
   statisticFilteredDeviceListe,
+  fromExpandSectionDashboard = "false",
 }) {
   const {
     FormatDateHeure,
@@ -46,6 +65,7 @@ function ListeDesAlertsGestion({
     setDashboardLoadingEffect,
     gestionAccountData,
     adminPassword,
+    accountDevices,
   } = useContext(DataContext);
 
   //
@@ -187,72 +207,214 @@ function ListeDesAlertsGestion({
     });
   };
 
+  const statusDescriptions = {
+    0x0000: "Code de statut non spécifié",
+    0xf020: "Localisation - En mouvement",
+    0xf021: "Localisation - Arrêté",
+    0xf022: "Localisation - Parking",
+    0xf100: "Localisation - Odomètre",
+    0xf110: "Localisation - Heures moteur",
+    0xf120: "Localisation - Niveau de carburant",
+    0xf200: "Changement d'état d'entrée",
+    0xf201: "Entrée activée",
+    0xf202: "Entrée désactivée",
+    0xf210: "Contact allumé",
+    0xf211: "Contact éteint",
+    0xf301: "Alimentation activée",
+    0xf302: "Alimentation désactivée",
+    0xf310: "Batterie faible",
+    0xf311: "Batterie OK",
+    0xf320: "En charge",
+    0xf321: "Non en charge",
+    0xf400: "Détection de remorquage",
+    0xf500: "Détection de collision",
+    0xf600: "Excès de vitesse",
+    0xf601: "Vitesse normale",
+    0xf700: "Entrée dans une zone géographique",
+    0xf701: "Sortie d'une zone géographique",
+    0xf800: "Informations de diagnostic",
+    0xf900: "Signal de vie",
+    0xfa00: "Connexion du conducteur",
+    0xfa01: "Déconnexion du conducteur",
+    0xfb00: "Alerte de panique",
+    0xfc00: "Rappel de maintenance",
+    // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
+  };
+
+  const getTextColor = (code) => {
+    switch (code) {
+      // Mouvements et localisation
+      case 0xf020:
+        return "text-green-500"; // En mouvement
+      case 0xf021:
+        return "text-green-500"; // Arrêté
+      case 0xf022:
+        return "text-blue-500"; // Parking
+      case 0xf100:
+        return "text-gray-500"; // Odomètre
+      case 0xf110:
+        return "text-gray-500"; // Heures moteur
+      case 0xf120:
+        return "text-yellow-500"; // Carburant
+
+      // Entrées
+      case 0xf200:
+        return "text-purple-500"; // Changement d'état
+      case 0xf201:
+        return "text-green-500"; // Activée
+      case 0xf202:
+        return "text-red-500"; // Désactivée
+
+      // Contact
+      case 0xf210:
+        return "text-green-500"; // Allumé
+      case 0xf211:
+        return "text-red-500"; // Éteint
+
+      // Alimentation
+      case 0xf301:
+        return "text-green-500"; // Alimentation activée
+      case 0xf302:
+        return "text-red-500"; // Alimentation désactivée
+      case 0xf310:
+        return "text-yellow-500"; // Batterie faible
+      case 0xf311:
+        return "text-green-500"; // Batterie OK
+      case 0xf320:
+        return "text-blue-500"; // En charge
+      case 0xf321:
+        return "text-gray-500"; // Non en charge
+
+      // Événements critiques
+      case 0xf400:
+        return "text-red-500"; // Remorquage
+      case 0xf500:
+        return "text-red-500"; // Collision
+      case 0xf600:
+        return "text-red-500"; // Excès de vitesse
+      case 0xf601:
+        return "text-green-500"; // Vitesse normale
+
+      // Zones géographiques
+      case 0xf700:
+        return "text-blue-500"; // Entrée zone
+      case 0xf701:
+        return "text-blue-500"; // Sortie zone
+
+      // Divers
+      case 0xf800:
+        return "text-gray-500"; // Diagnostic
+      case 0xf900:
+        return "text-gray-500"; // Signal de vie
+      case 0xfa00:
+        return "text-blue-500"; // Connexion conducteur
+      case 0xfa01:
+        return "text-gray-500"; // Déconnexion conducteur
+      case 0xfb00:
+        return "text-red-500"; // Panique
+      case 0xfc00:
+        return "text-orange-500"; // Maintenance
+
+      default:
+        return "text-gray-500"; // Inconnu ou générique
+    }
+  };
+
+  // //////////////////////////////////////////////////
+  // //////////////////////////////////////////////////
+  // //////////////////////////////////////////////////
+  // //////////////////////////////////////////////////
+  // //////////////////////////////////////////////////
+  // //////////////////////////////////////////////////
+
+  const statusVisuals = (description = "") => {
+    description = description.toLowerCase();
+
+    if (description.includes("collision")) {
+      return { icon: <FaExclamationTriangle />, color: "red" };
+    }
+    if (description.includes("batterie") && description.includes("faible")) {
+      return { icon: <FaBatteryQuarter />, color: "yellow" };
+    }
+    if (description.includes("batterie")) {
+      return { icon: <FaBatteryFull />, color: "green" };
+    }
+    if (description.includes("charge")) {
+      return { icon: <FaChargingStation />, color: "blue" };
+    }
+    if (description.includes("localisation") || description.includes("zone")) {
+      return { icon: <FaMapMarkerAlt />, color: "green" };
+    }
+    if (description.includes("carburant")) {
+      return { icon: <FaBolt />, color: "yellow" };
+    }
+    if (description.includes("remorquage")) {
+      return { icon: <FaLockOpen />, color: "red" };
+    }
+    if (description.includes("contact")) {
+      return { icon: <FaPowerOff />, color: "gray" };
+    }
+    if (description.includes("panique")) {
+      return { icon: <FaLifeRing />, color: "red" };
+    }
+    if (description.includes("conducteur")) {
+      return { icon: <FaUser />, color: "blue" };
+    }
+    if (description.includes("vitesse")) {
+      return {
+        icon: <FaTachometerAlt />,
+        color: description.includes("excès") ? "red" : "green",
+      };
+    }
+    if (description.includes("diagnostic")) {
+      return { icon: <FaTools />, color: "gray" };
+    }
+
+    return { icon: <FaCar />, color: "gray" };
+  };
+
+  const getTailwindBorderColor = (color) => {
+    switch (color) {
+      case "red":
+        return " border-red-300";
+      case "green":
+        return " border-green-300";
+      case "blue":
+        return " border-blue-300";
+      case "yellow":
+        return " border-yellow-300";
+      case "gray":
+        return " border-gray-300";
+      default:
+        return " border-orange-300";
+    }
+  };
+  const getTailwindColor = (color) => {
+    switch (color) {
+      case "red":
+        return "text-red-500 ";
+      case "green":
+        return "text-green-500 ";
+      case "blue":
+        return "text-blue-500 ";
+      case "yellow":
+        return "text-yellow-500 ";
+      case "gray":
+        return "text-gray-500 ";
+      default:
+        return "text-orange-500 ";
+    }
+  };
+
   return (
     <div>
-      <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
-
-      {deleteAccountPopup && (
-        <div className="fixed  z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
-          <form
-            onSubmit={deleteVehicleFonction}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Supprimer l'Appareil ?
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                Veuillez entrer votre mot de passe
-              </label>
-
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Mot de passe"
-                  required
-                  value={inputPassword}
-                  onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                type="submit"
-                className="py-1 px-5 bg-red-500 rounded-lg text-white"
-              >
-                Confirmer
-              </button>
-
-              <h3
-                onClick={() => {
-                  setDeleteAccountPopup(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
-              >
-                Annuler
-              </h3>
-            </div>
-          </form>
-        </div>
-      )}
-
       <div className="px-4 pb-40 bg-white pt-10 rounded-lg">
-        {!fromDashboard && (
+        {fromExpandSectionDashboard === "false" && (
           <div>
             <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
-              Liste des Appareils
+              Liste des Alertes
             </h2>
 
-            {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-          <span className="text-gray-700">Compte :</span>{" "}
-          {currentAccountSelected?.description}
-        </h3> */}
             <h3 className=" text-orange-600 text-md text-center font-bold-- ">
               {currentSelectedUserToConnect?.description && (
                 <span className="text-gray-700">Utilisateur :</span>
@@ -260,37 +422,19 @@ function ListeDesAlertsGestion({
               {currentSelectedUserToConnect?.description}
             </h3>
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">Nombre Appareil :</span>{" "}
-              {filteredListeGestionDesVehicules?.length}
+              <span className="text-gray-700">Nombre d'Alert :</span> (
+              {currentAccountSelected
+                ? currentAccountSelected?.accountDevices?.flatMap(
+                    (device) => device?.véhiculeDetails[0] || []
+                  )?.length
+                : accountDevices?.flatMap(
+                    (device) => device?.véhiculeDetails[0] || []
+                  )?.length}
+              )
             </h3>
 
             <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
               {/*  */}
-              <div className="flex gap-2 justify-center mt-4">
-                <button
-                  onClick={() => {
-                    // setShowCreateNewDevicePage(true);
-                    scrollToTop();
-
-                    if (!currentAccountSelected) {
-                      setChooseOneAccountToContinue(true);
-                      setChooseOtherAccountGestion(true);
-                      setDocumentationPage("Ajouter_nouveau_appareil");
-                    } else {
-                      setDocumentationPage("Ajouter_nouveau_appareil");
-                    }
-                  }}
-                  className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
-                >
-                  <span className="flex justify-center items-center gap-3 ">
-                    <FaUserPlus className="text-2xl" />
-                    <span className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                      <span className="hidden md:inline">Ajouter un</span>{" "}
-                      Nouveau Appareil
-                    </span>
-                  </span>
-                </button>{" "}
-              </div>
 
               {!showPasswordInput && (
                 <div className="flex gap-2 w-full justify-between items-center">
@@ -365,86 +509,112 @@ function ListeDesAlertsGestion({
 
           {filteredListeGestionDesVehicules?.length > 0 ? (
             filteredListeGestionDesVehicules
+              ?.flatMap((device) => device?.véhiculeDetails[0] || [])
               ?.slice()
-              .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
-              ?.map((device, index) => {
+              ?.map((alert, index) => {
+                // const code = parseInt(alert.statusCode, 16);
+                // const codeDescription =
+                //   statusDescriptions[code] || "Statut inconnu";
+
+                const code = parseInt(alert.statusCode, 16);
+                const codeDescription =
+                  statusDescriptions[code] || "Statut inconnu";
+                const { icon, color } = statusVisuals(codeDescription);
+                const twColor = getTailwindColor(color);
+                const twBorderColor = getTailwindBorderColor(color);
+
+                const currentDevice = accountDevices?.find(
+                  (d) => d.deviceID === alert.deviceID
+                );
+
+                // const color = getTextColor(code);
                 let border_color = "bg-gray-50";
                 let text_color = "text-orange-500/80";
-                if (
-                  currentTimeSec - device?.lastUpdateTime <
-                  twentyFourHoursInSec
-                ) {
-                  border_color = "border-l-[.4rem] border-orange-300";
-                  text_color = "text-orange-500/80";
-                } else if (
-                  currentTimeSec - device?.lastUpdateTime >
-                  twentyFourHoursInSec
-                ) {
-                  border_color = "border-l-[.4rem] border-purple-300";
-                  text_color = "text-purple-500/80";
-                }
+                // if (
+                //   currentTimeSec - device?.lastUpdateTime <
+                //   twentyFourHoursInSec
+                // ) {
+                //   border_color = "border-l-[.4rem] border-orange-300";
+                //   text_color = "text-orange-500/80";
+                // } else if (
+                //   currentTimeSec - device?.lastUpdateTime >
+                //   twentyFourHoursInSec
+                // ) {
+                //   border_color = "border-l-[.4rem] border-purple-300";
+                //   text_color = "text-purple-500/80";
+                // }
 
-                if (device?.lastStopTime > todayTimestamp) {
-                  border_color = "border-l-[.4rem] border-green-300";
-                  text_color = "text-green-500/80";
-                }
+                // if (device?.lastStopTime > todayTimestamp) {
+                //   border_color = "border-l-[.4rem] border-green-300";
+                //   text_color = "text-green-500/80";
+                // }
                 return (
                   <div
                     key={index}
-                    className={`${border_color} bg-gray-50 shadow-inner  shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4`}
+                    className={`${border_color} border-l-[.3rem]-- overflow-hidden bg-gray-50 shadow-inner  shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4`}
                   >
-                    <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                    <div className="bg-gray-100 shadow-lg shadow-black/10  pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                       {index + 1}
                     </div>
-                    <div className="flex  gap-3  ">
-                      <FaCar
+                    <div className="flex  gap-3   w-full">
+                      <IoAlertCircleOutline
                         className={`${text_color} text-[3rem] hidden sm:block  md:mr-4 `}
                       />
-                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                        <div>
-                          <FaCar
+                      <div className=" w-full  flex flex-wrap justify-between gap-x-4">
+                        <div className="  w-full">
+                          <IoAlertCircleOutline
                             className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
                           />
-                          <div className="flex flex-wrap border-b py-1">
+                          {/* <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Description :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
                               {device?.description ||
                                 device?.displayName ||
                                 "Pas de nom disponible"}
                             </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p
-                              onClick={() => {
-                                console.log(
-                                  device?.véhiculeDetails[0]?.address
-                                );
-                              }}
-                              className="font-bold"
-                            >
-                              Adresse :
-                            </p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.véhiculeDetails?.length >= 0
-                                ? device?.véhiculeDetails[0]?.address
-                                : "Pas de nom disponible"}
+                          </div>{" "} */}
+                          <div
+                            className={`${text_color} flex w-full  flex-wrap border-b py-1`}
+                          >
+                            <p className="font-bold">Alert :</p>
+                            <span className=" dark:text-orange-500 font-bold  pl-5">
+                              {codeDescription}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Dernière mise a jour :</p>
+                            <p className="font-bold">Code :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {FormatDateHeure(device?.lastUpdateTime).date}
-                              <span className="px-2">/</span>{" "}
-                              {FormatDateHeure(device?.lastUpdateTime).time}
+                              {alert?.statusCode}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Description :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {currentDevice?.description || "---"}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Account ID :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.accountID}
+                              {alert?.accountID}
                             </span>
                           </div>{" "}
-                          <div
+                          {/*  */}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Adresse :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {alert?.address || "Pas d'adresse disponible"}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold">Dernière mise a jour :</p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {FormatDateHeure(alert?.timestamp).date}
+                              <span className="px-2">/</span>{" "}
+                              {FormatDateHeure(alert?.timestamp).time}
+                            </span>
+                          </div>{" "}
+                          {/* <div
                             className={`${
                               showMoreDeviceInfo === index
                                 ? "max-h-[20rem]"
@@ -480,7 +650,7 @@ function ListeDesAlertsGestion({
                                 Distance totale parcourue :
                               </p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                                {/* {device?.lastOdometerKM.toFixed(0)} */}
+
                                 {device?.lastOdometerKM &&
                                 !isNaN(Number(device?.lastOdometerKM))
                                   ? Number(device?.lastOdometerKM).toFixed(0) +
@@ -494,7 +664,7 @@ function ListeDesAlertsGestion({
                               </p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 50941070132
-                                {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
+
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
@@ -505,8 +675,8 @@ function ListeDesAlertsGestion({
                                 {FormatDateHeure(device?.creationTime).time}
                               </span>
                             </div>{" "}
-                          </div>
-                          {showMoreDeviceInfo === index ? (
+                          </div> */}
+                          {/* {showMoreDeviceInfo === index ? (
                             <p
                               onClick={() => {
                                 setShowMoreDeviceInfo();
@@ -524,40 +694,9 @@ function ListeDesAlertsGestion({
                             >
                               Voir plus
                             </p>
-                          )}
+                          )} */}
                         </div>
                       </div>
-                    </div>
-                    <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
-                      <button
-                        onClick={() => {
-                          setCurrentSelectedDeviceGestion(device);
-                          setShowUserGroupeCategorieSection(false);
-                          setDocumentationPage("Modifier_appareil");
-                          scrollToTop();
-                        }}
-                        className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-1.5 pl-2.5 pr-1.5 flex justify-center items-center"
-                      >
-                        <p className="text-sm mr-2">Modifier</p>
-
-                        <FaRegEdit />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setCurrentSelectedDeviceGestion(device);
-
-                          setDeleteAccountPopup(true);
-                        }}
-                        className={`${
-                          true
-                            ? " bg-orange-500 text-white"
-                            : "text-orange-600 border-[0.02rem] border-orange-500 "
-                        }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-2 flex justify-center items-center`}
-                      >
-                        <p className="text-sm mr-2">Supprimer</p>
-
-                        <FaTrashAlt />
-                      </button>
                     </div>
                   </div>
                 );

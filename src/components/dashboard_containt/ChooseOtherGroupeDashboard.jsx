@@ -87,7 +87,7 @@ function ChooseOtherGroupeDashboard({
                       </p>
                       <p className="text-gray-600">
                         ID du Compte :{" "}
-                        <span className="font-bold">
+                        <span className="font-bold notranslate">
                           {groupe?.accountID || ""}
                         </span>{" "}
                       </p>

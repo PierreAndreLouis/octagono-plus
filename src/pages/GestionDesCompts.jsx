@@ -70,7 +70,7 @@ function GestionDesCompts({ setDocumentationPage }) {
           >
             Gestion Des Comptes ({filterListeDesCompte?.length})
           </h2>
-          <button
+          {/* <button
             onClick={() => {
               console.log(véhiculeDetails);
             }}
@@ -83,7 +83,7 @@ function GestionDesCompts({ setDocumentationPage }) {
             }}
           >
             accountDevices
-          </p>
+          </p> */}
           {/*  <br />
             <button
               onClick={() => {

@@ -28,6 +28,20 @@ const GoogleTranslate = () => {
       }
     };
 
+    const addCustomGoogleStyles = () => {
+      const style = document.createElement("style");
+      style.innerHTML = `
+    .goog-tooltip, .goog-tooltip:hover {
+      display: none !important;
+    }
+    .goog-text-highlight {
+      background: none !important;
+      box-shadow: none !important;
+    }
+  `;
+      document.head.appendChild(style);
+    };
+
     const initializeGoogleTranslate = () => {
       if (window.google?.translate) {
         try {
@@ -63,6 +77,7 @@ const GoogleTranslate = () => {
     if (isOnline) {
       setIsLoading(true);
       addGoogleTranslateScript();
+      // addCustomGoogleStyles();
       setTimeout(() => {
         if (!window.google?.translate) {
           initializeGoogleTranslate();

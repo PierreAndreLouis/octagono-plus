@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import {
   IoAlertCircle,
+  IoAlertCircleOutline,
   IoCarSportOutline,
   IoChevronDown,
   IoClose,
@@ -642,7 +643,7 @@ function DashboardAdminPage() {
                   </div>
                 </div>
 
-                {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
                     onClick={() => {
                       if (currentAccountSelected) {
@@ -652,13 +653,6 @@ function DashboardAdminPage() {
                       } else {
                         setListeGestionDesVehicules(accountDevices);
                       }
-
-                      // {
-                      //   accountDevices?.flatMap(
-                      //     (device) => device?.véhiculeDetails[0] || []
-                      //   )?.length;
-                      // }
-
                       scrollToTop();
                       setDocumentationPage("Gestion_des_alerts");
                       closeSideBar();
@@ -669,7 +663,7 @@ function DashboardAdminPage() {
                         : ""
                     } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
                   >
-                    <IoAlertCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <FiAlertCircle className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
                         Gestion des Alerts (
@@ -684,7 +678,7 @@ function DashboardAdminPage() {
                       </p>
                     </div>
                   </div>
-                </div> */}
+                </div>
 
                 <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
@@ -847,7 +841,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                03/06/2025 _ 1
+                04/06/2025 _ 1
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (

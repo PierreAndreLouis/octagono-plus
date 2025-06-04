@@ -187,6 +187,40 @@ function ListeDesVehiculesGestion({
     });
   };
 
+  const statusDescriptions = {
+    0x0000: "Code de statut non spécifié",
+    0xf020: "Localisation - En mouvement",
+    0xf021: "Localisation - Arrêté",
+    0xf022: "Localisation - Parking",
+    0xf100: "Localisation - Odomètre",
+    0xf110: "Localisation - Heures moteur",
+    0xf120: "Localisation - Niveau de carburant",
+    0xf200: "Changement d'état d'entrée",
+    0xf201: "Entrée activée",
+    0xf202: "Entrée désactivée",
+    0xf210: "Contact allumé",
+    0xf211: "Contact éteint",
+    0xf301: "Alimentation activée",
+    0xf302: "Alimentation désactivée",
+    0xf310: "Batterie faible",
+    0xf311: "Batterie OK",
+    0xf320: "En charge",
+    0xf321: "Non en charge",
+    0xf400: "Détection de remorquage",
+    0xf500: "Détection de collision",
+    0xf600: "Excès de vitesse",
+    0xf601: "Vitesse normale",
+    0xf700: "Entrée dans une zone géographique",
+    0xf701: "Sortie d'une zone géographique",
+    0xf800: "Informations de diagnostic",
+    0xf900: "Signal de vie",
+    0xfa00: "Connexion du conducteur",
+    0xfa01: "Déconnexion du conducteur",
+    0xfb00: "Alerte de panique",
+    0xfc00: "Rappel de maintenance",
+    // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
+  };
+
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
@@ -388,6 +422,13 @@ function ListeDesVehiculesGestion({
                   border_color = "border-l-[.4rem] border-green-300";
                   text_color = "text-green-500/80";
                 }
+
+                const code = parseInt(
+                  device?.véhiculeDetails[0]?.statusCode,
+                  16
+                );
+                const codeDescription =
+                  statusDescriptions[code] || "Statut inconnu";
                 return (
                   <div
                     key={index}
@@ -451,6 +492,18 @@ function ListeDesVehiculesGestion({
                                 : "max-h-0"
                             }  overflow-hidden transition-all`}
                           >
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">Alert :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {codeDescription}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">Alert code :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.véhiculeDetails[0]?.statusCode}
+                              </span>
+                            </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">Plaque du véhicule :</p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">

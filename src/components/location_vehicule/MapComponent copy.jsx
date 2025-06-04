@@ -58,7 +58,7 @@ function MapComponent({ mapType }) {
     setSuccesModifierGeofencePopup,
     errorModifierGeofencePopup,
     setErrorModifierGeofencePopup,
-    gestionAccountData
+    gestionAccountData,
   } = useContext(DataContext);
 
   // le data a utiliser
@@ -534,9 +534,9 @@ function MapComponent({ mapType }) {
         pos7?.lat || "",
         pos7?.lng || "",
         pos8?.lat || "",
-        pos8?.lng || "",
+        pos8?.lng || ""
 
-        // 
+        //
         //  gestionAccountData.find(
         //       (geofence) => geofence.accountID === accountID
         //     )?.accountID,
@@ -571,7 +571,7 @@ function MapComponent({ mapType }) {
         pos7?.lat || "",
         pos7?.lng || "",
         pos8?.lat || "",
-        pos8?.lng || "",
+        pos8?.lng || ""
         //   gestionAccountData.find(
         //       (geofence) => geofence.accountID === accountID
         //     )?.accountID,
@@ -753,8 +753,6 @@ function MapComponent({ mapType }) {
               </div>
             </div>
           )}
-
-        
 
           <div className="mx-auto relative   min-w-[90vw]-- w-full max-w-[40rem] rounded-lg p-4 bg-white">
             <div className="flex justify-between items-center gap-2">
@@ -1022,7 +1020,7 @@ function MapComponent({ mapType }) {
                     icon={L.divIcon({
                       className: "geofence-label",
                       html: `<div 
-                           class="bg-gray-100 px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
+                           class="bg-gray-100 notranslate px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                            
                            style="font-size: ${textSize}; width: ${widthSize}; color: ${geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                            ${geofence?.description}

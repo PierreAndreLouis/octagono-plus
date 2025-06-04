@@ -53,6 +53,17 @@
 /* Fin */
 
 
+/* .goog-tooltip, .goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+} */
+
+
+
 @keyframes progress {
   from { width: 100%; }
   to { width: 0%; }
