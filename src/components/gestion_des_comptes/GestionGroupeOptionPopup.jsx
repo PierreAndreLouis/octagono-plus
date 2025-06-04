@@ -73,7 +73,7 @@ function GestionGroupeOptionPopup({
               >
                 Options du groupe
               </h1>
-              <h2 className="px-3 mt-8-- text-orange-600 mb-4">
+              <h2 className="px-3 notranslate mt-8-- text-orange-600 mb-4">
                 {currentSelectedGroupeGestion?.description || "---"}
               </h2>
             </div>

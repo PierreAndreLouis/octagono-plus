@@ -130,7 +130,7 @@ function ListeDesGroupes({
             <div className="relative">
               <div className="text-center font-semibold text-lg bg-orange-100 py-4">
                 <h2 className="">Liste des Utilisateurs</h2>
-                <p className="text-center font-normal- text-orange-600 translate-x-11--  text-sm">
+                <p className="text-center notranslate font-normal- text-orange-600 translate-x-11--  text-sm">
                   {currentAccountSelected?.description}
                 </p>
               </div>
@@ -197,7 +197,9 @@ function ListeDesGroupes({
                       <div>
                         <p className="text-gray-600">
                           Nom de l'utilisateur :{" "}
-                          <span className="font-bold">{user?.description}</span>{" "}
+                          <span className="font-bold notranslate">
+                            {user?.description}
+                          </span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Nombre de Groupes affectés :{" "}
@@ -283,7 +285,9 @@ function ListeDesGroupes({
               {currentSelectedUserToConnect?.description && (
                 <span className="text-gray-700">Utilisateur :</span>
               )}{" "}
-              {currentSelectedUserToConnect?.description}
+              <span className="notranslate">
+                {currentSelectedUserToConnect?.description}
+              </span>
             </h3>
             <h3 className=" text-orange-600 text-md text-center font-bold-- ">
               {listeGestionDesGroupeTitre && (
@@ -429,7 +433,7 @@ function ListeDesGroupes({
                             <p className="font-bold- text-gray-700">
                               Nom du Groupe :
                             </p>
-                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                               {groupe?.description}
                             </span>
                           </div>{" "}
@@ -437,7 +441,7 @@ function ListeDesGroupes({
                             <p className="font-bold- text-gray-700">
                               ID du Groupe :
                             </p>
-                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            <span className=" dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                               {groupe?.groupID}
                             </span>
                           </div>{" "}

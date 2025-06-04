@@ -54,7 +54,7 @@ function VehiculeDetailInformationComponent({
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
               Nom du véhicule
             </h3>
-            <p className="pl-3 text-gray-500 dark:text-gray-400">
+            <p className="pl-3 notranslate text-gray-500 dark:text-gray-400">
               {currentVéhicule?.description || ""}
             </p>
           </div>
@@ -63,7 +63,7 @@ function VehiculeDetailInformationComponent({
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
               Description du véhicule
             </h3>
-            <p className="pl-3 text-gray-500 dark:text-gray-400">
+            <p className="pl-3 notranslate text-gray-500 dark:text-gray-400">
               {currentVéhicule?.description || ""}
             </p>
           </div>
@@ -101,7 +101,7 @@ function VehiculeDetailInformationComponent({
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
               Adresse du véhicule
             </h3>
-            <p className="pl-3 text-gray-500 dark:text-gray-400">
+            <p className="pl-3 notranslate text-gray-500 dark:text-gray-400">
               {currentVéhicule?.véhiculeDetails[0]?.backupAddress ||
                 currentVéhicule?.véhiculeDetails[0]?.address ||
                 ""}

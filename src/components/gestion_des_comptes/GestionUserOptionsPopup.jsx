@@ -128,7 +128,7 @@ function GestionUserOptionsPopup({
               >
                 Options de l'utilisateur
               </h1>
-              <h2 className="px-3 mt-8-- text-orange-600 mb-4">
+              <h2 className="px-3 notranslate mt-8-- text-orange-600 mb-4">
                 {currentSelectedUserToConnect?.description || "---"}
               </h2>
             </div>

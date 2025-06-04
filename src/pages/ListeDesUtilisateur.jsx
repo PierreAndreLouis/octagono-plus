@@ -216,7 +216,7 @@ function ListeDesUtilisateur({
                   >
                     <h3 className="w-full text-center font-semibold">
                       {/* Compte: */}
-                      <span>
+                      <span className="notranslate">
                         {currentAccountSelected?.description ||
                           "Choisissez un compte"}
                       </span>
@@ -291,13 +291,13 @@ function ListeDesUtilisateur({
                           <p className="font-bold- text-gray-700">
                             Nom Utilisateur :
                           </p>
-                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
                             {user?.description}
                           </span>
                         </div>{" "}
                         <div className="flex flex-wrap">
                           <p className="font-bold- text-gray-700">UserID :</p>
-                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
                             {user?.userID}
                           </span>
                         </div>{" "}
@@ -305,7 +305,7 @@ function ListeDesUtilisateur({
                           <p className="font-bold- text-gray-700">
                             AccountID :
                           </p>
-                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
                             {user?.accountID}
                           </span>
                         </div>{" "}

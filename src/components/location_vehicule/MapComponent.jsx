@@ -1362,17 +1362,23 @@ function MapComponent({
                   <div className="w-[70vw] max-w-[20rem]">
                     <p className="font-bold text-[1rem]">
                       <span>Description :</span>{" "}
-                      {véhicule.description || "Non disponible"}
+                      <span className="notranslate">
+                        {véhicule.description || "Non disponible"}
+                      </span>
                     </p>
 
                     <p>
                       <strong>accountID :</strong>{" "}
-                      {véhicule.accountID || "Non disponible"}
+                      <span className="notranslate">
+                        {véhicule.accountID || "Non disponible"}
+                      </span>
                     </p>
 
                     <p>
                       <strong>Adresse :</strong>{" "}
-                      {véhicule.address || "Non disponible"}
+                      <span className="notranslate">
+                        {véhicule.address || "Non disponible"}
+                      </span>
                     </p>
                     {/* <p>
                       <strong>Date creation :</strong>{" "}

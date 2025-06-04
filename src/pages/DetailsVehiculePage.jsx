@@ -88,7 +88,7 @@ function DetailsVehiculePage() {
               onClick={() => {
                 console.log(currentVéhicule);
               }}
-              className="text-start w-[90%] overflow-hidden whitespace-nowrap text-ellipsis"
+              className="text-start notranslate w-[90%] overflow-hidden whitespace-nowrap text-ellipsis"
             >
               {currentVéhicule?.description || "Choisis un véhicule"}
             </p>
@@ -113,7 +113,7 @@ function DetailsVehiculePage() {
             alt="Image de détails du véhicule"
           />
         </div>
-        <h1 className="text-center dark:text-gray-200 font-bold text-xl mt-8 text-gray-600">
+        <h1 className="text-center notranslate dark:text-gray-200 font-bold text-xl mt-8 text-gray-600">
           {currentVéhicule?.description || ""}
         </h1>
 

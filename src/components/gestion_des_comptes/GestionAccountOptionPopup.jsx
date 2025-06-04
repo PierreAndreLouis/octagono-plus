@@ -48,7 +48,9 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
               Voulez-vous Supprimer le compte :<br /> "
-              {currentAccountSelected?.description}" ?
+              <span className="notranslate">
+                {currentAccountSelected?.description}" ?
+              </span>
             </div>
             <div>
               <label
@@ -105,7 +107,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               >
                 Options du compte
               </h1>
-              <h2 className="px-3 mt-8-- text-orange-600 mb-4">
+              <h2 className="px-3 mt-8-- notranslate text-orange-600 mb-4">
                 {currentAccountSelected?.description || "---"}
               </h2>
             </div>

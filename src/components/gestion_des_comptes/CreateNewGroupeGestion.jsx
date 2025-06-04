@@ -245,7 +245,7 @@ function CreateNewGroupeGestion({
 
                       <p className="text-gray-600">
                         Nom de l'appareil :{" "}
-                        <span className="font-bold">{device?.description}</span>
+                        <span className="font-bold notranslate">{device?.description}</span>
                       </p>
                       <p className="text-gray-600">
                         Dernière mise a jour :{" "}

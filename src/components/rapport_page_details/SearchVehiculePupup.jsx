@@ -289,12 +289,12 @@ function SearchVehiculePupup({
                         ? foundVehicle?.description
                         : currentVéhicule?.description) &&
                     "bg-orange-50 dark:bg-gray-800"
-                  }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 dark:bg-gray-600-- dark:hover:bg-gray-800`}
+                  }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 notranslate dark:bg-gray-600-- dark:hover:bg-gray-800`}
                 >
                   <FaCar
                     className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg  `}
                   />
-                  <p className="text-gray-700 dark:text-white">
+                  <p className="text-gray-700 notranslate dark:text-white">
                     {index + 1} - {véhicule.description || "---"}
                   </p>
                 </div>

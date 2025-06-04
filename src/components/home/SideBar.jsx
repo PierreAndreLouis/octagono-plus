@@ -5,6 +5,7 @@ import { FaRegUser } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
 import {
+  MdGTranslate,
   MdLogout,
   MdSpaceDashboard,
   MdSupervisorAccount,
@@ -37,6 +38,7 @@ function SideBar() {
     setMergedDataHome,
     setGeofenceData,
     setDonneeFusionnéForRapport,
+    setChooseOtherLanguagePopup,
   } = useContext(DataContext);
   let x;
   //
@@ -261,6 +263,21 @@ function SideBar() {
         >
           <FaBook />
           <h3 className="font-semibold text-[1.1rem]">Manuel d'utilisation</h3>
+        </Link>
+
+        <Link
+          // to="/gestion_geofences?tab=geozone"
+          onClick={() => {
+            // setReadDocumentation(true);
+            setShowSideBar(true);
+            setChooseOtherLanguagePopup(true);
+
+            // handleTabClick("geozone");
+          }}
+          className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+        >
+          <MdGTranslate />
+          <h3 className="font-semibold text-[1.1rem]">Traduction</h3>
         </Link>
 
         {/*  */}

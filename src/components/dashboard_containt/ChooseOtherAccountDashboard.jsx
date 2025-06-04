@@ -110,7 +110,7 @@ function ChooseOtherAccountDashboard({
                     <div>
                       <p className="text-gray-600">
                         Nom du compte :{" "}
-                        <span className="font-bold">
+                        <span className="font-bold notranslate">
                           {account?.description}
                         </span>{" "}
                       </p>

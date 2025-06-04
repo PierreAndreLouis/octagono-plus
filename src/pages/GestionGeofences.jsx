@@ -346,7 +346,7 @@ function GestionGeofences({
                           <div>
                             <div className="flex flex-wrap">
                               <p className="font-bold">Nom du Geozone :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className="notranslate notranslate dark:text-orange-500 text-gray-600 pl-5">
                                 {geozone?.description}
                               </span>
                             </div>{" "}
@@ -358,7 +358,7 @@ function GestionGeofences({
                             </div>{" "}
                             <div className="flex flex-wrap">
                               <p className="font-bold">ID du compte :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
                                 {geozone?.accountID}
                               </span>
                             </div>{" "}
@@ -488,7 +488,7 @@ function GestionGeofences({
                         : "Désactiver"}{" "}
                       le geozone ? ?
                     </p>
-                    <p className="text-red-500 font-semibold">
+                    <p className="text-red-500 notranslate notranslate font-semibold">
                       {currentGeozone?.description}
                     </p>
                   </div>

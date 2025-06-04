@@ -135,7 +135,7 @@ function HistoriqueHeader({
                   >
                     Choisis un véhicule
                   </p>
-                  <p className="hidden md:block">
+                  <p className="hidden md:block notranslate">
                     {currentVéhicule?.description || "Choisir un véhicule"}
                   </p>
                   <FaChevronDown className="mt-1" />
@@ -177,7 +177,7 @@ function HistoriqueHeader({
           La maison de Monsieur Pedro
         </div> */}
         <div className="px-4 flex justify-center items-center py-1 ">
-          <p className="font-semibold text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
+          <p className="font-semibold notranslate text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
             {" "}
             {(showHistoriqueInMap && currentVéhicule?.description) || ""}
           </p>

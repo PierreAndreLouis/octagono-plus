@@ -182,7 +182,7 @@ function GestionDesCompts({ setDocumentationPage }) {
                             <p className="font-bold- text-gray-700">
                               Nom du Compte :
                             </p>
-                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                            <span className="notranslate notranslate notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
                               {account?.description}
                             </span>
                           </div>{" "}
@@ -190,7 +190,7 @@ function GestionDesCompts({ setDocumentationPage }) {
                             <p className="font-bold- text-gray-700">
                               ID du Compte :
                             </p>
-                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                            <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
                               {account?.accountID}
                             </span>
                           </div>{" "}

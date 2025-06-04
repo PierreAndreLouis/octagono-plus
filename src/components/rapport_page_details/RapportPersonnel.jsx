@@ -282,7 +282,7 @@ function RapportPersonnel({
           <h1 className="text-center mb-2 font-semibold text-xl mt-16 dark:text-gray-300">
             Rapport détaillé du véhicule
           </h1>
-          <h1 className="text-center mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
+          <h1 className="text-center notranslate mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
             {currentVéhicule?.description || ""}
           </h1>
           <div
@@ -349,7 +349,7 @@ function RapportPersonnel({
 
                 <p>
                   Nom du Véhicule :{" "}
-                  <span className=" dark:text-orange-500 font-normal text-gray-700 pl-3">
+                  <span className=" dark:text-orange-500 notranslate font-normal text-gray-700 pl-3">
                     {currentVéhicule?.description || "---"}
                   </span>
                 </p>
@@ -718,7 +718,7 @@ function RapportPersonnel({
                     className="absolute z-[22222222222] top-3 right-4 cursor-pointer text-2xl text-red-500"
                   />
                   <h3 className="text-orange-500">Historique</h3>
-                  <h2 className="text-gray-700 dark:text-gray-200 text-center">
+                  <h2 className="text-gray-700 notranslate dark:text-gray-200 text-center">
                     {currentVéhicule?.description || ""}
                   </h2>
                 </div>

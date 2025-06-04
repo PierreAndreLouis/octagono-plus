@@ -415,11 +415,13 @@ function ListeDesAlertsGestion({
               Liste des Alertes
             </h2>
 
-            <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+            <h3 className=" text-orange-600  text-md text-center font-bold-- ">
               {currentSelectedUserToConnect?.description && (
                 <span className="text-gray-700">Utilisateur :</span>
               )}{" "}
-              {currentSelectedUserToConnect?.description}
+              <span className="notranslate">
+                {currentSelectedUserToConnect?.description}
+              </span>
             </h3>
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
               <span className="text-gray-700">Nombre d'Alert :</span> (
@@ -589,20 +591,20 @@ function ListeDesAlertsGestion({
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Description :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
                               {currentDevice?.description || "---"}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Account ID :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
                               {alert?.accountID}
                             </span>
                           </div>{" "}
                           {/*  */}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Adresse :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
                               {alert?.address || "Pas d'adresse disponible"}
                             </span>
                           </div>{" "}

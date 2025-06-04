@@ -48,7 +48,7 @@ function HeaderLocation({
             id="vehicule_actuel"
             className="flex justify-between items-center border py-2 px-5 rounded-md w-full max-w-[40rem] mx-auto cursor-pointer bg-orange-50 dark:bg-gray-900/50 dark:text-gray-100 dark:border-gray-300/40 md:bg-white md:border md:border-gray-300  md:shadow-xl"
           >
-            <p className="w-[90%] overflow-hidden whitespace-nowrap text-ellipsis">
+            <p className="w-[90%] notranslate overflow-hidden whitespace-nowrap text-ellipsis">
               {selectedVehicleToShowInMap
                 ? véhiculeData?.find(
                     (véhicule) =>

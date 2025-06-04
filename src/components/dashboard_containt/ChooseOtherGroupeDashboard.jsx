@@ -81,7 +81,7 @@ function ChooseOtherGroupeDashboard({
                     <div>
                       <p className="text-gray-600">
                         Nom du Groupe :{" "}
-                        <span className="font-bold">
+                        <span className="font-bold notranslate">
                           {groupe?.description || "Pas de nom disponible"}
                         </span>{" "}
                       </p>

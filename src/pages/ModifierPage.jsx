@@ -239,10 +239,6 @@ function Modifier() {
         setIsPasswordConfirmed={setshowConfirmDeletePupup}
       />
 
-  
-
-    
-
       <div className="flex w-full justify-center h-full mt-16 pb-2 md:mt-20">
         <div className="w-full flex justify-center">
           <div className="bg-white dark:bg-gray-900/30 max-w-[40rem] md:px-6 mb-20 w-full mt-4 rounded-xl shadow-lg overflow-auto">
@@ -263,7 +259,7 @@ function Modifier() {
                 className="flex justify-between   cursor-pointer border rounded-md
                  px-3 py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-500  dark:text-gray-300 text-center"
               >
-                <p className="text-start w-[90%] overflow-hidden whitespace-nowrap text-ellipsis">
+                <p className="text-start notranslate w-[90%] overflow-hidden whitespace-nowrap text-ellipsis">
                   {currentVéhicule?.description || "Choisis un Véhicule"}
                 </p>
                 <FaChevronDown className="mt-1" />

@@ -242,7 +242,9 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                     <div className="w-full">
                       <p className="text-gray-600">
                         Nom du compte :{" "}
-                        <span className="font-bold">{groupe?.description}</span>
+                        <span className="font-bold notranslate">
+                          {groupe?.description}
+                        </span>
                       </p>
                       <p className="text-gray-600">
                         Nombre d'utilisateur :{" "}

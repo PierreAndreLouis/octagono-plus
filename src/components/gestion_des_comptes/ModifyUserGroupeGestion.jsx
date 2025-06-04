@@ -566,8 +566,8 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
                       setShowUserRolePopup(false);
                     }}
                   >
-                    <p>{role?.description}</p>
-                    <p>{role?.roleID}</p>
+                    <p className="notranslate">{role?.description}</p>
+                    <p className="notranslate">{role?.roleID}</p>
                   </div>
                 );
               })}
@@ -677,7 +677,9 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 Modifier l'utilisateur :{" "}
-                <span>{currentSelectedUserToConnect?.description}</span>
+                <span className="notranslate">
+                  {currentSelectedUserToConnect?.description}
+                </span>
               </h3>
             </div>
             <div className="flex justify-center mb-10">

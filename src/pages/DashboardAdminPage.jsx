@@ -348,7 +348,7 @@ function DashboardAdminPage() {
                 >
                   <FaUserCircle className="text-[1.4rem] text-gray-600" />
                   <div className=" text-gray-800 flex flex-col gap-0">
-                    <p className="font-semibold max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
+                    <p className="font-semibold notranslate max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
                       {currentAccountSelected?.description ||
                         "Tous les comptes"}
                     </p>
@@ -429,7 +429,7 @@ function DashboardAdminPage() {
                       <p className="text-gray-600 font-semibold">
                         Compte Actuel
                       </p>
-                      <p className="text-orange-500 max-w-[10rem] whitespace-nowrap text-ellipsis overflow-hidden  ">
+                      <p className="text-orange-500 notranslate max-w-[10rem] whitespace-nowrap text-ellipsis overflow-hidden  ">
                         {currentAccountSelected
                           ? currentAccountSelected?.description
                           : "Tous les comptes"}

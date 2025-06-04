@@ -247,7 +247,9 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                       </div>
                       <p className="text-gray-600">
                         Nom de l'appareil :{" "}
-                        <span className="font-bold">{device?.description}</span>
+                        <span className="font-bold notranslate">
+                          {device?.description}
+                        </span>
                       </p>
                       <p className="text-gray-600">
                         Dernière mise a jour :{" "}
@@ -396,7 +398,10 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Modifier le Groupe : {currentSelectedGroupeGestion?.description}
+                Modifier le Groupe :{" "}
+                <span className="notranslate">
+                  {currentSelectedGroupeGestion?.description}
+                </span>
               </h3>
             </div>
             <div className="flex justify-center mb-10">

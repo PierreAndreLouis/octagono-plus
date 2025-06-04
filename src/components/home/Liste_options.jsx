@@ -146,7 +146,7 @@ function Liste_options({}) {
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
-              <h1 className="px-3 mt-8 mb-2">
+              <h1 className="px-3 notranslate mt-8 mb-2">
                 {currentVéhicule?.description || "---"}
               </h1>
             </div>
@@ -356,7 +356,7 @@ function Liste_options({}) {
         {/* Options header */}
 
         <div className="p-4 py-6 pt-10 bg-orange-200/50 dark:bg-gray-900 dark:text-gray-50 dark:shadow-lg  dark:shadow-gray-700/50 relative">
-          <h2 className="text-xl text-center font-semibold">
+          <h2 className="text-xl notranslate text-center font-semibold">
             {currentVéhicule?.description || "---"}
           </h2>
           <IoMdClose

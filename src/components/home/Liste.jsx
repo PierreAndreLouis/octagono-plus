@@ -420,7 +420,7 @@ function Liste() {
                         {parseFloat(speed).toFixed(0)}
                       </h2>
                       <h2
-                        className={`${main_text_color} text-[1rem] sm:text-lg md:text-xl leading-3 font-semibold whitespace-nowrap`}
+                        className={`${main_text_color} notranslate text-[1rem] sm:text-lg md:text-xl leading-3 font-semibold whitespace-nowrap`}
                       >
                         Km/h
                       </h2>
@@ -428,7 +428,7 @@ function Liste() {
                     <div>
                       {/* Nom du véhicule */}
                       <h2
-                        className={`${activeTextColor} text-gray-800 dark:text-gray-100 font-semibold text-md md:text-xl mb-2 `}
+                        className={`${activeTextColor} notranslate text-gray-800 dark:text-gray-100 font-semibold text-md md:text-xl mb-2 `}
                       >
                         {véhicule?.description
                           ? véhicule?.description
@@ -485,7 +485,7 @@ function Liste() {
                           <MdLocationPin className="text-xl text-gray-500/80 dark:text-gray-300 -translate-x-0.5 mt-3" />
                         </div>
                         {/* Adresse du véhicule */}
-                        <p className=" text-md felx sm:flex text-gray-600 mt-2 md:text-[1.1rem] dark:text-gray-300">
+                        <p className=" text-md notranslate felx sm:flex text-gray-600 mt-2 md:text-[1.1rem] dark:text-gray-300">
                           {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
                             véhicule?.véhiculeDetails?.[0]?.address ||
                             "Adresse non disponible"}
@@ -503,9 +503,11 @@ function Liste() {
                     >
                       Adresse :{" "}
                     </span>
-                    {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
-                      véhicule?.véhiculeDetails?.[0]?.address ||
-                      "Adresse non disponible"}
+                    <span className="notranslate">
+                      {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
+                        véhicule?.véhiculeDetails?.[0]?.address ||
+                        "Adresse non disponible"}
+                    </span>
                   </p>
                 </div>
               </div>

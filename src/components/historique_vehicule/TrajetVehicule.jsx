@@ -1033,7 +1033,7 @@ function TrajetVehicule({
             className={`fixed flex flex-col gap-2 z-[999999999999]  md:top-auto md: bottom-[4rem] lg:bottom-[1rem] md: left-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem]-- p-3 bg-white rounded-lg shadow-lg shadow-black/20 `}
           >
             <div className="flex border-b md:pb-3 justify-end md:justify-between ">
-              <p className="font-bold hidden md:block">
+              <p className="font-bold notranslate hidden md:block">
                 {currentVéhicule?.description || ""}
               </p>
               <MdClose
@@ -1524,7 +1524,9 @@ function TrajetVehicule({
 
                             <p>
                               <strong>Adresse :</strong>{" "}
-                              {pos.vehicle?.address || "Non disponible"}
+                              <span className="notranslate">
+                                {pos.vehicle?.address || "Non disponible"}
+                              </span>
                             </p>
 
                             <p>

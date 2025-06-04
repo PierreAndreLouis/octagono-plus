@@ -525,8 +525,8 @@ function CreateNewUserGestion({
                       setShowUserRolePopup(false);
                     }}
                   >
-                    <p>{role?.description}</p>
-                    <p>{role?.roleID}</p>
+                    <p className="notranslate">{role?.description}</p>
+                    <p className="notranslate">{role?.roleID}</p>
                   </div>
                 );
               })}
@@ -580,7 +580,9 @@ function CreateNewUserGestion({
                     <div className="w-full">
                       <p className="text-gray-600">
                         Nom du Groupe :{" "}
-                        <span className="font-bold">{groupe?.description}</span>
+                        <span className="font-bold notranslate">
+                          {groupe?.description}
+                        </span>
                       </p>
                       <p className="text-gray-600">
                         Nombre d'appareil :{" "}

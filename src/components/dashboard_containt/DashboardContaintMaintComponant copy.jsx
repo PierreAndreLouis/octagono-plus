@@ -472,9 +472,12 @@ function DashboardContaintMaintComponant({
               </div>
               <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
                 <span className="mr-1  text-gray-600">Compte :</span>
+                <span className="notranslate">
+
                 {currentAccountSelected
                   ? currentAccountSelected?.description
                   : "Tous les comptes"}
+                  </span>
               </p>
             </div>
             <div
@@ -876,7 +879,7 @@ function DashboardContaintMaintComponant({
                     <div>
                       <p className="text-gray-600">
                         Nom de l'utilisateur :{" "}
-                        <span className="font-bold">{user?.description}</span>{" "}
+                        <span className="font-bold notranslate">{user?.description}</span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Nombre d'appareil :{" "}
@@ -980,7 +983,7 @@ function DashboardContaintMaintComponant({
                     <div>
                       <p className="text-gray-600">
                         Nom du Groupe :{" "}
-                        <span className="font-bold">{user?.description}</span>{" "}
+                        <span className="font-bold notranslate">{user?.description}</span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Nombre d'appareil :{" "}

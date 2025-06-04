@@ -137,7 +137,7 @@ function HistoriqueMainComponent({
           <h2 className="text-xl md:text-4xl md:mb-4 text-orange-600">
             Historique{" "}
           </h2>
-          <h2 className="text-gray-800 mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
+          <h2 className="text-gray-800 notranslate mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
             {currentVéhicule?.description || "Pas de véhicule sélectionné"}
           </h2>
         </div>

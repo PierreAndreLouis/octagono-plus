@@ -238,7 +238,7 @@ function RapportOptions({
             className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500"
           />
           <div className="h-16-- py-5 bg-orange-100 dark:bg-gray-800 dark:text-gray-50 dark:shadow-lg dark:shadow-gray-900 shadow-md text-gray-800 text-xl font-semibold text-center flex justify-center items-center p-2">
-            <h1 className="px-3">{currentVéhicule?.description}</h1>
+            <h1 className="px-3 notranslate">{currentVéhicule?.description}</h1>
           </div>
 
           {/*  */}

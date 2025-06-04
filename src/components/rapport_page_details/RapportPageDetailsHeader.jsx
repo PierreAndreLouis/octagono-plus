@@ -277,7 +277,7 @@ function RapportPageDetailsHeader({
       >
         {pageSection === "unite" && (
           <div className="flex justify-between cursor-pointer border rounded-md px-3 py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-500 dark:text-gray-300 text-center">
-            <p className="text-start w-[90%] dark:text-gray-200 overflow-hidden whitespace-nowrap text-ellipsis">
+            <p className="text-start notranslate w-[90%] dark:text-gray-200 overflow-hidden whitespace-nowrap text-ellipsis">
               {personnelDetails &&
                 !currentVéhicule?.description &&
                 "Choisissez un véhicule"}

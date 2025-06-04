@@ -931,7 +931,7 @@ function DashboardContaintMaintComponant({
                   />
                   <p className="text-gray-600 font-bold">
                     Nom du Groupe :{" "}
-                    <span className="font-normal text-gray-500 ml-2">
+                    <span className="font-normal notranslate text-gray-500 ml-2 ">
                       {device?.description}
                     </span>{" "}
                   </p>
@@ -1224,9 +1224,11 @@ function DashboardContaintMaintComponant({
               </div>
               <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
                 <span className="mr-1  text-gray-600">Compte :</span>
-                {currentAccountSelected
-                  ? currentAccountSelected?.description
-                  : "Tous les comptes"}
+                <span className="notranslate">
+                  {currentAccountSelected
+                    ? currentAccountSelected?.description
+                    : "Tous les comptes"}
+                </span>
               </p>
             </div>
             {currentAccountSelected && (
@@ -1719,7 +1721,11 @@ function DashboardContaintMaintComponant({
                       </p>
                       <p className="text-gray-600">
                         Adresse :{" "}
-                        <span className="font-bold">{details?.address}</span>{" "}
+                        <span className="notranslate">
+                          <span className="font-bold notranslate">
+                            {details?.address}
+                          </span>{" "}
+                        </span>
                       </p>
                       {/* <p><strong>Timestamp :</strong> {item.timestamp}</p> */}
                       {/* <p><strong>Statut :</strong> {description}</p> */}
@@ -1801,7 +1807,9 @@ function DashboardContaintMaintComponant({
                       <div>
                         <p className="text-gray-600">
                           Nom de l'utilisateur :{" "}
-                          <span className="font-bold">{user?.description}</span>{" "}
+                          <span className="font-bold notranslate">
+                            {user?.description}
+                          </span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Account ID :{" "}
@@ -1902,7 +1910,9 @@ function DashboardContaintMaintComponant({
                       <div>
                         <p className="text-gray-600">
                           Nom du Groupe :{" "}
-                          <span className="font-bold">{user?.description}</span>{" "}
+                          <span className="font-bold notranslate">
+                            {user?.description}
+                          </span>{" "}
                         </p>
                         <p className="text-gray-600">
                           Account ID :{" "}

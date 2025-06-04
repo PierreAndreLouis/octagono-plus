@@ -93,7 +93,7 @@ function ChooseOtherGeofenceDashboard({
                     <div>
                       <p className="text-gray-600">
                         Nom du compte :{" "}
-                        <span className="font-bold notranslate">
+                        <span className="font-bold notranslate notranslate">
                           {geofence?.description}
                         </span>{" "}
                       </p>

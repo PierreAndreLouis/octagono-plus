@@ -291,7 +291,9 @@ function ListeDesVehiculesGestion({
               {currentSelectedUserToConnect?.description && (
                 <span className="text-gray-700">Utilisateur :</span>
               )}{" "}
-              {currentSelectedUserToConnect?.description}
+              <span className="notranslate">
+                {currentSelectedUserToConnect?.description}
+              </span>
             </h3>
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
               <span className="text-gray-700">Nombre Appareil :</span>{" "}
@@ -448,7 +450,7 @@ function ListeDesVehiculesGestion({
                           />
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Description :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
                               {device?.description ||
                                 device?.displayName ||
                                 "Pas de nom disponible"}
@@ -465,7 +467,7 @@ function ListeDesVehiculesGestion({
                             >
                               Adresse :
                             </p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
                               {device?.véhiculeDetails?.length >= 0
                                 ? device?.véhiculeDetails[0]?.address
                                 : "Pas de nom disponible"}
@@ -481,7 +483,7 @@ function ListeDesVehiculesGestion({
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Account ID :</p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
                               {device?.accountID}
                             </span>
                           </div>{" "}
@@ -532,7 +534,7 @@ function ListeDesVehiculesGestion({
                               <p className="font-bold">
                                 Distance totale parcourue :
                               </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
                                 {/* {device?.lastOdometerKM.toFixed(0)} */}
                                 {device?.lastOdometerKM &&
                                 !isNaN(Number(device?.lastOdometerKM))

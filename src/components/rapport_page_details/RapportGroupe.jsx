@@ -1623,7 +1623,7 @@ function RapportGroupe({
 
                               <div>
                                 <h2
-                                  className={`${main_text_color} dark:text-green-200 text-gray-800-- font-semibold text-md md:text-xl mb-2`}
+                                  className={`${main_text_color} notranslate dark:text-green-200 text-gray-800-- font-semibold text-md md:text-xl mb-2`}
                                 >
                                   {véhicule?.description || "non disponible"}
                                 </h2>
@@ -1998,7 +1998,7 @@ function RapportGroupe({
                   <tbody>
                     {vehiclesByDepartureTime?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {
                             //
                             index + 1 || "---"
@@ -2008,14 +2008,14 @@ function RapportGroupe({
                           onClick={() => {
                             handleClick(véhicule);
                           }}
-                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border notranslate cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {
                             //
                             véhicule?.description || "---"
                           }
                         </td>
-                        <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[
@@ -2034,7 +2034,7 @@ function RapportGroupe({
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
@@ -2059,7 +2059,7 @@ function RapportGroupe({
                               ]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate cursor-pointer notranslate  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[
                             véhicule?.véhiculeDetails?.length - 1
@@ -2076,7 +2076,7 @@ function RapportGroupe({
                               véhicule?.véhiculeDetails[0]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate cursor-pointer notranslate  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
@@ -2146,7 +2146,7 @@ function RapportGroupe({
                   <tbody>
                     {vehiclesByDistance?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {
                             //
                             index + 1 || "---"
@@ -2156,17 +2156,17 @@ function RapportGroupe({
                           onClick={() => {
                             handleClick(véhicule);
                           }}
-                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2   dark:bg-gray-800  dark:border-gray-600"
+                          className="border notranslate cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2   dark:bg-gray-800  dark:border-gray-600"
                         >
                           {
                             //
                             véhicule?.description || "---"
                           }
                         </td>
-                        <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule?.totalDistance.toFixed(0) + " Km"}
                         </td>
-                        <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate    dark:bg-gray-800  dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[
@@ -2182,7 +2182,7 @@ function RapportGroupe({
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
-                        <td className="border py-3 px-2    dark:bg-gray-800  dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate    dark:bg-gray-800  dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
@@ -2199,7 +2199,7 @@ function RapportGroupe({
                               ]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2  cursor-pointer  dark:bg-gray-800  dark:border-gray-600"
+                          className="border py-3 px-2 notranslate  cursor-pointer  dark:bg-gray-800  dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[
                             véhicule?.véhiculeDetails?.length - 1
@@ -2216,7 +2216,7 @@ function RapportGroupe({
                               véhicule?.véhiculeDetails[0]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2  cursor-pointer  dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate  cursor-pointer  dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
@@ -2289,7 +2289,7 @@ function RapportGroupe({
                   <tbody>
                     {vehiclesByMovingDuration?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {
                             //
                             index + 1 || "---"
@@ -2299,17 +2299,17 @@ function RapportGroupe({
                           onClick={() => {
                             handleClick(véhicule);
                           }}
-                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border notranslate cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {
                             //
                             véhicule?.description || "---"
                           }
                         </td>
-                        <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule?.totalMovingDuration}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[
@@ -2325,7 +2325,7 @@ function RapportGroupe({
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
@@ -2342,7 +2342,7 @@ function RapportGroupe({
                               ]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[
                             véhicule?.véhiculeDetails?.length - 1
@@ -2359,7 +2359,7 @@ function RapportGroupe({
                               véhicule?.véhiculeDetails[0]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2 cursor-pointer  bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate cursor-pointer notranslate  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
@@ -2439,28 +2439,28 @@ function RapportGroupe({
                   <tbody>
                     {vehiclesByDistance?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
-                        <td className="border py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-white dark:bg-gray-800 dark:border-gray-600">
                           {index + 1 || "---"}
                         </td>
                         <td
                           onClick={() => {
                             handleClick(véhicule);
                           }}
-                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border notranslate cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.description || "---"}
                         </td>
 
-                        <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule?.maxSpeed.toFixed(0) + " Km/h"}
                         </td>
-                        <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule?.minSpeed?.toFixed(0) + " Km/h"}
                         </td>
-                        <td className="border py-3 px-2  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule?.avgSpeed + " Km/h"}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[
@@ -2476,7 +2476,7 @@ function RapportGroupe({
                               )?.time
                             : "Pas de dépacement"}{" "}
                         </td>
-                        <td className="border py-3 px-2   bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
@@ -2493,7 +2493,7 @@ function RapportGroupe({
                               ]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[
                             véhicule?.véhiculeDetails?.length - 1
@@ -2510,7 +2510,7 @@ function RapportGroupe({
                               véhicule?.véhiculeDetails[0]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate  cursor-pointer bg-white dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
@@ -2588,34 +2588,34 @@ function RapportGroupe({
                   <tbody>
                     {vehiculeMouvementOrdered?.map((véhicule, index) => (
                       <tr key={index} className="border dark:border-gray-600">
-                        <td className="border py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate  bg-gray-50 dark:bg-gray-800  dark:border-gray-600">
                           {index + 1 || "---"}
                         </td>
                         <td
                           onClick={() => {
                             handleClick(véhicule);
                           }}
-                          className="border cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600"
+                          className="border notranslate cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-700  py-3 px-2  bg-gray-50 dark:bg-gray-800  dark:border-gray-600"
                         >
                           {véhicule?.description || "---"}
                         </td>
-                        <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule.totalDuration || "0h 0m 0s "}
                         </td>
-                        <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule.totalMovingDuration || "0h 0m 0s "}
                         </td>
-                        <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           {véhicule.totalPauseDuration || "0h 0m 0s"}
                         </td>
-                        {/* <td className="border py-3 px-2   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
+                        {/* <td className="border py-3 px-2 notranslate   bg-orange-50 dark:bg-gray-900/70 dark:border-gray-600">
                           2h 22m 45s
                         </td> */}
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.totalDistance?.toFixed(0) + " km" ||
                             " 0 km"}
                         </td>
-                        <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
+                        <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.stopCount > 0
                             ? véhicule?.stopCount + " arrêts"
                             : "0 arrêt"}
@@ -2630,7 +2630,7 @@ function RapportGroupe({
                               ]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2  cursor-pointer bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate  cursor-pointer bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[
@@ -2645,7 +2645,7 @@ function RapportGroupe({
                               véhicule?.véhiculeDetails[0]?.creationTime
                             );
                           }}
-                          className="border py-3 px-2 cursor-pointer  bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                          className="border py-3 px-2 notranslate cursor-pointer notranslate  bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
@@ -3034,7 +3034,7 @@ function RapportGroupe({
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
+                  <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiclesByDepartureTime &&
                     vehiclesByDepartureTime[0]?.véhiculeDetails.length > 0
                       ? vehiclesByDepartureTime[0]?.description + " a "
@@ -3218,7 +3218,7 @@ function RapportGroupe({
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
+                  <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByDistance[0]?.description + " "
@@ -3401,7 +3401,7 @@ function RapportGroupe({
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
+                  <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByMovingDuration[0]?.description
@@ -3585,7 +3585,7 @@ function RapportGroupe({
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
                   Nom du véhicule :<br />
-                  <span className="font-normal dark:text-orange-500 text-gray-700 pl-5 pr-2">
+                  <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByMaxSpeed[0]?.description
@@ -4388,7 +4388,7 @@ function RapportGroupe({
                             onClick={() => {
                               handleClick(véhicule);
                             }}
-                            className={`${vehiculeBG} border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
+                            className={`${vehiculeBG} notranslate border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
                           >
                             {véhicule?.description || "---"}
                           </td>
@@ -4398,7 +4398,7 @@ function RapportGroupe({
                               tableSortByColorBg ===
                                 ("vehiclesByDepartureTime" || "") &&
                               "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2   dark:border-gray-600`}
+                            } border py-3 px-2 notranslate   dark:border-gray-600`}
                           >
                             {véhicule?.véhiculeDetails[0]?.timestamp
                               ? FormatDateHeure(
@@ -4418,7 +4418,7 @@ function RapportGroupe({
                                 )?.time
                               : "Pas de date disponible"}{" "}
                           </td>
-                          <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                          <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                             {véhicule?.véhiculeDetails[0]?.timestamp
                               ? FormatDateHeure(
                                   véhicule?.véhiculeDetails[0]?.timestamp
@@ -4435,7 +4435,7 @@ function RapportGroupe({
                           </td>
 
                           {/* Vitesse moyenne */}
-                          <td className="border py-3 px-2 dark:border-gray-600">
+                          <td className="border py-3 px-2 notranslate dark:border-gray-600">
                             {véhicule?.avgSpeed + " Km/h"}
                           </td>
                           {/* max speed */}
@@ -4444,7 +4444,7 @@ function RapportGroupe({
                               tableSortByColorBg ===
                                 ("vehiclesByMaxSpeed" || "") &&
                               "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
+                            } border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
                           >
                             {(véhicule?.maxSpeed).toFixed(0) + " Km/h"}
                           </td>
@@ -4455,13 +4455,13 @@ function RapportGroupe({
                               tableSortByColorBg ===
                                 ("vehiclesByDistance" || "") &&
                               "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2 dark:border-gray-600`}
+                            } border py-3 px-2 notranslate dark:border-gray-600`}
                           >
                             {véhicule.totalDistance.toFixed(0)} km
                           </td>
 
                           {/* Nombre d'arret */}
-                          <td className="border py-3 px-2   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                          <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                             {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
                             {véhicule.stopCount + " arrêts"}
                           </td>
@@ -4472,7 +4472,7 @@ function RapportGroupe({
                               tableSortByColorBg ===
                                 ("vehiclesByMovingDuration" || "") &&
                               "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2 dark:border-gray-600`}
+                            } border py-3 px-2 notranslate dark:border-gray-600`}
                           >
                             {véhicule?.totalMovingDuration}
                           </td>
@@ -4509,7 +4509,7 @@ function RapportGroupe({
                                   ]?.creationTime
                                 );
                               }}
-                              className="border py-3 px-2  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
+                              className="border py-3 px-2 notranslate  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
                             >
                               {véhicule?.véhiculeDetails[
                                 véhicule?.véhiculeDetails.length - 1
@@ -4551,7 +4551,7 @@ function RapportGroupe({
                                   véhicule?.véhiculeDetails[0]?.creationTime
                                 );
                               }}
-                              className="border py-3 px-2  cursor-pointer   dark:border-gray-600"
+                              className="border py-3 px-2 notranslate  cursor-pointer   dark:border-gray-600"
                             >
                               {véhicule?.véhiculeDetails[0]?.backupAddress ||
                                 véhicule?.véhiculeDetails[0]?.address ||

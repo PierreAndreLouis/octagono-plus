@@ -274,8 +274,8 @@ function SearchVehiculePupup({
                   <FaCar
                     className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg  `}
                   />
-                  <p className="text-gray-700 dark:text-white">
-                    {index + 1} - {véhicule.description || "---"}
+                  <p className="text-gray-700 notranslate dark:text-white">
+                    {index + 1} - {véhicule?.description || "---"}
                   </p>
                 </div>
               );
