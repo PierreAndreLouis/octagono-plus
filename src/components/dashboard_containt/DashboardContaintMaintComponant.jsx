@@ -19,15 +19,7 @@ import { TbPointFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
 // import { DataContext } from "../../context/DataContext";
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import {
   FaAngleDoubleRight,
@@ -44,6 +36,14 @@ import ListeDesVehiculesGestion from "../../pages/ListeDesVehiculesGestion";
 import ListeDesUtilisateur from "../../pages/ListeDesUtilisateur";
 import ListeDesGroupes from "../../pages/ListeDesGroupes";
 import ListeDesAlertsGestion from "../../pages/ListeDesAlertsGestion";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Label,
+} from "recharts";
 
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
@@ -1076,6 +1076,106 @@ function DashboardContaintMaintComponant({
     }
   };
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+  // const dataPieChart = [
+  //   { name: "Group 1", value: 40 },
+  //   { name: "Group 2", value: 10 },
+  //   { name: "Group 2", value: 10 },
+  //   { name: "Group 3", value: 20 },
+  //   { name: "Group 4", value: 30 },
+  //   { name: "Group 5", value: 30 },
+  // ];
+
+  const allData = (
+    currentAccountSelected
+      ? currentAccountSelected?.accountDevices
+      : accountDevices
+  )?.flatMap((device) => device?.véhiculeDetails[0] || []);
+
+  const statusCountMap = allData?.reduce((acc, item) => {
+    const status = item.statusCode;
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {});
+
+  const dataPieChart = Object.entries(statusCountMap || {}).map(
+    ([name, value]) => ({ name, value })
+  );
+
+  const COLORS = [
+    "#8b4cc7",
+    "#f87171", // rouge clair
+    "#60a5fa", // bleu
+    "#34d399", // vert
+    "#fbbf24", // jaune
+    "#a78bfa", // violet clair
+    "#fb7185", // rose
+    "#38bdf8", // bleu clair
+    "#4ade80", // vert clair
+    "#facc15", // jaune vif
+    "#818cf8", // indigo
+  ];
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+  }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor="middle"
+        dominantBaseline="central"
+        className="text-sm font-bold"
+      >
+        {(percent * 100).toFixed(0)}%
+      </text>
+    );
+  };
+
+  const CustomTooltipChartPie = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0];
+      const code = parseInt(name, 16);
+      const codeDescription = statusDescriptions[code] || "Statut inconnu";
+
+      return (
+        <div className="bg-white shadow-md rounded p-2 text-sm text-gray-800">
+          <p>
+            <strong>Code:</strong> {name}
+          </p>
+          <p>
+            <strong>Quantité:</strong> {value}
+          </p>
+          <p>
+            <strong>Description:</strong> {codeDescription}
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="pb-6-">
       {showStatisticDeviceListeDashboard && (
@@ -1185,7 +1285,7 @@ function DashboardContaintMaintComponant({
               <div className="overflow-auto min- h-[90vh]">
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
-                    Liste des Alerts (
+                    Liste des Alertes (
                     {
                       listeGestionDesVehicules?.flatMap(
                         (device) => device?.véhiculeDetails[0] || []
@@ -1648,97 +1748,175 @@ function DashboardContaintMaintComponant({
           </div>
         )}
 
-        <div className="bg-orange-100 shadow-inner shadow-orange-300/80 mt-6 p-3 rounded-lg">
-          <div className="flex mb-4 justify-between items-center ">
-            <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-              Tous les Alerts (
-              {
-                listeGestionDesVehicules?.flatMap(
-                  (device) => device?.véhiculeDetails[0] || []
-                )?.length
-              }
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+          <div className="bg-orange-100 shadow-inner md:col-span-2 shadow-black/10 -300/80 mt-6 p-3 rounded-lg">
+            <div className="flex mb-4 justify-between items-center ">
+              <h2 className="font-semibold text-lg mb-4-- text-gray-700">
+                Tous les Alertes (
+                {currentAccountSelected
+                  ? currentAccountSelected?.accountDevices?.flatMap(
+                      (device) => device?.véhiculeDetails[0] || []
+                    )?.length
+                  : accountDevices?.flatMap(
+                      (device) => device?.véhiculeDetails[0] || []
+                    )?.length}
+                )
+              </h2>
+              <button
+                onClick={() => {
+                  if (currentAccountSelected) {
+                    setListeGestionDesVehicules(
+                      currentAccountSelected?.accountDevices
+                    );
+                  } else {
+                    setListeGestionDesVehicules(accountDevices);
+                  }
+                  setExpandSection("deviceAlerts");
+                }}
+                className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
+              >
+                Voir tous
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2-- gap-3">
+              {(currentAccountSelected
+                ? currentAccountSelected?.accountDevices
+                : accountDevices
+              )
+                ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                ?.slice(0, 2)
+                ?.map((details, index) => {
+                  const code = parseInt(details.statusCode, 16);
+                  const codeDescription =
+                    statusDescriptions[code] || "Statut inconnu";
+                  const bgColor = getBackgroundColor(code);
+                  const currentDevice = accountDevices?.find(
+                    (d) => d.deviceID === details.deviceID
+                  );
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {}}
+                      className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
+                      style={
+                        {
+                          // backgroundColor: bgColor,
+                          // borderRadius: 10,
+                          // padding: 15,
+                          // marginBottom: 10,
+                          // boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                        }
+                      }
+                    >
+                      <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                        {index + 1}
+                      </p>
+                      <FiAlertCircle className="text-orange-500/80 min-w-[2.5rem] text-[2.5rem] mt-1" />
+                      <div>
+                        <p className="text-gray-600">
+                          Alerte :{" "}
+                          <span className="font-bold">{codeDescription}</span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Code :{" "}
+                          <span className="font-bold">
+                            {details?.statusCode}
+                          </span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Description :{" "}
+                          <span className="font-bold">
+                            {/* {currentDevice?.description} */}
+                          </span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          Account ID :{" "}
+                          <span className="font-bold notranslate ">
+                            {details?.accountID}
+                          </span>{" "}
+                        </p>
+                        <p className="text-gray-600 notranslate">
+                          Adresse :{" "}
+                          <span className="notranslate">
+                            <span className="font-bold notranslate">
+                              {details?.address || "Pas d'adresse disponible"}
+                            </span>{" "}
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          Last update :{" "}
+                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                            {FormatDateHeure(details?.timestamp).date}
+                            <span className="px-2">/</span>{" "}
+                            {FormatDateHeure(details?.timestamp).time}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+          <div className="col-span-1 flex flex-col justify-between bg-orange-100-- bg-white shadow-inner shadow-black/10 rounded-lg mt-6">
+            <h2 className="font-semibold text-lg m-2 mb-0 mb-4-- text-gray-700">
+              Chart des Alertes (
+              {currentAccountSelected
+                ? currentAccountSelected?.accountDevices?.flatMap(
+                    (device) => device?.véhiculeDetails[0] || []
+                  )?.length
+                : accountDevices?.flatMap(
+                    (device) => device?.véhiculeDetails[0] || []
+                  )?.length}
               )
             </h2>
-            <button
-              onClick={() => {
-                if (currentAccountSelected) {
-                  setListeGestionDesVehicules(
-                    currentAccountSelected?.accountDevices
-                  );
-                } else {
-                  setListeGestionDesVehicules(accountDevices);
-                }
-                setExpandSection("deviceAlerts");
-              }}
-              className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
-            >
-              Voir tous
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {/*  */}
-            {listeGestionDesVehicules
-              ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-              ?.slice(0, 4)
-              ?.map((details, index) => {
-                const code = parseInt(details.statusCode, 16);
+
+            <div className="w-full h-[15rem] scale-110 mt-10-- ">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={dataPieChart}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {dataPieChart?.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltipChartPie />} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className=" rounded-lg max-h-[6rem] flex flex-col gap-1 px-3 mb-2 overflow-auto">
+              {dataPieChart?.map((status, index) => {
+                const code = parseInt(status?.name, 16);
                 const codeDescription =
                   statusDescriptions[code] || "Statut inconnu";
-                const bgColor = getBackgroundColor(code);
+                const color = COLORS[index % COLORS.length]; // correspondance avec le PieChart
+
                 return (
-                  <div
-                    key={index}
-                    onClick={() => {}}
-                    className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
-                    style={
-                      {
-                        // backgroundColor: bgColor,
-                        // borderRadius: 10,
-                        // padding: 15,
-                        // marginBottom: 10,
-                        // boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                      }
-                    }
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                      {index + 1}
+                  <div key={index} className="flex gap-3 items-center">
+                    <div
+                      style={{ backgroundColor: color }}
+                      className="min-w-[1rem] min-h-[1rem] rounded-full bg-orange-600--"
+                    ></div>
+                    <p>{status?.name}</p>
+                    <p className="whitespace-nowrap">
+                      {codeDescription} ({status?.value})
                     </p>
-                    <FiAlertCircle className="text-orange-500/80 min-w-[2.5rem] text-[2.5rem] mt-1" />
-                    <div>
-                      <p className="text-gray-600">
-                        Alert :{" "}
-                        <span className="font-bold">{codeDescription}</span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Code :{" "}
-                        <span className="font-bold">{details?.statusCode}</span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Account ID :{" "}
-                        <span className="font-bold notranslate ">
-                          {details?.accountID}
-                        </span>{" "}
-                      </p>
-                      <p className="text-gray-600">
-                        Adresse :{" "}
-                        <span className="notranslate">
-                          <span className="font-bold notranslate">
-                            {details?.address}
-                          </span>{" "}
-                        </span>
-                      </p>
-                      {/* <p><strong>Timestamp :</strong> {item.timestamp}</p> */}
-                      {/* <p><strong>Statut :</strong> {description}</p> */}
-                      {/* <p><strong>Adresse :</strong> {item.address}</p> */}
-                    </div>
                   </div>
                 );
               })}
-
-            {/*  */}
+            </div>
           </div>
         </div>
-
         {/* Other info */}
         <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
           <div className="bg-white shadow-lg shadow-black/5 md:col-span-2-  p-3 h-full rounded-lg">

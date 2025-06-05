@@ -666,7 +666,7 @@ function DashboardAdminPage() {
                     <FiAlertCircle className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Gestion des Alerts (
+                        Gestion des Alertes (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountDevices?.flatMap(
                               (device) => device?.véhiculeDetails[0] || []
@@ -841,7 +841,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                04/06/2025 _ 1
+                04/06/2025 _ 2
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (

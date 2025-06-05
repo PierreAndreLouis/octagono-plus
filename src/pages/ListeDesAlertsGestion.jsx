@@ -424,7 +424,7 @@ function ListeDesAlertsGestion({
               </span>
             </h3>
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">Nombre d'Alert :</span> (
+              <span className="text-gray-700">Nombre d'Alerte :</span> (
               {currentAccountSelected
                 ? currentAccountSelected?.accountDevices?.flatMap(
                     (device) => device?.véhiculeDetails[0] || []
@@ -578,7 +578,7 @@ function ListeDesAlertsGestion({
                           <div
                             className={`${text_color} flex w-full  flex-wrap border-b py-1`}
                           >
-                            <p className="font-bold">Alert :</p>
+                            <p className="font-bold">Alerte :</p>
                             <span className=" dark:text-orange-500 font-bold  pl-5">
                               {codeDescription}
                             </span>
@@ -609,7 +609,7 @@ function ListeDesAlertsGestion({
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Dernière mise a jour :</p>
+                            <p className="font-bold">Last update :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
                               {FormatDateHeure(alert?.timestamp).date}
                               <span className="px-2">/</span>{" "}

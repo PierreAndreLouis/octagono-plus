@@ -495,13 +495,13 @@ function ListeDesVehiculesGestion({
                             }  overflow-hidden transition-all`}
                           >
                             <div className="flex flex-wrap border-b py-1">
-                              <p className="font-bold">Alert :</p>
+                              <p className="font-bold">Alerte :</p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 {codeDescription}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
-                              <p className="font-bold">Alert code :</p>
+                              <p className="font-bold">Code Alerte :</p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 {device?.véhiculeDetails[0]?.statusCode}
                               </span>

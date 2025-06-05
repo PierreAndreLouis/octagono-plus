@@ -238,22 +238,7 @@ function Liste() {
     return getPriority(a) - getPriority(b);
   });
 
-  ///////////////////////
 
-  // const latitude = 19.6600065;
-  // const longitude = -72.02567933333333;
-  // const [adresse, setAdresse] = useState("");
-
-  // useEffect(() => {
-  //   const fetchAdresse = async () => {
-  //     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     setAdresse(data.display_name);
-  //   };
-
-  //   fetchAdresse();
-  // }, []);
 
   return (
     <div className="p-2 flex flex-col gap-4 mt-4 mb-[10rem]-- pb-[6rem] dark:text-white">
