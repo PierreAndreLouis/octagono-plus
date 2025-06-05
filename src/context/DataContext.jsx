@@ -2485,7 +2485,7 @@ const DataContextProvider = ({ children }) => {
   x;
   useEffect(() => {
     console.log("🔄 Fusion + enrichissement des données");
-    if (!comptes.length) return;
+    if (!comptes?.length) return;
 
     const merged = comptes?.map((acct) => {
       const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
@@ -8891,6 +8891,3 @@ const DataContextProvider = ({ children }) => {
 };
 
 export default DataContextProvider;
-
-
-

@@ -448,15 +448,17 @@ function ListeDesVehiculesGestion({
                           <FaCar
                             className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
                           />
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Description :</p>
-                            <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.description ||
-                                device?.displayName ||
-                                "Pas de nom disponible"}
-                            </span>
+                          <div className=" border-b py-1">
+                            <p className="font-bold">
+                              Description :
+                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.description ||
+                                  device?.displayName ||
+                                  "Pas de nom disponible"}
+                              </span>
+                            </p>
                           </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
+                          <div className=" border-b py-1">
                             <p
                               onClick={() => {
                                 console.log(
@@ -466,12 +468,12 @@ function ListeDesVehiculesGestion({
                               className="font-bold"
                             >
                               Adresse :
+                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.véhiculeDetails?.length >= 0
+                                  ? device?.véhiculeDetails[0]?.address
+                                  : "Pas de nom disponible"}
+                              </span>
                             </p>
-                            <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
-                              {device?.véhiculeDetails?.length >= 0
-                                ? device?.véhiculeDetails[0]?.address
-                                : "Pas de nom disponible"}
-                            </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Dernière mise a jour :</p>

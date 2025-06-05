@@ -576,12 +576,14 @@ function ListeDesAlertsGestion({
                             </span>
                           </div>{" "} */}
                           <div
-                            className={`${text_color} flex w-full  flex-wrap border-b py-1`}
+                            className={`${text_color} flex-- w-full  flex-wrap00 border-b py-1`}
                           >
-                            <p className="font-bold">Alerte :</p>
-                            <span className=" dark:text-orange-500 font-bold  pl-5">
-                              {codeDescription}
-                            </span>
+                            <p className="font-bold">
+                              Alerte :
+                              <span className=" dark:text-orange-500 font-bold  pl-5">
+                                {codeDescription}
+                              </span>
+                            </p>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Code :</p>
@@ -589,11 +591,13 @@ function ListeDesAlertsGestion({
                               {alert?.statusCode}
                             </span>
                           </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Description :</p>
-                            <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
-                              {currentDevice?.description || "---"}
-                            </span>
+                          <div className="flex- flex-wrap- border-b py-1">
+                            <p className="font-bold">
+                              Description :
+                              <span className=" dark:text-orange-500 font-normal notranslate text-gray-600 pl-5">
+                                {currentDevice?.description || "---"}
+                              </span>
+                            </p>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Account ID :</p>
@@ -602,11 +606,13 @@ function ListeDesAlertsGestion({
                             </span>
                           </div>{" "}
                           {/*  */}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Adresse :</p>
-                            <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
-                              {alert?.address || "Pas d'adresse disponible"}
-                            </span>
+                          <div className="flex- flex-wrap- border-b py-1">
+                            <p className="font-bold">
+                              Adresse :
+                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
+                                {alert?.address || "Pas d'adresse disponible"}
+                              </span>
+                            </p>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">Last update :</p>

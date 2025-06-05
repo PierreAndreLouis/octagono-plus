@@ -11,6 +11,7 @@ import {
 } from "react-icons/io5";
 import {
   MdInstallDesktop,
+  MdLockOutline,
   MdPassword,
   MdSwitchAccount,
   MdUpdate,
@@ -25,7 +26,10 @@ import {
   FaAngleDoubleRight,
   FaCar,
   FaChevronDown,
+  FaLock,
+  FaLockOpen,
   FaSearch,
+  FaUnlockAlt,
   FaUserCircle,
   FaUsers,
 } from "react-icons/fa";
@@ -1176,6 +1180,8 @@ function DashboardContaintMaintComponant({
     return null;
   };
 
+  const [unlockCarteScroll, setUnlockCarteScroll] = useState(false);
+
   return (
     <div className="pb-6-">
       {showStatisticDeviceListeDashboard && (
@@ -1621,8 +1627,30 @@ function DashboardContaintMaintComponant({
               {
                 // {((showFistGrapheOption && !currentAccountSelected) ||
                 currentAccountSelected && (
-                  <div className="w-full h-[15rem]-- overflow-hidden rounded-md">
+                  <div className="w-full h-[15rem]-- relative overflow-hidden rounded-md">
                     <LocationPage fromDashboard="true" />
+                    {!unlockCarteScroll && (
+                      <div className="absolute flex justify-center items-center inset-0 bg-black/10 z-[999]">
+                        <div
+                          onClick={() => {
+                            setUnlockCarteScroll(true);
+                          }}
+                          className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
+                        >
+                          <FaUnlockAlt className="text-[1.3rem]" />
+                        </div>
+                      </div>
+                    )}
+                    {unlockCarteScroll && (
+                      <div
+                        onClick={() => {
+                          setUnlockCarteScroll(false);
+                        }}
+                        className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-[5.5rem] right-1 cursor-pointer"
+                      >
+                        <MdLockOutline className="text-[1.5rem]" />
+                      </div>
+                    )}
                   </div>
                 )
               }
@@ -1735,15 +1763,38 @@ function DashboardContaintMaintComponant({
               <LocationPage fromDashboard="true" />
             </div>
 
+            {!unlockCarteScroll && (
+              <div className="absolute flex justify-center items-center inset-0 bg-black/30 z-[999]">
+                <div
+                  onClick={() => {
+                    setUnlockCarteScroll(true);
+                  }}
+                  className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
+                >
+                  <FaUnlockAlt className="text-[1.3rem]" />
+                </div>
+              </div>
+            )}
+
             {/* {!expandSection && ( */}
             <div
               onClick={() => {
                 setExpandSection("carte");
               }}
-              className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-5 right-5 cursor-pointer"
+              className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-5 right-1 cursor-pointer"
             >
               <ImEnlarge className="text-[1.1rem]" />
             </div>
+            {unlockCarteScroll && (
+              <div
+                onClick={() => {
+                  setUnlockCarteScroll(false);
+                }}
+                className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-[5.5rem] right-1 cursor-pointer"
+              >
+                <MdLockOutline className="text-[1.5rem]" />
+              </div>
+            )}
             {/* )} */}
           </div>
         )}
@@ -1811,8 +1862,10 @@ function DashboardContaintMaintComponant({
                       <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                         {index + 1}
                       </p>
-                      <FiAlertCircle className="text-orange-500/80 min-w-[2.5rem] text-[2.5rem] mt-1" />
+                      <FiAlertCircle className="text-orange-500/80 hidden md:block min-w-[2.5rem] text-[2.5rem] mt-1" />
                       <div>
+                        <FiAlertCircle className="text-orange-500/80 md:hidden min-w-[2.5rem] text-[2.5rem] mt-1" />
+
                         <p className="text-gray-600">
                           Alerte :{" "}
                           <span className="font-bold">{codeDescription}</span>{" "}
@@ -1857,7 +1910,7 @@ function DashboardContaintMaintComponant({
                 })}
             </div>
           </div>
-          <div className="col-span-1 flex flex-col justify-between bg-orange-100-- bg-white shadow-inner shadow-black/10 rounded-lg mt-6">
+          <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-orange-100-- bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
             <h2 className="font-semibold text-lg m-2 mb-0 mb-4-- text-gray-700">
               Chart des Alertes (
               {currentAccountSelected
