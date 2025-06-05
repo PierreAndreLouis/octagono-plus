@@ -8,8 +8,8 @@ export default defineConfig({
     port: process.env.PORT || 3000, // Utilise le port de Render ou 3000 par défaut
     proxy: {
       '/api': {
-        target: 'http://192.227.91.57:8080',  // octagono-gps
-        // target: 'http://31.207.37.89:8080',   // octagono-plus
+        // target: 'http://192.227.91.57:8080',  // octagono-gps
+        target: 'http://31.207.37.89:8080',   // octagono-plus
 
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),

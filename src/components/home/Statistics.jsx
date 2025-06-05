@@ -22,162 +22,212 @@ function Statistics() {
   //
   //
   //
-  x;
 
   // Fonction pour obtenir le timestamp actuel en millisecondes
-  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
-  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  x;
+  const getCurrentTimestampMs = () => Date.now();
+  const tenMinutesInMs = 10 * 60 * 1000;
+  const twentyHoursInMs = 24 * 60 * 60 * 1000;
+  const currentTimeMs = getCurrentTimestampMs();
+  const currentTime = currentTimeMs;
 
-  // Pour stocker le nombre véhicules totale
+  // Total véhicules
   const totalVehicleCount = vehicleArray.length;
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  x;
 
-  // Liste des véhicules en mouvement actuellement
+  // Véhicules en mouvement (mouvement lent ou rapide)
   const activeVehicleCount = vehicleArray.filter((véhicule) => {
-    // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
-    const isSpeedActive =
-      véhicule?.véhiculeDetails &&
-      véhicule?.véhiculeDetails[0] &&
-      véhicule?.véhiculeDetails[0].speedKPH > 0;
-
-    // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
+    const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
     const lastUpdateTimestampMs =
-      véhicule?.véhiculeDetails &&
-      véhicule?.véhiculeDetails[0] &&
-      véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
-
-    // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
-    // Vérifie si la mise à jour est récente (moins de 30 minutes)
+      véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 || 0;
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime * 1000 || 0;
     const isStillSpeedActive =
-      lastUpdateTimestampMs &&
       currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
-
-    // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
-
-    const lastUpdateTimeMs = véhicule?.lastUpdateTime
-      ? véhicule?.lastUpdateTime * 1000
-      : 0;
-    // const lastUpdateTimeMs =
-    //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
-    //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
-    //       véhicule?.lastUpdateTime * 1000
-    //     : 0;
-
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    // Le véhicule doit être actif selon la vitesse et la mise à jour
-    return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
-  });
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  x;
+    return speed > 0 && isStillSpeedActive && isRecentlyUpdated;
+  }).length;
 
-  // Liste des véhicules en stationnement actuellement
-  const filteredVehicles = vehicleArray.filter((véhicule) => {
-    // Vérifie si le véhicule a des détails
-    const hasDetails =
-      véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
-
-    // Vérifie la vitesse (noSpeed)
-    const noSpeed = véhicule?.véhiculeDetails?.every(
-      (detail) => detail.speedKPH <= 0
-    );
-
-    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-    const lastUpdateTimeMs = véhicule?.lastUpdateTime
-      ? véhicule?.lastUpdateTime * 1000
-      : 0;
-
-    // const lastUpdateTimeMs =
-    //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
-    //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
-    //       véhicule?.lastUpdateTime * 1000
-    //     : 0;
-
+  // Véhicules en stationnement
+  const inactiveVehicleCount = vehicleArray.filter((véhicule) => {
+    const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
+    const lastUpdateTimestampMs =
+      véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 || 0;
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime * 1000 || 0;
+    const isStillSpeedActive =
+      currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    const lastUpdateTimestampMs =
-      véhicule?.véhiculeDetails &&
-      véhicule?.véhiculeDetails[0] &&
-      véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+    return (speed < 1 || (speed > 0 && !isStillSpeedActive)) && isActive;
+  }).length;
 
-    const isSpeedActive =
-      véhicule?.véhiculeDetails &&
-      véhicule?.véhiculeDetails[0] &&
-      véhicule?.véhiculeDetails[0].speedKPH > 0;
+  // Véhicules hors service (pas de détails OU inactifs depuis +20h)
+  const notActiveVehicleCount = vehicleArray.filter((véhicule) => {
+    const hasDetails = véhicule?.véhiculeDetails?.length > 0;
+    const lastUpdate =
+      véhicule?.véhiculeDetails?.[0]?.timestamp ||
+      véhicule?.lastUpdateTime ||
+      0;
+    const lastUpdateTimeMs = lastUpdate * 1000;
+    const isInactive = currentTime - lastUpdateTimeMs >= twentyHoursInMs;
 
-    const isNotStillSpeedActive =
-      lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
+    return !hasDetails || isInactive;
+  }).length;
 
-    return (
-      hasDetails &&
-      isActive &&
-      (noSpeed || (isSpeedActive && isNotStillSpeedActive))
-    );
-  });
-
-  // Nombre de véhicule en stationnement actuellement
-  const inactiveVehicleCount = filteredVehicles.length || "0";
-  //
-  //
-  //
-  //
-  //
-  //
-  //
   x;
 
-  // Filtrer les véhicules sans détails ou inactifs  // hors services
-  const filteredVehiclesInactifs = vehicleArray.filter((véhicule) => {
-    // Vérifier si le véhicule n'a pas de détails
-    const noDetails =
-      !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
+  // // Fonction pour obtenir le timestamp actuel en millisecondes
+  // const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+  // const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+  // const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+  // const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  // const currentTime = Date.now(); // Heure actuelle en millisecondes
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // x;
 
-    // Vérifier si le véhicule est inactif
-    // const lastUpdateTime = véhicule?.lastUpdateTime;
+  // // Pour stocker le nombre véhicules totale
+  // const totalVehicleCount = vehicleArray.length;
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // x;
 
-    const lastUpdateTime =
-      véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
-        ? véhicule?.véhiculeDetails?.[0]?.timestamp || véhicule?.lastUpdateTime
-        : 0;
+  // // Liste des véhicules en mouvement actuellement
+  // const activeVehicleCount = vehicleArray.filter((véhicule) => {
+  //   // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
+  //   const isSpeedActive =
+  //     véhicule?.véhiculeDetails &&
+  //     véhicule?.véhiculeDetails[0] &&
+  //     véhicule?.véhiculeDetails[0].speedKPH > 0;
 
-    const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
-    const isInactive =
-      lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+  //   // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
+  //   const lastUpdateTimestampMs =
+  //     véhicule?.véhiculeDetails &&
+  //     véhicule?.véhiculeDetails[0] &&
+  //     véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-    // Retourne true si l'une des conditions est satisfaite
-    return noDetails || isInactive;
-  });
+  //   // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
+  //   // Vérifie si la mise à jour est récente (moins de 30 minutes)
+  //   const isStillSpeedActive =
+  //     lastUpdateTimestampMs &&
+  //     currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
-  // Nombre de véhicules hors services filtrés
-  const notActiveVehicleCount = filteredVehiclesInactifs.length || "0";
+  //   // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
+
+  //   const lastUpdateTimeMs = véhicule?.lastUpdateTime
+  //     ? véhicule?.lastUpdateTime * 1000
+  //     : 0;
+  //   // const lastUpdateTimeMs =
+  //   //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
+  //   //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
+  //   //       véhicule?.lastUpdateTime * 1000
+  //   //     : 0;
+
+  //   const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+  //   // Le véhicule doit être actif selon la vitesse et la mise à jour
+  //   return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
+  // });
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // x;
+
+  // // Liste des véhicules en stationnement actuellement
+  // const filteredVehicles = vehicleArray.filter((véhicule) => {
+  //   // Vérifie si le véhicule a des détails
+  //   const hasDetails =
+  //     véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
+
+  //   // Vérifie la vitesse (noSpeed)
+  //   const noSpeed = véhicule?.véhiculeDetails?.every(
+  //     (detail) => detail.speedKPH <= 0
+  //   );
+
+  //   // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+  //   const lastUpdateTimeMs = véhicule?.lastUpdateTime
+  //     ? véhicule?.lastUpdateTime * 1000
+  //     : 0;
+
+  //   // const lastUpdateTimeMs =
+  //   //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
+  //   //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
+  //   //       véhicule?.lastUpdateTime * 1000
+  //   //     : 0;
+
+  //   const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+  //   const lastUpdateTimestampMs =
+  //     véhicule?.véhiculeDetails &&
+  //     véhicule?.véhiculeDetails[0] &&
+  //     véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+  //   const isSpeedActive =
+  //     véhicule?.véhiculeDetails &&
+  //     véhicule?.véhiculeDetails[0] &&
+  //     véhicule?.véhiculeDetails[0].speedKPH > 0;
+
+  //   const isNotStillSpeedActive =
+  //     lastUpdateTimestampMs &&
+  //     currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
+
+  //   return (
+  //     hasDetails &&
+  //     isActive &&
+  //     (noSpeed || (isSpeedActive && isNotStillSpeedActive))
+  //   );
+  // });
+
+  // // Nombre de véhicule en stationnement actuellement
+  // const inactiveVehicleCount = filteredVehicles.length || "0";
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // //
+  // x;
+
+  // // Filtrer les véhicules sans détails ou inactifs  // hors services
+  // const filteredVehiclesInactifs = vehicleArray.filter((véhicule) => {
+  //   // Vérifier si le véhicule n'a pas de détails
+  //   const noDetails =
+  //     !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
+
+  //   // Vérifier si le véhicule est inactif
+  //   // const lastUpdateTime = véhicule?.lastUpdateTime;
+
+  //   const lastUpdateTime =
+  //     véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
+  //       ? véhicule?.véhiculeDetails?.[0]?.timestamp || véhicule?.lastUpdateTime
+  //       : 0;
+
+  //   const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
+  //   const isInactive =
+  //     lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+
+  //   // Retourne true si l'une des conditions est satisfaite
+  //   return noDetails || isInactive;
+  // });
+
+  // // Nombre de véhicules hors services filtrés
+  // const notActiveVehicleCount = filteredVehiclesInactifs.length || "0";
   //
   //
   //
