@@ -15,6 +15,7 @@ import { DataContext } from "../../context/DataContext";
 
 import TrajetVehicule from "../historique_vehicule/TrajetVehicule";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function RapportGroupe({
   currentDataFusionné, // Liste des véhicules
@@ -58,6 +59,8 @@ function RapportGroupe({
     setCurrentPersonelVéhicule,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   let x;
+
+  const [t, i18n] = useTranslation();
 
   //
   //
@@ -120,7 +123,7 @@ function RapportGroupe({
   //
   x;
 
-  // Pour voir plus de details
+  // Pour {t("voir plus")} de details
   const [voirPlus, setvoirPlus] = useState(false);
 
   // Pour voir le trajet d'un vehicules dans la carte dans la carte
@@ -128,7 +131,7 @@ function RapportGroupe({
 
   // Pour le filtrage du tableau en ordre croissant ou décroissant
   useEffect(() => {
-    console.log(tableSortCroissant);
+    console.log("");
   }, [tableSortCroissant]);
 
   const [voirVehiculeListePupup, setvoirVehiculeListePupup] = useState(false);
@@ -472,7 +475,7 @@ function RapportGroupe({
 
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   useEffect(() => {
-    console.log("currentVéhicule", currentVehiculeInCarte);
+    console.log("currentVéhicule");
   }, [currentVehiculeInCarte]);
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -575,8 +578,7 @@ function RapportGroupe({
   const [showsortfilterpupup, setshowsortfilterpupup] = useState(false);
 
   useEffect(() => {
-    console.log("tableSortBy:", tableSortBy);
-    console.log("tableSortByColorBg:", tableSortByColorBg);
+    console.log("tableSortBy:");
   }, [tableSortBy, tableSortByColorBg]);
 
   useEffect(() => {
@@ -1084,18 +1086,18 @@ function RapportGroupe({
   x;
   // Pour savoir la date et heure /debut et fin
   const moisEnLettres = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "août",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
+    `${t("janvier")}`,
+    `${t("février")}`,
+    `${t("mars")}`,
+    `${t("avril")}`,
+    `${t("mai")}`,
+    `${t("juin")}`,
+    `${t("juillet")}`,
+    `${t("août")}`,
+    `${t("septembre")}`,
+    `${t("octobre")}`,
+    `${t("novembre")}`,
+    `${t("décembre")}`,
   ];
 
   const dataObjectDebut = new Date(mostOldTimestamp * 1000);
@@ -1153,13 +1155,13 @@ function RapportGroupe({
   const exportToExcel = () => {
     const table = document.getElementById("myTable"); // ID du tableau HTML
     const workbook = XLSX.utils.table_to_book(table);
-    XLSX.writeFile(workbook, "Rapport des vehicules.xlsx"); // Nom du fichier
+    XLSX.writeFile(workbook, `${t("Rapport des vehicules")}.xlsx `); // Nom du fichier
   };
 
   // preparation a l'exportation
   const [preparationDownloadPDF, setPreparationDownloadPDF] = useState(false);
   useEffect(() => {
-    console.log(preparationDownloadPDF);
+    console.log("");
   }, [preparationDownloadPDF]);
 
   useEffect(() => {
@@ -1248,23 +1250,27 @@ function RapportGroupe({
               <div className="flex justify-between items-center py-2">
                 <p></p>
                 <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
-                  {filter === "all" && "Tous les véhicules"}
+                  {filter === "all" && `${t("Tous les véhicules")}`}
                   {filter === "moving" &&
-                    `Véhicules déplacés  ${isSearching ? "" : "aujourd'hui"} `}
+                    `${t("Véhicules déplacés")}  ${
+                      isSearching ? "" : " " + `${t("aujourd'hui")}`
+                    } `}
+
                   {filter === "notMovingNow" &&
-                    `Véhicules en stationnement  ${
-                      isSearching ? "" : "actuellement"
+                    `${t("Véhicules en stationnement")}  ${
+                      isSearching ? "" : " " + `${t("actuellement")}`
                     }`}
 
                   {filter === "movingNow" &&
-                    `Véhicules en mouvement ${
-                      isSearching ? "" : " actuellement"
+                    `${t("Véhicules en mouvement")} ${
+                      isSearching ? "" : " " + `${t("actuellement")}`
                     }`}
                   {filter === "parking" &&
-                    ` Véhicules non déplacés  ${
-                      isSearching ? "" : " aujourd'hui"
+                    ` ${t("Véhicules non déplacés")}  ${
+                      isSearching ? "" : " " + `${t("aujourd'hui")}`
                     }  `}
-                  {filter === "inactive" && "Véhicules hors service "}
+
+                  {filter === "inactive" && `${t("Véhicules hors service")}`}
                 </h3>
                 <IoClose
                   onClick={() => {
@@ -1277,42 +1283,42 @@ function RapportGroupe({
 
               <div className="mx-auto  md:w-[75vw]">
                 <div className="flex  flex-wrap">
-                  <p className="font-bold">Date : </p>
+                  <p className="font-bold">{t("Date")} : </p>
                   <span className="font-semibold dark:text-orange-500 text-gray-900 pl-5">
                     {jourDebut ? (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        Du{" "}
+                        {t("Du")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
-                        au{" "}
+                        {t("au")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
                     ) : (
-                      <span>Pas de date disponible</span>
+                      <span>{t("Pas de date disponible")}</span>
                     )}
                   </span>
                 </div>
                 {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
                 <div className="flex flex-wrap">
-                  <p className="font-bold">Heure :</p>
+                  <p className="font-bold">{t("Heure")} :</p>
                   {jourDebut ? (
                     <span className="font-semibold dark:text-orange-500 text-gray-700 pl-5">
-                      De{" "}
+                      {t("De")}{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                         {heureDebut}
                       </span>{" "}
-                      à{" "}
+                      {t("à")}{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                         {heureFin}{" "}
                       </span>{" "}
                     </span>
                   ) : (
                     <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                      Pas de date disponible
+                      {t("Pas de date disponible")}
                     </span>
                   )}
                 </div>
@@ -1329,7 +1335,7 @@ function RapportGroupe({
                         : "Véhicules en stationnement"}
                     </p>
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
-                      Véhicules hors service
+                      {t("Véhicules hors service")}
                     </p>
                   </div>
                 )}
@@ -1434,7 +1440,7 @@ function RapportGroupe({
                       // && isToday
                     ) {
                       main_text_color = "text-green-700 dark:text-green-400";
-                      statut = "En mouvement rapide";
+                      statut = `${t("En mouvement rapide")}`;
                       lite_bg_color =
                         "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
@@ -1456,7 +1462,7 @@ function RapportGroupe({
                         (isSpeedActive && isNotStillSpeedActive))
                     ) {
                       main_text_color = "text-red-900 dark:text-red-300";
-                      statut = "En Stationnement";
+                      statut = `${t("En Stationnement")}`;
                       lite_bg_color =
                         "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
@@ -1473,7 +1479,7 @@ function RapportGroupe({
                     //
                     else if ((!isSearching && !hasDetails) || !isActive) {
                       main_text_color = "text-purple-900 dark:text-purple-300 ";
-                      statut = "Hors service";
+                      statut = `${t("Hors service")}`;
                       lite_bg_color =
                         "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-purple-900 dark:text-purple-200";
@@ -1499,7 +1505,7 @@ function RapportGroupe({
                       filter === "notMovingNow"
                     ) {
                       main_text_color = "text-red-900 dark:text-red-300";
-                      statut = "En Stationnement";
+                      statut = `${t("En Stationnement")}`;
                       lite_bg_color =
                         "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
@@ -1521,7 +1527,7 @@ function RapportGroupe({
                       filter === "moving"
                     ) {
                       main_text_color = "text-green-700 dark:text-green-400";
-                      statut = "En mouvement rapide";
+                      statut = `${t("En mouvement rapide")}`;
                       lite_bg_color =
                         "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
@@ -1538,7 +1544,7 @@ function RapportGroupe({
 
                     if (isSearching && hasDetails && isMoving) {
                       main_text_color = "text-green-700 dark:text-green-400";
-                      statut = "En mouvement rapide";
+                      statut = `${t("En mouvement rapide")}`;
                       lite_bg_color =
                         "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
@@ -1552,7 +1558,7 @@ function RapportGroupe({
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
                     } else if (isSearching && hasDetails && noSpeed) {
                       main_text_color = "text-red-900 dark:text-red-300";
-                      statut = "En Stationnement";
+                      statut = `${t("En Stationnement")}`;
                       lite_bg_color =
                         "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
@@ -1569,7 +1575,7 @@ function RapportGroupe({
                     //
                     else if ((isSearching && !hasDetails) || !isActive) {
                       main_text_color = "text-purple-900 dark:text-purple-300 ";
-                      statut = "Hors service";
+                      statut = `${t("Hors service")}`;
                       lite_bg_color =
                         "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-purple-900 dark:text-purple-200";
@@ -1655,7 +1661,7 @@ function RapportGroupe({
                                       <p
                                         className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
                                       >
-                                        Duree{" "}
+                                        {t("Durée")}{" "}
                                       </p>
                                     </div>
                                     <p className="text-[.95rem] font-semibold dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
@@ -1670,7 +1676,7 @@ function RapportGroupe({
                                       <p
                                         className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
                                       >
-                                        Départ{" "}
+                                        {t("Départ")}{" "}
                                       </p>
                                     </div>
                                     <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
@@ -1694,7 +1700,9 @@ function RapportGroupe({
                                                   .length - 1
                                               ]?.timestamp
                                             )?.time
-                                          : "Pas de date disponible"}{" "}
+                                          : `${t(
+                                              "Pas de date disponible"
+                                            )}`}{" "}
                                       </span>
                                     </p>
                                   </div>
@@ -1706,7 +1714,7 @@ function RapportGroupe({
                                       <p
                                         className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
                                       >
-                                        Arrivé{" "}
+                                        {t("Arrivé")}{" "}
                                       </p>
                                     </div>
                                     <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
@@ -1726,7 +1734,9 @@ function RapportGroupe({
                                               véhicule?.véhiculeDetails[0]
                                                 ?.timestamp
                                             )?.time
-                                          : "Pas de date disponible"}{" "}
+                                          : `${t(
+                                              "Pas de date disponible"
+                                            )}`}{" "}
                                       </span>
                                     </p>
                                   </div>
@@ -1740,7 +1750,7 @@ function RapportGroupe({
                                         <p
                                           className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
                                         >
-                                          Vitesse{" "}
+                                          {t("Vitesse")}{" "}
                                         </p>
                                       </div>
                                       <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
@@ -1755,7 +1765,7 @@ function RapportGroupe({
                                         <p
                                           className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  md:text-[1.02rem]   font-bold dark:text-green-200 `}
                                         >
-                                          Distance{" "}
+                                          {t("Distance")}{" "}
                                         </p>
                                       </div>
                                       <p className="text-[.95rem]  dark:text-[.95rem] felx sm:flex dark:text-gray-300 text-gray-600  md:text-[1.02rem]">
@@ -1773,7 +1783,7 @@ function RapportGroupe({
                                 <p
                                   className={` ${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex  mt-2 md:text-lg   font-bold dark:text-green-200`}
                                 >
-                                  Départ{" "}
+                                  {t("Départ")}{" "}
                                 </p>
                                 <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 mt-2 md:text-lg">
                                   {véhicule?.véhiculeDetails[0]?.timestamp
@@ -1793,7 +1803,7 @@ function RapportGroupe({
                                             véhicule?.véhiculeDetails.length - 1
                                           ]?.timestamp
                                         )?.time
-                                      : "Pas de date disponible"}{" "}
+                                      : `${t("Pas de date disponible")}`}{" "}
                                   </span>
                                 </p>
                               </div>
@@ -1801,7 +1811,7 @@ function RapportGroupe({
                                 <p
                                   className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex md:text-lg text-green-700  font-bold dark:text-green-200`}
                                 >
-                                  Arrivé{" "}
+                                  {t("Arrivé")}{" "}
                                 </p>
                                 <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
                                   {véhicule?.véhiculeDetails[0]?.timestamp
@@ -1818,7 +1828,7 @@ function RapportGroupe({
                                           véhicule?.véhiculeDetails[0]
                                             ?.timestamp
                                         )?.time
-                                      : "Pas de date disponible"}{" "}
+                                      : `${t("Pas de date disponible")}`}{" "}
                                   </span>
                                 </p>
                               </div>
@@ -1828,7 +1838,7 @@ function RapportGroupe({
                                     className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex md:text-lg text-green-700  font-bold dark:text-green-200`}
                                   >
                                     {" "}
-                                    Vitesse{" "}
+                                    {t("Vitesse")}{" "}
                                   </p>
                                   <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
                                     {véhicule?.avgSpeed + " Km/h"}
@@ -1840,7 +1850,7 @@ function RapportGroupe({
                                     className={`${main_text_color} min-w-[4.8rem] text-[.9rem] dark:text-[.9rem] felx sm:flex md:text-lg text-green-700  font-bold dark:text-green-200`}
                                   >
                                     {" "}
-                                    Distance{" "}
+                                    {t("Distance")}{" "}
                                   </p>
                                   <p className="text-[.9rem] dark:text-[.9rem] felx sm:flex dark:text-gray-300 text-gray-600 md:text-lg">
                                     {véhicule.totalDistance.toFixed(0)} km
@@ -1855,7 +1865,7 @@ function RapportGroupe({
                   })
                 ) : (
                   <p className="mt-12 text-center dark:text-gray-50 mr-6">
-                    Pas de Resultat
+                    {t("Pas de resultat")}
                   </p>
                 )}
               </div>
@@ -1926,7 +1936,7 @@ function RapportGroupe({
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white  rounded-lg p-3--">
               <div className="flex justify-between px-4 pt-3">
-                <h2 className="text-xl font-bold">Trajet du véhicule</h2>
+                <h2 className="text-xl font-bold">{t("Trajet du véhicule")}</h2>
                 <IoClose
                   onClick={() => {
                     settrajetVehiculePupup(false);
@@ -1936,7 +1946,9 @@ function RapportGroupe({
               </div>
               <div className=" overflow-auto w-[95vw] p-3  max-h-[70vh]">
                 <div className="min-h-[60vh] overflow-auto w-full text-left dark:bg-gray-800 dark:text-gray-200">
-                  <p className="text-center">Trajet du véhicule ici...</p>
+                  <p className="text-center">
+                    {t("Trajet du véhicule ici")}...
+                  </p>
                 </div>{" "}
               </div>
             </div>
@@ -1962,7 +1974,7 @@ function RapportGroupe({
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
               <div className="flex justify-between px-4 pt-3">
                 <h2 className="text-xl font-bold dark:text-gray-50">
-                  Tableau des deplacements
+                  {t("Tableau des deplacements")}
                 </h2>
                 <IoClose
                   onClick={() => {
@@ -1979,19 +1991,19 @@ function RapportGroupe({
                         #
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
-                        Véhicule
+                        {t("Véhicule")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure de départ
+                        {t("Date et Heure de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure d'arrivée
+                        {t("Date et Heure d'arrivée")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse de départ
+                        {t("Adresse de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse d'arrivée
+                        {t("Adresse d'arrivée")}
                       </th>
                     </tr>
                   </thead>
@@ -2032,7 +2044,7 @@ function RapportGroupe({
                                   véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
                         <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
@@ -2047,7 +2059,7 @@ function RapportGroupe({
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
 
                         <td
@@ -2067,7 +2079,7 @@ function RapportGroupe({
                             véhicule?.véhiculeDetails[
                               véhicule?.véhiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                         <td
                           onClick={() => {
@@ -2080,7 +2092,7 @@ function RapportGroupe({
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                       </tr>
                     ))}
@@ -2106,7 +2118,7 @@ function RapportGroupe({
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
               <div className="flex justify-between px-4 pt-3">
                 <h2 className="text-xl font-bold dark:text-gray-50">
-                  Tableau des Distances
+                  {t("Tableau des Distances")}
                 </h2>
                 <IoClose
                   onClick={() => {
@@ -2123,23 +2135,23 @@ function RapportGroupe({
                         #
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
-                        Véhicule
+                        {t("Véhicule")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Distance parcoure
+                        {t("Distance parcoure")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure de départ
+                        {t("Date et Heure de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure d'arrivée
+                        {t("Date et Heure d'arrivée")}
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse de départ
+                        {t("Adresse de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse d'arrivée
+                        {t("Adresse d'arrivée")}
                       </th>
                     </tr>
                   </thead>
@@ -2180,14 +2192,14 @@ function RapportGroupe({
                                   véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
                         <td className="border py-3 px-2 notranslate    dark:bg-gray-800  dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
 
                         <td
@@ -2207,7 +2219,7 @@ function RapportGroupe({
                             véhicule?.véhiculeDetails[
                               véhicule?.véhiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                         <td
                           onClick={() => {
@@ -2220,7 +2232,7 @@ function RapportGroupe({
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                       </tr>
                     ))}
@@ -2248,7 +2260,7 @@ function RapportGroupe({
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
               <div className="flex justify-between px-4 pt-3">
                 <h2 className="text-xl font-bold dark:text-gray-50">
-                  Tableau des activites
+                  {t("Tableau des activites")}
                 </h2>
                 <IoClose
                   onClick={() => {
@@ -2266,23 +2278,23 @@ function RapportGroupe({
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
-                        Véhicule
+                        {t("Véhicule")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Duree du trajet
+                        {t("Duree du trajet")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure de départ
+                        {t("Date et Heure de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure d'arrivée
+                        {t("Date et Heure d'arrivée")}
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse de départ
+                        {t("Adresse de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse d'arrivée
+                        {t("Adresse d'arrivée")}
                       </th>
                     </tr>
                   </thead>
@@ -2323,14 +2335,14 @@ function RapportGroupe({
                                   véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
                         <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
 
                         <td
@@ -2350,7 +2362,7 @@ function RapportGroupe({
                             véhicule?.véhiculeDetails[
                               véhicule?.véhiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                         <td
                           onClick={() => {
@@ -2363,7 +2375,7 @@ function RapportGroupe({
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                       </tr>
                     ))}
@@ -2391,7 +2403,7 @@ function RapportGroupe({
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
               <div className="flex justify-between px-4 pt-3">
                 <h2 className="text-xl font-bold dark:text-gray-50">
-                  Tableau des vitesse
+                  {t("Tableau des vitesse")}
                 </h2>
                 <IoClose
                   onClick={() => {
@@ -2409,30 +2421,30 @@ function RapportGroupe({
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
-                        Véhicule
+                        {t("Véhicule")}
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Vitesse maximale
+                        {t("Vitesse maximale")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Vitesse minimale
+                        {t("Vitesse minimale")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Vitesse moyenne
+                        {t("Vitesse moyenne")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure de départ
+                        {t("Date et Heure de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Date et Heure d'arrivée
+                        {t("Date et Heure d'arrivée")}
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse de départ
+                        {t("Adresse de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse d'arrivée
+                        {t("Adresse d'arrivée")}
                       </th>
                     </tr>
                   </thead>
@@ -2474,14 +2486,14 @@ function RapportGroupe({
                                   véhicule?.véhiculeDetails.length - 1
                                 ]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
                         <td className="border py-3 px-2 notranslate   bg-white dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.véhiculeDetails[0]?.timestamp
                             ? FormatDateHeure(
                                 véhicule?.véhiculeDetails[0]?.timestamp
                               )?.time
-                            : "Pas de dépacement"}{" "}
+                            : `${t("Pas de dépacement")}`}{" "}
                         </td>
 
                         <td
@@ -2501,7 +2513,7 @@ function RapportGroupe({
                             véhicule?.véhiculeDetails[
                               véhicule?.véhiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                         <td
                           onClick={() => {
@@ -2514,7 +2526,7 @@ function RapportGroupe({
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                       </tr>
                     ))}
@@ -2540,7 +2552,7 @@ function RapportGroupe({
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
               <div className="flex justify-between px-4 pt-3">
                 <h2 className="text-xl font-bold dark:text-gray-50">
-                  Tableau du trajet
+                  {t("Tableau du trajet")}
                 </h2>
                 <IoClose
                   onClick={() => {
@@ -2558,30 +2570,30 @@ function RapportGroupe({
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[17rem]">
-                        Véhicule
+                        {t("Véhicule")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Duree du trajet
+                        {t("Duree du trajet")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Temps d'activité
+                        {t("Temps d'activité")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Temps d'inactivité
+                        {t("Temps d'inactivité")}
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Distance parcourue
+                        {t("Distance parcourue")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[15rem]">
-                        Nombre d'arrêt
+                        {t("Nombre d'arrêt")}
                       </th>
 
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse de départ
+                        {t("Adresse de départ")}
                       </th>
                       <th className="border dark:border-gray-600 py-3 px-2 min-w-[20rem]">
-                        Adresse d'arrivée
+                        {t("Adresse d'arrivée")}
                       </th>
                     </tr>
                   </thead>
@@ -2617,8 +2629,8 @@ function RapportGroupe({
                         </td>
                         <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-800 dark:border-gray-600">
                           {véhicule?.stopCount > 0
-                            ? véhicule?.stopCount + " arrêts"
-                            : "0 arrêt"}
+                            ? véhicule?.stopCount + " " + `${t("arrêts")}`
+                            : "0 " + `${t("arrêt")}`}
                         </td>
 
                         <td
@@ -2636,7 +2648,7 @@ function RapportGroupe({
                             véhicule?.véhiculeDetails[
                               véhicule?.véhiculeDetails?.length - 1
                             ]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                         <td
                           onClick={() => {
@@ -2649,7 +2661,7 @@ function RapportGroupe({
                         >
                           {véhicule?.véhiculeDetails[0]?.backupAddress ||
                             véhicule?.véhiculeDetails[0]?.address ||
-                            "Pas d'adresse disponible"}
+                            `${t("Pas d'adresse disponible")}`}
                         </td>
                       </tr>
                     ))}
@@ -2668,17 +2680,8 @@ function RapportGroupe({
         {/*  */}
         {/*  */}
         {/*  */}
-        <h1
-          onClick={() => {
-            console.log(vehiclesByDepartureTime);
-            // console.log("xxxxxxxxxxxxxx");
-            // console.log("notActiveVehicleCount", notActiveVehicleCount);
-            // console.log("notActiveVehicleCount2", notActiveVehicleCount2);
-            // console.log("xxxxxxxxxxxxxx");
-          }}
-          className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300"
-        >
-          Rapport détaillé en groupe
+        <h1 className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300">
+          {t("Rapport détaillé en groupe")}
         </h1>
         {preparationDownloadPDF && <p className="min-h-[4rem]"></p>}
         <div
@@ -2689,48 +2692,48 @@ function RapportGroupe({
           <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
             <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Informations sur les véhicules
+              {t("Informations sur les véhicules")}
             </h2>
           </div>
 
           <div className="text-gray-700 flex flex-col gap-2 dark:text-gray-300">
             {/* Date et heure de recherche */}
             <div className="flex flex-wrap">
-              <p>Date de recherche trouvée : </p>
+              <p>{t("Date de recherche trouvée")} : </p>
               <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
                 {jourDebut ? (
                   <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                    Du{" "}
+                    {t("Du")}{" "}
                     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                       {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                       {anneeDebut === anneeFin ? "" : anneeDebut}
                     </span>{" "}
-                    au{" "}
+                    {t("au")}{" "}
                     <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                       {jourFin} {moisFin} {anneeFin}
                     </span>
                   </span>
                 ) : (
-                  <span>Pas de date disponible</span>
+                  <span>{t("Pas de date disponible")}</span>
                 )}
               </span>
             </div>
             <div className="flex flex-wrap">
-              <p>Heure de recherche trouvée :</p>
+              <p>{t("Heure de recherche trouvée")} :</p>
               {jourDebut ? (
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                  De{" "}
+                  {t("De")}{" "}
                   <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                     {heureDebut}
                   </span>{" "}
-                  à{" "}
+                  {t("à")}{" "}
                   <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                     {heureFin}{" "}
                   </span>{" "}
                 </span>
               ) : (
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                  Pas de date disponible
+                  {t("Pas de date disponible")}
                 </span>
               )}
             </div>
@@ -2744,12 +2747,12 @@ function RapportGroupe({
             {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                * Informations Actuellement
+                * {t("Informations Actuellement")}
               </h2>
             )}
             <div className="flex justify-between items-center pr-3">
               <p>
-                Nombre total de véhicules :{" "}
+                {t("Nombre total de véhicules")} :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {(currentDataFusionné && currentDataFusionné?.length) || "0"}
                 </span>
@@ -2761,14 +2764,14 @@ function RapportGroupe({
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
-                voir
+                {t("voir")}
               </p>
             </div>
             {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <div className="flex justify-between items-center pr-3">
                 <p>
-                  Véhicule en mouvement :{" "}
+                  {t("Véhicule en mouvement")} :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {isSearching
                       ? activeVehicleCount2
@@ -2786,7 +2789,7 @@ function RapportGroupe({
                   }}
                   className="text-orange-400 underline cursor-pointer"
                 >
-                  voir
+                  {t("voir")}
                 </p>
               </div>
             )}
@@ -2794,7 +2797,7 @@ function RapportGroupe({
               isSearchingToday) && (
               <div className="flex justify-between items-center pr-3">
                 <p>
-                  Véhicule en stationnement :{" "}
+                  {t("Véhicule en stationnement")} :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {isSearching
                       ? notActiveVehicleCount2
@@ -2811,7 +2814,7 @@ function RapportGroupe({
                   }}
                   className="text-orange-400 underline cursor-pointer"
                 >
-                  voir
+                  {t("voir")}
                 </p>
               </div>
             )}
@@ -2819,7 +2822,7 @@ function RapportGroupe({
               isSearchingToday) && (
               <div className="flex justify-between items-center pr-3">
                 <p>
-                  Véhicule hors service :{" "}
+                  {t("Véhicule hors service")} :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {véhiculeHorsService?.length || "0"}
                   </span>
@@ -2831,7 +2834,7 @@ function RapportGroupe({
                   }}
                   className="text-orange-400 underline cursor-pointer"
                 >
-                  voir
+                  {t("voir")}
                 </p>
               </div>
             )}
@@ -2848,12 +2851,12 @@ function RapportGroupe({
             {(searchDonneeFusionnéForRapport.length <= 0 ||
               isSearchingToday) && (
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                * Pour la journée d'aujourd'hui
+                * {t("Pour la journée d'aujourd'hui")}
               </h2>
             )}
             <div className="flex justify-between items-center pr-3">
               <p>
-                Véhicules déplacés :{" "}
+                {t("Véhicules déplacés")} :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {véhiculeActiveToday?.length || "0"}
                 </span>
@@ -2865,12 +2868,12 @@ function RapportGroupe({
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
-                voir
+                {t("voir")}
               </p>
             </div>
             <div className="flex justify-between items-center pr-3">
               <p>
-                Véhicules non déplacés :{" "}
+                {t("Véhicules non déplacés")} :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {/* {véhiculeActiveToday?.length || "0"} */}
                   {véhiculeNotActiveToday?.length || "0"}
@@ -2883,13 +2886,13 @@ function RapportGroupe({
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
-                voir
+                {t("voir")}
               </p>
             </div>
             {searchDonneeFusionnéForRapport.length > 0 && (
               <div className="flex justify-between items-center pr-3">
                 <p>
-                  Véhicule hors service :{" "}
+                  {t("Véhicule hors service")} :{" "}
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {véhiculeHorsService?.length || "0"}
                   </span>
@@ -2901,7 +2904,7 @@ function RapportGroupe({
                   }}
                   className="text-orange-400 underline cursor-pointer"
                 >
-                  voir
+                  {t("voir")}
                 </p>
               </div>
             )}
@@ -2915,7 +2918,7 @@ function RapportGroupe({
                   }}
                   className="text-white rounded-lg text-center bg-orange-500/90 py-1 px-4  font-semibold cursor-pointer"
                 >
-                  voir Plus
+                  {t("voir Plus")}
                 </div>
               </div>
             )}
@@ -2961,7 +2964,7 @@ function RapportGroupe({
           >
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Véhicule en mouvement en 1er
+                {t("Véhicule en mouvement en 1er")}
               </h2>
             </div>
 
@@ -2977,8 +2980,8 @@ function RapportGroupe({
                             <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                               {
                                 <span className="text-[1rem] dark:text-gray-300 text-gray-900 font-semibold sm:text-sm md:text-[1rem]  lg:text-lg--">
-                                  Le {jourPemierMouvement} {moisPemierMouvement}{" "}
-                                  {anneePemierMouvement}
+                                  {t("Le")} {jourPemierMouvement}{" "}
+                                  {moisPemierMouvement} {anneePemierMouvement}
                                 </span>
                                 // )
                               }
@@ -2991,7 +2994,7 @@ function RapportGroupe({
                         <div className="flex gap-3 items-center">
                           <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
                           <p className="dark:text-gray-300">
-                            De{" "}
+                            {t("De")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiclesByDepartureTime &&
@@ -3007,7 +3010,7 @@ function RapportGroupe({
                                   )?.time
                                 : " "}{" "}
                             </span>{" "}
-                            à{" "}
+                            {t("à")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiclesByDepartureTime &&
@@ -3033,12 +3036,12 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
-                  Nom du véhicule :<br />
+                  {t("Nom du véhicule")} :<br />
                   <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiclesByDepartureTime &&
                     vehiclesByDepartureTime[0]?.véhiculeDetails.length > 0
                       ? vehiclesByDepartureTime[0]?.description + " a "
-                      : "Pas de véhicule en mouvement"}
+                      : `${t("Pas de véhicule en mouvement")}`}
                   </span>
                   <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
                     {vehiclesByDepartureTime &&
@@ -3081,7 +3084,7 @@ function RapportGroupe({
                           }}
                           className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                         >
-                          Voir sur la carte
+                          {t("Voir sur la carte")}
                         </button>
                       )}
                     <button
@@ -3090,7 +3093,7 @@ function RapportGroupe({
                       }}
                       className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Plus d'info
+                      {t("Plus d'info")}
                     </button>
                   </div>
                 )}
@@ -3130,7 +3133,7 @@ function RapportGroupe({
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Véhicule ayant parcouru la plus grande distance
+                {t("Véhicule ayant parcouru la plus grande distance")}
               </h2>
             </div>
 
@@ -3146,7 +3149,7 @@ function RapportGroupe({
                             <span className="font-normal dark:text-gray-300 text-gray-700 pl-3">
                               {
                                 <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                                  Du{" "}
+                                  {t("Du")}{" "}
                                   <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
                                     {jourPemierDistance}{" "}
                                     {moisPemierDistance === moisDernierDistance
@@ -3157,7 +3160,7 @@ function RapportGroupe({
                                       ? ""
                                       : anneePemierDistance}
                                   </span>{" "}
-                                  au{" "}
+                                  {t("au")}{" "}
                                   <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
                                     {jourDernierDistance} {moisDernierDistance}{" "}
                                     {anneeDernierDistance}
@@ -3174,7 +3177,7 @@ function RapportGroupe({
                         <div className="flex gap-3 items-center">
                           <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
                           <p className=" dark:text-gray-300">
-                            De{" "}
+                            {t("De")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiculeMouvementOrdered &&
@@ -3190,7 +3193,7 @@ function RapportGroupe({
                                   )?.time
                                 : " "}{" "}
                             </span>{" "}
-                            à{" "}
+                            {t("à")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiculeMouvementOrdered &&
@@ -3217,16 +3220,17 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
-                  Nom du véhicule :<br />
+                  {t("Nom du véhicule")} :<br />
                   <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByDistance[0]?.description + " "
-                      : "Pas de véhicule en mouvement"}
+                      : `${t("Pas de véhicule en mouvement")}`}
                   </span>{" "}
                   {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 &&
-                    "( environ " +
+                    ` ( ${t("environ")} ` +
+                      " " +
                       vehiclesByDistance[0]?.totalDistance.toFixed(0) +
                       " Km )"}
                 </p>
@@ -3258,7 +3262,7 @@ function RapportGroupe({
                           }}
                           className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                         >
-                          Voir sur la carte
+                          {t("Voir sur la carte")}
                         </button>
                       )}
                     <button
@@ -3267,7 +3271,7 @@ function RapportGroupe({
                       }}
                       className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Plus d'info
+                      {t("Plus d'info")}
                     </button>
                   </div>
                 )}
@@ -3309,7 +3313,7 @@ function RapportGroupe({
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Véhicule en mouvement plus longtemps
+                {t("Véhicule en mouvement plus longtemps")}
               </h2>
             </div>
 
@@ -3325,7 +3329,7 @@ function RapportGroupe({
                             <span className="font-normal dark:text-gray-300 text-gray-700 pl-3">
                               {
                                 <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                                  Du{" "}
+                                  {t("Du")}{" "}
                                   <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
                                     {jourPemierDistanceLontan}{" "}
                                     {moisPemierDistanceLontan ===
@@ -3337,7 +3341,7 @@ function RapportGroupe({
                                       ? ""
                                       : anneePemierDistanceLontan}
                                   </span>{" "}
-                                  au{" "}
+                                  {t("au")}{" "}
                                   <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
                                     {jourDernierDistanceLontan}{" "}
                                     {moisDernierDistanceLontan}{" "}
@@ -3355,7 +3359,7 @@ function RapportGroupe({
                         <div className="flex gap-3 items-center">
                           <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
                           <p className=" dark:text-gray-300">
-                            De{" "}
+                            {t("De")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiculeMouvementOrdered &&
@@ -3372,7 +3376,7 @@ function RapportGroupe({
                                   )?.time
                                 : " "}{" "}
                             </span>{" "}
-                            à{" "}
+                            {t("à")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiculeMouvementOrdered &&
@@ -3400,16 +3404,16 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
-                  Nom du véhicule :<br />
+                  {t("Nom du véhicule")} :<br />
                   <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByMovingDuration[0]?.description
-                      : "Pas de véhicule en mouvement"}
+                      : `${t("Pas de véhicule en mouvement")}`}
                   </span>
                   {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0 &&
-                    "( environ " +
+                    `( ${t("environ")} ` +
                       vehiclesByMovingDuration[0]?.totalMovingDuration +
                       " )"}
                 </p>
@@ -3441,7 +3445,7 @@ function RapportGroupe({
                           }}
                           className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                         >
-                          Voir sur la carte
+                          {t("Voir sur la carte")}
                         </button>
                       )}
                     <button
@@ -3450,7 +3454,7 @@ function RapportGroupe({
                       }}
                       className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Plus d'info
+                      {t("Plus d'info")}
                     </button>
                   </div>
                 )}
@@ -3493,7 +3497,7 @@ function RapportGroupe({
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               {/* <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " /> */}
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Véhicule avec la vitesse maximale
+                {t("Véhicule avec la vitesse maximale")}
               </h2>
             </div>
 
@@ -3509,7 +3513,7 @@ function RapportGroupe({
                             <span className="font-normal dark:text-gray-300 text-gray-700 pl-3">
                               {
                                 <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                                  Du{" "}
+                                  {t("Du")}{" "}
                                   <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
                                     {jourPemierDistanceLontan}{" "}
                                     {moisPemierDistanceLontan ===
@@ -3521,7 +3525,7 @@ function RapportGroupe({
                                       ? ""
                                       : anneePemierDistanceLontan}
                                   </span>{" "}
-                                  au{" "}
+                                  {t("au")}{" "}
                                   <span className="dark:text-gray-300 dark:font-normal font-semibold text-gray-950">
                                     {jourDernierDistanceLontan}{" "}
                                     {moisDernierDistanceLontan}{" "}
@@ -3539,7 +3543,7 @@ function RapportGroupe({
                         <div className="flex gap-3 items-center">
                           <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
                           <p className=" dark:text-gray-300">
-                            De{" "}
+                            {t("De")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiculeMouvementOrdered &&
@@ -3556,7 +3560,7 @@ function RapportGroupe({
                                   )?.time
                                 : " "}{" "}
                             </span>{" "}
-                            à{" "}
+                            {t("à")}{" "}
                             <span className="font-semibold">
                               {" "}
                               {vehiculeMouvementOrdered &&
@@ -3584,12 +3588,12 @@ function RapportGroupe({
                 {/*  */}
                 {/*  */}
                 <p className="font-semibold pl-2 dark:text-gray-50">
-                  Nom du véhicule :<br />
+                  {t("Nom du véhicule")} :<br />
                   <span className="font-normal notranslate dark:text-orange-500 text-gray-700 pl-5 pr-2">
                     {vehiculeMouvementOrdered &&
                     vehiculeMouvementOrdered[0]?.véhiculeDetails.length > 0
                       ? vehiclesByMaxSpeed[0]?.description
-                      : "Pas de véhicule en mouvement"}
+                      : `${t("Pas de véhicule en mouvement")}`}
                   </span>
                   <span className="font-bold- dark:text-orange-500 text-gray-700 pl-3">
                     {vehiculeMouvementOrdered &&
@@ -3623,7 +3627,7 @@ function RapportGroupe({
                           }}
                           className="mx-l px-4 text-white border border-orange-200 shadow-lg-- shadow-gray-400/20-- py-0.5 rounded-lg mt-3 bg-orange-500"
                         >
-                          Voir sur la carte
+                          {t("Voir sur la carte")}
                         </button>
                       )}
                     <button
@@ -3632,7 +3636,7 @@ function RapportGroupe({
                       }}
                       className="mx-2-- px-4-- text-orange-600 underline font-semibold shadow-lg-- shadow-gray-400/20-- py-0.5-- rounded-lg-- mt-3 bg-orange-200/50-- border-b- border-b-orange-600"
                     >
-                      Plus d'info
+                      {t("Plus d'info")}
                     </button>
                   </div>
                 )}
@@ -3662,7 +3666,7 @@ function RapportGroupe({
               className="p-4 text-center  py-1 my-4 rounded-lg cursor-pointer shadow-lg shadow-gray-400/20 bg-orange-500/80 mt-8"
             >
               <p className="text-white font-semibold  cursor-pointer">
-                voir moins
+                {t("voir moins")}
               </p>
             </div>
           )}
@@ -3690,30 +3694,30 @@ function RapportGroupe({
           <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
             <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Informations sur le trajet des véhicules
+              {t("Informations sur le trajet des véhicules")}
             </h2>
           </div>
 
           <div>
             <div className="text-gray-700 flex flex-col gap-2 dark:text-gray-300">
               <div className="flex flex-wrap">
-                <p>Date de recherche trouvée : </p>
+                <p>{t("Date de recherche trouvée")} : </p>
                 <span className="font-bold dark:text-orange-500 text-gray-900 pl-5">
                   {
                     jourDebut ? (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        Du{" "}
+                        {t("Du")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
-                        au{" "}
+                        {t("au")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
                     ) : (
-                      <span>Pas de date disponible</span>
+                      <span>{t("Pas de date disponible")}</span>
                     )
                     // )
                   }
@@ -3721,21 +3725,21 @@ function RapportGroupe({
               </div>
 
               <div className="flex flex-wrap">
-                <p>Heure de recherche trouvée :</p>
+                <p>{t("Heure de recherche trouvée")} :</p>
                 {jourDebut ? (
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                    De{" "}
+                    {t("De")}{" "}
                     <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                       {heureDebut}
                     </span>{" "}
-                    à{" "}
+                    {t("à")}{" "}
                     <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                       {heureFin}{" "}
                     </span>{" "}
                   </span>
                 ) : (
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                    Pas de date disponible
+                    {t("Pas de date disponible")}
                   </span>
                 )}
               </div>
@@ -3750,9 +3754,9 @@ function RapportGroupe({
 
               <div className="flex gap-2 justify-between">
                 <p>
-                  Temps d'activité total :
+                  {t("Temps d'activité total")} :
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {totalMovingDuration || "Pas de deplacement"}
+                    {totalMovingDuration || `${t("Pas de deplacement")}`}
                   </span>
                 </p>
 
@@ -3762,14 +3766,14 @@ function RapportGroupe({
                   }}
                   className="text-orange-400 min-w-[4rem] border-b-- border-b-orange-400-- underline cursor-pointer"
                 >
-                  voir plus
+                  {t("voir plus")}
                 </p>
               </div>
               <p>
-                Distance totale parcourue:
+                {t("Distance totale parcourue")}:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {(totalDistanceSum && totalDistanceSum.toFixed(0) + " km") ||
-                    "Pas de mouvement"}
+                    `${t("Pas de mouvement")}`}
                 </span>
               </p>
 
@@ -3779,11 +3783,11 @@ function RapportGroupe({
               {/*  */}
 
               <p>
-                Nombre total d’arrêts :
+                {t("Nombre total d’arrêts")} :
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {nombreTotaleArret > 0
-                    ? nombreTotaleArret + " arrêts"
-                    : " 0 arrêt"}
+                    ? nombreTotaleArret + "" + `${t("arrêts")}`
+                    : " 0 " + `${t("arrêts")}`}
                 </span>
               </p>
               {/*  */}
@@ -3795,7 +3799,7 @@ function RapportGroupe({
               {/*  */}
               <div className="flex gap-2 justify-between">
                 <p>
-                  Vitesse minimale:
+                  {t("Vitesse minimale")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {speeds.minSpeed != "Infinity"
                       ? speeds && speeds.minSpeed?.toFixed(0) + " Km/h"
@@ -3808,11 +3812,11 @@ function RapportGroupe({
                   }}
                   className="text-orange-400 min-w-[4rem] border-b-- border-b-orange-400-- underline cursor-pointer"
                 >
-                  voir plus
+                  {t("voir plus")}
                 </p>
               </div>
               <p>
-                Vitesse maximale:
+                {t("Vitesse maximale")}:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {speeds.maxSpeed != "-Infinity"
                     ? speeds && speeds.maxSpeed?.toFixed(0) + " Km/h"
@@ -3820,7 +3824,7 @@ function RapportGroupe({
                 </span>
               </p>
               <p>
-                Vitesse moyenne:
+                {t("Vitesse moyenne")}:
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {totalAvgSpeed?.toFixed(0) + " Km/h"}
                 </span>
@@ -3833,7 +3837,7 @@ function RapportGroupe({
           <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
             <MdLocationPin className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Position des véhicules{" "}
+              {t("Position des véhicules")}{" "}
             </h2>
           </div>
         )}
@@ -3891,7 +3895,7 @@ function RapportGroupe({
           <BsTable className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
           <div className="flex justify-between items-center  w-full">
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Tableau récapitulatif{" "}
+              {t("Tableau récapitulatif")}{" "}
             </h2>
             <div onClick={() => {}} className="cursor-pointer relative">
               <p
@@ -3900,13 +3904,13 @@ function RapportGroupe({
                 }}
                 className="font-semibold underline text-orange-600"
               >
-                Filtrer
+                {t("Filtrer")}
               </p>
               {showsortfilterpupup && (
                 <div className="absolute z-[30] flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow-gray-900 dark:border shadow-lg shadow-gray-500 rounded-md p-3 top-10 -right-2 min-w-[20rem]">
                   <div className="flex justify-between mb-2 items-center ">
                     <p className="text-orange-500  font-semibold">
-                      Filtrer par :
+                      {t("Filtrer par")} :
                     </p>
                     <IoClose
                       onClick={() => {
@@ -3928,7 +3932,7 @@ function RapportGroupe({
                         tableSortCroissant ? "bg-orange-100 " : ""
                       } rounded-lg border border-white/0  hover:border hover:border-orange-200`}
                     >
-                      Croissant
+                      {t("Croissant")}
                     </p>
                     <p
                       onClick={() => {
@@ -3941,7 +3945,7 @@ function RapportGroupe({
                         !tableSortCroissant ? "bg-orange-100 " : ""
                       } rounded-lg  border border-white/0 hover:border hover:border-orange-200`}
                     >
-                      Decroissant
+                      {t("Décroissant")}
                     </p>
                   </div>
 
@@ -3957,7 +3961,7 @@ function RapportGroupe({
                       "bg-orange-50 dark:bg-gray-800"
                     } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
                   >
-                    Heure de départ
+                    {t("Heure de départ")}
                   </p>
 
                   <p
@@ -3976,7 +3980,7 @@ function RapportGroupe({
                       "bg-orange-50 dark:bg-gray-800"
                     } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
                   >
-                    Distance parcouru
+                    {t("Distance parcouru")}
                   </p>
                   <p
                     onClick={() => {
@@ -3991,7 +3995,7 @@ function RapportGroupe({
                       "bg-orange-50 dark:bg-gray-800"
                     } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
                   >
-                    Temps en mouvement
+                    {t("Temps en mouvement")}
                   </p>
                   <p
                     onClick={() => {
@@ -4004,7 +4008,7 @@ function RapportGroupe({
                       "bg-orange-50 dark:bg-gray-800"
                     } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
                   >
-                    Vitesse maximale
+                    {t("Vitesse maximale")}
                   </p>
                 </div>
               )}
@@ -4019,12 +4023,12 @@ function RapportGroupe({
                 <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
                   {
                     <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                      Du{" "}
+                      {t("Du")}{" "}
                       <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
                         {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                         {anneeDebut === anneeFin ? "" : anneeDebut}
                       </span>{" "}
-                      au{" "}
+                      {t("au")}{" "}
                       <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
                         {jourFin} {moisFin} {anneeFin}
                       </span>
@@ -4040,11 +4044,11 @@ function RapportGroupe({
 
               <p className="text-[.9rem]">
                 <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                  De{" "}
+                  {t("De")}{" "}
                   <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
                     {heureDebut}
                   </span>{" "}
-                  a{" "}
+                  {t("à")}{" "}
                   <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
                     {heureFin}
                   </span>{" "}
@@ -4060,7 +4064,7 @@ function RapportGroupe({
               }}
               className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
             >
-              <p>Telecharger</p>
+              <p>{t("Télécharger")}</p>
               <img
                 className="w-[2rem] mr-3--"
                 src="/img/exel_download.png"
@@ -4082,13 +4086,13 @@ function RapportGroupe({
         </div>
         <div className="mt-4  flex items-center gap-2">
           <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
-            Véhicules déplacés
+            {t("Véhicules déplacés")}
           </p>
           <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
-            Véhicules non déplacés
+            {t("Véhicules non déplacés")}
           </p>
           <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
-            Véhicules hors service
+            {t("Véhicules hors service")}
           </p>
         </div>
         {/*  */}
@@ -4117,34 +4121,34 @@ function RapportGroupe({
                 </th>
 
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[18rem] max-w-[18rem]">
-                  Véhicule
+                  {t("Véhicule")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2  min-w-[13rem] max-w-[13rem]">
-                  Date et Heure de départ
+                  {t("Date et Heure de départ")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                  Date et Heure d'arrivée
+                  {t("Date et Heure d'arrivée")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  Vitesse moyenne
+                  {t("Vitesse moyenne")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  Vitesse maximale
+                  {t("Vitesse maximale")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  Distance totale
+                  {t("Distance totale")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  Nombre d'arrêts
+                  {t("Nombre d'arrêts")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
-                  Temps en mouvement
+                  {t("Temps en mouvement")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                  Adresse de départ
+                  {t("Adresse de départ")}
                 </th>
                 <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                  Adresse d'arrivée
+                  {t("Adresse d'arrivée")}
                 </th>
               </tr>
             </div>
@@ -4164,23 +4168,25 @@ function RapportGroupe({
                   <p className="text-white">.</p>
 
                   <h2 className="w-full  mt-20 text-center font-semibold text-gray-800 text-[3rem] dark:text-orange-50 ">
-                    Tableau récapitulatif{" "}
+                    {t("Tableau récapitulatif")}{" "}
                   </h2>
                   <div className="flex justify-between  mt-4  items-center ">
                     <div className="sm:flex w-full gap-20 max-w-[50rem]-- mx-4-- justify-start items-center ">
                       <div className="flex gap-0 items-center text-xl">
-                        <p className="font-bold ">Date du resultat: </p>
+                        <p className="font-bold ">
+                          {tableSortByColorBg("Date du résultat")}:{" "}
+                        </p>
                         <p className="text-[.9rem]--  text-xl">
                           <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
                             {
                               <span className="text-[.85rem]--  --sm:text-sm md:text-[1rem]-- text-xl  lg:text-lg--">
-                                Du{" "}
+                                {t("Du")}{" "}
                                 <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
                                   {jourDebut}{" "}
                                   {moisDebut === moisFin ? "" : moisDebut}{" "}
                                   {anneeDebut === anneeFin ? "" : anneeDebut}
                                 </span>{" "}
-                                au{" "}
+                                {t("au")}{" "}
                                 <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
                                   {jourFin} {moisFin} {anneeFin}
                                 </span>
@@ -4192,15 +4198,15 @@ function RapportGroupe({
                       </div>
 
                       <div className="flex gap-0 items-center text-xl">
-                        <p className="font-bold ">Heure du resultat: </p>
+                        <p className="font-bold ">{t("Heure du résultat")}: </p>
 
                         <p className="text-[.9rem]-- text-xl">
                           <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                            De{" "}
+                            {t("De")}{" "}
                             <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
                               {heureDebut}
                             </span>{" "}
-                            a{" "}
+                            {t("à")}{" "}
                             <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
                               {heureFin}
                             </span>{" "}
@@ -4216,7 +4222,7 @@ function RapportGroupe({
                         }}
                         className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
                       >
-                        <p>Telecharger</p>
+                        <p>{t("Télécharger")}</p>
                         <img
                           className="w-[2rem] mr-3--"
                           src="/img/exel_download.png"
@@ -4242,13 +4248,13 @@ function RapportGroupe({
                   </div>
                   <div className="mt-4 mb-8 flex items-center gap-2">
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
-                      Véhicules déplacés
+                      {t("Véhicules déplacés")}
                     </p>
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
-                      Véhicules non déplacés
+                      {t("Véhicules non déplacés")}
                     </p>
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
-                      Véhicules hors service
+                      {t("Véhicules hors service")}
                     </p>
                   </div>
                 </div>
@@ -4267,34 +4273,34 @@ function RapportGroupe({
                     </th>
 
                     <th className="border dark:border-gray-600 py-3 px-2  min-w-[18rem] max-w-[18rem]">
-                      Véhicule
+                      {t("Véhicule")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                      Date et Heure de départ
+                      {t("Date et Heure de départ")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                      Date et Heure d'arrivée
+                      {t("Date et Heure d'arrivée")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      Vitesse moyenne
+                      {t("Vitesse moyenne")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      Vitesse maximale
+                      {t("Vitesse maximale")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      Distance totale
+                      {t("Distance totale")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      Nombre d'arrêts
+                      {t("Nombre d'arrêts")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
-                      Temps en mouvement
+                      {t("Temps en mouvement")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                      Adresse de départ
+                      {t("Adresse de départ")}
                     </th>
                     <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]  max-w-[30rem]">
-                      Adresse d'arrivée
+                      {t("Adresse d'arrivée")}
                     </th>
                   </tr>
                 </thead>
@@ -4416,7 +4422,7 @@ function RapportGroupe({
                                     véhicule?.véhiculeDetails.length - 1
                                   ]?.timestamp
                                 )?.time
-                              : "Pas de date disponible"}{" "}
+                              : `${t("Pas de date disponible")}`}{" "}
                           </td>
                           <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                             {véhicule?.véhiculeDetails[0]?.timestamp
@@ -4431,7 +4437,7 @@ function RapportGroupe({
                               ? FormatDateHeure(
                                   véhicule?.véhiculeDetails[0]?.timestamp
                                 )?.time
-                              : "Pas de date disponible"}{" "}
+                              : `${t("Pas de date disponible")}`}{" "}
                           </td>
 
                           {/* Vitesse moyenne */}
@@ -4463,7 +4469,7 @@ function RapportGroupe({
                           {/* Nombre d'arret */}
                           <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
                             {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
-                            {véhicule.stopCount + " arrêts"}
+                            {véhicule.stopCount + " " + `${t("arrêts")}`}
                           </td>
 
                           {/* Temps actifs */}
@@ -4479,8 +4485,7 @@ function RapportGroupe({
 
                           {/* Addresse départ */}
                           <Tooltip
-                            title="Voir cette adresse sur la carte
-                         "
+                            title={`${t("Voir cette adresse sur la carte")}`}
                             PopperProps={{
                               modifiers: [
                                 {
@@ -4517,14 +4522,13 @@ function RapportGroupe({
                                 véhicule?.véhiculeDetails[
                                   véhicule?.véhiculeDetails.length - 1
                                 ]?.address ||
-                                "Pas d'adresse disponible"}
+                                `${t("Pas d'adresse disponible")}`}
                             </td>
                           </Tooltip>
 
                           {/* Addresse départ */}
                           <Tooltip
-                            title="Voir cette adresse sur la carte
-                         "
+                            title={`${t("Voir cette adresse sur la carte")}`}
                             PopperProps={{
                               modifiers: [
                                 {
@@ -4555,7 +4559,7 @@ function RapportGroupe({
                             >
                               {véhicule?.véhiculeDetails[0]?.backupAddress ||
                                 véhicule?.véhiculeDetails[0]?.address ||
-                                "Pas d'adresse disponible"}
+                                `${t("Pas d'adresse disponible")}`}
                             </td>
                           </Tooltip>
                         </tr>

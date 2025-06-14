@@ -121,9 +121,9 @@ function GestionUserOptionsPopup({
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
               <h1
-                onClick={() => {
-                  console.log(currentAccountSelected);
-                }}
+                // onClick={() => {
+                //   console.log(currentAccountSelected);
+                // }}
                 className="px-3 mt-4 mb-2--"
               >
                 Options de l'utilisateur

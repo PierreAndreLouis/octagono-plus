@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 function CreateNewGroupeGestion({
   setDocumentationPage,
@@ -27,6 +28,8 @@ function CreateNewGroupeGestion({
     createNewGroupeEnGestionAccount,
     adminPassword,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
   const [
@@ -76,7 +79,9 @@ function CreateNewGroupeGestion({
 
     if (deviceExists) {
       setErrorID(
-        "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre."
+        `${t(
+          "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre"
+        )}`
       );
       return;
     }
@@ -140,7 +145,7 @@ function CreateNewGroupeGestion({
   //
 
   useEffect(() => {
-    console.log("deviceSelectionnes", deviceSelectionnes);
+    // console.log("deviceSelectionnes", deviceSelectionnes);
   }, [deviceSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
@@ -179,7 +184,7 @@ function CreateNewGroupeGestion({
       setErrorMessage("");
       setInputPassword("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -189,7 +194,7 @@ function CreateNewGroupeGestion({
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
             <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
-              Liste Des Appareils
+              {t("Liste Des Appareils")}
             </h2>
             <IoClose
               onClick={() => {
@@ -198,12 +203,12 @@ function CreateNewGroupeGestion({
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
             <p
-              onClick={() => {
-                console.log("deviceNonSelectionnes", deviceNonSelectionnes);
-              }}
+              // onClick={() => {
+              //   console.log("deviceNonSelectionnes", deviceNonSelectionnes);
+              // }}
               className="mx-2 mb-3 text-center mt-4 text-lg"
             >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
+              {t("Choisis un ou plusieurs Groupe pour intégrer l'appareil")}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -244,11 +249,13 @@ function CreateNewGroupeGestion({
                       </div>
 
                       <p className="text-gray-600">
-                        Nom de l'appareil :{" "}
-                        <span className="font-bold notranslate">{device?.description}</span>
+                        {t("Nom de l'appareil")} :{" "}
+                        <span className="font-bold notranslate">
+                          {device?.description}
+                        </span>
                       </p>
                       <p className="text-gray-600">
-                        Dernière mise a jour :{" "}
+                        {t("Dernière mise a jour")} :{" "}
                         <span className="font-bold">
                           {FormatDateHeure(device?.lastUpdateTime).date}
                           <span className="mx-3">/</span>
@@ -275,7 +282,7 @@ function CreateNewGroupeGestion({
                 }}
                 className="py-2 text-white rounded-md bg-orange-600 font-bold"
               >
-                Confirmer
+                {t("Confirmer")}
               </button>
               <button
                 onClick={() => {
@@ -283,103 +290,12 @@ function CreateNewGroupeGestion({
                 }}
                 className="py-2  rounded-md bg-gray-200 font-bold"
               >
-                Annuler
+                {t("Annuler")}
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* {showUserSelectionnesPopup && (
-        <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
-              Liste Des Appareils
-            </h2>
-            <IoClose
-              onClick={() => {
-                setShowUSerSelectionnesPopup(false);
-              }}
-              className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
-            />
-            <p
-              onClick={() => {
-                console.log("deviceNonSelectionnes", deviceNonSelectionnes);
-              }}
-              className="mx-2 mb-3 text-center mt-4 text-lg"
-            >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
-            </p>
-
-            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
-              {currentAccountSelected?.accountUsers?.map((user, index) => {
-                const isSelected = usersSelectionnes.includes(user.userID);
-
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setUsersSelectionnes((prev) => {
-                        if (prev.includes(user.userID)) {
-                          return prev.filter((id) => id !== user.userID);
-                        } else {
-                          return [...prev, user.userID];
-                        }
-                      });
-                    }}
-                    className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center rounded-lg py-2 px-2 ${
-                      isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
-                    }`}
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                      {index + 1}
-                    </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                    <div className="w-full">
-                      <p className="text-gray-600">
-                        Nom de l'appareil :{" "}
-                        <span className="font-bold">{user?.description}</span>
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
-                        <span className="font-bold">
-                          {user?.userDevices?.length}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="min-w-[4rem]">
-                      {isSelected ? (
-                        <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
-                      ) : (
-                        <IoMdSquareOutline className="text-[2rem] text-red-400" />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
-              <button
-                onClick={() => {
-                  setShowUSerSelectionnesPopup(false);
-                }}
-                className="py-2 text-white rounded-md bg-orange-600 font-bold"
-              >
-                Confirmer
-              </button>
-              <button
-                onClick={() => {
-                  setShowUSerSelectionnesPopup(false);
-                }}
-                className="py-2  rounded-md bg-gray-200 font-bold"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
 
       {/* Popup pour la confirmation du mot de passe */}
       <ConfirmationPassword
@@ -398,7 +314,7 @@ function CreateNewGroupeGestion({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Ajouter un nouveau Groupe
+                {t("Ajouter un nouveau Groupe")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -409,12 +325,12 @@ function CreateNewGroupeGestion({
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
                 <FaArrowLeft />
-                Retour
+                {t("Retour")}
               </button>
             </div>
 
             <p className="mb-2">
-              Choisissez des Appareils pour intégrer dans le groupe
+              {t("Choisissez des Appareils pour intégrer dans le groupe")}
             </p>
             <div
               onClick={() => {
@@ -425,9 +341,11 @@ function CreateNewGroupeGestion({
               <h3 className="w-full text-center-- font-semibold">
                 <span>
                   {deviceSelectionnes?.length +
-                    " Appareil" +
+                    `${t("Appareil")}` +
                     (deviceSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas d'appareil sélectionner"}
+                    " " +
+                    `${t("sélectionner")}` ||
+                    `${t("Pas d'appareil sélectionner")}`}
                 </span>
               </h3>
               <FaChevronDown />
@@ -458,23 +376,23 @@ function CreateNewGroupeGestion({
                 {[
                   {
                     id: "groupID",
-                    label: "ID du groupe",
+                    label: `${t("ID du groupe")}`,
                     placeholder: "ex: appareil_brûlé",
                   },
                   {
                     id: "description",
-                    label: "Description",
-                    placeholder: "Description de l'appareil",
+                    label: `${t("Description")}`,
+                    placeholder: `${t("Description de l'appareil")}`,
                   },
                   {
                     id: "displayName",
-                    label: "DisplayName",
-                    placeholder: "Nom a afficher",
+                    label: `${t("DisplayName")}`,
+                    placeholder: `${t("DisplayName")}`,
                   },
                   {
                     id: "notes",
-                    label: "Notes",
-                    placeholder: "Ajouter une petite note",
+                    label: `${t("Notes")}`,
+                    placeholder: `${t("Ajouter une petite note")}`,
                   },
                 ].map((field) => (
                   <div key={field.id}>
@@ -512,7 +430,7 @@ function CreateNewGroupeGestion({
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-orange-600 dark:bg-orange-700 px-3 py-1.5 text-md font-semibold text-white hover:bg-orange-700 dark:hover:bg-orange-800"
                   >
-                    Enregistrer
+                    {t("Enregistrer")}
                   </button>
                   <button
                     onClick={() => {
@@ -521,7 +439,7 @@ function CreateNewGroupeGestion({
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
-                    Annuler
+                    {t("Annuler")}
                   </button>
                 </div>
               </form>

@@ -3,6 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import { FaCar } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function SearchVehiculePupup({
   searchQueryListPopup,
@@ -22,6 +23,8 @@ function SearchVehiculePupup({
     setSelectedVehicleToShowInMap,
     searchDonneeFusionnéForRapport,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const [
     filterSearchVehiculePopupByCategorie,
@@ -108,8 +111,7 @@ function SearchVehiculePupup({
         <div className="absolute  top-[1rem] left-2 right-2 md:left-4  md:right-4 py-2">
           <div className="mt-4 mb-4   flex items-center gap-2">
             <Tooltip
-              title="Appuyer pour filtrer
-            "
+              title={`${t("cliquez pour filtrer")}`}
               PopperProps={{
                 modifiers: [
                   {
@@ -127,13 +129,12 @@ function SearchVehiculePupup({
                 }}
                 className="px-2 cursor-pointer  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
               >
-                Véhicules déplacés
+                {t("Véhicules déplacés")}
               </p>
             </Tooltip>
 
             <Tooltip
-              title="Appuyer pour filtrer
-            "
+              title={`${t("cliquez pour filtrer")}`}
               PopperProps={{
                 modifiers: [
                   {
@@ -151,13 +152,12 @@ function SearchVehiculePupup({
                 }}
                 className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 "
               >
-                Véhicules non déplacés
+                {t("Véhicules non déplacés")}
               </p>
             </Tooltip>
 
             <Tooltip
-              title="Appuyer pour filtrer
-            "
+              title={`${t("cliquez pour filtrer")}`}
               PopperProps={{
                 modifiers: [
                   {
@@ -175,7 +175,7 @@ function SearchVehiculePupup({
                 }}
                 className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
               >
-                Véhicules hors service
+                {t("Véhicules hors service")}
               </p>
             </Tooltip>
           </div>
@@ -183,13 +183,12 @@ function SearchVehiculePupup({
             <input
               className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
               type="text"
-              placeholder="Recherche"
+              placeholder={`${t("Rechercher")}`}
               value={searchQueryListPopup}
               onChange={handleSearchChange}
             />
             <Tooltip
-              title="Réinitialiser le filtrer par catégorie
-            "
+              title={`${t("Réinitialiser le filtrer par catégorie")}`}
               PopperProps={{
                 modifiers: [
                   {
@@ -208,7 +207,7 @@ function SearchVehiculePupup({
                 }}
                 className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5"
               >
-                Reset
+                {t("Reset")}
               </p>
             </Tooltip>
           </div>
@@ -302,7 +301,7 @@ function SearchVehiculePupup({
             })
           ) : (
             <p className="text-center dark:text-gray-50 px-3 mt-10">
-              Pas de resultat
+              {t("Pas de resultat")}
             </p>
           )}
         </div>

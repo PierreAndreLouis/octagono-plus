@@ -5,6 +5,7 @@ import { FaCar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
+import { useTranslation } from "react-i18next";
 
 function ShowFilterComponent({
   showFilter,
@@ -27,6 +28,8 @@ function ShowFilterComponent({
 }) {
   const { currentVéhicule, setVéhiculeHistoriqueDetails } =
     useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const formatDateToDDMMYYYY = (date) => {
     if (!(date instanceof Date)) {
@@ -68,7 +71,7 @@ function ShowFilterComponent({
                 }}
                 className="flex  mt-6 items-center justify-between gap-1 border px-2 py-1 cursor-pointer bg-orange-50 rounded-md dark:bg-gray-700 dark:text-white"
               >
-                <label htmlFor="mapType">Type de vue</label>
+                <label htmlFor="mapType">{t("Type de vue")}</label>
                 <FaChevronDown />
               </div>
             )}
@@ -81,7 +84,7 @@ function ShowFilterComponent({
             >
               <MdDateRange className="text-xl text-orange-600 dark:text-orange-400" />
               <h3 className="text-gray-800 dark:text-gray-200">
-                Filtrer par Date
+                {t("Filtrer par Date")}
               </h3>
             </div>
 
@@ -93,7 +96,7 @@ function ShowFilterComponent({
               <div className="flex pt-4 mb-4 items-center gap-3">
                 <FaCarRear className="text-xl text-orange-600/90 dark:text-orange-400" />
                 <h3 className="text-gray-800 dark:text-gray-200">
-                  Filtrer par statut
+                  {t("Filtrer par statut")}
                 </h3>
               </div>
               <div>
@@ -109,7 +112,7 @@ function ShowFilterComponent({
                     htmlFor="en_marche"
                     className="text-gray-800 dark:text-gray-200"
                   >
-                    En mouvement rapide
+                    {t("En mouvement rapide")}
                   </label>
                 </div>
                 <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
@@ -124,7 +127,7 @@ function ShowFilterComponent({
                     htmlFor="en_ralenti"
                     className="text-gray-800 dark:text-gray-200"
                   >
-                    En mouvement lent
+                    {t("En mouvement lent")}
                   </label>
                 </div>
                 <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
@@ -139,7 +142,7 @@ function ShowFilterComponent({
                     htmlFor="en_arret"
                     className="text-gray-800 dark:text-gray-200"
                   >
-                    En stationnement
+                    {t("En stationnement")}
                   </label>
                 </div>
               </div>
@@ -149,14 +152,18 @@ function ShowFilterComponent({
 
             <div className="py-3 pl-2">
               <div className="font-semibold flex flex-wrap dark:text-gray-50 ">
-                <p>Date et heure de Depart:{"  "}</p>
+                <p>
+                  {t("Date et heure de Depart")}:{"  "}
+                </p>
                 <p className="ml-4 font-normal dark:text-orange-500">
                   {formatDateToDDMMYYYY(startDate)} -{" "}
                   {convertTo12HourFormat(startTime)}
                 </p>
               </div>
               <div className="font-semibold flex flex-wrap mt-1 dark:text-gray-50 ">
-                <p>Date et heure de d'arrivée:{"  "}</p>
+                <p>
+                  {t("Date et heure de d'arrivée")}:{"  "}
+                </p>
                 <p className="ml-4 font-normal dark:text-orange-500">
                   {formatDateToDDMMYYYY(endDate)} -{" "}
                   {convertTo12HourFormat(endTime)}
@@ -172,7 +179,7 @@ function ShowFilterComponent({
                 className="cursor-pointer flex my-3 px-4 rounded-lg bg-red-100 justify-between gap-2 items-center"
               >
                 <h2 className=" p-2 px-0 bg-red-100 text-red-600 rounded-lg">
-                  Veuillez sélectionner un véhicule
+                  {t("Veuillez sélectionner un véhicule")}
                 </h2>
                 <FaCar className="text-xl text-red-700" />
               </div>
@@ -186,7 +193,7 @@ function ShowFilterComponent({
                 }}
                 className="border cursor-pointer border-orange-500 text-center text-orange-600 font-semibold rounded-md pt-1 pb-1.5 px-6 mt-5 dark:text-orange-400 dark:border-orange-400"
               >
-                Appliquer
+                {t("Appliquer")}
               </p>
             )}
           </div>

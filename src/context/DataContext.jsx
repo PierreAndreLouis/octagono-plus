@@ -334,6 +334,28 @@ const DataContextProvider = ({ children }) => {
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
 
+  const [currentCountry, setCurrentCountry] = useState("");
+
+  let currentAPI = "/octagono-plus-api/track/Service";
+
+  if (currentCountry === "rd") {
+    currentAPI = "/octagono-gps-api/track/Service";
+  } else {
+    currentAPI = "/octagono-plus-api/track/Service";
+  }
+
+  useEffect(() => {
+    if (username) {
+      localStorage.setItem("username", username);
+    }
+    if (adminUsername) {
+      localStorage.setItem("adminUsername", adminUsername);
+    }
+    if (currentCountry) {
+      localStorage.setItem("currentCountry", currentCountry);
+    }
+  }, [username, adminUsername, currentCountry]);
+
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
 
   // to show the log out popup
@@ -1136,10 +1158,11 @@ const DataContextProvider = ({ children }) => {
     account,
     user,
     password,
+    country,
     sendConnectionMail = true
   ) => {
     console.log("++++++++++++++++ Requête effectué: handleLogin");
-
+    console.log("Country: --------", country);
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${account}" user="${user}" password="${password}" />
         <Record table="Account" partial="true">
@@ -1150,8 +1173,16 @@ const DataContextProvider = ({ children }) => {
 
     console.log("xmlData ===>", xmlData);
 
+    if (country === "rd") {
+      currentAPI = "/octagono-gps-api/track/Service";
+    } else {
+      currentAPI = "/octagono-plus-api/track/Service";
+    }
+
+    console.log("currentAPI", currentAPI);
+
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -1183,35 +1214,45 @@ const DataContextProvider = ({ children }) => {
           fetchAllComptes(account, user, password);
           setAdminUserData(userData);
 
+          // localStorage.setItem("adminUserData", userData);
+          localStorage.setItem("adminUserData", JSON.stringify(adminUserData));
+
           localStorage.setItem("adminAccount", account);
           localStorage.setItem("adminUsername", user);
           localStorage.setItem("adminPassword", password);
 
-          setAdminAccount(localStorage.getItem("adminAccount") || "");
-          setAdminUsername(localStorage.getItem("adminUsername") || "");
-          setAdminPassword(localStorage.getItem("adminPassword") || "");
+          localStorage.setItem("currentCountry", country);
+
+          // setAdminAccount(localStorage.getItem("adminAccount") || "");
+          // setAdminUsername(localStorage.getItem("adminUsername") || "");
+          // setAdminPassword(localStorage.getItem("adminPassword") || "");
+
+          setAdminAccount(account);
+          setAdminUsername(user);
+          setAdminPassword(password);
         } else {
           setUserData(userData);
           navigate("/home");
           setIsDashboardHomePage(false);
-          // Stocker les informations de connexion en local
+
+          localStorage.setItem("userData", JSON.stringify(userData));
+
           localStorage.setItem("account", account);
           localStorage.setItem("username", user);
           localStorage.setItem("password", password);
 
-          setAccount(localStorage.getItem("account") || "");
-          setUsername(localStorage.getItem("username") || "");
-          setPassword(localStorage.getItem("password") || "");
+          localStorage.setItem("currentCountry", country);
+
+          // setAccount(localStorage.getItem("account") || "");
+          // setUsername(localStorage.getItem("username") || "");
+          // setPassword(localStorage.getItem("password") || "");
+
+          setAccount(account);
+          setUsername(user);
+          setPassword(password);
+
+          GeofenceDataFonction(account, user, password);
         }
-
-        ///////// a supprimer
-        // localStorage.setItem("account", account);
-        // localStorage.setItem("username", user);
-        // localStorage.setItem("password", password);
-
-        // setAccount(localStorage.getItem("account") || "");
-        // setUsername(localStorage.getItem("username") || "");
-        // setPassword(localStorage.getItem("password") || "");
 
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
           // Exécuter la fonction seulement si ce n'est pas localhost
@@ -1256,13 +1297,13 @@ const DataContextProvider = ({ children }) => {
     //     </Record>
     // </GTSRequest>
     //     `;
+    // <Field name="userID">${userID}</Field>
 
     const xmlData = `
 <GTSRequest command="dbget">
   <Authorization account="${accountID}" user="${userID}" password="${password}" />
-  <Record table="GroupList" partial="true">
+  <Record table="RuleList" partial="true">
     <Field name="accountID">${accountID}</Field>
-    <Field name="userID">${userID}</Field>
   </Record>
 </GTSRequest>
     `;
@@ -1389,7 +1430,7 @@ const DataContextProvider = ({ children }) => {
     // console.log("URL complète de l'API :", fullUrl);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -1479,7 +1520,7 @@ const DataContextProvider = ({ children }) => {
     console.log("Requête envoyer :", xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -1580,16 +1621,15 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchComptes: lancement de la requête XML");
     const xml = `
 <GTSRequest command="dbget">
-  <Authorization account="${account}" user="${
-      user || systemUser
-    }" password="${password}" />
+  <Authorization account="${account}" user="${user}" password="${password}" />
   <Record table="Account" partial="true" />
 </GTSRequest>
   `;
 
+    console.log("IP address:", currentAPI);
     console.log("requete +++++++++++++++++++++++++", xml);
 
-    const res = await fetch("/api/track/Service", {
+    const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
@@ -1621,7 +1661,7 @@ const DataContextProvider = ({ children }) => {
       newData = data?.filter((account) => account?.notes === "rd");
     }
 
-    console.log("fetchComptes: résultats =", newData);
+    console.log("fetchComptes: résultats------- =", user, newData);
 
     setComptes(newData);
 
@@ -1722,7 +1762,7 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
-    const res = await fetch("/api/track/Service", {
+    const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
@@ -1786,7 +1826,7 @@ const DataContextProvider = ({ children }) => {
 
     console.log("xml", xml);
 
-    const res = await fetch("/api/track/Service", {
+    const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
@@ -1838,7 +1878,7 @@ const DataContextProvider = ({ children }) => {
 
     console.log(xml);
 
-    const res = await fetch("/api/track/Service", {
+    const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
@@ -1910,7 +1950,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log(xml);
 
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xml,
@@ -2006,7 +2046,7 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
     `;
 
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xml,
@@ -2078,7 +2118,7 @@ const DataContextProvider = ({ children }) => {
     console.log("xmlData", xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -2235,7 +2275,7 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
     `;
 
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xml,
@@ -2636,7 +2676,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -2760,7 +2800,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -2898,7 +2938,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -3038,7 +3078,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -3249,7 +3289,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -3484,7 +3524,7 @@ const DataContextProvider = ({ children }) => {
     console.log("requestBody", requestBody);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -3662,7 +3702,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -3845,7 +3885,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -3952,7 +3992,7 @@ const DataContextProvider = ({ children }) => {
     console.log("requestBody", requestBody);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -4127,7 +4167,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -4274,7 +4314,7 @@ const DataContextProvider = ({ children }) => {
     console.log(xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -4409,7 +4449,7 @@ const DataContextProvider = ({ children }) => {
     console.log("requestBody", requestBody);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -4609,7 +4649,7 @@ const DataContextProvider = ({ children }) => {
     console.log("xmlData", xmlData);
 
     try {
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -4724,7 +4764,7 @@ const DataContextProvider = ({ children }) => {
     );
 
     try {
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -4842,7 +4882,7 @@ const DataContextProvider = ({ children }) => {
     console.log("xmlData", xmlData);
 
     try {
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -4885,7 +4925,7 @@ const DataContextProvider = ({ children }) => {
     console.log("xmlData", xmlData);
 
     try {
-      const res = await fetch("/api/track/Service", {
+      const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -4963,6 +5003,7 @@ const DataContextProvider = ({ children }) => {
     setAdminAccount(localStorage.getItem("adminAccount") || "");
     setAdminUsername(localStorage.getItem("adminUsername") || "");
     setAdminPassword(localStorage.getItem("adminPassword") || "");
+    setCurrentCountry(localStorage.getItem("currentCountry") || "");
   }, []);
 
   // Fonction pour se déconnecter de l’application
@@ -4978,6 +5019,11 @@ const DataContextProvider = ({ children }) => {
 
     localStorage.removeItem("gestionAccountData");
     setGestionAccountData(null);
+
+    localStorage.removeItem("currentCountry");
+    setCurrentCountry("");
+
+    localStorage.removeItem("customHistory");
 
     // localStorage.removeItem("geofenceData");
     setGeofenceData(null);
@@ -5160,7 +5206,11 @@ const DataContextProvider = ({ children }) => {
   //
   //
   x;
-  const GeofenceDataFonction = async () => {
+  const GeofenceDataFonction = async (
+    userAccount,
+    userUsername,
+    userPassword
+  ) => {
     // Pour suivre le nombre de requête
     incrementerRequête();
     console.log("++++++++++++++++ Requête effectué: GeofenceDataFonction");
@@ -5173,15 +5223,17 @@ const DataContextProvider = ({ children }) => {
     const password = localStorage.getItem("password") || "";
 
     const xmlData = `<GTSRequest command="dbget">
-      <Authorization account="${account}" user="${username}" password="${password}" />
+      <Authorization account="${account || userAccount}" user="${
+      username || userUsername
+    }" password="${password || userPassword}" />
       <Record table="Geozone" partial="true">
-        <Field name="accountID">${account}</Field>
+        <Field name="accountID">${account || userAccount}</Field>
         <Field name="descriptionZone" />
       </Record>
     </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -5391,7 +5443,7 @@ const DataContextProvider = ({ children }) => {
 
     try {
       console.log("Sending request to create Geofence...");
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -5445,7 +5497,7 @@ const DataContextProvider = ({ children }) => {
 
           setCreateGeofenceLoading(false);
           navigate("/gestion_geofences?tab=geozone");
-          GeofenceDataFonction();
+          GeofenceDataFonction(account, username, password);
         }
 
         // setSuccesCreateGeofencePopup(true);
@@ -5556,7 +5608,7 @@ const DataContextProvider = ({ children }) => {
     console.log("requestBody", requestBody);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -5633,7 +5685,7 @@ const DataContextProvider = ({ children }) => {
             )
           );
           navigate("/gestion_geofences?tab=geozone");
-          GeofenceDataFonction();
+          GeofenceDataFonction(account, username, password);
         }
 
         // setSuccesModifierGeofencePopup(true);
@@ -5723,7 +5775,7 @@ const DataContextProvider = ({ children }) => {
     console.log("requestBody", requestBody);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -5857,7 +5909,7 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -5884,7 +5936,7 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName(description);
 
-        GeofenceDataFonction();
+        GeofenceDataFonction(account, username, password);
 
         navigate("/gestion_geofences?tab=geozone");
 
@@ -5999,7 +6051,7 @@ const DataContextProvider = ({ children }) => {
     // console.log("xmlData : ===>", xmlData);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -6090,7 +6142,7 @@ const DataContextProvider = ({ children }) => {
   //   </GTSRequest>`;
 
   //   try {
-  //     const response = await fetch("/api/track/Service", {
+  //     const response = await fetch(currentAPI, {
   //       method: "POST",
   //       headers: { "Content-Type": "application/xml" },
   //       body: xmlData,
@@ -6207,7 +6259,7 @@ const DataContextProvider = ({ children }) => {
   </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -6460,7 +6512,7 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -6715,7 +6767,7 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -7141,7 +7193,7 @@ const DataContextProvider = ({ children }) => {
             véhiculeData?.length > 0 ||
             vehicleDataDB.length > 0
           ) {
-            GeofenceDataFonction();
+            GeofenceDataFonction(account, username, password);
           }
           console.log("Pas de données dans geofence", geofenceDataRef.current);
         }
@@ -7303,7 +7355,7 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -7460,7 +7512,7 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>`;
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
@@ -7557,7 +7609,7 @@ const DataContextProvider = ({ children }) => {
     // console.log("almost there.....");
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -7641,7 +7693,7 @@ const DataContextProvider = ({ children }) => {
     console.log("requestBody", requestBody);
 
     try {
-      const response = await fetch("/api/track/Service", {
+      const response = await fetch(currentAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/xml",
@@ -8612,6 +8664,7 @@ const DataContextProvider = ({ children }) => {
         véhiculeHistoriqueDetails,
         setCurrentVéhicule,
         account,
+        currentCountry,
         username,
         password,
         adminAccount,
@@ -8881,6 +8934,7 @@ const DataContextProvider = ({ children }) => {
         setChooseOtherLanguagePopup,
         véhiculeDetails,
         setVehiculeDetails,
+        adminUserData,
 
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}

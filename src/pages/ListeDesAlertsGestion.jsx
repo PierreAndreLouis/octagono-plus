@@ -32,6 +32,7 @@ import {
   FaLock,
   FaTachometerAlt,
 } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 function ListeDesAlertsGestion({
   setDocumentationPage,
   setChooseOneAccountToContinue,
@@ -67,6 +68,8 @@ function ListeDesAlertsGestion({
     adminPassword,
     accountDevices,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   //
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -208,36 +211,36 @@ function ListeDesAlertsGestion({
   };
 
   const statusDescriptions = {
-    0x0000: "Code de statut non spécifié",
-    0xf020: "Localisation - En mouvement",
-    0xf021: "Localisation - Arrêté",
-    0xf022: "Localisation - Parking",
-    0xf100: "Localisation - Odomètre",
-    0xf110: "Localisation - Heures moteur",
-    0xf120: "Localisation - Niveau de carburant",
-    0xf200: "Changement d'état d'entrée",
-    0xf201: "Entrée activée",
-    0xf202: "Entrée désactivée",
-    0xf210: "Contact allumé",
-    0xf211: "Contact éteint",
-    0xf301: "Alimentation activée",
-    0xf302: "Alimentation désactivée",
-    0xf310: "Batterie faible",
-    0xf311: "Batterie OK",
-    0xf320: "En charge",
-    0xf321: "Non en charge",
-    0xf400: "Détection de remorquage",
-    0xf500: "Détection de collision",
-    0xf600: "Excès de vitesse",
-    0xf601: "Vitesse normale",
-    0xf700: "Entrée dans une zone géographique",
-    0xf701: "Sortie d'une zone géographique",
-    0xf800: "Informations de diagnostic",
-    0xf900: "Signal de vie",
-    0xfa00: "Connexion du conducteur",
-    0xfa01: "Déconnexion du conducteur",
-    0xfb00: "Alerte de panique",
-    0xfc00: "Rappel de maintenance",
+    0x0000: `${t("Code de statut non spécifié")}`,
+    0xf020: `${t("Localisation - En mouvement")}`,
+    0xf021: `${t("Localisation - Arrêté")}`,
+    0xf022: `${t("Localisation - Parking")}`,
+    0xf100: `${t("Localisation - Odomètre")}`,
+    0xf110: `${t("Localisation - Heures moteur")}`,
+    0xf120: `${t("Localisation - Niveau de carburant")}`,
+    0xf200: `${t("Changement d'état d'entrée")}`,
+    0xf201: `${t("Entrée activée")}`,
+    0xf202: `${t("Entrée désactivée")}`,
+    0xf210: `${t("Contact allumé")}`,
+    0xf211: `${t("Contact éteint")}`,
+    0xf301: `${t("Alimentation activée")}`,
+    0xf302: `${t("Alimentation désactivée")}`,
+    0xf310: `${t("Batterie faible")}`,
+    0xf311: `${t("Batterie OK")}`,
+    0xf320: `${t("En charge")}`,
+    0xf321: `${t("Non en charge")}`,
+    0xf400: `${t("Détection de remorquage")}`,
+    0xf500: `${t("Détection de collision")}`,
+    0xf600: `${t("Excès de vitesse")}`,
+    0xf601: `${t("Vitesse normale")}`,
+    0xf700: `${t("Entrée dans une zone géographique")}`,
+    0xf701: `${t("Sortie d'une zone géographique")}`,
+    0xf800: `${t("Informations de diagnostic")}`,
+    0xf900: `${t("Signal de vie")}`,
+    0xfa00: `${t("Connexion du conducteur")}`,
+    0xfa01: `${t("Déconnexion du conducteur")}`,
+    0xfb00: `${t("Alerte de panique")}`,
+    0xfc00: `${t("Rappel de maintenance")}`,
     // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
   };
 
@@ -412,26 +415,26 @@ function ListeDesAlertsGestion({
         {fromExpandSectionDashboard === "false" && (
           <div>
             <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
-              Liste des Alertes
+              {t("Liste des Alertes")}
             </h2>
 
             <h3 className=" text-orange-600  text-md text-center font-bold-- ">
               {currentSelectedUserToConnect?.description && (
-                <span className="text-gray-700">Utilisateur :</span>
+                <span className="text-gray-700">{t("Utilisateur")} :</span>
               )}{" "}
               <span className="notranslate">
                 {currentSelectedUserToConnect?.description}
               </span>
             </h3>
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">Nombre d'Alerte :</span> (
+              <span className="text-gray-700">{t("Nombre d'Alerte")} :</span> (
               {currentAccountSelected
-                ? currentAccountSelected?.accountDevices?.flatMap(
-                    (device) => device?.véhiculeDetails[0] || []
-                  )?.length
-                : accountDevices?.flatMap(
-                    (device) => device?.véhiculeDetails[0] || []
-                  )?.length}
+                ? currentAccountSelected?.accountDevices
+                    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                    ?.filter((item) => item?.statusCode !== "0xF952")?.length
+                : accountDevices
+                    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                    ?.filter((item) => item?.statusCode !== "0xF952")?.length}
               )
             </h3>
 
@@ -452,7 +455,8 @@ function ListeDesAlertsGestion({
                     <h3 className="w-full text-center font-semibold">
                       {/* Compte: */}
                       <span className="max-w-[13rem] overflow-hidden whitespace-nowrap text-ellipsis sm:max-w-full">
-                        {deviceListeTitleGestion || "Tous les Appareils"}
+                        {deviceListeTitleGestion ||
+                          `${t("Tous les Appareils")}`}
                       </span>
                     </h3>
                     <FaChevronDown />
@@ -482,7 +486,7 @@ function ListeDesAlertsGestion({
                     id="search"
                     name="search"
                     type="search"
-                    placeholder="Recherche un appareil"
+                    placeholder={`${t("Recherche un appareil")}`}
                     required
                     value={searchTermInput}
                     onChange={(e) => {
@@ -512,6 +516,7 @@ function ListeDesAlertsGestion({
           {filteredListeGestionDesVehicules?.length > 0 ? (
             filteredListeGestionDesVehicules
               ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+              ?.filter((item) => item?.statusCode !== "0xF952")
               ?.slice()
               ?.map((alert, index) => {
                 // const code = parseInt(alert.statusCode, 16);
@@ -520,7 +525,7 @@ function ListeDesAlertsGestion({
 
                 const code = parseInt(alert.statusCode, 16);
                 const codeDescription =
-                  statusDescriptions[code] || "Statut inconnu";
+                  statusDescriptions[code] || `${t("Statut inconnu")}`;
                 const { icon, color } = statusVisuals(codeDescription);
                 const twColor = getTailwindColor(color);
                 const twBorderColor = getTailwindBorderColor(color);
@@ -579,28 +584,28 @@ function ListeDesAlertsGestion({
                             className={`${text_color} flex-- w-full  flex-wrap00 border-b py-1`}
                           >
                             <p className="font-bold">
-                              Alerte :
+                              {t("Alerte")} :
                               <span className=" dark:text-orange-500 font-bold  pl-5">
                                 {codeDescription}
                               </span>
                             </p>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Code :</p>
+                            <p className="font-bold">{t("Code")} :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
                               {alert?.statusCode}
                             </span>
                           </div>{" "}
                           <div className="flex- flex-wrap- border-b py-1">
                             <p className="font-bold">
-                              Description :
+                              {t("Description")} :
                               <span className=" dark:text-orange-500 font-normal notranslate text-gray-600 pl-5">
                                 {currentDevice?.description || "---"}
                               </span>
                             </p>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Account ID :</p>
+                            <p className="font-bold">{t("Account ID")} :</p>
                             <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
                               {alert?.accountID}
                             </span>
@@ -608,14 +613,15 @@ function ListeDesAlertsGestion({
                           {/*  */}
                           <div className="flex- flex-wrap- border-b py-1">
                             <p className="font-bold">
-                              Adresse :
+                              {t("Adresse")} :
                               <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
-                                {alert?.address || "Pas d'adresse disponible"}
+                                {alert?.address ||
+                                  `${t("Pas d'adresse disponible")}`}
                               </span>
                             </p>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold">Last update :</p>
+                            <p className="font-bold">{t("Last update")} :</p>
                             <span className=" dark:text-orange-500 text-gray-600 pl-5">
                               {FormatDateHeure(alert?.timestamp).date}
                               <span className="px-2">/</span>{" "}
@@ -711,7 +717,7 @@ function ListeDesAlertsGestion({
               })
           ) : (
             <div className="flex justify-center font-semibold text-lg">
-              Pas de résultat
+              {true("Pas de résultat")}
             </div>
           )}
           {/*  */}

@@ -18,6 +18,7 @@ import { FaChevronDown } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import { MdCenterFocusStrong } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 function HistoriqueHeader({
   setShowHistoriqueInMap,
@@ -28,6 +29,8 @@ function HistoriqueHeader({
   setshowFilter,
   showFilter,
 }) {
+  const [t, i18n] = useTranslation();
+
   return (
     <>
       <div className="flex flex-col w-full">
@@ -59,7 +62,7 @@ function HistoriqueHeader({
                       },
                     ],
                   }}
-                  title="Voir l'historique du véhicule"
+                  title={`${t("Voir l'historique du véhicule")}`}
                 >
                   <div className="cursor-pointer">
                     <IoStatsChart className="text-xl text-orange-600 " />
@@ -85,7 +88,7 @@ function HistoriqueHeader({
                       },
                     ],
                   }}
-                  title="Voir le trajet du véhicule"
+                  title={`${t("Voir le trajet du véhicule")}`}
                 >
                   <img
                     className="w-[1.7rem]"
@@ -117,7 +120,7 @@ function HistoriqueHeader({
                   },
                 ],
               }}
-              title="Choisissez un véhicule"
+              title={`${t("Choisissez un véhicule")}`}
             >
               <div
                 onClick={() => {
@@ -133,10 +136,11 @@ function HistoriqueHeader({
                     // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
                     className="md:hidden"
                   >
-                    Choisis un véhicule
+                    {t("Choisissez un véhicule")}
                   </p>
                   <p className="hidden md:block notranslate">
-                    {currentVéhicule?.description || "Choisir un véhicule"}
+                    {currentVéhicule?.description ||
+                      `${t("Choisissez un véhicule")}`}
                   </p>
                   <FaChevronDown className="mt-1" />
                 </div>
@@ -161,7 +165,7 @@ function HistoriqueHeader({
                   },
                 ],
               }}
-              title="Filtrer les résultats de recherche"
+              title={`${t("Filtrer les résultats de recherche")}`}
             >
               <div
                 onClick={() => setshowFilter(!showFilter)}

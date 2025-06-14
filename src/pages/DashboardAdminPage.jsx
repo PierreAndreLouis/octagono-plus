@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { IoMdLogIn } from "react-icons/io";
 import {
   IoAlertCircle,
@@ -64,6 +70,10 @@ import GestionGeofences from "./GestionGeofences";
 import GoogleTranslate from "../components/home/GoogleTranslate";
 import ListeDesAlertsGestion from "./ListeDesAlertsGestion";
 import { FiAlertCircle } from "react-icons/fi";
+import InfoUserComponent from "../components/profile/InfoUserComponent";
+import { useTranslation } from "react-i18next";
+import GestionDesRoles from "./GestionDesRoles";
+import { BiUniversalAccess } from "react-icons/bi";
 
 function DashboardAdminPage() {
   const {
@@ -85,38 +95,20 @@ function DashboardAdminPage() {
     setListeGestionDesVehicules,
     gestionAccountData,
     dashboardLoadingEffect,
-    setDashboardLoadingEffect,
-    TestDeRequetteDevices,
-    successCreateAccountGestionPoupu,
-    setSuccessCreateAccountGestionPoupu,
-    echecCreateAccountGestionPoupu,
-    setEchecCreateAccountGestionPoupu,
-    successModifyAccountGestionPopup,
-    setSuccessModifyAccountGestionPopup,
-    echecModifyAccountGestionPopup,
-    setEchecModifyAccountGestionPopup,
-    successCreateUserGestionPopup,
-    setSuccessCreateUserGestionPopup,
-    echecCreateUserGestionPopup,
-    setEchecCreateUserGestionPopup,
-    successModifyUserGestionPopup,
-    setSuccessModifyUserGestionPopup,
-    echecModifyUserGestionPopup,
-    setEchecModifyUserGestionPopup,
-    successAddVéhiculePopup,
 
-    errorAddVéhiculePopup,
-    setErrorAddVéhiculePopup,
     accountGeofences,
     listeGestionDesGeofences,
     setListeGestionDesGeofences,
     adminAccount,
     chooseOtherLanguagePopup,
     setChooseOtherLanguagePopup,
+    setAjouterGeofencePopup,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   // Données des véhicules avec heures différentes
+
+  const [t, i18n] = useTranslation();
 
   const [allDevices, setAllDevices] = useState([]);
   const data = currentAccountSelected?.accountDevices || accountDevices;
@@ -338,22 +330,35 @@ function DashboardAdminPage() {
                 </h2>
               </Link>
               <div className="flex gap-4 items-center">
-                <div
-                  onClick={() => {
-                    setChooseOtherAccountGestion(true);
-                    setChooseOneAccountToContinue(false);
-                    setChooseAccountFromGeozoneSection(false);
-                  }}
-                  className="flex cursor-pointer gap-2 items-center"
-                >
-                  <FaUserCircle className="text-[1.4rem] text-gray-600" />
-                  <div className=" text-gray-800 flex flex-col gap-0">
+                <div className="flex cursor-pointer gap-2 items-center">
+                  <FaUserCircle
+                    onClick={() => {
+                      setDocumentationPage("userInfo");
+                    }}
+                    className="text-[1.4rem] mr-2 text-gray-600"
+                  />
+
+                  <div
+                    onClick={() => {
+                      setChooseOtherAccountGestion(true);
+                      setChooseOneAccountToContinue(false);
+                      setChooseAccountFromGeozoneSection(false);
+                    }}
+                    className=" text-gray-800 flex flex-col gap-0"
+                  >
                     <p className="font-semibold notranslate max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
                       {currentAccountSelected?.description ||
-                        "Tous les comptes"}
+                        `${t("Tous les comptes")}`}
                     </p>
                   </div>
-                  <FaChevronDown className="mt-1" />
+                  <FaChevronDown
+                    onClick={() => {
+                      setChooseOtherAccountGestion(true);
+                      setChooseOneAccountToContinue(false);
+                      setChooseAccountFromGeozoneSection(false);
+                    }}
+                    className="mt-1"
+                  />
                 </div>
                 <div
                   onClick={() => {
@@ -397,7 +402,7 @@ function DashboardAdminPage() {
                   } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
                 >
                   <FaArrowLeft />
-                  <span className="text-[1rem]">Retour</span>
+                  <span className="text-[1rem]">{t("Retour")}</span>
                 </button>
               )}
               {/*  */}
@@ -427,12 +432,12 @@ function DashboardAdminPage() {
                     <FaUserCircle className="text-[3rem] min-w-[1.5rem] text-gray-500" />
                     <div className="w-full">
                       <p className="text-gray-600 font-semibold">
-                        Compte Actuel
+                        {t("Compte Actuel")}
                       </p>
                       <p className="text-orange-500 notranslate max-w-[10rem] whitespace-nowrap text-ellipsis overflow-hidden  ">
                         {currentAccountSelected
                           ? currentAccountSelected?.description
-                          : "Tous les comptes"}
+                          : `${t("Tous les comptes")}`}
                       </p>
                     </div>
                     <FaChevronDown className="text-lg" />
@@ -451,7 +456,9 @@ function DashboardAdminPage() {
                   >
                     <MdSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
-                      <p className="text-gray-600 font-semibold">Dashboard</p>
+                      <p className="text-gray-600 font-semibold">
+                        {t("Dashboard")}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -474,7 +481,7 @@ function DashboardAdminPage() {
                       <MdSwitchAccount className="text-xl min-w-[1.5rem] text-orange-600" />
                       <div className="flex w-full justify-between">
                         <p className="text-gray-600 font-semibold">
-                          Gestion des comptes ({comptes?.length})
+                          {t("Gestion des comptes")} ({comptes?.length})
                         </p>
                       </div>
                     </div>
@@ -512,33 +519,6 @@ function DashboardAdminPage() {
                                 )
                           ),
                         ]);
-                        // console.log([
-                        //   ...Array.from(
-                        //     new Map(
-                        //       gestionAccountData
-                        //         .flatMap((account) => account.accountUsers || [])
-                        //         .map((user) => [user.userID, user])
-                        //     ).values()
-                        //   ),
-                        //   ...accountUsers.filter(
-                        //     (user) =>
-                        //       !gestionAccountData
-                        //         .flatMap((account) => account.accountUsers || [])
-                        //         .some(
-                        //           (existingUser) =>
-                        //             existingUser.userID === user.userID
-                        //         )
-                        //   ),
-                        // ]);
-                        // setListeGestionDesUsers(
-                        //   Array.from(
-                        //     new Map(
-                        //       gestionAccountData
-                        //         .flatMap((account) => account.accountUsers)
-                        //         .map((user) => [user.userID, user])
-                        //     ).values()
-                        //   )
-                        // );
                       }
                       scrollToTop();
                       setDocumentationPage("Gestion_des_utilisateurs");
@@ -553,7 +533,7 @@ function DashboardAdminPage() {
                     <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Gestion des Utilisateurs (
+                        {t("Gestion des Utilisateurs")} (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountUsers?.length
                           : accountUsers?.length}
@@ -601,7 +581,7 @@ function DashboardAdminPage() {
                     <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Gestion des Groupe (
+                        {t("Gestion des Groupe")} (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountGroupes?.length
                           : accountGroupes?.length}
@@ -633,7 +613,7 @@ function DashboardAdminPage() {
                     <FaCar className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Gestion des Appareils (
+                        {t("Gestion des Appareils")} (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountDevices?.length
                           : accountDevices?.length}
@@ -643,7 +623,51 @@ function DashboardAdminPage() {
                   </div>
                 </div>
 
-                <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
+                  <div
+                    onClick={() => {
+                      // if (currentAccountSelected) {
+                      //   setListeGestionDesVehicules(
+                      //     currentAccountSelected?.accountDevices
+                      //   );
+                      // } else {
+                      //   setListeGestionDesVehicules(accountDevices);
+                      // }
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_roles");
+                      closeSideBar();
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_roles"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        {t("Gestion des Roles")}
+                        (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountDevices
+                              ?.flatMap(
+                                (device) => device?.véhiculeDetails[0] || []
+                              )
+                              ?.filter((item) => item?.statusCode !== "0xF952")
+                              ?.length
+                          : accountDevices
+                              ?.flatMap(
+                                (device) => device?.véhiculeDetails[0] || []
+                              )
+                              ?.filter((item) => item?.statusCode !== "0xF952")
+                              ?.length}
+                        )
+                      </p>
+                    </div>
+                  </div>
+                </div> */}
+
+                {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
                     onClick={() => {
                       if (currentAccountSelected) {
@@ -666,19 +690,25 @@ function DashboardAdminPage() {
                     <FiAlertCircle className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Gestion des Alertes (
+                        {t("Gestion des Alertes")} (
                         {currentAccountSelected
-                          ? currentAccountSelected?.accountDevices?.flatMap(
-                              (device) => device?.véhiculeDetails[0] || []
-                            )?.length
-                          : accountDevices?.flatMap(
-                              (device) => device?.véhiculeDetails[0] || []
-                            )?.length}
+                          ? currentAccountSelected?.accountDevices
+                              ?.flatMap(
+                                (device) => device?.véhiculeDetails[0] || []
+                              )
+                              ?.filter((item) => item?.statusCode !== "0xF952")
+                              ?.length
+                          : accountDevices
+                              ?.flatMap(
+                                (device) => device?.véhiculeDetails[0] || []
+                              )
+                              ?.filter((item) => item?.statusCode !== "0xF952")
+                              ?.length}
                         )
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="ajouter-appareil-container transition-all hover:border-b  ">
                   <div
@@ -710,7 +740,7 @@ function DashboardAdminPage() {
                     <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Gestion des Geofences (
+                        {t("Gestion des Geofences")} (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountGeofences?.length
                           : accountGeofences?.length}
@@ -732,6 +762,7 @@ function DashboardAdminPage() {
                       }
                       scrollToTop();
                       setDocumentationPage("Localisation_devices");
+                      setAjouterGeofencePopup(false);
                       // updateAccountDevicesWidthvéhiculeDetailsFonction();
                       closeSideBar();
                     }}
@@ -744,7 +775,7 @@ function DashboardAdminPage() {
                     <MdLocationPin className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        Localisation Appareils (
+                        {t("Localisation Appareils")} (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountDevices.filter(
                               (v) =>
@@ -785,7 +816,7 @@ function DashboardAdminPage() {
                     <MdGTranslate className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 text-[1rem] font-semibold">
-                        Traduction
+                        {t("Language")}
                       </p>
                     </div>
                   </div>
@@ -806,7 +837,7 @@ function DashboardAdminPage() {
                     <MdLogout className="text-xl min-w-[1.5rem] text-red-500" />
                     <div className="flex w-full justify-between">
                       <p className="text-red-600 text-[1rem] font-semibold">
-                        Déconnexion
+                        {t("Déconnexion")}
                       </p>
                     </div>
                   </div>
@@ -841,7 +872,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                05/06/2025 _ 1
+                14/06/2025 _ 1
               </p>
               {/* dashboardLoadingEffect */}
               {dashboardLoadingEffect && (
@@ -926,6 +957,13 @@ function DashboardAdminPage() {
                   setChooseOtherAccountGestion={setChooseOtherAccountGestion}
                 />
               )}
+              {documentationPage === "Gestion_des_roles" && (
+                <GestionDesRoles
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              )}
               {documentationPage === "Ajouter_nouveau_appareil" && (
                 <CreateNewDeviceGestion
                   setDocumentationPage={setDocumentationPage}
@@ -983,6 +1021,11 @@ function DashboardAdminPage() {
               )}{" "}
               {documentationPage === "Modifier_groupe" && (
                 <ModifyGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              )}{" "}
+              {documentationPage === "userInfo" && (
+                <InfoUserComponent
                   setDocumentationPage={setDocumentationPage}
                 />
               )}{" "}

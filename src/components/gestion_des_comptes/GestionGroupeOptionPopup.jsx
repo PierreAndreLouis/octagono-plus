@@ -31,7 +31,7 @@ function GestionGroupeOptionPopup({
   } = useContext(DataContext);
 
   const currentSelectedGroupeGestionDevices = () => {
-    console.log("currentSelectedGroupeGestion changer......");
+    // console.log("currentSelectedGroupeGestion changer......");
     // Crée un Set des deviceID de deviceInfo pour une recherche rapide
     const deviceIDsInInfo = new Set(
       currentSelectedGroupeGestion?.groupeDevices?.map(
@@ -48,7 +48,7 @@ function GestionGroupeOptionPopup({
       )
     )?.accountDevices?.filter((device) => deviceIDsInInfo.has(device.deviceID));
 
-    console.log("updateListe", updateListe);
+    // console.log("updateListe", updateListe);
 
     setTimeout(() => {
       setListeGestionDesVehicules(updateListe);
@@ -66,9 +66,9 @@ function GestionGroupeOptionPopup({
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
               <h1
-                onClick={() => {
-                  console.log(currentAccountSelected);
-                }}
+                // onClick={() => {
+                //   console.log(currentAccountSelected);
+                // }}
                 className="px-3 mt-4 mb-2--"
               >
                 Options du groupe

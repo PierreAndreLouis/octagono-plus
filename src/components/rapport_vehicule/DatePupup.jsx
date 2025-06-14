@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import DatePicker from "react-datepicker";
+import { useTranslation } from "react-i18next";
 
 function DatePupup({
   showChooseDate,
@@ -11,9 +12,10 @@ function DatePupup({
   selectedDate,
   setSelectedDate,
 }) {
-  const {  } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
 
- 
+  const {} = useContext(DataContext);
+
   const today = new Date(); // La date actuelle
   useEffect(() => {
     console.log(selectedDate);
@@ -35,7 +37,7 @@ function DatePupup({
             />
 
             <h2 className="font-semibold dark:text-gray-200 text-lg p-3 pb-0 text-gray-700">
-              Recherche par intervalle de date
+              {t("Recherche par intervalle de date")}
             </h2>
             <p
               onClick={() => {
@@ -44,7 +46,7 @@ function DatePupup({
               }}
               className="mx-3 shadow-lg-- shadow-gray-300/40 cursor-pointer bg-orange-100 p-2  mb-3 mt-2 rounded-lg"
             >
-              Selectionner une intervalle de date
+              {t("Sélectionner une intervalle de date")}
             </p>
             {/*  */}
             {/*  */}
@@ -52,7 +54,7 @@ function DatePupup({
             {/*  */}
             {/*  */}
             <h2 className="font-semibold dark:text-gray-200 text-lg px-3 text-gray-700">
-              Recherche pour une journee
+              {t("Recherche pour une journée")}
             </h2>
 
             {/* <h2 className="pt-4 pl-4 text-gray-900 dark:text-gray-100">
@@ -81,7 +83,7 @@ function DatePupup({
                 id="date"
                 className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border- p-2 rounded-lg w-full bg-orange-100- dark:bg-gray-400--  dark:border-gray-600- dark:text-gray-200--"
                 dateFormat="dd/MM/yyyy"
-                placeholderText="Selectionner une date"
+                placeholderText={`${t("Sélectionner une date")}`}
                 required
                 selected={selectedDate} // Passer directement l'objet Date
                 onChange={(date) => {
@@ -100,11 +102,11 @@ function DatePupup({
                   className="cursor-pointer font-semibold text-gray-100 px-8 py-2 rounded-md bg-orange-500 dark:bg-orange-600"
                   type="submit"
                 >
-                  Rechercher
+                  {t("Rechercher")}
                 </button>
               ) : (
                 <div className="cursor-default font-semibold text-gray-100 px-8 py-2 rounded-md bg-gray-400 dark:bg-gray-600">
-                  Rechercher
+                  {t("Rechercher")}
                 </div>
               )}
             </div>

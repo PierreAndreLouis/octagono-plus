@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function Statistics() {
   const {
@@ -11,6 +12,8 @@ function Statistics() {
     isDashboardHomePage,
     setIsDashboardHomePage,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const vehicleArray = mergedDataHome ? Object.values(mergedDataHome) : [];
   let x;
@@ -31,7 +34,7 @@ function Statistics() {
   const currentTime = currentTimeMs;
 
   // Total véhicules
-  const totalVehicleCount = vehicleArray.length;
+  const totalVehicleCount = vehicleArray;
 
   // Véhicules en mouvement (mouvement lent ou rapide)
   const activeVehicleCount = vehicleArray.filter((véhicule) => {
@@ -44,7 +47,7 @@ function Statistics() {
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     return speed > 0 && isStillSpeedActive && isRecentlyUpdated;
-  }).length;
+  });
 
   // Véhicules en stationnement
   const inactiveVehicleCount = vehicleArray.filter((véhicule) => {
@@ -57,20 +60,30 @@ function Statistics() {
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     return (speed < 1 || (speed > 0 && !isStillSpeedActive)) && isActive;
-  }).length;
+  });
 
   // Véhicules hors service (pas de détails OU inactifs depuis +20h)
   const notActiveVehicleCount = vehicleArray.filter((véhicule) => {
-    const hasDetails = véhicule?.véhiculeDetails?.length > 0;
-    const lastUpdate =
-      véhicule?.véhiculeDetails?.[0]?.timestamp ||
-      véhicule?.lastUpdateTime ||
-      0;
-    const lastUpdateTimeMs = lastUpdate * 1000;
-    const isInactive = currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+    const noDetails =
+      !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
 
-    return !hasDetails || isInactive;
-  }).length;
+    const lastUpdateTimeMs = véhicule?.lastUpdateTime
+      ? véhicule?.lastUpdateTime * 1000
+      : 0;
+    const isInactive = currentTimeMs - lastUpdateTimeMs >= twentyHoursInMs;
+
+    return noDetails || isInactive;
+
+    // const hasDetails = véhicule?.véhiculeDetails?.length > 0;
+    // const lastUpdate =
+    //   véhicule?.véhiculeDetails?.[0]?.timestamp ||
+    //   véhicule?.lastUpdateTime ||
+    //   0;
+    // const lastUpdateTimeMs = lastUpdate * 1000;
+    // const isInactive = currentTime - lastUpdateTimeMs >= twentyHoursInMs;
+
+    // return !hasDetails || isInactive;
+  });
 
   x;
 
@@ -290,11 +303,11 @@ function Statistics() {
               },
             ],
           }}
-          title="Nombre total de véhicules"
+          title={`${t("Nombre total de véhicules")}`}
         >
           <div
             onClick={() => {
-              console.log("isDashboardHomePage", isDashboardHomePage);
+              // console.log("isDashboardHomePage", isDashboardHomePage);
               setStatisticFilterInHomePage(vehicleArray);
               setStatisticFilterTextInHomePage("tout");
             }}
@@ -304,14 +317,14 @@ function Statistics() {
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                    Total
+                    {t("Total")}
                   </h3>
                   {statisticFilterTextInHomePage === "tout" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-blue-400"></div>
                   )}
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                  {totalVehicleCount}
+                  {totalVehicleCount?.length}
                 </h2>
               </div>
               <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
@@ -342,7 +355,7 @@ function Statistics() {
               },
             ],
           }}
-          title="Véhicules actuellement en service."
+          title={`${t("Véhicules actuellement en service")}`}
         >
           <div
             onClick={() => {
@@ -355,7 +368,7 @@ function Statistics() {
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                    En Mouvement
+                    {t("En Mouvement")}
                   </h3>
                   {statisticFilterTextInHomePage === "mouvement" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-green-400"></div>
@@ -393,11 +406,11 @@ function Statistics() {
               },
             ],
           }}
-          title="Véhicules actuellement stationnés"
+          title={`${t("Véhicules actuellement stationnés")}`}
         >
           <div
             onClick={() => {
-              setStatisticFilterInHomePage(filteredVehicles);
+              setStatisticFilterInHomePage(inactiveVehicleCount);
               setStatisticFilterTextInHomePage("parking");
             }}
             className="bg-white  cursor-pointer dark:bg-gray-800 rounded-lg"
@@ -406,14 +419,14 @@ function Statistics() {
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                    En Stationnement
+                    {t("En Stationnement")}
                   </h3>
                   {statisticFilterTextInHomePage === "parking" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-red-400"></div>
                   )}
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                  {inactiveVehicleCount}
+                  {inactiveVehicleCount?.length}
                 </h2>
               </div>
               <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">
@@ -444,11 +457,11 @@ function Statistics() {
               },
             ],
           }}
-          title="Véhicules actuellement hors service ou en panne"
+          title={`${t("Véhicules actuellement hors service ou en panne")}`}
         >
           <div
             onClick={() => {
-              setStatisticFilterInHomePage(filteredVehiclesInactifs);
+              setStatisticFilterInHomePage(notActiveVehicleCount);
               setStatisticFilterTextInHomePage("hors_service");
             }}
             className="bg-white  cursor-pointer dark:bg-gray-400/10 rounded-lg"
@@ -457,14 +470,14 @@ function Statistics() {
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
-                    Hors Service
+                    {t("Hors Service")}
                   </h3>
                   {statisticFilterTextInHomePage === "hors_service" && (
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-purple-400"></div>
                   )}
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
-                  {notActiveVehicleCount}
+                  {notActiveVehicleCount?.length}
                 </h2>
               </div>
               <div className="absolute right-4 bottom-4 xs:relative xs:right-0 xs:bottom-0">

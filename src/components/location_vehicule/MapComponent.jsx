@@ -20,6 +20,8 @@ import { IoClose, IoEarth } from "react-icons/io5";
 import { useMapEvent } from "react-leaflet";
 import { FaPlus } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 // import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
@@ -66,6 +68,8 @@ function MapComponent({
 
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   // le data a utiliser
   const navigate = useNavigate();
@@ -411,7 +415,7 @@ function MapComponent({
 
   function MapClickHandler({ setClickedPosition1 }) {
     useMapEvent("click", (e) => {
-      console.log("Position cliquée :", e.latlng);
+      // console.log("Position cliquée :", e.latlng);
 
       if (addOrEditPosition === "position1" && clickedPosition1 === undefined) {
         setClickedPosition1(e.latlng);
@@ -685,91 +689,10 @@ function MapComponent({
 
       setDocumentationPage("Gestion_geofences");
     } else {
-      console.log("pas d'assez de coordonnee...");
+      // console.log("pas d'assez de coordonnee...");
       setPasAssezDePositionAjouterErreur(true);
     }
   };
-
-  // const setCurrentGeozoneFonction = () => {
-  //   setZoneDescription(currentGeozone?.description);
-  //   setAjouterCouleurGeofenceCodeCouleur(currentGeozone?.color);
-  //   setAjouterCouleurGeofenceEnText("");
-  //   setClickedPosition1(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[0].lat,
-  //       currentGeozone?.coordinates[0].lng
-  //     )
-  //   );
-
-  //   setClickedPosition2(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[1].lat,
-  //       currentGeozone?.coordinates[1].lng
-  //     )
-  //   );
-
-  //   setClickedPosition3(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[2].lat,
-  //       currentGeozone?.coordinates[2].lng
-  //     )
-  //   );
-
-  //   setClickedPosition4(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[3].lat,
-  //       currentGeozone?.coordinates[3].lng
-  //     )
-  //   );
-
-  //   setClickedPosition5(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[4].lat,
-  //       currentGeozone?.coordinates[4].lng
-  //     )
-  //   );
-
-  //   setClickedPosition6(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[5].lat,
-  //       currentGeozone?.coordinates[5].lng
-  //     )
-  //   );
-
-  //   setClickedPosition7(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[6].lat,
-  //       currentGeozone?.coordinates[6].lng
-  //     )
-  //   );
-
-  //   setClickedPosition8(
-  //     L.latLng(
-  //       currentGeozone?.coordinates[7].lat,
-  //       currentGeozone?.coordinates[7].lng
-  //     )
-  //   );
-  // };
-
-  // const setCurrentGeozoneFonction = () => {
-  //   setZoneDescription(currentGeozone?.description);
-  //   setAjouterCouleurGeofenceCodeCouleur(currentGeozone?.color);
-  //   setAjouterCouleurGeofenceEnText("");
-
-  //   const coords = currentGeozone?.coordinates?.map((point) => ({
-  //     lat: point?.lat === 0 || point?.lat === "" ? undefined : point.lat,
-  //     lng: point?.lng === 0 || point?.lng === "" ? undefined : point.lng,
-  //   }));
-
-  //   setClickedPosition1(L.latLng(coords[0]?.lat, coords[0]?.lng));
-  //   setClickedPosition2(L.latLng(coords[1]?.lat, coords[1]?.lng));
-  //   setClickedPosition3(L.latLng(coords[2]?.lat, coords[2]?.lng));
-  //   setClickedPosition4(L.latLng(coords[3]?.lat, coords[3]?.lng));
-  //   setClickedPosition5(L.latLng(coords[4]?.lat, coords[4]?.lng));
-  //   setClickedPosition6(L.latLng(coords[5]?.lat, coords[5]?.lng));
-  //   setClickedPosition7(L.latLng(coords[6]?.lat, coords[6]?.lng));
-  //   setClickedPosition8(L.latLng(coords[7]?.lat, coords[7]?.lng));
-  // };
 
   const setCurrentGeozoneFonction = () => {
     if (!Array.isArray(currentGeozone?.coordinates)) return;
@@ -817,7 +740,7 @@ function MapComponent({
     if (mapRef.current && geofences?.coordinates?.length > 0) {
       const { lat, lng } = geofences.coordinates[0];
       mapRef.current.setView([lat, lng], 10);
-      console.log("Carte centrée sur la première position du geofence");
+      // console.log("Carte centrée sur la première position du geofence");
     }
   };
 
@@ -838,7 +761,7 @@ function MapComponent({
         coordinates.length;
 
       mapRef.current.setView([avgLat, avgLng], 7);
-      console.log("Carte centrée sur le point moyen des 4 positions");
+      // console.log("Carte centrée sur le point moyen des 4 positions");
     }
   };
 
@@ -930,16 +853,16 @@ function MapComponent({
                   if (clickedPosition7 != null) {
                     setPositionIndex(8);
                   }
-                  console.log(clickedPosition1);
-                  console.log(clickedPosition2);
-                  console.log(clickedPosition3);
-                  console.log(clickedPosition4);
+                  // console.log(clickedPosition1);
+                  // console.log(clickedPosition2);
+                  // console.log(clickedPosition3);
+                  // console.log(clickedPosition4);
                 }}
               >
                 <span className="w-[1.5rem] h-[1.5rem] flex justify-center items-center rounded-full bg-green-600 text-white">
                   <FaPlus />
                 </span>
-                Nouvelle position
+                {t("Nouvelle position")}
               </p>
             )}
             <div className="flex  gap-3 w-full  min-w-[80vw] xs:min-w-0">
@@ -957,7 +880,7 @@ function MapComponent({
                   setPositionIndex(1);
                 }}
               >
-                Recommencer
+                {t("Recommencer")}
               </p>
               <p
                 onClick={() => {
@@ -965,7 +888,7 @@ function MapComponent({
                 }}
                 className="py-1.5 w-full flex justify-center items-center cursor-pointer px-3 bg-green-600 text-white rounded-lg"
               >
-                Continue
+                {t("Continuer")}
               </p>
             </div>
           </div>
@@ -1008,7 +931,7 @@ function MapComponent({
             />
 
             <h2 className="border-b  border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-6 font-semibold">
-              Affichage des geofences dans la carte ?
+              {t("Afficher les geofences dans la carte")} ?
             </h2>
 
             <div
@@ -1020,7 +943,7 @@ function MapComponent({
                 setShowGeofenceInCartePopup(false);
               }}
             >
-              <p>Oui</p>
+              <p>{t("Oui")}</p>
             </div>
 
             <div
@@ -1032,7 +955,7 @@ function MapComponent({
                 setShowGeofenceInCartePopup(false);
               }}
             >
-              <p>Non</p>
+              <p>{t("Non")}</p>
             </div>
           </div>
         </div>
@@ -1067,10 +990,7 @@ function MapComponent({
           <div className="mx-auto relative   min-w-[90vw]-- w-full max-w-[40rem] rounded-lg p-4 bg-white">
             <div className="flex justify-between items-center gap-2">
               <h2 className="text-md font-semibold pb-2 border-b">
-                Ajouter un Geofence{" "}
-                <span className="font-normal text-gray-600">
-                  (Separation sur la carte)
-                </span>
+                {t("Ajouter un Geofence")}{" "}
               </h2>
               <button
                 onClick={() => {
@@ -1095,20 +1015,20 @@ function MapComponent({
                 htmlFor="zoneDescription"
                 className="block mt-4 text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
               >
-                Description de la zone :
+                {t("Description de la zone")} :
               </label>
               <input
                 id="zoneDescription"
                 name="zoneDescription"
                 type="text"
-                placeholder="Description de la zone"
+                placeholder={`${t("Description de la zone")}`}
                 value={zoneDescription}
                 onChange={handleInputChange}
                 required
                 className="block px-3 w-full border-b pb-2 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
               />
               <p className="block mt-4 text-md font-medium leading-6 text-gray-700 dark:text-gray-300">
-                Couleur :
+                {t("Couleur")} :
               </p>
               <div
                 onClick={() => {
@@ -1125,19 +1045,23 @@ function MapComponent({
                   ></div>
                   <p>{ajouterCouleurGeofenceEnText}</p>
                 </div>
-                <p className="cursor-pointer text-orange-500">Modifier</p>
+                <p className="cursor-pointer text-orange-500">
+                  {t("Modifier")}
+                </p>
               </div>
               <label
                 htmlFor="description"
                 className="block mt-4 text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
               >
-                Coordonnée :
+                {t("Coordonnée")} :
               </label>
               <div
                 className="flex border-b pb-3
                justify-between items-center w-full "
               >
-                <p>{geofences?.coordinates.length} positions </p>
+                <p>
+                  {geofences?.coordinates.length} {t("positions")}{" "}
+                </p>
                 <p
                   onClick={() => {
                     setAjouterGeofencePopup(false);
@@ -1151,13 +1075,13 @@ function MapComponent({
                   className="block cursor-pointer text-orange-600 px-3  border-b pb-2 py-1.5 outline-none  dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm "
                 >
                   {geofences?.coordinates.length <= 0
-                    ? "Ajouter des position "
-                    : "Modifier les positions"}
+                    ? `${t("Ajouter des position")}`
+                    : `${t("Modifier les positions")}`}
                 </p>
               </div>
               {pasAssezDePositionAjouterErreur && (
                 <p className="bg-red-100 mt-3 text-red-800 px-4 py-1 rounded-lg">
-                  Vous devez ajouter au 3 positions
+                  {t("Vous devez ajouter au 3 positions")}
                 </p>
               )}
               <div className="mt-10 max-w-[25rem] flex justify-center  mx-auto gap-3 ">
@@ -1169,7 +1093,7 @@ function MapComponent({
                   // }}
                   className="px-4 w-full cursor-pointer py-1 rounded-lg bg-green-500 text-white"
                 >
-                  {isEditingGeofence ? "Modifier" : "Ajouter"}
+                  {isEditingGeofence ? `${t("Modifier")}` : `${t("Ajouter")}`}
                 </button>
 
                 <button
@@ -1185,7 +1109,7 @@ function MapComponent({
                   // to="/gestion_geofences?tab=geozone"
                   className="px-4 w-full text-center cursor-pointer py-1 rounded-lg bg-red-500 text-white"
                 >
-                  Annuler
+                  {t("Annuler")}
                 </button>
               </div>
             </form>{" "}
@@ -1196,7 +1120,7 @@ function MapComponent({
             {ajouterCouleurGeofencePopup && (
               <div className="absolute bg-white min-w-[20rem] shadow-lg shadow-black/20 top-[1rem] right-[1rem] border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-center border-b pb-2">
-                  <p>Choisissez une couleur</p>
+                  <p>{t("Choisissez une couleur")}</p>
                   <IoClose
                     onClick={() => {
                       setAjouterCouleurGeofencePopup(false);
@@ -1211,23 +1135,16 @@ function MapComponent({
                   className="mt-4 overflow-auto max-h-[20rem] flex flex-col"
                 >
                   {[
-                    { name: "Bleu foncé", color: "#003366" },
-                    { name: "Rouge vif", color: "#FF0000" },
-                    { name: "Vert émeraude", color: "#2ECC71" },
-                    { name: "Jaune doré", color: "#F1C40F" },
-                    { name: "Turquoise", color: "#1ABC9C" },
-                    { name: "Violet", color: "#8E44AD" },
-                    { name: "Orange", color: "#FF5733" },
-                    { name: "Gris anthracite", color: "#34495E" },
-                    { name: "Rose fuchsia", color: "#C0392B" },
-                    { name: "Noir", color: "#000000" },
-                    { name: "Rouge foncé", color: "#8B0000" }, // Dark Red
-                    { name: "Orange foncé", color: "#E65100" }, // Dark Orange
-                    { name: "Jaune foncé", color: "#B7950B" }, // Dark Yellow
-                    { name: "Vert foncé", color: "#006400" }, // Dark Green
-                    { name: "Bleu foncé", color: "#00008B" }, // Dark Blue
-                    { name: "Indigo foncé", color: "#4B0082" }, // Dark Indigo
-                    { name: "Violet foncé", color: "#5B2C6F" }, // Dark Violet
+                    { name: `${t("Bleu foncé")}`, color: "#003366" },
+                    { name: `${t("Rouge vif")}`, color: "#FF0000" },
+                    { name: `${t("Vert émeraude")}`, color: "#2ECC71" },
+                    { name: `${t("Jaune doré")}`, color: "#F1C40F" },
+                    { name: `${t("Turquoise")}`, color: "#1ABC9C" },
+                    { name: `${t("Violet")}`, color: "#8E44AD" },
+                    { name: `${t("Orange")}`, color: "#FF5733" },
+                    { name: `${t("Gris anthracite")}`, color: "#34495E" },
+                    { name: `${t("Rose fuchsia")}`, color: "#C0392B" },
+                    { name: `${t("Noir")}`, color: "#000000" },
                   ].map((item, index) => (
                     <div
                       key={index}
@@ -1361,65 +1278,65 @@ function MapComponent({
                 <Popup>
                   <div className="w-[70vw] max-w-[20rem]">
                     <p className="font-bold text-[1rem]">
-                      <span>Description :</span>{" "}
+                      <span>{t("Description")} :</span>{" "}
                       <span className="notranslate">
-                        {véhicule.description || "Non disponible"}
+                        {véhicule.description || `${t("Non disponible")}`}
                       </span>
                     </p>
 
                     <p>
-                      <strong>accountID :</strong>{" "}
+                      <strong>{t("accountID")} :</strong>{" "}
                       <span className="notranslate">
-                        {véhicule.accountID || "Non disponible"}
+                        {véhicule.accountID || `${t("Non disponible")}`}
                       </span>
                     </p>
 
                     <p>
-                      <strong>Adresse :</strong>{" "}
+                      <strong>{t("Adresse")} :</strong>{" "}
                       <span className="notranslate">
-                        {véhicule.address || "Non disponible"}
+                        {véhicule.address || `${t("Non disponible")}`}
                       </span>
                     </p>
                     {/* <p>
                       <strong>Date creation :</strong>{" "}
-                      {véhicule.address || "Non disponible"}
+                      {véhicule.address || `${t("Non disponible")}`}
                     </p> */}
 
                     <p>
-                      <strong>Vitesse :</strong>{" "}
+                      <strong>{t("Vitesse")} :</strong>{" "}
                       {véhicule.speedKPH && !isNaN(Number(véhicule.speedKPH))
                         ? Number(véhicule.speedKPH).toFixed(0) + " km/h"
-                        : "Non disponible"}
+                        : `${t("Non disponible")}`}
                     </p>
 
                     <p>
-                      <strong>Statut : </strong>
-                      {véhicule.speedKPH ? "" : "Hors service"}
-                      {véhicule.speedKPH < 1 && "En stationnement"}
-                      {véhicule.speedKPH > 20 && "En mouvement rapide"}
+                      <strong>{t("Statut")} : </strong>
+                      {véhicule.speedKPH ? "" : `${t("Hors service")}`}
+                      {véhicule.speedKPH < 1 && `${t("En stationnement")}`}
+                      {véhicule.speedKPH > 20 && `${t("En mouvement rapide")}`}
                       {véhicule.speedKPH >= 1 &&
                         véhicule.speedKPH <= 20 &&
-                        "En mouvement lent"}
+                        `${t("En mouvement lent")}`}
                     </p>
                     <p>
-                      <strong>Plaque d'immatriculation :</strong>{" "}
-                      {véhicule?.licensePlate || "Chargement..."}
+                      <strong>{t("Plaque d'immatriculation")} :</strong>{" "}
+                      {véhicule?.licensePlate || `${t("Chargement...")}`}
                     </p>
                     {(username === "admin" || adminUsername === "admin") && (
                       <p>
-                        <strong>IMEI Number :</strong>{" "}
-                        {véhicule.imeiNumber || "Chargement..."}
+                        <strong>{t("IMEI")} :</strong>{" "}
+                        {véhicule.imeiNumber || `${t("Chargement...")}`}
                       </p>
                     )}
                     <p>
-                      <strong>Telephone :</strong>{" "}
-                      {véhicule?.simPhoneNumber || "Chargement..."}
+                      <strong>{t("Telephone")} :</strong>{" "}
+                      {véhicule?.simPhoneNumber || `${t("Chargement...")}`}
                     </p>
                     <p>
-                      <strong>Last Update :</strong>{" "}
+                      <strong>{t("Last Update")} :</strong>{" "}
                       {véhicule.timestamp
                         ? FormatDateHeureTimestamp.date
-                        : "Pas de date disponible"}
+                        : `${t("Pas de date disponible")}`}
                       <span className="px-3">/</span>
                       {FormatDateHeureTimestamp.time}
                     </p>
@@ -1433,7 +1350,7 @@ function MapComponent({
                       }
                       className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md"
                     >
-                      Voir sur Google Maps
+                      {t("Voir sur Google Maps")}
                     </button>
                   </div>
                 </Popup>

@@ -10,6 +10,7 @@ import { toggleTheme } from "../../theme/themeSlice";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function Header() {
   // Récupère des données utilisateur et des fonctions utiles via le contexte DataContext
@@ -26,6 +27,7 @@ function Header() {
     setHistoriqueSelectedLocationIndex,
     isDashboardHomePage,
   } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
 
   let x;
   //
@@ -110,7 +112,7 @@ function Header() {
                   <input
                     className="p-2 focus:outline-none w-full dark:bg-gray-600 dark:text-white"
                     type="text"
-                    placeholder="Recherche"
+                    placeholder={`${t("Rechercher")}`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)} // Met à jour le terme de recherche
                   />
@@ -155,7 +157,7 @@ function Header() {
                   {/* / {account} */}
                 </h3>
                 <h2 className="font-semibold text-lg text-gray-600 dark:text-gray-200 leading-5">
-                  {(userData && account) || "Nom absent"}
+                  {(userData && account) || `${t("Nom absent")}`}
                   {/* demo */}
                 </h2>
               </div>
@@ -168,8 +170,7 @@ function Header() {
               {/*  */}
 
               <Tooltip
-                title="Page d'accueil
-"
+                title={`${t("Page d'accueil")}`}
                 PopperProps={{
                   modifiers: [
                     {
@@ -196,7 +197,7 @@ function Header() {
                     tab === "acceuil" && "text-orange-500"
                   } hover:text-orange-500 cursor-pointer`}
                 >
-                  Accueil
+                  {t("Accueil")}
                 </Link>
               </Tooltip>
 
@@ -209,8 +210,7 @@ function Header() {
 
               {username === "admin" && (
                 <Tooltip
-                  title="Enregistrer un nouveau véhicule
-"
+                  title={`${t("Enregistrer un nouveau véhicule")}`}
                   PopperProps={{
                     modifiers: [
                       {
@@ -237,7 +237,7 @@ function Header() {
                       tab === "ajouter" && "text-orange-500"
                     } hover:text-orange-500 cursor-pointer`}
                   >
-                    Ajouter
+                    {t("Ajouter")}
                   </Link>
                 </Tooltip>
               )}
@@ -251,9 +251,7 @@ function Header() {
 
               {username === "admin" && (
                 <Tooltip
-                  title="Modifier ou Supprimer un Véhicule
-
-"
+                  title={`${t("Modifier ou Supprimer un Véhicule")}`}
                   PopperProps={{
                     modifiers: [
                       {
@@ -280,7 +278,7 @@ function Header() {
                       tab === "modifier" && "text-orange-500"
                     } hover:text-orange-500 cursor-pointer`}
                   >
-                    Modifier/Supprimer
+                    {t("Modifier/Supprimer")}
                   </Link>
                 </Tooltip>
               )}
@@ -293,9 +291,7 @@ function Header() {
               {/*  */}
 
               <Tooltip
-                title="Voir la position géographique des véhicules
-
-"
+                title={`${t("Voir la position géographique des véhicules")}`}
                 PopperProps={{
                   modifiers: [
                     {
@@ -325,7 +321,7 @@ function Header() {
                     tab === "localisation" && "text-orange-500"
                   } hover:text-orange-500 cursor-pointer`}
                 >
-                  Localisation
+                  {t("Localisation")}
                 </Link>
               </Tooltip>
 
@@ -337,9 +333,9 @@ function Header() {
               {/*  */}
 
               <Tooltip
-                title="Voir tous les détails sur le déplacement d'un véhicule
-
-"
+                title={`${t(
+                  "Voir tous les détails sur le déplacement d'un véhicule"
+                )}`}
                 PopperProps={{
                   modifiers: [
                     {
@@ -366,7 +362,7 @@ function Header() {
                     tab === "rapport" && "text-orange-500"
                   } hover:text-orange-500 cursor-pointer`}
                 >
-                  Rapport
+                  {t("Rapport")}
                 </Link>
               </Tooltip>
 
@@ -417,7 +413,7 @@ function Header() {
                 </button>
               </Tooltip>
               <Tooltip
-                title="Changer en mode sombre ou clair"
+                title={`${t("Changer en mode sombre ou clair")}`}
                 PopperProps={{
                   modifiers: [
                     {
@@ -449,8 +445,7 @@ function Header() {
                 </button>
               </Tooltip>
               <Tooltip
-                title="Mon Profil
-"
+                title={`${t("Mon Profil")}`}
                 PopperProps={{
                   modifiers: [
                     {
@@ -483,7 +478,7 @@ function Header() {
                 </Link>
               </Tooltip>
               <Tooltip
-                title="Menu"
+                title={`${t("Menu")}`}
                 PopperProps={{
                   modifiers: [
                     {

@@ -5,6 +5,7 @@ import { DataContext } from "../../context/DataContext";
 import { MdLocationPin } from "react-icons/md";
 import { FaCar } from "react-icons/fa";
 import "./style.css";
+import { useTranslation } from "react-i18next";
 
 function Liste() {
   const {
@@ -22,6 +23,8 @@ function Liste() {
     setCurrentPersonelVéhicule,
     vehiclesByDepartureTime,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   let x;
 
@@ -78,7 +81,7 @@ function Liste() {
 
   // Pour mettre a jour le véhicule actuel
   useEffect(() => {
-    console.log("Véhicule mise à jour", currentVéhicule);
+    // console.log("Véhicule mise à jour", currentVéhicule);
   }, [currentVéhicule]);
   //
   //
@@ -107,7 +110,7 @@ function Liste() {
     } else {
       console.error("Véhicule introuvable avec le deviceID :", deviceID);
     }
-    console.log("véhicule cliquer:", véhicule);
+    // console.log("véhicule cliquer:", véhicule);
   };
   //
   //
@@ -128,6 +131,7 @@ function Liste() {
 
       const lastUpdateTimestampMs =
         véhicule?.véhiculeDetails?.[0]?.timestamp * 1000;
+
       const isStillSpeedActive =
         currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
@@ -238,12 +242,10 @@ function Liste() {
     return getPriority(a) - getPriority(b);
   });
 
-
-
   return (
     <div className="p-2 flex flex-col gap-4 mt-4 mb-[10rem]-- pb-[6rem] dark:text-white">
       {isHomePageLoading ? (
-        <p>Chargement des données...</p>
+        <p>{t("Chargement des données")}...</p>
       ) : sortedData.length > 0 ? (
         sortedData.map((véhicule, index) => {
           const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH || 0;
@@ -307,7 +309,7 @@ function Liste() {
 
           if (!hasDetails || !isActive) {
             main_text_color = "text-purple-900 dark:text-purple-300 hidden";
-            statut = "Hors service";
+            statut = `${t("Hors service")}`;
             lite_bg_color =
               "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
             activeTextColor = "text-purple-900 dark:text-purple-200";
@@ -322,7 +324,7 @@ function Liste() {
             (speed < 1 || (isSpeedActive && !isStillSpeedActive))
           ) {
             main_text_color = "text-red-900 dark:text-red-300";
-            statut = "En Stationnement";
+            statut = `${t("En Stationnement")}`;
             lite_bg_color =
               "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
             activeTextColor = "text-red-900 dark:text-red-200";
@@ -338,7 +340,7 @@ function Liste() {
             isStillSpeedActive
           ) {
             main_text_color = "text-[#555b03] dark:text-yellow-300";
-            statut = "En mouvement lent";
+            statut = `${t("En mouvement lent")}`;
             lite_bg_color =
               "bg-[#ffff001b] dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-yellow-400/80  shadow-lg shadow-gray-950/20";
             activeTextColor = "text-[#555b03] dark:text-yellow-100";
@@ -354,7 +356,7 @@ function Liste() {
             isStillSpeedActive
           ) {
             main_text_color = "text-green-700 dark:text-green-400";
-            statut = "En mouvement rapide";
+            statut = `${t("En mouvement rapide")}`;
             lite_bg_color =
               "bg-green-100/50 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
             activeTextColor = "text-green-800 dark:text-green-200";
@@ -417,7 +419,7 @@ function Liste() {
                       >
                         {véhicule?.description
                           ? véhicule?.description
-                          : "Nom du véhicule"}
+                          : "-----"}
                       </h2>
                       <div className="flex mb-2 gap-4 text-gray-600 text-md dark:text-gray-300">
                         <div className="flex gap-3 items-center">
@@ -433,7 +435,7 @@ function Liste() {
                                     véhicule?.véhiculeDetails?.[0]?.timestamp
                                   ).date
                                 : FormatDateHeure(véhicule?.lastUpdateTime).date
-                              : "Pas de date disponible"}{" "}
+                              : `${t("Pas de date disponible")}`}{" "}
                           </h3>
                         </div>
 
@@ -473,7 +475,7 @@ function Liste() {
                         <p className=" text-md notranslate felx sm:flex text-gray-600 mt-2 md:text-[1.1rem] dark:text-gray-300">
                           {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
                             véhicule?.véhiculeDetails?.[0]?.address ||
-                            "Adresse non disponible"}
+                            `${t("Adresse non disponible")}`}
                         </p>
                       </div>
                     </div>
@@ -486,12 +488,12 @@ function Liste() {
                     <span
                       className={`${activeTextColor} font-semibold dark:text-orange-500--"`}
                     >
-                      Adresse :{" "}
+                      {t("Adresse")} :{" "}
                     </span>
                     <span className="notranslate">
                       {véhicule?.véhiculeDetails?.[0]?.backupAddress ||
                         véhicule?.véhiculeDetails?.[0]?.address ||
-                        "Adresse non disponible"}
+                        `${t("Adresse non disponible")}`}
                     </span>
                   </p>
                 </div>
@@ -500,7 +502,9 @@ function Liste() {
           );
         })
       ) : (
-        <p className="text-center dark:text-gray-400">Aucun véhicule trouvé.</p>
+        <p className="text-center dark:text-gray-400">
+          {t("Aucun véhicule trouvé")}
+        </p>
       )}
     </div>
   );

@@ -17,6 +17,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { FaCar } from "react-icons/fa";
 import InstallationPWA from "../../pages/InstallationPWA";
 import { IoEarth } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 function SideBar() {
   const {
@@ -41,6 +42,8 @@ function SideBar() {
     setChooseOtherLanguagePopup,
   } = useContext(DataContext);
   let x;
+  const [t, i18n] = useTranslation();
+
   //
   //
   //
@@ -90,7 +93,7 @@ function SideBar() {
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <IoHomeOutline />
-          <h3 className="font-semibold text-[1.1rem]">Accueil</h3>
+          <h3 className=" text-[1.1rem]">{t("Accueil")}</h3>
         </Link>
 
         {(account === "sysadmin" || adminAccount === "sysadmin") && (
@@ -115,7 +118,7 @@ function SideBar() {
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <MdSpaceDashboard />
-            <h3 className="font-semibold text-[1.1rem]">Dashboard</h3>
+            <h3 className=" text-[1.1rem]">{t("Dashboard")}</h3>
           </Link>
         )}
 
@@ -135,7 +138,7 @@ function SideBar() {
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaRegUser />
-          <h3 className="font-semibold text-[1.1rem]">Mon profil</h3>
+          <h3 className=" text-[1.1rem]">{t("Mon profil")}</h3>
         </Link>
 
         {/*  */}
@@ -155,7 +158,7 @@ function SideBar() {
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <IoMdAddCircleOutline />
-            <h3 className="font-semibold text-[1.1rem]">Ajouter un véhicule</h3>
+            <h3 className=" text-[1.1rem]">{t("Ajouter un véhicule")}</h3>
           </Link>
         )}
 
@@ -176,8 +179,8 @@ function SideBar() {
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <FaRegEdit />
-            <h3 className="font-semibold text-[1.1rem]">
-              Modifier ou supprimer un véhicule
+            <h3 className=" text-[1.1rem]">
+              {t("Modifier ou supprimer un véhicule")}
             </h3>
           </Link>
         )}
@@ -199,9 +202,7 @@ function SideBar() {
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <LuMapPin />
-          <h3 className="font-semibold text-[1.1rem]">
-            Localisation des véhicules
-          </h3>
+          <h3 className=" text-[1.1rem]">{t("Localisation des véhicules")}</h3>
         </Link>
 
         {/*  */}
@@ -220,7 +221,7 @@ function SideBar() {
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaCar />
-          <h3 className="font-semibold text-[1.1rem]">Rapport des véhicules</h3>
+          <h3 className=" text-[1.1rem]">{t("Rapport des véhicules")}</h3>
         </Link>
 
         <Link
@@ -234,7 +235,7 @@ function SideBar() {
           } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <IoEarth />
-          <h3 className="font-semibold text-[1.1rem]">Gestion des Geozones</h3>
+          <h3 className=" text-[1.1rem]">{t("Gestion des Geozones")}</h3>
         </Link>
         {account === "sysadmin" && (
           <Link
@@ -248,7 +249,7 @@ function SideBar() {
             } dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
           >
             <MdSupervisorAccount />
-            <h3 className="font-semibold text-[1.1rem]">Gestion des Comptes</h3>
+            <h3 className=" text-[1.1rem]">{t("Gestion des Comptes")}</h3>
           </Link>
         )}
 
@@ -262,7 +263,7 @@ function SideBar() {
           className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <FaBook />
-          <h3 className="font-semibold text-[1.1rem]">Manuel d'utilisation</h3>
+          <h3 className=" text-[1.1rem]">{t("Manuel d'utilisation")}</h3>
         </Link>
 
         <Link
@@ -277,7 +278,7 @@ function SideBar() {
           className={`flex text-gray-600 border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <MdGTranslate />
-          <h3 className="font-semibold text-[1.1rem]">Traduction</h3>
+          <h3 className=" text-[1.1rem]">{t("Language")}</h3>
         </Link>
 
         {/*  */}
@@ -301,7 +302,7 @@ function SideBar() {
           className="flex text-red-600 font-semibold border-b border-gray-300 py-3 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center dark:text-red-400 dark:border-gray-600 dark:hover:text-orange-400"
         >
           <MdLogout />
-          <h3 className="font-semibold text-[1.1rem]">Déconnexion</h3>
+          <h3 className=" text-[1.1rem]">{t("Déconnexion")}</h3>
         </div>
 
         {/*  */}

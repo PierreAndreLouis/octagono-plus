@@ -14,6 +14,7 @@ import { TbLockOpen } from "react-icons/tb";
 import { MdOutlineStickyNote2 } from "react-icons/md";
 import { GiPathDistance } from "react-icons/gi";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function Liste_options({}) {
   const {
@@ -31,6 +32,7 @@ function Liste_options({}) {
     username,
     setHistoriqueSelectedLocationIndex,
   } = useContext(DataContext); // fetchVehicleDetails importée du contexte
+  const [t, i18n] = useTranslation();
 
   let x;
   //
@@ -114,7 +116,7 @@ function Liste_options({}) {
       setInputPassword("");
       setErrorMessage("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -165,7 +167,7 @@ function Liste_options({}) {
               >
                 <TbLock className="text-[1.82rem] text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Bloquer le véhicule
+                  {t("Bloquer le véhicule")}
                 </h2>
               </div>
               {/*  */}
@@ -180,7 +182,7 @@ function Liste_options({}) {
               >
                 <TbLockOpen className="text-[2rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Débloquer le véhicule
+                  {t("Débloquer le véhicule")}
                 </h2>
               </div>
               {/*  */}
@@ -193,7 +195,7 @@ function Liste_options({}) {
               >
                 <FaMicrophone className="text-[2rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Écouter
+                  {t("Écouter")}
                 </h2>
               </div>
               {/* callError, setCallError, lancerAppel, */}
@@ -218,14 +220,15 @@ function Liste_options({}) {
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
               <h1 className="px-3 mt-8 mb-2 text-2xl text-center text-red-600 dark:text-gray-50--">
-                Attention !
+                {t("Attention")} !
               </h1>
             </div>
             <div className="p-4 flex flex-col gap-4 py-6  pb-10--">
               {/* callError, setCallError, lancerAppel, */}
               <p className="text-center dark:text-gray-300 text-red-500">
-                Vous devez disposer soit de crédits, soit de minutes et SMS
-                disponibles sur votre téléphone pour cette fonctionnalité.
+                {t(
+                  "Vous devez disposer soit de crédits, soit de minutes et SMS disponibles sur votre téléphone pour cette fonctionnalité"
+                )}
               </p>
             </div>
             <div className="flex justify-center pb-6">
@@ -233,7 +236,7 @@ function Liste_options({}) {
                 onClick={() => setShowNotezBienPopup(false)}
                 className="py-1 px-8 rounded-lg text-white bg-red-500 mx-auto"
               >
-                Ok
+                {t("Ok")}
               </button>
             </div>
           </div>
@@ -255,14 +258,14 @@ function Liste_options({}) {
                 htmlFor="username"
                 className="block text-lg leading-6 text-gray-500 mb-3 dark:text-gray-300"
               >
-                Veuillez entrer votre code d'accès
+                {t("Veuillez entrer votre code d'accès")}
               </label>
               <div className="mt-2">
                 <input
                   id="username"
                   name="username"
                   type="text"
-                  placeholder="code d'accès"
+                  placeholder={`${t("code d'accès")}`}
                   required
                   className="dark:bg-gray-800 block px-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:text-sm sm:leading-6 dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-200 dark:focus:ring-orange-400"
                 />
@@ -275,10 +278,10 @@ function Liste_options({}) {
                 }}
                 className="py-1 px-5 text-orange-500 rounded-lg font-semibold border border-orange-500 dark:text-orange-400 dark:border-orange-400"
               >
-                Annuler
+                {t("Annuler")}
               </button>
               <button className="py-1 px-5 bg-orange-500 rounded-lg text-white dark:bg-orange-400 dark:text-gray-900">
-                Ok
+                {t("Ok")}
               </button>
             </div>
           </div>
@@ -304,14 +307,14 @@ function Liste_options({}) {
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
               >
-                Veuillez entrer votre mot de passe
+                {t("Veuillez entrer votre mot de passe")}
               </label>
               <div className="mt-2">
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mot de passe"
+                  placeholder={`${t("Mot de passe")}`}
                   required
                   value={inputPassword}
                   onChange={(e) => setInputPassword(e.target.value)}
@@ -338,7 +341,7 @@ function Liste_options({}) {
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
               >
-                Annuler
+                {t("Annuler")}
               </h3>
             </div>
           </form>
@@ -392,7 +395,7 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Voir la position géographique du véhicule"
+              title={`${t("Voir la position géographique du véhicule")}`}
             >
               <Link
                 onClick={() => {
@@ -403,7 +406,7 @@ function Liste_options({}) {
                 className=" dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg col-span-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <FaLocationDot className="text-4xl" />
-                <h3>Localisation</h3>
+                <h3>{t("Localisation")}</h3>
               </Link>
             </Tooltip>
 
@@ -428,7 +431,7 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Voir le trajet du véhicule sur la carte"
+              title={`${t("Voir le trajet du véhicule sur la carte")}`}
             >
               <Link
                 to="/voiture_historique"
@@ -442,7 +445,7 @@ function Liste_options({}) {
               >
                 <GiPathDistance className="text-[2rem]" />
                 {/* GiPathDistance */}
-                <h3>Trajet</h3>
+                <h3>{t("Trajet")}</h3>
               </Link>
             </Tooltip>
 
@@ -467,7 +470,7 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Voir un historique sur l'état du véhicule"
+              title={`${t("Voir un historique sur l'état du véhicule")}`}
             >
               <Link
                 onClick={() => {
@@ -480,7 +483,7 @@ function Liste_options({}) {
                 className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-3---- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <IoStatsChartSharp className="text-3xl" />
-                <h3>Historique</h3>
+                <h3>{t("Historique")}</h3>
               </Link>
             </Tooltip>
 
@@ -505,7 +508,9 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Voir tous les détails sur le déplacement d'un véhicule"
+              title={`${t(
+                "Voir tous les détails sur le déplacement d'un véhicule"
+              )}`}
             >
               <Link
                 onClick={() => {
@@ -517,7 +522,7 @@ function Liste_options({}) {
                 className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <MdOutlineStickyNote2 className="text-3xl" />
-                <h3>Rapport</h3>
+                <h3>{t("Rapport")}</h3>
               </Link>
             </Tooltip>
 
@@ -542,7 +547,7 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Bloquer ou débloquer le véhicule"
+              title={`${t("Bloquer ou débloquer le véhicule")}`}
             >
               <div
                 onClick={() => {
@@ -551,7 +556,7 @@ function Liste_options({}) {
                 className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-2---- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <RiShutDownLine className="text-3xl" />
-                <h3>Contrôle</h3>
+                <h3>{t("Contrôle")}</h3>
               </div>
             </Tooltip>
 
@@ -576,7 +581,7 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Voir les informations personnelles du véhicule"
+              title={`${t("Voir les informations personnelles du véhicule")}`}
             >
               <Link
                 onClick={() => {
@@ -586,7 +591,7 @@ function Liste_options({}) {
                 className="dark:text-gray-100 dark:shadow-gray-900 dark:shadow-lg  row-start-3--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <FaInfoCircle className="text-3xl" />
-                <h3>Informations</h3>
+                <h3>{t("Informations")}</h3>
               </Link>
             </Tooltip>
 
@@ -612,7 +617,9 @@ function Liste_options({}) {
                   },
                 ],
               }}
-              title="Modifier des informations ou supprimer le véhicule"
+              title={`${t(
+                "Modifier des informations ou supprimer le véhicule"
+              )}`}
             >
               <Link
                 to="/modifier_vehicule"
@@ -622,7 +629,7 @@ function Liste_options({}) {
                 className="dark:text-gray-100 mt-4 dark:shadow-gray-900 dark:shadow-lg  row-start-2--- rounded-md shadow-md hover:text-orange-600 dark:hover:text-orange-400 cursor-pointer p-3 flex flex-col items-center"
               >
                 <FaEdit className="text-3xl" />
-                <h3>Modifier ou supprimer l'appareil</h3>
+                <h3>{t("Modifier ou supprimer l'appareil")}</h3>
               </Link>
             </Tooltip>
           )}

@@ -12,6 +12,7 @@ import GestionAccountOptionPopup from "../components/gestion_des_comptes/Gestion
 import { PiIntersectThreeBold } from "react-icons/pi";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
 import { MdUpdate } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 function ListeDesGroupes({
   setDocumentationPage,
@@ -37,6 +38,8 @@ function ListeDesGroupes({
     fetchAccountGroupes,
     gestionAccountData,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const [deleteGroupeAccountPopup, setDeleteGroupeAccountPopup] =
     useState(false);
@@ -68,7 +71,7 @@ function ListeDesGroupes({
       );
       setDeleteGroupeAccountPopup(false);
     } else {
-      setErrorPassord("Mot de passe incorrect");
+      setErrorPassord(`${t("Mot de passe incorrect")}`);
     }
   };
 
@@ -129,7 +132,7 @@ function ListeDesGroupes({
           <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[80vh] max-h-[90vh] rounded-lg">
             <div className="relative">
               <div className="text-center font-semibold text-lg bg-orange-100 py-4">
-                <h2 className="">Liste des Utilisateurs</h2>
+                <h2 className="">{t("Liste des Utilisateurs")}</h2>
                 <p className="text-center notranslate font-normal- text-orange-600 translate-x-11--  text-sm">
                   {currentAccountSelected?.description}
                 </p>
@@ -148,7 +151,7 @@ function ListeDesGroupes({
                 <input
                   className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
                   type="text"
-                  placeholder="Rechercher un utilisateur"
+                  placeholder={`${t("Rechercher un utilisateur")}`}
                   value={searchInputTerm}
                   onChange={(e) => {
                     setSearchInputTerm(e.target.value);
@@ -169,13 +172,13 @@ function ListeDesGroupes({
                       setListeGestionDesGroupe(
                         currentAccountSelected?.accountGroupes
                       );
-                      setListeGestionDesGroupeTitre("Tous les Groupes ");
+                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                       setShowChooseOtherUserGroupePopup(false);
                     }
                   }}
                   className="font-bold bg-orange-50 rounded-lg py-2 shadow-lg shadow-black/10"
                 >
-                  Tous les Groupes
+                  {t("Tous les Groupes")}
                 </button>{" "}
                 {filterGestionAccountData?.map((user, index) => {
                   return (
@@ -196,13 +199,13 @@ function ListeDesGroupes({
                       <FaUserCircle className="text-gray-500 text-[2.5rem]" />
                       <div>
                         <p className="text-gray-600">
-                          Nom de l'utilisateur :{" "}
+                          {t("Nom de l'utilisateur")} :{" "}
                           <span className="font-bold notranslate">
                             {user?.description}
                           </span>{" "}
                         </p>
                         <p className="text-gray-600">
-                          Nombre de Groupes affectés :{" "}
+                          {t("Nombre de Groupes affectés")} :{" "}
                           <span className="font-bold">
                             {user?.userGroupes?.length}
                           </span>{" "}
@@ -225,14 +228,14 @@ function ListeDesGroupes({
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Supprimer le groupe ?
+              {t("Voulez-vous Supprimer le groupe ?")}
             </div>
             <div>
               <label
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
               >
-                Veuillez entrer votre mot de passe
+                {t("Veuillez entrer votre mot de passe")}
               </label>
               <p className="text-red-500 mx-4 text-center">{errorPassord}</p>
               <div className="mt-2">
@@ -240,7 +243,7 @@ function ListeDesGroupes({
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mot de passe"
+                  placeholder={`${t("Mot de passe")}`}
                   required
                   value={inputPassword}
                   onChange={(e) => {
@@ -253,7 +256,7 @@ function ListeDesGroupes({
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button className="py-1 px-5 bg-red-500 rounded-lg text-white">
-                Confirmer
+                {t("Confirmer")}
               </button>
 
               <h3
@@ -262,7 +265,7 @@ function ListeDesGroupes({
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
               >
-                Annuler
+                {t("Annuler")}
               </h3>
             </div>
           </form>
@@ -278,12 +281,12 @@ function ListeDesGroupes({
               }}
               className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
             >
-              Liste des groupes
+              {t("Liste des groupes")}
             </h2>
 
             <h3 className=" text-orange-600 text-md text-center font-bold-- ">
               {currentSelectedUserToConnect?.description && (
-                <span className="text-gray-700">Utilisateur :</span>
+                <span className="text-gray-700">{t("Utilisateur")} :</span>
               )}{" "}
               <span className="notranslate">
                 {currentSelectedUserToConnect?.description}
@@ -291,12 +294,12 @@ function ListeDesGroupes({
             </h3>
             <h3 className=" text-orange-600 text-md text-center font-bold-- ">
               {listeGestionDesGroupeTitre && (
-                <span className="text-gray-700">Groupe :</span>
+                <span className="text-gray-700">{t("Groupe")} :</span>
               )}{" "}
               {listeGestionDesGroupeTitre}
             </h3>
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">Nombre de Groupe :</span>{" "}
+              <span className="text-gray-700">{t("Nombre de Groupe")} :</span>{" "}
               {filterGroupeAccountData?.length}
             </h3>
 
@@ -318,8 +321,8 @@ function ListeDesGroupes({
                   <div className="flex justify-center items-center gap-3 ">
                     <FaUserPlus className="text-2xl" />
                     <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                      <span className="hidden md:inline">Ajouter un</span>{" "}
-                      Nouveau Groupe
+                      <span className="hidden md:inline">{t("Ajouter")} </span>{" "}
+                      {t("Nouveau Groupe")}
                     </p>
                   </div>
                 </div>{" "}
@@ -336,7 +339,8 @@ function ListeDesGroupes({
                     <h3 className="w-full text-center font-semibold">
                       {/* Compte: */}
                       <span>
-                        {listeGestionDesGroupeTitre || "Tous les Groupes"}
+                        {listeGestionDesGroupeTitre ||
+                          `${t("Tous les Groupes")}`}
                       </span>
                     </h3>
                     <FaChevronDown />
@@ -366,7 +370,7 @@ function ListeDesGroupes({
                     id="search"
                     name="search"
                     type="search"
-                    placeholder="Recherche un Groupe"
+                    placeholder={`${t("Recherche un Groupe")}`}
                     required
                     value={searchGroupInputTerm}
                     onChange={(e) => {
@@ -431,7 +435,7 @@ function ListeDesGroupes({
                           <PiIntersectThreeBold className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              Nom du Groupe :
+                              {t("Nom du Groupe")} :
                             </p>
                             <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                               {groupe?.description}
@@ -439,7 +443,7 @@ function ListeDesGroupes({
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              ID du Groupe :
+                              {t("ID du Groupe")} :
                             </p>
                             <span className=" dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                               {groupe?.groupID}
@@ -447,7 +451,7 @@ function ListeDesGroupes({
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              Nombre d'appareil :
+                              {t("Nombre d'appareils")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                               {groupe?.groupeDevices?.length}
@@ -460,7 +464,7 @@ function ListeDesGroupes({
                               }}
                               className="font-bold- text-gray-700"
                             >
-                              Nombre Utilisateurs affectés :
+                              {t("Nombre Utilisateurs affectés")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                               {userListeAffected?.length}
@@ -500,7 +504,7 @@ function ListeDesGroupes({
                         }}
                         className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                       >
-                        <p>Options</p> <IoOptions className="text-xl" />
+                        <p>{t("Options")}</p> <IoOptions className="text-xl" />
                       </button>
                     </div>
                   </div>
@@ -508,7 +512,7 @@ function ListeDesGroupes({
               })
           ) : (
             <div className="flex justify-center font-semibold text-lg">
-              Pas de résultat
+              {t("Pas de résultat")}
             </div>
           )}
 

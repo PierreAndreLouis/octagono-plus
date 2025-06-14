@@ -12,6 +12,7 @@ import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecM
 import DashboardAdminPage from "./DashboardAdminPage";
 import Logout from "../components/login/Logout";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const {
@@ -45,6 +46,8 @@ const Home = () => {
     setSuccessDeleteVéhiculePopup,
     isDashboardHomePage,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   let x;
   useEffect(() => {
@@ -409,7 +412,7 @@ const Home = () => {
                 className=" xs:flex flex-wrap items-center col-gap-4 "
               >
                 <h3 className="text-red-700 mr-3 text-start md:text-[1.15rem] sm:font-bold  dark:text-red-100">
-                  Dernière mise à jour :{" "}
+                  {t("Dernière mise à jour")} :{" "}
                 </h3>
                 <p className="text-start font-bold  text-[.85rem] xs:text-[.91rem] md:text-[1.1rem] dark:text-gray-100 text-gray-700 ">
                   {" "}
@@ -432,14 +435,14 @@ const Home = () => {
                 )}
 
                 <p className="font-semibold sm:hidden text-sm sm:text-[1rem]">
-                  Auto...
+                  {t("Auto")}...
                 </p>
 
                 <p className="font-semibold hidden sm:block whitespace-nowrap lg:hidden text-sm sm:text-[1rem]---">
-                  Actualisation auto...
+                  {t("Actualisation auto")}...
                 </p>
                 <p className="font-semibold hidden lg:block text-sm sm:text-[1rem]">
-                  Actualisation automatique
+                  {t("Actualisation automatique")}
                 </p>
               </div>
             </div>
@@ -450,7 +453,9 @@ const Home = () => {
           <div className="shadow-md dark:bg-red-900/40 dark:shadow-gray-900  flex gap-2 justify-center md:gap-6 rounded-lg mx-2 mt-3 p-3 text-center bg-red-100">
             <RiWifiOffLine className="translate-y-0 text-red-700 dark:text-gray-200 text-4xl" />
             <h3 className="text-red-700 dark:text-red-100">
-              Vous êtes hors ligne. Veuillez vérifier votre connexion internet.
+              {t(
+                "Vous êtes hors ligne. Veuillez vérifier votre connexion internet"
+              )}
             </h3>
           </div>
         )}
@@ -501,7 +506,7 @@ const Home = () => {
               to={"/dashboard_admin_page"}
               className="px-4 py-2 text-center mt-6 w-full font-bold rounded-lg text-orange-500 border-2 border-orange-500 bg-white"
             >
-              Dashboard
+              {t("Dashboard")}
             </Link>
             <button
               onClick={() => {
@@ -509,7 +514,7 @@ const Home = () => {
               }}
               className="px-4 py-2 mt-2 w-full font-bold rounded-lg text-white bg-orange-600"
             >
-              Se deconnecter
+              {"Se déconnecter"}
             </button>
           </div>
         )}
@@ -525,15 +530,21 @@ const Home = () => {
                 className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
               >
                 <h2 className="font-bold text-white text-xl">
-                  Mise a jour automatique
+                  {t("Mise a jour automatique")}
                 </h2>
               </div>
               <div>
                 <h3
                   className={`${text_color}  block font-semibold text-lg  text-center leading-6  mb-3 px-4`}
                 >
-                  Êtes-vous sur {updateAuto ? "de désactiver" : "d'activer"} la
-                  mise a jour automatique ?
+                  {updateAuto
+                    ? `${t(
+                        "Êtes-vous sur de désactiver la mise a jour automatique"
+                      )}`
+                    : `${t(
+                        "Êtes-vous sur d'activer la mise a jour automatique"
+                      )}`}
+                  ?
                 </h3>
               </div>
               <div className="flex justify-center gap-2 mt-12">
@@ -546,7 +557,7 @@ const Home = () => {
                     // to="/home?tab=acceuil"
                     className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
                   >
-                    Oui
+                    {t("Oui")}
                   </div>
                 ) : (
                   <div
@@ -557,7 +568,7 @@ const Home = () => {
                     // to="/home?tab=acceuil"
                     className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
                   >
-                    Oui
+                    {t("Oui")}
                   </div>
                 )}
                 <div
@@ -567,7 +578,7 @@ const Home = () => {
                   // to="/home?tab=acceuil"
                   className={` bg-gray-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
                 >
-                  Non
+                  {t("Non")}
                 </div>
               </div>
             </div>

@@ -10,21 +10,41 @@ import ThemeProvider from "./theme/ThemeProvider.jsx";
 import { Provider } from "react-redux";
 import { store, persistor } from "./theme/store.js";
 import { PersistGate } from "redux-persist/integration/react";
+import i18next from "i18next";
+
+import english from "./traduction/anglais/language.json";
+import français from "./traduction/francais/language.json";
+import espagnol from "./traduction/espagnol/language.json";
+import { I18nextProvider } from "react-i18next";
+
+const savedLang = localStorage.getItem("lang") || "fr";
+
+i18next.init({
+  interpolation: { escapeValue: false },
+  lng: savedLang,
+  resources: {
+    en: { translation: english },
+    fr: { translation: français },
+    es: { translation: espagnol },
+  },
+});
 
 // import DataContextProvider from "./context/DataContext.js"; // Le provider du contexte
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Router>
-      <DataContextProvider>
-        <PersistGate persistor={persistor}>
-          <Provider store={store}>
-            <ThemeProvider>
-              <App />
-            </ThemeProvider>
-          </Provider>
-        </PersistGate>
-      </DataContextProvider>
+      <I18nextProvider i18n={i18next}>
+        <DataContextProvider>
+          <PersistGate persistor={persistor}>
+            <Provider store={store}>
+              <ThemeProvider>
+                <App />
+              </ThemeProvider>
+            </Provider>
+          </PersistGate>
+        </DataContextProvider>
+      </I18nextProvider>
     </Router>
   </StrictMode>
 );

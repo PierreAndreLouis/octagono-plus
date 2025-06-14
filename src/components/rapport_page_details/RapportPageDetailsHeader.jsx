@@ -16,6 +16,7 @@ import { IoMdClose } from "react-icons/io";
 import SearchVehiculePupup from "./SearchVehiculePupup";
 import Tooltip from "@mui/material/Tooltip";
 import { MdErrorOutline } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 // import "leaflet/dist/leaflet.css";
 
@@ -47,6 +48,8 @@ function RapportPageDetailsHeader({
     rapportPersonnelPDFtRef,
     rapportGroupePDFtRef,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
+
   const formatTime = (hours, minutes, seconds) => {
     if (hours > 0 || minutes > 0 || seconds > 0) {
       return `${hours > 0 ? hours + "h " : ""}${
@@ -63,7 +66,7 @@ function RapportPageDetailsHeader({
     console.log("Start Excel export");
     if (tableRef.current) {
       const workbook = XLSX.utils.table_to_book(tableRef.current);
-      XLSX.writeFile(workbook, "Tables des vehicules.xlsx");
+      XLSX.writeFile(workbook, `${t("Tables des véhicules")}.xlsx`);
       console.log("Finish Excel export");
     } else {
       console.error("Tableau introuvable.");
@@ -87,7 +90,9 @@ function RapportPageDetailsHeader({
       const element = rapportPersonnelPDFtRef.current; // Cible l'élément avec useRef
       html2pdf()
         .from(element)
-        .save(`Rapport personnel (${currentVéhicule?.description}) .pdf`);
+        .save(
+          `${t("Rapport personnel")} (${currentVéhicule?.description}).pdf`
+        );
     }, 1000); // Délai d'attente de 2 secondes
   };
 
@@ -96,7 +101,9 @@ function RapportPageDetailsHeader({
 
     setTimeout(() => {
       const element = rapportGroupePDFtRef.current; // Cible l'élément avec useRef
-      html2pdf().from(element).save("Rapport en Groupe.pdf");
+      html2pdf()
+        .from(element)
+        .save(`${t("Rapport en Groupe")}.pdf`);
     }, 1000); // Délai d'attente de 2 secondes
   };
 
@@ -119,7 +126,7 @@ function RapportPageDetailsHeader({
 
       const options = {
         margin: 10,
-        filename: "Rapport Tableau Récapitulatif en Groupe.pdf",
+        filename: `${t("Rapport Tableau Récapitulatif en Groupe")}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true }, // Permet de capturer correctement les styles
         jsPDF: {
@@ -280,11 +287,11 @@ function RapportPageDetailsHeader({
             <p className="text-start notranslate w-[90%] dark:text-gray-200 overflow-hidden whitespace-nowrap text-ellipsis">
               {personnelDetails &&
                 !currentVéhicule?.description &&
-                "Choisissez un véhicule"}
+                `${t("Choisissez un véhicule")}`}
 
               {personnelDetails && currentVéhicule?.description}
 
-              {!personnelDetails && "Rapport en groupe"}
+              {!personnelDetails && `${t("Rapport en groupe")}`}
             </p>
 
             <div
@@ -324,12 +331,12 @@ function RapportPageDetailsHeader({
                   <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
                     {
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        Du{" "}
+                        {t("Du")}{" "}
                         <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
-                        au{" "}
+                        {t("au")}{" "}
                         <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
@@ -345,11 +352,11 @@ function RapportPageDetailsHeader({
 
                 <p className="text-[.9rem]">
                   <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                    De{" "}
+                    {t("De")}{" "}
                     <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
                       {heureDebut}
                     </span>{" "}
-                    a{" "}
+                    {t("à")}{" "}
                     <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
                       {heureFin}
                     </span>{" "}
@@ -379,7 +386,7 @@ function RapportPageDetailsHeader({
                         },
                       ],
                     }}
-                    title="Telecharger en PDF"
+                    title={`${t("Télécharger en PDF")}`}
                   >
                     <div
                       onClick={() => {
@@ -400,8 +407,10 @@ function RapportPageDetailsHeader({
                   >
                     <div className="flex justify-between mx-2 mt-4 mb-3">
                       <p className="font-semibold text-orange-500 text-lg">
-                        Telecharger{" "}
-                        {pageSection === "unite" ? "(Unite)" : "(Groupe)"}
+                        {t("Télécharger")}{" "}
+                        {pageSection === "unite"
+                          ? `(${t("Unite")})`
+                          : `(${t("Groupe")})`}
                       </p>
                       <IoMdClose
                         onClick={() => {
@@ -417,7 +426,7 @@ function RapportPageDetailsHeader({
                       {/* <span>
                           <MdErrorOutline className="text-2xl mt-0.5" />
                         </span> */}
-                      Le téléchargement peut prendre jusqu'a 1 minute
+                      {t("Le téléchargement peut prendre jusqu'a 1 minute")}
                     </p>
                     {/* </div> */}
                     {/*  */}
@@ -430,7 +439,7 @@ function RapportPageDetailsHeader({
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        <p>Telecharger le rapport en PDF</p>
+                        <p>{t("Télécharger le rapport en PDF")}</p>
                         <img
                           className="w-[2rem]"
                           src="/img/pdf_download.png"
@@ -446,7 +455,7 @@ function RapportPageDetailsHeader({
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        <p>Telecharger le rapport en PDF</p>
+                        <p>{t("Télécharger le rapport en PDF")}</p>
                         <img
                           className="w-[2rem]"
                           src="/img/pdf_download.png"
@@ -462,7 +471,9 @@ function RapportPageDetailsHeader({
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        <p>Telecharger le tableau recapitulatif en PDF</p>
+                        <p>
+                          {t("Télécharger le tableau récapitulatif en PDF")}
+                        </p>
                         <img
                           className="w-[2rem]"
                           src="/img/pdf_download.png"
@@ -478,7 +489,9 @@ function RapportPageDetailsHeader({
                         }}
                         className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
                       >
-                        <p>Telecharger le tableau recapitulatif en Exel</p>
+                        <p>
+                          {t("Télécharger le tableau récapitulatif en Exel")}
+                        </p>
                         <img
                           className="w-[2rem]"
                           src="/img/exel_download.png"
@@ -508,7 +521,7 @@ function RapportPageDetailsHeader({
                     },
                   ],
                 }}
-                title="Recherche par date"
+                title={`${t("Recherche par date")}`}
               >
                 <div
                   onClick={() => {

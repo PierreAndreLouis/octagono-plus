@@ -34,6 +34,7 @@ import {
 import { DataContext } from "../../context/DataContext";
 import L from "leaflet";
 import { Polygon } from "react-leaflet";
+import { useTranslation } from "react-i18next";
 
 // Exemple de fonction de sélection d'icône pour un véhicule donné
 // (déjà utilisée dans d'autres parties du composant)
@@ -68,6 +69,8 @@ function TrajetVehicule({
     showHistoriqueInMap,
     geofenceData,
   } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
+
   const geofences = geofenceData;
 
   const [ajusterLaVitesse, setAjusterLaVitesse] = useState(1);
@@ -110,11 +113,11 @@ function TrajetVehicule({
   }, [isPaused, isReversed, ajusterLaVitesse]);
 
   useEffect(() => {
-    // console.log(isPaused);
-    // console.log(ajusterLaVitesse);
-    // console.log(vitesseActuelleAnimation);
-    // console.log(timestampActuelleAnimation);
-    // console.log(addressActuelleAnimation);
+    console.log(isPaused);
+    console.log(ajusterLaVitesse);
+    console.log(vitesseActuelleAnimation);
+    console.log(timestampActuelleAnimation);
+    console.log(addressActuelleAnimation);
   }, [
     ajusterLaVitesse,
     vitesseActuelleAnimation,
@@ -488,7 +491,9 @@ function TrajetVehicule({
             {/*  */}
             <Tooltip
               title={`${
-                isAnimating ? "Arrêtez l'animation" : "Retracer le trajet "
+                isAnimating
+                  ? `${t("Arrêtez l'animation")}`
+                  : `${t("Retracer le trajet")}`
               }`}
               PopperProps={{
                 modifiers: [
@@ -515,7 +520,7 @@ function TrajetVehicule({
                   setIsPaused(false);
                 }}
               >
-                {isAnimating ? "Arrêter " : "Retracer le trajet"}
+                {isAnimating ? `${t("Arrêter")}` : `${t("Retracer le trajet")}`}
               </div>
             </Tooltip>
             {/*  */}
@@ -523,8 +528,10 @@ function TrajetVehicule({
             {/*  */}
             <Tooltip
               title={`${
-                voirAnimationTrajetPopup ? " Masquer " : " Afficher"
-              }  les options`}
+                voirAnimationTrajetPopup
+                  ? `${t("Masquer les options")}`
+                  : `${t("Afficher les options")}`
+              }  `}
             >
               <div className="border-l-2 pl-2 cursor-pointer">
                 {voirAnimationTrajetPopup ? (
@@ -569,7 +576,11 @@ function TrajetVehicule({
                   : "max-w-[40rem] max-h-[50rem] p-2 md:p-1"
               } -- transition-all duration-500 flex flex-col rounded-lg md:rounded-none gap-3 justify-start md:flex-row overflow-hidden`}
             >
-              <Tooltip title={!isAnimating || isPaused ? "Play" : "Pause"}>
+              <Tooltip
+                title={
+                  !isAnimating || isPaused ? `${t("Play")}` : `${t("Pause")}`
+                }
+              >
                 <div className="flex items-center gap-4">
                   <div
                     onClick={() => {
@@ -599,8 +610,8 @@ function TrajetVehicule({
               <Tooltip
                 title={
                   !centrerLaCarteAuto
-                    ? "Activer le centrage automatique de la carte"
-                    : "Désactiver le centrage automatique de la carte"
+                    ? `${t("Activer le centrage automatique de la carte")}`
+                    : `${t("Désactiver le centrage automatique de la carte")}`
                 }
               >
                 <div
@@ -625,7 +636,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Recommencer le trajet">
+              <Tooltip title={`${t("Recommencer le trajet")}`}>
                 <div
                   onClick={() => {
                     replayAnimation();
@@ -641,7 +652,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Ajuster la vitesse du trajet">
+              <Tooltip title={`${t("Ajuster la vitesse du trajet")}`}>
                 <div
                   onClick={() => {
                     setVoirAjusterLaVitessePopup(!voirAjusterLaVitessePopup);
@@ -657,7 +668,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Ajuster le niveau de zoom">
+              <Tooltip title={`${t("Ajuster le niveau de zoom")}`}>
                 <div
                   onClick={() => {
                     setVoirNiveauZoomAutoPopup(!voirNiveauZoomAutoPopup);
@@ -673,7 +684,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Voir des details sur le trajet">
+              <Tooltip title={`${t("Voir des details sur le trajet")}`}>
                 <div
                   onClick={() => {
                     setVoirInfoSurAnimation(!voirInfoSurAnimation);
@@ -695,7 +706,7 @@ function TrajetVehicule({
                 </div>
               </Tooltip>
 
-              <Tooltip title="Voir les séparations de la carte">
+              <Tooltip title={`${t("Voir les séparations de la carte")}`}>
                 <div
                   onClick={() => {
                     setVoirGeofencePopup(!voirGeofencePopup);
@@ -720,8 +731,8 @@ function TrajetVehicule({
               <Tooltip
                 title={
                   voirAnimationTrajetPopup
-                    ? "Masquer les options"
-                    : "Afficher les options"
+                    ? `${t("Masquer les options")}`
+                    : `${t("Afficher les options")}`
                 }
               >
                 <div
@@ -745,7 +756,7 @@ function TrajetVehicule({
             {voirAjusterLaVitessePopup && (
               <div className="absolute font-normal z-[99999] bg-white min-w-[20rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-center border-b pb-2">
-                  <p>Vitesse de l'animation</p>
+                  <p>{t("Vitesse de l'animation")}</p>
                   <IoClose
                     onClick={() => {
                       setVoirAjusterLaVitessePopup(false);
@@ -767,7 +778,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 2 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Tres lent
+                    {t("Tres lent")}
                   </p>
                   <p
                     onClick={() => {
@@ -778,7 +789,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 1 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Lent
+                    {t("Lent")}
                   </p>
                   <p
                     onClick={() => {
@@ -789,7 +800,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 0.5 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Normal
+                    {t("Normal")}
                   </p>
                   <p
                     onClick={() => {
@@ -800,7 +811,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 0.4 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Rapide
+                    {t("Rapide")}
                   </p>
                   <p
                     onClick={() => {
@@ -811,7 +822,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 0.3 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Tres rapide
+                    {t("Tres rapide")}
                   </p>
                   <p
                     onClick={() => {
@@ -822,7 +833,7 @@ function TrajetVehicule({
                       ajusterLaVitesse === 0.1 ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Super rapide
+                    {t("Super rapide")}
                   </p>
                 </div>
               </div>
@@ -831,7 +842,7 @@ function TrajetVehicule({
             {voirNiveauZoomAutoPopup && (
               <div className="absolute bg-white min-w-[20rem] shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-center border-b pb-2">
-                  <p>Niveau de Zoom lors de l'animation</p>
+                  <p>{t("Niveau de Zoom lors de l'animation")}</p>
                   <IoClose
                     onClick={() => {
                       setVoirNiveauZoomAutoPopup(false);
@@ -928,7 +939,7 @@ function TrajetVehicule({
             {centrerLaCarteAutoPopup && (
               <div className="absolute bg-white min-w-[20rem] max-w-[70vw] w-full shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-start border-b pb-2">
-                  <p>Centrer automatique la carte lors de l'animation</p>
+                  <p>{t("Centrer automatique la carte lors de l'animation")}</p>
                   <IoClose
                     onClick={() => {
                       setCentrerLaCarteAutoPopup(false);
@@ -953,7 +964,7 @@ function TrajetVehicule({
                       centrerLaCarteAuto ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Activer
+                    {t("Activer")}
                   </p>
                   <p
                     onClick={() => {
@@ -965,7 +976,7 @@ function TrajetVehicule({
                       !centrerLaCarteAuto ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Désactiver
+                    {t("Désactiver")}
                   </p>
                 </div>
               </div>
@@ -975,8 +986,9 @@ function TrajetVehicule({
               <div className="absolute bg-white min-w-[20rem] max-w-[70vw] w-full shadow-lg shadow-black/20 top-0 md:top-[3rem] left-0 md:right-0 border p-4 rounded-lg flex flex-col gap-0">
                 <div className="font-bold flex justify-between items-start border-b pb-2">
                   <p>
-                    Voir les séparations et le nom des différentes parties de la
-                    carte
+                    {t(
+                      "Voir les séparations et le nom des différentes parties de la carte"
+                    )}
                   </p>
                   <IoClose
                     onClick={() => {
@@ -1002,7 +1014,7 @@ function TrajetVehicule({
                       voirGeofence ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Activer
+                    {t("Activer")}
                   </p>
                   <p
                     onClick={() => {
@@ -1014,7 +1026,7 @@ function TrajetVehicule({
                       !voirGeofence ? "bg-orange-100" : ""
                     } hover:bg-orange-100 p-2 cursor-pointer`}
                   >
-                    Désactiver
+                    {t("Désactiver")}
                   </p>
                 </div>
               </div>
@@ -1045,21 +1057,21 @@ function TrajetVehicule({
             </div>
 
             <p className="font-bold">
-              Date :{" "}
+              {t("Date")} :{" "}
               <span className="font-normal">
                 {timestampActuelleAnimation &&
                   FormatDateHeure(Number(timestampActuelleAnimation)).date}
               </span>
             </p>
             <p className="font-bold">
-              Heure :{" "}
+              {t("Heure")} :{" "}
               <span className="font-bold ml-3">
                 {timestampActuelleAnimation &&
                   FormatDateHeure(Number(timestampActuelleAnimation)).time}
               </span>
             </p>
             <p className="font-bold">
-              Vitesse :{" "}
+              {t("Vitesse")} :{" "}
               <span className="font-normal">
                 {vitesseActuelleAnimation &&
                 !isNaN(Number(vitesseActuelleAnimation))
@@ -1068,7 +1080,7 @@ function TrajetVehicule({
               </span>
             </p>
             <p className="font-bold  ">
-              Adresse :{" "}
+              {t("Adresse")} :{" "}
               <span className="font-normal">
                 {addressActuelleAnimation || ""}
               </span>
@@ -1400,49 +1412,49 @@ function TrajetVehicule({
                         <Popup>
                           <div>
                             <p className="font-bold text-[1rem]">
-                              <span>Description :</span>{" "}
-                              {description || "Non disponible"}
+                              <span>{t("Description")} :</span>{" "}
+                              {description || "----"}
                             </p>
                             <p>
-                              <strong>Adresse :</strong>{" "}
-                              {address || "Non disponible"}
+                              <strong>{t("Adresse")} :</strong>{" "}
+                              {address || "----"}
                             </p>
                             {username === "admin" && (
                               <p>
-                                <strong>IMEI Number :</strong>{" "}
-                                {imeiNumber || "loading..."}
+                                <strong>{t("IMEI")} :</strong>{" "}
+                                {imeiNumber || "----"}
                               </p>
                             )}
                             <p>
-                              <strong>Vitesse :</strong>{" "}
+                              <strong>{t("Vitesse")} :</strong>{" "}
                               {speedKPH && !isNaN(Number(speedKPH))
                                 ? Number(speedKPH).toFixed(0)
-                                : "Non disponible"}{" "}
+                                : "0"}{" "}
                               Km/h
                             </p>
                             <p>
-                              <strong>Date :</strong>{" "}
+                              <strong>{t("Date")} :</strong>{" "}
                               {timestamp
                                 ? FormatDateHeureTimestamp?.date
-                                : "Pas de date disponible"}
+                                : `${t("Pas de date disponible")}`}
                               <span className="px-3">/</span>
                               {FormatDateHeureTimestamp?.time}
                             </p>
                             <p>
-                              <strong>Statut : </strong>
-                              {speedKPH < 1 && "En stationnement"}
-                              {speedKPH > 20 && "En mouvement rapide"}
+                              <strong>{t("Statut")} : </strong>
+                              {speedKPH < 1 && `${t("En stationnement")}`}
+                              {speedKPH > 20 && `${t("En mouvement rapide")}`}
                               {speedKPH >= 1 &&
                                 speedKPH <= 20 &&
-                                "En mouvement lent"}
+                                `${t("En mouvement lent")}`}
                             </p>
                             <p>
-                              <strong>License Plate :</strong>{" "}
-                              {licensePlate || "loading..."}
+                              <strong>{t("Plaque d’immatriculation")} :</strong>{" "}
+                              {licensePlate || "----"}
                             </p>
                             <p>
-                              <strong>Numéro SIM :</strong>{" "}
-                              {simPhoneNumber || "loading..."}
+                              <strong>{t("Numéro SIM")} :</strong>{" "}
+                              {simPhoneNumber || "----"}
                             </p>
                             <button
                               onClick={() =>
@@ -1453,7 +1465,7 @@ function TrajetVehicule({
                               }
                               className="mt-2 px-3 py-1 bg-green-500 text-white rounded-md"
                             >
-                              Voir sur Google Maps
+                              {t("Voir sur Google Maps")}
                             </button>
                           </div>
                         </Popup>
@@ -1503,7 +1515,7 @@ function TrajetVehicule({
                         <Popup>
                           <div>
                             <p>
-                              <strong>Vitesse :</strong>{" "}
+                              <strong>{t("Vitesse")} :</strong>{" "}
                               {pos.vehicle?.speedKPH &&
                               !isNaN(Number(pos.vehicle?.speedKPH))
                                 ? Number(pos.vehicle?.speedKPH).toFixed(0)
@@ -1512,10 +1524,10 @@ function TrajetVehicule({
                             </p>
 
                             <p>
-                              <strong>Date :</strong>{" "}
+                              <strong>{t("Date")} :</strong>{" "}
                               {pos.vehicle?.timestamp
                                 ? FormatDateHeure(pos.vehicle?.timestamp).date
-                                : "Pas de date disponible"}
+                                : `${t("Pas de date disponible")}`}
                               <span className="px-3">/</span>
                               <span className="font-bold">
                                 {FormatDateHeure(pos.vehicle?.timestamp).time}
@@ -1523,20 +1535,21 @@ function TrajetVehicule({
                             </p>
 
                             <p>
-                              <strong>Adresse :</strong>{" "}
+                              <strong>{t("Adresse")} :</strong>{" "}
                               <span className="notranslate">
                                 {pos.vehicle?.address || "Non disponible"}
                               </span>
                             </p>
 
                             <p>
-                              <strong>Statut : </strong>
-                              {pos.vehicle?.speedKPH < 1 && "En stationnement"}
+                              <strong>{t("Statut")} : </strong>
+                              {pos.vehicle?.speedKPH < 1 &&
+                                `${t("En stationnement")}`}
                               {pos.vehicle?.speedKPH > 20 &&
-                                "En mouvement rapide"}
+                                `${t("En mouvement rapide")}}`}
                               {pos.vehicle?.speedKPH >= 1 &&
                                 pos.vehicle?.speedKPH <= 20 &&
-                                "En mouvement lent"}
+                                `${t("En mouvement lent")}`}
                             </p>
                           </div>
                         </Popup>

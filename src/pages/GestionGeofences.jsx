@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 import { FaChevronDown, FaPlusCircle, FaUserPlus } from "react-icons/fa";
 import ChooseOtherGeofenceDashboard from "../components/dashboard_containt/ChooseOtherGeofenceDashboard";
+import { useTranslation } from "react-i18next";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function GestionGeofences({
@@ -37,6 +38,8 @@ function GestionGeofences({
     showGeofenceInCarte,
     setShowGeofenceInCarte,
   } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
+
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
   const navigate = useNavigate();
 
@@ -175,7 +178,7 @@ function GestionGeofences({
           }}
           className="mt-[6rem] text-lg text-center font-bold "
         >
-          Geozones
+          {t("Geozones")}
         </h2>
 
         {/*  */}
@@ -198,10 +201,10 @@ function GestionGeofences({
           <div className="flex gap-2 justify-center mt-4">
             <div
               onClick={() => {
-                if (!currentAccountSelected) {
+                if (isDashBoardComptnent && !currentAccountSelected) {
                   setChooseOneAccountToContinue(true);
                   setChooseOtherAccountGestion(true);
-                } else {
+                } else if (isDashBoardComptnent && currentAccountSelected) {
                   setDocumentationPage("Localisation_devices");
                 }
                 setAjouterGeofencePopup(true);
@@ -218,8 +221,10 @@ function GestionGeofences({
               <div className="flex justify-center items-center gap-3 ">
                 <FaUserPlus className="text-2xl" />
                 <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                  <span className="hidden md:inline">Ajouter un</span> Nouveau
-                  Geofence
+                  <span className="hidden md:block">
+                    {t("Ajouter un Nouveau Geofence")}
+                  </span>
+                  <span className="md:hidden"> {t("Nouveau Geofence")}</span>
                 </p>
               </div>
             </div>{" "}
@@ -239,7 +244,7 @@ function GestionGeofences({
                   {/* Compte: */}
                   <span>
                     {/* {listeGestionDesGroupeTitre || "Tous les geofences"} */}
-                    Tous les geofences
+                    {t("Tous les geofences")}
                   </span>
                 </h3>
                 <FaChevronDown />
@@ -277,7 +282,7 @@ function GestionGeofences({
                 id="search"
                 name="search"
                 type="search"
-                placeholder="Recherche un Groupe"
+                placeholder={`${t("Recherche un Geozone")}`}
                 required
                 value={searchGroupInputTerm}
                 onChange={(e) => {
@@ -345,25 +350,31 @@ function GestionGeofences({
                         <div className=" w-full flex flex-wrap justify-between gap-x-4">
                           <div>
                             <div className="flex flex-wrap">
-                              <p className="font-bold">Nom du Geozone :</p>
+                              <p className="font-bold">
+                                {t("Nom du Geozone")} :
+                              </p>
                               <span className="notranslate notranslate dark:text-orange-500 text-gray-600 pl-5">
                                 {geozone?.description}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap">
-                              <p className="font-bold">Id du geozone :</p>
+                              <p className="font-bold">
+                                {t("Id du geozone")} :
+                              </p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 {geozone?.geozoneID}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap">
-                              <p className="font-bold">ID du compte :</p>
+                              <p className="font-bold">{t("ID du compte")} :</p>
                               <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
                                 {geozone?.accountID}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap">
-                              <p className="font-bold">Date de creation :</p>
+                              <p className="font-bold">
+                                {t("Date de creation")} :
+                              </p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 {FormatDateHeure(geozone?.lastUpdateTime).date}
                                 <span className="px-3">-</span>
@@ -388,7 +399,7 @@ function GestionGeofences({
                                   : "text-red-600 border-[0.02rem] border-red-500 "
                               }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
                             >
-                              Supprimer
+                              {t("Supprimer")}
                               {/* {isActive ||
                                 (isDashBoardComptnent &&
                                   geozone?.isActive === (0 || 1) &&
@@ -420,7 +431,7 @@ function GestionGeofences({
                           // to="/Groupe_vehicule_location?tab=localisation"
                           className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"
                         >
-                          Modifier
+                          {t("Modifier")}
                         </button>
 
                         {/* {isActive && geozone?.isActive === (0 || 1) && (
@@ -454,7 +465,7 @@ function GestionGeofences({
                 })
             ) : (
               <p className="mt-[5rem] text-center mx-4 font-semibold text-gray-600">
-                Pas de Geozone créer
+                {t("Pas de résultat")}
               </p>
             )
           }
@@ -477,16 +488,16 @@ function GestionGeofences({
                       id="page-action.heading"
                     >
                       {isCurrentGeozoneActive || isDashBoardComptnent
-                        ? "Supprimer"
-                        : "Désactiver"}
+                        ? `${t("Supprimer")}`
+                        : `${t("Désactiver")}`}
                     </h2>
 
                     <p className="text-gray-500">
-                      Êtes-vous sûr de{" "}
+                      {t("Êtes-vous sûr de")}{" "}
                       {isCurrentGeozoneActive || isDashBoardComptnent
-                        ? "Supprimer"
-                        : "Désactiver"}{" "}
-                      le geozone ? ?
+                        ? `${t("Supprimer")}`
+                        : `${t("Désactiver")}`}{" "}
+                      {t("le geozone")} ?
                     </p>
                     <p className="text-red-500 notranslate notranslate font-semibold">
                       {currentGeozone?.description}
@@ -506,7 +517,7 @@ function GestionGeofences({
                         className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset ---dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-gray-800 bg-white border-gray-300 hover:bg-gray-50 focus:ring-primary-600 focus:text-primary-600 focus:bg-primary-50 focus:border-primary-600 ---dark:bg-gray-800 ---dark:hover:bg-gray-700 ---dark:border-gray-600 ---dark:hover:border-gray-500 ---dark:text-gray-200 ---dark:focus:text-primary-400 ---dark:focus:border-primary-400 ---dark:focus:bg-gray-800"
                       >
                         <span className="flex items-center gap-1">
-                          <span className="">Annuler</span>
+                          <span className="">{t("Annuler")}</span>
                         </span>
                       </button>
 
@@ -520,8 +531,8 @@ function GestionGeofences({
                         <span className="flex items-center gap-1">
                           <span className="">
                             {isCurrentGeozoneActive || isDashBoardComptnent
-                              ? "Supprimer"
-                              : "Désactiver"}
+                              ? `${t("Supprimer")}`
+                              : `${t("Désactiver")}`}
                           </span>
                         </span>
                       </button>

@@ -25,9 +25,9 @@ function ChangePassword() {
             <div className="flex justify-center items-center w-full py-2 pt-6 mb-10">
               <RiLockPasswordFill className="text-2xl mr-2 text-orange-500 dark:text-orange-400" />
               <h3
-                onClick={() => {
-                  console.log(userData);
-                }}
+                // onClick={() => {
+                //   console.log(userData);
+                // }}
                 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl"
               >
                 Changer de mot de passe

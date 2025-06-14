@@ -7,6 +7,7 @@ import InfoUserComponent from "../components/profile/InfoUserComponent";
 import TimeZone from "../components/profile/TimeZone";
 import ConfirmationPassword from "../components/Reutilisable/ConfirmationPassword";
 import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+import { useTranslation } from "react-i18next";
 
 function ProfilUserPage() {
   const {
@@ -19,6 +20,8 @@ function ProfilUserPage() {
     setShowChangePasswordPopup,
     selectUTC,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   let x;
   //
@@ -60,7 +63,7 @@ function ProfilUserPage() {
       navigate("/Change_Password");
       setShowChangePasswordPopup(false);
     } else {
-      setErrorMessage("Le mot de passe est incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Le mot de passe est incorrect. Veuillez réessayer")}`);
     }
   };
   //
@@ -74,9 +77,6 @@ function ProfilUserPage() {
 
   return (
     <div className="px-4 pb-20 min-h-screen">
- 
- 
-
       {/* Log Out popup */}
       {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />}
 

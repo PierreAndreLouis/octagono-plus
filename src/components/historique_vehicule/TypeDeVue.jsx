@@ -1,7 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { IoClose } from "react-icons/io5";
 
 function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
+  const [t, i18n] = useTranslation();
+
   return (
     <>
       {typeDeVue && (
@@ -18,7 +21,7 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Choisir un type de vue:
+              {t("Choisissez un type de vue")}:
             </h2>
 
             <p
@@ -27,7 +30,7 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
               }`}
               onClick={() => handleMapTypeChange("streets")}
             >
-              Vue Normale
+              {t("Vue Normale")}
             </p>
             <p
               className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
@@ -35,7 +38,7 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
               }`}
               onClick={() => handleMapTypeChange("satelite")}
             >
-              Vue Satelite
+              {t("Vue Satelite")}
             </p>
             <p
               className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
@@ -43,7 +46,7 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
               }`}
               onClick={() => handleMapTypeChange("terrain")}
             >
-              Vue terrain
+              {t("Vue terrain")}
             </p>
             <p
               className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
@@ -53,7 +56,7 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
               }`}
               onClick={() => handleMapTypeChange("humanitarian")}
             >
-              Vue Humanitaire
+              {t("Vue Humanitaire")}
             </p>
             <p
               className={`cursor-pointer py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
@@ -61,9 +64,8 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
               }`}
               onClick={() => handleMapTypeChange("positron")}
             >
-              Vue Claire
+              {t("Vue Claire")}
             </p>
-           
           </div>
         </div>
       )}

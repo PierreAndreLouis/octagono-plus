@@ -3,6 +3,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function RapportPageDetailsOptions({
   setPersonnelDetails,
@@ -19,6 +20,9 @@ function RapportPageDetailsOptions({
   // formatTimestampToTimeWithTimezone,
   // formatTimestampToTime
 }) {
+
+    const [t, i18n] = useTranslation();
+  
   // const [setSelectedVehicleToShowInMap] = useContext(DataContext);
   return (
     <>
@@ -42,7 +46,7 @@ function RapportPageDetailsOptions({
               },
             ],
           }}
-          title="Voir un rapport pour un seul véhicule"
+          title={`${t("Voir un rapport pour un seul véhicule")}`}
         >
           <button
             onClick={() => {
@@ -59,7 +63,7 @@ function RapportPageDetailsOptions({
                 : "dark:bg-gray-900/70 bg-gray-100"
             } border border-gray-100 dark:text-gray-50 dark:border-gray-50/0 dark:shadow-gray-700 dark:shadow-lg rounded-lg shadow-lg-- shadow-gray-200 w-full py-1`}
           >
-            Unité
+            {t("Unité")}
           </button>
         </Tooltip>
         <Tooltip
@@ -81,7 +85,7 @@ function RapportPageDetailsOptions({
               },
             ],
           }}
-          title="Voir un rapport pour tous les véhicules"
+          title={`${t("Voir un rapport pour tous les véhicules")}`}  
         >
           <button
             onClick={() => {
@@ -100,36 +104,11 @@ function RapportPageDetailsOptions({
                 : "dark:bg-gray-900/70 bg-gray-100"
             } border border-gray-100 dark:text-gray-50 dark:border-gray-50/0 dark:shadow-gray-700 dark:shadow-lg rounded-lg shadow-lg-- shadow-gray-200 w-full py-1`}
           >
-            Groupe
+            {t("Groupe")}
           </button>
         </Tooltip>
-        {/* <button
-          onClick={() => {
-            setpageSection("search");
-            setShowOptions(false);
-            window.scrollTo({
-              top: 0,
-              behavior: "auto", // Défilement fluide
-              // behavior: "smooth", // Défilement fluide
-            });
-          }}
-          className={`${
-            pageSection === "search"
-              ? "dark:bg-orange-700 bg-orange-100"
-              : "dark:bg-gray-900/70 bg-gray-100"
-          } border border-gray-100 dark:text-gray-50 dark:border-gray-50/0 dark:shadow-gray-700 dark:shadow-lg rounded-lg shadow-lg-- shadow-gray-200 w-full py-1`}
-        >
-          Recherche
-        </button> */}
-        {/* <button
-          onClick={() => {
-            setShowListOption(true);
-            // setVéhiculeHistoriqueDetails(currentVéhicule?.véhiculeDetails);
-          }}
-          className="border border-gray-100 dark:bg-gray-900/70 dark:text-gray-50 dark:border-gray-50/0 dark:shadow-gray-700 dark:shadow-lg rounded-lg bg-gray-100 shadow-lg-- shadow-gray-200 w-full py-1"
-        >
-          Options
-        </button> */}
+    
+       
       </div>
     </>
   );

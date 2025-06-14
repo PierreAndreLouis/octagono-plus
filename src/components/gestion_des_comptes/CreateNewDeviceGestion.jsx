@@ -8,6 +8,7 @@ import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { PiIntersectThreeBold } from "react-icons/pi";
+import { useTranslation } from "react-i18next";
 
 function CreateNewDeviceGestion({
   setDocumentationPage,
@@ -25,6 +26,7 @@ function CreateNewDeviceGestion({
     currentSelectedDeviceGestion,
     adminPassword,
   } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
   const [showConfirmAddVéhiculePopup, setShowConfirmAddVéhiculePopup] =
@@ -78,20 +80,22 @@ function CreateNewDeviceGestion({
 
     if (deviceExists) {
       setErrorID(
-        "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre."
+        `${t(
+          "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre"
+        )}`
       );
       return;
     }
 
     // Validation du numéro SIM
     if (isNaN(addVéhiculeData.simPhoneNumber)) {
-      setErrorID("Le numéro de la carte SIM doit être un nombre.");
+      setErrorID(`${t("Le numéro de la carte SIM doit être un nombre")}`);
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
     // Validation du numéro SIM
     if (isNaN(addVéhiculeData.imeiNumber)) {
-      setErrorID("L'IMEI doit être un nombre.");
+      setErrorID(`${t("L'IMEI doit être un nombre")}`);
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
@@ -131,7 +135,7 @@ function CreateNewDeviceGestion({
     useState(false);
 
   useEffect(() => {
-    console.log("groupesSelectionnes", groupesSelectionnes);
+    // console.log("groupesSelectionnes", groupesSelectionnes);
   }, [groupesSelectionnes]);
   useEffect(() => {
     setGroupesSelectionnes([]);
@@ -154,20 +158,20 @@ function CreateNewDeviceGestion({
       const simPhoneNumber = addVéhiculeData.simPhoneNumber;
       const vehicleID = deviceID + uniqueIdentifier || "";
 
-      console.log(
-        currentAccountSelected?.accountID,
-        "admin",
-        currentAccountSelected?.password,
+      // console.log(
+      //   currentAccountSelected?.accountID,
+      //   "admin",
+      //   currentAccountSelected?.password,
 
-        deviceID,
-        imeiNumber,
-        uniqueIdentifier,
-        description,
-        displayName,
-        licensePlate,
-        equipmentType,
-        simPhoneNumber
-      );
+      //   deviceID,
+      //   imeiNumber,
+      //   uniqueIdentifier,
+      //   description,
+      //   displayName,
+      //   licensePlate,
+      //   equipmentType,
+      //   simPhoneNumber
+      // );
 
       if (
         currentAccountSelected?.accountID &&
@@ -195,7 +199,7 @@ function CreateNewDeviceGestion({
       setErrorMessage("");
       setInputPassword("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -205,12 +209,12 @@ function CreateNewDeviceGestion({
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
             <h2
-              onClick={() => {
-                console.log("tous les Groupes: ", allGroupIDs);
-              }}
+              // onClick={() => {
+              //   console.log("tous les Groupes: ", allGroupIDs);
+              // }}
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
-              Liste Des Groupe
+              {t("Liste Des Groupe")}
             </h2>
             <IoClose
               onClick={() => {
@@ -219,12 +223,12 @@ function CreateNewDeviceGestion({
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
             <p
-              onClick={() => {
-                console.log("groupesNonSelectionnes", groupesNonSelectionnes);
-              }}
+              // onClick={() => {
+              //   console.log("groupesNonSelectionnes", groupesNonSelectionnes);
+              // }}
               className="mx-2 mb-3 text-center mt-4 text-lg"
             >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
+              {t("Choisis un ou plusieurs Groupe pour intégrer l'appareil")}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -253,11 +257,13 @@ function CreateNewDeviceGestion({
                     <PiIntersectThreeBold className="text-gray-500 text-[2.5rem]" />
                     <div className="w-full">
                       <p className="text-gray-600">
-                        Nom du compte :{" "}
-                        <span className="font-bold notranslate">{groupe?.description}</span>
+                        {t("Nom du compte")} :{" "}
+                        <span className="font-bold notranslate">
+                          {groupe?.description}
+                        </span>
                       </p>
                       <p className="text-gray-600">
-                        Nombre d'utilisateur :{" "}
+                        {t("Nombre d'utilisateur")} :{" "}
                         <span className="font-bold">
                           {groupe?.groupeDevices?.length}
                         </span>
@@ -282,7 +288,7 @@ function CreateNewDeviceGestion({
                 }}
                 className="py-2 text-white rounded-md bg-orange-600 font-bold"
               >
-                Confirmer
+                {t("Confirmer")}
               </button>
               <button
                 onClick={() => {
@@ -290,7 +296,7 @@ function CreateNewDeviceGestion({
                 }}
                 className="py-2  rounded-md bg-gray-200 font-bold"
               >
-                Annuler
+                {t("Annuler")}
               </button>
             </div>
           </div>
@@ -314,7 +320,7 @@ function CreateNewDeviceGestion({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Enregistrer un nouveau Appareil
+                {t("Enregistrer un nouveau Appareil")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -325,11 +331,11 @@ function CreateNewDeviceGestion({
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
                 <FaArrowLeft />
-                Retour
+                {t("Retour")}
               </button>
             </div>
 
-            <p className="mb-2">Choisissez un Groupe</p>
+            <p className="mb-2">{t("Choisissez un Groupe")}</p>
             <div
               onClick={() => {
                 setShowGroupesSelectionnesPopup(true);
@@ -338,7 +344,9 @@ function CreateNewDeviceGestion({
             >
               <h3 className="w-full text-center-- font-semibold">
                 {/* Compte: */}
-                <span>{groupesSelectionnes.join(" - ") || "Défaut"}</span>
+                <span>
+                  {groupesSelectionnes.join(" - ") || `${t("Défaut")}`}
+                </span>
               </h3>
               <FaChevronDown />
             </div>
@@ -350,38 +358,38 @@ function CreateNewDeviceGestion({
                   { id: "deviceID", label: "ID", placeholder: "ID" },
                   {
                     id: "imeiNumber",
-                    label: "Numéro IMEI",
-                    placeholder: "Numéro IMEI",
+                    label: `${t("Numéro IMEI")}`,
+                    placeholder: `${t("Numéro IMEI")}`,
                   },
                   {
                     id: "uniqueIdentifier",
-                    label: "Identificateur unique",
-                    placeholder: " IMEI",
+                    label: `${t("IMEI")}`,
+                    placeholder: `${t("IMEI")}`,
                   },
                   {
                     id: "description",
-                    label: "Description du véhicule",
-                    placeholder: "Description",
+                    label: `${t("Description du véhicule")}`,
+                    placeholder: `${t("Description du véhicule")}`,
                   },
                   {
                     id: "displayName",
-                    label: "Nom court du véhicule",
-                    placeholder: "Nom du véhicule",
+                    label: `${t("Nom du véhicule")}`,
+                    placeholder: `${t("Nom du véhicule")}`,
                   },
                   {
                     id: "licensePlate",
-                    label: "Plaque du véhicule",
-                    placeholder: "Plaque",
+                    label: `${t("Plaque du véhicule")}`,
+                    placeholder: `${t("Plaque du véhicule")}`,
                   },
                   {
                     id: "equipmentType",
-                    label: "Type d'appareil",
+                    label: `${t("Type d'appareil")}`,
                     placeholder: "Ex. : BO, B1, B2",
                   },
                   {
                     id: "simPhoneNumber",
-                    label: "Numéro SIM",
-                    placeholder: "Numéro SIM",
+                    label: `${t("Numéro SIM")}`,
+                    placeholder: `${t("Numéro SIM")}`,
                   },
                 ].map((field) => (
                   <div key={field.id}>
@@ -426,7 +434,7 @@ function CreateNewDeviceGestion({
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-orange-600 dark:bg-orange-700 px-3 py-1.5 text-md font-semibold text-white hover:bg-orange-700 dark:hover:bg-orange-800"
                   >
-                    Enregistrer
+                    {t("Enregistrer")}
                   </button>
                   <button
                     onClick={() => {
@@ -435,7 +443,7 @@ function CreateNewDeviceGestion({
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
-                    Annuler
+                    {t("Annuler")}
                   </button>
                 </div>
               </form>

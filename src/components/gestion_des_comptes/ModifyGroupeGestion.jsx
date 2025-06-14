@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 function ModifyGroupeGestion({ setDocumentationPage }) {
   const {
@@ -25,6 +26,8 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
     gestionAccountData,
     adminPassword,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
   const [
@@ -116,10 +119,9 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   //
 
   useEffect(() => {
-    console.log("deviceSelectionnes", deviceSelectionnes);
+    // console.log("deviceSelectionnes", deviceSelectionnes);
     // console.log("usersSelectionnes", usersSelectionnes);
-
-    console.log("Device_______NonSelectionnes", deviceNonSelectionnes);
+    // console.log("Device_______NonSelectionnes", deviceNonSelectionnes);
   }, [deviceSelectionnes, usersSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
@@ -169,7 +171,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
       setErrorMessage("");
       setInputPassword("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -193,7 +195,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
             <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
-              Liste Des Appareils
+              {t("Liste Des Appareils")}
             </h2>
             <IoClose
               onClick={() => {
@@ -202,12 +204,12 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
             <p
-              onClick={() => {
-                console.log("deviceNonSelectionnes", deviceNonSelectionnes);
-              }}
+              // onClick={() => {
+              //   console.log("deviceNonSelectionnes", deviceNonSelectionnes);
+              // }}
               className="mx-2 mb-3 text-center mt-4 text-lg"
             >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
+              {t("Choisis un ou plusieurs Groupe pour intégrer l'appareil")}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -246,13 +248,13 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                         </div>
                       </div>
                       <p className="text-gray-600">
-                        Nom de l'appareil :{" "}
+                        {t("Nom de l'appareil")} :{" "}
                         <span className="font-bold notranslate">
                           {device?.description}
                         </span>
                       </p>
                       <p className="text-gray-600">
-                        Dernière mise a jour :{" "}
+                        {t("Dernière mise a jour")} :{" "}
                         <span className="font-bold">
                           {FormatDateHeure(device?.lastUpdateTime).date}
                           <span className="mx-3">/</span>
@@ -279,7 +281,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                 }}
                 className="py-2 text-white rounded-md bg-orange-600 font-bold"
               >
-                Confirmer
+                {t("Confirmer")}
               </button>
               <button
                 onClick={() => {
@@ -287,98 +289,12 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                 }}
                 className="py-2  rounded-md bg-gray-200 font-bold"
               >
-                Annuler
+                {t("Annuler")}
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* {showUserSelectionnesPopup && (
-        <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
-            <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
-              Liste Des Appareils
-            </h2>
-            <IoClose
-              onClick={() => {
-                setShowUSerSelectionnesPopup(false);
-              }}
-              className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
-            />
-            <p className="mx-2 mb-3 text-center mt-4 text-lg">
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
-            </p>
-
-            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
-              {currentAccountSelected?.accountUsers?.map((user, index) => {
-                const isSelected = usersSelectionnes.includes(user.userID);
-
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setUsersSelectionnes((prev) => {
-                        if (prev.includes(user.userID)) {
-                          return prev.filter((id) => id !== user.userID);
-                        } else {
-                          return [...prev, user.userID];
-                        }
-                      });
-                    }}
-                    className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center rounded-lg py-2 px-2 ${
-                      isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
-                    }`}
-                  >
-                    <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
-                      {index + 1}
-                    </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
-                    <div className="w-full">
-                      <p className="text-gray-600">
-                        Nom de l'appareil :{" "}
-                        <span className="font-bold">{user?.description}</span>
-                      </p>
-                      <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
-                        <span className="font-bold">
-                          {user?.userDevices?.length}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="min-w-[4rem]">
-                      {isSelected ? (
-                        <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
-                      ) : (
-                        <IoMdSquareOutline className="text-[2rem] text-red-400" />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
-              <button
-                onClick={() => {
-                  setShowUSerSelectionnesPopup(false);
-                }}
-                className="py-2 text-white rounded-md bg-orange-600 font-bold"
-              >
-                Confirmer
-              </button>
-              <button
-                onClick={() => {
-                  setShowUSerSelectionnesPopup(false);
-                }}
-                className="py-2  rounded-md bg-gray-200 font-bold"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
 
       {/* Popup pour la confirmation du mot de passe */}
       <ConfirmationPassword
@@ -398,7 +314,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               {/* <FaCar className="text-2xl mr-2 text-orange-500" /> */}
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Modifier le Groupe :{" "}
+                {t("Modifier le Groupe")} :{" "}
                 <span className="notranslate">
                   {currentSelectedGroupeGestion?.description}
                 </span>
@@ -412,12 +328,12 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
                 <FaArrowLeft />
-                Retour
+                {t("Retour")}
               </button>
             </div>
 
             <p className="mb-2">
-              Choisissez des Appareils pour intégrer dans le groupe
+              {t("Choisissez des Appareils pour intégrer dans le groupe")}
             </p>
             <div
               onClick={() => {
@@ -428,9 +344,11 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
               <h3 className="w-full text-center-- font-semibold">
                 <span>
                   {deviceSelectionnes?.length +
-                    " Appareil" +
+                    `${t("Appareil")}` +
                     (deviceSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas d'appareil sélectionner"}
+                    " " +
+                    `${t("sélectionner")}` ||
+                    `${t("Pas d'appareil sélectionner")}`}
                 </span>
               </h3>
               <FaChevronDown />
@@ -461,28 +379,23 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                 {[
                   {
                     id: "groupID",
-                    label: "ID du groupe",
+                    label: `${t("ID du groupe")}`,
                     placeholder: "ex: appareil_brûlé",
                   },
                   {
                     id: "description",
-                    label: "Description",
-                    placeholder: "Description de l'appareil",
+                    label: `${t("Description")}`,
+                    placeholder: `${t("Description de l'appareil")}`,
                   },
                   {
                     id: "displayName",
-                    label: "DisplayName",
-                    placeholder: "Nom a afficher",
+                    label: `${t("DisplayName")}`,
+                    placeholder: `${t("DisplayName")}`,
                   },
                   {
                     id: "notes",
-                    label: "Notes",
-                    placeholder: "Ajouter une petite note",
-                  },
-                  {
-                    id: "workOrderID",
-                    label: "workOrderID",
-                    placeholder: "workOrderID",
+                    label: `${t("Notes")}`,
+                    placeholder: `${t("Ajouter une petite note")}`,
                   },
                 ].map((field) => (
                   <div key={field.id}>
@@ -521,7 +434,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-orange-600 dark:bg-orange-700 px-3 py-1.5 text-md font-semibold text-white hover:bg-orange-700 dark:hover:bg-orange-800"
                   >
-                    Enregistrer
+                    {t("Enregistrer")}
                   </button>
                   <button
                     onClick={() => {
@@ -530,7 +443,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
-                    Annuler
+                    {t("Annuler")}
                   </button>
                 </div>
               </form>

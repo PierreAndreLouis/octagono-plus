@@ -6,6 +6,7 @@ import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdRadioButtonOff, IoMdRadioButtonOn } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { PiIntersectThreeBold } from "react-icons/pi";
+import { useTranslation } from "react-i18next";
 
 function CreateNewUserGestion({
   setDocumentationPage,
@@ -24,6 +25,8 @@ function CreateNewUserGestion({
     userRole,
     adminPassword,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
   const [
@@ -86,19 +89,21 @@ function CreateNewUserGestion({
     const errors = [];
 
     if (!emailRegex.test(addNewUserData.contactEmail)) {
-      errors.push("L'email de contact n'est pas valide.");
+      errors.push(`${t("L'email de contact n'est pas valide")}`);
     }
 
     if (!emailRegex.test(addNewUserData.notifyEmail)) {
-      errors.push("L'email de notification n'est pas valide.");
+      errors.push(`${t("L'email de notification n'est pas valide")}`);
     }
 
     if (!phoneRegex.test(addNewUserData.contactPhone)) {
-      errors.push("Le numéro de téléphone est invalide.");
+      errors.push(`${t("Le numéro de téléphone est invalide")}`);
     }
 
     if (addNewUserData.password.length < 6) {
-      errors.push("Le mot de passe doit contenir au moins 6 caractères.");
+      errors.push(
+        `${t("Le mot de passe doit contenir au moins 6 caractères")}`
+      );
     }
 
     return errors;
@@ -116,7 +121,7 @@ function CreateNewUserGestion({
     }
 
     if (addNewUserData?.password !== addNewUserData?.password2) {
-      setErrorID("Les mots de passe ne correspondent pas.");
+      setErrorID(`${t("Les mots de passe ne correspondent pas")}`);
       return;
     }
 
@@ -128,7 +133,9 @@ function CreateNewUserGestion({
 
     if (userExists) {
       setErrorID(
-        "Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre."
+        `${t(
+          "Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre"
+        )}`
       );
       return;
     }
@@ -167,7 +174,7 @@ function CreateNewUserGestion({
     useState(false);
 
   useEffect(() => {
-    console.log("groupesSelectionnes", groupesSelectionnes);
+    // console.log("groupesSelectionnes", groupesSelectionnes);
   }, [groupesSelectionnes]);
 
   useEffect(() => {
@@ -237,7 +244,7 @@ function CreateNewUserGestion({
       setErrorMessage("");
       setInputPassword("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -257,7 +264,7 @@ function CreateNewUserGestion({
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Choisir un max access level:
+              {t("Choisir un max access level")}:
             </h2>
 
             <div
@@ -275,7 +282,7 @@ function CreateNewUserGestion({
                 setShowMaxAccessLevelPopup(false);
               }}
             >
-              <p>New/Delete</p>
+              <p>{t("New/Delete")}</p>
               <p>0</p>
             </div>
 
@@ -294,7 +301,7 @@ function CreateNewUserGestion({
                 setShowMaxAccessLevelPopup(false);
               }}
             >
-              <p>Read/View</p>
+              <p>{t("Read/View")}</p>
               <p>1</p>
             </div>
 
@@ -313,7 +320,7 @@ function CreateNewUserGestion({
                 setShowMaxAccessLevelPopup(false);
               }}
             >
-              <p>Write/Edit</p>
+              <p>{t("Write/Edit")}</p>
               <p>2</p>
             </div>
             <div
@@ -331,7 +338,7 @@ function CreateNewUserGestion({
                 setShowMaxAccessLevelPopup(false);
               }}
             >
-              <p>Accès complet</p>
+              <p>{t("Accès complet")}</p>
               <p>3</p>
             </div>
           </div>
@@ -351,7 +358,7 @@ function CreateNewUserGestion({
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Activation de l'utilisateur:
+              {t("Activation de l'utilisateur")}:
             </h2>
 
             <div
@@ -406,7 +413,7 @@ function CreateNewUserGestion({
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Type de l'utilisateur:
+              {t("Type de l'utilisateur")}:
             </h2>
 
             <div
@@ -424,7 +431,7 @@ function CreateNewUserGestion({
                 setShowUserTypePopup(false);
               }}
             >
-              <p>Utilisateur standard / limité</p>
+              <p>{t("Utilisateur standard / limité")}</p>
               <p>1</p>
             </div>
 
@@ -443,7 +450,7 @@ function CreateNewUserGestion({
                 setShowUserTypePopup(false);
               }}
             >
-              <p>Utilisateur Administrateur / Superviseur</p>
+              <p>{t("Utilisateur Administrateur / Superviseur")}</p>
               <p>0</p>
             </div>
           </div>
@@ -463,7 +470,7 @@ function CreateNewUserGestion({
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Choisir un TimeZone:
+              {t("Choisir un TimeZone")}:
             </h2>
             <div className="max-h-[60vh] overflow-auto">
               {timeZoneData?.map((zone, index) => {
@@ -505,7 +512,7 @@ function CreateNewUserGestion({
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Choisir un TimeZone:
+              {t("choisissez un role")}:
             </h2>
             <div className="max-h-[60vh] overflow-auto">
               {userRole?.map((role, index) => {
@@ -538,12 +545,12 @@ function CreateNewUserGestion({
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
             <h2
-              onClick={() => {
-                console.log("tous les Groupes: ", allGroupIDs);
-              }}
+              // onClick={() => {
+              //   console.log("tous les Groupes: ", allGroupIDs);
+              // }}
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
-              Liste Des Groupe
+              {t("Liste Des Groupe")}
             </h2>
             <IoClose
               onClick={() => {
@@ -552,7 +559,7 @@ function CreateNewUserGestion({
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
             <p className="mx-2 mb-3 text-center mt-4 text-lg">
-              Choisis un Groupe pour intégrer l'appareil
+              {t("Choisis un Groupe pour intégrer l'appareil")}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -579,13 +586,13 @@ function CreateNewUserGestion({
                     <PiIntersectThreeBold className="text-gray-500 text-[2.5rem]" />
                     <div className="w-full">
                       <p className="text-gray-600">
-                        Nom du Groupe :{" "}
+                        {t("Nom du Groupe")} :{" "}
                         <span className="font-bold notranslate">
                           {groupe?.description}
                         </span>
                       </p>
                       <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
+                        {t("Nombre d'appareil")} :{" "}
                         <span className="font-bold">
                           {groupe?.groupeDevices?.length}
                         </span>
@@ -610,7 +617,7 @@ function CreateNewUserGestion({
                 }}
                 className="py-2 text-white rounded-md bg-orange-600 font-bold"
               >
-                Confirmer
+                {t("Confirmer")}
               </button>
               <button
                 onClick={() => {
@@ -618,7 +625,7 @@ function CreateNewUserGestion({
                 }}
                 className="py-2  rounded-md bg-gray-100 font-bold"
               >
-                Annuler
+                {t("Annuler")}
               </button>
             </div>
           </div>
@@ -642,7 +649,7 @@ function CreateNewUserGestion({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Ajouter un nouveau Utilisateur
+                {t("Ajouter un nouveau Utilisateur")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -653,12 +660,12 @@ function CreateNewUserGestion({
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
                 <FaArrowLeft />
-                Retour
+                {t("Retour")}
               </button>
             </div>
 
             <p className="mb-2">
-              Choisissez un groupe pour affecter l'utilisateur
+              {t("Choisissez un groupe pour affecter l'utilisateur")}
             </p>
             <div
               onClick={() => {
@@ -670,7 +677,7 @@ function CreateNewUserGestion({
                 <span>
                   {groupesSelectionnes
                     ? groupesSelectionnes
-                    : "Pad de groupe sélectionner"}
+                    : `${t("Pas de groupe sélectionner")}`}
                 </span>
               </h3>
               <FaChevronDown />
@@ -682,90 +689,79 @@ function CreateNewUserGestion({
                 {[
                   {
                     id: "userID",
-                    label: "ID de l'utilisateur",
+                    label: `${t("ID de l'utilisateur")}`,
                     placeholder: "ex: Victor",
                   },
                   {
                     id: "description",
-                    label: "Description",
-                    placeholder: "Description de l'utilisateur",
+                    label: `${t("Description")}`,
+                    placeholder: `${t("Nom de l'utilisateur")}`,
                   },
                   {
                     id: "displayName",
-                    label: "DisplayName",
-                    placeholder: "Nom a afficher",
+                    label: `${t("DisplayName")}`,
+                    placeholder: `${t("DisplayName")}`,
                   },
                   //
                   {
                     id: "contactEmail",
-                    label: "contactEmail",
-                    placeholder: "Email",
+                    label: `${t("contactEmail")}`,
+                    placeholder: `${t("contactEmail")}`,
                   },
                   {
                     id: "notifyEmail",
-                    label: "notifyEmail",
-                    placeholder: "email",
+                    label: `${t("notifyEmail")}`,
+                    placeholder: `${t("notifyEmail")}`,
                   },
 
                   {
                     id: "contactPhone",
-                    label: "Phone Number",
-                    placeholder: "telephone",
+                    label: `${t("Telephone")}`,
+                    placeholder: `${t("Telephone")}`,
                   },
                   {
                     id: "contactName",
-                    label: "contactName",
-                    placeholder: "contactName",
+                    label: `${t("contactName")}`,
+                    placeholder: `${t("contactName")}`,
                   },
 
                   {
                     id: "addressCity",
-                    label: "addressCity",
-                    placeholder: "addressCity",
+                    label: `${t("addressCity")}`,
+                    placeholder: `${t("addressCity")}`,
                   },
                   {
                     id: "addressCountry",
-                    label: "addressCountry",
-                    placeholder: "addressCountry",
+                    label: `${t("addressCountry")}`,
+                    placeholder: `${t("addressCountry")}`,
                   },
-                  // {
-                  //   id: "userType",
-                  //   label: "userType",
-                  //   placeholder: "userType",
-                  // },
-
                   {
                     id: "isActive",
-                    label: "isActive",
-                    placeholder: "email",
+                    label: `${t("isActive")}`,
+                    placeholder: `${t("isActive")}`,
                   },
 
                   {
                     id: "timeZone",
-                    label: "timeZone",
+                    label: `${t("TimeZone")}`,
                     placeholder: "",
                   },
-                  // {
-                  //   id: "maxAccessLevel",
-                  //   label: "maxAccessLevel",
-                  //   placeholder: "",
-                  // },
                   {
                     id: "roleID",
-                    label: "roleID",
+                    label: `${t("roleID")}`,
                     placeholder: "",
                   },
 
                   //
                   {
                     id: "password",
-                    label: "Mot de passe",
-                    placeholder: "Ajouter un mot de passe",
+                    label: `${t("Mot de passe")}`,
+                    placeholder: `${t("Ajouter un mot de passe")}`,
                   },
                   {
                     id: "password2",
-                    label: "confirmer le mot de passe",
-                    placeholder: "Confirmer le mot de passe",
+                    label: `${t("Confirmer le mot de passe")}`,
+                    placeholder: `${t("Confirmer le mot de passe")}`,
                   },
                 ].map((field) => (
                   <div key={field.id}>
@@ -866,7 +862,7 @@ function CreateNewUserGestion({
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-orange-600 dark:bg-orange-700 px-3 py-1.5 text-md font-semibold text-white hover:bg-orange-700 dark:hover:bg-orange-800"
                   >
-                    Enregistrer
+                    {t("Enregistrer")}
                   </button>
                   <button
                     onClick={() => {
@@ -875,7 +871,7 @@ function CreateNewUserGestion({
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
-                    Annuler
+                    {t("Annuler")}
                   </button>
                 </div>
               </form>

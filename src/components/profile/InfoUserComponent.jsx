@@ -5,6 +5,7 @@ import LanguageComponent from "../home/LanguageComponent";
 import GoogleTranslate from "../home/GoogleTranslate";
 import GoogleTranslate2 from "../home/GoogleTranslate2";
 import LanguageSwitcher from "../home/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 function InfoUserComponent({
   account,
@@ -15,9 +16,18 @@ function InfoUserComponent({
   selectUTC,
   SelectedTimeZone,
   setChangeTimeZone,
+  adminUserData,
 }) {
-  const { setUsername, homePageReload, resetIndexedDB, countRequête } =
-    useContext(DataContext);
+  const {
+    setUsername,
+    adminAccount,
+    adminUsername,
+    homePageReload,
+    resetIndexedDB,
+    countRequête,
+  } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const [redemarerApplication, setRedemarerApplication] = useState(false);
 
@@ -33,20 +43,14 @@ function InfoUserComponent({
         onClick={() => {
           // setUsername("xxxxxxx");
         }}
-        className="flex mt-24 md:mt-28 justify-center items-center"
+        className="flex mt-14  justify-center items-center"
       >
         <FaUserCircle className="text-gray-300 dark:text-gray-300 w-[25rem] h-24" />
       </div>
 
       {/* Titre principal */}
-      <h1
-        onClick={() => {
-          // setUsername("admin");
-          console.log(userData);
-        }}
-        className="text-center font-bold text-xl mt-4 text-gray-700 dark:text-gray-100"
-      >
-        Mon Profil
+      <h1 className="text-center font-bold text-xl mt-4 text-gray-700 dark:text-gray-100">
+        {t("Mon Profil")}
       </h1>
 
       {/* Section des informations utilisateur */}
@@ -54,42 +58,47 @@ function InfoUserComponent({
         {/* Compte */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Compte :
+            {t("Compte")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {account || "-----"}
+            {adminAccount && adminAccount} {adminAccount && account && " / "}{" "}
+            {account && account}
           </p>
         </div>
 
         {/* Nom d'utilisateur */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Nom d'utilisateur :
+            {t("Nom d'utilisateur")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {username || "-----"}
+            {adminUsername && adminUsername}{" "}
+            {adminUsername && username && " / "} {username && username}
           </p>
         </div>
 
         {/* Mot de passe */}
-        <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             Mot de passe :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">***-*</p>
-        </div>
+        </div> */}
 
         {/* Fuseau horaire */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Fuseau horaire :
+            {t("Fuseau horaire")} :
           </h3>
           <div className="flex justify-between items-center w-full">
             <p className="pl-3 text-gray-500 dark:text-gray-300">
               {/* {userData?.timeZone || "-----"} */}
-              {selectUTC !== ""
+              {adminUsername && adminUserData?.timeZone}{" "}
+              {adminUsername && username && " / "}{" "}
+              {username && userData?.timeZone}
+              {/* {selectUTC !== ""
                 ? "GMT" + (selectUTC >= 0 ? "+" : "") + selectUTC
-                : userData?.timeZone || "-----"}
+                : userData?.timeZone || "-----"} */}
             </p>
             {/* <p
               onClick={() => {
@@ -105,10 +114,11 @@ function InfoUserComponent({
         {/* Adresse */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Adresse :
+            {t("Adresse")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
             {userData?.addressCity || "-----"}
+            {"/ " + adminUserData?.addressCity && adminUserData?.addressCity}
           </p>
         </div>
         {/* Adresse */}
@@ -122,14 +132,16 @@ function InfoUserComponent({
         </div> */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Version de l'application :
+            {t("Version de l'application")} :
           </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">17.05.25</p>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">
+            14/06/2025 _ 1
+          </p>
         </div>
 
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Redémarrer l'application :
+            {t("Redémarrer l'application")} :
           </h3>
           <p
             onClick={() => {
@@ -140,7 +152,7 @@ function InfoUserComponent({
             }}
             className="pl-3 text-orange-500 font-semibold cursor-pointer dark:text-gray-300"
           >
-            Cliquez ici
+            {t("Cliquez ici")}
           </p>
         </div>
       </div>
@@ -163,7 +175,7 @@ function InfoUserComponent({
           }}
           className="bg-orange-500 w-full dark:bg-orange-400 text-center rounded-lg px-3 text-white py-2 hover:bg-orange-600 dark:hover:bg-orange-500"
         >
-          Se déconnecter{" "}
+          {t("Se déconnecter")}{" "}
         </button>
       </div>
 
@@ -176,14 +188,14 @@ function InfoUserComponent({
               className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
             >
               <h2 className="font-bold text-white text-xl">
-                Redémarrer l'application
+                {t("Redémarrer l'application")}
               </h2>
             </div>
             <div>
               <h3
                 className={`${text_color}  block font-semibold text-lg  text-center leading-6  mb-3 `}
               >
-                Êtes vous sur de redémarrer l'application ?
+                {t("Êtes vous sur de redémarrer l'application")} ?
               </h3>
             </div>
             <div className="flex justify-center gap-2 mt-5">
@@ -197,7 +209,7 @@ function InfoUserComponent({
                 // to="/home?tab=acceuil"
                 className={` bg-red-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
               >
-                Oui
+                {t("Oui")}
               </div>
               <div
                 onClick={() => {
@@ -206,7 +218,7 @@ function InfoUserComponent({
                 // to="/home?tab=acceuil"
                 className={` bg-gray-500 cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
               >
-                Non
+                {t("Non")}
               </div>
             </div>
           </div>

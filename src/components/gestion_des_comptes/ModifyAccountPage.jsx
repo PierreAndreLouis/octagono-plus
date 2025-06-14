@@ -4,6 +4,7 @@ import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
 import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 function ModifyAccountPage({ setDocumentationPage }) {
   const {
@@ -16,8 +17,10 @@ function ModifyAccountPage({ setDocumentationPage }) {
     comptes,
     timeZoneData,
     modifyAccountEnGestionAccountFonction,
-    adminPassword
+    adminPassword,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
   const [
@@ -77,19 +80,21 @@ function ModifyAccountPage({ setDocumentationPage }) {
     const errors = [];
 
     if (!phoneRegex.test(addNewAccountData.contactPhone)) {
-      errors.push("Le téléphone n'est pas valide.");
+      errors.push(`${t("Le téléphone n'est pas valide")}`);
     }
 
     if (!emailRegex.test(addNewAccountData.contactEmail)) {
-      errors.push("L'email de contact n'est pas valide.");
+      errors.push(`${t("L'email de contact n'est pas valide")}`);
     }
 
     if (!emailRegex.test(addNewAccountData.notifyEmail)) {
-      errors.push("L'email de notification n'est pas valide.");
+      errors.push(`${t("L'email de notification n'est pas valide")}`);
     }
 
     if (addNewAccountData.password.length < 6) {
-      errors.push("Le mot de passe doit contenir au moins 6 caractères.");
+      errors.push(
+        `${t("Le mot de passe doit contenir au moins 6 caractères")}`
+      );
     }
 
     return errors;
@@ -106,7 +111,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
     }
 
     if (addNewAccountData?.password !== addNewAccountData?.password2) {
-      setErrorID("Les mots de passe ne correspondent pas.");
+      setErrorID(`${t("Les mots de passe ne correspondent pas")}`);
       return;
     }
 
@@ -167,7 +172,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
       setErrorMessage("");
       setInputPassword("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -237,7 +242,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Activation du compte:
+              {t("Activation du compte")}:
             </h2>
 
             <div
@@ -290,7 +295,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Droit de manager:
+              {t("Droit de manager")}:
             </h2>
 
             <div
@@ -344,7 +349,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
             />
 
             <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              Choisir un TimeZone:
+              {t("Choisir un TimeZone")}:
             </h2>
             <div className="max-h-[60vh] overflow-auto">
               {timeZoneData?.map((zone, index) => {
@@ -378,7 +383,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10-- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Modifier le Compte
+                {t("Modifier le Compte")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -389,7 +394,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
                 <FaArrowLeft />
-                Retour
+                {t("Retour")}
               </button>
             </div>
 
@@ -398,76 +403,76 @@ function ModifyAccountPage({ setDocumentationPage }) {
                 {[
                   {
                     id: "accountID",
-                    label: "ID du compte",
+                    label: `${t("ID du compte")}`,
                     placeholder: "ex: compte_victor",
                   },
                   {
                     id: "description",
-                    label: "Description",
-                    placeholder: "Description du compte",
+                    label: `${t("Description")}`,
+                    placeholder: `${t("Description")}`,
                   },
                   {
                     id: "displayName",
-                    label: "DisplayName",
-                    placeholder: "Nom a afficher",
+                    label: `${t("DisplayName")}`,
+                    placeholder: `${t("DisplayName")}`,
                   },
                   {
                     id: "contactPhone",
-                    label: "Telephone",
-                    placeholder: "le numero de telephone",
+                    label: `${t("Telephone")}`,
+                    placeholder: `${t("Telephone")}`,
                   },
                   {
                     id: "contactName",
-                    label: "contactName",
-                    placeholder: "contactName",
+                    label: `${t("contactName")}`,
+                    placeholder: `${t("contactName")}`,
                   },
 
                   {
                     id: "contactEmail",
-                    label: "contactEmail",
-                    placeholder: "contactEmail",
+                    label: `${t("contactEmail")}`,
+                    placeholder: `${t("contactEmail")}`,
                   },
                   {
                     id: "addressCity",
-                    label: "addressCity",
-                    placeholder: "addressCity",
+                    label: `${t("addressCity")}`,
+                    placeholder: `${t("addressCity")}`,
                   },
                   {
                     id: "addressCountry",
-                    label: "addressCountry",
-                    placeholder: "addressCountry",
+                    label: `${t("addressCountry")}`,
+                    placeholder: `${t("addressCountry")}`,
                   },
 
                   {
                     id: "notifyEmail",
-                    label: "Email",
-                    placeholder: "email",
+                    label: `${t("Email")}`,
+                    placeholder: `${t("Email")}`,
                   },
                   {
                     id: "isActive",
-                    label: "isActive",
-                    placeholder: "isActive",
+                    label: `${t("isActive")}`,
+                    placeholder: `${t("isActive")}`,
                   },
                   {
                     id: "isAccountManager",
-                    label: "isAccountManager",
-                    placeholder: "isAccountManager",
+                    label: `${t("isAccountManager")}`,
+                    placeholder: `${t("isAccountManager")}`,
                   },
                   {
                     id: "timeZone",
-                    label: "timeZone",
+                    label: `${t("timeZone")}`,
                     placeholder: "",
                   },
 
                   {
                     id: "password",
-                    label: "Mot de passe",
-                    placeholder: "Ajouter un mot de passe",
+                    label: `${t("Mot de passe")}`,
+                    placeholder: `${t("Ajouter un mot de passe")}`,
                   },
                   {
                     id: "password2",
-                    label: "confirmer le mot de passe",
-                    placeholder: "Confirmer le mot de passe",
+                    label: `${t("Confirmer le mot de passe")}`,
+                    placeholder: `${t("Confirmer le mot de passe")}`,
                   },
                 ].map((field) => (
                   <div key={field.id}>
@@ -540,7 +545,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-orange-600 dark:bg-orange-700 px-3 py-1.5 text-md font-semibold text-white hover:bg-orange-700 dark:hover:bg-orange-800"
                   >
-                    Enregistrer
+                    {t("Enregistrer")}
                   </button>
                   <button
                     onClick={() => {
@@ -549,7 +554,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
-                    Annuler
+                    {t("Annuler")}
                   </button>
                 </div>
               </form>

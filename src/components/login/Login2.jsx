@@ -6,6 +6,7 @@ import GoogleTranslate from "../home/GoogleTranslate.jsx";
 import { Link } from "react-router-dom";
 import { FaAddressBook, FaBook } from "react-icons/fa";
 import { MdGTranslate } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 function Login2() {
   const {
@@ -18,6 +19,9 @@ function Login2() {
     chooseOtherLanguagePopup,
   } = useContext(DataContext);
   let x;
+
+  const [t, i18n] = useTranslation();
+
   //
   //
   //
@@ -41,7 +45,7 @@ function Login2() {
     const savedData = localStorage.getItem("userCredentials");
     return savedData
       ? JSON.parse(savedData)
-      : { account: "", username: "", password: "" };
+      : { account: "", username: "", password: "", country: "" };
   });
 
   // Sauvegarde ou suppression instantanée des données dès qu'il y a un changement
@@ -55,8 +59,8 @@ function Login2() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { account, username, password } = formData;
-    handleLogin(account, username, password);
+    const { account, username, password, country } = formData;
+    handleLogin(account, username, password, country);
   };
 
   const demoAccountLogin = () => {
@@ -92,7 +96,7 @@ function Login2() {
           <MdGTranslate className="text-xl min-w-[1.5rem] text-blue-400" />
           <div className="flex w-full justify-between">
             <p className="text-gray-600 text-[1rem] font-semibold">
-              Traduction
+              {t("Traduction")}
             </p>
           </div>
         </div>
@@ -105,12 +109,12 @@ function Login2() {
             className="mx-auto h-20 w-auto"
           />
           <h2
-            onClick={() => {
-              console.log(adminAccount);
-            }}
+            // onClick={() => {
+            //   console.log(adminAccount);
+            // }}
             className="mt-4 dark:text-gray-100 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
           >
-            Bienvenue à Octagono Plus
+            {t("Bienvenue à Octagono Plus")}
           </h2>
           <div className="flex justify-center items-center gap-2">
             <p className="text-center cursor-pointer">
@@ -123,11 +127,33 @@ function Login2() {
         <div className="mt-10   sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
+              <div className="mb-4 ">
+                <label
+                  htmlFor="country"
+                  className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+                >
+                  {t("Pays")}
+                </label>
+                <div className="mt-2 ">
+                  <select
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    required
+                    className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+                  >
+                    <option value="">{t("Sélectionner un pays")}</option>
+                    <option value="ht">{t("Haïti")}</option>
+                    <option value="rd">{t("République Dominicaine")}</option>
+                  </select>
+                </div>
+              </div>
               <label
                 htmlFor="account"
                 className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
               >
-                Compte
+                {t("Compte")}
               </label>
               <div className="mt-2">
                 <input
@@ -136,7 +162,7 @@ function Login2() {
                   type="text"
                   value={formData.account}
                   onChange={handleChange}
-                  placeholder="Nom du compte"
+                  placeholder={`${t("Nom du compte")}`}
                   required
                   className="block px-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-400 dark:focus:ring-indigo-500"
                 />
@@ -148,7 +174,7 @@ function Login2() {
                 htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
               >
-                Nom d'utilisateur
+                {t("Nom d'utilisateur")}
               </label>
               <div className="mt-2">
                 <input
@@ -157,7 +183,7 @@ function Login2() {
                   type="text"
                   value={formData.username}
                   onChange={handleChange}
-                  placeholder="Nom d'utilisateur"
+                  placeholder={`${t("Nom d'utilisateur")}`}
                   required
                   className="block px-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-400 dark:focus:ring-indigo-500"
                 />
@@ -169,7 +195,7 @@ function Login2() {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
               >
-                Mot de passe
+                {t("Mot de passe")}
               </label>
               <div className="mt-2">
                 <input
@@ -178,7 +204,7 @@ function Login2() {
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Mot de passe"
+                  placeholder={`${t("Mot de passe")}`}
                   required
                   autoComplete="current-password"
                   className="block px-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-400 dark:focus:ring-indigo-500"
@@ -199,7 +225,7 @@ function Login2() {
                   htmlFor="remember_me"
                   className="ml-2 block text-sm text-gray-900 dark:text-gray-100"
                 >
-                  Se souvenir de moi
+                  {t("Se souvenir de moi")}
                 </label>
               </div>
 
@@ -213,7 +239,7 @@ function Login2() {
                 className={`flex text-gray-600  py-4 gap-2 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
               >
                 <FaBook className="text-blue-600" />
-                <h3 className="text-sm">Manuel d'utilisation</h3>
+                <h3 className="text-sm">{t("Manuel d'utilisation")}</h3>
               </div>
             </div>
             {error && (
@@ -226,12 +252,14 @@ function Login2() {
                 disabled={isHomePageLoading}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-400"
               >
-                {isHomePageLoading ? "Chargement..." : "Se connecter"}
+                {isHomePageLoading
+                  ? `${t("Chargement")}...`
+                  : `${t("Se connecter")}`}
               </button>
               <div>
                 {isHomePageLoading ? (
                   <div className="flex w-full justify-center rounded-md hover:bg-indigo-50 border border-indigo-500 text-gray-800 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 cursor-pointer mt-3 dark:focus:ring-indigo-400">
-                    Chargement...
+                    {t("Chargement")}...
                   </div>
                 ) : (
                   <div
@@ -240,7 +268,7 @@ function Login2() {
                     }}
                     className="flex w-full justify-center rounded-md hover:bg-indigo-50 border border-indigo-500 text-gray-800 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 cursor-pointer mt-3 dark:focus:ring-indigo-400"
                   >
-                    Compte Demo
+                    {t("Compte Demo")}
                   </div>
                 )}
               </div>

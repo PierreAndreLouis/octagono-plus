@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
+import { useTranslation } from "react-i18next";
 
 function HeaderLocation({
   setShowVehiculeListe,
@@ -12,6 +13,8 @@ function HeaderLocation({
   isDashBoardComptnent = false,
 }) {
   const {} = useContext(DataContext);
+  const [t, i18n] = useTranslation();
+
   return (
     <>
       <div
@@ -39,7 +42,7 @@ function HeaderLocation({
               },
             ],
           }}
-          title="Choisissez un véhicule"
+          title={`${t("Choisissez un véhicule")}`}
         >
           <h2
             onClick={() => {
@@ -53,8 +56,8 @@ function HeaderLocation({
                 ? véhiculeData?.find(
                     (véhicule) =>
                       véhicule?.deviceID === selectedVehicleToShowInMap
-                  )?.description || "Véhicule non disponible"
-                : "Choisir un véhicule"}
+                  )?.description || `${t("Véhicule non disponible")}`
+                : `${t("Choisir un véhicule")}`}
             </p>
             <span>
               <FaChevronDown />
@@ -83,7 +86,7 @@ function HeaderLocation({
                 },
               ],
             }}
-            title="Changer le type de vue sur la carte"
+            title={`${t("Changer le type de vue sur la carte")}`}
           >
             <div
               onClick={() => {
@@ -91,7 +94,7 @@ function HeaderLocation({
               }}
               className="flex items-center md:shadow-xl justify-between gap-1 border px-2 py-1 cursor-pointer  dark:bg-gray-900/50 dark:text-gray-100 dark:border-gray-300/40 bg-orange-50 md:bg-white md:border md:border-gray-300  rounded-md"
             >
-              <label htmlFor="mapType">Type de vue </label>
+              <label htmlFor="mapType">{t("Type de vue")} </label>
               <FaChevronDown />
             </div>
           </Tooltip>
@@ -116,7 +119,9 @@ function HeaderLocation({
                 },
               ],
             }}
-            title="Voir la position géographique de tous les véhicules"
+            title={`${t(
+              "Voir la position géographique de tous les véhicules"
+            )}`}
           >
             <h3
               onClick={() => {
@@ -125,7 +130,7 @@ function HeaderLocation({
               }}
               className="text-end md:bg-white md:border md:border-gray-300  md:shadow-xl md:py-1 md:px-4 rounded-lg text-orange-600 font-semibold cursor-pointer underline"
             >
-              Tous les vehicules
+              {t("Tous les véhicules")}
             </h3>
           </Tooltip>
         </div>

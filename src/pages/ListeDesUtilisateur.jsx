@@ -15,6 +15,7 @@ import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
 import { MdUpdate } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 function ListeDesUtilisateur({
   setDocumentationPage,
@@ -31,12 +32,14 @@ function ListeDesUtilisateur({
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
     handleLogin,
+    currentCountry,
     setShowSelectedUserOptionsPopup,
     setListeGestionDesVehicules,
     gestionAccountData,
     TestDeRequetteDevices,
     adminPassword,
   } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -61,10 +64,11 @@ function ListeDesUtilisateur({
         currentSelectedUserToConnect?.accountID,
         currentSelectedUserToConnect?.userID,
         currentSelectedUserToConnect?.password,
+        currentCountry,
         sendConnectionMail
       );
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -110,14 +114,14 @@ function ListeDesUtilisateur({
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous changer de Compte ?
+              {t("Voulez-vous changer de Compte ?")}
             </div>
             <div>
               <label
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
               >
-                Veuillez entrer votre mot de passe
+                {t("Veuillez entrer votre mot de passe")}
               </label>
               {errorMessage && (
                 <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
@@ -127,7 +131,7 @@ function ListeDesUtilisateur({
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mot de passe"
+                  placeholder={`${t("Mot de passe")}`}
                   required
                   value={inputPassword}
                   onChange={(e) => {
@@ -141,7 +145,7 @@ function ListeDesUtilisateur({
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button className="py-1 px-5 bg-orange-500 rounded-lg text-white">
-                Confirmer
+                {t("Confirmer")}
               </button>
 
               <h3
@@ -150,7 +154,7 @@ function ListeDesUtilisateur({
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
               >
-                Annuler
+                {t("Annuler")}
               </h3>
             </div>
           </form>
@@ -161,11 +165,13 @@ function ListeDesUtilisateur({
         {fromExpandSectionDashboard === "false" && (
           <div className="mb-[4rem]">
             <h2 className="notranslate mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
-              Liste des Utilisateur
+              {t("Liste des Utilisateur")}
             </h2>
 
             <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">Nombre d'utilisateur :</span>{" "}
+              <span className="text-gray-700">
+                {t("Nombre d'utilisateur")} :
+              </span>{" "}
               {filterUserAccountData?.length}
             </h3>
 
@@ -186,8 +192,8 @@ function ListeDesUtilisateur({
                   <div className="flex justify-center items-center gap-3 ">
                     <FaUserPlus className="text-2xl" />
                     <p className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                      <span className="hidden md:inline">Ajouter un</span>{" "}
-                      nouveau utilisateur
+                      <span className="hidden md:inline">{t("Ajouter")}</span>{" "}
+                      {t("nouveau utilisateur")}
                     </p>
                   </div>
                 </button>{" "}
@@ -218,7 +224,7 @@ function ListeDesUtilisateur({
                       {/* Compte: */}
                       <span className="notranslate">
                         {currentAccountSelected?.description ||
-                          "Choisissez un compte"}
+                          `${t("Choisissez un compte")}`}
                       </span>
                     </h3>
                     <FaChevronDown />
@@ -240,7 +246,7 @@ function ListeDesUtilisateur({
                     id="search"
                     name="search"
                     type="search"
-                    placeholder="Recherche un utilisateur"
+                    placeholder={`${t("Recherche un utilisateur")}`}
                     required
                     value={searchGroupInputTerm}
                     onChange={(e) => {
@@ -265,109 +271,116 @@ function ListeDesUtilisateur({
           </div>
         )}
         <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-          {filterUserAccountData
-            ?.slice()
-            .sort((a, b) => b?.creationTime - a?.creationTime)
-            ?.map((user, index) => {
-              return (
-                <div
-                  onClick={() => {
-                    console.log("User:", user);
-                    setCurrentSelectedUserToConnect(user);
-                    setListeGestionDesVehicules(user?.userDevices);
-                  }}
-                  key={index}
-                  className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
-                >
-                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                    {index + 1}
-                  </div>
-                  <div className="flex  gap-3  ">
-                    <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
-                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                      <div>
-                        <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            Nom Utilisateur :
-                          </p>
-                          <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
-                            {user?.description}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">UserID :</p>
-                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
-                            {user?.userID}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            AccountID :
-                          </p>
-                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
-                            {user?.accountID}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            Groupes affectés :
-                          </p>
-                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                            {user?.userGroupes?.length > 0
-                              ? user?.userGroupes?.length
-                              : "Tous"}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            Nombre d'Appareils :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {user?.userDevices?.length || "0"}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            Dernière connexion :
-                          </p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {FormatDateHeure(user?.lastLoginTime).date}
+          {filterUserAccountData.length > 0 ? (
+            filterUserAccountData
+              ?.slice()
+              .sort((a, b) => b?.creationTime - a?.creationTime)
+              ?.map((user, index) => {
+                return (
+                  <div
+                    onClick={() => {
+                      setCurrentSelectedUserToConnect(user);
+                      setListeGestionDesVehicules(user?.userDevices);
+                    }}
+                    key={index}
+                    className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                  >
+                    <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                      {index + 1}
+                    </div>
+                    <div className="flex  gap-3  ">
+                      <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
+                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                        <div>
+                          <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              {t("Nom Utilisateur")} :
+                            </p>
+                            <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
+                              {user?.description}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              {t("UserID")} :
+                            </p>
+                            <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
+                              {user?.userID}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              {t("AccountID")} :
+                            </p>
+                            <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
+                              {user?.accountID}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              {t("Groupes affectés")} :
+                            </p>
+                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                              {user?.userGroupes?.length > 0
+                                ? user?.userGroupes?.length
+                                : "Tous"}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              {t("Nombre d'Appareils")} :
+                            </p>
+                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                              {user?.userDevices?.length || "0"}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap">
+                            <p className="font-bold- text-gray-700">
+                              {t("Dernière connexion")} :
+                            </p>
+                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              {FormatDateHeure(user?.lastLoginTime).date}
 
-                            <span className="px-3">-</span>
-                            {FormatDateHeure(user?.lastLoginTime).time}
-                          </span>
-                        </div>{" "}
+                              <span className="px-3">-</span>
+                              {FormatDateHeure(user?.lastLoginTime).time}
+                            </span>
+                          </div>{" "}
+                        </div>
                       </div>
                     </div>
+                    <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                      {" "}
+                      <button
+                        onClick={() => {
+                          setSeConnecterAutreComptePopup(true);
+                        }}
+                        className={`${
+                          true
+                            ? " bg-gray-200 text-gray-800"
+                            : "text-gray-800 border-[0.02rem] border-gray-50 "
+                        }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                      >
+                        <p>Login</p> <IoMdLogIn className="text-xl" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowSelectedUserOptionsPopup(true);
+                          setCurrentSelectedUserToConnect(user);
+                        }}
+                        className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                      >
+                        <p>{t("Options")}</p> <IoOptions className="text-xl" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                    {" "}
-                    <button
-                      onClick={() => {
-                        setSeConnecterAutreComptePopup(true);
-                      }}
-                      className={`${
-                        true
-                          ? " bg-gray-200 text-gray-800"
-                          : "text-gray-800 border-[0.02rem] border-gray-50 "
-                      }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                    >
-                      <p>Login</p> <IoMdLogIn className="text-xl" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowSelectedUserOptionsPopup(true);
-                        setCurrentSelectedUserToConnect(user);
-                      }}
-                      className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                    >
-                      <p>Options</p> <IoOptions className="text-xl" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+          ) : (
+            <div className="flex h-full   justify-center items-center font-semibold text-lg">
+              <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

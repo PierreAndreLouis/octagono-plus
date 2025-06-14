@@ -48,6 +48,7 @@ import {
   ResponsiveContainer,
   Label,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
@@ -80,11 +81,13 @@ function DashboardContaintMaintComponant({
     fetchAllComptes,
     comptes,
     adminAccount,
-    adminUser,
+    adminUsername,
     adminPassword,
     véhiculeDetails,
     setListeGestionDesVehicules,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const [expandSection, setExpandSection] = useState("");
 
@@ -236,19 +239,21 @@ function DashboardContaintMaintComponant({
         <div className="bg-white shadow-lg rounded p-2 mb-5 text-sm border border-gray-100">
           <p className="text-gray-700 font-semibold">{fullName}</p>
           <p className="text-gray-700 font-semibold--">
-            AccountID :{" "}
+            {t("AccountID")} :{" "}
             <span className="font-bold notranslate">{accountID}</span>{" "}
           </p>
           <p className="text-gray-600">
             {" "}
-            Départ : {startDate} /{" "}
+            {t("Départ")} : {startDate} /{" "}
             <span className="font-bold">{startTime}</span>
           </p>
           <p className="text-gray-600">
-            Arrivée : {stopDate} / <span className="font-bold">{stopTime}</span>
+            {t("Arrivée")} : {stopDate} /{" "}
+            <span className="font-bold">{stopTime}</span>
           </p>
           <p className="text-gray-600">
-            Durée trajet : <span className="font-bold"> {dureeTrajetStr}</span>
+            {t("Durée trajet")} :{" "}
+            <span className="font-bold"> {dureeTrajetStr}</span>
           </p>
         </div>
       );
@@ -325,13 +330,13 @@ function DashboardContaintMaintComponant({
         <div className="bg-white shadow-lg rounded p-2 text-sm border border-gray-100">
           <p className="font-semibold">{data.name}</p>
           <p>
-            Total : <span className="font-bold">{data.total}</span>
+            {t("Total")} : <span className="font-bold">{data.total}</span>
           </p>
           <p>
-            Inactifs : <span className="font-bold">{data.inactifs}</span>
+            {t("Inactifs")} : <span className="font-bold">{data.inactifs}</span>
           </p>
           <p>
-            Actifs : <span className="font-bold">{data.actifs}</span>
+            {t("Actifs")} : <span className="font-bold">{data.actifs}</span>
           </p>
         </div>
       );
@@ -487,9 +492,9 @@ function DashboardContaintMaintComponant({
       setIsLoading2(false);
     }, 5000);
 
-    const fetchAllOtherData = true;
+    // const fetchAllOtherData = true;
 
-    fetchAllComptes(adminAccount, adminUser, adminPassword, fetchAllOtherData);
+    fetchAllComptes(adminAccount, adminUsername, adminPassword);
   };
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
@@ -511,38 +516,38 @@ function DashboardContaintMaintComponant({
                 #
               </th>
               <th className="border min-w-[11.94rem] dark:border-gray-600 py-2 ---- px-2">
-                Compte
+                {t("Compte")}
               </th>
               <th className="border dark:border-gray-600 min-w-[6rem] py-2 ---- px-2">
-                Total
+                {t("Total")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Déplacé
+                {t("Déplacé")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Actif
+                {t("Actifs")}
               </th>
 
               <th className="border  min-w-[8rem] dark:border-gray-600 py-2 ---- px-2">
-                Hors service
+                {t("Hors service")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Utilisateur
+                {t("Utilisateur")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Groupe
+                {t("Groupe")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Geofence
+                {t("Geofence")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Type
+                {t("Type")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                Manager
+                {t("Manager")}
               </th>
               <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                IsActif
+                {t("IsActif")}
               </th>
             </tr>
           </div>
@@ -760,7 +765,7 @@ function DashboardContaintMaintComponant({
         ) : (
           <div className="w-full min-h-full flex justify-center items-center">
             <p className="py-10 font-semibold text-lg text-gray-600">
-              Pas de données disponibles
+              {t("Pas de données disponibles")}
             </p>
           </div>
         )}
@@ -891,78 +896,93 @@ function DashboardContaintMaintComponant({
                   ?.map((device) => [device.deviceID, device])
               ).values()
             )
-        )
-          ?.slice(0, 3)
-          .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
-          ?.map((device, index) => {
-            let border_color = "bg-gray-50";
-            let text_color = "text-orange-500/80";
+        )?.slice(0, 3)?.length > 0 ? (
+          (currentAccountSelected
+            ? currentAccountSelected?.accountDevices
+            : Array.from(
+                new Map(
+                  gestionAccountData
+                    ?.flatMap((account) => account.accountDevices)
+                    ?.map((device) => [device.deviceID, device])
+                ).values()
+              )
+          )
+            ?.slice(0, 3)
+            .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
+            ?.map((device, index) => {
+              let border_color = "bg-gray-50";
+              let text_color = "text-orange-500/80";
 
-            if (
-              currentTimeSec - device?.lastUpdateTime <
-              twentyFourHoursInSec
-            ) {
-              border_color = "border-l-[.4rem] border-orange-400";
-              text_color = "text-orange-400";
-            } else if (
-              currentTimeSec - device?.lastUpdateTime >
-              twentyFourHoursInSec
-            ) {
-              border_color = "border-l-[.4rem] border-purple-300";
-              text_color = "text-purple-400";
-            }
+              if (
+                currentTimeSec - device?.lastUpdateTime <
+                twentyFourHoursInSec
+              ) {
+                border_color = "border-l-[.4rem] border-orange-400";
+                text_color = "text-orange-400";
+              } else if (
+                currentTimeSec - device?.lastUpdateTime >
+                twentyFourHoursInSec
+              ) {
+                border_color = "border-l-[.4rem] border-purple-300";
+                text_color = "text-purple-400";
+              }
 
-            if (device?.lastStopTime > todayTimestamp) {
-              border_color = "border-l-[.4rem] border-green-500";
-              text_color = "text-green-400";
-            }
+              if (device?.lastStopTime > todayTimestamp) {
+                border_color = "border-l-[.4rem] border-green-500";
+                text_color = "text-green-400";
+              }
 
-            return (
-              <div
-                key={index}
-                onClick={() => {}}
-                className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-[1rem] px-2 `}
-              >
-                {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+              return (
+                <div
+                  key={index}
+                  onClick={() => {}}
+                  className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-[1rem] px-2 `}
+                >
+                  {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                   {index + 1}
                 </p> */}
-                <FaCar
-                  className={`${text_color} text-[2rem] hidden sm:block min-w-[2.5rem] mt-1`}
-                />
-                <div className="flex flex-col gap-1 ">
                   <FaCar
-                    className={`${text_color} text-[2rem] sm:hidden min-w-[2.5rem] mt-1`}
+                    className={`${text_color} text-[2rem] hidden sm:block min-w-[2.5rem] mt-1`}
                   />
-                  <p className="text-gray-600 font-bold">
-                    Nom du Groupe :{" "}
-                    <span className="font-normal notranslate text-gray-500 ml-2 ">
-                      {device?.description}
-                    </span>{" "}
-                  </p>
-                  <p className="text-gray-600 font-bold">
-                    Last Update :{" "}
-                    <span className="font-normal text-gray-500 ml-2">
-                      {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
-                      {FormatDateHeure(device?.lastUpdateTime)?.time}
-                    </span>{" "}
-                  </p>
-                  {/* <p className="text-gray-600 font-bold">
+                  <div className="flex flex-col gap-1 ">
+                    <FaCar
+                      className={`${text_color} text-[2rem] sm:hidden min-w-[2.5rem] mt-1`}
+                    />
+                    <p className="text-gray-600 font-bold">
+                      {t("Nom du Groupe")} :{" "}
+                      <span className="font-normal notranslate text-gray-500 ml-2 ">
+                        {device?.description}
+                      </span>{" "}
+                    </p>
+                    <p className="text-gray-600 font-bold">
+                      {t("Last Update")} :{" "}
+                      <span className="font-normal text-gray-500 ml-2">
+                        {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
+                        {FormatDateHeure(device?.lastUpdateTime)?.time}
+                      </span>{" "}
+                    </p>
+                    {/* <p className="text-gray-600 font-bold">
                     Arrivée : 
                     <span className="font-normal text-gray-500 ml-2">
                       {FormatDateHeure(device?.lastStopTime)?.date} {" / "}
                       {FormatDateHeure(device?.lastStopTime)?.time}
                     </span>{" "}
                   </p> */}
-                  {/* <p className="text-gray-600">
+                    {/* <p className="text-gray-600">
                     Derniere Heure :{" "}
                     <span className="font-bold">
                       {FormatDateHeure(device?.lastUpdateTime)?.time}
                     </span>{" "}
                   </p> */}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+        ) : (
+          <div className="flex h-full   justify-center items-center font-semibold text-lg">
+            <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+          </div>
+        )}
       </div>
     );
   }
@@ -1002,7 +1022,7 @@ function DashboardContaintMaintComponant({
 
   function getMostRecentTimestamp(data) {
     if (data) {
-      console.log("data...............", data);
+      // console.log("data...............", data);
       const validTimestamps = data
         .map((véhicule) => parseInt(véhicule?.lastUpdateTime))
         .filter((timestamp) => !isNaN(timestamp));
@@ -1026,40 +1046,40 @@ function DashboardContaintMaintComponant({
     if (result) {
       setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
     }
-    console.log("result", result);
+    // console.log("result", result);
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
   const statusDescriptions = {
-    0x0000: "Code de statut non spécifié",
-    0xf020: "Localisation - En mouvement",
-    0xf021: "Localisation - Arrêté",
-    0xf022: "Localisation - Parking",
-    0xf100: "Localisation - Odomètre",
-    0xf110: "Localisation - Heures moteur",
-    0xf120: "Localisation - Niveau de carburant",
-    0xf200: "Changement d'état d'entrée",
-    0xf201: "Entrée activée",
-    0xf202: "Entrée désactivée",
-    0xf210: "Contact allumé",
-    0xf211: "Contact éteint",
-    0xf301: "Alimentation activée",
-    0xf302: "Alimentation désactivée",
-    0xf310: "Batterie faible",
-    0xf311: "Batterie OK",
-    0xf320: "En charge",
-    0xf321: "Non en charge",
-    0xf400: "Détection de remorquage",
-    0xf500: "Détection de collision",
-    0xf600: "Excès de vitesse",
-    0xf601: "Vitesse normale",
-    0xf700: "Entrée dans une zone géographique",
-    0xf701: "Sortie d'une zone géographique",
-    0xf800: "Informations de diagnostic",
-    0xf900: "Signal de vie",
-    0xfa00: "Connexion du conducteur",
-    0xfa01: "Déconnexion du conducteur",
-    0xfb00: "Alerte de panique",
-    0xfc00: "Rappel de maintenance",
+    0x0000: `${t("Code de statut non spécifié")}`,
+    0xf020: `${t("Localisation - En mouvement")}`,
+    0xf021: `${t("Localisation - Arrêté")}`,
+    0xf022: `${t("Localisation - Parking")}`,
+    0xf100: `${t("Localisation - Odomètre")}`,
+    0xf110: `${t("Localisation - Heures moteur")}`,
+    0xf120: `${t("Localisation - Niveau de carburant")}`,
+    0xf200: `${t("Changement d'état d'entrée")}`,
+    0xf201: `${t("Entrée activée")}`,
+    0xf202: `${t("Entrée désactivée")}`,
+    0xf210: `${t("Contact allumé")}`,
+    0xf211: `${t("Contact éteint")}`,
+    0xf301: `${t("Alimentation activée")}`,
+    0xf302: `${t("Alimentation désactivée")}`,
+    0xf310: `${t("Batterie faible")}`,
+    0xf311: `${t("Batterie OK")}`,
+    0xf320: `${t("En charge")}`,
+    0xf321: `${t("Non en charge")}`,
+    0xf400: `${t("Détection de remorquage")}`,
+    0xf500: `${t("Détection de collision")}`,
+    0xf600: `${t("Excès de vitesse")}`,
+    0xf601: `${t("Vitesse normale")}`,
+    0xf700: `${t("Entrée dans une zone géographique")}`,
+    0xf701: `${t("Sortie d'une zone géographique")}`,
+    0xf800: `${t("Informations de diagnostic")}`,
+    0xf900: `${t("Signal de vie")}`,
+    0xfa00: `${t("Connexion du conducteur")}`,
+    0xfa01: `${t("Déconnexion du conducteur")}`,
+    0xfb00: `${t("Alerte de panique")}`,
+    0xfc00: `${t("Rappel de maintenance")}`,
     // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
   };
 
@@ -1090,20 +1110,13 @@ function DashboardContaintMaintComponant({
   //
   //
 
-  // const dataPieChart = [
-  //   { name: "Group 1", value: 40 },
-  //   { name: "Group 2", value: 10 },
-  //   { name: "Group 2", value: 10 },
-  //   { name: "Group 3", value: 20 },
-  //   { name: "Group 4", value: 30 },
-  //   { name: "Group 5", value: 30 },
-  // ];
-
   const allData = (
     currentAccountSelected
       ? currentAccountSelected?.accountDevices
       : accountDevices
-  )?.flatMap((device) => device?.véhiculeDetails[0] || []);
+  )
+    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+    ?.filter((item) => item?.statusCode !== "0xF952");
 
   const statusCountMap = allData?.reduce((acc, item) => {
     const status = item.statusCode;
@@ -1116,10 +1129,10 @@ function DashboardContaintMaintComponant({
   );
 
   const COLORS = [
-    "#8b4cc7",
     "#f87171", // rouge clair
-    "#60a5fa", // bleu
     "#34d399", // vert
+    "#60a5fa", // bleu
+    "#8b4cc7", // purple
     "#fbbf24", // jaune
     "#a78bfa", // violet clair
     "#fb7185", // rose
@@ -1165,13 +1178,13 @@ function DashboardContaintMaintComponant({
       return (
         <div className="bg-white shadow-md rounded p-2 text-sm text-gray-800">
           <p>
-            <strong>Code:</strong> {name}
+            <strong>{t("Code")}:</strong> {name}
           </p>
           <p>
-            <strong>Quantité:</strong> {value}
+            <strong>{t("Quantité")}:</strong> {value}
           </p>
           <p>
-            <strong>Description:</strong> {codeDescription}
+            <strong>{t("Description")}:</strong> {codeDescription}
           </p>
         </div>
       );
@@ -1238,7 +1251,7 @@ function DashboardContaintMaintComponant({
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
                   <h2 className="mb-16">
-                    Graphe des Comptes ({comptes?.length})
+                    {t("Graphe des Comptes")} ({comptes?.length})
                   </h2>
                 </div>
                 <Graphe3BatonnetComptes />
@@ -1247,7 +1260,7 @@ function DashboardContaintMaintComponant({
             {expandSection === "tableau" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                  <h2 className="mb-10">Tableau des Comptes</h2>
+                  <h2 className="mb-10">{t("Tableau des Comptes")}</h2>
                 </div>
                 <TableauRecapitulatifComptes isLongueur="true" />
               </div>
@@ -1256,7 +1269,7 @@ function DashboardContaintMaintComponant({
               <div className="overflow-auto min- h-[90vh]">
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
-                    Liste des utilisateurs ({" "}
+                    {t("Liste des utilisateurs")} ({" "}
                     {currentAccountSelected
                       ? currentAccountSelected?.accountUsers?.length
                       : accountUsers?.length}
@@ -1273,7 +1286,7 @@ function DashboardContaintMaintComponant({
               <div className="overflow-auto min- h-[90vh]">
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
-                    Liste des Groupes ({" "}
+                    {t("Liste des Groupes")} ({" "}
                     {currentAccountSelected
                       ? currentAccountSelected?.accountGroupes?.length
                       : accountGroupes?.length}
@@ -1291,7 +1304,7 @@ function DashboardContaintMaintComponant({
               <div className="overflow-auto min- h-[90vh]">
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
-                    Liste des Alertes (
+                    {t("Liste des Alertes")} (
                     {
                       listeGestionDesVehicules?.flatMap(
                         (device) => device?.véhiculeDetails[0] || []
@@ -1322,18 +1335,18 @@ function DashboardContaintMaintComponant({
             <div className="">
               <div className="flex items-center gap-2 sm:gap-3">
                 <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
-                  Pour Aujourd'hui
+                  {t("Pour Aujourd'hui")}
                 </h1>
                 <h1 className="font-bold hidden md:block text-[1.1rem] md:text-xl text-gray-800">
-                  Statistiques pour aujourd'hui
+                  {t("Statistiques pour aujourd'hui")}
                 </h1>
               </div>
               <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
-                <span className="mr-1  text-gray-600">Compte :</span>
+                <span className="mr-1  text-gray-600">{t("Compte")} :</span>
                 <span className="notranslate">
                   {currentAccountSelected
                     ? currentAccountSelected?.description
-                    : "Tous les comptes"}
+                    : `${t("Tous les comptes")}`}
                 </span>
               </p>
             </div>
@@ -1345,9 +1358,9 @@ function DashboardContaintMaintComponant({
                 className=" cursor-pointer text-orange-500 flex gap-1 sm:gap-3 items-center absolute right-0  rounded-lg -bottom-0 sm:bottom-0"
               >
                 <p className="font-semibold hidden sm:block">
-                  Sélectionner un Groupe
+                  {t("Sélectionner un Groupe")}
                 </p>
-                <p className="font-semibold sm:hidden">Groupe</p>
+                <p className="font-semibold sm:hidden">{t("Groupe")}</p>
                 <FaChevronDown className="mt-1" />
               </div>
             )}
@@ -1355,7 +1368,9 @@ function DashboardContaintMaintComponant({
             <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
               {lastUpdate?.mostRecentTimestamp && (
                 <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
-                  <span className="hidden md:block mr-2">Last Update</span>
+                  <span className="hidden md:block mr-2">
+                    {t("Last Update")}
+                  </span>
                   {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
                   {" / "}
                   {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
@@ -1389,7 +1404,7 @@ function DashboardContaintMaintComponant({
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      Total
+                      {t("Total")}
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
@@ -1418,7 +1433,7 @@ function DashboardContaintMaintComponant({
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      Déplacés
+                      {t("Déplacés")}
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
@@ -1447,7 +1462,7 @@ function DashboardContaintMaintComponant({
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      Actifs
+                      {t("Actifs")}
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
@@ -1476,7 +1491,7 @@ function DashboardContaintMaintComponant({
                 <div>
                   <div className="flex items-center  gap-2">
                     <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      Inactifs
+                      {t("Inactifs")}
                     </h3>
                   </div>
                   <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
@@ -1526,14 +1541,14 @@ function DashboardContaintMaintComponant({
                 currentAccountSelected) && (
                 <div className="  min-w-[14rem]">
                   <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                    <h2>Position des appareils </h2>
+                    <h2>{t("Position des appareils")} </h2>
                     <p
                       onClick={() => {
                         setExpandSection("carte");
                       }}
                       className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
                     >
-                      Full Screen
+                      {t("Full Screen")}
                     </p>
                     {!currentAccountSelected && (
                       <FaAngleDoubleRight
@@ -1545,7 +1560,7 @@ function DashboardContaintMaintComponant({
                     )}
                   </div>
                   <p className="text-gray-500">
-                    Nombre d'appareils (
+                    {t("Nombre d'appareils")} (
                     {
                       listeGestionDesVehicules.filter(
                         (v) =>
@@ -1567,14 +1582,14 @@ function DashboardContaintMaintComponant({
                 <div>
                   <div className="  min-w-[14rem]">
                     <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                      <h2>Graphe des Comptes </h2>
+                      <h2>{t("Graphe des Comptes")} </h2>
                       <p
                         onClick={() => {
                           setExpandSection("graphe");
                         }}
                         className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
                       >
-                        Full Screen
+                        {t("Full Screen")}
                       </p>
                       {/* {!currentAccountSelected && (
                         <FaAngleDoubleRight
@@ -1586,7 +1601,7 @@ function DashboardContaintMaintComponant({
                       )} */}
                     </div>
                     <p className="text-gray-500">
-                      Nombre de comptes ({comptes?.length})
+                      {t("Nombre de comptes")} ({comptes?.length})
                     </p>
                   </div>
                   <div className="flex   text-[.8rem] absolute bottom-[0rem] right-0 gap-2 sm:gap-4 text-gray-600  ">
@@ -1594,19 +1609,19 @@ function DashboardContaintMaintComponant({
                       <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-green-500">
                         {" "}
                       </p>{" "}
-                      <p>Total</p>
+                      <p>{t("Total")}</p>
                     </div>
                     <div className="flex gap-1 items-center">
                       <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-orange-500">
                         {" "}
                       </p>{" "}
-                      <p>Actif</p>
+                      <p>{t("Actif")}</p>
                     </div>
                     <div className="flex gap-1 items-center">
                       <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-purple-500">
                         {" "}
                       </p>{" "}
-                      <p>Inactif</p>
+                      <p>{t("Inactif")}</p>
                     </div>
                   </div>{" "}
                 </div>
@@ -1670,13 +1685,13 @@ function DashboardContaintMaintComponant({
             <div className="flex items-center- items-start   mb-8">
               {showFistGrapheOption2 && (
                 <h2 className="font-semibold text-lg text-gray-700">
-                  Tous les appareils
+                  {t("Tous les appareils")}
                 </h2>
               )}
               {!showFistGrapheOption2 && !currentAccountSelected && (
                 <div className="flex w-full justify-between items-center">
                   <h2 className="font-semibold text-lg text-gray-700">
-                    Tableau des comptes ({comptes?.length})
+                    {t("Tableau des comptes")} ({comptes?.length})
                   </h2>
                   <p
                     onClick={() => {
@@ -1684,7 +1699,7 @@ function DashboardContaintMaintComponant({
                     }}
                     className="font-semibold absolute-- top-4 right-4 text-sm underline cursor-pointer text-orange-500"
                   >
-                    Full Screen
+                    {t("Full Screen")}
                   </p>
                 </div>
               )}
@@ -1692,7 +1707,7 @@ function DashboardContaintMaintComponant({
               {currentAccountSelected && (
                 <div>
                   <h2 className="font-semibold text-lg text-gray-700">
-                    Liste des Appareils
+                    {t("Liste des Appareils")}
                   </h2>
                   <p
                     onClick={() => {
@@ -1701,11 +1716,12 @@ function DashboardContaintMaintComponant({
                     }}
                     className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"
                   >
-                    Voir tous
+                    {t("Voir tous")}
                   </p>
 
                   <p className="text-gray-500">
-                    Nombre d'appareils ({listeGestionDesVehicules?.length})
+                    {t("Nombre d'appareils")} (
+                    {listeGestionDesVehicules?.length})
                   </p>
                 </div>
               )}
@@ -1735,19 +1751,25 @@ function DashboardContaintMaintComponant({
                   <p className="w-[.6rem] h-[.6rem] rounded-full bg-purple-500">
                     {" "}
                   </p>{" "}
-                  <p>Hors service ({DeviceInactifs?.length})</p>
+                  <p>
+                    {t("Hors service")} ({DeviceInactifs?.length})
+                  </p>
                 </div>
                 <div className="flex gap-1 items-center">
                   <p className="w-[.6rem] h-[.6rem] rounded-full bg-green-500">
                     {" "}
                   </p>{" "}
-                  <p>Déplacés ({DeviceDéplacer?.length})</p>
+                  <p>
+                    {t("Déplacés")} ({DeviceDéplacer?.length})
+                  </p>
                 </div>
                 <div className="flex gap-1 items-center">
                   <p className="w-[.6rem] h-[.6rem] rounded-full bg-orange-500">
                     {" "}
                   </p>{" "}
-                  <p>Actifs ({DeviceEnStationnement?.length})</p>
+                  <p>
+                    {t("Actifs")} ({DeviceEnStationnement?.length})
+                  </p>
                 </div>
               </div>
             )}
@@ -1764,7 +1786,7 @@ function DashboardContaintMaintComponant({
             </div>
 
             {!unlockCarteScroll && (
-              <div className="absolute flex justify-center items-center inset-0 bg-black/30 z-[999]">
+              <div className="absolute flex justify-center items-center inset-0 bg-black/20 z-[999]">
                 <div
                   onClick={() => {
                     setUnlockCarteScroll(true);
@@ -1803,14 +1825,14 @@ function DashboardContaintMaintComponant({
           <div className="bg-orange-100 shadow-inner md:col-span-2 shadow-black/10 -300/80 mt-6 p-3 rounded-lg">
             <div className="flex mb-4 justify-between items-center ">
               <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                Tous les Alertes (
+                {t("Tous les Alertes")} (
                 {currentAccountSelected
-                  ? currentAccountSelected?.accountDevices?.flatMap(
-                      (device) => device?.véhiculeDetails[0] || []
-                    )?.length
-                  : accountDevices?.flatMap(
-                      (device) => device?.véhiculeDetails[0] || []
-                    )?.length}
+                  ? currentAccountSelected?.accountDevices
+                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                      ?.filter((item) => item?.statusCode !== "0xF952")?.length
+                  : accountDevices
+                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                      ?.filter((item) => item?.statusCode !== "0xF952")?.length}
                 )
               </h2>
               <button
@@ -1826,7 +1848,7 @@ function DashboardContaintMaintComponant({
                 }}
                 className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
               >
-                Voir tous
+                {t("Voir tous")}
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2-- gap-3">
@@ -1835,138 +1857,160 @@ function DashboardContaintMaintComponant({
                 : accountDevices
               )
                 ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                ?.slice(0, 2)
-                ?.map((details, index) => {
-                  const code = parseInt(details.statusCode, 16);
-                  const codeDescription =
-                    statusDescriptions[code] || "Statut inconnu";
-                  const bgColor = getBackgroundColor(code);
-                  const currentDevice = accountDevices?.find(
-                    (d) => d.deviceID === details.deviceID
-                  );
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {}}
-                      className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
-                      style={
-                        {
-                          // backgroundColor: bgColor,
-                          // borderRadius: 10,
-                          // padding: 15,
-                          // marginBottom: 10,
-                          // boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                ?.filter((item) => item?.statusCode !== "0xF952")
+                ?.slice(0, 2)?.length > 0 ? (
+                (currentAccountSelected
+                  ? currentAccountSelected?.accountDevices
+                  : accountDevices
+                )
+                  ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                  ?.filter((item) => item?.statusCode !== "0xF952")
+                  ?.slice(0, 2)
+                  ?.map((details, index) => {
+                    const code = parseInt(details.statusCode, 16);
+                    const codeDescription =
+                      statusDescriptions[code] || "Statut inconnu";
+                    const bgColor = getBackgroundColor(code);
+                    const currentDevice = accountDevices?.find(
+                      (d) => d.deviceID === details.deviceID
+                    );
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {}}
+                        className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
+                        style={
+                          {
+                            // backgroundColor: bgColor,
+                            // borderRadius: 10,
+                            // padding: 15,
+                            // marginBottom: 10,
+                            // boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                          }
                         }
-                      }
-                    >
-                      <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                        {index + 1}
-                      </p>
-                      <FiAlertCircle className="text-orange-500/80 hidden md:block min-w-[2.5rem] text-[2.5rem] mt-1" />
-                      <div>
-                        <FiAlertCircle className="text-orange-500/80 md:hidden min-w-[2.5rem] text-[2.5rem] mt-1" />
+                      >
+                        <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                          {index + 1}
+                        </p>
+                        <FiAlertCircle className="text-orange-500/80 hidden md:block min-w-[2.5rem] text-[2.5rem] mt-1" />
+                        <div>
+                          <FiAlertCircle className="text-orange-500/80 md:hidden min-w-[2.5rem] text-[2.5rem] mt-1" />
 
-                        <p className="text-gray-600">
-                          Alerte :{" "}
-                          <span className="font-bold">{codeDescription}</span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Code :{" "}
-                          <span className="font-bold">
-                            {details?.statusCode}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Description :{" "}
-                          <span className="font-bold">
-                            {/* {currentDevice?.description} */}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Account ID :{" "}
-                          <span className="font-bold notranslate ">
-                            {details?.accountID}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600 notranslate">
-                          Adresse :{" "}
-                          <span className="notranslate">
-                            <span className="font-bold notranslate">
-                              {details?.address || "Pas d'adresse disponible"}
+                          <p className="text-gray-600">
+                            {t("Alerte")} :{" "}
+                            <span className="font-bold">{codeDescription}</span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Code")} :{" "}
+                            <span className="font-bold">
+                              {details?.statusCode}
                             </span>{" "}
-                          </span>
-                        </p>
-                        <p className="text-gray-600">
-                          Last update :{" "}
-                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                            {FormatDateHeure(details?.timestamp).date}
-                            <span className="px-2">/</span>{" "}
-                            {FormatDateHeure(details?.timestamp).time}
-                          </span>
-                        </p>
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Description")} :{" "}
+                            <span className="font-bold">
+                              {currentDevice?.description}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Account ID")} :{" "}
+                            <span className="font-bold notranslate ">
+                              {details?.accountID}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600 notranslate">
+                            {t("Adresse")} :{" "}
+                            <span className="notranslate">
+                              <span className="font-bold notranslate">
+                                {details?.address ||
+                                  `${t("Pas d'adresse disponible")}`}
+                              </span>{" "}
+                            </span>
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Last update")} :{" "}
+                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                              {FormatDateHeure(details?.timestamp).date}
+                              <span className="px-2">/</span>{" "}
+                              {FormatDateHeure(details?.timestamp).time}
+                            </span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+              ) : (
+                <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                  <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+                </div>
+              )}
             </div>
           </div>
           <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-orange-100-- bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
             <h2 className="font-semibold text-lg m-2 mb-0 mb-4-- text-gray-700">
-              Chart des Alertes (
+              {t("Chart des Alertes")} (
               {currentAccountSelected
-                ? currentAccountSelected?.accountDevices?.flatMap(
-                    (device) => device?.véhiculeDetails[0] || []
-                  )?.length
-                : accountDevices?.flatMap(
-                    (device) => device?.véhiculeDetails[0] || []
-                  )?.length}
+                ? currentAccountSelected?.accountDevices
+                    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                    ?.filter((item) => item?.statusCode !== "0xF952")?.length
+                : accountDevices
+                    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                    ?.filter((item) => item?.statusCode !== "0xF952")?.length}
               )
             </h2>
 
-            <div className="w-full h-[15rem] scale-110 mt-10-- ">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={dataPieChart}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {dataPieChart?.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltipChartPie />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            {dataPieChart?.length > 0 ? (
+              <div className="w-full h-[15rem] scale-110 mt-10-- ">
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={dataPieChart}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {dataPieChart?.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltipChartPie />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+              </div>
+            )}
             <div className=" rounded-lg max-h-[6rem] flex flex-col gap-1 px-3 mb-2 overflow-auto">
-              {dataPieChart?.map((status, index) => {
-                const code = parseInt(status?.name, 16);
-                const codeDescription =
-                  statusDescriptions[code] || "Statut inconnu";
-                const color = COLORS[index % COLORS.length]; // correspondance avec le PieChart
+              {dataPieChart
+                ?.filter((item) => item?.statusCode !== "0xF952")
+                ?.map((status, index) => {
+                  const code = parseInt(status?.name, 16);
+                  const codeDescription =
+                    statusDescriptions[code] || `${t("Statut inconnu")}`;
+                  const color = COLORS[index % COLORS.length]; // correspondance avec le PieChart
 
-                return (
-                  <div key={index} className="flex gap-3 items-center">
-                    <div
-                      style={{ backgroundColor: color }}
-                      className="min-w-[1rem] min-h-[1rem] rounded-full bg-orange-600--"
-                    ></div>
-                    <p>{status?.name}</p>
-                    <p className="whitespace-nowrap">
-                      {codeDescription} ({status?.value})
-                    </p>
-                  </div>
-                );
-              })}
+                  return (
+                    <div key={index} className="flex gap-3 items-center">
+                      <div
+                        style={{ backgroundColor: color }}
+                        className="min-w-[1rem] min-h-[1rem] rounded-full bg-orange-600--"
+                      ></div>
+                      <p>{status?.name}</p>
+                      <p className="whitespace-nowrap">
+                        {codeDescription} ({status?.value})
+                      </p>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
@@ -1976,7 +2020,7 @@ function DashboardContaintMaintComponant({
             <div className="flex mb-4 justify-between items-end ">
               <div className=" flex w-full justify-between items-center">
                 <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                  Tous les Utilisateurs (
+                  {t("Tous les Utilisateurs")} (
                   {currentAccountSelected
                     ? currentAccountSelected?.accountUsers?.length
                     : accountUsers?.length}
@@ -1997,7 +2041,7 @@ function DashboardContaintMaintComponant({
                   }}
                   className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
                 >
-                  Voir tous
+                  {t("Voir tous")}
                 </button>
               </div>
             </div>
@@ -2022,56 +2066,82 @@ function DashboardContaintMaintComponant({
                           )
                     ),
                   ]
-              )
-                ?.slice(0, 3)
-                .map((user, index) => {
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {}}
-                      className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
-                    >
-                      {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+              )?.slice(0, 3)?.length > 0 ? (
+                (currentAccountSelected
+                  ? currentAccountSelected?.accountUsers
+                  : [
+                      ...Array.from(
+                        new Map(
+                          gestionAccountData
+                            ?.flatMap((account) => account.accountUsers || [])
+                            ?.map((user) => [user.userID, user])
+                        ).values()
+                      ),
+                      ...accountUsers.filter(
+                        (user) =>
+                          !gestionAccountData
+                            ?.flatMap((account) => account.accountUsers || [])
+                            ?.some(
+                              (existingUser) =>
+                                existingUser.userID === user.userID
+                            )
+                      ),
+                    ]
+                )
+                  ?.slice(0, 3)
+                  .map((user, index) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {}}
+                        className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
+                      >
+                        {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                         {index + 1}
                       </p> */}
-                      <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
-                      <div>
-                        <p className="text-gray-600">
-                          Nom de l'utilisateur :{" "}
-                          <span className="font-bold notranslate">
-                            {user?.description}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Account ID :{" "}
-                          <span className="font-bold notranslate">
-                            {user?.accountID}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Nombre d'appareil :{" "}
-                          <span className="font-bold">
-                            {user?.userDevices?.length}
-                          </span>{" "}
-                        </p>
+                        <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
+                        <div>
+                          <p className="text-gray-600">
+                            {t("Nom de l'utilisateur")} :{" "}
+                            <span className="font-bold notranslate">
+                              {user?.description}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Account ID")} :{" "}
+                            <span className="font-bold notranslate">
+                              {user?.accountID}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Nombre d'appareil")} :{" "}
+                            <span className="font-bold">
+                              {user?.userDevices?.length}
+                            </span>{" "}
+                          </p>
 
-                        <p className="text-gray-600">
-                          Nombre de Groupe :{" "}
-                          <span className="font-bold">
-                            {user?.userGroupes?.length}
-                          </span>{" "}
-                        </p>
+                          <p className="text-gray-600">
+                            {t("Nombre de Groupe")} :{" "}
+                            <span className="font-bold">
+                              {user?.userGroupes?.length}
+                            </span>{" "}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+              ) : (
+                <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                  <p className="mb-10 md:mt-10">{t("Pas de résultat")}</p>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
             <div className=" flex pb-4 w-full justify-between items-center">
               <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                Tous les Groupes (
+                {t("Tous les Groupes")} (
                 {currentAccountSelected
                   ? currentAccountSelected?.accountGroupes?.length
                   : accountGroupes?.length}
@@ -2083,7 +2153,7 @@ function DashboardContaintMaintComponant({
                     setListeGestionDesGroupe(
                       currentAccountSelected?.accountGroupes
                     );
-                    setListeGestionDesGroupeTitre("Tous les Groupe");
+                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                   } else {
                     // setListeGestionDesGroupe(accountGroupes);
                     setListeGestionDesGroupe(
@@ -2095,7 +2165,7 @@ function DashboardContaintMaintComponant({
                         ).values()
                       )
                     );
-                    setListeGestionDesGroupeTitre("Tous les Groupe");
+                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                   }
                   setExpandSection("userGroupe");
                   // setDocumentationPage("Gestion_des_groupes");
@@ -2103,7 +2173,7 @@ function DashboardContaintMaintComponant({
                 }}
                 className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
               >
-                Voir tous
+                {t("Voir tous")}
               </button>
             </div>
             <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto--">
@@ -2116,51 +2186,56 @@ function DashboardContaintMaintComponant({
                         ?.map((group) => [group.groupID, group])
                     ).values()
                   )
-              )
-                ?.slice(0, 4)
-                ?.map((user, index) => {
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        // setShowSelectedUserOptionsPopup(true);
-                        // setTimeout(() => {
-                        //   setCurrentSelectedUserToConnect(user);
-                        //   console.log("user", user);
-                        // }, 1000);
-                        // setCurrentAccountSelected(account);
-                        // setListeGestionDesVehicules(account?.accountDevices);
-                        // setChooseOtherAccountGestion(false);
-                      }}
-                      className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
-                    >
-                      {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+              )?.slice(0, 4)?.length > 0 ? (
+                (currentAccountSelected
+                  ? currentAccountSelected?.accountGroupes
+                  : Array.from(
+                      new Map(
+                        gestionAccountData
+                          ?.flatMap((account) => account.accountGroupes)
+                          ?.map((group) => [group.groupID, group])
+                      ).values()
+                    )
+                )
+                  ?.slice(0, 4)
+                  ?.map((user, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
+                      >
+                        {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                         {index + 1}
                       </p> */}
-                      <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
-                      <div>
-                        <p className="text-gray-600">
-                          Nom du Groupe :{" "}
-                          <span className="font-bold notranslate">
-                            {user?.description}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Account ID :{" "}
-                          <span className="font-bold notranslate notranslate">
-                            {user?.accountID}
-                          </span>{" "}
-                        </p>
-                        <p className="text-gray-600">
-                          Nombre d'appareil :{" "}
-                          <span className="font-bold">
-                            {user?.groupeDevices?.length}
-                          </span>{" "}
-                        </p>
+                        <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
+                        <div>
+                          <p className="text-gray-600">
+                            {t("Nom du Groupe")} :{" "}
+                            <span className="font-bold notranslate">
+                              {user?.description}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Account ID")} :{" "}
+                            <span className="font-bold notranslate notranslate">
+                              {user?.accountID}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Nombre d'appareil")} :{" "}
+                            <span className="font-bold">
+                              {user?.groupeDevices?.length}
+                            </span>{" "}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+              ) : (
+                <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                  <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

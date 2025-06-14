@@ -66,7 +66,7 @@ function DashboardContaintMaintComponant({
     setListeGestionDesGroupeTitre,
     fetchAllComptes,
     adminAccount,
-    adminUser,
+    adminUsername,
     adminPassword,
   } = useContext(DataContext);
 
@@ -426,7 +426,12 @@ function DashboardContaintMaintComponant({
     }, 5000);
     const fetchAllOtherData = true;
 
-    fetchAllComptes(adminAccount, adminUser, adminPassword, fetchAllOtherData);
+    fetchAllComptes(
+      adminAccount,
+      adminUsername,
+      adminPassword,
+      fetchAllOtherData
+    );
 
     // fetchAccountDevices(id, pwd).catch((err) => {
     //   console.error("Erreur lors du chargement des devices :", err);
@@ -473,11 +478,10 @@ function DashboardContaintMaintComponant({
               <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
                 <span className="mr-1  text-gray-600">Compte :</span>
                 <span className="notranslate">
-
-                {currentAccountSelected
-                  ? currentAccountSelected?.description
-                  : "Tous les comptes"}
-                  </span>
+                  {currentAccountSelected
+                    ? currentAccountSelected?.description
+                    : "Tous les comptes"}
+                </span>
               </p>
             </div>
             <div
@@ -865,7 +869,7 @@ function DashboardContaintMaintComponant({
                     onClick={() => {
                       setShowSelectedUserOptionsPopup(true);
                       setCurrentSelectedUserToConnect(user);
-                      console.log("user", user);
+                      // console.log("user", user);
                       // setCurrentAccountSelected(account);
                       // setListeGestionDesVehicules(account?.accountDevices);
                       // setChooseOtherAccountGestion(false);
@@ -879,7 +883,9 @@ function DashboardContaintMaintComponant({
                     <div>
                       <p className="text-gray-600">
                         Nom de l'utilisateur :{" "}
-                        <span className="font-bold notranslate">{user?.description}</span>{" "}
+                        <span className="font-bold notranslate">
+                          {user?.description}
+                        </span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Nombre d'appareil :{" "}
@@ -983,7 +989,9 @@ function DashboardContaintMaintComponant({
                     <div>
                       <p className="text-gray-600">
                         Nom du Groupe :{" "}
-                        <span className="font-bold notranslate">{user?.description}</span>{" "}
+                        <span className="font-bold notranslate">
+                          {user?.description}
+                        </span>{" "}
                       </p>
                       <p className="text-gray-600">
                         Nombre d'appareil :{" "}

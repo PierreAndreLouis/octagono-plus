@@ -5,6 +5,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { PiIntersectThreeBold } from "react-icons/pi";
+import { useTranslation } from "react-i18next";
 
 function ModifyDeviceGestion({ setDocumentationPage }) {
   const {
@@ -18,6 +19,8 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
     gestionAccountData,
     adminPassword,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
   const [showConfirmAddVéhiculePopup, setShowConfirmAddVéhiculePopup] =
@@ -63,29 +66,29 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
     setError("");
 
     // Si deviceID est unique, créer le véhicule
-    const deviceID = addVéhiculeData.deviceID;
+    // const deviceID = addVéhiculeData.deviceID;
 
     // Vérification si deviceID existe déjà
-    const deviceExists = setCurrentAccountSelected?.accountDevices?.some(
-      (véhicule) => véhicule?.deviceID === deviceID
-    );
+    // const deviceExists = setCurrentAccountSelected?.accountDevices?.some(
+    //   (véhicule) => véhicule?.deviceID === deviceID
+    // );
 
-    if (deviceExists) {
-      setErrorID(
-        "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre."
-      );
-      return;
-    }
+    // if (deviceExists) {
+    //   setErrorID(
+    //     "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre."
+    //   );
+    //   return;
+    // }
 
     // Validation du numéro SIM
     if (isNaN(addVéhiculeData.simPhoneNumber)) {
-      setErrorID("Le numéro de la carte SIM doit être un nombre.");
+      setErrorID(`${t("Le numéro de la carte SIM doit être un nombre")}`);
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
     // Validation du numéro SIM
     if (isNaN(addVéhiculeData.imeiNumber)) {
-      setErrorID("L'IMEI doit être un nombre.");
+      setErrorID(`${t("L'IMEI doit être un nombre")}`);
       return; // Empêche la soumission si le numéro SIM n'est pas valide
     }
 
@@ -117,7 +120,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
     useState(false);
 
   useEffect(() => {
-    console.log("groupesSelectionnes", groupesSelectionnes);
+    // console.log("groupesSelectionnes", groupesSelectionnes);
   }, [groupesSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
@@ -172,7 +175,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
       setErrorMessage("");
       setInputPassword("");
     } else {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
 
@@ -200,19 +203,19 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] bg-white rounded-lg">
             <h2
               onClick={() => {
-                console.log("tous les Groupes: ", allGroupIDs);
+                // console.log("tous les Groupes: ", allGroupIDs);
               }}
               className="text-center py-4 bg-orange-300 font-bold text-lg"
             >
-              Liste Des Groupe
+              {t("Liste Des Groupe")}
             </h2>
             <p
               onClick={() => {
-                console.log("groupesNonSelectionnes", groupesNonSelectionnes);
+                // console.log("groupesNonSelectionnes", groupesNonSelectionnes);
               }}
               className="mx-2 mb-3 text-center mt-4 text-lg"
             >
-              Choisis un ou plusieurs Groupe pour intégrer l'appareil
+              {t("Choisis un ou plusieurs Groupe pour intégrer l'appareil")}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -241,13 +244,13 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                     <PiIntersectThreeBold className="text-gray-500 text-[2.5rem]" />
                     <div className="w-full">
                       <p className="text-gray-600">
-                        Nom du compte :{" "}
+                        {t("Nom du compte")} :{" "}
                         <span className="font-bold notranslate">
                           {groupe?.description}
                         </span>
                       </p>
                       <p className="text-gray-600">
-                        Nombre d'utilisateur :{" "}
+                        {t("Nombre d'utilisateur")} :{" "}
                         <span className="font-bold">
                           {groupe?.groupeDevices?.length}
                         </span>
@@ -272,7 +275,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                 }}
                 className="py-2 text-white rounded-md bg-orange-600 font-bold"
               >
-                Confirmer
+                {t("Confirmer")}
               </button>
               <button
                 onClick={() => {
@@ -280,7 +283,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                 }}
                 className="py-2  rounded-md bg-gray-200 font-bold"
               >
-                Annuler
+                {t("Annuler")}
               </button>
             </div>
           </div>
@@ -304,7 +307,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                Modifier un Appareil
+                {t("Modifier un Appareil")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -315,10 +318,10 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
                 <FaArrowLeft />
-                Retour
+                {t("Retour")}
               </button>
             </div>
-            <p className="mb-2">Choisissez un Groupe</p>
+            <p className="mb-2">{t("Choisissez un Groupe")}</p>
             <div
               onClick={() => {
                 setShowGroupesSelectionnesPopup(true);
@@ -326,7 +329,9 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
               className="w-full mb-10 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
             >
               <h3 className="w-full text-center-- font-semibold">
-                <span>{groupesSelectionnes.join(" - ") || "Défaut"}</span>
+                <span>
+                  {groupesSelectionnes.join(" - ") || `${t("Défaut")}`}
+                </span>
               </h3>
               <FaChevronDown />
             </div>
@@ -338,38 +343,38 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                   { id: "deviceID", label: "ID", placeholder: "ID" },
                   {
                     id: "imeiNumber",
-                    label: "Numéro IMEI",
-                    placeholder: "Numéro IMEI",
+                    label: `${t("Numéro IMEI")}`,
+                    placeholder: `${t("Numéro IMEI")}`,
                   },
                   {
                     id: "uniqueIdentifier",
-                    label: "Identificateur unique",
-                    placeholder: " IMEI",
+                    label: `${t("IMEI")}`,
+                    placeholder: `${t("IMEI")}`,
                   },
                   {
                     id: "description",
-                    label: "Description du véhicule",
-                    placeholder: "Description",
+                    label: `${t("Description du véhicule")}`,
+                    placeholder: `${t("Description du véhicule")}`,
                   },
                   {
                     id: "displayName",
-                    label: "Nom court du véhicule",
-                    placeholder: "Nom du véhicule",
+                    label: `${t("Nom du véhicule")}`,
+                    placeholder: `${t("Nom du véhicule")}`,
                   },
                   {
                     id: "licensePlate",
-                    label: "Plaque du véhicule",
-                    placeholder: "Plaque",
+                    label: `${t("Plaque du véhicule")}`,
+                    placeholder: `${t("Plaque du véhicule")}`,
                   },
                   {
                     id: "equipmentType",
-                    label: "Type d'appareil",
+                    label: `${t("Type d'appareil")}`,
                     placeholder: "Ex. : BO, B1, B2",
                   },
                   {
                     id: "simPhoneNumber",
-                    label: "Numéro SIM",
-                    placeholder: "Numéro SIM",
+                    label: `${t("Numéro SIM")}`,
+                    placeholder: `${t("Numéro SIM")}`,
                   },
                 ].map((field) => (
                   <div key={field.id}>
@@ -390,6 +395,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                       value={addVéhiculeData[field.id]}
                       onChange={handleChange}
                       required
+                      disabled={field.id === "deviceID"}
                       className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                     />
                   </div>
@@ -414,7 +420,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-orange-600 dark:bg-orange-700 px-3 py-1.5 text-md font-semibold text-white hover:bg-orange-700 dark:hover:bg-orange-800"
                   >
-                    Enregistrer
+                    {t("Enregistrer")}
                   </button>
                   <button
                     onClick={() => {
@@ -425,7 +431,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
-                    Annuler
+                    {t("Annuler")}
                   </button>
                 </div>
               </form>

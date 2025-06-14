@@ -7,6 +7,7 @@ import { DataContext } from "../../context/DataContext";
 import { MdOutlineStickyNote2 } from "react-icons/md";
 import { MdLocationPin } from "react-icons/md";
 import { GiPathDistance } from "react-icons/gi";
+import { useTranslation } from "react-i18next";
 
 function NavigationBar() {
   const {
@@ -25,6 +26,8 @@ function NavigationBar() {
     setIsDashboardHomePage,
   } = useContext(DataContext);
   let x;
+  const [t, i18n] = useTranslation();
+
   //
   //
   //
@@ -70,7 +73,7 @@ function NavigationBar() {
               } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
             >
               <IoMdHome className="text-xl" />
-              <h3 className="text-sm">Accueil</h3>
+              <h3 className="text-sm">{t("Accueil")}</h3>
             </Link>
 
             {/*  */}
@@ -91,7 +94,7 @@ function NavigationBar() {
                 } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
               >
                 <FaRegEdit className="text-xl" />
-                <h3 className="text-sm">Modifier</h3>
+                <h3 className="text-sm">{t("Modifier")}</h3>
               </Link>
             ) : (
               <Link
@@ -109,7 +112,7 @@ function NavigationBar() {
               >
                 <GiPathDistance className="text-xl" />
                 {/* <FaCar className="text-xl" /> */}
-                <h3 className="text-sm">Trajet</h3>
+                <h3 className="text-sm">{t("Trajet")}</h3>
               </Link>
             )}
 
@@ -167,7 +170,7 @@ function NavigationBar() {
               <MdOutlineStickyNote2 className="text-xl" />
               {/* <FaCar className="text-xl" /> */}
 
-              <h3 className="text-sm">Rapport</h3>
+              <h3 className="text-sm">{t("Rapport")}</h3>
             </Link>
 
             {/*  */}
@@ -187,7 +190,7 @@ function NavigationBar() {
               } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
             >
               <FaRegCircleUser className="text-xl" />
-              <h3 className="text-sm">Profil</h3>
+              <h3 className="text-sm">{t("Profil")}</h3>
             </Link>
 
             {/*  */}

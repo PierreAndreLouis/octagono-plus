@@ -8,7 +8,7 @@ import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffec
 import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
-function GestionDesCompts({ setDocumentationPage }) {
+function GestionDesRoles({ setDocumentationPage }) {
   const {
     FormatDateHeure,
     account,
@@ -64,14 +64,14 @@ function GestionDesCompts({ setDocumentationPage }) {
           <h2 className="mt-[10rem]-- text-lg text-center font-bold ">
             {t("Gestion Des Comptes")} ({filterListeDesCompte?.length})
           </h2>
-          {/* <button
+          <button
             onClick={() => {
-              console.log(véhiculeDetails);
+              TestDeRequetteDevices();
             }}
           >
             Test
           </button>{" "}
-          <p
+          {/* <p
             onClick={() => {
               console.log(accountDevices);
             }}
@@ -278,4 +278,6 @@ function GestionDesCompts({ setDocumentationPage }) {
   );
 }
 
-export default GestionDesCompts;
+// export default GestionDesRoles;
+
+export default GestionDesRoles;

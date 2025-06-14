@@ -12,6 +12,7 @@ import HistoriqueMainComponent from "../components/historique_vehicule/Historiqu
 import HistoriqueHeader from "../components/historique_vehicule/HistoriqueHeader";
 import TrajetVehicule from "../components/historique_vehicule/TrajetVehicule";
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
+import { useTranslation } from "react-i18next";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -42,6 +43,7 @@ function HistoriquePage() {
     currentDataFusionné,
     setSelectedVehicleToShowInMap,
   } = useContext(DataContext);
+  const [t, i18n] = useTranslation();
 
   let x;
   //

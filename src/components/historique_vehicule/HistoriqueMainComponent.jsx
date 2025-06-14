@@ -9,6 +9,7 @@ import { Tooltip } from "@mui/material";
 import MapComponent from "../location_vehicule/MapComponent";
 import { MdOutlineFullscreen } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 function HistoriqueMainComponent({
   // currentVéhicule,
@@ -30,6 +31,9 @@ function HistoriqueMainComponent({
     setVéhiculeHistoriqueDetails,
   } = useContext(DataContext);
   let x;
+
+  const [t, i18n] = useTranslation();
+
   //
   //
   //
@@ -105,9 +109,9 @@ function HistoriqueMainComponent({
   }, []); // Pas de dépendances, exécution régulière
 
   useEffect(() => {
-    console.log(currentVéhicule);
-    console.log(véhiculeHistoriqueDetails);
-    console.log(selectedVehicleToShowInMap);
+    // console.log(currentVéhicule);
+    // console.log(véhiculeHistoriqueDetails);
+    // console.log(selectedVehicleToShowInMap);
   }, [currentVéhicule, véhiculeHistoriqueDetails, selectedVehicleToShowInMap]);
 
   return (
@@ -135,16 +139,17 @@ function HistoriqueMainComponent({
         )}
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
           <h2 className="text-xl md:text-4xl md:mb-4 text-orange-600">
-            Historique{" "}
+            {t("Historique")}{" "}
           </h2>
           <h2 className="text-gray-800 notranslate mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
-            {currentVéhicule?.description || "Pas de véhicule sélectionné"}
+            {currentVéhicule?.description ||
+              `${t("Pas de véhicule sélectionné")}`}
           </h2>
         </div>
 
         <div className="flex flex-col gap-4">
           {loadingHistoriqueFilter ? (
-            <p className="text-center">Chargement des données...</p>
+            <p className="text-center">{t("Chargement des données")}...</p>
           ) : véhiculeHistoriqueDetails.length > 0 ? (
             (() => {
               const filteredVehicles = véhiculeHistoriqueDetails.filter(
@@ -176,7 +181,7 @@ function HistoriqueMainComponent({
                       vitess_img;
                     if (speed < 1) {
                       main_text_color = "text-red-900 dark:text-red-300";
-                      statut = "En stationnement";
+                      statut = `${t("En stationnement")}`;
                       lite_bg_color =
                         "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-red-700/10 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-red-900 dark:text-red-200";
@@ -185,7 +190,7 @@ function HistoriqueMainComponent({
                       imgClass = "w-14 sm:w-16 md:w-20";
                     } else if (speed >= 1 && speed <= 20) {
                       main_text_color = "text-[#555b03] dark:text-yellow-300";
-                      statut = "En mouvement lent";
+                      statut = `${t("En mouvement lent")}`;
                       lite_bg_color =
                         "bg-[#ffff001b] dark:bg-gray-900/40 dark:shadow-yellow-300/10 dark:shadow-lg dark:border-l-[.5rem] dark:border-yellow-400/80  shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-[#555b03] dark:text-yellow-100";
@@ -195,7 +200,7 @@ function HistoriqueMainComponent({
                       imgClass = "w-12 sm:w-14 md:w-20";
                     } else {
                       main_text_color = "text-green-700 dark:text-green-400";
-                      statut = "En mouvement rapide";
+                      statut = `${t("En mouvement rapide")}`;
                       lite_bg_color =
                         "bg-green-100/50 dark:bg-gray-900/40 dark:shadow-green-700/10 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
                       activeTextColor = "text-green-800 dark:text-green-200";
@@ -216,9 +221,7 @@ function HistoriqueMainComponent({
                     //   FormatDateHeure(timeStampData);
                     return (
                       <Tooltip
-                        title="Voir cette position sur la carte
-
-                    "
+                        title={`${t("Voir cette position sur la carte")}`}
                         PopperProps={{
                           modifiers: [
                             {
@@ -239,16 +242,16 @@ function HistoriqueMainComponent({
                             setHistoriqueSelectedLocationIndex(index);
 
                             setvoirPositionSurCarte(true);
-                            console.log(véhicule);
+                            // console.log(véhicule);
                           }}
                           key={index}
                           className={`${lite_bg_color} shadow-md relative rounded-lg p-3`}
                         >
                           <div
-                            onClick={() => {
-                              console.log(véhicule.timestamp);
-                              console.log(véhicule);
-                            }}
+                            // onClick={() => {
+                            //   console.log(véhicule.timestamp);
+                            //   console.log(véhicule);
+                            // }}
                             className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
                           >
                             {numero}
@@ -277,7 +280,7 @@ function HistoriqueMainComponent({
                                     <h3 className="text-sm sm:text-sm md:text-md">
                                       {véhicule.timestamp
                                         ? FormatDateHeureTimestamp.date
-                                        : "Pas de date disponible"}
+                                        : `${t("Pas de date disponible")}`}
                                     </h3>
                                   </div>
                                   <div className="flex items-center gap-1">
@@ -307,7 +310,7 @@ function HistoriqueMainComponent({
                                   <p className="text-md flex text-gray-600 dark:text-gray-300 mt-2 md:text-lg">
                                     {véhicule?.backupAddress ||
                                       véhicule.address ||
-                                      "Adresse non disponible"}{" "}
+                                      `${t("Adresse non disponible")}`}{" "}
                                   </p>
                                 </div>
                               </div>
@@ -319,8 +322,8 @@ function HistoriqueMainComponent({
                   })
               ) : (
                 <p className="text-center">
-                  Pas de données disponibles{" "}
-                  <span className=" text-orange-600">pour le filtre</span>
+                  {t("Pas de résultat")}{" "}
+                  {/* <span className=" text-orange-600">pour le filtre</span> */}
                 </p>
               );
             })()

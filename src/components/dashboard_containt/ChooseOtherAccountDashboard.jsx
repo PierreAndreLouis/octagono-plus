@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function ChooseOtherAccountDashboard({
   chooseOtherAccountGestion,
@@ -24,14 +25,17 @@ function ChooseOtherAccountDashboard({
     scrollToTop,
     accountGeofences,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
+
   return (
     <>
       {chooseOtherAccountGestion && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999999999999999999999999999999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[90vh] rounded-lg">
+          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[83vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
-                Liste des Comptes
+                {t("Liste des Comptes")}
               </h2>
 
               <IoClose
@@ -45,7 +49,7 @@ function ChooseOtherAccountDashboard({
               <input
                 className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
                 type="text"
-                placeholder="Rechercher un compte"
+                placeholder={`${t("Rechercher un compte")}`}
                 value={searchInputTerm}
                 onChange={(e) => {
                   setSearchInputTerm(e.target.value);
@@ -59,7 +63,7 @@ function ChooseOtherAccountDashboard({
             {chooseOneAccountToContinue && !currentAccountSelected && (
               <div className="mx-4 flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
                 <p className="w-full">
-                  Veuillez choisir un compte pour continuer
+                  {t("Veuillez choisir un compte pour continuer")}
                 </p>
                 <IoClose
                   onClick={() => {
@@ -85,7 +89,7 @@ function ChooseOtherAccountDashboard({
                 }}
                 className="font-bold bg-orange-500 text-white rounded-lg py-2 shadow-lg shadow-black/10"
               >
-                Tous les Comptes
+                {t("Tous les Comptes")}
               </button>{" "}
               {/*  */}
               {filterGestionAccountData?.map((account, index) => {
@@ -109,32 +113,32 @@ function ChooseOtherAccountDashboard({
                     <FaUserCircle className="text-gray-500 text-[2.5rem] mt-1" />
                     <div>
                       <p className="text-gray-600">
-                        Nom du compte :{" "}
+                        {t("Nom du compte")} :{" "}
                         <span className="font-bold notranslate">
                           {account?.description}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
+                        {t("Nombre d'appareil")} :{" "}
                         <span className="font-bold">
                           {account?.accountDevices?.length}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        Nombre d'utilisateur :{" "}
+                        {t("Nombre d'utilisateur")} :{" "}
                         <span className="font-bold">
                           {account?.accountUsers?.length}
                         </span>{" "}
                       </p>
 
                       <p className="text-gray-600">
-                        Nombre de Groupe :{" "}
+                        {t("Nombre de Groupe")} :{" "}
                         <span className="font-bold">
                           {account?.accountGroupes?.length}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        Nombre de geozones :{" "}
+                        {t("Nombre de geozones")} :{" "}
                         <span className="font-bold">
                           {account?.accountGeofences?.length}
                         </span>{" "}

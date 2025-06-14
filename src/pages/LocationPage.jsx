@@ -8,6 +8,7 @@ import HeaderLocation from "../components/location_vehicule/HeaderLocation";
 import MapComponent from "../components/location_vehicule/MapComponent";
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 import TypeDeVue from "../components/historique_vehicule/TypeDeVue";
+import { useTranslation } from "react-i18next";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -33,6 +34,9 @@ const LocationPage = ({
     isDashboardHomePage,
   } = useContext(DataContext);
   let x;
+
+  const [t, i18n] = useTranslation();
+
   //
   //
   //

@@ -263,7 +263,7 @@ function MapComponent({ mapType }) {
     useState("Rouge vif");
 
   useEffect(() => {
-    console.log("");
+    // console.log("");
   }, [ajouterCouleurGeofenceCodeCouleur]);
 
   ///////////////////////////////////////////
@@ -346,13 +346,13 @@ function MapComponent({ mapType }) {
   }, [clickedPosition8]);
 
   useEffect(() => {
-    console.log("");
+    // console.log("");
     setAddOrEditPosition(`position${positionIndex}`);
   }, [positionIndex]);
 
   function MapClickHandler({ setClickedPosition1 }) {
     useMapEvent("click", (e) => {
-      console.log("Position cliquée :", e.latlng);
+      // console.log("Position cliquée :", e.latlng);
       if (addOrEditPosition === "position1") {
         setClickedPosition1(e.latlng);
       } else if (addOrEditPosition === "position2") {
@@ -582,7 +582,7 @@ function MapComponent({ mapType }) {
         //     )?.password
       );
     } else {
-      console.log("pas d'assez de coordonnee...");
+      // console.log("pas d'assez de coordonnee...");
       setPasAssezDePositionAjouterErreur(true);
     }
   };

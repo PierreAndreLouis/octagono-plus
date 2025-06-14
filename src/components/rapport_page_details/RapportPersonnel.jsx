@@ -35,6 +35,7 @@ import TrajetVehicule from "../historique_vehicule/TrajetVehicule";
 import { DataContext } from "../../context/DataContext";
 import HistoriqueMainComponent from "../historique_vehicule/HistoriqueMainComponent";
 import MapComponent from "../location_vehicule/MapComponent";
+import { useTranslation } from "react-i18next";
 
 function RapportPersonnel({
   // currentVéhicule,
@@ -99,6 +100,8 @@ function RapportPersonnel({
     setCurrentPersonelVéhicule,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
+  const [t, i18n] = useTranslation();
+
   useEffect(() => {
     if (currentDataFusionné?.length > 0) {
       const updatedVéhicule = currentDataFusionné.find(
@@ -126,18 +129,18 @@ function RapportPersonnel({
   };
 
   const moisEnLettres = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "août",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
+    `${t("janvier")}`,
+    `${t("février")}`,
+    `${t("mars")}`,
+    `${t("avril")}`,
+    `${t("mai")}`,
+    `${t("juin")}`,
+    `${t("juillet")}`,
+    `${t("août")}`,
+    `${t("septembre")}`,
+    `${t("octobre")}`,
+    `${t("novembre")}`,
+    `${t("décembre")}`,
   ];
   // Trouver la date du rapport
   const timestampInSecondsDebut =
@@ -280,10 +283,10 @@ function RapportPersonnel({
           className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full"
         >
           <h1 className="text-center mb-2 font-semibold text-xl mt-16 dark:text-gray-300">
-            Rapport détaillé du véhicule
+            {t("Rapport détaillé du véhicule")}
           </h1>
           <h1 className="text-center notranslate mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
-            {currentVéhicule?.description || ""}
+            {currentVéhicule?.description || "---"}
           </h1>
           <div
             className={`mb-12 ${
@@ -293,7 +296,7 @@ function RapportPersonnel({
             <div className="flex gap-4 items-center border-b border-orange-600/30 dark:border-gray-600 pb-2 mb-3">
               <IoMdInformationCircleOutline className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Informations sur le véhicule
+                {t("Informations sur le véhicule")}
               </h2>
             </div>
 
@@ -302,39 +305,39 @@ function RapportPersonnel({
             <div>
               <div className="text-gray-700 font-bold flex flex-col gap-2 dark:text-gray-300">
                 <div className="flex flex-wrap">
-                  <p>Date de recherche trouvée :</p>
+                  <p>{t("Date de recherche trouvée")} :</p>
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-5">
                     {jourDebut ? (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        Du{" "}
+                        {t("Du")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
-                        au{" "}
+                        {t("au")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-950">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
                     ) : (
                       // )
-                      <span>Pas de date disonible</span>
+                      <span>{t("Pas de date disponible")}</span>
                     )}
                   </span>
                 </div>
 
                 {/*  */}
                 <div className="flex flex-wrap">
-                  <p>Heure de recherche trouvée :</p>
+                  <p>{t("Heure de recherche trouvée")} :</p>
                   {currentVéhicule?.véhiculeDetails[
                     currentVéhicule?.véhiculeDetails?.length - 1
                   ]?.timestamp ? (
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-5">
-                      De{" "}
+                      {t("De")}{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-950">
                         {heureDebut}
                       </span>{" "}
-                      à{" "}
+                      {t("à")}{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-950">
                         {heureFin}{" "}
                       </span>{" "}
@@ -342,20 +345,20 @@ function RapportPersonnel({
                   ) : (
                     <span className="font-normal ml-5 dark:text-orange-500">
                       {" "}
-                      Pas d'heure disponible
+                      {t("Pas d'heure disponible")}
                     </span>
                   )}
                 </div>
 
                 <p>
-                  Nom du Véhicule :{" "}
+                  {t("Nom du Véhicule")} :{" "}
                   <span className=" dark:text-orange-500 notranslate font-normal text-gray-700 pl-3">
                     {currentVéhicule?.description || "---"}
                   </span>
                 </p>
 
                 <p>
-                  Plaque d'immatriculation:{" "}
+                  {t("Plaque d'immatriculation")}:{" "}
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                     {currentVéhicule?.licensePlate || "---"}
                   </span>
@@ -372,7 +375,7 @@ function RapportPersonnel({
               <RiPinDistanceLine className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <div>
                 <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                  Informations sur le trajet du véhicule
+                  {t("Informations sur le trajet du véhicule")}
                 </h2>
               </div>
             </div>
@@ -386,38 +389,38 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 <div className="flex flex-wrap">
-                  <p>Date de recherche trouvée :</p>
+                  <p>{t("Date de recherche trouvée")} :</p>
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
                     {jourDebut ? (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        Du{" "}
+                        {t("Du")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-700">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
-                        au{" "}
+                        {t("au")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold- text-gray-700">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
                       </span>
                     ) : (
                       // )
-                      <span>Pas de date disonible</span>
+                      <span>{t("Pas de date dispobible")}</span>
                     )}
                   </span>
                 </div>
                 {/*  */}
                 <div className="flex flex-wrap">
-                  <p>Heure de recherche trouvée :</p>
+                  <p>{t("Heure de recherche trouvée")} :</p>
                   {currentVéhicule?.véhiculeDetails[
                     currentVéhicule?.véhiculeDetails?.length - 1
                   ]?.timestamp ? (
                     <span className="font-bold dark:text-orange-500 text-gray-700 pl-5">
-                      De{" "}
+                      {t("De")}{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold- text-gray-700">
                         {heureDebut}
                       </span>{" "}
-                      à{" "}
+                      {t("à")}{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold- text-gray-700">
                         {heureFin}{" "}
                       </span>{" "}
@@ -425,7 +428,7 @@ function RapportPersonnel({
                   ) : (
                     <span className="font-bold ml-5 dark:text-orange-500">
                       {" "}
-                      Pas d'heure disponible
+                      {t("Pas d'heure disponible")}
                     </span>
                   )}
                 </div>
@@ -437,7 +440,7 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 <p>
-                  Heure de départ:{" "}
+                  {t("Heure de départ")}:{" "}
                   <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveDebut &&
                       isSearching &&
@@ -447,11 +450,11 @@ function RapportPersonnel({
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
                     {heureActiveDebut
                       ? FormatDateHeure(heureActiveDebut.timestamp)?.time
-                      : "Pas de mouvement"}{" "}
+                      : `${t("Pas de mouvement")}`}{" "}
                   </span>
                 </p>
                 <p>
-                  Heure d'arrivée:{" "}
+                  {t("Heure d'arrivée")}:{" "}
                   <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin &&
                       isSearching &&
@@ -461,7 +464,7 @@ function RapportPersonnel({
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin
                       ? FormatDateHeure(heureActiveFin.timestamp)?.time
-                      : "Pas de mouvement"}{" "}
+                      : `${t("Pas de mouvement")}`}{" "}
                   </span>
                 </p>
                 {/*  */}
@@ -472,7 +475,7 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 <p>
-                  Durée total en mouvement :{" "}
+                  {t("Durée total en mouvement")} :{" "}
                   <span
                     onClick={() => {
                       console.log(currentPersonelVéhicule);
@@ -488,7 +491,7 @@ function RapportPersonnel({
                   </span>
                 </p>
                 <p>
-                  Durée des arrêts lors du deplacement :
+                  {t("Durée des arrêts lors du déplacement")} :
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {/* {formatTime(
                       totalStopHours,
@@ -499,7 +502,7 @@ function RapportPersonnel({
                   </span>
                 </p>
                 <p>
-                  Duree de l’arrêts le plus long :
+                  {t("Duree de l’arrêts le plus long")} :
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {formatTime(longestHours, longestMinutes, longestSeconds)}
                   </span>
@@ -512,7 +515,7 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 <p>
-                  Distance totale parcourue:
+                  {t("Distance totale parcourue")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {calculateTotalDistance(
                       currentVéhicule?.véhiculeDetails
@@ -522,7 +525,7 @@ function RapportPersonnel({
                   </span>
                 </p>
                 <p>
-                  Nombre total d’arrêts :
+                  {t("Nombre total d’arrêts")} :
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {nombreArret || "0"} */}
                     {currentPersonelVéhicule?.stopCount || ""}
@@ -536,21 +539,21 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 <p>
-                  Vitesse minimale:
+                  {t("Vitesse minimale")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {(minSpeed && minSpeed.toFixed(0)) || "0"} Km/h */}
                     {currentPersonelVéhicule?.minSpeed?.toFixed() || "0"} Km/h
                   </span>
                 </p>{" "}
                 <p>
-                  Vitesse maximale:
+                  {t("Vitesse maximale")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {(maxSpeed && maxSpeed.toFixed(0)) || "0"} Km/h */}
                     {currentPersonelVéhicule?.maxSpeed?.toFixed() || "0"} Km/h
                   </span>
                 </p>
                 <p>
-                  Vitesse moyenne:
+                  {t("Vitesse moyenne")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {/* {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/ */}
                     {currentPersonelVéhicule?.avgSpeed || 0} Km/h
@@ -564,7 +567,7 @@ function RapportPersonnel({
             <div className="shadow-md mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4">
               <GiPathDistance className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
               <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                Trajet du véhicule{" "}
+                {t("Trajet du véhicule")}{" "}
               </h2>
             </div>
           )}
@@ -675,7 +678,7 @@ function RapportPersonnel({
           >
             <SlSpeedometer className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              Graphe des vitesses{" "}
+              {t("Graphe des vitesses")}{" "}
             </h2>
           </div>
 
@@ -717,7 +720,7 @@ function RapportPersonnel({
                     }}
                     className="absolute z-[22222222222] top-3 right-4 cursor-pointer text-2xl text-red-500"
                   />
-                  <h3 className="text-orange-500">Historique</h3>
+                  <h3 className="text-orange-500">{t("Historique")}</h3>
                   <h2 className="text-gray-700 notranslate dark:text-gray-200 text-center">
                     {currentVéhicule?.description || ""}
                   </h2>
@@ -788,7 +791,7 @@ function RapportPersonnel({
                     className="flex items-center gap-3 "
                   >
                     <p className="font-semibold hidden xs:block text-lg text-orange-500 mb-0.5">
-                      Filtrer
+                      {t("Filtrer")}
                     </p>
 
                     {lieuxFrequentePupup ? (
@@ -818,7 +821,7 @@ function RapportPersonnel({
                     >
                       <IoSearchSharp className="text-orange-500 text-xl" />
 
-                      <h4 className="dark:text-gray-200">Recherche</h4>
+                      <h4 className="dark:text-gray-200">{t("Recherche")}</h4>
                     </div>
                     {/*  */}
                     {/*  */}
@@ -834,7 +837,9 @@ function RapportPersonnel({
                     >
                       <IoStatsChart className="text-orange-500 text-xl" />
 
-                      <h4 className="dark:text-gray-200">Voir l'Histoirque</h4>
+                      <h4 className="dark:text-gray-200">
+                        {t("Voir l’historique")}
+                      </h4>
                     </div>
                     {/*  */}
                     {/*  */}
@@ -854,7 +859,7 @@ function RapportPersonnel({
                       <TfiMapAlt className="text-orange-500 text-xl" />
 
                       <h4 className="dark:text-gray-200">
-                        Tous les lieux fréquentés
+                        {t("Tous les lieux fréquentés")}
                       </h4>
                     </div>
                     {/*  */}
@@ -875,7 +880,7 @@ function RapportPersonnel({
                       <FaCar className="text-orange-500 text-xl" />
 
                       <h4 className="dark:text-gray-200">
-                        Tous les lieux Stationnés
+                        {t("Tous les lieux Stationnés")}
                       </h4>
                     </div>
                     {/*  */}
@@ -896,7 +901,7 @@ function RapportPersonnel({
                       <FaArrowUp19 className="text-orange-500 text-xl" />
 
                       <h4 className="dark:text-gray-200">
-                        Filtre en ordre croissant
+                        {t("Filtre en ordre croissant")}
                       </h4>
                     </div>
                     {/*  */}
@@ -921,7 +926,7 @@ function RapportPersonnel({
                       <FaArrowUp91 className="text-orange-500 text-xl" />
 
                       <h4 className="dark:text-gray-200">
-                        Filtre en ordre decroissant
+                        {t("Filtre en ordre décroissant")}
                       </h4>
                     </div>
                   </div>
@@ -932,7 +937,7 @@ function RapportPersonnel({
                 <div className="border flex  max-w-[30rem]-- max-auto w-full dark:bg-gray-900 mt-3 bg-white justify-between border-gray-400 rounded-lg p-2 py-1">
                   <input
                     type="text"
-                    placeholder="Recherche"
+                    placeholder={`${t("Rechercher")}`}
                     className="w-full bg-transparent  focus:outline-none"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -955,12 +960,12 @@ function RapportPersonnel({
                   <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
                     {jourDebut ? (
                       <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        Du{" "}
+                        {t("Du")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
                           {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
                           {anneeDebut === anneeFin ? "" : anneeDebut}
                         </span>{" "}
-                        au{" "}
+                        {t("au")}{" "}
                         <span className="dark:text-orange-500 dark:font-normal font-semibold text-gray-950">
                           {jourFin} {moisFin} {anneeFin}
                         </span>
@@ -968,7 +973,7 @@ function RapportPersonnel({
                     ) : (
                       // )
 
-                      <span>Pas de date disponible</span>
+                      <span>{t("Pas de date disponible")}</span>
                     )}
                   </span>
                 </p>
@@ -982,11 +987,11 @@ function RapportPersonnel({
                 ]?.timestamp ? (
                   <p className="text-[.9rem]">
                     <span className="font-normal dark:text-orange-500 text-gray-700 pl-3">
-                      De{" "}
+                      {t("De")}{" "}
                       <span className="dark:text-orange-500 mx-1 dark:font-normal font-semibold text-gray-950">
                         {heureDebut}
                       </span>{" "}
-                      à{" "}
+                      {t("à")}{" "}
                       <span className="dark:text-orange-500 ml-1 dark:font-normal font-semibold text-gray-950">
                         {heureFin}
                       </span>{" "}
@@ -994,7 +999,7 @@ function RapportPersonnel({
                   </p>
                 ) : (
                   <p className="text-[.9rem] ml-3 text-gray-700 dark:text-orange-500">
-                    Pas d'heure disponible
+                    {t("Pas d'heure disponible")}
                   </p>
                 )}
               </div>
@@ -1016,8 +1021,7 @@ function RapportPersonnel({
 
                       return (
                         <Tooltip
-                          title="Voir cette position sur la carte
-"
+                          title={`${t("Voir cette position sur la carte")}`}
                           PopperProps={{
                             modifiers: [
                               {
@@ -1061,30 +1065,40 @@ function RapportPersonnel({
                             </p>
                             <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
                               <p>
-                                <span className="font-bold">Date : </span>
+                                <span className="font-bold">
+                                  {t("Date")} :{" "}
+                                </span>
                                 {item.timestamp
                                   ? FormatDateHeure(item.timestamp)?.date
-                                  : "Pas de date disponible"}{" "}
+                                  : `${t("Pas de date disponible")}`}{" "}
                               </p>
                               <p>
-                                <span className="font-bold">Heure : </span>
+                                <span className="font-bold">
+                                  {t("Heure")} :{" "}
+                                </span>
                                 {FormatDateHeure(item.timestamp)?.time}{" "}
                               </p>
                             </div>
                             <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
                               <p>
-                                <span className="font-bold">Vitesse : </span>
+                                <span className="font-bold">
+                                  {t("Vitesse")} :{" "}
+                                </span>
                                 {item.speedKPH && !isNaN(Number(item.speedKPH))
                                   ? Number(item.speedKPH).toFixed(0) + " km/h"
                                   : "Non disponible"}
                               </p>
                               <p>
-                                <span className="font-bold">Statut : </span>
-                                {item.speedKPH <= 0 && "En stationnement"}
+                                <span className="font-bold">
+                                  {t("Statut")} :{" "}
+                                </span>
+                                {item.speedKPH <= 0 &&
+                                  `${t("En stationnement")}`}
                                 {item.speedKPH >= 1 &&
                                   item.speedKPH < 20 &&
-                                  "En mouvement lent"}
-                                {item.speedKPH >= 20 && "En mouvement rapide"}
+                                  `${t("En mouvement lent")}`}
+                                {item.speedKPH >= 20 &&
+                                  `${t("En mouvement rapide")}`}
                               </p>
                             </div>
                           </div>
@@ -1093,7 +1107,7 @@ function RapportPersonnel({
                     })
                   ) : (
                     <p className="px-4 dark:text-gray-200 dark:bg-gray-800 text-center py-10">
-                      Pas de Résultat
+                      {t("Pas de Résultat")}
                     </p>
                   )
                 ) : filteredAddresses?.length > 0 ? (
@@ -1106,8 +1120,7 @@ function RapportPersonnel({
 
                       return (
                         <Tooltip
-                          title="Voir cette position sur la carte
-                        "
+                          title={`${t("Voir cette position sur la carte")}`}
                           PopperProps={{
                             modifiers: [
                               {
@@ -1152,15 +1165,15 @@ function RapportPersonnel({
                             <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
                               <p>
                                 <span className="font-bold dark:text-orange-400">
-                                  Date :{" "}
+                                  {t("Date")} :{" "}
                                 </span>
                                 {item.timestamp
                                   ? FormatDateHeure(item.timestamp)?.date
-                                  : "Pas de date disponible"}{" "}
+                                  : `${t("Pas de date disponible")}`}{" "}
                               </p>
                               <p>
                                 <span className="font-bold  dark:text-orange-400">
-                                  Heure :{" "}
+                                  {t("Heure")} :{" "}
                                 </span>
                                 {FormatDateHeure(item.timestamp)?.time}{" "}
                               </p>
@@ -1168,21 +1181,23 @@ function RapportPersonnel({
                             <div className="grid grid-cols-2 items-center gap-4 border-t mt-1 pt-1">
                               <p>
                                 <span className="font-bold  dark:text-orange-400">
-                                  Vitesse :{" "}
+                                  {t("Vitesse")} :{" "}
                                 </span>
                                 {item.speedKPH && !isNaN(Number(item.speedKPH))
                                   ? Number(item.speedKPH).toFixed(0) + " km/h"
-                                  : "Non disponible"}
+                                  : `${t("Non disponible")}`}
                               </p>
                               <p>
                                 <span className="font-bold  dark:text-orange-400">
                                   Statut :{" "}
                                 </span>
-                                {item.speedKPH <= 0 && "En stationnement"}
+                                {item.speedKPH <= 0 &&
+                                  `${t("En stationnement")}`}
                                 {item.speedKPH >= 1 &&
                                   item.speedKPH < 20 &&
-                                  "En mouvement lent"}
-                                {item.speedKPH >= 20 && "En mouvement rapide"}
+                                  `${t("En mouvement lent")}`}
+                                {item.speedKPH >= 20 &&
+                                  `${t("En mouvement rapide")}`}
                               </p>
                             </div>
                           </div>
@@ -1190,7 +1205,9 @@ function RapportPersonnel({
                       );
                     })
                 ) : (
-                  <p className="px-4 text-center py-10">Pas de Résultat</p>
+                  <p className="px-4 text-center py-10">
+                    {t("Pas de Résultat")}
+                  </p>
                 )}
               </div>
             </div>
@@ -1204,7 +1221,7 @@ function RapportPersonnel({
             }}
             className="bg-orange-100  px-4 py-1 mt-5 cursor-pointer rounded-lg"
           >
-            Choisissez un véhicule
+            {t("Choisissez un véhicule")}
           </button>
         </div>
       )}
