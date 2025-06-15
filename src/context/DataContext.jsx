@@ -2779,7 +2779,7 @@ const DataContextProvider = ({ children }) => {
           console.error("Erreur lors du chargement des devices :", err);
         });
       });
-    }, 1000 * 60 * 5);
+    }, 1000 * 60 * 15);
 
     return () => clearInterval(intervalId);
   }, [comptes]);

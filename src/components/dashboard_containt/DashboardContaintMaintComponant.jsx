@@ -571,6 +571,7 @@ function DashboardContaintMaintComponant({
     // const fetchAllOtherData = true;
 
     fetchAllComptes(adminAccount, adminUsername, adminPassword);
+    // console.log("fetch device only...................................");
     // comptes?.forEach((acct) => {
     //   const id = acct.accountID;
     //   const pwd = acct.password;
