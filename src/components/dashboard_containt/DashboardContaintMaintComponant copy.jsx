@@ -68,6 +68,7 @@ function DashboardContaintMaintComponant({
     adminAccount,
     adminUsername,
     adminPassword,
+    comptes,
   } = useContext(DataContext);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -426,12 +427,21 @@ function DashboardContaintMaintComponant({
     }, 5000);
     const fetchAllOtherData = true;
 
-    fetchAllComptes(
-      adminAccount,
-      adminUsername,
-      adminPassword,
-      fetchAllOtherData
-    );
+    comptes?.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
+      // Devices du compte
+      fetchAccountDevices(id, pwd).catch((err) => {
+        console.error("Erreur lors du chargement des devices :", err);
+      });
+    });
+
+    // fetchAllComptes(
+    //   adminAccount,
+    //   adminUsername,
+    //   adminPassword,
+    //   fetchAllOtherData
+    // );
 
     // fetchAccountDevices(id, pwd).catch((err) => {
     //   console.error("Erreur lors du chargement des devices :", err);

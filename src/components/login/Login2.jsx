@@ -22,6 +22,14 @@ function Login2() {
 
   const [t, i18n] = useTranslation();
 
+  const savedLang = localStorage.getItem("lang") || "fr";
+
+  const changeLang = (event) => {
+    const lang = event.target.value;
+    i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
+  };
+
   //
   //
   //
@@ -85,7 +93,7 @@ function Login2() {
     <div>
       {/* <GoogleTranslate /> */}
 
-      <div className="fixed top-0 right-4  ">
+      {/* <div className="fixed top-0 right-4  ">
         <div
           onClick={() => {
             // closeSideBar();
@@ -100,7 +108,7 @@ function Login2() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <img
@@ -127,26 +135,51 @@ function Login2() {
         <div className="mt-10   sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <div className="mb-4 ">
-                <label
-                  htmlFor="country"
-                  className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
-                >
-                  {t("Pays")}
-                </label>
-                <div className="mt-2 ">
-                  <select
-                    id="country"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    required
-                    className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+              <div className="grid grid-cols-2 justify-center items-center gap-2">
+                <div className="mb-4 ">
+                  <label
+                    htmlFor="country"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                   >
-                    <option value="">{t("Sélectionner un pays")}</option>
-                    <option value="ht">{t("Haïti")}</option>
-                    <option value="rd">{t("République Dominicaine")}</option>
-                  </select>
+                    {t("Pays")}
+                  </label>
+                  <div className="mt-2 ">
+                    <select
+                      id="country"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      required
+                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+                    >
+                      <option value="">{t("Sélectionner un pays")}</option>
+                      <option value="ht">{t("Haïti")}</option>
+                      <option value="rd">{t("République Dominicaine")}</option>
+                    </select>
+                  </div>
+                </div>{" "}
+                <div className="mb-4 ">
+                  <label
+                    htmlFor="country"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+                  >
+                    {t("Language")}
+                  </label>
+                  <div className="mt-2 ">
+                    <select
+                      id="country"
+                      name="country"
+                      value={savedLang}
+                      onChange={changeLang}
+                      required
+                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+                    >
+                      <option value="">{t("Sélectionner une langue")}</option>
+                      <option value="fr">{t("Français")}</option>
+                      <option value="es">{t("Espagnol")}</option>
+                      <option value="en">{t("Anglais")}</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               <label

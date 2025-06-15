@@ -494,7 +494,15 @@ function DashboardContaintMaintComponant({
 
     // const fetchAllOtherData = true;
 
-    fetchAllComptes(adminAccount, adminUsername, adminPassword);
+    // fetchAllComptes(adminAccount, adminUsername, adminPassword);
+    comptes?.forEach((acct) => {
+      const id = acct.accountID;
+      const pwd = acct.password;
+      // Devices du compte
+      fetchAccountDevices(id, pwd).catch((err) => {
+        console.error("Erreur lors du chargement des devices :", err);
+      });
+    });
   };
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
