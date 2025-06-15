@@ -2769,20 +2769,20 @@ const DataContextProvider = ({ children }) => {
   ]);
 
   x;
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      comptes?.forEach((acct) => {
-        const id = acct.accountID;
-        const pwd = acct.password;
-        // Devices du compte
-        fetchAccountDevices(id, pwd).catch((err) => {
-          console.error("Erreur lors du chargement des devices :", err);
-        });
-      });
-    }, 1000 * 60 * 15);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     comptes?.forEach((acct) => {
+  //       const id = acct.accountID;
+  //       const pwd = acct.password;
+  //       // Devices du compte
+  //       fetchAccountDevices(id, pwd).catch((err) => {
+  //         console.error("Erreur lors du chargement des devices :", err);
+  //       });
+  //     });
+  //   }, 1000 * 60 * 15);
 
-    return () => clearInterval(intervalId);
-  }, [comptes]);
+  //   return () => clearInterval(intervalId);
+  // }, [comptes]);
 
   //
   //
