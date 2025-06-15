@@ -619,7 +619,55 @@
   "Se souvenir de moi": "Recordarme",
   "Chargement": "Cargando",
   "Se connecter": "Iniciar Sesión",
-  "Compte Demo": "Cuenta Demo"
+  "Compte Demo": "Cuenta Demo",
+
+
+
+
+
+
+
+
+  
+  "Sélectionner une langue": "Seleccionar un idioma",
+  "Creation du nouveau groupe avec succès": "Grupo creado con éxito",
+  "Échec de la Creation du groupe": "Error al crear el grupo",
+  "Modification du groupe avec succès": "Grupo modificado con éxito",
+  "Échec de la Modification du groupe": "Error al modificar el grupo",
+  "Suppression du groupe avec succès": "Grupo eliminado con éxito",
+  "Échec de la Suppression du groupe": "Error al eliminar el grupo",
+  "Creation du nouveau utilisateur avec succès": "Usuario nuevo creado con éxito",
+  "Échec de la Creation du l'utilisateur": "Error al crear el usuario",
+  "Modification de l'utilisateur avec succès": "Usuario modificado con éxito",
+  "Échec de la Modification de l'utilisateur": "Error al modificar el usuario",
+  "Suppression de l'utilisateur avec succès": "Usuario eliminado con éxito",
+  "Échec de Suppression de l'utilisateur": "Error al eliminar el usuario",
+  "Creation du nouveau compte avec succès": "Cuenta creada con éxito",
+  "Échec de la Creation du compte": "Error al crear la cuenta",
+  "Compte modifié avec succès": "Cuenta modificada con éxito",
+  "Échec de la  Modification du compte": "Error al modificar la cuenta",
+  "Compte supprimer avec succès": "Cuenta eliminada con éxito",
+  "Échec de Suppression du compte": "Error al eliminar la cuenta",
+  "Creation du nouveau appareil avec succès": "Dispositivo creado con éxito",
+  "Échec de la Creation de l'appareil": "Error al crear el dispositivo",
+  "Modification de l'appareil avec succès": "Dispositivo modificado con éxito",
+  "Échec de la modification de l'appareil": "Error al modificar el dispositivo",
+  "Suppression de l'appareil avec succès": "Dispositivo eliminado con éxito",
+  "Échec de Suppression de l'appareil": "Error al eliminar el dispositivo",
+  "Vous avez ajoutee le geofence avec succès": "Geocerca añadida con éxito",
+  "Échec de l'ajout du Geofence": "Error al añadir la geocerca",
+  "Modification du geofence avec succès": "Geocerca modificada con éxito",
+  "Échec de la modification du geofence": "Error al modificar la geocerca",
+  "Suppression du geofence avec succès": "Geocerca eliminada con éxito",
+  "Échec de la Suppression du geofence": "Error al eliminar la geocerca",
+  "Échec de la Modification du geofence": "Error al modificar la geocerca",
+  "Vous avez ajouté l'appareil avec succès": "Dispositivo añadido con éxito",
+  "Échec de l'ajout du véhicule": "Error al añadir el vehículo",
+  "Vous avez modifié le véhicule avec succès": "Vehículo modificado con éxito",
+  "Échec de la modification du véhicule": "Error al modificar el vehículo",
+  "Vous avez supprimé le véhicule avec succès": "Vehículo eliminado con éxito",
+  "Échec de la suppression du véhicule": "Error al eliminar el vehículo"
+
 
 
 

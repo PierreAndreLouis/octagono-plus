@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
 import { ImEnlarge } from "react-icons/im";
 import { FiAlertCircle } from "react-icons/fi";
@@ -85,6 +85,7 @@ function DashboardContaintMaintComponant({
     adminPassword,
     véhiculeDetails,
     setListeGestionDesVehicules,
+    progressBarForLoadingData,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -316,9 +317,84 @@ function DashboardContaintMaintComponant({
       };
     });
 
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   const graphData2 = formatBarData(gestionAccountData)?.sort(
     (a, b) => b.total - a.total
   );
+
+  // const [graphData2, setGraphData2] = useState(null);
+  // const [updateGraphData2, setUpdateGraphData2] = useState(false);
+
+  // useEffect(() => {
+
+  //     setUpdateGraphData2(!updateGraphData2)
+
+  //   setTimeout(() => {
+  //     setUpdateGraphData2(!updateGraphData2)
+  //   }, 10000);
+  // }, [gestionAccountData])
+
+  // useEffect(() => {
+  //  setGraphData2(
+  //       formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
+  //     );
+  // }, [gestionAccountData])
+
+  // useEffect(() => {
+  //   if (!graphData2) {
+  //     setGraphData2(
+  //       formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
+  //     );
+  //   }
+  // }, [gestionAccountData]);
+
+  //   const [graphData2, setGraphData2] = useState(() =>
+  //   formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
+  // );
+
+  // let updateTimeout = null;
+
+  // useEffect(() => {
+  //   if (updateTimeout) clearTimeout(updateTimeout);
+
+  //   updateTimeout = setTimeout(() => {
+  //     const data = formatBarData(gestionAccountData)?.sort(
+  //       (a, b) => b.total - a.total
+  //     );
+  //     setGraphData2(data);
+  //   }, 15000);
+
+  //   return () => clearTimeout(updateTimeout);
+  // }, [gestionAccountData]);
+
+  // const [graphData2, setGraphData2] = useState([]);
+  // const isFirstUpdate = useRef(true);
+  // const timerRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (isFirstUpdate.current) {
+  //     isFirstUpdate.current = false;
+  //     setGraphData2(
+  //       formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
+  //     );
+  //   } else {
+  //     if (timerRef.current) clearTimeout(timerRef.current);
+
+  //     timerRef.current = setTimeout(() => {
+  //       setGraphData2(
+  //         formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
+  //       );
+  //     }, 15000); // 15 secondes
+  //   }
+  // }, [gestionAccountData]);
+
   const barSpacing2 = expandSection === "graphe" ? 160 : 70;
   const fixedWidth2 = graphData2?.length * barSpacing2;
 
@@ -494,15 +570,15 @@ function DashboardContaintMaintComponant({
 
     // const fetchAllOtherData = true;
 
-    // fetchAllComptes(adminAccount, adminUsername, adminPassword);
-    comptes?.forEach((acct) => {
-      const id = acct.accountID;
-      const pwd = acct.password;
-      // Devices du compte
-      fetchAccountDevices(id, pwd).catch((err) => {
-        console.error("Erreur lors du chargement des devices :", err);
-      });
-    });
+    fetchAllComptes(adminAccount, adminUsername, adminPassword);
+    // comptes?.forEach((acct) => {
+    //   const id = acct.accountID;
+    //   const pwd = acct.password;
+    //   // Devices du compte
+    //   fetchAccountDevices(id, pwd).catch((err) => {
+    //     console.error("Erreur lors du chargement des devices :", err);
+    //   });
+    // });
   };
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
@@ -1521,7 +1597,39 @@ function DashboardContaintMaintComponant({
         </div>{" "}
       </div>
       {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+
+      {/*  */}
       <div className="md:px-4-- pt-4">
+        {progressBarForLoadingData > 0 && progressBarForLoadingData < 100 && (
+          <div
+            className="rounded-md shadow-sm shadow-black/10 overflow-hidden"
+            style={{
+              width: "100%",
+              background: "#fff",
+              margin: "0px 0 10px 0",
+            }}
+          >
+            <div
+              style={{
+                width: `${progressBarForLoadingData}%`,
+                background: "#4caf50",
+                color: "#fff",
+                padding: "4px",
+                transition: "width 0.8s ease",
+                textAlign: "center",
+              }}
+            >
+              <p className="  font-semibold  drop-shadow-2xl">
+                {progressBarForLoadingData}%
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-2 items-stretch justify-center  gap-4 ">
           {/*  */}

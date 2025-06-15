@@ -648,7 +648,54 @@
   "Se souvenir de moi": "Remember Me",
   "Chargement": "Loading",
   "Se connecter": "Sign In",
-  "Compte Demo": "Demo Account"
+  "Compte Demo": "Demo Account",
+
+
+
+
+
+
+
+  
+  "Sélectionner une langue": "Select a Language",
+  "Creation du nouveau groupe avec succès": "New Group Created Successfully",
+  "Échec de la Creation du groupe": "Failed to Create Group",
+  "Modification du groupe avec succès": "Group Updated Successfully",
+  "Échec de la Modification du groupe": "Failed to Update Group",
+  "Suppression du groupe avec succès": "Group Deleted Successfully",
+  "Échec de la Suppression du groupe": "Failed to Delete Group",
+  "Creation du nouveau utilisateur avec succès": "New User Created Successfully",
+  "Échec de la Creation du l'utilisateur": "Failed to Create User",
+  "Modification de l'utilisateur avec succès": "User Updated Successfully",
+  "Échec de la Modification de l'utilisateur": "Failed to Update User",
+  "Suppression de l'utilisateur avec succès": "User Deleted Successfully",
+  "Échec de Suppression de l'utilisateur": "Failed to Delete User",
+  "Creation du nouveau compte avec succès": "New Account Created Successfully",
+  "Échec de la Creation du compte": "Failed to Create Account",
+  "Compte modifié avec succès": "Account Updated Successfully",
+  "Échec de la  Modification du compte": "Failed to Update Account",
+  "Compte supprimer avec succès": "Account Deleted Successfully",
+  "Échec de Suppression du compte": "Failed to Delete Account",
+  "Creation du nouveau appareil avec succès": "New Device Created Successfully",
+  "Échec de la Creation de l'appareil": "Failed to Create Device",
+  "Modification de l'appareil avec succès": "Device Updated Successfully",
+  "Échec de la modification de l'appareil": "Failed to Update Device",
+  "Suppression de l'appareil avec succès": "Device Deleted Successfully",
+  "Échec de Suppression de l'appareil": "Failed to Delete Device",
+  "Vous avez ajoutee le geofence avec succès": "Geofence Added Successfully",
+  "Échec de l'ajout du Geofence": "Failed to Add Geofence",
+  "Modification du geofence avec succès": "Geofence Updated Successfully",
+  "Échec de la modification du geofence": "Failed to Update Geofence",
+  "Suppression du geofence avec succès": "Geofence Deleted Successfully",
+  "Échec de la Suppression du geofence": "Failed to Delete Geofence",
+  "Échec de la Modification du geofence": "Failed to Update Geofence",
+  "Vous avez ajouté l'appareil avec succès": "Device Added Successfully",
+  "Échec de l'ajout du véhicule": "Failed to Add Vehicle",
+  "Vous avez modifié le véhicule avec succès": "Vehicle Updated Successfully",
+  "Échec de la modification du véhicule": "Failed to Update Vehicle",
+  "Vous avez supprimé le véhicule avec succès": "Vehicle Deleted Successfully",
+  "Échec de la suppression du véhicule": "Failed to Delete Vehicle"
+
 
 
 

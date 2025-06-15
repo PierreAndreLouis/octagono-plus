@@ -4,12 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import emailjs from "emailjs-com";
 import Logout from "../components/login/Logout";
+import { useTranslation } from "react-i18next";
 
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
   let x;
   const navigate = useNavigate();
+  const [t, i18n] = useTranslation();
 
   // Pour compter le nombre de requêtes
   const [countRequête, setCountRequête] = useState(() => {
@@ -247,6 +249,15 @@ const DataContextProvider = ({ children }) => {
   }, [currentAccountSelected]);
 
   const [dashboardLoadingEffect, setDashboardLoadingEffect] = useState(false);
+  const [dashboardLoadingEffectLogin, setDashboardLoadingEffectLogin] =
+    useState(false);
+
+  const loadForManySecond = () => {
+    setDashboardLoadingEffectLogin(true);
+    setTimeout(() => {
+      setDashboardLoadingEffectLogin(false);
+    }, 60 * 1000);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -1211,7 +1222,6 @@ const DataContextProvider = ({ children }) => {
         if (account === "sysadmin") {
           setIsDashboardHomePage(true);
           navigate("/dashboard_admin_page");
-          fetchAllComptes(account, user, password);
           setAdminUserData(userData);
 
           // localStorage.setItem("adminUserData", userData);
@@ -1230,8 +1240,11 @@ const DataContextProvider = ({ children }) => {
           setAdminAccount(account);
           setAdminUsername(user);
           setAdminPassword(password);
+
+          fetchAllComptes(account, user, password);
         } else {
           setUserData(userData);
+
           navigate("/home");
           setIsDashboardHomePage(false);
 
@@ -1252,6 +1265,11 @@ const DataContextProvider = ({ children }) => {
           setPassword(password);
 
           GeofenceDataFonction(account, user, password);
+
+          setTimeout(() => {
+            console.log("aaaaaaaaaaaaaaaaaa");
+            fetchVehicleData();
+          }, 3000);
         }
 
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
@@ -1612,6 +1630,67 @@ const DataContextProvider = ({ children }) => {
   const systemUser = "admin";
 
   // 1) Récupérer la liste des comptes et déclencher les autres fetchs
+
+  const [progressBarForLoadingData, setProgress] = useState(0);
+
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  const processCompte = async (acct) => {
+    const id = acct?.accountID;
+    const pwd = acct?.password;
+
+    try {
+      fetchAccountDevices(id, pwd);
+
+      fetchAccountGroupes(id, pwd)
+        .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+        .catch((err) => {
+          console.error(
+            "Erreur lors du chargement des groupes ou des devices de groupes :",
+            err
+          );
+          setError("Erreur lors de la mise à jour des groupes.");
+        });
+
+      fetchAccountUsers(id, pwd)
+        .then((users) => {
+          fetchUserDevices(id, users);
+          fetchUserGroupes(id, users);
+        })
+        .catch((err) => {
+          console.error(
+            "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+            err
+          );
+          setError("Erreur lors de la mise à jour des utilisateurs.");
+        });
+
+      fetchAccountGeofences(id, pwd);
+
+      await delay(2000); // pause entre les groupes
+    } catch (err) {
+      console.error("Erreur pour le compte", id, ":", err);
+      setError("Erreur sur un ou plusieurs comptes.");
+    }
+  };
+
+  const processAllComptes = async (comptes, batchSize = 5) => {
+    const total = comptes?.length;
+    let done = 0;
+
+    for (let i = 0; i < total; i += batchSize) {
+      const batch = comptes?.slice(i, i + batchSize);
+
+      for (const acct of batch) {
+        await processCompte(acct);
+        done += 1;
+        setProgress(Math.round((done / total) * 100));
+      }
+
+      await delay(3000); // pause entre les groupes
+    }
+  };
+
   const fetchAllComptes = async (
     account,
     user,
@@ -1626,16 +1705,13 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
-    console.log("IP address:", currentAPI);
-    console.log("requete +++++++++++++++++++++++++", xml);
-
     const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
+
     const text = await res.text();
-    console.log("result :", text);
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -1666,64 +1742,128 @@ const DataContextProvider = ({ children }) => {
     setComptes(newData);
 
     if (fetchAllOtherData) {
-      // Déclenchement automatique des autres fetchs pour chaque compte
+      loadForManySecond();
+      await processAllComptes(newData, 3); // 👈 traitement séquentiel en lots de 5
       ListeDesRolePourLesUserFonction(account, user, password);
-      newData?.forEach((acct) => {
-        const id = acct.accountID;
-        const pwd = acct.password;
-
-        // setTimeout(() => {
-        fetchAccountDevices(id, pwd)
-          .then((devices) => {
-            fetchVehiculeDetails(id, devices, pwd);
-          })
-          .catch((err) => {
-            console.error("Erreur lors du chargement des véhicules :", err);
-            setError("Erreur lors du chargement des véhicules.");
-          });
-        // }, 500);
-
-        setTimeout(() => {
-          // Groupes + Devices par groupe
-          fetchAccountGroupes(id, pwd)
-            .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-            .catch((err) => {
-              console.error(
-                "Erreur lors du chargement des groupes ou des devices de groupes :",
-                err
-              );
-              setError("Erreur lors de la mise à jour des groupes.");
-            });
-        }, 1000);
-
-        setTimeout(() => {
-          // Utilisateurs + Devices par utilisateur
-          fetchAccountUsers(id, pwd)
-            .then((users) => {
-              fetchUserDevices(id, users);
-              fetchUserGroupes(id, users);
-            })
-            .catch((err) => {
-              console.error(
-                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-                err
-              );
-              setError("Erreur lors de la mise à jour des utilisateurs.");
-            });
-        }, 2000);
-
-        setTimeout(() => {
-          fetchAccountGeofences(id, pwd).catch((err) => {
-            console.error("Erreur lors du chargement des geofences :", err);
-            setError("Erreur lors du chargement des geofences.");
-          });
-        }, 3000);
-      });
     }
+
     return newData;
   };
 
+  //   const fetchAllComptes = async (
+  //     account,
+  //     user,
+  //     password,
+  //     fetchAllOtherData = true
+  //   ) => {
+  //     console.log("fetchComptes: lancement de la requête XML");
+  //     const xml = `
+  // <GTSRequest command="dbget">
+  //   <Authorization account="${account}" user="${user}" password="${password}" />
+  //   <Record table="Account" partial="true" />
+  // </GTSRequest>
+  //   `;
+
+  //     console.log("IP address:", currentAPI);
+  //     console.log("requete +++++++++++++++++++++++++", xml);
+
+  //     const res = await fetch(currentAPI, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xml,
+  //     });
+  //     const text = await res.text();
+  //     console.log("result :", text);
+  //     const doc = new DOMParser().parseFromString(text, "application/xml");
+  //     const result = doc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       ?.getAttribute("result");
+  //     const records = Array.from(doc.getElementsByTagName("Record"));
+
+  //     const data =
+  //       result === "success"
+  //         ? records.map((rec) =>
+  //             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+  //               obj[fld.getAttribute("name")] = fld.textContent;
+  //               return obj;
+  //             }, {})
+  //           )
+  //         : [];
+
+  //     let newData;
+  //     if (user === "admin") {
+  //       newData = data;
+  //     } else if (user === "ht") {
+  //       newData = data?.filter((account) => account?.notes === "ht");
+  //     } else if (user === "rd") {
+  //       newData = data?.filter((account) => account?.notes === "rd");
+  //     }
+
+  //     console.log("fetchComptes: résultats------- =", user, newData);
+
+  //     setComptes(newData);
+
+  //     if (fetchAllOtherData) {
+  //       loadForManySecond();
+  //       // Déclenchement automatique des autres fetchs pour chaque compte
+  //       ListeDesRolePourLesUserFonction(account, user, password);
+  //       newData?.forEach((acct) => {
+  //         const id = acct.accountID;
+  //         const pwd = acct.password;
+
+  //         // setTimeout(() => {
+  //         fetchAccountDevices(id, pwd)
+  //           .then((devices) => {
+  //             fetchVehiculeDetails(id, devices, pwd);
+  //           })
+  //           .catch((err) => {
+  //             console.error("Erreur lors du chargement des véhicules :", err);
+  //             setError("Erreur lors du chargement des véhicules.");
+  //           });
+  //         // }, 500);
+
+  //         setTimeout(() => {
+  //           // Groupes + Devices par groupe
+  //           fetchAccountGroupes(id, pwd)
+  //             .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+  //             .catch((err) => {
+  //               console.error(
+  //                 "Erreur lors du chargement des groupes ou des devices de groupes :",
+  //                 err
+  //               );
+  //               setError("Erreur lors de la mise à jour des groupes.");
+  //             });
+  //         }, 1000);
+
+  //         setTimeout(() => {
+  //           // Utilisateurs + Devices par utilisateur
+  //           fetchAccountUsers(id, pwd)
+  //             .then((users) => {
+  //               fetchUserDevices(id, users);
+  //               fetchUserGroupes(id, users);
+  //             })
+  //             .catch((err) => {
+  //               console.error(
+  //                 "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+  //                 err
+  //               );
+  //               setError("Erreur lors de la mise à jour des utilisateurs.");
+  //             });
+  //         }, 2000);
+
+  //         setTimeout(() => {
+  //           fetchAccountGeofences(id, pwd).catch((err) => {
+  //             console.error("Erreur lors du chargement des geofences :", err);
+  //             setError("Erreur lors du chargement des geofences.");
+  //           });
+  //         }, 3000);
+  //       });
+  //     }
+  //     return newData;
+  //   };
+
   // 2) Récupérer accountDevices
+
   const fetchAccountDevices = async (accountID, password) => {
     console.log(
       "fetchAccountDevices: lancement de la requête XML pour",
@@ -1784,7 +1924,19 @@ const DataContextProvider = ({ children }) => {
           )
         : [];
 
-    const vehDetails = await fetchVehiculeDetails(accountID, data, password);
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+    const batchSize = 500; // 👈 modifiable (ex : 100 devices à la fois)
+    let vehDetails = [];
+
+    for (let i = 0; i < data.length; i += batchSize) {
+      const batch = data.slice(i, i + batchSize);
+      const details = await fetchVehiculeDetails(accountID, batch, password);
+      vehDetails = vehDetails.concat(details);
+      await delay(50); // 👈 modifiable (pause entre groupes)
+    }
+
+    // const vehDetails = await fetchVehiculeDetails(accountID, data, password);
 
     const enrichedData = data.map((device) => {
       const found = vehDetails.find((v) => v.deviceID === device.deviceID);
@@ -2696,7 +2848,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Creation du nouveau groupe avec  succès "
+          `${t("Creation du nouveau groupe avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -2750,7 +2902,9 @@ const DataContextProvider = ({ children }) => {
 
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de la Creation du  groupe  ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Creation du groupe")}`
+        );
         setConfirmationMessagePopupName(description);
 
         setCreateVéhiculeLoading(false);
@@ -2761,7 +2915,9 @@ const DataContextProvider = ({ children }) => {
       console.error("Erreur lors de la création du véhicule", error);
 
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de la Creation du  groupe  ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Creation du groupe")}`
+      );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
@@ -2888,7 +3044,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Modification du groupe avec  succès "
+          `${t("Modification du groupe avec succès")}`
         );
         setConfirmationMessagePopupName(description);
       } else {
@@ -2898,7 +3054,9 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
 
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de la Creation du groupe  ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Modification du groupe")}`
+        );
         setConfirmationMessagePopupName(description);
 
         setCreateVéhiculeLoading(false);
@@ -2908,7 +3066,9 @@ const DataContextProvider = ({ children }) => {
       setError("Erreur lors de la moodification du groupe.");
       console.error("Erreur lors de la création du véhicule", error);
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de la Creation du groupe  ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Modification du groupe")}`
+      );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
@@ -2970,7 +3130,9 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
 
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Suppression du groupe avec  succès ");
+        setConfirmationMessagePopupTexte(
+          `${t("Suppression du groupe avec succès")}`
+        );
         setConfirmationMessagePopupName("");
       } else {
         const errorMessage =
@@ -2981,7 +3143,9 @@ const DataContextProvider = ({ children }) => {
 
         // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Suppression du groupe")}`
+        );
         setConfirmationMessagePopupName("");
 
         setCreateVéhiculeLoading(false);
@@ -2995,7 +3159,9 @@ const DataContextProvider = ({ children }) => {
 
       setCreateVéhiculeLoading(false);
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de la Suppression du groupe  ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Suppression du groupe")}`
+      );
       setConfirmationMessagePopupName("");
     }
   };
@@ -3103,7 +3269,7 @@ const DataContextProvider = ({ children }) => {
         // setSuccessCreateUserGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Creation du nouveau utilisateur avec  succès "
+          `${t("Creation du nouveau utilisateur avec succès")}`
         );
         setConfirmationMessagePopupName(description);
         setError("");
@@ -3205,7 +3371,7 @@ const DataContextProvider = ({ children }) => {
         // setEchecCreateUserGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Échec de la Creation du l'utilisateur  "
+          `${t("Échec de la Creation du l'utilisateur")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -3219,7 +3385,7 @@ const DataContextProvider = ({ children }) => {
       // setEchecCreateUserGestionPopup(true);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        "Échec de la Creation du l'utilisateur  "
+        `${t("Échec de la Creation du l'utilisateur")}`
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -3311,7 +3477,7 @@ const DataContextProvider = ({ children }) => {
         // setSuccessModifyUserGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Modification de l'utilisateur avec   succès "
+          `${t("Modification de l'utilisateur avec succès")}`
         );
         setConfirmationMessagePopupName(description);
         setError("");
@@ -3481,7 +3647,7 @@ const DataContextProvider = ({ children }) => {
         // setEchecModifyUserGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Échec de la Modification de l'utilisateur  "
+          `${t("Échec de la Modification de l'utilisateur")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -3495,7 +3661,7 @@ const DataContextProvider = ({ children }) => {
       // setEchecModifyUserGestionPopup(true);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        "Échec de la Modification de l'utilisateur  "
+        `${t("Échec de la Modification de l'utilisateur")}`
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -3540,7 +3706,7 @@ const DataContextProvider = ({ children }) => {
           console.log("Delete successsssssssss...............");
           setShowConfirmationMessagePopup(true); // succès  Échec
           setConfirmationMessagePopupTexte(
-            "Suppression de l'utilisateur avec succès "
+            `${t("Suppression de l'utilisateur avec succès")}`
           );
           setConfirmationMessagePopupName("");
 
@@ -3629,7 +3795,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Échec de Suppression de l'utilisateur  "
+          `${t("Échec de Suppression de l'utilisateur")}`
         );
         setConfirmationMessagePopupName("");
 
@@ -3644,7 +3810,7 @@ const DataContextProvider = ({ children }) => {
       );
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        "Échec de Suppression de l'utilisateur  "
+        `${t("Échec de Suppression de l'utilisateur")}`
       );
       setConfirmationMessagePopupName("");
 
@@ -3736,7 +3902,7 @@ const DataContextProvider = ({ children }) => {
         // setSuccessCreateAccountGestionPoupu(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Creation du nouveau compte avec succès  "
+          `${t("Creation du nouveau compte avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -3819,7 +3985,9 @@ const DataContextProvider = ({ children }) => {
         // console.log("errorrrrrrrrr");
         // setEchecCreateAccountGestionPoupu(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de la Creation du compte  ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Creation du compte")}`
+        );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
@@ -3831,7 +3999,9 @@ const DataContextProvider = ({ children }) => {
       console.error("Erreur lors de la création du véhicule", error);
       // setEchecCreateAccountGestionPoupu(true);
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de la Creation du compte  ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Creation du compte")}`
+      );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
@@ -3906,7 +4076,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("Véhicule créé avec succès :");
         // setSuccessModifyAccountGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Compte modifié avec succès  ");
+        setConfirmationMessagePopupTexte(`${t("Compte modifié avec succès")}`);
         setConfirmationMessagePopupName(description);
         setError("");
         console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
@@ -3950,7 +4120,7 @@ const DataContextProvider = ({ children }) => {
         // setEchecModifyAccountGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Échec de la  Modification du compte   "
+          `${t("Échec de la  Modification du compte")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -3964,7 +4134,7 @@ const DataContextProvider = ({ children }) => {
       // setEchecModifyAccountGestionPopup(true);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        "Échec de la  Modification du compte   "
+        `${t("Échec de la  Modification du compte")}`
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -4008,7 +4178,9 @@ const DataContextProvider = ({ children }) => {
           console.log("Delete successsssssssss...............");
 
           setShowConfirmationMessagePopup(true); // succès  Échec
-          setConfirmationMessagePopupTexte("Compte supprimer avec succès  ");
+          setConfirmationMessagePopupTexte(
+            `${t("Compte supprimer avec succès")}`
+          );
           setConfirmationMessagePopupName("");
 
           setComptes((prev) =>
@@ -4091,7 +4263,9 @@ const DataContextProvider = ({ children }) => {
         );
 
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de Suppression du compte   ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de Suppression du compte")}`
+        );
         setConfirmationMessagePopupName("");
 
         setCreateVéhiculeLoading(false);
@@ -4105,7 +4279,9 @@ const DataContextProvider = ({ children }) => {
       );
 
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de Suppression du compte   ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de Suppression du compte")}`
+      );
       setConfirmationMessagePopupName("");
       setCreateVéhiculeLoading(false);
     }
@@ -4187,7 +4363,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("Véhicule créé avec succès :");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Creation du nouveau appareil avec   succès"
+          `${t("Creation du nouveau appareil avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -4246,7 +4422,9 @@ const DataContextProvider = ({ children }) => {
 
         // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de la Creation de l'appareil ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Creation de l'appareil")}`
+        );
         setConfirmationMessagePopupName(description);
         //////////////////
         setCreateVéhiculeLoading(false);
@@ -4259,7 +4437,9 @@ const DataContextProvider = ({ children }) => {
       console.error("Erreur lors de la création du véhicule", error);
 
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de la Creation de l'appareil ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Creation de l'appareil")}`
+      );
       setConfirmationMessagePopupName(description);
       //////////////////
       setCreateVéhiculeLoading(false);
@@ -4334,7 +4514,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("Véhicule créé avec succès :");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Modification de l'appareil avec  succès"
+          `${t("Modification de l'appareil avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -4404,7 +4584,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Échec de la modification de l'appareil "
+          `${t("Échec de la modification de l'appareil")}`
         );
         setConfirmationMessagePopupName(description);
         //////////////////
@@ -4419,7 +4599,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        "Échec de la modification de l'appareil "
+        `${t("Échec de la modification de l'appareil")}`
       );
       setConfirmationMessagePopupName(description);
       //////////////////
@@ -4465,7 +4645,7 @@ const DataContextProvider = ({ children }) => {
           console.log("Delete successsssssssss...............");
           setShowConfirmationMessagePopup(true); // succès  Échec
           setConfirmationMessagePopupTexte(
-            "Suppression de l'appareil avec  succès"
+            `${t("Suppression de l'appareil avec succès")}`
           );
           setConfirmationMessagePopupName("");
 
@@ -4557,7 +4737,9 @@ const DataContextProvider = ({ children }) => {
           response.statusText
         );
         setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte("Échec de Suppression de l'appareil ");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de Suppression de l'appareil")}`
+        );
         setConfirmationMessagePopupName("");
         setCreateVéhiculeLoading(false);
       }
@@ -4569,7 +4751,9 @@ const DataContextProvider = ({ children }) => {
         error
       );
       setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte("Échec de Suppression de l'appareil ");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de Suppression de l'appareil")}`
+      );
       setConfirmationMessagePopupName("");
       setCreateVéhiculeLoading(false);
     }
@@ -5503,7 +5687,7 @@ const DataContextProvider = ({ children }) => {
         // setSuccesCreateGeofencePopup(true);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Vous avez ajoutee le geofence avec succès."
+          `${t("Vous avez ajoutee le geofence avec succès")}`
         );
         setConfirmationMessagePopupName(description);
       } else {
@@ -5511,7 +5695,9 @@ const DataContextProvider = ({ children }) => {
         setCreateGeofenceLoading(false);
 
         setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte("Échec de l'ajout du Geofence");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de l'ajout du Geofence")}`
+        );
         setConfirmationMessagePopupName(description);
 
         const errorMessage =
@@ -5525,7 +5711,7 @@ const DataContextProvider = ({ children }) => {
       setCreateGeofenceLoading(false);
 
       setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte("Échec de l'ajout du Geofence");
+      setConfirmationMessagePopupTexte(`${t("Échec de l'ajout du Geofence")}`);
       setConfirmationMessagePopupName(description);
     }
   };
@@ -5692,7 +5878,7 @@ const DataContextProvider = ({ children }) => {
         // succès  Échec
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Modification du geofence avec succès"
+          `${t("Modification du geofence avec succès")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
@@ -5709,7 +5895,7 @@ const DataContextProvider = ({ children }) => {
         // succès  Échec
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Échec de la modification du geofence"
+          `${t("Échec de la modification du geofence")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
@@ -5720,7 +5906,9 @@ const DataContextProvider = ({ children }) => {
       // setErrorModifierGeofencePopup(true);
       // succès  Échec
       setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte("Échec de la modification du geofence");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la modification du geofence")}`
+      );
       setConfirmationMessagePopupName(description);
       setCreateGeofenceLoading(false);
     }
@@ -5841,7 +6029,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Suppression du geofence avec succès "
+          `${t("Suppression du geofence avec succès")}`
         );
         setConfirmationMessagePopupName("");
 
@@ -5861,7 +6049,9 @@ const DataContextProvider = ({ children }) => {
         // setErrorDeleteGeofencePopup(true);
         // succès  Échec
         setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte("Échec de la Suppression du geofence");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Suppression du geofence")}`
+        );
         setConfirmationMessagePopupName("");
         setCreateGeofenceLoading(false);
       }
@@ -5869,7 +6059,9 @@ const DataContextProvider = ({ children }) => {
       console.log("Erreur lors de la Suppression du geofence");
       // setErrorDeleteGeofencePopup(true);
       setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte("Échec de la Suppression du geofence");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Suppression du geofence")}`
+      );
       setConfirmationMessagePopupName("");
       setCreateGeofenceLoading(false);
       handleUserError(xmlDoc);
@@ -5932,7 +6124,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Modification du geofence avec succès "
+          `${t("Modification du geofence avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -5960,7 +6152,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          "Échec de la Modification du geofence  "
+          `${t("Échec de la Modification du geofence")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
@@ -5975,7 +6167,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        "Échec de la Modification du geofence  "
+        `${t("Échec de la Modification du geofence")}`
       );
       setConfirmationMessagePopupName(description);
       setCreateGeofenceLoading(false);
@@ -6007,6 +6199,8 @@ const DataContextProvider = ({ children }) => {
   x;
   // Requête pour afficher tous les véhicule mais sans details
   const fetchVehicleData = async () => {
+    console.log("aaaaaaaaaaaaaaaaaa33333333333");
+
     // if (!userData) return;
     // Pour suivre le nombre de requête
     incrementerRequête();
@@ -6048,7 +6242,7 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
-    // console.log("xmlData : ===>", xmlData);
+    console.log("xmlData : ===>", xmlData);
 
     try {
       const response = await fetch(currentAPI, {
@@ -6078,6 +6272,8 @@ const DataContextProvider = ({ children }) => {
       }
 
       setVehicleData(véhiculeData);
+      console.log("aaaaaaaaaaaaaaaaaa5555555555");
+      console.log("véhiculeData", véhiculeData);
 
       if (véhiculeData && véhiculeData?.length > 0) {
         véhiculeData?.forEach((véhicule) => {
@@ -7533,7 +7729,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Vous avez ajouté l'appareil avec succès"
+          `${t("Vous avez ajouté l'appareil avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -7552,7 +7748,9 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         //  succès
-        setConfirmationMessagePopupTexte("Échec de l'ajout du véhicule.");
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de l'ajout du véhicule")}`
+        );
         setConfirmationMessagePopupName(description);
 
         setCreateVéhiculeLoading(false);
@@ -7566,7 +7764,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true);
       //  succès
-      setConfirmationMessagePopupTexte("Échec de l'ajout du véhicule.");
+      setConfirmationMessagePopupTexte(`${t("Échec de l'ajout du véhicule")}`);
       setConfirmationMessagePopupName(description);
 
       setCreateVéhiculeLoading(false);
@@ -7640,7 +7838,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Vous avez modifié le véhicule avec succès"
+          `${t("Vous avez modifié le véhicule avec succès")}`
         );
         setConfirmationMessagePopupName(description);
 
@@ -7656,7 +7854,7 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Échec de la modification du véhicule."
+          `${t("Échec de la modification du véhicule")}`
         );
         setConfirmationMessagePopupName(description);
       }
@@ -7665,7 +7863,9 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setCreateVéhiculeLoading(false);
       setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte("Échec de la modification du véhicule.");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la modification du véhicule")}`
+      );
       setConfirmationMessagePopupName(description);
 
       console.error(
@@ -7706,7 +7906,7 @@ const DataContextProvider = ({ children }) => {
       if (response.ok) {
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Vous avez supprimé le véhicule avec succès."
+          `${t("Vous avez supprimé le véhicule avec succès")}`
         );
         setConfirmationMessagePopupName("");
 
@@ -7770,7 +7970,7 @@ const DataContextProvider = ({ children }) => {
         );
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          "Échec de la suppression du véhicule."
+          `${t("Échec de la suppression du véhicule")}`
         );
         setConfirmationMessagePopupName("");
         //
@@ -7785,7 +7985,9 @@ const DataContextProvider = ({ children }) => {
         error
       );
       setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte("Échec de la suppression du véhicule.");
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la suppression du véhicule")}`
+      );
       setConfirmationMessagePopupName("");
       //
 
@@ -8935,7 +9137,10 @@ const DataContextProvider = ({ children }) => {
         véhiculeDetails,
         setVehiculeDetails,
         adminUserData,
-
+        dashboardLoadingEffectLogin,
+        setDashboardLoadingEffectLogin,
+        loadForManySecond,
+        progressBarForLoadingData,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

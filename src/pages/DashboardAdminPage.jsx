@@ -95,6 +95,9 @@ function DashboardAdminPage() {
     setListeGestionDesVehicules,
     gestionAccountData,
     dashboardLoadingEffect,
+    dashboardLoadingEffectLogin,
+    setDashboardLoadingEffectLogin,
+    loadForManySecond,
 
     accountGeofences,
     listeGestionDesGeofences,
@@ -872,10 +875,10 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                15/06/2025 _ 1
+                15/06/2025 _ 2
               </p>
-              {/* dashboardLoadingEffect */}
-              {dashboardLoadingEffect && (
+              {/* ((dashboardLoadingEffect )) */}
+              {(dashboardLoadingEffect || dashboardLoadingEffectLogin) && (
                 <div className="fixed  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
                   <div className="w-full h-full flex justify-center items-center">
                     <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
