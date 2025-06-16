@@ -355,13 +355,26 @@ function DashboardContaintMaintComponant({
   //   }
   // }, [gestionAccountData]);
 
-  //   const [graphData2, setGraphData2] = useState(() =>
-  //   formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
-  // );
+  // const [graphData2, setGraphData2] = useState();
 
   // let updateTimeout = null;
 
   // useEffect(() => {
+  //   if (!graphData2) {
+  //     const data = formatBarData(gestionAccountData)?.sort(
+  //       (a, b) => b.total - a.total
+  //     );
+  //     setGraphData2(data);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!graphData2) {
+  //     const data = formatBarData(gestionAccountData)?.sort(
+  //       (a, b) => b.total - a.total
+  //     );
+  //     setGraphData2(data);
+  //   }
   //   if (updateTimeout) clearTimeout(updateTimeout);
 
   //   updateTimeout = setTimeout(() => {
@@ -795,65 +808,65 @@ function DashboardContaintMaintComponant({
   function Graphe3BatonnetComptes() {
     return (
       <div>
-        {graphData2?.length > 0 ? (
-          <div
-            className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={graphData2}
-                  layout="horizontal"
-                  margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
-                  barCategoryGap={barSpacing2 - 10}
-                >
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="shortName"
-                    type="category"
-                    tick={{ fontSize: 12 }}
-                    interval={0}
-                  />
-                  <YAxis hide={true} />
-                  <Tooltip content={<CustomTooltip2 />} />
-                  <Bar
-                    dataKey="totalDisplay"
-                    fill="#22c55e"
-                    name="Total"
-                    radius={[8, 8, 0, 0]}
-                    barSize={7}
-                    animationDuration={1000}
-                  />
+        {/* {graphData2?.length > 0 ? ( */}
+        <div
+          className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={graphData2}
+                layout="horizontal"
+                margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
+                barCategoryGap={barSpacing2 - 10}
+              >
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="shortName"
+                  type="category"
+                  tick={{ fontSize: 12 }}
+                  interval={0}
+                />
+                <YAxis hide={true} />
+                <Tooltip content={<CustomTooltip2 />} />
+                <Bar
+                  dataKey="totalDisplay"
+                  fill="#22c55e"
+                  name="Total"
+                  radius={[8, 8, 0, 0]}
+                  barSize={7}
+                  animationDuration={1000}
+                />
 
-                  <Bar
-                    dataKey="inactifsDisplay"
-                    fill="#9333ea"
-                    name="Inactifs"
-                    radius={[8, 8, 0, 0]}
-                    barSize={7}
-                    animationDuration={1000}
-                  />
+                <Bar
+                  dataKey="inactifsDisplay"
+                  fill="#9333ea"
+                  name="Inactifs"
+                  radius={[8, 8, 0, 0]}
+                  barSize={7}
+                  animationDuration={1000}
+                />
 
-                  <Bar
-                    dataKey="actifsDisplay"
-                    fill="#f97316"
-                    name="Actifs"
-                    radius={[8, 8, 0, 0]}
-                    barSize={7}
-                    animationDuration={1000}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                <Bar
+                  dataKey="actifsDisplay"
+                  fill="#f97316"
+                  name="Actifs"
+                  radius={[8, 8, 0, 0]}
+                  barSize={7}
+                  animationDuration={1000}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
-        ) : (
-          <div className="w-full min-h-full flex justify-center items-center">
-            <p className="py-10 font-semibold text-lg text-gray-600">
-              {t("Pas de données disponibles")}
-            </p>
-          </div>
-        )}
+        </div>
+        {/* // ) : (
+        //   <div className="w-full min-h-full flex justify-center items-center">
+        //     <p className="py-10 font-semibold text-lg text-gray-600">
+        //       {t("Pas de données disponibles")}
+        //     </p>
+        //   </div>
+        // )} */}
       </div>
     );
   }

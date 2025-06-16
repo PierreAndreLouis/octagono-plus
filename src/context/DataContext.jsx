@@ -1635,12 +1635,17 @@ const DataContextProvider = ({ children }) => {
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-  const processCompte = async (acct) => {
+  const processCompte = async (acct, isLastBatch = false) => {
     const id = acct?.accountID;
     const pwd = acct?.password;
 
     try {
-      fetchAccountDevices(id, pwd);
+      if (isLastBatch) {
+        await fetchAccountDevices(id, pwd); // 👈 await seulement ici
+      } else {
+        fetchAccountDevices(id, pwd);
+      }
+      // fetchAccountDevices(id, pwd);
 
       fetchAccountGroupes(id, pwd)
         .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
@@ -1680,15 +1685,34 @@ const DataContextProvider = ({ children }) => {
 
     for (let i = 0; i < total; i += batchSize) {
       const batch = comptes?.slice(i, i + batchSize);
+      const isLastBatch = i + batchSize >= total;
 
       for (const acct of batch) {
-        await processCompte(acct);
+        await processCompte(acct, isLastBatch);
         done += 1;
         setProgress(Math.round((done / total) * 100));
       }
-
-      await delay(3000); // pause entre les groupes
+      await delay(3000); // pas de pause après le dernier lot
     }
+
+    // les 2 derniers lots
+    //     const total = comptes?.length;
+    // const totalBatches = Math.ceil(total / batchSize);
+
+    // for (let i = 0; i < total; i += batchSize) {
+    //   const batchIndex = i / batchSize;
+    //   const isLastTwoBatches = batchIndex >= totalBatches - 2;
+
+    //   const batch = comptes?.slice(i, i + batchSize);
+
+    //   for (const acct of batch) {
+    //     await processCompte(acct, isLastTwoBatches); // 👈
+    //     done += 1;
+    //     setProgress(Math.round((done / total) * 100));
+    //   }
+
+    //   if (!isLastTwoBatches) await delay(3000);
+    // }
   };
 
   const fetchAllComptes = async (
@@ -1743,7 +1767,7 @@ const DataContextProvider = ({ children }) => {
 
     if (fetchAllOtherData) {
       loadForManySecond();
-      await processAllComptes(newData, 3); // 👈 traitement séquentiel en lots de 5
+      await processAllComptes(newData, 3); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
