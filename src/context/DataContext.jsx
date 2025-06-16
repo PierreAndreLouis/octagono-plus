@@ -1767,7 +1767,7 @@ const DataContextProvider = ({ children }) => {
 
     if (fetchAllOtherData) {
       loadForManySecond();
-      await processAllComptes(newData, 3); // 👈 traitement séquentiel en lots de 3
+      await processAllComptes(newData, 20); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
