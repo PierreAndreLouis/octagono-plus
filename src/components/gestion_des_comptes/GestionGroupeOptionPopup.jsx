@@ -27,33 +27,64 @@ function GestionGroupeOptionPopup({
     currentSelectedGroupeGestion,
     setListeGestionDesUsers,
     gestionAccountData,
+    accountDevices,
     setCurrentSelectedGroupeGestion,
   } = useContext(DataContext);
 
   const currentSelectedGroupeGestionDevices = () => {
-    // console.log("currentSelectedGroupeGestion changer......");
-    // Crée un Set des deviceID de deviceInfo pour une recherche rapide
+    const foundGroupe = gestionAccountData
+      ?.flatMap((account) => account.accountGroupes)
+      ?.find((u) => u.groupID === currentSelectedGroupeGestion?.groupID);
+
     const deviceIDsInInfo = new Set(
-      currentSelectedGroupeGestion?.groupeDevices?.map(
-        (device) => device.deviceID
-      )
+      foundGroupe?.groupeDevices?.map((device) => device.deviceID)
     );
 
-    // Filtre les éléments de deviceListe
-    const updateListe = (
-      currentAccountSelected ||
-      gestionAccountData?.find(
-        (account) =>
-          account.accountID === currentSelectedGroupeGestion?.accountID
-      )
-    )?.accountDevices?.filter((device) => deviceIDsInInfo.has(device.deviceID));
+    const foundDeviceIDs = [];
+    const notFoundDeviceIDs = [];
 
-    // console.log("updateListe", updateListe);
+    deviceIDsInInfo.forEach((id) => {
+      const isFound = accountDevices?.some((device) => device.deviceID === id);
+      if (isFound) {
+        foundDeviceIDs.push(id);
+      } else {
+        notFoundDeviceIDs.push(id);
+      }
+    });
+
+    console.log("✅ DeviceIDs trouvés :", foundDeviceIDs);
+    console.log("❌ DeviceIDs non trouvés :", notFoundDeviceIDs);
+
+    const updateListe = accountDevices?.filter((device) =>
+      deviceIDsInInfo.has(device.deviceID)
+    );
+
+    console.log("updateListe", updateListe);
 
     setTimeout(() => {
       setListeGestionDesVehicules(updateListe);
     }, 500);
   };
+
+  // const currentSelectedGroupeGestionDevices = () => {
+  //   const foundGroupe = gestionAccountData
+  //     ?.flatMap((account) => account.accountGroupes)
+  //     ?.find((u) => u.groupID === currentSelectedGroupeGestion?.groupID);
+
+  //   const deviceIDsInInfo = new Set(
+  //     foundGroupe?.groupeDevices?.map((device) => device.deviceID)
+  //   );
+
+  //   // Filtre les éléments de deviceListe
+  //   const updateListe = accountDevices
+  //     ?.filter((device) => deviceIDsInInfo.has(device.deviceID));
+
+  //   console.log("updateListe", updateListe);
+
+  //   setTimeout(() => {
+  //     setListeGestionDesVehicules(updateListe);
+  //   }, 500);
+  // };
 
   return (
     <div>

@@ -57,6 +57,10 @@ function GestionUserOptionsPopup({
     }
   };
 
+  const foundUser = gestionAccountData
+    ?.flatMap((account) => account.accountUsers)
+    ?.find((u) => u.userID === currentSelectedUserToConnect?.userID);
+
   return (
     <div>
       {deleteAccountPopup && (
@@ -141,21 +145,9 @@ function GestionUserOptionsPopup({
               <Link
                 onClick={() => {
                   setTimeout(() => {
-                    if (currentSelectedUserToConnect?.userDevices?.length > 0) {
-                      setListeGestionDesVehicules(
-                        currentSelectedUserToConnect?.userDevices
-                      );
-                    } else if (
-                      currentSelectedUserToConnect?.userGroupes?.length > 0
-                    ) {
-                      setListeGestionDesVehicules(
-                        currentSelectedUserToConnect?.userDevices
-                      );
-                    } else {
-                      setListeGestionDesVehicules(
-                        currentAccountSelected?.accountDevices
-                      );
-                    }
+                    setListeGestionDesVehicules(
+                      currentSelectedUserToConnect?.userDevices
+                    );
 
                     setDeviceListeTitleGestion(
                       "Utilisateur : " +
@@ -204,7 +196,7 @@ function GestionUserOptionsPopup({
               >
                 <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Liste des Groupes affectés
+                  Groupe affecté
                 </h2>
               </button>
               {/*  */}

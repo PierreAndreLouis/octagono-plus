@@ -12,6 +12,7 @@ const DataContextProvider = ({ children }) => {
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   // Pour compter le nombre de requêtes
   const [countRequête, setCountRequête] = useState(() => {
@@ -292,31 +293,34 @@ const DataContextProvider = ({ children }) => {
     } else {
       setListeGestionDesVehicules(accountDevices);
       setListeGestionDesGeofences(accountGeofences);
-      setListeGestionDesGroupe(
-        Array.from(
-          new Map(
-            gestionAccountData
-              ?.flatMap((account) => account.accountGroupes)
-              ?.map((group) => [group.groupID, group])
-          ).values()
-        )
-      );
+      // setListeGestionDesGroupe(
+      //   Array.from(
+      //     new Map(
+      //       gestionAccountData
+      //         ?.flatMap((account) => account.accountGroupes)
+      //         ?.map((group) => [group.groupID, group])
+      //     ).values()
+      //   )
+      // );
+      setListeGestionDesGroupe(accountGroupes);
 
-      setListeGestionDesUsers([
-        ...Array.from(
-          new Map(
-            gestionAccountData
-              ?.flatMap((account) => account.accountUsers || [])
-              ?.map((user) => [user.userID, user])
-          ).values()
-        ),
-        ...accountUsers.filter(
-          (user) =>
-            !gestionAccountData
-              ?.flatMap((account) => account.accountUsers || [])
-              ?.some((existingUser) => existingUser.userID === user.userID)
-        ),
-      ]);
+      setListeGestionDesUsers(accountUsers);
+
+      // setListeGestionDesUsers([
+      //   ...Array.from(
+      //     new Map(
+      //       gestionAccountData
+      //         ?.flatMap((account) => account.accountUsers || [])
+      //         ?.map((user) => [user.userID, user])
+      //     ).values()
+      //   ),
+      //   ...accountUsers.filter(
+      //     (user) =>
+      //       !gestionAccountData
+      //         ?.flatMap((account) => account.accountUsers || [])
+      //         ?.some((existingUser) => existingUser.userID === user.userID)
+      //   ),
+      // ]);
     }
   }, [currentAccountSelected]);
 
@@ -429,12 +433,15 @@ const DataContextProvider = ({ children }) => {
   }, [véhiculeData]);
 
   // véhicule detail in home page
-  const [vehicleDetails, setVehicleDetails] = useState(() => {
-    const storedVehicleDetails = localStorage.getItem("vehicleDetails");
-    return storedVehicleDetails && storedVehicleDetails !== "undefined"
-      ? JSON.parse(storedVehicleDetails)
-      : [];
-  });
+  // const [vehicleDetails, setVehicleDetails] = useState(() => {
+  //   const storedVehicleDetails = localStorage.getItem("vehicleDetails");
+  //   return storedVehicleDetails && storedVehicleDetails !== "undefined"
+  //     ? JSON.parse(storedVehicleDetails)
+  //     : [];
+  // });
+  const [vehicleDetails, setVehicleDetails] = useState([]);
+
+  // const [mergedDataHome, setMergedDataHome] = useState(null);
 
   const vehicleDetailsRef = useRef(vehicleDetails);
 
@@ -741,7 +748,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 6);
+      const request = indexedDB.open("MyDatabase", 7);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -749,6 +756,11 @@ const DataContextProvider = ({ children }) => {
         if (!db.objectStoreNames.contains("mergedDataHome")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("mergedDataHome", { autoIncrement: true });
+        }
+
+        if (!db.objectStoreNames.contains("vehicleDetails")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("vehicleDetails", { autoIncrement: true });
         }
 
         if (!db.objectStoreNames.contains("geofenceData")) {
@@ -847,9 +859,18 @@ const DataContextProvider = ({ children }) => {
   // Récupérer les données au chargement
   useEffect(() => {
     getDataFromIndexedDB("mergedDataHome").then((data) => {
-      if (data.length > 0) {
+      if (data[0]) {
+        // if (data.length > 0) {
         setMergedDataHome(data[0]);
       }
+    });
+  }, []);
+
+  useEffect(() => {
+    getDataFromIndexedDB("vehicleDetails").then((data) => {
+      // if (data.length > 0) {
+      setVehicleDetails(data);
+      // }
     });
   }, []);
 
@@ -947,6 +968,12 @@ const DataContextProvider = ({ children }) => {
   }, [mergedDataHome]);
 
   useEffect(() => {
+    if (vehicleDetails) {
+      saveDataToIndexedDB("vehicleDetails", vehicleDetails);
+    }
+  }, [vehicleDetails]);
+
+  useEffect(() => {
     if (geofenceData) {
       saveDataToIndexedDB("geofenceData", geofenceData);
     }
@@ -1030,8 +1057,14 @@ const DataContextProvider = ({ children }) => {
       setTimeout(() => {
         //
         if (storeName === "mergedDataHome") {
+          console.log("setMergedDataHome5555555555555");
+
           setMergedDataHome([]);
         }
+        if (storeName === "vehicleDetails") {
+          setVehicleDetails([]);
+        }
+
         if (storeName === "geofenceData") {
           setGeofenceData([]);
         }
@@ -1633,7 +1666,7 @@ const DataContextProvider = ({ children }) => {
 
   const [progressBarForLoadingData, setProgress] = useState(0);
 
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   const processCompte = async (acct, isLastBatch = false) => {
     const id = acct?.accountID;
@@ -1672,7 +1705,7 @@ const DataContextProvider = ({ children }) => {
 
       fetchAccountGeofences(id, pwd);
 
-      await delay(2000); // pause entre les groupes
+      // await delay(2000); // pause entre les groupes
     } catch (err) {
       console.error("Erreur pour le compte", id, ":", err);
       setError("Erreur sur un ou plusieurs comptes.");
@@ -1692,27 +1725,8 @@ const DataContextProvider = ({ children }) => {
         done += 1;
         setProgress(Math.round((done / total) * 100));
       }
-      await delay(3000); // pas de pause après le dernier lot
+      await delay(2000); // pas de pause après le dernier lot
     }
-
-    // les 2 derniers lots
-    //     const total = comptes?.length;
-    // const totalBatches = Math.ceil(total / batchSize);
-
-    // for (let i = 0; i < total; i += batchSize) {
-    //   const batchIndex = i / batchSize;
-    //   const isLastTwoBatches = batchIndex >= totalBatches - 2;
-
-    //   const batch = comptes?.slice(i, i + batchSize);
-
-    //   for (const acct of batch) {
-    //     await processCompte(acct, isLastTwoBatches); // 👈
-    //     done += 1;
-    //     setProgress(Math.round((done / total) * 100));
-    //   }
-
-    //   if (!isLastTwoBatches) await delay(3000);
-    // }
   };
 
   const fetchAllComptes = async (
@@ -1767,7 +1781,7 @@ const DataContextProvider = ({ children }) => {
 
     if (fetchAllOtherData) {
       loadForManySecond();
-      await processAllComptes(newData, 20); // 👈 traitement séquentiel en lots de 3
+      processAllComptes(newData, 20); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
@@ -1948,7 +1962,7 @@ const DataContextProvider = ({ children }) => {
           )
         : [];
 
-    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
     const batchSize = 500; // 👈 modifiable (ex : 100 devices à la fois)
     let vehDetails = [];
@@ -5243,7 +5257,11 @@ const DataContextProvider = ({ children }) => {
     setVehicleDetails([]);
 
     localStorage.removeItem("mergedDataHome");
+    console.log("setMergedDataHome77777777777777");
+
     setMergedDataHome(null);
+
+    localStorage.removeItem("mergedDataHome");
 
     // localStorage.removeItem("donneeFusionnéForRapport");
     setDonneeFusionnéForRapport([]);
@@ -6221,17 +6239,45 @@ const DataContextProvider = ({ children }) => {
   //  Home page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
+  // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const [progressBarForLoadingDataUser, setProgressDataUser] = useState(0);
+
+  const processVehicle = async (vehicle, isLastBatch = false) => {
+    try {
+      fetchVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+
+      if (isLastBatch) {
+        await fetchRapportVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+      } else {
+        fetchRapportVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+      }
+
+      // await delay(500);
+    } catch (error) {
+      console.error("Erreur pour le véhicule", vehicle?.deviceID, ":", error);
+    }
+  };
+
+  const processAllVehicles = async (vehicles, batchSize = 20) => {
+    const total = vehicles?.length;
+    let done = 0;
+
+    for (let i = 0; i < total; i += batchSize) {
+      const batch = vehicles.slice(i, i + batchSize);
+      const isLastBatch = i + batchSize >= total;
+
+      for (const vehicle of batch) {
+        await processVehicle(vehicle, isLastBatch);
+        done += 1;
+        setProgressDataUser(Math.round((done / total) * 100));
+      }
+
+      if (!isLastBatch) await delay(1000);
+    }
+  };
+
   // Requête pour afficher tous les véhicule mais sans details
   const fetchVehicleData = async () => {
-    console.log("aaaaaaaaaaaaaaaaaa33333333333");
-
-    // if (!userData) return;
-    // Pour suivre le nombre de requête
-    incrementerRequête();
-    // console.log("++++++++++++++++ Requête effectué: fetchVehicleData");
-
-    // const { accountID, userID, password } = userData;
-
     const accountID = account || localStorage.getItem("account") || "";
     const userID = username || localStorage.getItem("username") || "";
     const password = localStorage.getItem("password") || "";
@@ -6276,7 +6322,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("Data fetchVehicleData", data);
+      console.log("data............", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -6299,12 +6345,9 @@ const DataContextProvider = ({ children }) => {
       console.log("aaaaaaaaaaaaaaaaaa5555555555");
       console.log("véhiculeData", véhiculeData);
 
-      if (véhiculeData && véhiculeData?.length > 0) {
-        véhiculeData?.forEach((véhicule) => {
-          fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-          fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-        });
-      }
+      // await delay(1000);
+      processAllVehicles(véhiculeData);
+
       handleUserError(xmlDoc);
     } catch (error) {
       console.error(
@@ -6314,135 +6357,6 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  // Requête pour rechercher les details des véhicule dans la page home
-  // const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-  //   // /////////
-  //   //  "2020-05-14 21:00:00"
-  //   // Ajuste les heures de TimeFrom et TimeTo
-  //   const adjustTime = (time, hours) => {
-  //     const date = new Date(time);
-  //     date.setHours(date.getHours() + hours);
-  //     return date.toISOString().replace("T", " ").split(".")[0];
-  //   };
-
-  //   const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
-  //   const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
-
-  //   // const { accountID, userID, password } = userData;
-  //   const accountID = account || localStorage.getItem("account") || "";
-  //   const userID = username || localStorage.getItem("username") || "";
-  //   const password = localStorage.getItem("password") || "";
-
-  //   const xmlData = `<GTSRequest command="eventdata">
-  //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
-  //     <EventData>
-  //       <Device>${Device}</Device>
-  //       <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
-  //       <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
-
-  //       <GPSRequired>false</GPSRequired>
-  //       <StatusCode>false</StatusCode>
-  //       <Limit type="last">4</Limit>
-  //       <Ascending>false</Ascending>
-  //       <Field name="latitude" />
-  //       <Field name="longitude" />
-  //       <Field name="address" />
-  //       <Field name="speedKPH" />
-  //       <Field name="timestamp" />
-  //       <Field name="heading" />
-  //       <Field name="city" />
-  //       <Field name="creationMillis" />
-  //       <Field name="creationTime" />
-  //       <Field name="odometerKM" />
-  //       <Field name="stateProvince" />
-  //       <Field name="statusCode" />
-  //       <Field name="streetAddress" />
-
-  //     </EventData>
-  //   </GTSRequest>`;
-
-  //   try {
-  //     const response = await fetch(currentAPI, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/xml" },
-  //       body: xmlData,
-  //     });
-
-  //     const data = await response.text();
-  //     // console.log("data brut de :", fetchVehicleDetails);
-  //     const parser = new DOMParser();
-  //     const xmlDoc = parser.parseFromString(data, "application/xml");
-  //     const records = xmlDoc.getElementsByTagName("Record");
-
-  //     const newVehicleDetails = [];
-  //     for (let i = 0; i < records.length; i++) {
-  //       const fields = records[i].getElementsByTagName("Field");
-  //       const details = { Device }; // Ajoute l'identifiant du véhicule pour regrouper les événements
-
-  //       for (let j = 0; j < fields.length; j++) {
-  //         const fieldName = fields[j].getAttribute("name");
-  //         let fieldValue = fields[j].textContent;
-
-  //         // // Si le champ est un timestamp, ajoute 4 heures
-  //         if (fieldName === "timestamp") {
-  //           // Convertir le timestamp en entier, ajouter 4 heures (en secondes)
-  //           let timestamp = parseInt(fieldValue, 10);
-  //           timestamp = timestamp + ((Number(selectUTC) || -5) + 5) * 60 * 60; // Ajouter 4 heures
-  //           fieldValue = timestamp.toString(); // Reconvertir en chaîne
-  //         }
-  //         details[fieldName] = fieldValue;
-  //       }
-
-  //       details.backupAddress = "";
-
-  //       newVehicleDetails.push(details);
-  //     }
-
-  //     // Filtrage des timestamps
-  //     const timeFromTimestamp = new Date(TimeFrom).getTime();
-  //     const timeToTimestamp = new Date(TimeTo).getTime();
-
-  //     const filteredVehicleDetails = newVehicleDetails.filter((detail) => {
-  //       const recordTimestamp = parseInt(detail.timestamp, 10) * 1000; // Convertir en millisecondes
-  //       return (
-  //         recordTimestamp >= timeFromTimestamp &&
-  //         recordTimestamp <= timeToTimestamp
-  //       );
-  //     });
-
-  //     setVehicleDetails((prevDetails) => {
-  //       const updatedDetails = prevDetails?.map((detail) => {
-  //         if (detail.Device === Device) {
-  //           return filteredVehicleDetails.length > 0
-  //             ? { ...detail, véhiculeDetails: [...filteredVehicleDetails] }
-  //             : detail;
-  //         }
-  //         return detail;
-  //       });
-
-  //       // Si le véhicule n'est pas trouvé, ajoute-le
-  //       if (!updatedDetails.some((detail) => detail.Device === Device)) {
-  //         updatedDetails.push({
-  //           Device,
-  //           véhiculeDetails: [...filteredVehicleDetails],
-  //         });
-  //       }
-
-  //       return [...updatedDetails];
-  //     });
-
-  //     handleUserError(xmlDoc);
-
-  //     // mergeVehicleDataWithEvents();
-  //   } catch (error) {
-  //     console.error(
-  //       "Erreur lors de la récupération des détails du véhicule",
-  //       error
-  //     );
-  //   }
-  // };
-
-  // Requête pour rechercher les détails des véhicules dans la page home
   const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
     const accountID = account || localStorage.getItem("account") || "";
     const userID = username || localStorage.getItem("username") || "";
@@ -6587,20 +6501,24 @@ const DataContextProvider = ({ children }) => {
       }
     });
 
-    try {
+    // try {
+    //   setMergedDataHome(dataFusionne);
+    //   // localStorage.setItem("mergedDataHome", JSON.stringify(dataFusionne));
+    // } catch (error) {
+    //   if (error.name === "QuotaExceededError") {
+    //     console.error(
+    //       "Quota dépassé pour mergedDataHome: essayez de réduire la taille des données ou de nettoyer localStorage."
+    //     );
+    //   } else {
+    //     console.error("Erreur de stockage : ", error);
+    //   }
+    // }
+    const hasDeviceID = Object.values(dataFusionne).some(
+      (item) => !!item.deviceID
+    );
+    if (hasDeviceID) {
       setMergedDataHome(dataFusionne);
-      // localStorage.setItem("mergedDataHome", JSON.stringify(dataFusionne));
-    } catch (error) {
-      if (error.name === "QuotaExceededError") {
-        console.error(
-          "Quota dépassé pour mergedDataHome: essayez de réduire la taille des données ou de nettoyer localStorage."
-        );
-      } else {
-        console.error("Erreur de stockage : ", error);
-      }
     }
-
-    setMergedDataHome(dataFusionne);
     setIsHomePageLoading(false);
 
     return dataFusionne;
@@ -6608,11 +6526,11 @@ const DataContextProvider = ({ children }) => {
 
   // Pour lancer la requête de details des véhicules
   // ????????????????????????????????????????????????????????????????????????????
-  useEffect(() => {
-    if (userData) {
-      fetchVehicleData();
-    }
-  }, [userData]);
+  // useEffect(() => {
+  //   if (userData) {
+  //     fetchVehicleData();
+  //   }
+  // }, [userData]);
 
   const homePageReload = () => {
     // const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
@@ -7391,102 +7309,102 @@ const DataContextProvider = ({ children }) => {
     return () => clearInterval(intervalId);
   }, []); // Pas de dépendances, exécution régulière
 
-  useEffect(() => {
-    const checkData = async () => {
-      try {
-        const geofenceDataDB = await getDataFromIndexedDB("geofenceData");
-        const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
-        // const vehicleDetailsDB = await getDataFromIndexedDB("vehicleDetailsStore");
-        const rapportVehicleDetailsDB = await getDataFromIndexedDB(
-          "donneeFusionnéForRapport"
-        );
+  // useEffect(() => {
+  //   const checkData = async () => {
+  //     try {
+  //       const geofenceDataDB = await getDataFromIndexedDB("geofenceData");
+  //       const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
+  //       // const vehicleDetailsDB = await getDataFromIndexedDB("vehicleDetailsStore");
+  //       const rapportVehicleDetailsDB = await getDataFromIndexedDB(
+  //         "donneeFusionnéForRapport"
+  //       );
 
-        if (
-          geofenceDataRef.current?.length > 0 ||
-          geofenceData?.length > 0 ||
-          geofenceDataDB.length > 0
-        ) {
-          // console.log("Données geofence disponibles", geofenceDataRef.current);
-        } else {
-          if (
-            véhiculeDataRef.current?.length > 0 ||
-            véhiculeData?.length > 0 ||
-            vehicleDataDB.length > 0
-          ) {
-            GeofenceDataFonction(account, username, password);
-          }
-          console.log("Pas de données dans geofence", geofenceDataRef.current);
-        }
+  //       if (
+  //         geofenceDataRef.current?.length > 0 ||
+  //         geofenceData?.length > 0 ||
+  //         geofenceDataDB.length > 0
+  //       ) {
+  //         // console.log("Données geofence disponibles", geofenceDataRef.current);
+  //       } else {
+  //         if (
+  //           véhiculeDataRef.current?.length > 0 ||
+  //           véhiculeData?.length > 0 ||
+  //           vehicleDataDB.length > 0
+  //         ) {
+  //           GeofenceDataFonction(account, username, password);
+  //         }
+  //         console.log("Pas de données dans geofence", geofenceDataRef.current);
+  //       }
 
-        if (
-          véhiculeDataRef.current?.length > 0 ||
-          véhiculeData?.length > 0 ||
-          vehicleDataDB.length > 0
-        ) {
-          // console.log("Données véhiculeData disponibles", vehicleDataDB);
-        } else {
-          fetchVehicleData();
-          console.log("Pas de données véhiculeData", vehicleDataDB);
-        }
+  //       if (
+  //         véhiculeDataRef.current?.length > 0 ||
+  //         véhiculeData?.length > 0 ||
+  //         vehicleDataDB.length > 0
+  //       ) {
+  //         // console.log("Données véhiculeData disponibles", vehicleDataDB);
+  //       } else {
+  //         fetchVehicleData();
+  //         console.log("Pas de données véhiculeData", vehicleDataDB);
+  //       }
 
-        if (
-          vehicleDetailsRef.current?.length > 0 ||
-          vehicleDetails?.length > 0 ||
-          vehicleDataDB.length > 0
-        ) {
-          // console.log(
-          //   "Données vehicleDetails disponibles",
-          //   vehicleDetailsRef.current
-          // );
-        } else {
-          console.log(
-            "Pas de données vehicleDetails",
-            vehicleDetailsRef.current
-          );
-          if (
-            véhiculeDataRef.current?.length > 0 ||
-            véhiculeData?.length > 0 ||
-            vehicleDataDB.length > 0
-          ) {
-            véhiculeDataRef.current?.forEach((véhicule) => {
-              fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-            });
-          }
-        }
+  //       if (
+  //         vehicleDetailsRef.current?.length > 0 ||
+  //         vehicleDetails?.length > 0 ||
+  //         vehicleDataDB.length > 0
+  //       ) {
+  //         // console.log(
+  //         //   "Données vehicleDetails disponibles",
+  //         //   vehicleDetailsRef.current
+  //         // );
+  //       } else {
+  //         console.log(
+  //           "Pas de données vehicleDetails",
+  //           vehicleDetailsRef.current
+  //         );
+  //         if (
+  //           véhiculeDataRef.current?.length > 0 ||
+  //           véhiculeData?.length > 0 ||
+  //           vehicleDataDB.length > 0
+  //         ) {
+  //           véhiculeDataRef.current?.forEach((véhicule) => {
+  //             fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //           });
+  //         }
+  //       }
 
-        if (
-          rapportVehicleDetailsRef.current?.length > 0 ||
-          rapportVehicleDetails?.length > 0 ||
-          rapportVehicleDetailsDB.length > 0
-        ) {
-          // console.log("Données rapport disponibles", rapportVehicleDetailsDB);
-        } else {
-          console.log("Pas de données rapport", rapportVehicleDetailsDB);
+  //       if (
+  //         rapportVehicleDetailsRef.current?.length > 0 ||
+  //         rapportVehicleDetails?.length > 0 ||
+  //         rapportVehicleDetailsDB.length > 0
+  //       ) {
+  //         // console.log("Données rapport disponibles", rapportVehicleDetailsDB);
+  //       } else {
+  //         console.log("Pas de données rapport", rapportVehicleDetailsDB);
 
-          if (
-            véhiculeDataRef.current?.length > 0 ||
-            véhiculeData?.length > 0 ||
-            vehicleDataDB.length > 0
-          ) {
-            véhiculeDataRef.current?.forEach((véhicule) => {
-              fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-            });
-          }
-        }
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données IndexedDB",
-          error
-        );
-      }
-    };
+  //         if (
+  //           véhiculeDataRef.current?.length > 0 ||
+  //           véhiculeData?.length > 0 ||
+  //           vehicleDataDB.length > 0
+  //         ) {
+  //           véhiculeDataRef.current?.forEach((véhicule) => {
+  //             fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //           });
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error(
+  //         "Erreur lors de la récupération des données IndexedDB",
+  //         error
+  //       );
+  //     }
+  //   };
 
-    const intervalId = setInterval(() => {
-      // checkData();
-    }, 20000);
+  //   const intervalId = setInterval(() => {
+  //     // checkData();
+  //   }, 20000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   //
   //
@@ -8128,35 +8046,6 @@ const DataContextProvider = ({ children }) => {
   // Sauvegarde des données dans localStorage à chaque mise à jour des états
   useEffect(() => {
     try {
-      localStorage.setItem("vehicleDetails", JSON.stringify(vehicleDetails));
-    } catch (error) {
-      if (error.name === "QuotaExceededError") {
-        console.error(
-          "Quota dépassé pour vehicleDetails: essayez de réduire la taille des données ou de nettoyer localStorage."
-        );
-      } else {
-        console.error("Erreur de stockage : ", error);
-      }
-    }
-
-    // }
-
-    try {
-      localStorage.setItem(
-        "rapportVehicleDetails",
-        JSON.stringify(rapportVehicleDetails)
-      );
-    } catch (error) {
-      if (error.name === "QuotaExceededError") {
-        // console.error(
-        //   "Quota dépassé pour rapportVehicleDetails : essayez de réduire la taille des données ou de nettoyer localStorage."
-        // );
-      } else {
-        console.error("Erreur de stockage : ", error);
-      }
-    }
-
-    try {
       localStorage.setItem("userRole", JSON.stringify(userRole));
     } catch (error) {
       if (error.name === "QuotaExceededError") {
@@ -8182,27 +8071,7 @@ const DataContextProvider = ({ children }) => {
         console.error("Erreur de stockage : ", error);
       }
     }
-
-    // try {
-    //   localStorage.setItem("geofenceData", JSON.stringify(geofenceData));
-    // } catch (error) {
-    //   if (error.name === "QuotaExceededError") {
-    //     // console.error(
-    //     //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-    //     // );
-    //   } else {
-    //     console.error("Erreur de stockage : ", error);
-    //   }
-    // }
-  }, [
-    // donneeFusionnéForRapport,
-    vehicleDetails,
-    rapportVehicleDetails,
-    userRole,
-    isDashboardHomePage,
-    // mergedDataHome,
-    // geofenceData,
-  ]);
+  }, [userRole, isDashboardHomePage]);
 
   //
   //
@@ -9165,6 +9034,7 @@ const DataContextProvider = ({ children }) => {
         setDashboardLoadingEffectLogin,
         loadForManySecond,
         progressBarForLoadingData,
+        progressBarForLoadingDataUser,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

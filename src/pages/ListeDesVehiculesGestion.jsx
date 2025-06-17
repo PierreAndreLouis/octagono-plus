@@ -429,10 +429,10 @@ function ListeDesVehiculesGestion({
                   text_color = "text-green-500/80";
                 }
 
-                const code = parseInt(
-                  device?.véhiculeDetails[0]?.statusCode,
-                  16
-                );
+                const code =
+                  device?.véhiculeDetails?.length > 0 &&
+                  device?.véhiculeDetails[0]?.statusCode &&
+                  parseInt(device?.véhiculeDetails[0]?.statusCode, 16);
                 const codeDescription =
                   statusDescriptions[code] || `${t("statut inconnu")}`;
                 return (
@@ -463,14 +463,7 @@ function ListeDesVehiculesGestion({
                             </p>
                           </div>{" "}
                           <div className=" border-b py-1">
-                            <p
-                              onClick={() => {
-                                console.log(
-                                  device?.véhiculeDetails[0]?.address
-                                );
-                              }}
-                              className="font-bold"
-                            >
+                            <p className="font-bold">
                               {t("Adresse")} :
                               <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
                                 {device?.véhiculeDetails?.length >= 0
@@ -503,6 +496,12 @@ function ListeDesVehiculesGestion({
                             }  overflow-hidden transition-all`}
                           >
                             <div className="flex flex-wrap border-b py-1">
+                              <p className="font-bold">{t("deviceID")} :</p>
+                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                {device?.deviceID}
+                              </span>
+                            </div>{" "}
+                            <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("Alerte")} :</p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
                                 {codeDescription}
@@ -511,7 +510,8 @@ function ListeDesVehiculesGestion({
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("Code Alerte")} :</p>
                               <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                                {device?.véhiculeDetails[0]?.statusCode}
+                                {device?.véhiculeDetails?.length > 0 &&
+                                  device?.véhiculeDetails[0]?.statusCode}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">

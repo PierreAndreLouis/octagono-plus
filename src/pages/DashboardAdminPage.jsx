@@ -499,29 +499,29 @@ function DashboardAdminPage() {
                           currentAccountSelected?.accountUsers
                         );
                       } else {
-                        // setListeGestionDesUsers(accountUsers);
-                        setListeGestionDesUsers([
-                          ...Array.from(
-                            new Map(
-                              gestionAccountData
-                                ?.flatMap(
-                                  (account) => account.accountUsers || []
-                                )
-                                ?.map((user) => [user.userID, user])
-                            ).values()
-                          ),
-                          ...accountUsers.filter(
-                            (user) =>
-                              !gestionAccountData
-                                ?.flatMap(
-                                  (account) => account.accountUsers || []
-                                )
-                                ?.some(
-                                  (existingUser) =>
-                                    existingUser.userID === user.userID
-                                )
-                          ),
-                        ]);
+                        setListeGestionDesUsers(accountUsers);
+                        // setListeGestionDesUsers([
+                        //   ...Array.from(
+                        //     new Map(
+                        //       gestionAccountData
+                        //         ?.flatMap(
+                        //           (account) => account.accountUsers || []
+                        //         )
+                        //         ?.map((user) => [user.userID, user])
+                        //     ).values()
+                        //   ),
+                        //   ...accountUsers.filter(
+                        //     (user) =>
+                        //       !gestionAccountData
+                        //         ?.flatMap(
+                        //           (account) => account.accountUsers || []
+                        //         )
+                        //         ?.some(
+                        //           (existingUser) =>
+                        //             existingUser.userID === user.userID
+                        //         )
+                        //   ),
+                        // ]);
                       }
                       scrollToTop();
                       setDocumentationPage("Gestion_des_utilisateurs");
@@ -559,16 +559,16 @@ function DashboardAdminPage() {
                         );
                         setListeGestionDesGroupeTitre("Tous les Groupe");
                       } else {
-                        // setListeGestionDesGroupe(accountGroupes);
-                        setListeGestionDesGroupe(
-                          Array.from(
-                            new Map(
-                              gestionAccountData
-                                ?.flatMap((account) => account.accountGroupes)
-                                ?.map((group) => [group.groupID, group])
-                            ).values()
-                          )
-                        );
+                        setListeGestionDesGroupe(accountGroupes);
+                        // setListeGestionDesGroupe(
+                        //   Array.from(
+                        //     new Map(
+                        //       gestionAccountData
+                        //         ?.flatMap((account) => account.accountGroupes)
+                        //         ?.map((group) => [group.groupID, group])
+                        //     ).values()
+                        //   )
+                        // );
                         setListeGestionDesGroupeTitre("Tous les Groupe");
                       }
                       scrollToTop();
@@ -875,7 +875,7 @@ function DashboardAdminPage() {
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
             >
               <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-                15/06/2025 _ 5
+                17/06/2025 _ 1
               </p>
               {/* ((dashboardLoadingEffect )) */}
               {(dashboardLoadingEffect || dashboardLoadingEffectLogin) && (

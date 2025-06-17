@@ -38,6 +38,7 @@ function ListeDesUtilisateur({
     gestionAccountData,
     TestDeRequetteDevices,
     adminPassword,
+    accountUsers,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -85,6 +86,10 @@ function ListeDesUtilisateur({
 
   const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
+
+  const listeGestionDesUsers2 = currentAccountSelected
+    ? currentAccountSelected?.accountUsers
+    : accountUsers;
 
   const filterUserAccountData = searchGroupInputTerm
     ? listeGestionDesUsers?.filter(
@@ -276,11 +281,15 @@ function ListeDesUtilisateur({
               ?.slice()
               .sort((a, b) => b?.creationTime - a?.creationTime)
               ?.map((user, index) => {
+                const foundUser = gestionAccountData
+                  ?.flatMap((account) => account.accountUsers)
+                  ?.find((u) => u.userID === user?.userID);
+
                 return (
                   <div
                     onClick={() => {
-                      setCurrentSelectedUserToConnect(user);
-                      setListeGestionDesVehicules(user?.userDevices);
+                      setCurrentSelectedUserToConnect(foundUser);
+                      setListeGestionDesVehicules(foundUser?.userDevices);
                     }}
                     key={index}
                     className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
@@ -322,8 +331,8 @@ function ListeDesUtilisateur({
                               {t("Groupes affectés")} :
                             </p>
                             <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                              {user?.userGroupes?.length > 0
-                                ? user?.userGroupes?.length
+                              {foundUser?.userGroupes?.length > 0
+                                ? foundUser?.userGroupes?.length
                                 : "Tous"}
                             </span>
                           </div>{" "}
@@ -332,7 +341,7 @@ function ListeDesUtilisateur({
                               {t("Nombre d'Appareils")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {user?.userDevices?.length || "0"}
+                              {foundUser?.userDevices?.length || "0"}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap">

@@ -73,188 +73,12 @@ function Statistics() {
     const isInactive = currentTimeMs - lastUpdateTimeMs >= twentyHoursInMs;
 
     return noDetails || isInactive;
-
-    // const hasDetails = véhicule?.véhiculeDetails?.length > 0;
-    // const lastUpdate =
-    //   véhicule?.véhiculeDetails?.[0]?.timestamp ||
-    //   véhicule?.lastUpdateTime ||
-    //   0;
-    // const lastUpdateTimeMs = lastUpdate * 1000;
-    // const isInactive = currentTime - lastUpdateTimeMs >= twentyHoursInMs;
-
-    // return !hasDetails || isInactive;
   });
 
   x;
 
-  // // Fonction pour obtenir le timestamp actuel en millisecondes
-  // const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
-  // const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
-  // const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
-  // const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  // const currentTime = Date.now(); // Heure actuelle en millisecondes
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // x;
-
-  // // Pour stocker le nombre véhicules totale
-  // const totalVehicleCount = vehicleArray.length;
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // x;
-
-  // // Liste des véhicules en mouvement actuellement
-  // const activeVehicleCount = vehicleArray.filter((véhicule) => {
-  //   // Vérifie si le véhicule a des détails et si sa vitesse est supérieure à zéro
-  //   const isSpeedActive =
-  //     véhicule?.véhiculeDetails &&
-  //     véhicule?.véhiculeDetails[0] &&
-  //     véhicule?.véhiculeDetails[0].speedKPH > 0;
-
-  //   // Récupérer le timestamp de la dernière mise à jour (en millisecondes)
-  //   const lastUpdateTimestampMs =
-  //     véhicule?.véhiculeDetails &&
-  //     véhicule?.véhiculeDetails[0] &&
-  //     véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
-
-  //   // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
-  //   // Vérifie si la mise à jour est récente (moins de 30 minutes)
-  //   const isStillSpeedActive =
-  //     lastUpdateTimestampMs &&
-  //     currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
-
-  //   // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
-
-  //   const lastUpdateTimeMs = véhicule?.lastUpdateTime
-  //     ? véhicule?.lastUpdateTime * 1000
-  //     : 0;
-  //   // const lastUpdateTimeMs =
-  //   //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
-  //   //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
-  //   //       véhicule?.lastUpdateTime * 1000
-  //   //     : 0;
-
-  //   const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-  //   // Le véhicule doit être actif selon la vitesse et la mise à jour
-  //   return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
-  // });
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // x;
-
-  // // Liste des véhicules en stationnement actuellement
-  // const filteredVehicles = vehicleArray.filter((véhicule) => {
-  //   // Vérifie si le véhicule a des détails
-  //   const hasDetails =
-  //     véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0;
-
-  //   // Vérifie la vitesse (noSpeed)
-  //   const noSpeed = véhicule?.véhiculeDetails?.every(
-  //     (detail) => detail.speedKPH <= 0
-  //   );
-
-  //   // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-  //   const lastUpdateTimeMs = véhicule?.lastUpdateTime
-  //     ? véhicule?.lastUpdateTime * 1000
-  //     : 0;
-
-  //   // const lastUpdateTimeMs =
-  //   //   véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
-  //   //     ? véhicule?.véhiculeDetails?.[0]?.timestamp * 1000 ||
-  //   //       véhicule?.lastUpdateTime * 1000
-  //   //     : 0;
-
-  //   const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-  //   const lastUpdateTimestampMs =
-  //     véhicule?.véhiculeDetails &&
-  //     véhicule?.véhiculeDetails[0] &&
-  //     véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
-
-  //   const isSpeedActive =
-  //     véhicule?.véhiculeDetails &&
-  //     véhicule?.véhiculeDetails[0] &&
-  //     véhicule?.véhiculeDetails[0].speedKPH > 0;
-
-  //   const isNotStillSpeedActive =
-  //     lastUpdateTimestampMs &&
-  //     currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
-
-  //   return (
-  //     hasDetails &&
-  //     isActive &&
-  //     (noSpeed || (isSpeedActive && isNotStillSpeedActive))
-  //   );
-  // });
-
-  // // Nombre de véhicule en stationnement actuellement
-  // const inactiveVehicleCount = filteredVehicles.length || "0";
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // //
-  // x;
-
-  // // Filtrer les véhicules sans détails ou inactifs  // hors services
-  // const filteredVehiclesInactifs = vehicleArray.filter((véhicule) => {
-  //   // Vérifier si le véhicule n'a pas de détails
-  //   const noDetails =
-  //     !véhicule?.véhiculeDetails || véhicule?.véhiculeDetails.length === 0;
-
-  //   // Vérifier si le véhicule est inactif
-  //   // const lastUpdateTime = véhicule?.lastUpdateTime;
-
-  //   const lastUpdateTime =
-  //     véhicule?.véhiculeDetails?.[0] || véhicule?.lastUpdateTime
-  //       ? véhicule?.véhiculeDetails?.[0]?.timestamp || véhicule?.lastUpdateTime
-  //       : 0;
-
-  //   const lastUpdateTimeMs = lastUpdateTime ? lastUpdateTime * 1000 : 0; // Conversion en millisecondes
-  //   const isInactive =
-  //     lastUpdateTimeMs > 0 && currentTime - lastUpdateTimeMs >= twentyHoursInMs;
-
-  //   // Retourne true si l'une des conditions est satisfaite
-  //   return noDetails || isInactive;
-  // });
-
-  // // Nombre de véhicules hors services filtrés
-  // const notActiveVehicleCount = filteredVehiclesInactifs.length || "0";
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  x;
-  // a supprimer
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  //
   const [test, setTest] = useState("x");
   const testRef = useRef(test);
 
@@ -272,13 +96,6 @@ function Statistics() {
     return () => clearInterval(intervalId);
   }, []);
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  //
-  //
-  //
-  //
-  //
   //
   //
   //
@@ -313,7 +130,7 @@ function Statistics() {
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
-            <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-blue-300/50 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md p-3">
+            <div className="border  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900 md:p-[1.2rem] bg-blue-300/50 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md p-3">
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-blue-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
@@ -323,7 +140,7 @@ function Statistics() {
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-blue-400"></div>
                   )}
                 </div>
-                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-3xl ">
                   {totalVehicleCount?.length}
                 </h2>
               </div>
@@ -364,7 +181,7 @@ function Statistics() {
             }}
             className="bg-white  cursor-pointer dark:bg-gray-800 rounded-lg"
           >
-            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-green-300/50 dark:bg-green-600/40 flex justify-between items-start rounded-lg shadow-md p-3">
+            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[1.2rem] bg-green-300/50 dark:bg-green-600/40 flex justify-between items-start rounded-lg shadow-md p-3">
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-green-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
@@ -374,7 +191,7 @@ function Statistics() {
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-green-400"></div>
                   )}
                 </div>
-                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-3xl ">
                   {activeVehicleCount.length || "0"}
                 </h2>
               </div>
@@ -415,7 +232,7 @@ function Statistics() {
             }}
             className="bg-white  cursor-pointer dark:bg-gray-800 rounded-lg"
           >
-            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-red-300/50 dark:bg-red-800/50 flex justify-between items-start rounded-lg shadow-md p-3">
+            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[1.2rem] bg-red-300/50 dark:bg-red-800/50 flex justify-between items-start rounded-lg shadow-md p-3">
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-red-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
@@ -425,7 +242,7 @@ function Statistics() {
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-red-400"></div>
                   )}
                 </div>
-                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-3xl ">
                   {inactiveVehicleCount?.length}
                 </h2>
               </div>
@@ -466,7 +283,7 @@ function Statistics() {
             }}
             className="bg-white  cursor-pointer dark:bg-gray-400/10 rounded-lg"
           >
-            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[2rem] bg-purple-300/50 dark:bg-purple-700/30 flex justify-between items-start rounded-lg shadow-md p-3">
+            <div className="border relative dark:border-gray-800 dark:shadow-gray-900 md:p-[1.2rem] bg-purple-300/50 dark:bg-purple-700/30 flex justify-between items-start rounded-lg shadow-md p-3">
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-purple-950 dark:text-gray-300 md:font-semibold text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl ">
@@ -476,7 +293,7 @@ function Statistics() {
                     <div className="min-w-2 min-h-2 md:min-w-3 md:min-h-3  rounded-full bg-purple-400"></div>
                   )}
                 </div>
-                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-4xl ">
+                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-3xl lg:text-3xl ">
                   {notActiveVehicleCount?.length}
                 </h2>
               </div>

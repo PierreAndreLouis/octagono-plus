@@ -37,6 +37,7 @@ function ListeDesGroupes({
     setListeGestionDesUsers,
     fetchAccountGroupes,
     gestionAccountData,
+    accountGroupes,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -85,12 +86,12 @@ function ListeDesGroupes({
     );
   }, [showSelectedGroupeOptionsPopup]);
 
-  useEffect(() => {
-    console.log(
-      "currentSelectedGroupeGestion +++++++++++++",
-      currentSelectedGroupeGestion
-    );
-  }, [currentSelectedGroupeGestion]);
+  // useEffect(() => {
+  //   console.log(
+  //     "currentSelectedGroupeGestion +++++++++++++",
+  //     currentSelectedGroupeGestion
+  //   );
+  // }, [currentSelectedGroupeGestion]);
 
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
@@ -105,6 +106,10 @@ function ListeDesGroupes({
 
   const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
+
+  const listeGestionDesGroupe2 = currentAccountSelected
+    ? currentAccountSelected?.accountGroupes
+    : accountGroupes;
 
   const filterGroupeAccountData = searchGroupInputTerm
     ? listeGestionDesGroupe?.filter((item) =>
@@ -417,10 +422,15 @@ function ListeDesGroupes({
                   );
                 });
 
+                const foundGroupe = gestionAccountData
+                  ?.flatMap((account) => account.accountGroupes)
+                  ?.find((u) => u.groupID === groupe?.groupID);
+
                 return (
                   <div
                     onClick={() => {
-                      setCurrentSelectedGroupeGestion(groupe);
+                      setCurrentSelectedGroupeGestion(foundGroupe);
+                      console.log("foundGroupe----------", foundGroupe);
                     }}
                     key={index}
                     className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
@@ -435,14 +445,6 @@ function ListeDesGroupes({
                           <PiIntersectThreeBold className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              {t("Nom du Groupe")} :
-                            </p>
-                            <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
-                              {groupe?.description}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold- text-gray-700">
                               {t("ID du Groupe")} :
                             </p>
                             <span className=" dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
@@ -451,10 +453,18 @@ function ListeDesGroupes({
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
+                              {t("Nom du Groupe")} :
+                            </p>
+                            <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
+                              {groupe?.description || "---"}
+                            </span>
+                          </div>{" "}
+                          <div className="flex flex-wrap border-b py-1">
+                            <p className="font-bold- text-gray-700">
                               {t("Nombre d'appareils")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {groupe?.groupeDevices?.length}
+                              {foundGroupe?.groupeDevices?.length}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
@@ -470,29 +480,10 @@ function ListeDesGroupes({
                               {userListeAffected?.length}
                             </span>
                           </div>{" "}
-                          {/* <div className="flex flex-wrap border-b py-1">
-                          <p className="font-bold- text-gray-700">
-                            Dernière mise a jour :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            21-04-2024 <span className="px-2">/</span> 05:34 PM
-                          </span>
-                        </div>{" "} */}
                         </div>
                       </div>
                     </div>
                     <div className="flex justify-end md:mr-10-- sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                      {/* <button
-                        onClick={() => {
-                          setDocumentationPage("Modifier_groupe");
-                          setCurrentSelectedGroupeGestion(groupe);
-                          // setShowModifyNewGroupePage(true);
-                        }}
-                        className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-2 pl-2.5 pr-1.5 flex justify-center items-center"
-                      >
-                        <p className="text-sm mr-2">Modifier</p>
-                        <FaRegEdit />
-                      </button> */}
                       <button
                         onClick={() => {
                           setTimeout(() => {

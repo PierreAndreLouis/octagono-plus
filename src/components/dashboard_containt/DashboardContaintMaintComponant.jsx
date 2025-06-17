@@ -1617,7 +1617,7 @@ function DashboardContaintMaintComponant({
       {/*  */}
 
       {/*  */}
-      <div className="md:px-4-- pt-4">
+      <div className="md:px-4-- pt-4 mx-2 md:mx-0">
         {progressBarForLoadingData > 0 && progressBarForLoadingData < 100 && (
           <div
             className="rounded-md shadow-sm shadow-black/10 overflow-hidden"
@@ -2340,15 +2340,15 @@ function DashboardContaintMaintComponant({
                         <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
                         <div>
                           <p className="text-gray-600">
-                            {t("Nom du Groupe")} :{" "}
-                            <span className="font-bold notranslate">
-                              {user?.description}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
                             {t("Account ID")} :{" "}
                             <span className="font-bold notranslate notranslate">
                               {user?.accountID}
+                            </span>{" "}
+                          </p>
+                          <p className="text-gray-600">
+                            {t("Nom du Groupe")} :{" "}
+                            <span className="font-bold notranslate">
+                              {user?.description || "---"}
                             </span>{" "}
                           </p>
                           <p className="text-gray-600">

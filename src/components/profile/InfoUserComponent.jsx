@@ -25,6 +25,7 @@ function InfoUserComponent({
     homePageReload,
     resetIndexedDB,
     countRequête,
+    currentCountry,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -74,6 +75,14 @@ function InfoUserComponent({
           <p className="pl-3 text-gray-500 dark:text-gray-300">
             {adminUsername && adminUsername}{" "}
             {adminUsername && username && " / "} {username && username}
+          </p>
+        </div>
+        <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
+            {t("Pays")} :
+          </h3>
+          <p className="pl-3 text-gray-500 dark:text-gray-300">
+            {currentCountry === "rd" ? "République Dominicaine" : "Haïti"}{" "}
           </p>
         </div>
 
@@ -135,7 +144,7 @@ function InfoUserComponent({
             {t("Version de l'application")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            15/06/2025 _ 5
+            17/06/2025 _ 1
           </p>
         </div>
 

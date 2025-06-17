@@ -13,6 +13,7 @@ import DashboardAdminPage from "./DashboardAdminPage";
 import Logout from "../components/login/Logout";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import StatisticHomePage from "../components/home/StatisticHomePage";
 
 const Home = () => {
   const {
@@ -45,6 +46,7 @@ const Home = () => {
     successDeleteVéhiculePopup,
     setSuccessDeleteVéhiculePopup,
     isDashboardHomePage,
+    progressBarForLoadingDataUser,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -369,6 +371,35 @@ const Home = () => {
       ) : ( */}
       <div className="sm:px-10 pt-16 md:px-14 lg:px-20 min-h-[120vh]">
         <Statistics />
+        {/* <StatisticHomePage /> */}
+        <div className="px-3">
+          {progressBarForLoadingDataUser > 0 &&
+            progressBarForLoadingDataUser < 100 && (
+              <div
+                className="rounded-md  shadow-sm shadow-black/10 overflow-hidden"
+                style={{
+                  width: "100%",
+                  background: "#fff",
+                  margin: "0px 0 10px 0",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${progressBarForLoadingDataUser}%`,
+                    background: "#4caf50",
+                    color: "#fff",
+                    padding: "4px",
+                    transition: "width 0.8s ease",
+                    textAlign: "center",
+                  }}
+                >
+                  <p className="  font-semibold  drop-shadow-2xl">
+                    {progressBarForLoadingDataUser}%
+                  </p>
+                </div>
+              </div>
+            )}
+        </div>
         {/* Chargement quand on login */}
         {/* {isHomePageLoading && (
         <div className="fixed inset-0 bg-gray-200/50 dark:bg-gray-900/50">
@@ -379,7 +410,7 @@ const Home = () => {
       )} */}
         {/* Pour afficher la date et heure de la dernière mise a jour */}
         {lastUpdate?.mostRecentTimestamp !== -Infinity && (
-          <div className="shadow-md md:py-4 md:pr-4 lg:pr-10 cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-2 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100">
+          <div className="shadow-md md:py-2 md:pr-4 lg:pr-10 cursor-pointer dark:bg-red-900/40 dark:shadow-gray-900  flex gap-2 justify-between-- md:gap-6 rounded-lg mx-2 mt-3 p-3 py-2 text-center bg-red-100">
             <div
               onClick={() => {
                 handleClick();

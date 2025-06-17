@@ -735,14 +735,14 @@ function RapportGroupe({
       dataFusionneeHome?.find((v) => v.deviceID === véhicule?.deviceID);
 
     const isSpeedActive =
-      matchedVehicle2.véhiculeDetails &&
-      matchedVehicle2.véhiculeDetails[0] &&
-      matchedVehicle2.véhiculeDetails[0].speedKPH > 0;
+      matchedVehicle2?.véhiculeDetails &&
+      matchedVehicle2?.véhiculeDetails[0] &&
+      matchedVehicle2?.véhiculeDetails[0]?.speedKPH > 0;
 
     const isNotSpeedActive =
-      matchedVehicle2.véhiculeDetails &&
-      matchedVehicle2.véhiculeDetails[0] &&
-      matchedVehicle2.véhiculeDetails[0].speedKPH <= 0;
+      matchedVehicle2?.véhiculeDetails &&
+      matchedVehicle2?.véhiculeDetails[0] &&
+      matchedVehicle2?.véhiculeDetails[0]?.speedKPH <= 0;
 
     const isMoving = matchedVehicle.véhiculeDetails?.some(
       (detail) => detail.speedKPH >= 1
@@ -1357,14 +1357,14 @@ function RapportGroupe({
                       );
 
                     const isSpeedActive =
-                      matchedVehicle2.véhiculeDetails &&
-                      matchedVehicle2.véhiculeDetails[0] &&
-                      matchedVehicle2.véhiculeDetails[0].speedKPH > 0;
+                      matchedVehicle2?.véhiculeDetails &&
+                      matchedVehicle2?.véhiculeDetails[0] &&
+                      matchedVehicle2?.véhiculeDetails[0]?.speedKPH > 0;
 
                     const isNotSpeedActive =
-                      matchedVehicle2.véhiculeDetails &&
-                      matchedVehicle2.véhiculeDetails[0] &&
-                      matchedVehicle2.véhiculeDetails[0].speedKPH <= 0;
+                      matchedVehicle2?.véhiculeDetails &&
+                      matchedVehicle2?.véhiculeDetails[0] &&
+                      matchedVehicle2?.véhiculeDetails[0]?.speedKPH <= 0;
 
                     const isMoving = matchedVehicle.véhiculeDetails?.some(
                       (detail) => detail.speedKPH >= 1
