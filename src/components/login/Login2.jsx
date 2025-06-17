@@ -154,7 +154,7 @@ function Login2() {
                     >
                       <option value="">{t("Sélectionner un pays")}</option>
                       <option value="ht">{t("Haïti")}</option>
-                      <option value="rd">{t("République Dominicaine")}</option>
+                      <option value="rd">República Dominicana</option>
                     </select>
                   </div>
                 </div>{" "}

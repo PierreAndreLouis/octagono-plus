@@ -2446,7 +2446,7 @@ const DataContextProvider = ({ children }) => {
     <TimeTo timezone="GMT">${adjustedTimeTo}</TimeTo>
     <GPSRequired>false</GPSRequired>
     <StatusCode>false</StatusCode>
-    <Limit type="last">2</Limit>
+    <Limit type="last">1</Limit>
     <Ascending>false</Ascending>
     <Field name="latitude" />
     <Field name="longitude" />
@@ -2454,13 +2454,13 @@ const DataContextProvider = ({ children }) => {
     <Field name="speedKPH" />
     <Field name="timestamp" />
     <Field name="heading" />
-    <Field name="city" />
-    <Field name="creationMillis" />
-    <Field name="creationTime" />
+    
+    
+    
     <Field name="odometerKM" />
-    <Field name="stateProvince" />
+    
     <Field name="statusCode" />
-    <Field name="streetAddress" />
+    
   </EventData>
 </GTSRequest>
     `;
@@ -6374,21 +6374,20 @@ const DataContextProvider = ({ children }) => {
 
       <GPSRequired>false</GPSRequired>
       <StatusCode>false</StatusCode>
-      <Limit type="last">4</Limit>
+      <Limit type="last">1</Limit>
       <Ascending>false</Ascending>
+
       <Field name="latitude" />
       <Field name="longitude" />
       <Field name="address" />
       <Field name="speedKPH" />
       <Field name="timestamp" />
       <Field name="heading" />
-      <Field name="city" />
-      <Field name="creationMillis" />
-      <Field name="creationTime" />
+      
       <Field name="odometerKM" />
-      <Field name="stateProvince" />
+      
       <Field name="statusCode" />
-      <Field name="streetAddress" />
+      
     </EventData>
   </GTSRequest>`;
 
@@ -6636,13 +6635,13 @@ const DataContextProvider = ({ children }) => {
         <Field name="speedKPH" />
         <Field name="timestamp" />
         <Field name="heading" />
-        <Field name="city" />
-        <Field name="creationMillis" />
-        <Field name="creationTime" />
+        
+        
+        
         <Field name="odometerKM" />
-        <Field name="stateProvince" />
+        
         <Field name="statusCode" />
-        <Field name="streetAddress" />
+        
 
 
         
@@ -6894,13 +6893,13 @@ const DataContextProvider = ({ children }) => {
         <Field name="speedKPH" />
         <Field name="timestamp" />
         <Field name="heading" />
-        <Field name="city" />
-        <Field name="creationMillis" />
-        <Field name="creationTime" />
+        
+        
+       
         <Field name="odometerKM" />
-        <Field name="stateProvince" />
+        
         <Field name="statusCode" />
-        <Field name="streetAddress" />
+        
       </EventData>
     </GTSRequest>`;
 
@@ -7482,13 +7481,13 @@ const DataContextProvider = ({ children }) => {
         <Field name="speedKPH" />
         <Field name="timestamp" />
         <Field name="heading" />
-        <Field name="city" />
-        <Field name="creationMillis" />
-        <Field name="creationTime" />
+        
+        
+        
         <Field name="odometerKM" />
-        <Field name="stateProvince" />
+        
         <Field name="statusCode" />
-        <Field name="streetAddress" />
+        
       </EventData>
     </GTSRequest>`;
 
