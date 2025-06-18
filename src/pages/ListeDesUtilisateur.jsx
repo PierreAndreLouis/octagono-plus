@@ -333,7 +333,7 @@ function ListeDesUtilisateur({
                             <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
                               {foundUser?.userGroupes?.length > 0
                                 ? foundUser?.userGroupes?.length
-                                : "Tous"}
+                                : `${t("Aucun")}`}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap">

@@ -2762,7 +2762,8 @@ const DataContextProvider = ({ children }) => {
             ? groupesDuUser.flatMap(
                 (groupLink) => groupMap[groupLink.groupID] || []
               )
-            : devices || [];
+            : [];
+        // : devices || [];
 
         const uniqueDevices = Object.values(
           devicesFromGroups?.reduce((acc, device) => {
@@ -8721,6 +8722,48 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  const statusDescriptions = {
+    0x0000: `${t("Code de statut non spécifié")}`,
+
+    0xfd10: `${t("Low Battery")}`,
+    0xf112: `${t("In motion")}`,
+    0xf403: `${t("Ignition OFF")}`,
+    0xf841: `${t("Panic")}`,
+    0xf401: `${t("Ignition ON")}`,
+    0xf020: `${t("Localisation")}`,
+    0xf210: `${t("Arrived at Geozone")}`,
+    0xf230: `${t("Departed at Geozone")}`,
+    // 0xf021: `${t("Localisation - Arrêté")}`,
+    // 0xf022: `${t("Localisation - Parking")}`,
+    // 0xf100: `${t("Localisation - Odomètre")}`,
+    // 0xf110: `${t("Localisation - Heures moteur")}`,
+    // 0xf120: `${t("Localisation - Niveau de carburant")}`,
+    // 0xf200: `${t("Changement d'état d'entrée")}`,
+    // 0xf201: `${t("Entrée activée")}`,
+    // 0xf202: `${t("Entrée désactivée")}`,
+    // 0xf210: `${t("Contact allumé")}`,
+    // 0xf211: `${t("Contact éteint")}`,
+    // 0xf301: `${t("Alimentation activée")}`,
+    // 0xf302: `${t("Alimentation désactivée")}`,
+    // 0xf310: `${t("Batterie faible")}`,
+    // 0xf311: `${t("Batterie OK")}`,
+    // 0xf320: `${t("En charge")}`,
+    // 0xf321: `${t("Non en charge")}`,
+    // 0xf400: `${t("Détection de remorquage")}`,
+    // 0xf500: `${t("Détection de collision")}`,
+    // 0xf600: `${t("Excès de vitesse")}`,
+    // 0xf601: `${t("Vitesse normale")}`,
+    // 0xf700: `${t("Entrée dans une zone géographique")}`,
+    // 0xf701: `${t("Sortie d'une zone géographique")}`,
+    // 0xf800: `${t("Informations de diagnostic")}`,
+    // 0xf900: `${t("Signal de vie")}`,
+    // 0xfa00: `${t("Connexion du conducteur")}`,
+    // 0xfa01: `${t("Déconnexion du conducteur")}`,
+    // 0xfb00: `${t("Alerte de panique")}`,
+    // 0xfc00: `${t("Rappel de maintenance")}`,
+    // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
+  };
+
   // backToPagePrecedent
   return (
     <DataContext.Provider
@@ -9034,6 +9077,7 @@ const DataContextProvider = ({ children }) => {
         loadForManySecond,
         progressBarForLoadingData,
         progressBarForLoadingDataUser,
+        statusDescriptions,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

@@ -724,6 +724,25 @@
 "Échec de la modification du véhicule": "Échec de la modification du véhicule",
 "Vous avez supprimé le véhicule avec succès": "Vous avez supprimé le véhicule avec succès",
 "Échec de la suppression du véhicule": "Échec de la suppression du véhicule",
+
+
+
+
+
+
+
+"Low Battery": "Low Battery",
+"In motion": "In motion",
+"Panic": "Panic",
+"Ignition OFF": "Ignition OFF",
+"Ignition ON": "Ignition ON",
+"Arrived at Geozone": "Arrived at Geozone",
+"Aucun": "Aucun",
+"": "",
+"": "",
+"": "",
+"": "",
+"": "",
 "": "",
 "": "",
 "": ""

@@ -15,6 +15,7 @@ function GestionDesCompts({ setDocumentationPage }) {
     TestDeRequetteDevices,
     gestionAccountData,
     setCurrentAccountSelected,
+    currentAccountSelected,
     getAllAccountsDataLoading,
     setCurrentSelectedUserToConnect,
     setShowAccountOptionsPopup,
@@ -38,18 +39,62 @@ function GestionDesCompts({ setDocumentationPage }) {
     adminUsername,
     adminPassword,
     véhiculeDetails,
+    currentCountry,
+    handleLogin,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
   const [inputSearchItem, setInputSearchItem] = useState("");
 
   const filterListeDesCompte = inputSearchItem
-    ? gestionAccountData.filter((item) =>
-        item?.description.toLowerCase().includes(inputSearchItem.toLowerCase())
+    ? gestionAccountData.filter(
+        (item) =>
+          item?.description
+            .toLowerCase()
+            .includes(inputSearchItem.toLowerCase()) ||
+          item?.accountID.toLowerCase().includes(inputSearchItem.toLowerCase())
       )
     : gestionAccountData;
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+  const [seConnecterAutreComptePopup, setSeConnecterAutreComptePopup] =
+    useState(false);
+
+  const [inputPassword, setInputPassword] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handlePasswordCheck = (event) => {
+    event.preventDefault(); // Prevents the form from submitting
+    console.log("Clicked......");
+
+    if (inputPassword === adminPassword) {
+      console.log("Clicked...... 222");
+
+      const sendConnectionMail = false;
+      setSeConnecterAutreComptePopup(false);
+      const localStorageCurrentCountry = localStorage.getItem("currentCountry");
+      handleLogin(
+        currentAccountSelected?.accountID,
+        "admin",
+        currentAccountSelected?.password,
+        localStorageCurrentCountry || currentCountry,
+        sendConnectionMail
+      );
+
+      // console.log("currentCountry", currentCountry);
+
+      // handleLogin(
+      //   setCurrentAccountSelected?.accountID,
+      //   "admin",
+      //   setCurrentAccountSelected?.password,
+      //   currentCountry,
+      //   sendConnectionMail
+      // );
+    } else {
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
+    }
+  };
 
   return (
     <div>
@@ -59,6 +104,60 @@ function GestionDesCompts({ setDocumentationPage }) {
         <LoadingPageEffectCircle
           getAllAccountsDataLoading={getAllAccountsDataLoading}
         />
+
+        {seConnecterAutreComptePopup && (
+          <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
+            <form
+              onSubmit={handlePasswordCheck}
+              className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+            >
+              <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
+                {t("Voulez-vous changer de Compte ?")}
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
+                >
+                  {t("Veuillez entrer votre mot de passe")}
+                </label>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                )}
+                <div className="mt-2">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder={`${t("Mot de passe")}`}
+                    required
+                    value={inputPassword}
+                    onChange={(e) => {
+                      setInputPassword(e.target.value);
+
+                      setErrorMessage("");
+                    }}
+                    className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 justify-start mt-5">
+                <button className="py-1 px-5 bg-orange-500 rounded-lg text-white">
+                  {t("Confirmer")}
+                </button>
+
+                <h3
+                  onClick={() => {
+                    setSeConnecterAutreComptePopup(false);
+                  }}
+                  className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
+                >
+                  {t("Annuler")}
+                </h3>
+              </div>
+            </form>
+          </div>
+        )}
 
         <div className="px-4 pt-10 mt-4-- pb-40 bg-white rounded-lg">
           <h2 className="mt-[10rem]-- text-lg text-center font-bold ">
@@ -159,7 +258,6 @@ function GestionDesCompts({ setDocumentationPage }) {
                     key={index}
                     onClick={() => {
                       setCurrentAccountSelected(account);
-                      setShowAccountOptionsPopup(true);
                       setCurrentSelectedUserToConnect(null);
                     }}
                     className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
@@ -236,7 +334,16 @@ function GestionDesCompts({ setDocumentationPage }) {
                             </span>
                           </div>{" "}
                         </div>
-                        <div className="flex sm:justify-end w-full xs:justify-start justify-center">
+                        <div className="flex gap-2 md:flex-col md:max-w-[11rem] sm:justify-end w-full xs:justify-start justify-center">
+                          <button
+                            onClick={() => {
+                              setSeConnecterAutreComptePopup(true);
+                            }}
+                            className={`  bg-orange-500-- text-orange-500  w-full cursor-pointer xs:w-auto mt-4 md:mt-0 text-sm- border-2 border-orange-500 border-gray-300- text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                          >
+                            <p className="text-[.8rem]">{t("Se connecter")}</p>
+                            {/* <IoOptions className="text-xl" /> */}
+                          </button>{" "}
                           <button
                             onClick={() => {
                               setShowAccountOptionsPopup(true);
