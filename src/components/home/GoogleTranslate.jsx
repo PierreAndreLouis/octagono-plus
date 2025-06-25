@@ -6,102 +6,6 @@ import { useTranslation } from "react-i18next";
 const GoogleTranslate = () => {
   const { setChooseOtherLanguagePopup, chooseOtherLanguagePopup } =
     useContext(DataContext);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-
-  useEffect(() => {
-    const updateOnlineStatus = () => setIsOnline(navigator.onLine);
-    window.addEventListener("online", updateOnlineStatus);
-    window.addEventListener("offline", updateOnlineStatus);
-
-    let retryLimit = 15;
-
-    const addGoogleTranslateScript = () => {
-      if (!document.getElementById("google-translate-script")) {
-        const script = document.createElement("script");
-        script.id = "google-translate-script";
-        script.src =
-          "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-        script.async = true;
-        document.body.appendChild(script);
-      }
-    };
-
-    const addCustomGoogleStyles = () => {
-      const style = document.createElement("style");
-      style.innerHTML = `
-    .goog-tooltip, .goog-tooltip:hover {
-      display: none !important;
-    }
-    .goog-text-highlight {
-      background: none !important;
-      box-shadow: none !important;
-    }
-  `;
-      document.head.appendChild(style);
-    };
-
-    const initializeGoogleTranslate = () => {
-      if (window.google?.translate) {
-        try {
-          new window.google.translate.TranslateElement(
-            {
-              pageLanguage: "fr",
-              includedLanguages: "fr,en,es,pt,ht",
-              layout:
-                window.google.translate.TranslateElement.InlineLayout
-                  .HORIZONTAL || 0,
-            },
-            "google_translate_element"
-          );
-          setIsLoading(false);
-          setError(false);
-        } catch (e) {
-          console.warn("Erreur d'initialisation :", e);
-          setError(true);
-        }
-      } else if (retryCount < retryLimit) {
-        setRetryCount((count) => count + 1);
-        console.warn("Google Translate non prêt, nouvelle tentative...");
-        setTimeout(initializeGoogleTranslate, 2000);
-      } else {
-        setIsLoading(false);
-        setError(true);
-        console.error("Échec du chargement de Google Translate");
-      }
-    };
-
-    window.googleTranslateElementInit = initializeGoogleTranslate;
-
-    if (isOnline) {
-      setIsLoading(true);
-      addGoogleTranslateScript();
-      // addCustomGoogleStyles();
-      setTimeout(() => {
-        if (!window.google?.translate) {
-          initializeGoogleTranslate();
-        }
-      }, 1000);
-    }
-
-    // 🔁 Réinitialiser l'état
-    const container = document.getElementById("google_translate_element");
-    if (container) container.innerHTML = "";
-
-    if (window.google && window.google.translate) {
-      delete window.google.translate.TranslateElement;
-    }
-
-    setRetryCount(0);
-    setIsLoading(true);
-
-    return () => {
-      window.removeEventListener("online", updateOnlineStatus);
-      window.removeEventListener("offline", updateOnlineStatus);
-    };
-  }, [isOnline, retryCount]);
 
   ///////////////////////
 
@@ -172,31 +76,6 @@ const GoogleTranslate = () => {
                 {t("Anglais")}
               </button>
             </div>
-
-            {/* {isOnline ? (
-          <div className="min-w-[50vw] flex flex-col items-center gap-4">
-            {isLoading && !error && (
-              <div className="text-sm text-gray-500 animate-pulse">
-                Chargement de Google Translate...
-              </div>
-            )}
-            {error && (
-              <div className="text-red-500 font-semibold text-sm">
-                ❌ Échec du chargement de la traduction. Veuillez réessayer.
-              </div>
-            )}
-            <div className="w-full scale-110">
-              <div
-                id="google_translate_element"
-                className="w-full min-w-[80vw] md:min-w-[20vw] text-4xl rounded-lg px-4 border border-gray-200 bg-gray-50"
-              ></div>
-            </div>
-          </div>
-        ) : (
-          <p className="text-red-500 font-semibold text-lg">
-            Le service de traduction n'est pas disponible hors ligne.
-          </p>
-        )} */}
           </div>
         </div>
       )}

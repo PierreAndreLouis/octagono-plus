@@ -37,23 +37,32 @@ function SearchVehiculePupup({
   const isSearching = searchDonneeFusionnéForRapport?.length > 0;
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+
   const getTodayTimestamp = () => {
     const now = new Date();
     now.setHours(0, 0, 0, 0); // Minuit
-    return Math.floor(now.getTime() / 1000); // Convertir en secondes
+    return Math.floor(now.getTime() / 1000); // secondes
   };
-  const todayTimestamp = getTodayTimestamp() * 1000;
+
+  const todayTimestamp = getTodayTimestamp();
 
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
   const currentTime = Date.now(); // Heure actuelle en millisecondes
+  const twentyFourHoursInSec = 24 * 60 * 60;
 
+  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
+  const currentTimeSec = getCurrentTimestamp();
   // Pour filtrer le recherche
 
   const filteredVehiclesPupupByCategorie = filteredVehicles?.filter(
     (véhicule) => {
-      const hasBeenMoving =
-        véhicule?.véhiculeDetails &&
-        véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+      const hasBeenMoving = véhicule?.lastStopTime > todayTimestamp;
+
+      const isParking =
+        currentTimeSec - véhicule?.lastUpdateTime < twentyFourHoursInSec;
+
+      const isHorsService =
+        currentTimeSec - véhicule?.lastUpdateTime > twentyFourHoursInSec;
 
       const noSpeed =
         véhicule?.véhiculeDetails &&
@@ -76,6 +85,36 @@ function SearchVehiculePupup({
 
       const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
+      //
+      //
+      //
+
+      // let border_color = "bg-gray-50";
+      // let text_color = "text-orange-500/80";
+      // let bg_color = "bg-orange-500";
+      // if (currentTimeSec - device?.lastUpdateTime < twentyFourHoursInSec) {
+      //   border_color = "border-l-[.4rem] border-orange-300";
+      //   text_color = "text-orange-500/80";
+      //   bg_color = "bg-orange-500";
+      // } else if (
+      //   currentTimeSec - device?.lastUpdateTime >
+      //   twentyFourHoursInSec
+      // ) {
+      //   border_color = "border-l-[.4rem] border-purple-300";
+      //   text_color = "text-purple-500/80";
+      //   bg_color = "bg-purple-500";
+      // }
+
+      // if (device?.lastStopTime > todayTimestamp) {
+      //   border_color = "border-l-[.4rem] border-green-300";
+      //   text_color = "text-green-500/80";
+      //   bg_color = "bg-green-500";
+      // }
+
+      //
+      //
+      //
+
       if (isSearching) {
         if (filterSearchVehiculePopupByCategorie === "all") {
           return true;
@@ -90,13 +129,11 @@ function SearchVehiculePupup({
         if (filterSearchVehiculePopupByCategorie === "all") {
           return true;
         } else if (filterSearchVehiculePopupByCategorie === "deplace") {
-          return hasBeenMoving && isToday && isActive;
+          return hasBeenMoving;
         } else if (filterSearchVehiculePopupByCategorie === "non deplace") {
-          return (
-            hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
-          );
+          return isParking;
         } else if (filterSearchVehiculePopupByCategorie === "hors service") {
-          return noDetails || !isActive;
+          return isHorsService;
         }
       }
     }
@@ -106,8 +143,8 @@ function SearchVehiculePupup({
     (v) => v.deviceID === selectedVehicleToShowInMap
   );
   return (
-    <div className="fixed px-2 z-[999999999999999] inset-0 bg-black/50 flex justify-center ">
-      <div className=" sm:mx-auto   min-w-[90vw] md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh] border-red-600  shadow-lg shadow-gray-600/80 ">
+    <div className="fixed min-h-[100vh] px-2  z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
+      <div className=" sm:mx-auto   min-w-[90vw]  md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
         <div className="absolute  top-[1rem] left-2 right-2 md:left-4  md:right-4 py-2">
           <div className="mt-4 mb-4   flex items-center gap-2">
             <Tooltip
@@ -250,6 +287,20 @@ function SearchVehiculePupup({
 
               const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
+              //
+              //
+              //
+              //
+              const hasBeenMoving = véhicule?.lastStopTime > todayTimestamp;
+
+              const isParking =
+                currentTimeSec - véhicule?.lastUpdateTime <
+                twentyFourHoursInSec;
+
+              const isHorsService =
+                currentTimeSec - véhicule?.lastUpdateTime >
+                twentyFourHoursInSec;
+
               let iconBg = "text-red-500 dark:text-red-500";
 
               if (isSearching) {
@@ -261,15 +312,11 @@ function SearchVehiculePupup({
                   iconBg = "text-purple-500 dark:text-purple-500";
                 }
               } else {
-                if (hasDetails && isMoving && isToday && isActive) {
+                if (hasBeenMoving) {
                   iconBg = "text-green-500 dark:text-green-500";
-                } else if (
-                  hasDetails &&
-                  (noSpeed || (isMoving && !isToday)) &&
-                  isActive
-                ) {
+                } else if (isParking) {
                   iconBg = "text-red-500 dark:text-red-500";
-                } else if (!hasDetails || !isActive) {
+                } else if (isHorsService) {
                   iconBg = "text-purple-500 dark:text-purple-500";
                 }
               }

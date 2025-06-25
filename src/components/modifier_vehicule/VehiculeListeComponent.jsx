@@ -15,7 +15,7 @@ function VehiculeListeComponent({
   const { currentVéhicule } = useContext(DataContext);
   return (
     <>
-      {showVehiculeListe && (
+      {/* {showVehiculeListe && (
         <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-20 shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80">
           <SearchVehiculePupup
             searchQueryListPopup={searchQueryListPopup}
@@ -27,7 +27,7 @@ function VehiculeListeComponent({
             isMapcomponent="false"
           />
         </div>
-      )}
+      )} */}
     </>
   );
 }

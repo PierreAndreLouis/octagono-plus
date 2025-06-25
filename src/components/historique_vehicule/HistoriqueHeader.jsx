@@ -33,7 +33,7 @@ function HistoriqueHeader({
 
   return (
     <>
-      <div className="flex flex-col w-full">
+      <div className="flex   flex-col w-full">
         <div className="w-full ">
           <div className="flex  mx-auto relative justify-between px-4 max-w-[45rem] w-[100vw]-- w-full items-center-- gap-3 w-full--">
             <div

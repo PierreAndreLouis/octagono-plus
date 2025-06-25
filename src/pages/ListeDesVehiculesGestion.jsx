@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IoClose, IoSearchOutline } from "react-icons/io5";
+import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import {
   FaPlusCircle,
@@ -14,6 +14,7 @@ import {
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { MdUpdate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import GestionAppareilOptionPopup from "../components/gestion_des_comptes/GestionAppareilOptionPopup";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
@@ -48,9 +49,13 @@ function ListeDesVehiculesGestion({
     gestionAccountData,
     adminPassword,
     statusDescriptions,
+    isDashboardHomePage,
+    mergedDataHome,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   //
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -135,7 +140,9 @@ function ListeDesVehiculesGestion({
 
   const currentListe = fromDashboard
     ? statisticFilteredDeviceListe
-    : listeGestionDesVehicules;
+    : isDashboardHomePage
+    ? listeGestionDesVehicules
+    : dataFusionné;
 
   const filteredListeGestionDesVehicules = searchTermInput
     ? currentListe?.filter(
@@ -191,60 +198,17 @@ function ListeDesVehiculesGestion({
     });
   };
 
+  const [showOptionAppareilOptionPopup, setShowOptionAppareilOptionPopup] =
+    useState(false);
+
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
-
-      {deleteAccountPopup && (
-        <div className="fixed  z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
-          <form
-            onSubmit={deleteVehicleFonction}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
-          >
-            <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              {t("Voulez-vous Supprimer l'Appareil ?")}
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
-              >
-                {t("Veuillez entrer votre mot de passe")}
-              </label>
-
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder={`${t("Mot de passe")}`}
-                  required
-                  value={inputPassword}
-                  onChange={(e) => setInputPassword(e.target.value)}
-                  className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 justify-start mt-5">
-              <button
-                type="submit"
-                className="py-1 px-5 bg-red-500 rounded-lg text-white"
-              >
-                {t("Confirmer")}
-              </button>
-
-              <h3
-                onClick={() => {
-                  setDeleteAccountPopup(false);
-                }}
-                className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
-              >
-                {t("Annuler")}
-              </h3>
-            </div>
-          </form>
-        </div>
-      )}
+      <GestionAppareilOptionPopup
+        setShowOptionAppareilOptionPopup={setShowOptionAppareilOptionPopup}
+        showOptionAppareilOptionPopup={showOptionAppareilOptionPopup}
+        setDocumentationPage={setDocumentationPage}
+      />
 
       <div className="px-4 pb-40 bg-white pt-10 rounded-lg">
         {!fromDashboard && (
@@ -272,33 +236,37 @@ function ListeDesVehiculesGestion({
 
             <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
               {/*  */}
-              <div className="flex gap-2 justify-center mt-4">
-                <button
-                  onClick={() => {
-                    // setShowCreateNewDevicePage(true);
-                    scrollToTop();
+              {isDashboardHomePage && (
+                <div className="flex gap-2 justify-center mt-4">
+                  <button
+                    onClick={() => {
+                      // setShowCreateNewDevicePage(true);
+                      scrollToTop();
 
-                    if (!currentAccountSelected) {
-                      setChooseOneAccountToContinue(true);
-                      setChooseOtherAccountGestion(true);
-                      setDocumentationPage("Ajouter_nouveau_appareil");
-                    } else {
-                      setDocumentationPage("Ajouter_nouveau_appareil");
-                    }
-                  }}
-                  className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
-                >
-                  <span className="flex justify-center items-center gap-3 ">
-                    <FaUserPlus className="text-2xl" />
-                    <span className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
-                      <span className="hidden md:inline">{t("Ajouter")} </span>{" "}
-                      {t("Nouveau Appareil")}
+                      if (!currentAccountSelected) {
+                        setChooseOneAccountToContinue(true);
+                        setChooseOtherAccountGestion(true);
+                        setDocumentationPage("Ajouter_nouveau_appareil");
+                      } else {
+                        setDocumentationPage("Ajouter_nouveau_appareil");
+                      }
+                    }}
+                    className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
+                  >
+                    <span className="flex justify-center items-center gap-3 ">
+                      <FaUserPlus className="text-2xl" />
+                      <span className="text-sm md:text-[1rem] text-ellipsis whitespace-nowrap- w-[50%]-- text-center">
+                        <span className="hidden md:inline">
+                          {t("Ajouter")}{" "}
+                        </span>{" "}
+                        {t("Nouveau Appareil")}
+                      </span>
                     </span>
-                  </span>
-                </button>{" "}
-              </div>
+                  </button>{" "}
+                </div>
+              )}
 
-              {!showPasswordInput && (
+              {!showPasswordInput && isDashboardHomePage && (
                 <div className="flex gap-2 w-full justify-between items-center">
                   <div
                     onClick={() => {
@@ -337,37 +305,40 @@ function ListeDesVehiculesGestion({
                 </div>
               )}
 
-              {showPasswordInput && (
-                <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
-                  <input
-                    id="search"
-                    name="search"
-                    type="search"
-                    placeholder={`${t("Recherche un appareil")}`}
-                    required
-                    value={searchTermInput}
-                    onChange={(e) => {
-                      setSearchTermInput(e.target.value);
-                    }}
-                    className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
-                  />
-                  <div
-                    onClick={() => {
-                      {
-                        setShowPasswordInput(false);
-                        setSearchTermInput("");
-                      }
-                    }}
-                    className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
-                  >
-                    <IoClose className="text-xl text-red-600" />
+              {showPasswordInput ||
+                (!isDashboardHomePage && (
+                  <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+                    <input
+                      id="search"
+                      name="search"
+                      type="search"
+                      placeholder={`${t("Recherche un appareil")}`}
+                      required
+                      value={searchTermInput}
+                      onChange={(e) => {
+                        setSearchTermInput(e.target.value);
+                      }}
+                      className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                    />
+                    <div
+                      onClick={() => {
+                        {
+                          setShowPasswordInput(false);
+                          setSearchTermInput("");
+                        }
+                      }}
+                      className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+                    >
+                      {isDashboardHomePage && (
+                        <IoClose className="text-xl text-red-600" />
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                ))}
             </div>
           </div>
         )}
-        <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+        <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
 
           {filteredListeGestionDesVehicules?.length > 0 ? (
@@ -375,26 +346,38 @@ function ListeDesVehiculesGestion({
               ?.slice()
               .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
               ?.map((device, index) => {
+                //
+                //
+                //
+                //
                 let border_color = "bg-gray-50";
                 let text_color = "text-orange-500/80";
+                let bg_color = "bg-orange-500";
                 if (
                   currentTimeSec - device?.lastUpdateTime <
                   twentyFourHoursInSec
                 ) {
                   border_color = "border-l-[.4rem] border-orange-300";
                   text_color = "text-orange-500/80";
+                  bg_color = "bg-orange-500";
                 } else if (
                   currentTimeSec - device?.lastUpdateTime >
                   twentyFourHoursInSec
                 ) {
                   border_color = "border-l-[.4rem] border-purple-300";
                   text_color = "text-purple-500/80";
+                  bg_color = "bg-purple-500";
                 }
 
                 if (device?.lastStopTime > todayTimestamp) {
                   border_color = "border-l-[.4rem] border-green-300";
                   text_color = "text-green-500/80";
+                  bg_color = "bg-green-500";
                 }
+                //
+                //
+                //
+                //
 
                 const code =
                   device?.véhiculeDetails?.length > 0 &&
@@ -409,6 +392,21 @@ function ListeDesVehiculesGestion({
                   >
                     <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                       {index + 1}
+                    </div>
+                    <div className="absolute bottom-3 right-3 ">
+                      {/* <button
+                        onClick={() => {
+                          // setTimeout(() => {
+                          //   setCurrentSelectedGroupeGestion(groupe);
+                          // }, 500);
+                          // setListeGestionDesUsers(userListeAffected);
+                          // console.log(groupe);
+                          // setShowSelectedGroupeOptionsPopup(true);
+                        }}
+                        className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                      >
+                        <p>{t("Options")}</p> <IoOptions className="text-xl" />
+                      </button> */}
                     </div>
                     <div className="flex  gap-3  ">
                       <FaCar
@@ -564,37 +562,53 @@ function ListeDesVehiculesGestion({
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- items-center ">
+                    {/* {isDashboardHomePage && ( */}
+                    <div
+                      className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- 
+                      items-center "
+                    >
                       <button
                         onClick={() => {
                           setCurrentSelectedDeviceGestion(device);
-                          setShowUserGroupeCategorieSection(false);
-                          setDocumentationPage("Modifier_appareil");
-                          scrollToTop();
+                          setShowOptionAppareilOptionPopup(true);
                         }}
-                        className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-1.5 pl-2.5 pr-1.5 flex justify-center items-center"
+                        className={` bg-orange-500 text-white  text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-4 flex justify-center items-center`}
                       >
-                        <p className="text-sm mr-2">{t("Modifier")}</p>
+                        <p className="text-sm mr-2">{t("Options")}</p>
 
-                        <FaRegEdit />
+                        <IoOptions />
                       </button>
-                      <button
-                        onClick={() => {
-                          setCurrentSelectedDeviceGestion(device);
+                      {/* <button
+                          onClick={() => {
+                            setShowUserGroupeCategorieSection(false);
+                            setCurrentSelectedDeviceGestion(device);
+                            setDocumentationPage("Modifier_appareil");
+                            scrollToTop();
+                          }}
+                          className="bg-gray-200 border border-gray-300 text-center w-[50%] md:w-full text-lg font-semibold rounded-lg py-1.5 pl-2.5 pr-1.5 flex justify-center items-center"
+                        >
+                          <p className="text-sm mr-2">{t("Modifier")}</p>
 
-                          setDeleteAccountPopup(true);
-                        }}
-                        className={`${
-                          true
-                            ? " bg-orange-500 text-white"
-                            : "text-orange-600 border-[0.02rem] border-orange-500 "
-                        }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-2 flex justify-center items-center`}
-                      >
-                        <p className="text-sm mr-2">{t("Supprimer")}</p>
+                          <FaRegEdit />
+                        </button> */}
+                      {/* <button
+                          onClick={() => {
+                            setCurrentSelectedDeviceGestion(device);
 
-                        <FaTrashAlt />
-                      </button>
+                            setDeleteAccountPopup(true);
+                          }}
+                          className={`${
+                            true
+                              ? " bg-orange-500 text-white"
+                              : "text-orange-600 border-[0.02rem] border-orange-500 "
+                          }   text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-2 flex justify-center items-center`}
+                        >
+                          <p className="text-sm mr-2">{t("Supprimer")}</p>
+
+                          <FaTrashAlt />
+                        </button> */}
                     </div>
+                    {/* // )} */}
                   </div>
                 );
               })

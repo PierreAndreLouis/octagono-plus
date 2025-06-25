@@ -63,6 +63,7 @@ function MapComponent({
     isDashboardHomePage,
     adminUsername,
     accountGeofences,
+    mergedDataHome,
     // showGeofenceInCarte,
     // setShowGeofenceInCarte,
 
@@ -73,6 +74,7 @@ function MapComponent({
 
   // le data a utiliser
   const navigate = useNavigate();
+  const dataFusionnéHome = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // const dataFusionné =
   //   (isDashboardHomePage && currentAccountSelected?.accountDevices) ??
@@ -89,7 +91,7 @@ function MapComponent({
     dataFusionné = accountDevices;
     CurrentGeofenceData = accountGeofences || [];
   } else if (!isDashboardHomePage) {
-    dataFusionné = currentDataFusionné;
+    dataFusionné = dataFusionnéHome;
     CurrentGeofenceData = geofenceData;
   }
 
@@ -807,9 +809,7 @@ function MapComponent({
             onClick={() => {
               setIsAddingNewGeofence(false);
               setAjouterGeofencePopup(false);
-              if (!isDashBoardComptnent) {
-                navigate("/gestion_geofences?tab=geozone");
-              }
+
               setDocumentationPage("Gestion_geofences");
 
               // centrerSurGeofenceChoisis();
@@ -994,9 +994,6 @@ function MapComponent({
               </h2>
               <button
                 onClick={() => {
-                  if (!isDashBoardComptnent) {
-                    navigate("/gestion_geofences?tab=geozone");
-                  }
                   setDocumentationPage("Gestion_geofences");
                 }}
                 // to="/gestion_geofences?tab=geozone"
@@ -1101,9 +1098,6 @@ function MapComponent({
                     setIsAddingNewGeofence(false);
                     setAjouterGeofencePopup(false);
 
-                    if (!isDashBoardComptnent) {
-                      navigate("/gestion_geofences?tab=geozone");
-                    }
                     setDocumentationPage("Gestion_geofences");
                   }}
                   // to="/gestion_geofences?tab=geozone"

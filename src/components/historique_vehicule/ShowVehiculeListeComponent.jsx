@@ -17,7 +17,7 @@ function ShowVehiculeListeComponent({
   const { currentVéhicule, FormatDateHeure } = useContext(DataContext);
   return (
     <>
-      {showVehiculeListe && (
+      {/* {showVehiculeListe && (
         <div className="fixed z-[999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50  shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80 dark:border-gray-600">
           <SearchVehiculePupup
             searchQueryListPopup={searchQueryListPopup}
@@ -30,7 +30,7 @@ function ShowVehiculeListeComponent({
             isMapcomponent="false"
           />
         </div>
-      )}
+      )} */}
     </>
   );
 }

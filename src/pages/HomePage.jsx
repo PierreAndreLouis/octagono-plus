@@ -534,7 +534,7 @@ const Home = () => {
         {isDashboardHomePage && (
           <div className="flex max-w-[40rem] mx-auto flex-col px-2 justify-center w-full">
             <Link
-              to={"/dashboard_admin_page"}
+              to={"/home"}
               className="px-4 py-2 text-center mt-6 w-full font-bold rounded-lg text-orange-500 border-2 border-orange-500 bg-white"
             >
               {t("Dashboard")}

@@ -41,6 +41,9 @@ function GestionDesCompts({ setDocumentationPage }) {
     véhiculeDetails,
     currentCountry,
     handleLogin,
+    setMergedDataHome,
+    setGeofenceData,
+    clearDataIndexedbStore,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -74,6 +77,12 @@ function GestionDesCompts({ setDocumentationPage }) {
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);
       const localStorageCurrentCountry = localStorage.getItem("currentCountry");
+      // clearDataIndexedbStore("mergedDataHome");
+      // clearDataIndexedbStore("geofenceData");
+      // clearDataIndexedbStore("donneeFusionnéForRapport");
+      // setMergedDataHome([]);
+      // setGeofenceData([]);
+
       handleLogin(
         currentAccountSelected?.accountID,
         "admin",
@@ -81,6 +90,8 @@ function GestionDesCompts({ setDocumentationPage }) {
         localStorageCurrentCountry || currentCountry,
         sendConnectionMail
       );
+
+      setDocumentationPage("Dashboard");
 
       // console.log("currentCountry", currentCountry);
 

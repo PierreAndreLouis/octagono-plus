@@ -453,7 +453,7 @@ function TrajetVehicule({
     <div>
       <div className="relative">
         <button
-          className="absolute z-[999] top-[5rem] right-[1rem]"
+          className="absolute z-[999] top-[8.5rem] right-[1rem]"
           // onClick={centerOnFirstMarkerAnimation}
           // !isAnimating ? centerOnFirstMarker : centerOnFirstMarkerAnimation;
           onClick={() => {
@@ -476,8 +476,10 @@ function TrajetVehicule({
           className={`${
             voirAnimationTrajetPopup ? " pl-0.5" : ""
           } absolute md:bg-white cursor-pointer flex flex-col md:flex-row md:items-center  justify-start items-start z-[999999999999999999999999999] ${
-            composantLocationPage === "historique" ? "top-[5rem]" : "top-[2rem]"
-          }  md:top-[4rem] left-[1rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
+            composantLocationPage === "historique"
+              ? "top-[8.5rem]"
+              : "top-[2rem]"
+          }   left-[1rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
         >
           <div
             className={`${
@@ -1042,7 +1044,7 @@ function TrajetVehicule({
 
         {voirInfoSurAnimation && (
           <div
-            className={`fixed flex flex-col gap-2 z-[999999999999]  md:top-auto md: bottom-[4rem] lg:bottom-[1rem] md: left-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem]-- p-3 bg-white rounded-lg shadow-lg shadow-black/20 `}
+            className={`fixed flex flex-col gap-2 z-[999999999999]  md:top-auto md: bottom-[4rem] lg:bottom-[1rem] md: right-[1rem] min-w-[10rem] max-w-[20rem] min-h-[17rem]-- p-3 bg-white rounded-lg shadow-lg shadow-black/20 `}
           >
             <div className="flex border-b md:pb-3 justify-end md:justify-between ">
               <p className="font-bold notranslate hidden md:block">

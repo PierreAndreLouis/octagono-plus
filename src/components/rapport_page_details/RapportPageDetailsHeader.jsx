@@ -47,17 +47,35 @@ function RapportPageDetailsHeader({
     tableRef,
     rapportPersonnelPDFtRef,
     rapportGroupePDFtRef,
+    mergedDataHome,
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    FormatDateHeure,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+  let x;
+  // Le data converti en Objet
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-  const formatTime = (hours, minutes, seconds) => {
-    if (hours > 0 || minutes > 0 || seconds > 0) {
-      return `${hours > 0 ? hours + "h " : ""}${
-        minutes > 0 ? minutes + "m " : ""
-      }${seconds > 0 ? seconds + "s" : ""}`;
-    }
-    return "0s";
-  };
+  let deviceListeSelected;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    deviceListeSelected = currentAccountSelected?.accountDevices;
+  } else if (isDashboardHomePage && !currentAccountSelected) {
+    deviceListeSelected = accountDevices;
+  } else if (!isDashboardHomePage) {
+    deviceListeSelected = dataFusionné;
+  }
+
+  // const formatTime = (hours, minutes, seconds) => {
+  //   if (hours > 0 || minutes > 0 || seconds > 0) {
+  //     return `${hours > 0 ? hours + "h " : ""}${
+  //       minutes > 0 ? minutes + "m " : ""
+  //     }${seconds > 0 ? seconds + "s" : ""}`;
+  //   }
+  //   return "0s";
+  // };
 
   const [pdfDownloadPupup, setPdfDownloadPupup] = useState(false);
 
@@ -151,8 +169,8 @@ function RapportPageDetailsHeader({
 
   const dernierDetails = donneeVehiculeDetails?.[0]?.timestamp;
 
-  const timestampInSecondsDebut = premierDetail;
-  const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
+  // const timestampInSecondsDebut = premierDetail;
+  // const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
   // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
@@ -161,16 +179,16 @@ function RapportPageDetailsHeader({
 
   // Trouver la date du rapport
   // const timestampInSecondsFin = currentVéhicule?.véhiculeDetails[0]?.timestamp;
-  const timestampInSecondsFin = dernierDetails;
-  const dateObjectFin = new Date(timestampInSecondsFin * 1000);
+  // const timestampInSecondsFin = dernierDetails;
+  // const dateObjectFin = new Date(timestampInSecondsFin * 1000);
 
   // Récupérer le jour, le mois et l'année séparément
   // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
   // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
   // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
 
-  const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
-  const [ordreCroissant, setordreCroissant] = useState(true);
+  // const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
+  // const [ordreCroissant, setordreCroissant] = useState(true);
   // const [searchTerm, setSearchTerm] = useState(""); // Gère le terme de recherche de véhicule
 
   const [lieuxFrequentePupup, setlieuxFrequentePupup] = useState(false);
@@ -206,7 +224,7 @@ function RapportPageDetailsHeader({
     setRapportPageDetailHeader(e.target.value);
   };
 
-  const filteredVehicles = currentDataFusionné?.filter(
+  const filteredVehicles = deviceListeSelected?.filter(
     (véhicule) =>
       véhicule?.imeiNumber
         .toLowerCase()
@@ -247,12 +265,12 @@ function RapportPageDetailsHeader({
     return { day, month, year };
   };
 
-  const {
-    day: jourDebut,
-    month: moisDebut,
-    year: anneeDebut,
-  } = formatDate(startDate);
-  const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
+  // const {
+  //   day: jourDebut,
+  //   month: moisDebut,
+  //   year: anneeDebut,
+  // } = formatDate(startDate);
+  // const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
 
   const formatTo12Hour = (time) => {
     let [hours, minutes] = time.split(":").map(Number);
@@ -263,8 +281,8 @@ function RapportPageDetailsHeader({
   };
 
   // Convertir les heures
-  const heureDebut = formatTo12Hour(startTime);
-  const heureFin = formatTo12Hour(endTime);
+  // const heureDebut = formatTo12Hour(startTime);
+  // const heureFin = formatTo12Hour(endTime);
 
   // console.log("Jour Début:", jourDebut);
   // console.log("Mois Début:", moisDebut);
@@ -274,8 +292,146 @@ function RapportPageDetailsHeader({
   // console.log("Mois Fin:", moisFin);
   // console.log("Année Fin:", anneeFin);
 
+  const formatTime = (hours, minutes, seconds) => {
+    if (hours > 0 || minutes > 0 || seconds > 0) {
+      return `${hours > 0 ? hours + "h " : ""}${
+        minutes > 0 ? minutes + "m " : ""
+      }${seconds > 0 ? seconds + "s" : ""}`;
+    }
+    return "0s";
+  };
+
+  const moisEnLettres = [
+    `${t("janvier")}`,
+    `${t("février")}`,
+    `${t("mars")}`,
+    `${t("avril")}`,
+    `${t("mai")}`,
+    `${t("juin")}`,
+    `${t("juillet")}`,
+    `${t("août")}`,
+    `${t("septembre")}`,
+    `${t("octobre")}`,
+    `${t("novembre")}`,
+    `${t("décembre")}`,
+  ];
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+  // Fonction pour avoir le timestamp le plus recent
+  function getMostRecentTimestamp(data) {
+    // Filtrer les entrées avec un tableau véhiculeDetails valide et non vide
+    const validTimestamps = data
+      ?.filter(
+        (véhicule) =>
+          Array.isArray(véhicule?.véhiculeDetails) &&
+          véhicule?.véhiculeDetails.length > 0
+      )
+      .map((véhicule) => parseInt(véhicule?.véhiculeDetails[0].timestamp));
+
+    // Trouver le timestamp le plus récent
+    const mostRecentTimestamp = validTimestamps && Math.max(...validTimestamps);
+
+    return { mostRecentTimestamp };
+  }
+  const mostRecentTimestamp = getMostRecentTimestamp(
+    currentDataFusionné && currentDataFusionné
+  )?.mostRecentTimestamp;
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  x;
+
+  // Pour avoir le timestamp le plus ancien
+  function getMostOldTimestamp(data) {
+    // Filtrer les entrées avec un tableau véhiculeDetails valide et non vide
+    const validTimestamps = data
+      ?.filter(
+        (véhicule) =>
+          Array.isArray(véhicule?.véhiculeDetails) &&
+          véhicule?.véhiculeDetails.length > 0
+      )
+      .map((véhicule) =>
+        parseInt(
+          véhicule?.véhiculeDetails[véhicule?.véhiculeDetails.length - 1]
+            .timestamp
+        )
+      );
+
+    // Trouver le timestamp le plus récent
+    const mostOldTimestamp = validTimestamps && Math.min(...validTimestamps);
+
+    return { mostOldTimestamp };
+  }
+
+  // Récupérer le timestamp le plus ancien
+  const mostOldTimestamp = getMostOldTimestamp(
+    currentDataFusionné && currentDataFusionné
+  )?.mostOldTimestamp;
+  //
+  //
+  //
+  //
+  //
+  //
+  // Trouver la date du rapport
+  const timestampInSecondsDebut =
+    currentVéhicule?.véhiculeDetails[
+      currentVéhicule?.véhiculeDetails.length - 1
+    ]?.timestamp;
+  const dateObjectDebut =
+    pageSection === "unite"
+      ? new Date(timestampInSecondsDebut * 1000)
+      : new Date(mostOldTimestamp * 1000);
+
+  // Trouver la date du rapport
+  const timestampInSecondsFin = currentVéhicule?.véhiculeDetails[1]?.timestamp;
+  const dateObjectFin =
+    pageSection === "unite"
+      ? new Date(timestampInSecondsFin * 1000)
+      : new Date(mostRecentTimestamp * 1000);
+
+  // Récupérer le jour, le mois et l'année séparément pour la date de début en local
+  const jourDebut = dateObjectDebut.getDate(); // Jour local
+  const moisDebut = moisEnLettres[dateObjectDebut.getMonth()]; // Mois local
+  const anneeDebut = dateObjectDebut.getFullYear(); // Année locale
+
+  // Récupérer le jour, le mois et l'année séparément pour la date de fin en local
+  const jourFin = dateObjectFin.getDate(); // Jour local
+  const moisFin = moisEnLettres[dateObjectFin.getMonth()]; // Mois local
+  const anneeFin = dateObjectFin.getFullYear(); // Année locale
+
+  const heureDebut = FormatDateHeure(
+    pageSection === "unite" ? timestampInSecondsDebut : mostRecentTimestamp
+  )?.time;
+  const heureFin = FormatDateHeure(
+    pageSection === "unite" ? timestampInSecondsFin : mostOldTimestamp
+  )?.time;
+
+  const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
+  const [ordreCroissant, setordreCroissant] = useState(false);
+
   return (
-    <div className=" shadow-md shadow-gray-400/20 pb-2">
+    <div className=" shadow-md-- shadow-gray-400/20 pb-2">
       <div
         onClick={() => {
           setShowOptions(!showOptions);
@@ -321,220 +477,263 @@ function RapportPageDetailsHeader({
           isMapcomponent="false"
         />
       )}
-      {currentDataFusionné?.length > 0 &&
-        (pageSection === "unite" || pageSection === "groupe") && (
-          <div className="flex justify-between gap-3 px-4 ">
-            <div className="sm:flex w-full   gap-10 max-w-[50rem] mx-4-- justify-start items-center ">
-              <div className="flex gap-0 items-center">
-                <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
-                <p className="text-[.9rem]">
-                  <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                    {
-                      <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                        {t("Du")}{" "}
-                        <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
-                          {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
-                          {anneeDebut === anneeFin ? "" : anneeDebut}
-                        </span>{" "}
-                        {t("au")}{" "}
-                        <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
-                          {jourFin} {moisFin} {anneeFin}
+      {(pageSection === "unite" || pageSection === "groupe") && (
+        <div className="flex justify-end gap-3 px-4 ">
+          {timestampInSecondsDebut &&
+            timestampInSecondsFin &&
+            pageSection === "unite" && (
+              <div className="sm:flex w-full   gap-8 max-w-[50rem] mx-4-- justify-start items-center ">
+                <div className="flex gap-0 items-center whitespace-nowrap">
+                  <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
+                  <p className="text-[.9rem]">
+                    <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                      {
+                        <span className=" sm:text-sm md:text-[1rem]  lg:text-lg--">
+                          {t("Du")}{" "}
+                          <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                            {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
+                            {anneeDebut === anneeFin ? "" : anneeDebut}
+                          </span>{" "}
+                          {t("au")}{" "}
+                          <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                            {jourFin} {moisFin} {anneeFin}
+                          </span>
                         </span>
-                      </span>
-                      // )
-                    }
-                  </span>
-                </p>
-              </div>
+                        // )
+                      }
+                    </span>
+                  </p>
+                </div>
 
-              <div className="flex gap-0 items-center">
-                <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
+                <div className="flex gap-0 items-center whitespace-nowrap">
+                  <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
 
-                <p className="text-[.9rem]">
-                  <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                    {t("De")}{" "}
-                    <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
-                      {heureDebut}
-                    </span>{" "}
-                    {t("à")}{" "}
-                    <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
-                      {heureFin}
-                    </span>{" "}
-                  </span>
-                </p>
+                  <p className="text-[.9rem]">
+                    <span className="font-normal sm:text-sm md:text-[1rem]  dark:text-orange-400 text-gray-700 pl-3">
+                      {t("De")}{" "}
+                      <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
+                        {heureDebut}
+                      </span>{" "}
+                      {t("à")}{" "}
+                      <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
+                        {heureFin}
+                      </span>{" "}
+                    </span>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                {(currentVéhicule || pageSection === "groupe") && (
-                  <Tooltip
-                    PopperProps={{
-                      modifiers: [
-                        {
-                          name: "offset",
-                          options: {
-                            offset: [0, -3], // Décalage horizontal et vertical
-                          },
+            )}
+          {currentDataFusionné &&
+            currentDataFusionné?.length > 0 &&
+            pageSection === "groupe" && (
+              <div className="sm:flex w-full   gap-8 max-w-[50rem] mx-4-- justify-start items-center ">
+                <div className="flex gap-0 items-center whitespace-nowrap">
+                  <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
+                  <p className="text-[.9rem]">
+                    <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                      {
+                        <span className=" sm:text-sm md:text-[1rem]  lg:text-lg--">
+                          {t("Du")}{" "}
+                          <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                            {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
+                            {anneeDebut === anneeFin ? "" : anneeDebut}
+                          </span>{" "}
+                          {t("au")}{" "}
+                          <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                            {jourFin} {moisFin} {anneeFin}
+                          </span>
+                        </span>
+                        // )
+                      }
+                    </span>
+                  </p>
+                </div>
+
+                <div className="flex gap-0 items-center whitespace-nowrap">
+                  <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
+
+                  <p className="text-[.9rem]">
+                    <span className="font-normal sm:text-sm md:text-[1rem]  dark:text-orange-400 text-gray-700 pl-3">
+                      {t("De")}{" "}
+                      <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
+                        {heureDebut}
+                      </span>{" "}
+                      {t("à")}{" "}
+                      <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
+                        {heureFin}
+                      </span>{" "}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )}
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              {(currentVéhicule || pageSection === "groupe") && (
+                <Tooltip
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -3], // Décalage horizontal et vertical
                         },
-                        {
-                          name: "zIndex",
-                          enabled: true,
-                          phase: "write",
-                          fn: ({ state }) => {
-                            state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                          },
+                      },
+                      {
+                        name: "zIndex",
+                        enabled: true,
+                        phase: "write",
+                        fn: ({ state }) => {
+                          state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
                         },
-                      ],
-                    }}
-                    title={`${t("Télécharger en PDF")}`}
-                  >
-                    <div
-                      onClick={() => {
-                        setPdfDownloadPupup(true);
-                      }}
-                      className="flex gap-2 items-center cursor-pointer"
-                    >
-                      <LuFileDown className="text-[1.3rem] mt-2- text-orange-500" />
-                    </div>
-                  </Tooltip>
-                )}
-                {pdfDownloadPupup && (
+                      },
+                    ],
+                  }}
+                  title={`${t("Télécharger en PDF")}`}
+                >
                   <div
-                    // onClick={() => {
-                    //   setPdfDownloadPupup(false);
-                    // }}
-                    className="absolute rounded-lg flex flex-col gap-0 bg-white top-8 border -right-10 z-[1111] shadow-lg shadow-gray-300 w-[80vw] max-w-[30rem] p-4 pt-0"
+                    onClick={() => {
+                      setPdfDownloadPupup(true);
+                    }}
+                    className="flex gap-2 items-center cursor-pointer"
                   >
-                    <div className="flex justify-between mx-2 mt-4 mb-3">
-                      <p className="font-semibold text-orange-500 text-lg">
-                        {t("Télécharger")}{" "}
-                        {pageSection === "unite"
-                          ? `(${t("Unite")})`
-                          : `(${t("Groupe")})`}
-                      </p>
-                      <IoMdClose
-                        onClick={() => {
-                          setPdfDownloadPupup(false);
-                        }}
-                        className=" text-xl text-red-500 cursor-pointer"
-                      />
-                    </div>
-                    {/*  */}
-                    {/*  */}
-                    {/* <div className="flex justify-center items-center "> */}
-                    <p className="flex items-start gap-3 bg-yellow-100 text-yellow-600 text-md mb-2 px-2 py-1 rounded-md text-center dark:bg-yellow-900 dark:text-yellow-400">
-                      {/* <span>
+                    <LuFileDown className="text-[1.3rem] mt-2- text-orange-500" />
+                  </div>
+                </Tooltip>
+              )}
+              {pdfDownloadPupup && (
+                <div
+                  // onClick={() => {
+                  //   setPdfDownloadPupup(false);
+                  // }}
+                  className="absolute rounded-lg flex flex-col gap-0 bg-white top-8 border -right-10 z-[1111] shadow-lg shadow-gray-300 w-[80vw] max-w-[30rem] p-4 pt-0"
+                >
+                  <div className="flex justify-between mx-2 mt-4 mb-3">
+                    <p className="font-semibold text-orange-500 text-lg">
+                      {t("Télécharger")}{" "}
+                      {pageSection === "unite"
+                        ? `(${t("Unite")})`
+                        : `(${t("Groupe")})`}
+                    </p>
+                    <IoMdClose
+                      onClick={() => {
+                        setPdfDownloadPupup(false);
+                      }}
+                      className=" text-xl text-red-500 cursor-pointer"
+                    />
+                  </div>
+                  {/*  */}
+                  {/*  */}
+                  {/* <div className="flex justify-center items-center "> */}
+                  <p className="flex items-start gap-3 bg-yellow-100 text-yellow-600 text-md mb-2 px-2 py-1 rounded-md text-center dark:bg-yellow-900 dark:text-yellow-400">
+                    {/* <span>
                           <MdErrorOutline className="text-2xl mt-0.5" />
                         </span> */}
-                      {t("Le téléchargement peut prendre jusqu'a 1 minute")}
-                    </p>
-                    {/* </div> */}
-                    {/*  */}
-                    {/*  */}
-                    {pageSection === "unite" && (
-                      <div
-                        onClick={() => {
-                          generatePersonelPDF();
-                          setPdfDownloadPupup(false);
-                        }}
-                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
-                      >
-                        <p>{t("Télécharger le rapport en PDF")}</p>
-                        <img
-                          className="w-[2rem]"
-                          src="/img/pdf_download.png"
-                          alt=""
-                        />
-                      </div>
-                    )}
-                    {pageSection !== "unite" && (
-                      <div
-                        onClick={() => {
-                          generateGroupePDF();
-                          setPdfDownloadPupup(false);
-                        }}
-                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
-                      >
-                        <p>{t("Télécharger le rapport en PDF")}</p>
-                        <img
-                          className="w-[2rem]"
-                          src="/img/pdf_download.png"
-                          alt=""
-                        />
-                      </div>
-                    )}
-                    {pageSection !== "unite" && (
-                      <div
-                        onClick={() => {
-                          generateTableGroupePDF();
-                          setPdfDownloadPupup(false);
-                        }}
-                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
-                      >
-                        <p>
-                          {t("Télécharger le tableau récapitulatif en PDF")}
-                        </p>
-                        <img
-                          className="w-[2rem]"
-                          src="/img/pdf_download.png"
-                          alt=""
-                        />
-                      </div>
-                    )}
-                    {pageSection !== "unite" && (
-                      <div
-                        onClick={() => {
-                          exportToExcel();
-                          setPdfDownloadPupup(false);
-                        }}
-                        className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
-                      >
-                        <p>
-                          {t("Télécharger le tableau récapitulatif en Exel")}
-                        </p>
-                        <img
-                          className="w-[2rem]"
-                          src="/img/exel_download.png"
-                          alt=""
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <Tooltip
-                PopperProps={{
-                  modifiers: [
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [0, -3], // Décalage horizontal et vertical
-                      },
-                    },
-                    {
-                      name: "zIndex",
-                      enabled: true,
-                      phase: "write",
-                      fn: ({ state }) => {
-                        state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                      },
-                    },
-                  ],
-                }}
-                title={`${t("Recherche par date")}`}
-              >
-                <div
-                  onClick={() => {
-                    setShowChooseDate(true);
-                  }}
-                  className="flex  gap-2 items-center cursor-pointer"
-                >
-                  <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+                    {t("Le téléchargement peut prendre jusqu'a 1 minute")}
+                  </p>
+                  {/* </div> */}
+                  {/*  */}
+                  {/*  */}
+                  {pageSection === "unite" && (
+                    <div
+                      onClick={() => {
+                        generatePersonelPDF();
+                        setPdfDownloadPupup(false);
+                      }}
+                      className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                    >
+                      <p>{t("Télécharger le rapport en PDF")}</p>
+                      <img
+                        className="w-[2rem]"
+                        src="/img/pdf_download.png"
+                        alt=""
+                      />
+                    </div>
+                  )}
+                  {pageSection !== "unite" && (
+                    <div
+                      onClick={() => {
+                        generateGroupePDF();
+                        setPdfDownloadPupup(false);
+                      }}
+                      className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                    >
+                      <p>{t("Télécharger le rapport en PDF")}</p>
+                      <img
+                        className="w-[2rem]"
+                        src="/img/pdf_download.png"
+                        alt=""
+                      />
+                    </div>
+                  )}
+                  {pageSection !== "unite" && (
+                    <div
+                      onClick={() => {
+                        generateTableGroupePDF();
+                        setPdfDownloadPupup(false);
+                      }}
+                      className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                    >
+                      <p>{t("Télécharger le tableau récapitulatif en PDF")}</p>
+                      <img
+                        className="w-[2rem]"
+                        src="/img/pdf_download.png"
+                        alt=""
+                      />
+                    </div>
+                  )}
+                  {pageSection !== "unite" && (
+                    <div
+                      onClick={() => {
+                        exportToExcel();
+                        setPdfDownloadPupup(false);
+                      }}
+                      className="border-b flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+                    >
+                      <p>{t("Télécharger le tableau récapitulatif en Exel")}</p>
+                      <img
+                        className="w-[2rem]"
+                        src="/img/exel_download.png"
+                        alt=""
+                      />
+                    </div>
+                  )}
                 </div>
-              </Tooltip>
+              )}
             </div>
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -3], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title={`${t("Recherche par date")}`}
+            >
+              <div
+                onClick={() => {
+                  setShowChooseDate(true);
+                }}
+                className="flex  gap-2 items-center cursor-pointer"
+              >
+                <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+              </div>
+            </Tooltip>
           </div>
-        )}
+        </div>
+      )}
 
       {/*  */}
     </div>

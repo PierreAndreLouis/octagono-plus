@@ -12,8 +12,23 @@ function DetailsVehiculePage() {
     mergedDataHome,
     setCurrentVéhicule,
     currentDataFusionné,
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
   } = useContext(DataContext); // fetchVehicleDetails importée du contexte
   let x;
+
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  let listeDevices;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    listeDevices = currentAccountSelected?.accountDevices;
+  } else if (isDashboardHomePage && !currentAccountSelected) {
+    listeDevices = accountDevices;
+  } else if (!isDashboardHomePage) {
+    listeDevices = dataFusionné;
+  }
   //
   //
   //
@@ -27,12 +42,12 @@ function DetailsVehiculePage() {
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
   // Le data a utiliser
-  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   // Pour définir le véhicule actuel
   const handleVehicleClick = (véhicule) => {
     setCurrentVéhicule(véhicule);
     setShowVehiculeListe(!showVehiculeListe);
+    console.log("véhicule", véhicule);
   };
 
   // Pour mettre a jour le véhicules actuel
@@ -50,7 +65,7 @@ function DetailsVehiculePage() {
   };
 
   // Pour filtrer la recherche des véhicules
-  const filteredVehicles = currentDataFusionné?.filter(
+  const filteredVehicles = listeDevices?.filter(
     (véhicule) =>
       // véhicule.displayName.toLowerCase().includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
       véhicule?.imeiNumber
@@ -72,7 +87,7 @@ function DetailsVehiculePage() {
   x;
 
   return (
-    <div className="px-4 mt-20 pb-20 min-h-screen">
+    <div className="px-4 pt-20 pb-20 min-h-screen bg-white rounded-lg">
       <div>
         <div
           onClick={() => {

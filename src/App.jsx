@@ -73,7 +73,7 @@ function App() {
   const navigate = useNavigate(); // Utilisation de useNavigate
 
   const {
-    isAuthenticated,
+    isAuthenticated = false,
     readDocumentation,
     setReadDocumentation,
     seConnecterRef,
@@ -135,7 +135,7 @@ function App() {
   React.useEffect(() => {
     // Redirige vers /home si l'utilisateur est authentifié et se rend sur "/login"
     if (isAuthenticated && location.pathname === "/login") {
-      navigate(isDashboardHomePage ? "/dashboard_admin_page" : "/home"); // Utilisation correcte de navigate
+      navigate("/home"); // Utilisation correcte de navigate
     }
   }, [isAuthenticated, isDashboardHomePage, location.pathname, navigate]);
 
@@ -278,9 +278,9 @@ function App() {
         {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
         {!readDocumentation && (
           <div className="absolute z-[100000000000000000000000000]">
-            {!shouldHideComponent && <Header />}
+            {/* {!shouldHideComponent && <Header />} */}
             {!shouldHideComponent && <Navigation_bar />}
-            {!shouldHideComponent && <SideBar />}
+            {/* {!shouldHideComponent && <SideBar />} */}
           </div>
         )}
 
@@ -1134,7 +1134,7 @@ function App() {
                 isAuthenticated ? (
                   <Navigate
                     // to={isDashboardHomePage ? "/home" : "/home"}
-                    to={isDashboardHomePage ? "/dashboard_admin_page" : "/home"}
+                    to={"/home"}
                   />
                 ) : (
                   <Navigate to="/login" />
@@ -1144,12 +1144,12 @@ function App() {
             <Route path="/login" element={<Login2 />} />
 
             <Route
-              path="/home"
+              path="/home2"
               element={<PrivateRoute element={<HomePage />} />}
             />
 
             <Route
-              path="/dashboard_admin_page"
+              path="/home"
               element={<PrivateRoute element={<DashboardAdminPage />} />}
             />
 

@@ -82,6 +82,7 @@ function RapportPersonnel({
   endDate,
   endTime,
   downloadExelPDF,
+  longestDuration,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -98,6 +99,7 @@ function RapportPersonnel({
     currentVéhicule,
     currentPersonelVéhicule,
     setCurrentPersonelVéhicule,
+    rapportPersonelleData,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -269,7 +271,7 @@ function RapportPersonnel({
     }
   }, [downloadExelPDF]);
 
-  const isSearching = searchDonneeFusionnéForRapport?.length > 0;
+  // const isSearching = searchDonneeFusionnéForRapport?.length > 0;
 
   return (
     <>
@@ -282,7 +284,12 @@ function RapportPersonnel({
           ref={rapportPersonnelPDFtRef}
           className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full"
         >
-          <h1 className="text-center mb-2 font-semibold text-xl mt-16 dark:text-gray-300">
+          <h1
+            onClick={() => {
+              console.log("rapportPersonelleData", rapportPersonelleData);
+            }}
+            className="text-center mb-2 font-semibold text-xl mt-16-- dark:text-gray-300"
+          >
             {t("Rapport détaillé du véhicule")}
           </h1>
           <h1 className="text-center notranslate mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
@@ -442,11 +449,11 @@ function RapportPersonnel({
                 <p>
                   {t("Heure de départ")}:{" "}
                   <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {heureActiveDebut &&
+                    {/* {heureActiveDebut &&
                       isSearching &&
-                      FormatDateHeure(heureActiveDebut.timestamp)?.date}{" "}
+                      FormatDateHeure(heureActiveDebut.timestamp)?.date}{" "} */}
                   </span>
-                  {isSearching && <span className="mx-1"> /</span>}
+                  {/* {isSearching && <span className="mx-1"> /</span>} */}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
                     {heureActiveDebut
                       ? FormatDateHeure(heureActiveDebut.timestamp)?.time
@@ -456,11 +463,11 @@ function RapportPersonnel({
                 <p>
                   {t("Heure d'arrivée")}:{" "}
                   <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {heureActiveFin &&
+                    {/* {heureActiveFin &&
                       isSearching &&
-                      FormatDateHeure(heureActiveFin.timestamp)?.date}{" "}
+                      FormatDateHeure(heureActiveFin.timestamp)?.date}{" "} */}
                   </span>
-                  {isSearching && <span className="mx-1"> /</span>}
+                  {/* {isSearching && <span className="mx-1"> /</span>} */}
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
                     {heureActiveFin
                       ? FormatDateHeure(heureActiveFin.timestamp)?.time
@@ -474,31 +481,36 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <p>
+                <p
+                  onClick={() => {
+                    console.log(currentPersonelVéhicule);
+                  }}
+                >
                   {t("Durée total en mouvement")} :{" "}
-                  <span
-                    onClick={() => {
-                      console.log(currentPersonelVéhicule);
-                    }}
-                    className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3"
-                  >
-                    {/* {formatTime(
-                      totalMovingHours,
-                      totalMovingMinutes,
-                      totalMovingSeconds
-                    )} */}
-                    {currentPersonelVéhicule?.totalMovingDuration || ""}
+                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      rapportPersonelleData?.totalMovingDuration
+                      //  ||
+                      //   formatTime(
+                      //     totalMovingHours,
+                      //     totalMovingMinutes,
+                      //     totalMovingSeconds
+                      //   )
+                    }
+                    {/* {currentPersonelVéhicule?.totalMovingDuration || ""}
+                    {longestDuration} */}
                   </span>
                 </p>
                 <p>
                   {t("Durée des arrêts lors du déplacement")} :
                   <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    {rapportPersonelleData?.totalStopDuration}
                     {/* {formatTime(
                       totalStopHours,
                       totalStopMinutes,
                       totalStopSeconds
                     )} */}
-                    {currentPersonelVéhicule?.totalPauseDuration || ""}
+                    {/* {currentPersonelVéhicule?.totalPauseDuration || ""} */}
                   </span>
                 </p>
                 <p>
@@ -517,18 +529,21 @@ function RapportPersonnel({
                 <p>
                   {t("Distance totale parcourue")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {rapportPersonelleData?.totalDistance?.toFixed(0) + " Km"}
                     {/* {calculateTotalDistance(
                       currentVéhicule?.véhiculeDetails
-                    ).toFixed(0)} */}
-                    {currentPersonelVéhicule?.totalDistance?.toFixed() || ""}
-                    Km{" "}
+                    ).toFixed(0)}{" "} */}
+                    {/* ------- */}
+                    {/* {currentPersonelVéhicule?.totalDistance?.toFixed() || ""} */}
+                    {/* Km{" "} */}
                   </span>
                 </p>
                 <p>
                   {t("Nombre total d’arrêts")} :
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {rapportPersonelleData?.stopCount}
                     {/* {nombreArret || "0"} */}
-                    {currentPersonelVéhicule?.stopCount || ""}
+                    {/* {currentPersonelVéhicule?.stopCount || ""} */}
 
                     {/* {stopSequences?.length || "---"} */}
                   </span>
@@ -541,22 +556,25 @@ function RapportPersonnel({
                 <p>
                   {t("Vitesse minimale")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {rapportPersonelleData?.minSpeed?.toFixed(0) + " Km"}
                     {/* {(minSpeed && minSpeed.toFixed(0)) || "0"} Km/h */}
-                    {currentPersonelVéhicule?.minSpeed?.toFixed() || "0"} Km/h
+                    {/* {currentPersonelVéhicule?.minSpeed?.toFixed() || "0"} Km/h */}
                   </span>
                 </p>{" "}
                 <p>
                   {t("Vitesse maximale")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {rapportPersonelleData?.maxSpeed?.toFixed(0) + " Km"}
                     {/* {(maxSpeed && maxSpeed.toFixed(0)) || "0"} Km/h */}
-                    {currentPersonelVéhicule?.maxSpeed?.toFixed() || "0"} Km/h
+                    {/* {currentPersonelVéhicule?.maxSpeed?.toFixed() || "0"} Km/h */}
                   </span>
                 </p>
                 <p>
                   {t("Vitesse moyenne")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {rapportPersonelleData?.avgSpeed} Km
                     {/* {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/ */}
-                    {currentPersonelVéhicule?.avgSpeed || 0} Km/h
+                    {/* {currentPersonelVéhicule?.avgSpeed || 0} Km/h */}
                   </span>
                 </p>
               </div>

@@ -15,6 +15,7 @@ function ChooseOtherAccountDashboard({
   setChooseOneAccountToContinue,
   documentationPage,
   chooseAccountFromGeozoneSection,
+  setAccountIdFromRole,
 }) {
   const {
     setCurrentAccountSelected,
@@ -73,34 +74,40 @@ function ChooseOtherAccountDashboard({
               </div>
             )}
             <div className="flex overflow-auto h-[66vh] pb-20 flex-col gap-4 mx-3">
-              <button
-                onClick={() => {
-                  {
-                    if (chooseAccountFromGeozoneSection) {
-                      setListeGestionDesGeofences(accountGeofences);
-                      setChooseOtherAccountGestion(false);
-                    } else {
-                      setCurrentAccountSelected(null);
-                      setAllDevices(accountDevices);
-                      setChooseOtherAccountGestion(false);
-                      setListeGestionDesGeofences(accountGeofences);
+              {documentationPage !== "Ajouter_nouveau_role" && (
+                <button
+                  onClick={() => {
+                    {
+                      if (chooseAccountFromGeozoneSection) {
+                        setListeGestionDesGeofences(accountGeofences);
+                        setChooseOtherAccountGestion(false);
+                      } else {
+                        setCurrentAccountSelected(null);
+                        setAllDevices(accountDevices);
+                        setChooseOtherAccountGestion(false);
+                        setListeGestionDesGeofences(accountGeofences);
+                      }
                     }
-                  }
-                }}
-                className="font-bold bg-orange-500 text-white rounded-lg py-2 shadow-lg shadow-black/10"
-              >
-                {t("Tous les Comptes")}
-              </button>{" "}
+                  }}
+                  className="font-bold bg-orange-500 text-white rounded-lg py-2 shadow-lg shadow-black/10"
+                >
+                  {t("Tous les Comptes")}
+                </button>
+              )}
               {/*  */}
               {filterGestionAccountData?.map((account, index) => {
                 return (
                   <div
                     key={index}
                     onClick={() => {
-                      setCurrentAccountSelected(account);
-                      setListeGestionDesVehicules(account?.accountDevices);
-                      setListeGestionDesGeofences(account?.accountGeofences);
-                      setAllDevices(account?.accountDevices);
+                      if (documentationPage === "Ajouter_nouveau_role") {
+                        setAccountIdFromRole(account?.accountID);
+                      } else {
+                        setCurrentAccountSelected(account);
+                        setListeGestionDesVehicules(account?.accountDevices);
+                        setListeGestionDesGeofences(account?.accountGeofences);
+                        setAllDevices(account?.accountDevices);
+                      }
 
                       setChooseOtherAccountGestion(false);
                       scrollToTop();
@@ -116,6 +123,12 @@ function ChooseOtherAccountDashboard({
                         {t("Nom du compte")} :{" "}
                         <span className="font-bold notranslate">
                           {account?.description}
+                        </span>{" "}
+                      </p>
+                      <p className="text-gray-600">
+                        {t("accountID")} :{" "}
+                        <span className="font-bold notranslate">
+                          {account?.accountID}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">

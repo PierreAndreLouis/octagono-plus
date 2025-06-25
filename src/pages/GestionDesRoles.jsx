@@ -62,58 +62,20 @@ function GestionDesRoles({ setDocumentationPage }) {
 
         <div className="px-4 pt-10 mt-4-- pb-40 bg-white rounded-lg">
           <h2 className="mt-[10rem]-- text-lg text-center font-bold ">
-            {t("Gestion Des Comptes")} ({filterListeDesCompte?.length})
+            {t("Gestion Des Role")}
+            {/* ({filterListeDesCompte?.length}) */}
           </h2>
-          <button
-            onClick={() => {
-              TestDeRequetteDevices();
-            }}
-          >
-            Test
-          </button>{" "}
-          {/* <p
-            onClick={() => {
-              console.log(accountDevices);
-            }}
-          >
-            accountDevices
-          </p> */}
-          {/*  <br />
-            <button
-              onClick={() => {
-                testFonction2();
-              }}
-            >
-              Test fonction 2
-            </button>{" "}
-            <br />
-            <button
-              onClick={() => {
-                testFonction3();
-              }}
-            >
-              Test fonction 3
-            </button>{" "}
-            <br />
-            <button
-              onClick={() => {
-                testFonction4();
-              }}
-            >
-              Test fonction 4
-            </button>{" "}
-            <br /> */}
           <div className="flex  justify-center mt-4">
             <button
               onClick={() => {
-                setDocumentationPage("Ajouter_nouveau_compte");
+                setDocumentationPage("Ajouter_nouveau_role");
               }}
               className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
               <div className="flex justify-center items-center gap-3">
                 <FaPlusCircle className="text-2xl" />
                 <p className="text-[1rem] text-center">
-                  {t("Ajouter un nouveau Compte")}
+                  {t("Ajouter un nouveau Role")}
                 </p>
               </div>
             </button>{" "}
@@ -124,7 +86,7 @@ function GestionDesRoles({ setDocumentationPage }) {
                 id="text"
                 name="text"
                 type="text"
-                placeholder={`${t("Rechercher un compte")}`}
+                placeholder={`${t("Rechercher un Role")}`}
                 required
                 value={inputSearchItem}
                 onChange={(e) => setInputSearchItem(e.target.value)}
@@ -146,8 +108,8 @@ function GestionDesRoles({ setDocumentationPage }) {
               </div> */}
           </div>
           {/* Liste des Comptes */}
-          <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-            {filterListeDesCompte
+          <div className="hidden-- flex mt-[5rem] min-h-[50vh] flex-col gap-6 max-w-[50rem] mx-auto">
+            {/* {filterListeDesCompte
               ?.slice()
               .sort(
                 (a, b) => b?.accountDevices?.length - a?.accountDevices?.length
@@ -188,7 +150,6 @@ function GestionDesRoles({ setDocumentationPage }) {
                               {account?.accountID}
                             </span>
                           </div>{" "}
-                          {/*  */}
                           <div className="flex flex-wrap mt-1">
                             <p className="font-bold- text-gray-700">
                               {t("Nombre d'utilisateurs")} :
@@ -197,7 +158,6 @@ function GestionDesRoles({ setDocumentationPage }) {
                               {account?.accountUsers?.length}
                             </span>
                           </div>{" "}
-                          {/*  */}
                           <div className="flex flex-wrap mt-1">
                             <p className="font-bold- text-gray-700">
                               {t("Nombre d'appareils")} :
@@ -206,8 +166,7 @@ function GestionDesRoles({ setDocumentationPage }) {
                               {account?.accountDevices?.length}
                             </span>
                           </div>{" "}
-                          {/*  */}
-                          {/*  */}
+                       
                           <div className="flex flex-wrap mt-1">
                             <p className="font-bold- text-gray-700">
                               {t("Nombre de Groupe")} :
@@ -224,7 +183,6 @@ function GestionDesRoles({ setDocumentationPage }) {
                               {account?.accountGeofences?.length}
                             </span>
                           </div>{" "}
-                          {/*  */}
                           <div className="flex flex-wrap mt-1">
                             <p className="font-bold- text-gray-700">
                               {t("Date de creatio")}n :
@@ -251,7 +209,7 @@ function GestionDesRoles({ setDocumentationPage }) {
                     </div>
                   </div>
                 );
-              })}
+              })} */}
 
             {/*  */}
           </div>

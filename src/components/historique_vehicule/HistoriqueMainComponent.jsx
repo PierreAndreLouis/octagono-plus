@@ -238,10 +238,14 @@ function HistoriqueMainComponent({
                             setSelectedVehicleToShowInMap(
                               currentVéhicule?.deviceID
                             );
-
                             setHistoriqueSelectedLocationIndex(index);
-
                             setvoirPositionSurCarte(true);
+
+                            console.log(
+                              "currentVéhicule?.deviceID",
+                              currentVéhicule?.deviceID
+                            );
+                            console.log("index", index);
                             // console.log(véhicule);
                           }}
                           key={index}

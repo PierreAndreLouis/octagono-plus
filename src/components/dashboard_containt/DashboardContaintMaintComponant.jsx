@@ -49,6 +49,10 @@ import {
   Label,
 } from "recharts";
 import { useTranslation } from "react-i18next";
+import TableauRecapitulatifComptes from "./TableauRecapitulatifComptes";
+import DeviceListeDashboard from "./DeviceListeDashboard";
+import Graphe3BatonnetComptes from "./Graphe3BatonnetComptes";
+import StatisticDashboard from "./StatisticDashboard";
 
 function DashboardContaintMaintComponant({
   setChooseOtherAccountGestion,
@@ -87,9 +91,21 @@ function DashboardContaintMaintComponant({
     setListeGestionDesVehicules,
     progressBarForLoadingData,
     statusDescriptions,
+    isDashboardHomePage,
+    mergedDataHome,
+    progressAnimationStart,
+    setProgressAnimationStart,
+    runningAnimationProgressLoading,
+    setRunningAnimationProgressLoading,
+    runningAnimationProgressDuration,
+    setRunningAnimationProgressDuration,
+    homePageReload,
+    username,
+    fetchVehicleDataFromRapportGroupe,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   const [expandSection, setExpandSection] = useState("");
 
@@ -123,23 +139,6 @@ function DashboardContaintMaintComponant({
   const [animatedInactifs, setAnimatedInactifs] = useState(0);
 
   const preparationDownloadPDF = false;
-
-  // function animateValue(start, end, duration, setter) {
-  //   const startTime = performance.now();
-
-  //   function animate(currentTime) {
-  //     const elapsed = currentTime - startTime;
-  //     const progress = Math.min(elapsed / duration, 1);
-  //     const value = start + (end - start) * progress;
-  //     setter(parseFloat(value.toFixed(1)));
-
-  //     if (progress < 1) {
-  //       requestAnimationFrame(animate);
-  //     }
-  //   }
-
-  //   requestAnimationFrame(animate);
-  // }
 
   const animateValue = (start, end, duration, setter) => {
     const startTime = performance.now();
@@ -184,12 +183,7 @@ function DashboardContaintMaintComponant({
   //
   //
   /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  //
+  ////////////////////////////////////////////////////////////////////////////
 
   // Préparation des données pour le graphique
   const graphData =
@@ -272,17 +266,6 @@ function DashboardContaintMaintComponant({
 
   const MIN_DISPLAY = 2; // px ou unité relative
 
-  // const transformValue = (value) => {
-  //   if (value === 0) return MIN_DISPLAY;
-  //   if (value <= 10) return Math.max(value * 7.5, MIN_DISPLAY);
-  //   return Math.max(75 + (value - 10) * 0.5, MIN_DISPLAY);
-  // };
-
-  // const transformValue = (value) => {
-  //   if (value === 0) return MIN_DISPLAY;
-  //   if (value <= 20) return Math.max(value * 3.75, MIN_DISPLAY);
-  //   return Math.max(75 + (value - 20) * 0.5, MIN_DISPLAY);
-  // };
   const transformValue = (value) => {
     if (value === 0) return MIN_DISPLAY;
     if (value <= 30) return Math.max(value * 2.5, MIN_DISPLAY);
@@ -330,84 +313,12 @@ function DashboardContaintMaintComponant({
     (a, b) => b.total - a.total
   );
 
-  // const [graphData2, setGraphData2] = useState(null);
-  // const [updateGraphData2, setUpdateGraphData2] = useState(false);
-
-  // useEffect(() => {
-
-  //     setUpdateGraphData2(!updateGraphData2)
-
-  //   setTimeout(() => {
-  //     setUpdateGraphData2(!updateGraphData2)
-  //   }, 10000);
-  // }, [gestionAccountData])
-
-  // useEffect(() => {
-  //  setGraphData2(
-  //       formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
-  //     );
-  // }, [gestionAccountData])
-
-  // useEffect(() => {
-  //   if (!graphData2) {
-  //     setGraphData2(
-  //       formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
-  //     );
-  //   }
-  // }, [gestionAccountData]);
-
-  // const [graphData2, setGraphData2] = useState();
-
-  // let updateTimeout = null;
-
-  // useEffect(() => {
-  //   if (!graphData2) {
-  //     const data = formatBarData(gestionAccountData)?.sort(
-  //       (a, b) => b.total - a.total
-  //     );
-  //     setGraphData2(data);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!graphData2) {
-  //     const data = formatBarData(gestionAccountData)?.sort(
-  //       (a, b) => b.total - a.total
-  //     );
-  //     setGraphData2(data);
-  //   }
-  //   if (updateTimeout) clearTimeout(updateTimeout);
-
-  //   updateTimeout = setTimeout(() => {
-  //     const data = formatBarData(gestionAccountData)?.sort(
-  //       (a, b) => b.total - a.total
-  //     );
-  //     setGraphData2(data);
-  //   }, 15000);
-
-  //   return () => clearTimeout(updateTimeout);
-  // }, [gestionAccountData]);
-
-  // const [graphData2, setGraphData2] = useState([]);
-  // const isFirstUpdate = useRef(true);
-  // const timerRef = useRef(null);
-
-  // useEffect(() => {
-  //   if (isFirstUpdate.current) {
-  //     isFirstUpdate.current = false;
-  //     setGraphData2(
-  //       formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
-  //     );
-  //   } else {
-  //     if (timerRef.current) clearTimeout(timerRef.current);
-
-  //     timerRef.current = setTimeout(() => {
-  //       setGraphData2(
-  //         formatBarData(gestionAccountData)?.sort((a, b) => b.total - a.total)
-  //       );
-  //     }, 15000); // 15 secondes
-  //   }
-  // }, [gestionAccountData]);
+  /////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////
 
   const barSpacing2 = expandSection === "graphe" ? 160 : 70;
   const fixedWidth2 = graphData2?.length * barSpacing2;
@@ -520,28 +431,6 @@ function DashboardContaintMaintComponant({
     ), // green
   ];
 
-  // const layers = [
-  //   buildCircle(
-  //     90,
-  //     14,
-  //     inactivPct,
-  //     "rgba(147,51,234,1)",
-  //     "rgba(147,51,234,0.1)"
-  //   ), // purple
-  //   // buildCircle(90, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"), // green
-
-  //   buildCircle(
-  //     70,
-  //     14,
-  //     parkingPct,
-  //     "rgba(251,146,60,1)",
-  //     "rgba(251,146,60,0.1)"
-  //   ), // orange
-  //   // buildCircle(70, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"),// green
-
-  //   buildCircle(50, 14, activePct, "rgba(34,197,94,1)", "rgba(34,197,94,0.1)"), // green
-  // ];
-
   ///////////////////////////////////////////////////
 
   const [readDocumentationSideBar, setReadDocumentationSideBar] =
@@ -564,12 +453,6 @@ function DashboardContaintMaintComponant({
   }, []);
 
   ///////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////
 
   // Pour le loading lors du clique sur l'icon reload in home page.
   const [isLoading2, setIsLoading2] = useState(false);
@@ -584,169 +467,19 @@ function DashboardContaintMaintComponant({
 
     // const fetchAllOtherData = true;
 
-    fetchAllComptes(adminAccount, adminUsername, adminPassword);
-    // console.log("fetch device only...................................");
-    // comptes?.forEach((acct) => {
-    //   const id = acct.accountID;
-    //   const pwd = acct.password;
-    //   // Devices du compte
-    //   fetchAccountDevices(id, pwd).catch((err) => {
-    //     console.error("Erreur lors du chargement des devices :", err);
-    //   });
-    // });
+    const accountUser = account || localStorage.getItem("account") || "";
+    const usernameUser = username || localStorage.getItem("username") || "";
+    const passwordUser = password || localStorage.getItem("password") || "";
+
+    if (isDashboardHomePage) {
+      fetchAllComptes(adminAccount, adminUsername, adminPassword);
+    } else {
+      homePageReload(accountUser, usernameUser, passwordUser);
+    }
   };
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
   const [showFistGrapheOption2, setShowFistGrapheOption2] = useState(false);
-
-  function TableauRecapitulatifComptes({ isLongueur }) {
-    return (
-      <div
-        className={`w-full  overflow-x-auto overflow-y-hidden ${
-          isLongueur === "true" ? "" : " h-[20rem] "
-        } `}
-      >
-        {/* fixed header */}
-        <thead>
-          <div className="h-auto border-l-2-- border-red-600- min- w-full -w-[150rem] w-full-">
-            <tr className="bg-orange-100 border-2 border-green-600 relative z-20 text-gray-700 dark:bg-gray-900 dark:text-gray-100">
-              {/* <th className="border min-w-[.4rem] dark:border-gray-600 py-2 ----- --px-1"></th> */}
-              <th className="border  min-w-[3.21rem]  dark:border-gray-600 py-2 ---- px-2">
-                #
-              </th>
-              <th className="border min-w-[11.94rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Compte")}
-              </th>
-              <th className="border dark:border-gray-600 min-w-[6rem] py-2 ---- px-2">
-                {t("Total")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Déplacé")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Actifs")}
-              </th>
-
-              <th className="border  min-w-[8rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Hors service")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Utilisateur")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Groupe")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Geofence")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Type")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("Manager")}
-              </th>
-              <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-                {t("IsActif")}
-              </th>
-            </tr>
-          </div>
-        </thead>
-
-        <div
-          className={`border-2 pb-10 -translate-y-[3.1rem] w-full min-w-[78rem] overflow-y-auto overflow-x-hidden ${(isLongueur =
-            "true" ? "h-[75vh] " : "md:h-[25rem] h-[20rem]")}`}
-        >
-          {/* en-tête PDF, téléchargement… */}
-
-          <table
-            id="myTable"
-            className="w-full-- text-left dark:bg-gray-800 dark:text-gray-200 border-2 border-red-500-- "
-          >
-            {/* second fixed header */}
-            <thead>
-              <tr className="bg-orange-50 h-[2.8rem]   text-gray-700 dark:bg-gray-900 dark:text-gray-100">
-                {/* <th className=""></th> */}
-                <th className="">#</th>
-                <th className="">Compte</th>
-                <th className="">Total </th>
-                <th className="">Déplacés</th>
-                <th className="">Actifs</th>
-                <th className="">Hors service</th>
-                <th className="">Utilisateurs</th>
-                <th className="">Groupes</th>
-                <th className="">Geofences</th>
-                <th className="">Type</th>
-                <th className="">Manager</th>
-                <th className="">Actif</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gestionAccountData
-                ?.slice()
-                .sort(
-                  (a, b) =>
-                    (b.accountDevices?.length || 0) -
-                    (a.accountDevices?.length || 0)
-                )
-                .map((acct, i) => {
-                  const totalDevices = acct.accountDevices?.length || 0;
-                  const movedDevices = acct.accountDevices?.filter(
-                    (d) => d.lastStopTime > todayTimestamp
-                  ).length;
-                  const activeDevices = acct.accountDevices?.filter(
-                    (d) =>
-                      currentTimeSec - d.lastUpdateTime < twentyFourHoursInSec
-                  ).length;
-                  const inactiveDevices = acct.accountDevices?.filter(
-                    (d) =>
-                      currentTimeSec - d.lastUpdateTime >= twentyFourHoursInSec
-                  ).length;
-                  const nbUsers = acct.accountUsers?.length || 0;
-                  const nbGroups = acct.accountGroupes?.length || 0;
-                  const nbGeofences = acct.accountGeofences?.length || 0;
-
-                  return (
-                    <tr key={i} className="border dark:border-gray-600">
-                      {/* <td className="border-l-4 w-0"></td> */}
-                      <td className="py-3  w-[3rem] px-2 border">{i + 1}</td>
-                      <td className="notranslate py-3 px-2 w-[12rem] border">
-                        {acct.accountID}
-                      </td>
-                      <td className="py-3 w-[6rem] px-2 border">
-                        {totalDevices}
-                      </td>
-                      <td className="py-3 px-2 border w-[6rem]">
-                        {movedDevices}
-                      </td>
-                      <td className="py-3 px-2 border w-[6rem]">
-                        {activeDevices}
-                      </td>
-                      <td className="py-3 px-2 border w-[8rem]">
-                        {inactiveDevices}
-                      </td>
-                      <td className="py-3 px-2 border w-[6rem]">{nbUsers}</td>
-                      <td className="py-3 px-2 border w-[6rem]">{nbGroups}</td>
-                      <td className="py-3 px-2 border w-[6rem]">
-                        {nbGeofences}
-                      </td>
-                      <td className="py-3 px-2 border w-[6rem]">
-                        {acct.accountType}
-                      </td>
-                      <td className="py-3 px-2 border w-[6rem]">
-                        {acct.isAccountManager}
-                      </td>
-                      <td className="py-3 min-w-[5rem] px-2">
-                        {acct.isActive}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
 
   function GrapheCirculaireDevices() {
     return (
@@ -802,72 +535,6 @@ function DashboardContaintMaintComponant({
           <p className="text-gray-500 text-sm">Total</p>
           <p className="text-2xl font-bold">{allVehicule}</p>
         </div>
-      </div>
-    );
-  }
-
-  function Graphe3BatonnetComptes() {
-    return (
-      <div>
-        {/* {graphData2?.length > 0 ? ( */}
-        <div
-          className="w-full flex -translate-y-6 flex-col justify-end h-[300px] overflow-x-auto p-4 bg-gray-100 rounded-xl"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={graphData2}
-                layout="horizontal"
-                margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
-                barCategoryGap={barSpacing2 - 10}
-              >
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="shortName"
-                  type="category"
-                  tick={{ fontSize: 12 }}
-                  interval={0}
-                />
-                <YAxis hide={true} />
-                <Tooltip content={<CustomTooltip2 />} />
-                <Bar
-                  dataKey="totalDisplay"
-                  fill="#22c55e"
-                  name="Total"
-                  radius={[8, 8, 0, 0]}
-                  barSize={7}
-                  animationDuration={1000}
-                />
-
-                <Bar
-                  dataKey="inactifsDisplay"
-                  fill="#9333ea"
-                  name="Inactifs"
-                  radius={[8, 8, 0, 0]}
-                  barSize={7}
-                  animationDuration={1000}
-                />
-
-                <Bar
-                  dataKey="actifsDisplay"
-                  fill="#f97316"
-                  name="Actifs"
-                  radius={[8, 8, 0, 0]}
-                  barSize={7}
-                  animationDuration={1000}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        {/* // ) : (
-        //   <div className="w-full min-h-full flex justify-center items-center">
-        //     <p className="py-10 font-semibold text-lg text-gray-600">
-        //       {t("Pas de données disponibles")}
-        //     </p>
-        //   </div>
-        // )} */}
       </div>
     );
   }
@@ -983,109 +650,6 @@ function DashboardContaintMaintComponant({
     );
   }
 
-  function DeviceListeDashboard() {
-    return (
-      <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto-">
-        {(currentAccountSelected
-          ? currentAccountSelected?.accountDevices
-          : Array.from(
-              new Map(
-                gestionAccountData
-                  ?.flatMap((account) => account.accountDevices)
-                  ?.map((device) => [device.deviceID, device])
-              ).values()
-            )
-        )?.slice(0, 3)?.length > 0 ? (
-          (currentAccountSelected
-            ? currentAccountSelected?.accountDevices
-            : Array.from(
-                new Map(
-                  gestionAccountData
-                    ?.flatMap((account) => account.accountDevices)
-                    ?.map((device) => [device.deviceID, device])
-                ).values()
-              )
-          )
-            ?.slice(0, 3)
-            .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
-            ?.map((device, index) => {
-              let border_color = "bg-gray-50";
-              let text_color = "text-orange-500/80";
-
-              if (
-                currentTimeSec - device?.lastUpdateTime <
-                twentyFourHoursInSec
-              ) {
-                border_color = "border-l-[.4rem] border-orange-400";
-                text_color = "text-orange-400";
-              } else if (
-                currentTimeSec - device?.lastUpdateTime >
-                twentyFourHoursInSec
-              ) {
-                border_color = "border-l-[.4rem] border-purple-300";
-                text_color = "text-purple-400";
-              }
-
-              if (device?.lastStopTime > todayTimestamp) {
-                border_color = "border-l-[.4rem] border-green-500";
-                text_color = "text-green-400";
-              }
-
-              return (
-                <div
-                  key={index}
-                  onClick={() => {}}
-                  className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-[1rem] px-2 `}
-                >
-                  {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                  {index + 1}
-                </p> */}
-                  <FaCar
-                    className={`${text_color} text-[2rem] hidden sm:block min-w-[2.5rem] mt-1`}
-                  />
-                  <div className="flex flex-col gap-1 ">
-                    <FaCar
-                      className={`${text_color} text-[2rem] sm:hidden min-w-[2.5rem] mt-1`}
-                    />
-                    <p className="text-gray-600 font-bold">
-                      {t("Nom du Groupe")} :{" "}
-                      <span className="font-normal notranslate text-gray-500 ml-2 ">
-                        {device?.description}
-                      </span>{" "}
-                    </p>
-                    <p className="text-gray-600 font-bold">
-                      {t("Last Update")} :{" "}
-                      <span className="font-normal text-gray-500 ml-2">
-                        {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
-                        {FormatDateHeure(device?.lastUpdateTime)?.time}
-                      </span>{" "}
-                    </p>
-                    {/* <p className="text-gray-600 font-bold">
-                    Arrivée : 
-                    <span className="font-normal text-gray-500 ml-2">
-                      {FormatDateHeure(device?.lastStopTime)?.date} {" / "}
-                      {FormatDateHeure(device?.lastStopTime)?.time}
-                    </span>{" "}
-                  </p> */}
-                    {/* <p className="text-gray-600">
-                    Derniere Heure :{" "}
-                    <span className="font-bold">
-                      {FormatDateHeure(device?.lastUpdateTime)?.time}
-                    </span>{" "}
-                  </p> */}
-                  </div>
-                </div>
-              );
-            })
-        ) : (
-          <div className="flex h-full   justify-center items-center font-semibold text-lg">
-            <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
-          </div>
-        )}
-      </div>
-    );
-  }
-
   const fromDashboard = true;
   const [
     showStatisticDeviceListeDashboard,
@@ -1102,22 +666,6 @@ function DashboardContaintMaintComponant({
   //
   //
   //
-  // Fonction pour avoir le dernier timestamp, pour calculer la dernière mise a jour
-  // function getMostRecentTimestamp(data) {
-  //   // Filtrer les entrées avec un tableau véhiculeDetails valide et non vide
-  //   const validTimestamps = data
-  //     .filter(
-  //       (véhicule) =>
-  //         Array.isArray(véhicule?.véhiculeDetails) &&
-  //         véhicule?.véhiculeDetails.length > 0
-  //     )
-  //     .map((véhicule) => parseInt(véhicule?.véhiculeDetails[0].timestamp));
-
-  //   // Trouver le timestamp le plus récent
-  //   const mostRecentTimestamp = Math.max(...validTimestamps);
-
-  //   return { mostRecentTimestamp };
-  // }
 
   function getMostRecentTimestamp(data) {
     if (data) {
@@ -1136,8 +684,11 @@ function DashboardContaintMaintComponant({
   }
 
   // Pour stocker le timestamp le plus récent lorsque "data" change
+
   const [lastUpdate, setLastUpdate] = useState();
-  const data = currentAccountSelected?.accountDevices || accountDevices;
+  const data = isDashboardHomePage
+    ? currentAccountSelected?.accountDevices || accountDevices
+    : dataFusionné;
 
   // Mettre à jour le timestamp le plus récent lorsque "data" change
   useEffect(() => {
@@ -1147,40 +698,6 @@ function DashboardContaintMaintComponant({
     }
     // console.log("result", result);
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
-
-  // const statusDescriptions = {
-  //   0x0000: `${t("Code de statut non spécifié")}`,
-  //   0xf020: `${t("Localisation - En mouvement")}`,
-  //   0xf021: `${t("Localisation - Arrêté")}`,
-  //   0xf022: `${t("Localisation - Parking")}`,
-  //   0xf100: `${t("Localisation - Odomètre")}`,
-  //   0xf110: `${t("Localisation - Heures moteur")}`,
-  //   0xf120: `${t("Localisation - Niveau de carburant")}`,
-  //   0xf200: `${t("Changement d'état d'entrée")}`,
-  //   0xf201: `${t("Entrée activée")}`,
-  //   0xf202: `${t("Entrée désactivée")}`,
-  //   0xf210: `${t("Contact allumé")}`,
-  //   0xf211: `${t("Contact éteint")}`,
-  //   0xf301: `${t("Alimentation activée")}`,
-  //   0xf302: `${t("Alimentation désactivée")}`,
-  //   0xf310: `${t("Batterie faible")}`,
-  //   0xf311: `${t("Batterie OK")}`,
-  //   0xf320: `${t("En charge")}`,
-  //   0xf321: `${t("Non en charge")}`,
-  //   0xf400: `${t("Détection de remorquage")}`,
-  //   0xf500: `${t("Détection de collision")}`,
-  //   0xf600: `${t("Excès de vitesse")}`,
-  //   0xf601: `${t("Vitesse normale")}`,
-  //   0xf700: `${t("Entrée dans une zone géographique")}`,
-  //   0xf701: `${t("Sortie d'une zone géographique")}`,
-  //   0xf800: `${t("Informations de diagnostic")}`,
-  //   0xf900: `${t("Signal de vie")}`,
-  //   0xfa00: `${t("Connexion du conducteur")}`,
-  //   0xfa01: `${t("Déconnexion du conducteur")}`,
-  //   0xfb00: `${t("Alerte de panique")}`,
-  //   0xfc00: `${t("Rappel de maintenance")}`,
-  //   // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
-  // };
 
   const getBackgroundColor = (code) => {
     switch (code) {
@@ -1210,9 +727,11 @@ function DashboardContaintMaintComponant({
   //
 
   const allData = (
-    currentAccountSelected
-      ? currentAccountSelected?.accountDevices
-      : accountDevices
+    isDashboardHomePage
+      ? currentAccountSelected
+        ? currentAccountSelected?.accountDevices
+        : accountDevices
+      : dataFusionné
   )
     ?.flatMap((device) => device?.véhiculeDetails[0] || [])
     ?.filter((item) => item?.statusCode !== "0xF952");
@@ -1294,12 +813,42 @@ function DashboardContaintMaintComponant({
 
   const [unlockCarteScroll, setUnlockCarteScroll] = useState(false);
 
+  const TouslesAlertesData = (
+    isDashboardHomePage
+      ? currentAccountSelected
+        ? currentAccountSelected?.accountDevices
+        : accountDevices
+      : dataFusionné
+  )
+    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+    ?.filter((item) => item?.statusCode !== "0xF952")
+    ?.slice(0, 2);
+
+  useEffect(() => {
+    if (runningAnimationProgressLoading && progressAnimationStart < 99) {
+      const interval = setInterval(() => {
+        setProgressAnimationStart((prev) => {
+          if (prev >= 98) {
+            clearInterval(interval);
+            return 99;
+          }
+          return prev + 1;
+        });
+      }, runningAnimationProgressDuration);
+      return () => clearInterval(interval);
+    }
+  }, [
+    runningAnimationProgressLoading,
+    runningAnimationProgressDuration,
+    progressAnimationStart,
+  ]);
+
   return (
     <div className="pb-6-">
       {showStatisticDeviceListeDashboard && (
         <div className="fixed px-3 inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
           <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw]">
-            <div className="absolute flex justify-center items-center top-0 left-0 right-0 h-[4rem] bg-orange-200 z-[999]">
+            <div className="absolute flex justify-center items-center top-0 left-0 right-0 h-[4rem] bg-orange-200 z-[8]">
               <h2 className="font-bold text-lg">
                 {statisticFilteredDeviceListeText} - (
                 {statisticFilteredDeviceListe?.length})
@@ -1318,19 +867,15 @@ function DashboardContaintMaintComponant({
                   setDocumentationPage={setDocumentationPage}
                   fromDashboard={fromDashboard}
                   statisticFilteredDeviceListe={statisticFilteredDeviceListe}
-                  // setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-                  // setChooseOtherAccountGestion={setChooseOtherAccountGestion}
                 />
               </div>
             </div>
           </div>
         </div>
       )}
-
       {/*  */}
       {expandSection && (
         <div className="fixed  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
-          {/* <div className="bg-white rounded-lg overflow-hidden max-w-[90vw] flex flex-col justify-center w-full"> */}
           <div className="w-full  mx-4 md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
             <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
               <IoClose
@@ -1353,7 +898,12 @@ function DashboardContaintMaintComponant({
                     {t("Graphe des Comptes")} ({comptes?.length})
                   </h2>
                 </div>
-                <Graphe3BatonnetComptes />
+                <Graphe3BatonnetComptes
+                  graphData2={graphData2}
+                  barSpacing2={barSpacing2}
+                  CustomTooltip2={CustomTooltip2}
+                  fixedWidth2={fixedWidth2}
+                />
               </div>
             )}
             {expandSection === "tableau" && (
@@ -1404,10 +954,19 @@ function DashboardContaintMaintComponant({
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
                     {t("Liste des Alertes")} (
-                    {
+                    {/* {
                       listeGestionDesVehicules?.flatMap(
                         (device) => device?.véhiculeDetails[0] || []
                       )?.length
+                    } */}
+                    {
+                      (isDashboardHomePage
+                        ? listeGestionDesVehicules
+                        : dataFusionné
+                      )
+                        ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                        ?.filter((item) => item?.statusCode !== "0xF952")
+                        ?.length
                     }
                     )
                   </h2>
@@ -1418,232 +977,71 @@ function DashboardContaintMaintComponant({
                 />
               </div>
             )}
-
-            {/* uuuuuuuuuuuu */}
-            {/* {expandSection === "tableau" && <TableauRecapitulatifComptes />} */}
           </div>
-          {/* </div> */}
         </div>
       )}
-
       {/*  */}
       {/* statistic box */}
-      <div className="md:px-4-- pt-3--">
-        <div className="w-full h-full shadow-lg shadow-black/5 bg-white rounded-lg p-4">
-          <div className=" relative mb-4 ">
-            <div className="">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
-                  {t("Pour Aujourd'hui")}
-                </h1>
-                <h1 className="font-bold hidden md:block text-[1.1rem] md:text-xl text-gray-800">
-                  {t("Statistiques pour aujourd'hui")}
-                </h1>
-              </div>
-              <p className="  font-semibold max-w-[12rem] sm:max-w-[24rem]  whitespace-nowrap text-ellipsis overflow-hidden text-orange-500">
-                <span className="mr-1  text-gray-600">{t("Compte")} :</span>
-                <span className="notranslate">
-                  {currentAccountSelected
-                    ? currentAccountSelected?.description
-                    : `${t("Tous les comptes")}`}
-                </span>
-              </p>
-            </div>
-            {currentAccountSelected && (
-              <div
-                onClick={() => {
-                  setChosseOtherGroupeDashboard(true);
-                }}
-                className=" cursor-pointer text-orange-500 flex gap-1 sm:gap-3 items-center absolute right-0  rounded-lg -bottom-0 sm:bottom-0"
-              >
-                <p className="font-semibold hidden sm:block">
-                  {t("Sélectionner un Groupe")}
-                </p>
-                <p className="font-semibold sm:hidden">{t("Groupe")}</p>
-                <FaChevronDown className="mt-1" />
-              </div>
-            )}
-
-            <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
-              {lastUpdate?.mostRecentTimestamp && (
-                <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
-                  <span className="hidden md:block mr-2">
-                    {t("Last Update")}
-                  </span>
-                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
-                  {" / "}
-                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
-                </p>
-              )}
-              <div
-                onClick={() => {
-                  fetchNewDataDevices();
-                }}
-                className={`${
-                  isLoading2 ? "animate-spin" : ""
-                }  text-orange-500 min-w-2  translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
-              >
-                <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
-              </div>
-            </div>
-          </div>
-
-          {/* Liste des statistics */}
-          <div className="grid grid-cols-2 gap-1.5 md:gap-4 md:grid-cols-4 items-center justify-between">
-            {/*  */}
-            <div
-              onClick={() => {
-                setShowStatisticDeviceListeDashboard(true);
-                setStatisticFilteredDeviceListe(allDevices);
-                setStatisticFilteredDeviceListeText("Tous les Appareils");
-              }}
-              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
-            >
-              <div className="border border-blue-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-blue-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-                <div>
-                  <div className="flex items-center  gap-2">
-                    <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      {t("Total")}
-                    </h3>
-                  </div>
-                  <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {allDevices?.length} */}
-                    {animatedTotal}
-                  </h2>
-                </div>
-                <div className="absolute mt-1.5 right-4 bottom-4 ">
-                  <img
-                    className=" w-8 md:w-10 lg:w-14--"
-                    src="/img/home_icon/total.png"
-                    alt="Total"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              onClick={() => {
-                setShowStatisticDeviceListeDashboard(true);
-                setStatisticFilteredDeviceListe(DeviceDéplacer);
-                setStatisticFilteredDeviceListeText("Appareils Déplacer");
-              }}
-              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
-            >
-              <div className="border border-green-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-green-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-                <div>
-                  <div className="flex items-center  gap-2">
-                    <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      {t("Déplacés")}
-                    </h3>
-                  </div>
-                  <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {DeviceDéplacer?.length} */}
-                    {animatedDeplaces}
-                  </h2>
-                </div>
-                <div className="absolute mt-1.5 right-4 bottom-4">
-                  <img
-                    className=" w-12 md:w-14 lg:w-14--"
-                    src="/img/home_icon/active.png"
-                    alt="Total"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              onClick={() => {
-                setShowStatisticDeviceListeDashboard(true);
-                setStatisticFilteredDeviceListe(DeviceEnStationnement);
-                setStatisticFilteredDeviceListeText("Appareils Actifs");
-              }}
-              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
-            >
-              <div className="border border-orange-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-orange-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-                <div>
-                  <div className="flex items-center  gap-2">
-                    <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      {t("Actifs")}
-                    </h3>
-                  </div>
-                  <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {DeviceEnStationnement?.length} */}
-                    {animatedStationnement}
-                  </h2>
-                </div>
-                <div className="absolute mt-1.5 right-4 bottom-4 ">
-                  <img
-                    className=" w-8 md:w-10 lg:w-14--"
-                    src="/img/cars/parking.png"
-                    alt="Total"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              onClick={() => {
-                setShowStatisticDeviceListeDashboard(true);
-                setStatisticFilteredDeviceListe(DeviceInactifs);
-                setStatisticFilteredDeviceListeText("Appareils Inactifs");
-              }}
-              className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
-            >
-              <div className="border border-purple-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-purple-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-                <div>
-                  <div className="flex items-center  gap-2">
-                    <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                      {t("Inactifs")}
-                    </h3>
-                  </div>
-                  <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                    {/* {DeviceInactifs?.length} */}
-                    {animatedInactifs}
-                  </h2>
-                </div>
-                <div className="absolute mt-1.5 right-4 bottom-4 ">
-                  <img
-                    className=" w-8 md:w-10 lg:w-14--"
-                    src="/img/home_icon/payer.png"
-                    alt="Total"
-                  />
-                </div>
-              </div>
-            </div>
-            {/*  */}
-          </div>
-        </div>{" "}
-      </div>
+      <StatisticDashboard
+        setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
+        lastUpdate={lastUpdate}
+        fetchNewDataDevices={fetchNewDataDevices}
+        isLoading2={isLoading2}
+        setShowStatisticDeviceListeDashboard={
+          setShowStatisticDeviceListeDashboard
+        }
+        setStatisticFilteredDeviceListe={setStatisticFilteredDeviceListe}
+        setStatisticFilteredDeviceListeText={
+          setStatisticFilteredDeviceListeText
+        }
+        animatedTotal={animatedTotal}
+        animatedDeplaces={animatedDeplaces}
+        DeviceEnStationnement={DeviceEnStationnement}
+        animatedStationnement={animatedStationnement}
+        DeviceInactifs={DeviceInactifs}
+        animatedInactifs={animatedInactifs}
+        DeviceDéplacer={DeviceDéplacer}
+        allDevices={allDevices}
+      />
       {/*  */}
       {/*  */}
       {/*  */}
       {/*  */}
       {/*  */}
-
       {/*  */}
+      {/* {progressBarForLoadingData}-{progressAnimationStart} */}
       <div className="md:px-4-- pt-4 mx-2 md:mx-0">
-        {progressBarForLoadingData > 0 && progressBarForLoadingData < 100 && (
-          <div
-            className="rounded-md shadow-sm shadow-black/10 overflow-hidden"
-            style={{
-              width: "100%",
-              background: "#fff",
-              margin: "0px 0 10px 0",
-            }}
-          >
+        {!(
+          (progressBarForLoadingData === 100 &&
+            progressAnimationStart === 99) ||
+          progressBarForLoadingData === 0 ||
+          progressAnimationStart === 0
+        ) &&
+          !fetchVehicleDataFromRapportGroupe && (
             <div
+              className="rounded-md shadow-sm shadow-black/10 overflow-hidden"
               style={{
-                width: `${progressBarForLoadingData}%`,
-                background: "#4caf50",
-                color: "#fff",
-                padding: "4px",
-                transition: "width 0.8s ease",
-                textAlign: "center",
+                width: "100%",
+                background: "#fff",
+                margin: "10px 0",
               }}
             >
-              <p className="  font-semibold  drop-shadow-2xl">
-                {progressBarForLoadingData}%
-              </p>
+              <div
+                style={{
+                  width: `${progressAnimationStart}%`,
+                  background: "#4caf50",
+                  color: "#fff",
+                  padding: "4px",
+                  transition: "width 1s linear",
+                  textAlign: "center",
+                }}
+              >
+                <p className="font-semibold drop-shadow-2xl">
+                  {Math.floor(progressAnimationStart)}%
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-2 items-stretch justify-center  gap-4 ">
@@ -1657,19 +1055,15 @@ function DashboardContaintMaintComponant({
           {/*  */}
           {/*  */}
           {/*  */}
-          {/* Graphe de déplacement */}
-          {/* {(currentAccountSelected ||
-            (!showFistGrapheOption && !currentAccountSelected)) && (
-            <GrapheDeDeplacementDesAppareils />
-          )} */}
 
           {/* Graphe des comptes */}
-          {/* {!currentAccountSelected && showFistGrapheOption && ( */}
           <div className="bg-white shadow-lg shadow-black/5 relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
             {/* title section */}
             <div className="flex relative   mb-4 justify-between items-end- ">
-              {((showFistGrapheOption && !currentAccountSelected) ||
-                currentAccountSelected) && (
+              {((currentAccountSelected && isDashboardHomePage) ||
+                // currentAccountSelected ||
+
+                !isDashboardHomePage) && (
                 <div className="  min-w-[14rem]">
                   <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
                     <h2>{t("Position des appareils")} </h2>
@@ -1693,7 +1087,12 @@ function DashboardContaintMaintComponant({
                   <p className="text-gray-500">
                     {t("Nombre d'appareils")} (
                     {
-                      listeGestionDesVehicules.filter(
+                      (isDashboardHomePage
+                        ? currentAccountSelected
+                          ? currentAccountSelected?.accountDevices
+                          : accountDevices
+                        : dataFusionné
+                      ).filter(
                         (v) =>
                           !(
                             v.lastValidLatitude === "0.0" ||
@@ -1709,97 +1108,92 @@ function DashboardContaintMaintComponant({
                 </div>
               )}
 
-              {!showFistGrapheOption && !currentAccountSelected && (
-                <div>
-                  <div className="  min-w-[14rem]">
-                    <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                      <h2>{t("Graphe des Comptes")} </h2>
-                      <p
-                        onClick={() => {
-                          setExpandSection("graphe");
-                        }}
-                        className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
-                      >
-                        {t("Full Screen")}
-                      </p>
-                      {/* {!currentAccountSelected && (
-                        <FaAngleDoubleRight
+              {!showFistGrapheOption &&
+                !currentAccountSelected &&
+                isDashboardHomePage && (
+                  <div>
+                    <div className="  min-w-[14rem]">
+                      <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
+                        <h2>{t("Graphe des Comptes")} </h2>
+                        <p
                           onClick={() => {
-                            setShowFistGrapheOption(!showFistGrapheOption);
+                            setExpandSection("graphe");
                           }}
-                          className="text-xl ml-3 mt-1 cursor-pointer"
-                        />
-                      )} */}
+                          className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
+                        >
+                          {t("Full Screen")}
+                        </p>
+                      </div>
+                      <p className="text-gray-500">
+                        {t("Nombre de comptes")} ({comptes?.length})
+                      </p>
                     </div>
-                    <p className="text-gray-500">
-                      {t("Nombre de comptes")} ({comptes?.length})
-                    </p>
+                    <div className="flex   text-[.8rem] absolute bottom-[0rem] right-0 gap-2 sm:gap-4 text-gray-600  ">
+                      <div className="flex gap-1 items-center ">
+                        <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-green-500">
+                          {" "}
+                        </p>{" "}
+                        <p>{t("Total")}</p>
+                      </div>
+                      <div className="flex gap-1 items-center">
+                        <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-orange-500">
+                          {" "}
+                        </p>{" "}
+                        <p>{t("Actif")}</p>
+                      </div>
+                      <div className="flex gap-1 items-center">
+                        <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-purple-500">
+                          {" "}
+                        </p>{" "}
+                        <p>{t("Inactif")}</p>
+                      </div>
+                    </div>{" "}
                   </div>
-                  <div className="flex   text-[.8rem] absolute bottom-[0rem] right-0 gap-2 sm:gap-4 text-gray-600  ">
-                    <div className="flex gap-1 items-center ">
-                      <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-green-500">
-                        {" "}
-                      </p>{" "}
-                      <p>{t("Total")}</p>
-                    </div>
-                    <div className="flex gap-1 items-center">
-                      <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-orange-500">
-                        {" "}
-                      </p>{" "}
-                      <p>{t("Actif")}</p>
-                    </div>
-                    <div className="flex gap-1 items-center">
-                      <p className="w-[.6rem] sm:w-[.7rem] h-[.6rem] sm:h-[.7rem] rounded-full bg-purple-500">
-                        {" "}
-                      </p>{" "}
-                      <p>{t("Inactif")}</p>
-                    </div>
-                  </div>{" "}
-                </div>
-              )}
+                )}
             </div>
             <div className=" max-h-[20rem] flex flex-col justify-between items-start overflow-x-auto overflow-y-hidden">
-              {/* {!showFistGrapheOption && !currentAccountSelected && ( */}
-              {!currentAccountSelected && (
+              {!currentAccountSelected && isDashboardHomePage && (
                 <div>
                   <div>
                     <p>.</p>
                     <p>.</p>
                   </div>
 
-                  <Graphe3BatonnetComptes />
+                  <Graphe3BatonnetComptes
+                    graphData2={graphData2}
+                    barSpacing2={barSpacing2}
+                    CustomTooltip2={CustomTooltip2}
+                    fixedWidth2={fixedWidth2}
+                  />
                 </div>
               )}
-              {
-                // {((showFistGrapheOption && !currentAccountSelected) ||
-                currentAccountSelected && (
-                  <div className="w-full h-[15rem]-- relative overflow-hidden rounded-md">
-                    <LocationPage fromDashboard="true" />
-                    {!unlockCarteScroll && (
-                      <div className="absolute flex justify-center items-center inset-0 bg-black/10 z-[999]">
-                        <div
-                          onClick={() => {
-                            setUnlockCarteScroll(true);
-                          }}
-                          className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
-                        >
-                          <FaUnlockAlt className="text-[1.3rem]" />
-                        </div>
-                      </div>
-                    )}
-                    {unlockCarteScroll && (
+              {(currentAccountSelected || !isDashboardHomePage) && (
+                <div className="w-full h-[15rem]-- relative overflow-hidden rounded-md">
+                  <LocationPage fromDashboard="true" />
+                  {!unlockCarteScroll && (
+                    <div className="absolute flex justify-center items-center inset-0 bg-black/10 z-[8]">
                       <div
                         onClick={() => {
-                          setUnlockCarteScroll(false);
+                          setUnlockCarteScroll(true);
                         }}
-                        className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-[5.5rem] right-1 cursor-pointer"
+                        className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
                       >
-                        <MdLockOutline className="text-[1.5rem]" />
+                        <FaUnlockAlt className="text-[1.3rem]" />
                       </div>
-                    )}
-                  </div>
-                )
-              }
+                    </div>
+                  )}
+                  {unlockCarteScroll && (
+                    <div
+                      onClick={() => {
+                        setUnlockCarteScroll(false);
+                      }}
+                      className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[8] top-[5.5rem] right-1 cursor-pointer"
+                    >
+                      <MdLockOutline className="text-[1.5rem]" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           {/* )} */}
@@ -1819,23 +1213,25 @@ function DashboardContaintMaintComponant({
                   {t("Tous les appareils")}
                 </h2>
               )}
-              {!showFistGrapheOption2 && !currentAccountSelected && (
-                <div className="flex w-full justify-between items-center">
-                  <h2 className="font-semibold text-lg text-gray-700">
-                    {t("Tableau des comptes")} ({comptes?.length})
-                  </h2>
-                  <p
-                    onClick={() => {
-                      setExpandSection("tableau");
-                    }}
-                    className="font-semibold absolute-- top-4 right-4 text-sm underline cursor-pointer text-orange-500"
-                  >
-                    {t("Full Screen")}
-                  </p>
-                </div>
-              )}
+              {!showFistGrapheOption2 &&
+                !currentAccountSelected &&
+                isDashboardHomePage && (
+                  <div className="flex w-full justify-between items-center">
+                    <h2 className="font-semibold text-lg text-gray-700">
+                      {t("Tableau des comptes")} ({comptes?.length})
+                    </h2>
+                    <p
+                      onClick={() => {
+                        setExpandSection("tableau");
+                      }}
+                      className="font-semibold absolute-- top-4 right-4 text-sm underline cursor-pointer text-orange-500"
+                    >
+                      {t("Full Screen")}
+                    </p>
+                  </div>
+                )}
 
-              {currentAccountSelected && (
+              {(currentAccountSelected || !isDashboardHomePage) && (
                 <div>
                   <h2 className="font-semibold text-lg text-gray-700">
                     {t("Liste des Appareils")}
@@ -1843,7 +1239,10 @@ function DashboardContaintMaintComponant({
                   <p
                     onClick={() => {
                       // setExpandSection("tableau");
-                      setDocumentationPage("Gestion_des_appareils");
+                      // setDocumentationPage("Gestion_des_appareils");
+                      setShowStatisticDeviceListeDashboard(true);
+                      setStatisticFilteredDeviceListe(allDevices);
+                      setStatisticFilteredDeviceListeText("Tous les Appareils");
                     }}
                     className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"
                   >
@@ -1852,24 +1251,25 @@ function DashboardContaintMaintComponant({
 
                   <p className="text-gray-500">
                     {t("Nombre d'appareils")} (
-                    {listeGestionDesVehicules?.length})
+                    {
+                      (isDashboardHomePage
+                        ? listeGestionDesVehicules
+                        : dataFusionné
+                      )?.length
+                    }
+                    )
                   </p>
                 </div>
               )}
               {/* {!currentAccountSelected && ( */}
-              {/* <FaAngleDoubleRight
-                onClick={() => {
-                  setShowFistGrapheOption2(!showFistGrapheOption2);
-                }}
-                className="text-xl ml-3 mt-1.5 cursor-pointer"
-              /> */}
-              {/* )} */}
             </div>
             <div className="  rounded-md overflow-hidden ">
-              {!currentAccountSelected && (
+              {!currentAccountSelected && isDashboardHomePage && (
                 <TableauRecapitulatifComptes isLongueur="false" />
               )}
-              {currentAccountSelected && <DeviceListeDashboard />}
+              {(currentAccountSelected || !isDashboardHomePage) && (
+                <DeviceListeDashboard />
+              )}
 
               {/* {showFistGrapheOption2 && <GrapheCirculaireDevices />} */}
             </div>
@@ -1910,14 +1310,14 @@ function DashboardContaintMaintComponant({
           {/*  */}
         </div>
 
-        {!currentAccountSelected && (
+        {!currentAccountSelected && isDashboardHomePage && (
           <div className="w-full relative bg-white min-h-[15rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
-            <div className="w-full overflow-hidden rounded-md">
+            <div className="w-full overflow-hidden rounded-md z-0">
               <LocationPage fromDashboard="true" />
             </div>
 
             {!unlockCarteScroll && (
-              <div className="absolute flex justify-center items-center inset-0 bg-black/20 z-[999]">
+              <div className="absolute flex justify-center items-center inset-0 bg-black/20 z-[8]">
                 <div
                   onClick={() => {
                     setUnlockCarteScroll(true);
@@ -1934,7 +1334,7 @@ function DashboardContaintMaintComponant({
               onClick={() => {
                 setExpandSection("carte");
               }}
-              className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-5 right-1 cursor-pointer"
+              className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[8] top-5 right-1 cursor-pointer"
             >
               <ImEnlarge className="text-[1.1rem]" />
             </div>
@@ -1943,7 +1343,7 @@ function DashboardContaintMaintComponant({
                 onClick={() => {
                   setUnlockCarteScroll(false);
                 }}
-                className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[999] top-[5.5rem] right-1 cursor-pointer"
+                className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[8] top-[5.5rem] right-1 cursor-pointer"
               >
                 <MdLockOutline className="text-[1.5rem]" />
               </div>
@@ -1951,24 +1351,40 @@ function DashboardContaintMaintComponant({
             {/* )} */}
           </div>
         )}
-
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
         <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
           <div className="bg-orange-100 shadow-inner md:col-span-2 shadow-black/10 -300/80 mt-6 p-3 rounded-lg">
             <div className="flex mb-4 justify-between items-center ">
               <h2 className="font-semibold text-lg mb-4-- text-gray-700">
                 {t("Tous les Alertes")} (
-                {currentAccountSelected
-                  ? currentAccountSelected?.accountDevices
-                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                      ?.filter((item) => item?.statusCode !== "0xF952")?.length
-                  : accountDevices
+                {isDashboardHomePage
+                  ? currentAccountSelected
+                    ? currentAccountSelected?.accountDevices
+                        ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                        ?.filter((item) => item?.statusCode !== "0xF952")
+                        ?.length
+                    : accountDevices
+                        ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                        ?.filter((item) => item?.statusCode !== "0xF952")
+                        ?.length
+                  : dataFusionné
                       ?.flatMap((device) => device?.véhiculeDetails[0] || [])
                       ?.filter((item) => item?.statusCode !== "0xF952")?.length}
                 )
               </h2>
               <button
                 onClick={() => {
-                  if (currentAccountSelected) {
+                  if (!isDashboardHomePage) {
+                    setListeGestionDesVehicules(dataFusionné);
+                  } else if (currentAccountSelected) {
                     setListeGestionDesVehicules(
                       currentAccountSelected?.accountDevices
                     );
@@ -1983,93 +1399,71 @@ function DashboardContaintMaintComponant({
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2-- gap-3">
-              {(currentAccountSelected
-                ? currentAccountSelected?.accountDevices
-                : accountDevices
-              )
-                ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                ?.filter((item) => item?.statusCode !== "0xF952")
-                ?.slice(0, 2)?.length > 0 ? (
-                (currentAccountSelected
-                  ? currentAccountSelected?.accountDevices
-                  : accountDevices
-                )
-                  ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                  ?.filter((item) => item?.statusCode !== "0xF952")
-                  ?.slice(0, 2)
-                  ?.map((details, index) => {
-                    const code = parseInt(details.statusCode, 16);
-                    const codeDescription =
-                      statusDescriptions[code] || "Statut inconnu";
-                    const bgColor = getBackgroundColor(code);
-                    const currentDevice = accountDevices?.find(
-                      (d) => d.deviceID === details.deviceID
-                    );
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => {}}
-                        className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
-                        style={
-                          {
-                            // backgroundColor: bgColor,
-                            // borderRadius: 10,
-                            // padding: 15,
-                            // marginBottom: 10,
-                            // boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                          }
-                        }
-                      >
-                        <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                          {index + 1}
-                        </p>
-                        <FiAlertCircle className="text-orange-500/80 hidden md:block min-w-[2.5rem] text-[2.5rem] mt-1" />
-                        <div>
-                          <FiAlertCircle className="text-orange-500/80 md:hidden min-w-[2.5rem] text-[2.5rem] mt-1" />
+              {TouslesAlertesData ? (
+                TouslesAlertesData?.map((details, index) => {
+                  const code = parseInt(details.statusCode, 16);
+                  const codeDescription =
+                    statusDescriptions[code] || "Statut inconnu";
+                  const bgColor = getBackgroundColor(code);
+                  const currentDevice = accountDevices?.find(
+                    (d) => d.deviceID === details.deviceID
+                  );
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {}}
+                      className="shadow-lg- shadow-lg -inner-- border- border-orange-200 /0  relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
+                    >
+                      <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                        {index + 1}
+                      </p>
+                      <FiAlertCircle className="text-orange-500/80 hidden md:block min-w-[2.5rem] text-[2.5rem] mt-1" />
+                      <div>
+                        <FiAlertCircle className="text-orange-500/80 md:hidden min-w-[2.5rem] text-[2.5rem] mt-1" />
 
-                          <p className="text-gray-600">
-                            {t("Alerte")} :{" "}
-                            <span className="font-bold">{codeDescription}</span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Code")} :{" "}
-                            <span className="font-bold">
-                              {details?.statusCode}
+                        <p className="text-gray-600">
+                          {t("Alerte")} :{" "}
+                          <span className="font-bold">{codeDescription}</span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Code")} :{" "}
+                          <span className="font-bold">
+                            {details?.statusCode}
+                          </span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Description")} :{" "}
+                          <span className="font-bold">
+                            {currentDevice?.description}
+                          </span>{" "}
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Account ID")} :{" "}
+                          <span className="font-bold notranslate ">
+                            {details?.accountID}
+                          </span>{" "}
+                        </p>
+                        <p className="text-gray-600 notranslate">
+                          {t("Adresse")} :{" "}
+                          <span className="notranslate">
+                            <span className="font-bold notranslate">
+                              {details?.address ||
+                                `${t("Pas d'adresse disponible")}`}
                             </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Description")} :{" "}
-                            <span className="font-bold">
-                              {currentDevice?.description}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Account ID")} :{" "}
-                            <span className="font-bold notranslate ">
-                              {details?.accountID}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600 notranslate">
-                            {t("Adresse")} :{" "}
-                            <span className="notranslate">
-                              <span className="font-bold notranslate">
-                                {details?.address ||
-                                  `${t("Pas d'adresse disponible")}`}
-                              </span>{" "}
-                            </span>
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Last update")} :{" "}
-                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                              {FormatDateHeure(details?.timestamp).date}
-                              <span className="px-2">/</span>{" "}
-                              {FormatDateHeure(details?.timestamp).time}
-                            </span>
-                          </p>
-                        </div>
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Last update")} :{" "}
+                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                            {FormatDateHeure(details?.timestamp).date}
+                            <span className="px-2">/</span>{" "}
+                            {FormatDateHeure(details?.timestamp).time}
+                          </span>
+                        </p>
                       </div>
-                    );
-                  })
+                    </div>
+                  );
+                })
               ) : (
                 <div className="flex h-full   justify-center items-center font-semibold text-lg">
                   <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
@@ -2080,11 +1474,15 @@ function DashboardContaintMaintComponant({
           <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-orange-100-- bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
             <h2 className="font-semibold text-lg m-2 mb-0 mb-4-- text-gray-700">
               {t("Chart des Alertes")} (
-              {currentAccountSelected
-                ? currentAccountSelected?.accountDevices
-                    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                    ?.filter((item) => item?.statusCode !== "0xF952")?.length
-                : accountDevices
+              {isDashboardHomePage
+                ? currentAccountSelected
+                  ? currentAccountSelected?.accountDevices
+                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                      ?.filter((item) => item?.statusCode !== "0xF952")?.length
+                  : accountDevices
+                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+                      ?.filter((item) => item?.statusCode !== "0xF952")?.length
+                : dataFusionné
                     ?.flatMap((device) => device?.véhiculeDetails[0] || [])
                     ?.filter((item) => item?.statusCode !== "0xF952")?.length}
               )
@@ -2145,60 +1543,50 @@ function DashboardContaintMaintComponant({
             </div>
           </div>
         </div>
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
         {/* Other info */}
-        <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
-          <div className="bg-white shadow-lg shadow-black/5 md:col-span-2-  p-3 h-full rounded-lg">
-            <div className="flex mb-4 justify-between items-end ">
-              <div className=" flex w-full justify-between items-center">
-                <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                  {t("Tous les Utilisateurs")} (
-                  {currentAccountSelected
-                    ? currentAccountSelected?.accountUsers?.length
-                    : accountUsers?.length}
-                  )
-                </h2>
-                <button
-                  onClick={() => {
-                    if (currentAccountSelected) {
-                      setListeGestionDesUsers(
-                        currentAccountSelected?.accountUsers
-                      );
-                    } else {
-                      setListeGestionDesUsers(accountUsers);
-                    }
-                    setExpandSection("userListe");
-                    // setDocumentationPage("Gestion_des_utilisateurs");
-                    // scrollToTop();
-                  }}
-                  className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
-                >
-                  {t("Voir tous")}
-                </button>
+        {isDashboardHomePage && (
+          <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
+            <div className="bg-white shadow-lg shadow-black/5 md:col-span-2-  p-3 h-full rounded-lg">
+              <div className="flex mb-4 justify-between items-end ">
+                <div className=" flex w-full justify-between items-center">
+                  <h2 className="font-semibold text-lg mb-4-- text-gray-700">
+                    {t("Tous les Utilisateurs")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountUsers?.length
+                      : accountUsers?.length}
+                    )
+                  </h2>
+                  <button
+                    onClick={() => {
+                      if (currentAccountSelected) {
+                        setListeGestionDesUsers(
+                          currentAccountSelected?.accountUsers
+                        );
+                      } else {
+                        setListeGestionDesUsers(accountUsers);
+                      }
+                      setExpandSection("userListe");
+                      // setDocumentationPage("Gestion_des_utilisateurs");
+                      // scrollToTop();
+                    }}
+                    className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
+                  >
+                    {t("Voir tous")}
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="h-full max-h-[20rem]-- flex flex-col gap-4 overflow-auto-- overflow-hidden--">
-              {(currentAccountSelected
-                ? currentAccountSelected?.accountUsers
-                : [
-                    ...Array.from(
-                      new Map(
-                        gestionAccountData
-                          ?.flatMap((account) => account.accountUsers || [])
-                          ?.map((user) => [user.userID, user])
-                      ).values()
-                    ),
-                    ...accountUsers.filter(
-                      (user) =>
-                        !gestionAccountData
-                          ?.flatMap((account) => account.accountUsers || [])
-                          ?.some(
-                            (existingUser) =>
-                              existingUser.userID === user.userID
-                          )
-                    ),
-                  ]
-              )?.slice(0, 3)?.length > 0 ? (
-                (currentAccountSelected
+              <div className="h-full max-h-[20rem]-- flex flex-col gap-4 overflow-auto-- overflow-hidden--">
+                {(currentAccountSelected
                   ? currentAccountSelected?.accountUsers
                   : [
                       ...Array.from(
@@ -2218,107 +1606,115 @@ function DashboardContaintMaintComponant({
                             )
                       ),
                     ]
-                )
-                  ?.slice(0, 3)
-                  .map((user, index) => {
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => {}}
-                        className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
-                      >
-                        {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                        {index + 1}
-                      </p> */}
-                        <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
-                        <div>
-                          <p className="text-gray-600">
-                            {t("Nom de l'utilisateur")} :{" "}
-                            <span className="font-bold notranslate">
-                              {user?.description}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Account ID")} :{" "}
-                            <span className="font-bold notranslate">
-                              {user?.accountID}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Nombre d'appareil")} :{" "}
-                            <span className="font-bold">
-                              {user?.userDevices?.length}
-                            </span>{" "}
-                          </p>
-
-                          <p className="text-gray-600">
-                            {t("Nombre de Groupe")} :{" "}
-                            <span className="font-bold">
-                              {user?.userGroupes?.length}
-                            </span>{" "}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })
-              ) : (
-                <div className="flex h-full   justify-center items-center font-semibold text-lg">
-                  <p className="mb-10 md:mt-10">{t("Pas de résultat")}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
-            <div className=" flex pb-4 w-full justify-between items-center">
-              <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                {t("Tous les Groupes")} (
-                {currentAccountSelected
-                  ? currentAccountSelected?.accountGroupes?.length
-                  : accountGroupes?.length}
-                )
-              </h2>
-              <button
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesGroupe(
-                      currentAccountSelected?.accountGroupes
-                    );
-                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                  } else {
-                    // setListeGestionDesGroupe(accountGroupes);
-                    setListeGestionDesGroupe(
-                      Array.from(
-                        new Map(
-                          gestionAccountData
-                            ?.flatMap((account) => account.accountGroupes)
-                            ?.map((group) => [group.groupID, group])
-                        ).values()
-                      )
-                    );
-                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                  }
-                  setExpandSection("userGroupe");
-                  // setDocumentationPage("Gestion_des_groupes");
-                  // scrollToTop();
-                }}
-                className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
-              >
-                {t("Voir tous")}
-              </button>
-            </div>
-            <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto--">
-              {(currentAccountSelected
-                ? currentAccountSelected?.accountGroupes
-                : Array.from(
-                    new Map(
-                      gestionAccountData
-                        ?.flatMap((account) => account.accountGroupes)
-                        ?.map((group) => [group.groupID, group])
-                    ).values()
+                )?.slice(0, 3)?.length > 0 ? (
+                  (currentAccountSelected
+                    ? currentAccountSelected?.accountUsers
+                    : [
+                        ...Array.from(
+                          new Map(
+                            gestionAccountData
+                              ?.flatMap((account) => account.accountUsers || [])
+                              ?.map((user) => [user.userID, user])
+                          ).values()
+                        ),
+                        ...accountUsers.filter(
+                          (user) =>
+                            !gestionAccountData
+                              ?.flatMap((account) => account.accountUsers || [])
+                              ?.some(
+                                (existingUser) =>
+                                  existingUser.userID === user.userID
+                              )
+                        ),
+                      ]
                   )
-              )?.slice(0, 4)?.length > 0 ? (
-                (currentAccountSelected
+                    ?.slice(0, 3)
+                    .map((user, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {}}
+                          className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
+                        >
+                          <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
+                          <div>
+                            <p className="text-gray-600">
+                              {t("Nom de l'utilisateur")} :{" "}
+                              <span className="font-bold notranslate">
+                                {user?.description}
+                              </span>{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              {t("Account ID")} :{" "}
+                              <span className="font-bold notranslate">
+                                {user?.accountID}
+                              </span>{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              {t("Nombre d'appareil")} :{" "}
+                              <span className="font-bold">
+                                {user?.userDevices?.length}
+                              </span>{" "}
+                            </p>
+
+                            <p className="text-gray-600">
+                              {t("Nombre de Groupe")} :{" "}
+                              <span className="font-bold">
+                                {user?.userGroupes?.length}
+                              </span>{" "}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })
+                ) : (
+                  <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                    <p className="mb-10 md:mt-10">{t("Pas de résultat")}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
+              <div className=" flex pb-4 w-full justify-between items-center">
+                <h2 className="font-semibold text-lg mb-4-- text-gray-700">
+                  {t("Tous les Groupes")} (
+                  {currentAccountSelected
+                    ? currentAccountSelected?.accountGroupes?.length
+                    : accountGroupes?.length}
+                  )
+                </h2>
+                <button
+                  onClick={() => {
+                    if (currentAccountSelected) {
+                      setListeGestionDesGroupe(
+                        currentAccountSelected?.accountGroupes
+                      );
+                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+                    } else {
+                      // setListeGestionDesGroupe(accountGroupes);
+                      setListeGestionDesGroupe(
+                        Array.from(
+                          new Map(
+                            gestionAccountData
+                              ?.flatMap((account) => account.accountGroupes)
+                              ?.map((group) => [group.groupID, group])
+                          ).values()
+                        )
+                      );
+                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+                    }
+                    setExpandSection("userGroupe");
+                    // setDocumentationPage("Gestion_des_groupes");
+                    // scrollToTop();
+                  }}
+                  className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
+                >
+                  {t("Voir tous")}
+                </button>
+              </div>
+              <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto--">
+                {(currentAccountSelected
                   ? currentAccountSelected?.accountGroupes
                   : Array.from(
                       new Map(
@@ -2327,49 +1723,60 @@ function DashboardContaintMaintComponant({
                           ?.map((group) => [group.groupID, group])
                       ).values()
                     )
-                )
-                  ?.slice(0, 4)
-                  ?.map((user, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
-                      >
-                        {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
+                )?.slice(0, 4)?.length > 0 ? (
+                  (currentAccountSelected
+                    ? currentAccountSelected?.accountGroupes
+                    : Array.from(
+                        new Map(
+                          gestionAccountData
+                            ?.flatMap((account) => account.accountGroupes)
+                            ?.map((group) => [group.groupID, group])
+                        ).values()
+                      )
+                  )
+                    ?.slice(0, 4)
+                    ?.map((user, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
+                        >
+                          {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
                         {index + 1}
                       </p> */}
-                        <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
-                        <div>
-                          <p className="text-gray-600">
-                            {t("Account ID")} :{" "}
-                            <span className="font-bold notranslate notranslate">
-                              {user?.accountID}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Nom du Groupe")} :{" "}
-                            <span className="font-bold notranslate">
-                              {user?.description || "---"}
-                            </span>{" "}
-                          </p>
-                          <p className="text-gray-600">
-                            {t("Nombre d'appareil")} :{" "}
-                            <span className="font-bold">
-                              {user?.groupeDevices?.length}
-                            </span>{" "}
-                          </p>
+                          <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
+                          <div>
+                            <p className="text-gray-600">
+                              {t("Account ID")} :{" "}
+                              <span className="font-bold notranslate notranslate">
+                                {user?.accountID}
+                              </span>{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              {t("Nom du Groupe")} :{" "}
+                              <span className="font-bold notranslate">
+                                {user?.description || "---"}
+                              </span>{" "}
+                            </p>
+                            <p className="text-gray-600">
+                              {t("Nombre d'appareil")} :{" "}
+                              <span className="font-bold">
+                                {user?.groupeDevices?.length}
+                              </span>{" "}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })
-              ) : (
-                <div className="flex h-full   justify-center items-center font-semibold text-lg">
-                  <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
-                </div>
-              )}
+                      );
+                    })
+                ) : (
+                  <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                    <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

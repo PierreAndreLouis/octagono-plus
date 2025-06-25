@@ -39,6 +39,9 @@ function ListeDesUtilisateur({
     TestDeRequetteDevices,
     adminPassword,
     accountUsers,
+    setMergedDataHome,
+    setGeofenceData,
+    clearDataIndexedbStore,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -60,14 +63,30 @@ function ListeDesUtilisateur({
 
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);
+      console.log("currentSelectedUserToConnect", currentSelectedUserToConnect);
+      // console.log(
+      //   currentSelectedUserToConnect?.accountID,
+      //   currentSelectedUserToConnect?.userID,
+      //   currentSelectedUserToConnect?.password,
+      //   currentCountry,
+      //   sendConnectionMail
+      // );
+      // clearDataIndexedbStore("mergedDataHome");
+      // clearDataIndexedbStore("geofenceData");
+      // clearDataIndexedbStore("donneeFusionnéForRapport");
+      // setMergedDataHome([]);
+      // setGeofenceData([]);
+      setTimeout(() => {
+        handleLogin(
+          currentSelectedUserToConnect?.accountID,
+          currentSelectedUserToConnect?.userID,
+          currentSelectedUserToConnect?.password,
+          currentCountry,
+          sendConnectionMail
+        );
+      }, 200);
 
-      handleLogin(
-        currentSelectedUserToConnect?.accountID,
-        currentSelectedUserToConnect?.userID,
-        currentSelectedUserToConnect?.password,
-        currentCountry,
-        sendConnectionMail
-      );
+      setDocumentationPage("Dashboard");
     } else {
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
@@ -129,7 +148,9 @@ function ListeDesUtilisateur({
                 {t("Veuillez entrer votre mot de passe")}
               </label>
               {errorMessage && (
-                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                <p className="text-red-500 text-center text-sm mt-2">
+                  {errorMessage}
+                </p>
               )}
               <div className="mt-2">
                 <input
@@ -283,7 +304,11 @@ function ListeDesUtilisateur({
               ?.map((user, index) => {
                 const foundUser = gestionAccountData
                   ?.flatMap((account) => account.accountUsers)
-                  ?.find((u) => u.userID === user?.userID);
+                  ?.find(
+                    (u) =>
+                      u.userID === user?.userID &&
+                      u.accountID === user?.accountID
+                  );
 
                 return (
                   <div

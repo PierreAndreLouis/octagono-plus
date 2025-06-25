@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 // import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 function GestionGeofences({
-  isDashBoardComptnent = false,
+  // isDashboardHomePage = false,
   setChooseOtherAccountGestion,
   setDocumentationPage,
   setChooseOneAccountToContinue,
@@ -75,7 +75,7 @@ function GestionGeofences({
 
     if (
       (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) ||
-      isDashBoardComptnent
+      isDashboardHomePage
     ) {
       supprimerGeofence(
         geozoneID,
@@ -201,20 +201,20 @@ function GestionGeofences({
           <div className="flex gap-2 justify-center mt-4">
             <div
               onClick={() => {
-                if (isDashBoardComptnent && !currentAccountSelected) {
+                if (isDashboardHomePage && !currentAccountSelected) {
                   setChooseOneAccountToContinue(true);
                   setChooseOtherAccountGestion(true);
-                } else if (isDashBoardComptnent && currentAccountSelected) {
-                  setDocumentationPage("Localisation_devices");
+                } else if (isDashboardHomePage && currentAccountSelected) {
                 }
                 setAjouterGeofencePopup(true);
                 setIsEditingGeofence(false);
                 setCurrentGeozone();
+                setDocumentationPage("Localisation_devices");
                 // setDocumentationPage("Localisation_devices");
 
-                if (!isDashBoardComptnent) {
-                  navigate("/Groupe_vehicule_location?tab=localisation");
-                }
+                // if (!isDashboardHomePage) {
+                //   navigate("/Groupe_vehicule_location?tab=localisation");
+                // }
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -229,26 +229,27 @@ function GestionGeofences({
               </div>
             </div>{" "}
           </div>
-
-          {!showFilterInputSection && isDashBoardComptnent && (
+          {!showFilterInputSection && isDashboardHomePage && (
             <div className="flex gap-2 w-full justify-between items-center">
-              <div
-                onClick={() => {
-                  setDocumentationPage("Gestion_geofences");
-                  setChooseOtherAccountGestion(true);
-                  setChooseAccountFromGeozoneSection(true);
-                }}
-                className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-              >
-                <h3 className="w-full text-center font-semibold">
-                  {/* Compte: */}
-                  <span>
-                    {/* {listeGestionDesGroupeTitre || "Tous les geofences"} */}
-                    {t("Tous les geofences")}
-                  </span>
-                </h3>
-                <FaChevronDown />
-              </div>
+              {isDashboardHomePage && (
+                <div
+                  onClick={() => {
+                    setDocumentationPage("Gestion_geofences");
+                    setChooseOtherAccountGestion(true);
+                    setChooseAccountFromGeozoneSection(true);
+                  }}
+                  className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+                >
+                  <h3 className="w-full text-center font-semibold">
+                    {/* Compte: */}
+                    <span>
+                      {/* {listeGestionDesGroupeTitre || "Tous les geofences"} */}
+                      {t("Tous les geofences")}
+                    </span>
+                  </h3>
+                  <FaChevronDown />
+                </div>
+              )}
               {/* <div
                 onClick={() => {
                   setShowGeofenceInCartePopup(true);
@@ -257,14 +258,16 @@ function GestionGeofences({
               >
                 <IoEarth className="text-xl text-orange-500" />
               </div> */}
-              <div
-                onClick={() => {
-                  setShowFilterInputSection(true);
-                }}
-                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
-              >
-                <IoSearchOutline className="text-xl " />
-              </div>
+              {isDashboardHomePage && (
+                <div
+                  onClick={() => {
+                    setShowFilterInputSection(true);
+                  }}
+                  className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+                >
+                  <IoSearchOutline className="text-xl " />
+                </div>
+              )}
               {/* <div
                         onClick={() => {
                           // deviceUpdateFonction();
@@ -275,8 +278,7 @@ function GestionGeofences({
                       </div> */}
             </div>
           )}
-
-          {(showFilterInputSection || !isDashBoardComptnent) && (
+          {(showFilterInputSection || !isDashboardHomePage) && (
             <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
               <input
                 id="search"
@@ -290,7 +292,7 @@ function GestionGeofences({
                 }}
                 className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
               />
-              {isDashBoardComptnent && (
+              {isDashboardHomePage && (
                 <div
                   onClick={() => {
                     {
@@ -385,47 +387,27 @@ function GestionGeofences({
                         </div>
                       </div>
                       <div className="flex  justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-end ">
-                        {
-                          // (isActive && geozone?.isActive === (0 || 1)) ||
-                          isDashBoardComptnent && (
-                            <button
-                              onClick={() => {
-                                setCurrentGeozone(geozone);
-                                setSupprimerGeozonePopup(true);
-                              }}
-                              className={`${
-                                true
-                                  ? " bg-red-500 text-white"
-                                  : "text-red-600 border-[0.02rem] border-red-500 "
-                              }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
-                            >
-                              {t("Supprimer")}
-                              {/* {isActive ||
-                                (isDashBoardComptnent &&
-                                  geozone?.isActive === (0 || 1) &&
-                                  "Supprimer")}
-
-
-                              {(isActive || !isActive) &&
-                                geozone?.isActive === 0 &&
-                                "Activer"}
-
-                              {!isActive &&
-                                geozone?.isActive === 1 &&
-                                "Désactiver"} */}
-                            </button>
-                          )
-                        }
+                        {isDashboardHomePage && (
+                          <button
+                            onClick={() => {
+                              setCurrentGeozone(geozone);
+                              setSupprimerGeozonePopup(true);
+                            }}
+                            className={`${
+                              true
+                                ? " bg-red-500 text-white"
+                                : "text-red-600 border-[0.02rem] border-red-500 "
+                            }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
+                          >
+                            {t("Supprimer")}
+                          </button>
+                        )}
                         <button
                           onClick={() => {
                             setCurrentGeozone(geozone);
                             setAjouterGeofencePopup(true);
                             setIsEditingGeofence(true);
-                            if (!isDashBoardComptnent) {
-                              navigate(
-                                "/Groupe_vehicule_location?tab=localisation"
-                              );
-                            }
+
                             setDocumentationPage("Localisation_devices");
                           }}
                           // to="/Groupe_vehicule_location?tab=localisation"
@@ -487,14 +469,14 @@ function GestionGeofences({
                       className="text-xl font-bold tracking-tight"
                       id="page-action.heading"
                     >
-                      {isCurrentGeozoneActive || isDashBoardComptnent
+                      {isCurrentGeozoneActive || isDashboardHomePage
                         ? `${t("Supprimer")}`
                         : `${t("Désactiver")}`}
                     </h2>
 
                     <p className="text-gray-500">
                       {t("Êtes-vous sûr de")}{" "}
-                      {isCurrentGeozoneActive || isDashBoardComptnent
+                      {isCurrentGeozoneActive || isDashboardHomePage
                         ? `${t("Supprimer")}`
                         : `${t("Désactiver")}`}{" "}
                       {t("le geozone")} ?
@@ -530,7 +512,7 @@ function GestionGeofences({
                       >
                         <span className="flex items-center gap-1">
                           <span className="">
-                            {isCurrentGeozoneActive || isDashBoardComptnent
+                            {isCurrentGeozoneActive || isDashboardHomePage
                               ? `${t("Supprimer")}`
                               : `${t("Désactiver")}`}
                           </span>

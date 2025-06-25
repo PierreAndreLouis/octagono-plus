@@ -268,18 +268,18 @@ function Modifier() {
 
             {/* Pour afficher le popup de la liste des véhicules */}
             {showVehiculeListe && (
-              <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-20 shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80">
-                <SearchVehiculePupup
-                  searchQueryListPopup={searchQueryModifyPage}
-                  setSearchQueryListPopup={setSearchQueryModifyPage}
-                  handleSearchChange={handleSearchChange}
-                  setShowOptions={setShowVehiculeListe}
-                  filteredVehicles={filteredVehicles}
-                  handleClick={handleVehicleClick}
-                  currentVéhicule={currentVéhicule}
-                  isMapcomponent="false"
-                />
-              </div>
+              // <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-20 shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80">
+              <SearchVehiculePupup
+                searchQueryListPopup={searchQueryModifyPage}
+                setSearchQueryListPopup={setSearchQueryModifyPage}
+                handleSearchChange={handleSearchChange}
+                setShowOptions={setShowVehiculeListe}
+                filteredVehicles={filteredVehicles}
+                handleClick={handleVehicleClick}
+                currentVéhicule={currentVéhicule}
+                isMapcomponent="false"
+              />
+              // </div>
             )}
 
             {/* La form a modifier ou a supprimer */}

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import { MdLocationPin } from "react-icons/md";
+import { MdLocationPin, MdUpdate } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import customMarkerIcon from "/img/cars/localisation.png";
@@ -57,10 +57,44 @@ function RapportGroupe({
     tableSortCroissant,
     setTableSortCroissant,
     setCurrentPersonelVéhicule,
+    progressAnimationStart,
+    setProgressAnimationStart,
+    runningAnimationProgressLoading,
+    setRunningAnimationProgressLoading,
+    runningAnimationProgressDuration,
+    setRunningAnimationProgressDuration,
+    progressBarForLoadingData,
+    homePageReload,
+    username,
+    statusDescriptions,
+    isDashboardHomePage,
+    fetchVehicleDataFromRapportGroupe,
+    account,
+    currentAccountSelected,
+    setDonneeFusionnéForRapport,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   let x;
 
   const [t, i18n] = useTranslation();
+
+  const onlyLastResult = false;
+
+  const rapportFetchFonction = () => {
+    let accountID;
+    let userID;
+    let password;
+
+    if (isDashboardHomePage && currentAccountSelected) {
+      accountID = currentAccountSelected?.accountID;
+      userID = "admin";
+      password = currentAccountSelected?.password;
+    } else if (!isDashboardHomePage) {
+      accountID = account || localStorage.getItem("account") || "";
+      userID = username || localStorage.getItem("username") || "";
+      password = localStorage.getItem("password") || "";
+    }
+    homePageReload(accountID, userID, password, onlyLastResult);
+  };
 
   //
   //
@@ -763,8 +797,6 @@ function RapportGroupe({
       : 0;
     const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    const isSearching = searchDonneeFusionnéForRapport?.length > 0;
-
     const hasBeenMoving =
       matchedVehicle.véhiculeDetails &&
       matchedVehicle.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
@@ -774,37 +806,14 @@ function RapportGroupe({
       matchedVehicle.véhiculeDetails[0] &&
       matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-    const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
-
     const isNotStillSpeedActive =
       lastUpdateTimestampMs &&
       currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
 
-    if (!isSearching) {
-      if (filter === "movingNow")
-        return (
-          isSpeedActive && hasDetails && isActive && !isNotStillSpeedActive
-        );
-      if (filter === "notMovingNow")
-        return (
-          hasDetails &&
-          isActive &&
-          (isNotSpeedActive || (hasBeenMoving && isNotStillSpeedActive))
-        );
-      if (filter === "moving") return hasDetails && isMoving && isToday;
-
-      if (filter === "parking")
-        return (
-          hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
-        );
-      if (filter === "inactive") return !hasDetails || !isActive;
-      return true; // "all" : tous les véhicules
-    } else {
-      if (filter === "inactive") return !hasDetails;
-      if (filter === "parking") return hasDetails && noSpeed;
-      if (filter === "moving") return hasDetails && isMoving;
-      return true; // "all" : tous les véhicules
-    }
+    if (filter === "inactive") return !hasDetails;
+    if (filter === "parking") return hasDetails && noSpeed;
+    if (filter === "moving") return hasDetails && isMoving;
+    return true; // "all" : tous les véhicules
   });
 
   //
@@ -1132,10 +1141,6 @@ function RapportGroupe({
   //
   x;
 
-  const isSearching = searchDonneeFusionnéForRapport?.length > 0;
-
-  const isSearchingToday = mostOldTimestamp * 1000 >= todayTimestamp;
-
   //
   //
   //
@@ -1221,6 +1226,21 @@ function RapportGroupe({
   //
   //
   //
+
+  useEffect(() => {
+    if (runningAnimationProgressLoading && progressAnimationStart < 99) {
+      const interval = setInterval(() => {
+        setProgressAnimationStart((prev) => {
+          if (prev >= 98) {
+            clearInterval(interval);
+            return 99;
+          }
+          return prev + 1;
+        });
+      }, runningAnimationProgressDuration);
+      return () => clearInterval(interval);
+    }
+  }, [runningAnimationProgressLoading, progressAnimationStart]);
   //
   //
   //
@@ -1233,7 +1253,7 @@ function RapportGroupe({
     <>
       <div
         ref={rapportGroupePDFtRef}
-        className=" px-4 pb-20 md:max-w-[80vw] w-full"
+        className=" px-4 pb-20 md:max-w-[70vw] w-full"
       >
         {/*  */}
         {/*  */}
@@ -1251,24 +1271,13 @@ function RapportGroupe({
                 <p></p>
                 <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
                   {filter === "all" && `${t("Tous les véhicules")}`}
-                  {filter === "moving" &&
-                    `${t("Véhicules déplacés")}  ${
-                      isSearching ? "" : " " + `${t("aujourd'hui")}`
-                    } `}
+                  {filter === "moving" && `${t("Véhicules déplacés")}   `}
 
                   {filter === "notMovingNow" &&
-                    `${t("Véhicules en stationnement")}  ${
-                      isSearching ? "" : " " + `${t("actuellement")}`
-                    }`}
+                    `${t("Véhicules en stationnement")}`}
 
-                  {filter === "movingNow" &&
-                    `${t("Véhicules en mouvement")} ${
-                      isSearching ? "" : " " + `${t("actuellement")}`
-                    }`}
-                  {filter === "parking" &&
-                    ` ${t("Véhicules non déplacés")}  ${
-                      isSearching ? "" : " " + `${t("aujourd'hui")}`
-                    }  `}
+                  {filter === "movingNow" && `${t("Véhicules en mouvement")} `}
+                  {filter === "parking" && ` ${t("Véhicules non déplacés")}   `}
 
                   {filter === "inactive" && `${t("Véhicules hors service")}`}
                 </h3>
@@ -1325,14 +1334,10 @@ function RapportGroupe({
                 {filter === "all" && (
                   <div className="mt-4 mb-4 flex items-center gap-2">
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
-                      {isSearching
-                        ? "Véhicules déplacés"
-                        : "Véhicules en mouvement"}
+                      Véhicules en mouvement
                     </p>
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
-                      {isSearching
-                        ? "Véhicules non déplacés"
-                        : "Véhicules en stationnement"}
+                      Véhicules en stationnement
                     </p>
                     <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
                       {t("Véhicules hors service")}
@@ -1385,8 +1390,6 @@ function RapportGroupe({
                     const isActive =
                       currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-                    const isSearching =
-                      searchDonneeFusionnéForRapport?.length > 0;
                     ///////////////////////////////////////////////////////////////////////////
 
                     ////////////////////////////////////////////////////
@@ -1409,8 +1412,6 @@ function RapportGroupe({
                       matchedVehicle.véhiculeDetails[0] &&
                       matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-                    const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
-
                     const isNotStillSpeedActive =
                       lastUpdateTimestampMs &&
                       currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
@@ -1431,14 +1432,7 @@ function RapportGroupe({
                     let border_top =
                       "border-t border-t-red-200 dark:border-t-red-600/30 ";
 
-                    if (
-                      !isSearching &&
-                      hasDetails &&
-                      isSpeedActive &&
-                      // isActive &&
-                      !isNotStillSpeedActive
-                      // && isToday
-                    ) {
+                    if (hasDetails && isSpeedActive && !isNotStillSpeedActive) {
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = `${t("En mouvement rapide")}`;
                       lite_bg_color =
@@ -1453,7 +1447,6 @@ function RapportGroupe({
                       border_top =
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
                     } else if (
-                      !isSearching &&
                       hasDetails &&
                       isActive &&
                       // hasBeenMoving &&
@@ -1477,7 +1470,7 @@ function RapportGroupe({
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
                     //
-                    else if ((!isSearching && !hasDetails) || !isActive) {
+                    else if (!hasDetails || !isActive) {
                       main_text_color = "text-purple-900 dark:text-purple-300 ";
                       statut = `${t("Hors service")}`;
                       lite_bg_color =
@@ -1498,7 +1491,6 @@ function RapportGroupe({
                     //
                     //
                     if (
-                      !isSearching &&
                       isNotSpeedActive &&
                       hasDetails &&
                       isActive &&
@@ -1520,12 +1512,7 @@ function RapportGroupe({
                         "border-t border-t-red-200 dark:border-t-red-600/30 ";
                     }
 
-                    if (
-                      hasDetails &&
-                      isActive &&
-                      isToday &&
-                      filter === "moving"
-                    ) {
+                    if (hasDetails && isActive && filter === "moving") {
                       main_text_color = "text-green-700 dark:text-green-400";
                       statut = `${t("En mouvement rapide")}`;
                       lite_bg_color =
@@ -1541,55 +1528,6 @@ function RapportGroupe({
                         "border-t border-t-green-200 dark:border-t-green-600/30 ";
                     }
                     //
-
-                    if (isSearching && hasDetails && isMoving) {
-                      main_text_color = "text-green-700 dark:text-green-400";
-                      statut = `${t("En mouvement rapide")}`;
-                      lite_bg_color =
-                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
-                      activeTextColor = "text-green-800 dark:text-green-200";
-                      active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
-                      vitess_img = "/img/home_icon/active.png";
-                      vitess_img_dark = "/img/home_icon/rapport_active.png";
-                      imgClass = "w-12  h-auto sm:w-14 md:w-20";
-                      imgBg =
-                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
-                      border_top =
-                        "border-t border-t-green-200 dark:border-t-green-600/30 ";
-                    } else if (isSearching && hasDetails && noSpeed) {
-                      main_text_color = "text-red-900 dark:text-red-300";
-                      statut = `${t("En Stationnement")}`;
-                      lite_bg_color =
-                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
-                      activeTextColor = "text-red-900 dark:text-red-200";
-                      active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
-                      vitess_img = "/img/home_icon/rapport_parking2.png";
-                      vitess_img_dark = "/img/home_icon/rapport_parking.png";
-
-                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
-                      imgBg =
-                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
-                      border_top =
-                        "border-t border-t-red-200 dark:border-t-red-600/30 ";
-                    }
-                    //
-                    else if ((isSearching && !hasDetails) || !isActive) {
-                      main_text_color = "text-purple-900 dark:text-purple-300 ";
-                      statut = `${t("Hors service")}`;
-                      lite_bg_color =
-                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
-                      activeTextColor = "text-purple-900 dark:text-purple-200";
-                      active_bg_color =
-                        "bg-purple-200/50 dark:bg-purple-600/50";
-                      vitess_img = "/img/home_icon/payer.png";
-                      vitess_img_dark = "/img/home_icon/rapport_not_active.png";
-
-                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
-                      imgBg =
-                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
-                      border_top =
-                        "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
-                    }
 
                     return (
                       <div>
@@ -1954,7 +1892,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {/*  */}
         {/*  */}
         {/*  */}
@@ -1967,7 +1904,6 @@ function RapportGroupe({
         {/*  */}
         {/*  */}
         {/*  */}
-
         {/*  Tableau des deplacements */}
         {tableDeplacement && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
@@ -2102,7 +2038,6 @@ function RapportGroupe({
             </div>
           </div>
         )}
-
         {/*  */}
         {/*  */}
         {/*  */}
@@ -2112,7 +2047,6 @@ function RapportGroupe({
         {/*  */}
         {/*  */}
         {/* Tableau des Distances */}
-
         {tableDistance && (
           <div className="flex hidden-- z-[499999999990] justify-center items-center px-4 fixed inset-0 bg-black/50">
             <div className="bg-white dark:bg-gray-700 rounded-lg min-h-[60vh] p-3--">
@@ -2680,9 +2614,56 @@ function RapportGroupe({
         {/*  */}
         {/*  */}
         {/*  */}
-        <h1 className="text-center mb-10 font-semibold text-xl my-10 dark:text-gray-300">
+        <h1 className="text-center mb-10 font-semibold text-xl mb-10 dark:text-gray-300">
           {t("Rapport détaillé en groupe")}
         </h1>
+        <div
+          onClick={() => {
+            rapportFetchFonction();
+          }}
+          className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
+        >
+          <h3>{t("Mettre a jour les donnees")}</h3>
+          <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
+        </div>
+
+        {!(
+          progressBarForLoadingData === 100 ||
+          progressBarForLoadingData === 0 ||
+          progressAnimationStart === 0
+        ) &&
+          // (
+          //   (progressBarForLoadingData === 100 &&
+          //     progressAnimationStart === 99) ||
+          //   progressBarForLoadingData === 0 ||
+          //   progressAnimationStart === 0
+          // )
+          fetchVehicleDataFromRapportGroupe && (
+            <div
+              className="rounded-md shadow-sm shadow-black/10 overflow-hidden"
+              style={{
+                width: "100%",
+                background: "#fff",
+                margin: "10px 0",
+              }}
+            >
+              <div
+                style={{
+                  width: `${progressAnimationStart}%`,
+                  background: "#4caf50",
+                  color: "#fff",
+                  padding: "4px",
+                  transition: "width 1s linear",
+                  textAlign: "center",
+                }}
+              >
+                <p className="font-semibold drop-shadow-2xl">
+                  {Math.floor(progressAnimationStart)}%
+                </p>
+              </div>
+            </div>
+          )}
+        {/*  */}
         {preparationDownloadPDF && <p className="min-h-[4rem]"></p>}
         <div
           className={`
@@ -2744,12 +2725,10 @@ function RapportGroupe({
             {/*  */}
             {/*  */}
             {/*  */}
-            {(searchDonneeFusionnéForRapport.length <= 0 ||
-              isSearchingToday) && (
-              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                * {t("Informations Actuellement")}
-              </h2>
-            )}
+            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+              * {t("Informations Generale")}
+            </h2>
+
             <div className="flex justify-between items-center pr-3">
               <p>
                 {t("Nombre total de véhicules")} :{" "}
@@ -2767,98 +2746,81 @@ function RapportGroupe({
                 {t("voir")}
               </p>
             </div>
-            {(searchDonneeFusionnéForRapport.length <= 0 ||
-              isSearchingToday) && (
-              <div className="flex justify-between items-center pr-3">
-                <p>
-                  {t("Véhicule en mouvement")} :{" "}
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {isSearching
-                      ? activeVehicleCount2
-                      : activeVehicleCount?.length || "0"} */}
+            <div className="flex justify-between items-center pr-3">
+              <p>
+                {t("Véhicule en mouvement")} :{" "}
+                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                  {activeVehicleCount2?.length}
+                </span>
+              </p>
+              <p
+                onClick={() => {
+                  setvoirVehiculeListePupup(true);
+                  setFilter("movingNow");
+                }}
+                className="text-orange-400 underline cursor-pointer"
+              >
+                {t("voir")}
+              </p>
+            </div>
 
-                    {/* {!isSearching && activeVehicleCount?.length}
-                    {isSearching && activeVehicleCount2?.length} */}
-                    {activeVehicleCount2?.length}
-                  </span>
-                </p>
-                <p
-                  onClick={() => {
-                    setvoirVehiculeListePupup(true);
-                    setFilter("movingNow");
-                  }}
-                  className="text-orange-400 underline cursor-pointer"
-                >
-                  {t("voir")}
-                </p>
-              </div>
-            )}
-            {(searchDonneeFusionnéForRapport.length <= 0 ||
-              isSearchingToday) && (
-              <div className="flex justify-between items-center pr-3">
-                <p>
-                  {t("Véhicule en stationnement")} :{" "}
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {isSearching
-                      ? notActiveVehicleCount2
-                      : notActiveVehicleCount?.length || "0"} */}
-                    {notActiveVehicleCount2?.length || "0"}
-                    {/* {!isSearching && notActiveVehicleCount?.length}
-                    {isSearching && notActiveVehicleCount2?.length} */}
-                  </span>
-                </p>
-                <p
-                  onClick={() => {
-                    setvoirVehiculeListePupup(true);
-                    setFilter("notMovingNow");
-                  }}
-                  className="text-orange-400 underline cursor-pointer"
-                >
-                  {t("voir")}
-                </p>
-              </div>
-            )}
-            {(searchDonneeFusionnéForRapport.length <= 0 ||
-              isSearchingToday) && (
-              <div className="flex justify-between items-center pr-3">
-                <p>
-                  {t("Véhicule hors service")} :{" "}
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {véhiculeHorsService?.length || "0"}
-                  </span>
-                </p>
-                <p
-                  onClick={() => {
-                    setvoirVehiculeListePupup(true);
-                    setFilter("inactive");
-                  }}
-                  className="text-orange-400 underline cursor-pointer"
-                >
-                  {t("voir")}
-                </p>
-              </div>
-            )}
+            <div className="flex justify-between items-center pr-3">
+              <p>
+                {t("Véhicule en stationnement")} :{" "}
+                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                  {notActiveVehicleCount2?.length || "0"}
+                </span>
+              </p>
+              <p
+                onClick={() => {
+                  setvoirVehiculeListePupup(true);
+                  setFilter("notMovingNow");
+                }}
+                className="text-orange-400 underline cursor-pointer"
+              >
+                {t("voir")}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-center pr-3">
+              <p>
+                {t("Véhicule hors service")} :{" "}
+                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                  {currentDataFusionné?.length > 0
+                    ? véhiculeHorsService?.length || "0"
+                    : "0"}
+                </span>
+              </p>
+              <p
+                onClick={() => {
+                  setvoirVehiculeListePupup(true);
+                  setFilter("inactive");
+                }}
+                className="text-orange-400 underline cursor-pointer"
+              >
+                {t("voir")}
+              </p>
+            </div>
+
             {/*  */}
             {/*  */}
             {/*  */}
-            {(searchDonneeFusionnéForRapport.length <= 0 ||
-              isSearchingToday) && (
-              <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
-            )}{" "}
+            <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+
             {/*  */}
             {/*  */}
             {/*  */}
-            {(searchDonneeFusionnéForRapport.length <= 0 ||
-              isSearchingToday) && (
-              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-                * {t("Pour la journée d'aujourd'hui")}
-              </h2>
-            )}
+            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+              * {t("Information sur les déplacements")}
+            </h2>
+
             <div className="flex justify-between items-center pr-3">
               <p>
                 {t("Véhicules déplacés")} :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {véhiculeActiveToday?.length || "0"}
+                  {currentDataFusionné?.length > 0
+                    ? véhiculeActiveToday?.length || "0"
+                    : "0"}
                 </span>
               </p>
               <p
@@ -2876,7 +2838,9 @@ function RapportGroupe({
                 {t("Véhicules non déplacés")} :{" "}
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {/* {véhiculeActiveToday?.length || "0"} */}
-                  {véhiculeNotActiveToday?.length || "0"}
+                  {currentDataFusionné?.length > 0
+                    ? véhiculeNotActiveToday?.length || "0"
+                    : "0"}
                 </span>
               </p>
               <p
@@ -2889,25 +2853,7 @@ function RapportGroupe({
                 {t("voir")}
               </p>
             </div>
-            {searchDonneeFusionnéForRapport.length > 0 && (
-              <div className="flex justify-between items-center pr-3">
-                <p>
-                  {t("Véhicule hors service")} :{" "}
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {véhiculeHorsService?.length || "0"}
-                  </span>
-                </p>
-                <p
-                  onClick={() => {
-                    setvoirVehiculeListePupup(true);
-                    setFilter("inactive");
-                  }}
-                  className="text-orange-400 underline cursor-pointer"
-                >
-                  {t("voir")}
-                </p>
-              </div>
-            )}
+
             {/* ////////////////////////////////////////////////////////////////////////////// */}
             {!voirPlus && (
               <div>
@@ -4111,47 +4057,44 @@ function RapportGroupe({
             preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
           }  w-full mt-4 mb-20 overflow-x-auto overflow-y-hidden`}
         >
-          {/*  */}
-          <thead>
-            <div className="h-auto-  w-full- overflow-y-scroll--">
-              <tr className="bg-orange-50  relative z-20 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-                <th className="border border-l-4  border-l-orange-200  min-w-[0rem] max-w-[0rem]"></th>
-                <th className="text-start border-l-4--   border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem] max-w-[4rem]">
-                  #
-                </th>
+          <thead className="">
+            <tr className="bg-orange-50  relative z-20 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+              <th className="border border-l-4  border-l-orange-200  min-w-[0rem] max-w-[0rem]"></th>
+              <th className="text-start border-l-4--   border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem] max-w-[4rem]">
+                #
+              </th>
 
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[18rem] max-w-[18rem]">
-                  {t("Véhicule")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2  min-w-[13rem] max-w-[13rem]">
-                  {t("Date et Heure de départ")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                  {t("Date et Heure d'arrivée")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  {t("Vitesse moyenne")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  {t("Vitesse maximale")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  {t("Distance totale")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                  {t("Nombre d'arrêts")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
-                  {t("Temps en mouvement")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                  {t("Adresse de départ")}
-                </th>
-                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                  {t("Adresse d'arrivée")}
-                </th>
-              </tr>
-            </div>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[18rem] max-w-[18rem]">
+                {t("Véhicule")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2  min-w-[13rem] max-w-[13rem]">
+                {t("Date et Heure de départ")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
+                {t("Date et Heure d'arrivée")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                {t("Vitesse moyenne")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                {t("Vitesse maximale")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                {t("Distance totale")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                {t("Nombre d'arrêts")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
+                {t("Temps en mouvement")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
+                {t("Adresse de départ")}
+              </th>
+              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
+                {t("Adresse d'arrivée")}
+              </th>
+            </tr>
           </thead>
 
           <div
@@ -4342,29 +4285,18 @@ function RapportGroupe({
                         matchedVehicle.véhiculeDetails[0] &&
                         matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-                      const isToday =
-                        lastUpdateTimestampMs - todayTimestamp > 0;
-
                       ////////////////////////////////////////////////////////////////////
 
                       let iconBg = "text-red-500 dark:text-red-500";
                       let vehiculeBG =
                         "bg-red-50/50-- hover:bg-red-100 dark:hover:bg-gray-700";
 
-                      if (
-                        hasDetails &&
-                        isMoving &&
-                        (isToday || (isSearching && !isToday))
-                      ) {
+                      if (hasDetails && isMoving) {
                         iconBg =
                           "text-green-500 bg-green-50/50  dark:text-green-500 border-l-green-600 dark:border-l-green-600";
                         vehiculeBG =
                           "bg-green-50/50-- text-green-800 dark:text-green-200 font-semibold hover:bg-green-100 dark:hover:bg-gray-700";
-                      } else if (
-                        hasDetails &&
-                        (noSpeed || (isMoving && !isToday)) &&
-                        isActive
-                      ) {
+                      } else if (hasDetails && noSpeed && isActive) {
                         iconBg =
                           "text-red-500  bg-red-50/50 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
                         vehiculeBG =

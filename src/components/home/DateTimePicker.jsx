@@ -21,8 +21,6 @@ const DateTimePicker = ({
 }) => {
   const {} = useContext(DataContext);
 
-  
-
   const today = new Date(); // La date actuelle
 
   useEffect(() => {

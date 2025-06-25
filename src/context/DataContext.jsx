@@ -30,6 +30,16 @@ const DataContextProvider = ({ children }) => {
     });
   };
 
+  const [documentationPage, setDocumentationPage] = useState("Dashboard");
+
+  const [progressAnimationStart, setProgressAnimationStart] = useState(0);
+  const [runningAnimationProgressLoading, setRunningAnimationProgressLoading] =
+    useState(false);
+  const [
+    runningAnimationProgressDuration,
+    setRunningAnimationProgressDuration,
+  ] = useState(200);
+
   // mise a jour auto des donnees des devices
   const [updateAuto, setupdateAuto] = useState(false);
   const [chooseOtherLanguagePopup, setChooseOtherLanguagePopup] =
@@ -81,7 +91,7 @@ const DataContextProvider = ({ children }) => {
 
   // to store login user data  // account, username, password
   const [readDocumentation, setReadDocumentation] = useState(false);
-  const [documentationPage, setDocumentationPage] = useState("connecter");
+  // const [documentationPage, setDocumentationPage] = useState("connecter");
   const seConnecterRef = useRef();
   const docAddVehiculeRef = useRef();
   const docModifierVehiculeRef = useRef();
@@ -261,9 +271,11 @@ const DataContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setDashboardLoadingEffect(false);
-    }, 3000);
+    if (dashboardLoadingEffect) {
+      setTimeout(() => {
+        setDashboardLoadingEffect(false);
+      }, 5000);
+    }
   }, [dashboardLoadingEffect]);
 
   useEffect(() => {
@@ -652,7 +664,7 @@ const DataContextProvider = ({ children }) => {
   });
 
   // Pour le réglage des difference d'heure du timezone
-  let addHoursFrom = -17;
+  let addHoursFrom = -5;
   let addHoursTo = 0;
   if (selectUTC > -5 && selectUTC <= 0) {
     addHoursFrom = -7;
@@ -748,7 +760,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 7);
+      const request = indexedDB.open("MyDatabase", 8);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -808,12 +820,12 @@ const DataContextProvider = ({ children }) => {
         //   db.createObjectStore("userDevices", { autoIncrement: true });
         // }
 
-        if (!db.objectStoreNames.contains("donneeFusionnéForRapport")) {
-          // Auto-incrémente sans keyPath pour stocker uniquement les données
-          db.createObjectStore("donneeFusionnéForRapport", {
-            autoIncrement: true,
-          });
-        }
+        // if (!db.objectStoreNames.contains("donneeFusionnéForRapport")) {
+        //   // Auto-incrémente sans keyPath pour stocker uniquement les données
+        //   db.createObjectStore("donneeFusionnéForRapport", {
+        //     autoIncrement: true,
+        //   });
+        // }
       };
 
       request.onerror = (error) => reject(error);
@@ -952,13 +964,13 @@ const DataContextProvider = ({ children }) => {
   //   });
   // }, []);
 
-  useEffect(() => {
-    getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
-      // if (data.length > 0) {
-      setDonneeFusionnéForRapport(data);
-      // }
-    });
-  }, []);
+  // useEffect(() => {
+  //   getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
+  //     // if (data.length > 0) {
+  //     setDonneeFusionnéForRapport(data);
+  //     // }
+  //   });
+  // }, []);
 
   // Sauvegarder les données lorsqu'elles changent
   useEffect(() => {
@@ -1032,12 +1044,12 @@ const DataContextProvider = ({ children }) => {
   //   }
   // }, [userDevices]);
 
-  useEffect(() => {
-    // console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
-    if (donneeFusionnéForRapport) {
-      saveDataToIndexedDB("donneeFusionnéForRapport", donneeFusionnéForRapport);
-    }
-  }, [donneeFusionnéForRapport]);
+  // useEffect(() => {
+  //   // console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
+  //   if (donneeFusionnéForRapport) {
+  //     saveDataToIndexedDB("donneeFusionnéForRapport", donneeFusionnéForRapport);
+  //   }
+  // }, [donneeFusionnéForRapport]);
 
   // Réinitialiser IndexedDB
   const resetIndexedDB = () => {
@@ -1068,12 +1080,11 @@ const DataContextProvider = ({ children }) => {
         if (storeName === "geofenceData") {
           setGeofenceData([]);
         }
-        if (storeName === "donneeFusionnéForRapport") {
-          setDonneeFusionnéForRapport([]);
-        }
-        //
+        //   if (storeName === "donneeFusionnéForRapport") {
+        // setDonneeFusionnéForRapport([]);
+        //   }
+        //   //
       }, 3000);
-      //
     } catch (error) {
       console.error("Erreur d'ouverture de la base :", error);
     }
@@ -1250,11 +1261,12 @@ const DataContextProvider = ({ children }) => {
           let fieldValue = fields[i].textContent;
           userData[fieldName] = fieldValue;
         }
+        setDashboardLoadingEffect(true);
 
         // navigate("/home");
         if (account === "sysadmin") {
           setIsDashboardHomePage(true);
-          navigate("/dashboard_admin_page");
+          navigate("/home");
           setAdminUserData(userData);
 
           // localStorage.setItem("adminUserData", userData);
@@ -1282,11 +1294,9 @@ const DataContextProvider = ({ children }) => {
           setIsDashboardHomePage(false);
 
           localStorage.setItem("userData", JSON.stringify(userData));
-
           localStorage.setItem("account", account);
           localStorage.setItem("username", user);
           localStorage.setItem("password", password);
-
           localStorage.setItem("currentCountry", country);
 
           // setAccount(localStorage.getItem("account") || "");
@@ -1301,7 +1311,7 @@ const DataContextProvider = ({ children }) => {
 
           setTimeout(() => {
             console.log("aaaaaaaaaaaaaaaaaa");
-            fetchVehicleData();
+            fetchVehicleData(account, user, password);
           }, 3000);
         }
 
@@ -1781,6 +1791,21 @@ const DataContextProvider = ({ children }) => {
 
     if (fetchAllOtherData) {
       loadForManySecond();
+      setProgressAnimationStart(0);
+      setRunningAnimationProgressLoading(true);
+      if (newData?.length < 20) {
+        setRunningAnimationProgressDuration(50);
+      } else if (newData?.length < 40) {
+        setRunningAnimationProgressDuration(100);
+      } else if (newData?.length < 60) {
+        setRunningAnimationProgressDuration(150);
+      } else if (newData?.length < 70) {
+        setRunningAnimationProgressDuration(200);
+      } else if (newData?.length < 80) {
+        setRunningAnimationProgressDuration(250);
+      } else {
+        setRunningAnimationProgressDuration(300);
+      }
       processAllComptes(newData, 20); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
@@ -1788,119 +1813,6 @@ const DataContextProvider = ({ children }) => {
     return newData;
   };
 
-  //   const fetchAllComptes = async (
-  //     account,
-  //     user,
-  //     password,
-  //     fetchAllOtherData = true
-  //   ) => {
-  //     console.log("fetchComptes: lancement de la requête XML");
-  //     const xml = `
-  // <GTSRequest command="dbget">
-  //   <Authorization account="${account}" user="${user}" password="${password}" />
-  //   <Record table="Account" partial="true" />
-  // </GTSRequest>
-  //   `;
-
-  //     console.log("IP address:", currentAPI);
-  //     console.log("requete +++++++++++++++++++++++++", xml);
-
-  //     const res = await fetch(currentAPI, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/xml" },
-  //       body: xml,
-  //     });
-  //     const text = await res.text();
-  //     console.log("result :", text);
-  //     const doc = new DOMParser().parseFromString(text, "application/xml");
-  //     const result = doc
-  //       .getElementsByTagName("GTSResponse")[0]
-  //       ?.getAttribute("result");
-  //     const records = Array.from(doc.getElementsByTagName("Record"));
-
-  //     const data =
-  //       result === "success"
-  //         ? records.map((rec) =>
-  //             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
-  //               obj[fld.getAttribute("name")] = fld.textContent;
-  //               return obj;
-  //             }, {})
-  //           )
-  //         : [];
-
-  //     let newData;
-  //     if (user === "admin") {
-  //       newData = data;
-  //     } else if (user === "ht") {
-  //       newData = data?.filter((account) => account?.notes === "ht");
-  //     } else if (user === "rd") {
-  //       newData = data?.filter((account) => account?.notes === "rd");
-  //     }
-
-  //     console.log("fetchComptes: résultats------- =", user, newData);
-
-  //     setComptes(newData);
-
-  //     if (fetchAllOtherData) {
-  //       loadForManySecond();
-  //       // Déclenchement automatique des autres fetchs pour chaque compte
-  //       ListeDesRolePourLesUserFonction(account, user, password);
-  //       newData?.forEach((acct) => {
-  //         const id = acct.accountID;
-  //         const pwd = acct.password;
-
-  //         // setTimeout(() => {
-  //         fetchAccountDevices(id, pwd)
-  //           .then((devices) => {
-  //             fetchVehiculeDetails(id, devices, pwd);
-  //           })
-  //           .catch((err) => {
-  //             console.error("Erreur lors du chargement des véhicules :", err);
-  //             setError("Erreur lors du chargement des véhicules.");
-  //           });
-  //         // }, 500);
-
-  //         setTimeout(() => {
-  //           // Groupes + Devices par groupe
-  //           fetchAccountGroupes(id, pwd)
-  //             .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-  //             .catch((err) => {
-  //               console.error(
-  //                 "Erreur lors du chargement des groupes ou des devices de groupes :",
-  //                 err
-  //               );
-  //               setError("Erreur lors de la mise à jour des groupes.");
-  //             });
-  //         }, 1000);
-
-  //         setTimeout(() => {
-  //           // Utilisateurs + Devices par utilisateur
-  //           fetchAccountUsers(id, pwd)
-  //             .then((users) => {
-  //               fetchUserDevices(id, users);
-  //               fetchUserGroupes(id, users);
-  //             })
-  //             .catch((err) => {
-  //               console.error(
-  //                 "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-  //                 err
-  //               );
-  //               setError("Erreur lors de la mise à jour des utilisateurs.");
-  //             });
-  //         }, 2000);
-
-  //         setTimeout(() => {
-  //           fetchAccountGeofences(id, pwd).catch((err) => {
-  //             console.error("Erreur lors du chargement des geofences :", err);
-  //             setError("Erreur lors du chargement des geofences.");
-  //           });
-  //         }, 3000);
-  //       });
-  //     }
-  //     return newData;
-  //   };
-
-  // 2) Récupérer accountDevices
 
   const fetchAccountDevices = async (accountID, password) => {
     console.log(
@@ -5237,6 +5149,9 @@ const DataContextProvider = ({ children }) => {
     localStorage.removeItem("userData");
     setUserData(null);
 
+    localStorage.removeItem("userRole");
+    setUserRole(null);
+
     localStorage.removeItem("adminUserData");
     setAdminUserData(null);
 
@@ -5259,13 +5174,10 @@ const DataContextProvider = ({ children }) => {
 
     localStorage.removeItem("mergedDataHome");
     console.log("setMergedDataHome77777777777777");
-
     setMergedDataHome(null);
-
-    localStorage.removeItem("mergedDataHome");
+    setDonneeFusionnéForRapport([]);
 
     // localStorage.removeItem("donneeFusionnéForRapport");
-    setDonneeFusionnéForRapport([]);
 
     setVéhiculeActiveToday([]);
     setVéhiculeNotActiveToday([]);
@@ -5273,11 +5185,13 @@ const DataContextProvider = ({ children }) => {
     setVéhiculeEnMouvementMaintenant([]);
     setSearchDonneeFusionnéForRapport([]);
 
-    localStorage.removeItem("rapportVehicleDetails");
+    // localStorage.removeItem("rapportVehicleDetails");
     setRapportVehicleDetails([]);
 
     localStorage.removeItem("selectedTimeZone");
     setSelectedTimeZone("");
+
+    // localStorage.removeItem("userCredentials");
 
     localStorage.removeItem("selectUTC");
     // setSelectUTC("");
@@ -6246,14 +6160,32 @@ const DataContextProvider = ({ children }) => {
   const processVehicle = async (vehicle, isLastBatch = false) => {
     try {
       fetchVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+    } catch (error) {
+      console.error("Erreur pour le véhicule", vehicle?.deviceID, ":", error);
+    }
+  };
 
+  const processVehicleDetails = async (
+    vehicle,
+    isLastBatch = false,
+    timeFrom,
+    timeTo
+  ) => {
+    try {
       if (isLastBatch) {
-        await fetchRapportVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+        await fetchRapportVehicleDetails(
+          vehicle?.deviceID,
+          timeFrom || TimeFrom,
+          timeTo || TimeTo
+        );
       } else {
-        fetchRapportVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+        fetchRapportVehicleDetails(
+          vehicle?.deviceID,
+          timeFrom || TimeFrom,
+          timeTo || TimeTo
+        );
       }
-
-      // await delay(500);
+      await delay(500);
     } catch (error) {
       console.error("Erreur pour le véhicule", vehicle?.deviceID, ":", error);
     }
@@ -6270,6 +6202,7 @@ const DataContextProvider = ({ children }) => {
       for (const vehicle of batch) {
         await processVehicle(vehicle, isLastBatch);
         done += 1;
+        setProgress(Math.round((done / total) * 100));
         setProgressDataUser(Math.round((done / total) * 100));
       }
 
@@ -6277,11 +6210,45 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  const processAllVehiclesDetails = async (
+    vehicles,
+    timeFrom,
+    timeTo,
+    batchSize = 20
+  ) => {
+    const total = vehicles?.length;
+    let done = 0;
+    for (let i = 0; i < total; i += batchSize) {
+      const batch = vehicles.slice(i, i + batchSize);
+      const isLastBatch = i + batchSize >= total;
+      for (const vehicle of batch) {
+        await processVehicleDetails(vehicle, isLastBatch, timeFrom, timeTo);
+        done += 1;
+        setProgress(Math.round((done / total) * 100));
+        setProgressDataUser(Math.round((done / total) * 100));
+      }
+      if (!isLastBatch) await delay(1000);
+    }
+  };
+
+  const [
+    fetchVehicleDataFromRapportGroupe,
+    setFetchVehicleDataFromRapportGroupe,
+  ] = useState(false);
+
   // Requête pour afficher tous les véhicule mais sans details
-  const fetchVehicleData = async () => {
-    const accountID = account || localStorage.getItem("account") || "";
-    const userID = username || localStorage.getItem("username") || "";
-    const password = localStorage.getItem("password") || "";
+  const fetchVehicleData = async (
+    accountID,
+    userID,
+    password,
+    onlyLastResult = true,
+    timeFrom,
+    timeTo
+  ) => {
+    // const accountID = account || localStorage.getItem("account") || "";
+    // const userID = username || localStorage.getItem("username") || "";
+    // const password = localStorage.getItem("password") || "";
+    setDashboardLoadingEffect(true);
 
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -6342,12 +6309,53 @@ const DataContextProvider = ({ children }) => {
         véhiculeData.push(vehicleRecord);
       }
 
-      setVehicleData(véhiculeData);
-      console.log("aaaaaaaaaaaaaaaaaa5555555555");
       console.log("véhiculeData", véhiculeData);
+      console.log("onlyLastResult", onlyLastResult);
+      setVehicleData(véhiculeData);
+      if (onlyLastResult) {
+        setFetchVehicleDataFromRapportGroupe(false);
+        // await delay(1000);
+        if (véhiculeData?.length < 50) {
+          setRunningAnimationProgressDuration(10);
+        } else if (véhiculeData?.length < 100) {
+          setRunningAnimationProgressDuration(30);
+        } else if (véhiculeData?.length < 200) {
+          setRunningAnimationProgressDuration(50);
+        } else if (véhiculeData?.length < 300) {
+          setRunningAnimationProgressDuration(70);
+        } else if (véhiculeData?.length < 400) {
+          setRunningAnimationProgressDuration(100);
+        } else {
+          setRunningAnimationProgressDuration(150);
+        }
+        setProgressAnimationStart(0);
+        setRunningAnimationProgressLoading(true);
 
-      // await delay(1000);
-      processAllVehicles(véhiculeData);
+        processAllVehicles(véhiculeData);
+      } else {
+        setFetchVehicleDataFromRapportGroupe(true);
+
+        // await delay(1000);
+        if (véhiculeData?.length < 20) {
+          setRunningAnimationProgressDuration(100);
+        } else if (véhiculeData?.length < 50) {
+          setRunningAnimationProgressDuration(200);
+        } else if (véhiculeData?.length < 100) {
+          setRunningAnimationProgressDuration(300);
+        } else if (véhiculeData?.length < 200) {
+          setRunningAnimationProgressDuration(400);
+        } else if (véhiculeData?.length < 300) {
+          setRunningAnimationProgressDuration(500);
+        } else if (véhiculeData?.length < 500) {
+          setRunningAnimationProgressDuration(600);
+        } else {
+          setRunningAnimationProgressDuration(700);
+        }
+        setProgressAnimationStart(0);
+        setRunningAnimationProgressLoading(true);
+
+        processAllVehiclesDetails(véhiculeData, timeFrom, timeTo);
+      }
 
       handleUserError(xmlDoc);
     } catch (error) {
@@ -6359,9 +6367,23 @@ const DataContextProvider = ({ children }) => {
   };
 
   const fetchVehicleDetails = async (Device, TimeFrom, TimeTo) => {
-    const accountID = account || localStorage.getItem("account") || "";
-    const userID = username || localStorage.getItem("username") || "";
-    const password = localStorage.getItem("password") || "";
+    // const accountID = account || localStorage.getItem("account") || "";
+    // const userID = username || localStorage.getItem("username") || "";
+    // const password = localStorage.getItem("password") || "";
+
+    let accountID;
+    let userID;
+    let password;
+
+    if (isDashboardHomePage && currentAccountSelected) {
+      accountID = currentAccountSelected?.accountID;
+      userID = "admin";
+      password = currentAccountSelected?.password;
+    } else if (!isDashboardHomePage) {
+      accountID = account || localStorage.getItem("account") || "";
+      userID = username || localStorage.getItem("username") || "";
+      password = localStorage.getItem("password") || "";
+    }
 
     const adjustedTimeFrom = "2020-01-01 21:00:00";
     const adjustedTimeTo = "2030-05-14 21:00:00";
@@ -6524,25 +6546,15 @@ const DataContextProvider = ({ children }) => {
     return dataFusionne;
   };
 
-  // Pour lancer la requête de details des véhicules
-  // ????????????????????????????????????????????????????????????????????????????
-  // useEffect(() => {
-  //   if (userData) {
-  //     fetchVehicleData();
-  //   }
-  // }, [userData]);
-
-  const homePageReload = () => {
-    // const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
-    fetchVehicleData();
-    console.log("Start fetching.............");
-    if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
-      console.log("reload HomePage");
-      (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
-        fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-        fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-      });
-    }
+  const homePageReload = (
+    account,
+    user,
+    password,
+    onlyLastResult = true,
+    timeFrom = null,
+    timeTo = null
+  ) => {
+    fetchVehicleData(account, user, password, onlyLastResult, timeFrom, timeTo);
   };
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
@@ -6555,7 +6567,6 @@ const DataContextProvider = ({ children }) => {
           // console.log("reload HomePage");
           (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
             fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-            fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
           });
           setEstLancerUpdateAuto(true);
         }
@@ -6607,16 +6618,33 @@ const DataContextProvider = ({ children }) => {
     incrementerRequête();
     console
       .log
-      // "++++++++++++++++ Requête effectué: fetchRapportVehicleDetails"
+      // "++++++++++++++++ Requête effectué: "
       ();
 
     // /////////
     // Ajuste les heures de TimeFrom et TimeTo
 
     // const { accountID, userID, password } = userData;
-    const accountID = account || localStorage.getItem("account") || "";
-    const userID = username || localStorage.getItem("username") || "";
-    const password = localStorage.getItem("password") || "";
+    let accountID;
+    let userID;
+    let password;
+
+    if (isDashboardHomePage && currentAccountSelected) {
+      accountID = currentAccountSelected?.accountID;
+      userID = "admin";
+      password = currentAccountSelected?.password;
+    } else if (!isDashboardHomePage) {
+      accountID = account || localStorage.getItem("account") || "";
+      userID = username || localStorage.getItem("username") || "";
+      password = localStorage.getItem("password") || "";
+    }
+
+    console.log("TimeFrom", TimeFrom);
+    console.log("TimeTo", TimeTo);
+    console.log("adjustedTimeFrom", adjustedTimeFrom);
+    console.log("adjustedTimeTo", adjustedTimeTo);
+    console.log("addHoursFrom", addHoursFrom);
+    console.log("addHoursTo", addHoursTo);
 
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -6648,6 +6676,8 @@ const DataContextProvider = ({ children }) => {
         
       </EventData>
     </GTSRequest>`;
+
+    console.log("xml:", xmlData);
 
     try {
       const response = await fetch(currentAPI, {
@@ -6710,10 +6740,26 @@ const DataContextProvider = ({ children }) => {
         );
       });
 
-      setRapportVehicleDetails((prevDetails) => [
-        ...prevDetails.filter((detail) => detail.Device !== Device),
-        ...filteredVehicleDetails,
-      ]);
+      console.log(
+        "filteredVehicleDetails pour le device: :",
+        Device,
+        "---------",
+        filteredVehicleDetails
+      );
+
+      // setRapportVehicleDetails((prevDetails) => [
+      //   ...prevDetails.filter((detail) => detail.Device !== Device),
+      //   ...filteredVehicleDetails,
+      // ]);
+      setRapportVehicleDetails((prevDetails) => {
+        const autresDetails = prevDetails.filter(
+          (detail) => detail.Device !== Device
+        );
+        if (filteredVehicleDetails.length === 0) {
+          return autresDetails;
+        }
+        return [...autresDetails, ...filteredVehicleDetails];
+      });
       handleUserError(xmlDoc);
 
       // rapportFusionnerDonnees();
@@ -6734,89 +6780,18 @@ const DataContextProvider = ({ children }) => {
   const rapportFusionnerDonnees = () => {
     if (!véhiculeData || !rapportVehicleDetails) return [];
 
-    const getTodayTimestamp = () => {
-      const now = new Date();
-      now.setHours(0, 0, 0, 0); // Minuit
-      return Math.floor(now.getTime() / 1000); // Convertir en secondes
-    };
-    const todayTimestamp = getTodayTimestamp() * 1000;
-
-    // Récupérer les anciens détails depuis localStorage
-    const previousData = (() => {
-      try {
-        // Initialiser une valeur par défaut vide avant de charger les données de IndexedDB
-        let data = [];
-
-        // Charger les données depuis IndexedDB
-        getDataFromIndexedDB("donneeFusionnéForRapport").then((result) => {
-          // Vérifier si les données sont valides et les définir
-          data = Array.isArray(result) ? result : [];
-        });
-
-        return data || Array.isArray(donneeFusionnéForRapport)
-          ? donneeFusionnéForRapport
-          : [];
-        // const data = donneeFusionnéForRapport;
-
-        // return Array.isArray(data) ? data : [];
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données du localStorage:",
-          error
-        );
-        return [];
-      }
-    })();
-
     const dataFusionné = véhiculeData.map((véhicule) => {
-      // Trouver les nouveaux détails pour le véhicule
       const newDetails = rapportVehicleDetails?.filter(
         (detail) => detail.Device === véhicule?.deviceID
       );
 
-      const todayMidnight = new Date();
-      todayMidnight.setHours(0, 0, 0, 0); // Met l'heure à 00:00:00.000
-
-      const previousDetails = previousData
-        ?.find((prev) => prev.deviceID === véhicule?.deviceID)
-        ?.véhiculeDetails?.filter((detail) => {
-          const timestampDate = new Date(detail.timestamp * 1000); // Conversion du timestamp en date
-          return timestampDate >= todayMidnight;
-        });
-
-      // Conserver les anciens détails si aucun nouveau n'est trouvé
-      const updatedDetails =
-        newDetails && newDetails.length > 0
-          ? newDetails
-          : previousDetails || [];
-
-      // // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
-
       return {
         ...véhicule,
-        véhiculeDetails: updatedDetails,
+        véhiculeDetails: newDetails && newDetails.length > 0 ? newDetails : [],
       };
     });
 
-    // Met à jour l'état avec les données fusionnées
     setDonneeFusionnéForRapport(dataFusionné);
-
-    try {
-      setDonneeFusionnéForRapport(dataFusionné);
-
-      // localStorage.setItem(
-      //   "donneeFusionnéForRapport",
-      //   JSON.stringify(dataFusionné)
-      // );
-    } catch (error) {
-      if (error.name === "QuotaExceededError") {
-        // console.error(
-        //   "Quota dépassé pour donneeFusionnéForRapport : essayez de réduire la taille des données ou de nettoyer localStorage."
-        // );
-      } else {
-        console.error("Erreur de stockage : ", error);
-      }
-    }
 
     return dataFusionné;
   };
@@ -6852,7 +6827,14 @@ const DataContextProvider = ({ children }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
   // Requête pour la recherche de details des véhicule dans la page rapport
-  const fetchSearchRapportVehicleDetails = async (Device, TimeFrom, TimeTo) => {
+  const fetchSearchRapportVehicleDetails = async (
+    Device,
+    TimeFrom,
+    TimeTo,
+    adminAccount,
+    adminUser,
+    adminPassword
+  ) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -6879,7 +6861,9 @@ const DataContextProvider = ({ children }) => {
     const password = localStorage.getItem("password") || "";
 
     const xmlData = `<GTSRequest command="eventdata">
-      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Authorization account="${adminAccount || accountID}" user="${
+      adminUser || userID
+    }" password="${adminPassword || password}" />
       <EventData>
         <Device>${Device}</Device>
         <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
@@ -7062,79 +7046,11 @@ const DataContextProvider = ({ children }) => {
   //  Pour filtrer les donnees dans la page rapport
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
-  let currentDataFusionné =
-    searchDonneeFusionnéForRapport.length > 0
-      ? searchDonneeFusionnéForRapport
-      : donneeFusionnéForRapport;
+  let currentDataFusionné = donneeFusionnéForRapport;
 
   //  Pour filtrer les donnees dans la page rapport
   useEffect(() => {
-    if (
-      searchDonneeFusionnéForRapport.length > 0 &&
-      currentDataFusionné &&
-      currentDataFusionné?.length > 0
-    ) {
-      // 2. Met à jour l'état avec tous les véhicules ayant au moins un événement avec `speedKPH >= 1`
-      const véhiculeActiveToday = currentDataFusionné?.filter((véhicule) =>
-        véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1)
-      );
-      setVéhiculeActiveToday(véhiculeActiveToday);
-
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      // 3. Met à jour l'état avec tous les véhicules n'ayant aucun événement avec `speedKPH >= 1`
-      const véhiculeNotActiveToday = currentDataFusionné?.filter(
-        (véhicule) =>
-          véhicule?.véhiculeDetails?.length > 0 && // Vérifie que des détails existent
-          véhicule?.véhiculeDetails.every((detail) => detail.speedKPH <= 0) // Tous les détails doivent avoir speedKPH <= 0
-      );
-
-      setVéhiculeNotActiveToday(véhiculeNotActiveToday);
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      // 4. Met à jour l'état avec tous les véhicules dont `véhiculeDetails[0].speedKPH >= 1`
-      const véhiculeEnMouvementMaintenant = currentDataFusionné?.filter(
-        (véhicule) =>
-          véhicule?.véhiculeDetails &&
-          véhicule?.véhiculeDetails?.length &&
-          véhicule?.véhiculeDetails[0]?.speedKPH >= 1
-      );
-      setVéhiculeEnMouvementMaintenant(véhiculeEnMouvementMaintenant);
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      // 5. Met à jour l'état avec tous les véhicules dont `lastUpdateTime` est supérieur à 24h par rapport à l'heure actuelle
-      const véhiculeHorsService = currentDataFusionné?.filter((véhicule) => {
-        const lastUpdate = new Date(véhicule?.lastUpdateTime);
-        const now = new Date();
-        const diffHeures = (now - lastUpdate) / (1000 * 60 * 60);
-        return véhicule?.véhiculeDetails?.length <= 0 || diffHeures > 24;
-      });
-
-      setVéhiculeHorsService(véhiculeHorsService);
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    } else if (
-      searchDonneeFusionnéForRapport.length <= 0 &&
-      currentDataFusionné &&
-      currentDataFusionné?.length > 0
-    ) {
+    if (currentDataFusionné && currentDataFusionné?.length > 0) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -7161,7 +7077,7 @@ const DataContextProvider = ({ children }) => {
 
         const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
-        return hasBeenMoving && isToday;
+        return hasBeenMoving;
       });
 
       setVéhiculeActiveToday(véhiculeActiveToday);
@@ -7210,7 +7126,8 @@ const DataContextProvider = ({ children }) => {
         // return hasDetails && noSpeed && isActive;
 
         return (
-          hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
+          hasDetails && isActive && noSpeed
+          // hasDetails && isActive && (noSpeed || (hasBeenMoving && !isToday))
         );
       });
 
@@ -7268,11 +7185,7 @@ const DataContextProvider = ({ children }) => {
 
       setVéhiculeHorsService(véhiculeHorsService);
     }
-  }, [
-    currentDataFusionné,
-    searchDonneeFusionnéForRapport,
-    donneeFusionnéForRapport,
-  ]);
+  }, [currentDataFusionné, donneeFusionnéForRapport]);
 
   // Fonction pour mettre à jour le véhicule actuel
   const updateCurrentVéhicule = () => {
@@ -7309,103 +7222,6 @@ const DataContextProvider = ({ children }) => {
     return () => clearInterval(intervalId);
   }, []); // Pas de dépendances, exécution régulière
 
-  // useEffect(() => {
-  //   const checkData = async () => {
-  //     try {
-  //       const geofenceDataDB = await getDataFromIndexedDB("geofenceData");
-  //       const vehicleDataDB = await getDataFromIndexedDB("mergedDataHome");
-  //       // const vehicleDetailsDB = await getDataFromIndexedDB("vehicleDetailsStore");
-  //       const rapportVehicleDetailsDB = await getDataFromIndexedDB(
-  //         "donneeFusionnéForRapport"
-  //       );
-
-  //       if (
-  //         geofenceDataRef.current?.length > 0 ||
-  //         geofenceData?.length > 0 ||
-  //         geofenceDataDB.length > 0
-  //       ) {
-  //         // console.log("Données geofence disponibles", geofenceDataRef.current);
-  //       } else {
-  //         if (
-  //           véhiculeDataRef.current?.length > 0 ||
-  //           véhiculeData?.length > 0 ||
-  //           vehicleDataDB.length > 0
-  //         ) {
-  //           GeofenceDataFonction(account, username, password);
-  //         }
-  //         console.log("Pas de données dans geofence", geofenceDataRef.current);
-  //       }
-
-  //       if (
-  //         véhiculeDataRef.current?.length > 0 ||
-  //         véhiculeData?.length > 0 ||
-  //         vehicleDataDB.length > 0
-  //       ) {
-  //         // console.log("Données véhiculeData disponibles", vehicleDataDB);
-  //       } else {
-  //         fetchVehicleData();
-  //         console.log("Pas de données véhiculeData", vehicleDataDB);
-  //       }
-
-  //       if (
-  //         vehicleDetailsRef.current?.length > 0 ||
-  //         vehicleDetails?.length > 0 ||
-  //         vehicleDataDB.length > 0
-  //       ) {
-  //         // console.log(
-  //         //   "Données vehicleDetails disponibles",
-  //         //   vehicleDetailsRef.current
-  //         // );
-  //       } else {
-  //         console.log(
-  //           "Pas de données vehicleDetails",
-  //           vehicleDetailsRef.current
-  //         );
-  //         if (
-  //           véhiculeDataRef.current?.length > 0 ||
-  //           véhiculeData?.length > 0 ||
-  //           vehicleDataDB.length > 0
-  //         ) {
-  //           véhiculeDataRef.current?.forEach((véhicule) => {
-  //             fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-  //           });
-  //         }
-  //       }
-
-  //       if (
-  //         rapportVehicleDetailsRef.current?.length > 0 ||
-  //         rapportVehicleDetails?.length > 0 ||
-  //         rapportVehicleDetailsDB.length > 0
-  //       ) {
-  //         // console.log("Données rapport disponibles", rapportVehicleDetailsDB);
-  //       } else {
-  //         console.log("Pas de données rapport", rapportVehicleDetailsDB);
-
-  //         if (
-  //           véhiculeDataRef.current?.length > 0 ||
-  //           véhiculeData?.length > 0 ||
-  //           vehicleDataDB.length > 0
-  //         ) {
-  //           véhiculeDataRef.current?.forEach((véhicule) => {
-  //             fetchRapportVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-  //           });
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error(
-  //         "Erreur lors de la récupération des données IndexedDB",
-  //         error
-  //       );
-  //     }
-  //   };
-
-  //   const intervalId = setInterval(() => {
-  //     // checkData();
-  //   }, 20000);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
   //
   //
   //
@@ -7437,7 +7253,14 @@ const DataContextProvider = ({ children }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
   // pour afficher les detail d'hun véhicule dans Historique page (utilise pour les recherches)
-  const fetchHistoriqueVehicleDetails = async (Device, TimeFrom, TimeTo) => {
+  const fetchHistoriqueVehicleDetails = async (
+    Device,
+    TimeFrom,
+    TimeTo,
+    adminAccount,
+    adminUser,
+    adminPassword
+  ) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
       const date = new Date(time);
@@ -7447,6 +7270,13 @@ const DataContextProvider = ({ children }) => {
 
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
+
+    console.log("TimeFrom", TimeFrom);
+    console.log("TimeTo", TimeTo);
+    console.log("adjustedTimeFrom", adjustedTimeFrom);
+    console.log("adjustedTimeTo", adjustedTimeTo);
+    console.log("addHoursFrom", addHoursFrom);
+    console.log("addHoursTo", addHoursTo);
 
     console.log("Start fetching.........");
     setLoadingHistoriqueFilter(true);
@@ -7467,7 +7297,9 @@ const DataContextProvider = ({ children }) => {
     const password = localStorage.getItem("password") || "";
 
     const xmlData = `<GTSRequest command="eventdata">
-      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Authorization account="${adminAccount || accountID}" user="${
+      adminUser || userID
+    }" password="${adminPassword || password}" />
       <EventData>
         <Device>${Device}</Device>
         <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
@@ -7492,6 +7324,8 @@ const DataContextProvider = ({ children }) => {
       </EventData>
     </GTSRequest>`;
 
+    console.log("xmlData", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -7500,6 +7334,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      // console.log("data", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -7553,6 +7388,34 @@ const DataContextProvider = ({ children }) => {
       });
 
       setVéhiculeHistoriqueDetails(filteredVehicleDetails);
+      console.log("filteredVehicleDetails", filteredVehicleDetails);
+      // if (forCurrentDevice) {
+      const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+      const foundVehicle = (
+        isDashboardHomePage ? accountDevices : dataFusionné
+      )?.find((v) => v.deviceID === Device);
+
+      if (foundVehicle) {
+        const foundVehicleWidthFilteredVehicleDetails = {
+          ...foundVehicle,
+          véhiculeDetails: filteredVehicleDetails,
+        };
+
+        setCurrentPersonelVéhicule(foundVehicleWidthFilteredVehicleDetails);
+        setCurrentVéhicule(foundVehicleWidthFilteredVehicleDetails);
+        setLoadingHistoriqueFilter(false);
+        setRapportDataLoading(false);
+
+        console.log(
+          "foundVehicleWidthFilteredVehicleDetails",
+          foundVehicleWidthFilteredVehicleDetails
+        );
+      } else {
+        console.log("Pas d'appareil trouver avec l'ID:", Device);
+      }
+      // }
+      setRapportDataLoading(false);
 
       setLoadingHistoriqueFilter(false);
       setTimeout(() => {
@@ -7676,7 +7539,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(description);
 
         setError("");
-        fetchVehicleData();
         setCreateVéhiculeLoading(false);
         navigate("/home");
       } else {
@@ -7784,7 +7646,6 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName(description);
 
-        fetchVehicleData();
         setCreateVéhiculeLoading(false);
         navigate("/home");
       } else {
@@ -7900,7 +7761,6 @@ const DataContextProvider = ({ children }) => {
         });
 
         // console.log("Véhicule supprimé avec succès.");
-        fetchVehicleData();
 
         setCreateVéhiculeLoading(false);
         navigate("/home");
@@ -8581,6 +8441,11 @@ const DataContextProvider = ({ children }) => {
     currentDataFusionné && currentDataFusionné
   );
 
+  let rapportPersonelleData = {};
+  if (currentVéhicule) {
+    rapportPersonelleData = processVehicleData([currentVéhicule])[0];
+  }
+
   const vehiculeMouvementOrdered = sortVehiclesBySpeed(filteredData);
 
   // Filtrer par distance parcouru OKK... tester
@@ -8796,6 +8661,7 @@ const DataContextProvider = ({ children }) => {
         showListeOption,
         setShowListOption,
         fetchVehicleDetails,
+        rapportPersonelleData,
 
         fetchHistoriqueVehicleDetails,
         véhiculeHistoriqueDetails,
@@ -9078,6 +8944,20 @@ const DataContextProvider = ({ children }) => {
         progressBarForLoadingData,
         progressBarForLoadingDataUser,
         statusDescriptions,
+        TimeFrom,
+        TimeTo,
+        progressAnimationStart,
+        setProgressAnimationStart,
+        runningAnimationProgressLoading,
+        setRunningAnimationProgressLoading,
+        runningAnimationProgressDuration,
+        setRunningAnimationProgressDuration,
+        setMergedDataHome,
+        setGeofenceData,
+        documentationPage,
+        setDocumentationPage,
+        fetchVehicleDataFromRapportGroupe,
+        setRapportVehicleDetails,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

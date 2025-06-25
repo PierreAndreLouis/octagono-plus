@@ -32,6 +32,7 @@ const LocationPage = ({
     accountDevices,
     currentAccountSelected,
     isDashboardHomePage,
+    ajouterGeofencePopup,
   } = useContext(DataContext);
   let x;
 
@@ -62,7 +63,7 @@ const LocationPage = ({
   } else if (isDashboardHomePage && !currentAccountSelected) {
     vehiculeActive = accountDevices;
   } else if (!isDashboardHomePage) {
-    vehiculeActive = currentDataFusionné;
+    vehiculeActive = dataFusionné;
   }
 
   // vehiculeActive = currentDataFusionné;
@@ -124,6 +125,10 @@ const LocationPage = ({
   const vehicles = selectedVehicleToShowInMap
     ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
     : véhiculeData;
+
+  useEffect(() => {
+    console.log("vehicles", vehicles);
+  }, [vehicles]);
 
   // Les type de carte disponibles
   const tileLayers = {
@@ -227,7 +232,7 @@ const LocationPage = ({
 
   return (
     <div className="relative ">
-      {!isAddingNewGeofence &&
+      {/* {!isAddingNewGeofence &&
         (fromDashboard === "true" ? (
           ""
         ) : (
@@ -239,24 +244,35 @@ const LocationPage = ({
             showAllVehicles={showAllVehicles}
             isDashBoardComptnent={isDashBoardComptnent}
           />
-        ))}
+        ))} */}
+
+      {!isAddingNewGeofence &&
+        fromDashboard !== "true" &&
+        !ajouterGeofencePopup && (
+          <HeaderLocation
+            setShowVehiculeListe={setShowVehiculeListe}
+            selectedVehicleToShowInMap={selectedVehicleToShowInMap}
+            véhiculeData={véhiculeData}
+            setTypeDeVue={setTypeDeVue}
+            showAllVehicles={showAllVehicles}
+            isDashBoardComptnent={isDashBoardComptnent}
+          />
+        )}
 
       {showVehiculeListe && (
-        <div className="fixed flex justify-center items-center inset-0 bg-black/50 z-[14124124124124] shadow-xl border-- border-gray-100 rounded-md p-3">
-          <SearchVehiculePupup
-            searchQueryListPopup={searchQueryLocationPage}
-            setSearchQueryListPopup={setSearchQueryLocationPage}
-            handleSearchChange={handleSearchChange}
-            setShowOptions={setShowVehiculeListe}
-            filteredVehicles={filteredVehicles}
-            handleClick={handleVehicleClick}
-            currentVéhicule={currentVéhicule}
-            isMapcomponent="true"
-          />
-        </div>
+        <SearchVehiculePupup
+          searchQueryListPopup={searchQueryLocationPage}
+          setSearchQueryListPopup={setSearchQueryLocationPage}
+          handleSearchChange={handleSearchChange}
+          setShowOptions={setShowVehiculeListe}
+          filteredVehicles={filteredVehicles}
+          handleClick={handleVehicleClick}
+          currentVéhicule={currentVéhicule}
+          isMapcomponent="true"
+        />
       )}
 
-      <div className="relative">
+      <div className="relative z-0">
         <TypeDeVue
           typeDeVue={typeDeVue}
           setTypeDeVue={setTypeDeVue}

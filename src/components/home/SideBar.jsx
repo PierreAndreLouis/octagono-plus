@@ -99,7 +99,7 @@ function SideBar() {
         {(account === "sysadmin" || adminAccount === "sysadmin") && (
           // {adminAccount === "sysadmin" && (
           <Link
-            to="/dashboard_admin_page"
+            to="/home"
             onClick={() => {
               setShowSideBar(true);
               handleTabClick("dashboard");

@@ -42,10 +42,29 @@ function HistoriquePage() {
     fetchHistoriqueVehicleDetails,
     currentDataFusionné,
     setSelectedVehicleToShowInMap,
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    gestionAccountData,
+    currentSelectedDeviceGestion,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
   let x;
+
+  // Le data converti en Objet
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  let deviceListeChosen;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    deviceListeChosen = currentAccountSelected?.accountDevices;
+  } else if (isDashboardHomePage && !currentAccountSelected) {
+    deviceListeChosen = accountDevices;
+  } else if (!isDashboardHomePage) {
+    deviceListeChosen = dataFusionné;
+  }
+
   //
   //
   //
@@ -62,9 +81,11 @@ function HistoriquePage() {
         (v) => v.deviceID === deviceID
       );
 
-      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
-      setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
-      setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection
+      if (foundVehicle) {
+        setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
+        setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
+        setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection
+      }
     }
   }, [currentDataFusionné]);
 
@@ -141,7 +162,7 @@ function HistoriquePage() {
   useEffect(() => {
     setvehicles(véhiculeData);
     // console.log(vehicles);
-  }, [véhiculeHistoriqueDetails, vehicles, currentVéhicule]);
+  }, [véhiculeHistoriqueDetails, currentVéhicule]);
   //
   //
   //
@@ -197,8 +218,6 @@ function HistoriquePage() {
     window.open(googleMapsUrl, "_blank"); // Ouvrir dans un nouvel onglet
   };
 
-  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
-
   // Pour afficher la liste des véhicules
   const [showVehiculeListe, setShowVehiculeListe] = useState(false);
 
@@ -220,32 +239,6 @@ function HistoriquePage() {
       mapRef.current.setView([lastValidLatitude, lastValidLongitude], 13);
       console.log("centrer la carte 33333333333333333333333333333333333333333");
     }
-  };
-
-  // Recherche du véhicule correspondant dans la liste
-  const handleVehicleClick = (véhicule) => {
-    const deviceID = véhicule?.deviceID;
-    const foundVehicle = donneeFusionnéForRapport.find(
-      (v) => v.deviceID === deviceID
-    );
-
-    if (foundVehicle) {
-      setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
-      setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
-
-      centerOnFirstMarker();
-      setTimeout(() => {
-        centerOnFirstMarker();
-      }, 500);
-    } else {
-      console.error("Véhicule introuvable avec le deviceID :", deviceID);
-    }
-    setShowVehiculeListe(!showVehiculeListe);
-    centerOnFirstMarker();
-
-    setTimeout(() => {
-      centerOnFirstMarker();
-    }, 500);
   };
 
   const handleCheckboxChange = (name) => {
@@ -271,7 +264,7 @@ function HistoriquePage() {
   };
 
   // Pour filtrer le recherche
-  const filteredVehiclesPupup = currentDataFusionné?.filter(
+  const filteredVehiclesPupup = deviceListeChosen?.filter(
     (véhicule) =>
       véhicule?.imeiNumber
         .toLowerCase()
@@ -397,15 +390,35 @@ function HistoriquePage() {
     console.log(timeTo);
     handleApply();
 
-    if (timeFrom && timeTo) {
-      fetchHistoriqueVehicleDetails(currentVéhicule.deviceID, timeFrom, timeTo);
-      setAppliedCheckboxes(checkboxes);
+    if (isDashboardHomePage) {
+      fetchHistoriqueVehicleDetails(
+        currentVéhicule.deviceID,
+
+        timeFromFetch || timeFrom,
+
+        timeToFetch || timeTo,
+
+        currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedDeviceGestion?.accountID
+          )?.accountID,
+        "admin",
+        currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedDeviceGestion?.accountID
+          )?.password
+      );
     } else {
       fetchHistoriqueVehicleDetails(
         currentVéhicule.deviceID,
-        timeFromFetch,
-        timeToFetch
+        timeFromFetch || timeFrom,
+        timeToFetch || timeTo
       );
+    }
+
+    if (timeFromFetch && timeToFetch) {
       setAppliedCheckboxes(checkboxes);
     }
   };
@@ -413,6 +426,74 @@ function HistoriquePage() {
   //
   //
   //
+
+  // Recherche du véhicule correspondant dans la liste
+  const handleVehicleClick = (véhicule) => {
+    const deviceID = véhicule?.deviceID;
+    console.log("véhicule", véhicule);
+
+    setCurrentVéhicule(véhicule); // Définit le véhicule actuel
+
+    if (isDashboardHomePage) {
+      if (timeFrom && timeTo) {
+        fetchHistoriqueVehicleDetails(
+          deviceID,
+          timeFrom,
+          timeTo,
+
+          currentAccountSelected?.accountID ||
+            gestionAccountData.find(
+              (account) => account.accountID === véhicule?.accountID
+            )?.accountID,
+          "admin",
+          currentAccountSelected?.password ||
+            gestionAccountData.find(
+              (account) => account.accountID === véhicule?.accountID
+            )?.password
+        );
+        setAppliedCheckboxes(checkboxes);
+      } else {
+        fetchHistoriqueVehicleDetails(
+          deviceID,
+          timeFromFetch,
+          timeToFetch,
+
+          currentAccountSelected?.accountID ||
+            gestionAccountData.find(
+              (account) => account.accountID === véhicule?.accountID
+            )?.accountID,
+          "admin",
+          currentAccountSelected?.password ||
+            gestionAccountData.find(
+              (account) => account.accountID === véhicule?.accountID
+            )?.password
+        );
+        setAppliedCheckboxes(checkboxes);
+      }
+    } else {
+      if (timeFrom && timeTo) {
+        fetchHistoriqueVehicleDetails(deviceID, timeFrom, timeTo);
+        setAppliedCheckboxes(checkboxes);
+      } else {
+        fetchHistoriqueVehicleDetails(deviceID, timeFromFetch, timeToFetch);
+        setAppliedCheckboxes(checkboxes);
+      }
+    }
+
+    // }
+    setShowVehiculeListe(!showVehiculeListe);
+    centerOnFirstMarker();
+
+    setTimeout(() => {
+      centerOnFirstMarker();
+    }, 500);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      centerOnFirstMarker();
+    }, 1000);
+  }, [véhiculeHistoriqueDetails]);
   //
   //
   //
@@ -428,7 +509,7 @@ function HistoriquePage() {
   }, [currentVéhicule]);
 
   return (
-    <div className="p-4 min-h-screen flex flex-col gap-4 mt-16 mb-32 px-4 sm:px-12 md:px-20 lg:px-40">
+    <div className="p-4 min-h-screen   bg-white flex flex-col gap-4  rounded-lg px-4 sm:px-12 md:px-20 lg:px-40">
       <div className="z-50"></div>
 
       {/* Pour choisir une date */}
@@ -460,8 +541,8 @@ function HistoriquePage() {
       )}
 
       {/* entête de page pour l'historique */}
-      <div className="mb-6 mt-8 md:mt-16">
-        <div className="fixed flex justify-center z-20 top-[3.5rem] bg-white dark:bg-gray-800 md:bg-white/0 py-2 pt-3 left-0 right-0">
+      <div className="mb-6 mt-4 ">
+        <div className={`absolute z-[1] left-0 right-0`}>
           <HistoriqueHeader
             setShowHistoriqueInMap={setShowHistoriqueInMap}
             showHistoriqueInMap={showHistoriqueInMap}
@@ -471,23 +552,22 @@ function HistoriquePage() {
             setshowFilter={setshowFilter}
             showFilter={showFilter}
           />
-
+        </div>
+        <div className="fixed flex justify-center z-20 top-[3.5rem] bg-white-- dark:bg-gray-800 md:bg-white/0  pt-3 left-0 right-0">
           {/* La liste de véhicules a choisir */}
           {showVehiculeListe && (
-            <div className="fixed z-[999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50  shadow-xl border-- border-gray-100 rounded-md p-3 dark:bg-black/80 dark:border-gray-600">
-              <SearchVehiculePupup
-                searchQueryListPopup={searchQueryHistoriquePage}
-                setSearchQueryListPopup={setSearchQueryHistoriquePage}
-                handleSearchChange={handleSearchChange}
-                setShowOptions={setShowVehiculeListe}
-                filteredVehicles={filteredVehiclesPupup}
-                handleClick={handleVehicleClick}
-                currentVéhicule={currentVéhicule}
-                isMapcomponent="false"
-                vehicles={vehicles}
-                mapRef={mapRef}
-              />
-            </div>
+            <SearchVehiculePupup
+              searchQueryListPopup={searchQueryHistoriquePage}
+              setSearchQueryListPopup={setSearchQueryHistoriquePage}
+              handleSearchChange={handleSearchChange}
+              setShowOptions={setShowVehiculeListe}
+              filteredVehicles={filteredVehiclesPupup}
+              handleClick={handleVehicleClick}
+              currentVéhicule={currentVéhicule}
+              isMapcomponent="false"
+              vehicles={vehicles}
+              mapRef={mapRef}
+            />
           )}
 
           <ShowFilterComponent
@@ -526,8 +606,8 @@ function HistoriquePage() {
         </div>
       ) : (
         // carte section
-        <div className="  fixed z-[9] right-0 top-[5rem] md:top-[3.8rem] bottom-0 overflow-hidden left-0">
-          <div className=" mt-[2.3rem]-- md:mt-0 overflow-hidden">
+        <div className="absolute inset-0 z-0  overflow-hidden">
+          <div className="  overflow-hidden ">
             <TrajetVehicule
               typeDeVue={typeDeVue}
               setTypeDeVue={setTypeDeVue}
