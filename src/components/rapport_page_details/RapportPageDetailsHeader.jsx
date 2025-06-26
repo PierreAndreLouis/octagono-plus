@@ -40,6 +40,7 @@ function RapportPageDetailsHeader({
   endDate,
   endTime,
   fonctiondownloadExelPDF,
+  totalDevice,
 }) {
   const {
     currentVéhicule,
@@ -722,14 +723,17 @@ function RapportPageDetailsHeader({
               }}
               title={`${t("Recherche par date")}`}
             >
-              <div
-                onClick={() => {
-                  setShowChooseDate(true);
-                }}
-                className="flex  gap-2 items-center cursor-pointer"
-              >
-                <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
-              </div>
+              {(totalDevice?.length < 100 && pageSection === "groupe") ||
+                (pageSection === "unite" && (
+                  <div
+                    onClick={() => {
+                      setShowChooseDate(true);
+                    }}
+                    className="flex  gap-2 items-center cursor-pointer"
+                  >
+                    <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+                  </div>
+                ))}
             </Tooltip>
           </div>
         </div>

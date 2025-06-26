@@ -412,7 +412,7 @@ function ListeDesAlertsGestion({
 
   return (
     <div>
-      <div className="px-4 pb-40 bg-white pt-10 rounded-lg">
+      <div className="px-2 pb-40 bg-white pt-10 rounded-lg">
         {fromExpandSectionDashboard === "false" && (
           <div>
             <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">

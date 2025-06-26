@@ -144,7 +144,7 @@ function InfoUserComponent({
             {t("Version de l'application")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            25/06/2025 _ 1
+            26/06/2025 _ 1
           </p>
         </div>
 

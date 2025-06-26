@@ -277,10 +277,8 @@ function App() {
 
         {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
         {!readDocumentation && (
-          <div className="absolute z-[100000000000000000000000000]">
-            {/* {!shouldHideComponent && <Header />} */}
+          <div className="absolute z-[10000000000000000000000000000000000000000]">
             {!shouldHideComponent && <Navigation_bar />}
-            {/* {!shouldHideComponent && <SideBar />} */}
           </div>
         )}
 

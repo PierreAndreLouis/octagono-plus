@@ -846,7 +846,7 @@ function DashboardContaintMaintComponant({
   return (
     <div className="pb-6-">
       {showStatisticDeviceListeDashboard && (
-        <div className="fixed px-3 inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
+        <div className="fixed px-3-- inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
           <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw]">
             <div className="absolute flex justify-center items-center top-0 left-0 right-0 h-[4rem] bg-orange-200 z-[8]">
               <h2 className="font-bold text-lg">
@@ -875,8 +875,8 @@ function DashboardContaintMaintComponant({
       )}
       {/*  */}
       {expandSection && (
-        <div className="fixed  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
-          <div className="w-full  mx-4 md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
+        <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
+          <div className="w-full  mx-auto md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
             <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
               <IoClose
                 onClick={() => {

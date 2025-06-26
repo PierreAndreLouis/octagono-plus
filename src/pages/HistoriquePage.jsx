@@ -541,7 +541,7 @@ function HistoriquePage() {
       )}
 
       {/* entête de page pour l'historique */}
-      <div className="mb-6 mt-4 ">
+      <div className="mb-6- mt-4- ">
         <div className={`absolute z-[1] left-0 right-0`}>
           <HistoriqueHeader
             setShowHistoriqueInMap={setShowHistoriqueInMap}
@@ -553,7 +553,7 @@ function HistoriquePage() {
             showFilter={showFilter}
           />
         </div>
-        <div className="fixed flex justify-center z-20 top-[3.5rem] bg-white-- dark:bg-gray-800 md:bg-white/0  pt-3 left-0 right-0">
+        <div className="fixed flex justify-center z-20 top-[3.5rem]-- bg-white-- dark:bg-gray-800 md:bg-white/0  pt-3 left-0 right-0">
           {/* La liste de véhicules a choisir */}
           {showVehiculeListe && (
             <SearchVehiculePupup

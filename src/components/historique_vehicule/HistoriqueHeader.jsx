@@ -181,7 +181,7 @@ function HistoriqueHeader({
           La maison de Monsieur Pedro
         </div> */}
         <div className="px-4 flex justify-center items-center py-1 ">
-          <p className="font-semibold notranslate text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
+          <p className="font-semibold notranslate bg-white px-3 text-orange-600 rounded-lg text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
             {" "}
             {(showHistoriqueInMap && currentVéhicule?.description) || ""}
           </p>

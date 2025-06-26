@@ -1364,6 +1364,7 @@ function RapportPageDetails() {
               endDate={endDateToDisplay}
               endTime={endTimeToDisplay}
               fonctiondownloadExelPDF={fonctiondownloadExelPDF}
+              totalDevice={totalDevice}
             />
           </div>
           {/* )} */}
@@ -1422,23 +1423,22 @@ function RapportPageDetails() {
       {/* ////////////////////////////////////////////////////////////////////////////////////// */}
       {/* en groupe */}
 
-      {/* {pageSection === "groupe" && (
+      {pageSection === "groupe" && totalDevice?.length > 100 ? (
         <div>
           <h2 className="font-bold mx-4 text-center mt-10 text-lg">
-            Opération de maintenance en cours...
+            Ce compte a plus de 100 appareils...
           </h2>
           <br />
           <p className="text-orange-700-- text-center text-lg">
             <span className="text-orange-600">
-              Durée estimée : environ une semaine.
+              Nous ne pouvons pas vous donner un rapport pour tous les
+              appareils.
             </span>
             <br />
-            Nous vous remercions de votre compréhension.
+            {/* Nous vous remercions de votre compréhension. */}
           </p>
         </div>
-      )} */}
-
-      {pageSection === "groupe" && (
+      ) : (
         <RapportGroupe
           currentDataFusionné={currentDataFusionné}
           véhiculeActiveToday={véhiculeActiveToday}

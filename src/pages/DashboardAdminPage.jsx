@@ -56,6 +56,7 @@ import SideBarSysadmin from "../components/dashboard_containt/SideBarSysadmin";
 import DetailsVehiculePage from "./DetailsVehiculePage";
 import HistoriquePage from "./HistoriquePage";
 import RapportPageDetails from "./RapportPageDetails";
+import Navigation_bar from "../components/home/Navigation_bar";
 
 function DashboardAdminPage() {
   const {
@@ -261,9 +262,27 @@ function DashboardAdminPage() {
 
   const [accountIdFromRole, setAccountIdFromRole] = useState("");
 
+  // Liste des chemins où le footer ne doit pas apparaître
+  const hideComponentRoutes = ["/login"];
+
+  // Vérification si le chemin actuel correspond à l'un des chemins dans hideComponentRoutes
+  const shouldHideComponent = hideComponentRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
+
   return (
     // <>
     <div className="transition-all bg-gray-100">
+      {/* {!readDocumentation && ( */}
+      <div className="absolute z-[8]">
+        {!shouldHideComponent && (
+          <Navigation_bar
+            documentationPage={documentationPage}
+            setDocumentationPage={setDocumentationPage}
+          />
+        )}
+      </div>
+      {/* )} */}
       <ChooseOtherAccountDashboard
         chooseOtherAccountGestion={chooseOtherAccountGestion}
         setChooseOtherAccountGestion={setChooseOtherAccountGestion}
@@ -294,7 +313,7 @@ function DashboardAdminPage() {
         setChooseAccountFromGeozoneSection={setChooseAccountFromGeozoneSection}
         setReadDocumentationSideBar={setReadDocumentationSideBar}
       />
-      <div className="flex gap-5 bg-white">
+      <div className="flex gap-5 bg-white pb-14">
         {/* Side Bar */}
         <SideBarSysadmin
           readDocumentationSideBar={readDocumentationSideBar}
@@ -489,7 +508,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            25/06/2025 _ 1
+            26/06/2025 _ 1
           </p>
           {/*  */}
           {/*  */}

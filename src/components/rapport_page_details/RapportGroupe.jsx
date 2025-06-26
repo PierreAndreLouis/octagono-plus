@@ -3811,7 +3811,7 @@ function RapportGroupe({
             ) : (
               <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
                 <button
-                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
+                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[99] top-[4rem] right-[0.3rem]"
                   onClick={() => {
                     setzoomPosition(true);
                     setSelectedVehicleToShowInMap(null);

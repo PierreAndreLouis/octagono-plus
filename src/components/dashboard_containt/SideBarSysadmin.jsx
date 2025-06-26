@@ -77,6 +77,7 @@ function SideBarSysadmin({
         className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
       />
       {documentationPage !== "Dashboard" &&
+        documentationPage !== "Trajet_appareil" &&
         documentationPage !== "Rapport_unite" && (
           <button
             onClick={backToPagePrecedent}
@@ -514,8 +515,8 @@ function SideBarSysadmin({
               // } else if (!isDashboardHomePage) {
               //   setListeGestionDesVehicules(dataFusionné);
               // }
-              setShowHistoriqueInMap(true);
               scrollToTop();
+              setShowHistoriqueInMap(true);
               setDocumentationPage("Trajet_appareil");
               closeSideBar();
             }}
