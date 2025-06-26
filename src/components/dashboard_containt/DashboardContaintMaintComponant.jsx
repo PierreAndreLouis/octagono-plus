@@ -824,24 +824,46 @@ function DashboardContaintMaintComponant({
     ?.filter((item) => item?.statusCode !== "0xF952")
     ?.slice(0, 2);
 
+  // useEffect(() => {
+  //   if (runningAnimationProgressLoading && progressAnimationStart < 99) {
+  //     const interval = setInterval(() => {
+  //       setProgressAnimationStart((prev) => {
+  //         if (prev >= 98) {
+  //           clearInterval(interval);
+  //           return 99;
+  //         }
+  //         return prev + 1;
+  //       });
+  //     }, runningAnimationProgressDuration);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [
+  //   runningAnimationProgressLoading,
+  //   runningAnimationProgressDuration,
+  //   progressAnimationStart,
+  // ]);
+
+  const intervalRef = useRef(null);
+
   useEffect(() => {
     if (runningAnimationProgressLoading && progressAnimationStart < 99) {
-      const interval = setInterval(() => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+
+      intervalRef.current = setInterval(() => {
         setProgressAnimationStart((prev) => {
           if (prev >= 98) {
-            clearInterval(interval);
+            if (intervalRef.current) clearInterval(intervalRef.current);
             return 99;
           }
           return prev + 1;
         });
       }, runningAnimationProgressDuration);
-      return () => clearInterval(interval);
     }
-  }, [
-    runningAnimationProgressLoading,
-    runningAnimationProgressDuration,
-    progressAnimationStart,
-  ]);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
 
   return (
     <div className="pb-6-">
@@ -1011,12 +1033,8 @@ function DashboardContaintMaintComponant({
       {/*  */}
       {/* {progressBarForLoadingData}-{progressAnimationStart} */}
       <div className="md:px-4-- pt-4 mx-2 md:mx-0">
-        {!(
-          (progressBarForLoadingData === 100 &&
-            progressAnimationStart === 99) ||
-          progressBarForLoadingData === 0 ||
-          progressAnimationStart === 0
-        ) &&
+        {progressBarForLoadingData > 0 &&
+          progressBarForLoadingData < 100 &&
           !fetchVehicleDataFromRapportGroupe && (
             <div
               className="rounded-md shadow-sm shadow-black/10 overflow-hidden"

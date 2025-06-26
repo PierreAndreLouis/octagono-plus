@@ -1735,7 +1735,7 @@ const DataContextProvider = ({ children }) => {
         done += 1;
         setProgress(Math.round((done / total) * 100));
       }
-      await delay(2000); // pas de pause après le dernier lot
+      if (!isLastBatch) await delay(2000); // pas de pause après le dernier lot
     }
   };
 
@@ -1791,28 +1791,27 @@ const DataContextProvider = ({ children }) => {
 
     if (fetchAllOtherData) {
       loadForManySecond();
+      if (newData?.length < 20) {
+        setRunningAnimationProgressDuration(20);
+      } else if (newData?.length < 40) {
+        setRunningAnimationProgressDuration(40);
+      } else if (newData?.length < 60) {
+        setRunningAnimationProgressDuration(60);
+      } else if (newData?.length < 70) {
+        setRunningAnimationProgressDuration(80);
+      } else if (newData?.length < 80) {
+        setRunningAnimationProgressDuration(90);
+      } else {
+        setRunningAnimationProgressDuration(100);
+      }
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
-      if (newData?.length < 20) {
-        setRunningAnimationProgressDuration(50);
-      } else if (newData?.length < 40) {
-        setRunningAnimationProgressDuration(100);
-      } else if (newData?.length < 60) {
-        setRunningAnimationProgressDuration(150);
-      } else if (newData?.length < 70) {
-        setRunningAnimationProgressDuration(200);
-      } else if (newData?.length < 80) {
-        setRunningAnimationProgressDuration(250);
-      } else {
-        setRunningAnimationProgressDuration(300);
-      }
       processAllComptes(newData, 20); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
     return newData;
   };
-
 
   const fetchAccountDevices = async (accountID, password) => {
     console.log(

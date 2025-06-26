@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 
 import { IoMdInformationCircleOutline } from "react-icons/io";
@@ -1227,20 +1227,42 @@ function RapportGroupe({
   //
   //
 
+  const intervalRef = useRef(null);
+
   useEffect(() => {
     if (runningAnimationProgressLoading && progressAnimationStart < 99) {
-      const interval = setInterval(() => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+
+      intervalRef.current = setInterval(() => {
         setProgressAnimationStart((prev) => {
           if (prev >= 98) {
-            clearInterval(interval);
+            if (intervalRef.current) clearInterval(intervalRef.current);
             return 99;
           }
           return prev + 1;
         });
       }, runningAnimationProgressDuration);
-      return () => clearInterval(interval);
     }
-  }, [runningAnimationProgressLoading, progressAnimationStart]);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
+
+  // useEffect(() => {
+  //   if (runningAnimationProgressLoading && progressAnimationStart < 99) {
+  //     const interval = setInterval(() => {
+  //       setProgressAnimationStart((prev) => {
+  //         if (prev >= 98) {
+  //           clearInterval(interval);
+  //           return 99;
+  //         }
+  //         return prev + 1;
+  //       });
+  //     }, runningAnimationProgressDuration);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [runningAnimationProgressLoading, progressAnimationStart]);
   //
   //
   //
@@ -2627,11 +2649,13 @@ function RapportGroupe({
           <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
         </div>
 
-        {!(
-          progressBarForLoadingData === 100 ||
-          progressBarForLoadingData === 0 ||
-          progressAnimationStart === 0
-        ) &&
+        {progressBarForLoadingData > 0 &&
+          progressBarForLoadingData < 100 &&
+          // !(
+          //   progressBarForLoadingData === 100 ||
+          //   progressBarForLoadingData === 0 ||
+          //   progressAnimationStart === 0
+          // ) &&
           // (
           //   (progressBarForLoadingData === 100 &&
           //     progressAnimationStart === 99) ||
