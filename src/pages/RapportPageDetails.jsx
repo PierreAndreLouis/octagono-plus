@@ -1423,7 +1423,7 @@ function RapportPageDetails() {
       {/* ////////////////////////////////////////////////////////////////////////////////////// */}
       {/* en groupe */}
 
-      {pageSection === "groupe" && totalDevice?.length > 100 ? (
+      {pageSection === "groupe" && totalDevice?.length > 100 && (
         <div>
           <h2 className="font-bold mx-4 text-center mt-10 text-lg">
             Ce compte a plus de 100 appareils...
@@ -1438,7 +1438,9 @@ function RapportPageDetails() {
             {/* Nous vous remercions de votre compréhension. */}
           </p>
         </div>
-      ) : (
+      )}
+
+      {pageSection === "groupe" && totalDevice?.length <= 100 && (
         <RapportGroupe
           currentDataFusionné={currentDataFusionné}
           véhiculeActiveToday={véhiculeActiveToday}

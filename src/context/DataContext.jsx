@@ -40,6 +40,11 @@ const DataContextProvider = ({ children }) => {
     setRunningAnimationProgressDuration,
   ] = useState(200);
 
+  const [
+    isSearchingFromRapportGroupePage,
+    setIsSearchingFromRapportGroupePage,
+  ] = useState(false);
+
   // mise a jour auto des donnees des devices
   const [updateAuto, setupdateAuto] = useState(false);
   const [chooseOtherLanguagePopup, setChooseOtherLanguagePopup] =
@@ -1792,11 +1797,11 @@ const DataContextProvider = ({ children }) => {
     if (fetchAllOtherData) {
       loadForManySecond();
       if (newData?.length < 20) {
-        setRunningAnimationProgressDuration(20);
-      } else if (newData?.length < 40) {
         setRunningAnimationProgressDuration(40);
-      } else if (newData?.length < 60) {
+      } else if (newData?.length < 40) {
         setRunningAnimationProgressDuration(60);
+      } else if (newData?.length < 60) {
+        setRunningAnimationProgressDuration(70);
       } else if (newData?.length < 70) {
         setRunningAnimationProgressDuration(80);
       } else if (newData?.length < 80) {
@@ -8957,6 +8962,8 @@ const DataContextProvider = ({ children }) => {
         setDocumentationPage,
         fetchVehicleDataFromRapportGroupe,
         setRapportVehicleDetails,
+        isSearchingFromRapportGroupePage,
+        setIsSearchingFromRapportGroupePage,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

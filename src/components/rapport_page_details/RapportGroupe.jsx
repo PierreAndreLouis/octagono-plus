@@ -72,6 +72,9 @@ function RapportGroupe({
     account,
     currentAccountSelected,
     setDonneeFusionnéForRapport,
+    accountDevices,
+    isSearchingFromRapportGroupePage,
+    setIsSearchingFromRapportGroupePage,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   let x;
 
@@ -104,7 +107,20 @@ function RapportGroupe({
   //
   //
   //
-  const dataFusionneeHome = mergedDataHome ? Object.values(mergedDataHome) : [];
+  // const dataFusionneeHome = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  // Le data converti en Objet
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  let dataFusionneeHome;
+
+  if (isDashboardHomePage && currentAccountSelected) {
+    dataFusionneeHome = currentAccountSelected?.accountDevices;
+  } else if (isDashboardHomePage && !currentAccountSelected) {
+    dataFusionneeHome = accountDevices;
+  } else if (!isDashboardHomePage) {
+    dataFusionneeHome = dataFusionné;
+  }
 
   //
   //
@@ -113,6 +129,8 @@ function RapportGroupe({
   //
   //
   const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+
   const currentTime = Date.now(); // Heure actuelle en millisecondes
 
   // Fonction pour obtenir le timestamp actuel en millisecondes
@@ -758,63 +776,392 @@ function RapportGroupe({
 
   //
   //
+
+  let main_text_color = "text-red-900 dark:text-red-300";
+  let statut = "";
+  let lite_bg_color =
+    "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-950/20";
+  let activeTextColor = "text-red-900 dark:text-red-200";
+  let active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+  let vitess_img = "img/cars/orange_vitess.png";
+  let vitess_img_dark = "img/cars/orange_vitess.png";
+
+  let imgClass = "w-14 sm:w-16 md:w-24";
+  let imgBg = "bg-green-200/40";
+  let border_top = "border-t border-t-red-200 dark:border-t-red-600/30 ";
   // Fonction pour filtrer les véhicules
+
   const filteredVehiclesListe = vehiclesByDepartureTime?.filter((véhicule) => {
-    const matchedVehicle =
-      currentDataFusionné &&
-      currentDataFusionné.find((v) => v.deviceID === véhicule?.deviceID);
-
-    const matchedVehicle2 =
-      dataFusionneeHome &&
-      dataFusionneeHome?.find((v) => v.deviceID === véhicule?.deviceID);
-
-    const isSpeedActive =
-      matchedVehicle2?.véhiculeDetails &&
-      matchedVehicle2?.véhiculeDetails[0] &&
-      matchedVehicle2?.véhiculeDetails[0]?.speedKPH > 0;
-
-    const isNotSpeedActive =
-      matchedVehicle2?.véhiculeDetails &&
-      matchedVehicle2?.véhiculeDetails[0] &&
-      matchedVehicle2?.véhiculeDetails[0]?.speedKPH <= 0;
-
-    const isMoving = matchedVehicle.véhiculeDetails?.some(
-      (detail) => detail.speedKPH >= 1
+    const matchedVehicle = currentDataFusionné?.find(
+      (v) => v.deviceID === véhicule?.deviceID
+    );
+    const matchedVehicle2 = dataFusionneeHome?.find(
+      (v) => v.deviceID === véhicule?.deviceID
     );
 
-    const hasDetails =
-      matchedVehicle.véhiculeDetails &&
-      matchedVehicle.véhiculeDetails.length > 0;
-
-    const noSpeed = matchedVehicle.véhiculeDetails?.every(
-      (detail) => detail.speedKPH <= 0
-    );
-    //
-
-    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-    const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
-      ? matchedVehicle.lastUpdateTime * 1000
+    const hasDetails = matchedVehicle?.véhiculeDetails?.length > 0;
+    const lastDetail = matchedVehicle?.véhiculeDetails?.[0];
+    const speed = lastDetail?.speedKPH ?? 0;
+    const lastUpdateMs = lastDetail?.timestamp
+      ? lastDetail.timestamp * 1000
       : 0;
-    const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-    const hasBeenMoving =
-      matchedVehicle.véhiculeDetails &&
-      matchedVehicle.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+    const isActive = matchedVehicle?.lastUpdateTime
+      ? currentTime - matchedVehicle.lastUpdateTime * 1000 < twentyFourHoursInMs
+      : false;
 
-    const lastUpdateTimestampMs =
-      matchedVehicle.véhiculeDetails &&
-      matchedVehicle.véhiculeDetails[0] &&
-      matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+    const updatedToday = lastUpdateMs >= todayTimestamp;
+    const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
 
-    const isNotStillSpeedActive =
-      lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
+    const movedToday = matchedVehicle?.véhiculeDetails?.some(
+      (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH >= 1
+    );
 
-    if (filter === "inactive") return !hasDetails;
-    if (filter === "parking") return hasDetails && noSpeed;
-    if (filter === "moving") return hasDetails && isMoving;
-    return true; // "all" : tous les véhicules
+    const neverMovedToday = matchedVehicle?.véhiculeDetails?.every(
+      (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH <= 0
+    );
+
+    const movedBefore = matchedVehicle?.véhiculeDetails?.some(
+      (d) => d.speedKPH >= 1
+    );
+
+    ///////////////////////////// FILTRES /////////////////////////////////
+
+    if (filter === "isNotActiveRithtNowToday") {
+      const inactive =
+        !hasDetails || currentTimeMs - lastUpdateMs > twentyFourHoursInMs;
+      if (inactive) {
+        main_text_color = "text-purple-900 dark:text-purple-300";
+        statut = `${t("Hors service")}`;
+        lite_bg_color =
+          "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+        activeTextColor = "text-purple-900 dark:text-purple-200";
+        active_bg_color = "bg-purple-200/50 dark:bg-purple-600/50";
+        vitess_img = "/img/home_icon/payer.png";
+        vitess_img_dark = "/img/home_icon/rapport_not_active.png";
+        imgClass = "w-14 h-auto sm:w-16 md:w-24";
+        imgBg =
+          "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200";
+        border_top = "border-t border-t-purple-200 dark:border-t-purple-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "isMovingRightNowToday") {
+      if (
+        hasDetails &&
+        isActive &&
+        speed >= 1 &&
+        updatedRecently &&
+        updatedToday
+      ) {
+        main_text_color = "text-green-700 dark:text-green-400";
+        statut = `${t("En mouvement rapide")}`;
+        lite_bg_color =
+          "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80 shadow-lg shadow-gray-950/20";
+        activeTextColor = "text-green-800 dark:text-green-200";
+        active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+        vitess_img = "/img/home_icon/active.png";
+        vitess_img_dark = "/img/home_icon/rapport_active.png";
+        imgClass = "w-12 h-auto sm:w-14 md:w-20";
+        imgBg =
+          "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200";
+        border_top = "border-t border-t-green-200 dark:border-t-green-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "ispParkingRightNowToday") {
+      if (
+        hasDetails &&
+        isActive &&
+        updatedToday &&
+        (speed <= 0 || (speed >= 1 && !updatedRecently))
+      ) {
+        main_text_color = "text-red-900 dark:text-red-300";
+        statut = `${t("En Stationnement")}`;
+        lite_bg_color =
+          "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+        activeTextColor = "text-red-900 dark:text-red-200";
+        active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+        vitess_img = "/img/home_icon/rapport_parking2.png";
+        vitess_img_dark = "/img/home_icon/rapport_parking.png";
+        imgClass = "w-14 h-auto sm:w-16 md:w-24";
+        imgBg =
+          "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200";
+        border_top = "border-t border-t-red-200 dark:border-t-red-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "hasBeenMovingToday") {
+      if (movedToday) {
+        main_text_color = "text-green-700 dark:text-green-400";
+        statut = `${t("A bougé aujourd'hui")}`;
+        lite_bg_color =
+          "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80 shadow-lg shadow-gray-950/20";
+        activeTextColor = "text-green-800 dark:text-green-200";
+        active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+        vitess_img = "/img/home_icon/active.png";
+        vitess_img_dark = "/img/home_icon/rapport_active.png";
+        imgClass = "w-12 h-auto sm:w-14 md:w-20";
+        imgBg =
+          "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200";
+        border_top = "border-t border-t-green-200 dark:border-t-green-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "hasNotBeenMovingToday") {
+      if (!movedToday && hasDetails && isActive) {
+        main_text_color = "text-red-900 dark:text-red-300";
+        statut = `${t("N'a pas bougé aujourd'hui")}`;
+        lite_bg_color =
+          "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+        activeTextColor = "text-red-900 dark:text-red-200";
+        active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+        vitess_img = "/img/home_icon/rapport_parking2.png";
+        vitess_img_dark = "/img/home_icon/rapport_parking.png";
+        imgClass = "w-14 h-auto sm:w-16 md:w-24";
+        imgBg =
+          "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200";
+        border_top = "border-t border-t-red-200 dark:border-t-red-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "hasBeenMovingFromSearch") {
+      if (hasDetails && movedBefore) {
+        main_text_color = "text-green-700 dark:text-green-400";
+        statut = `${t("A bougé récemment")}`;
+        lite_bg_color =
+          "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80 shadow-lg shadow-gray-950/20";
+        activeTextColor = "text-green-800 dark:text-green-200";
+        active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+        vitess_img = "/img/home_icon/active.png";
+        vitess_img_dark = "/img/home_icon/rapport_active.png";
+        imgClass = "w-12 h-auto sm:w-14 md:w-20";
+        imgBg =
+          "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200";
+        border_top = "border-t border-t-green-200 dark:border-t-green-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "hasNotBeenMovingFromSearch") {
+      if (hasDetails && !movedBefore) {
+        main_text_color = "text-red-900 dark:text-red-300";
+        statut = `${t("Jamais bougé")}`;
+        lite_bg_color =
+          "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+        activeTextColor = "text-red-900 dark:text-red-200";
+        active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+        vitess_img = "/img/home_icon/rapport_parking2.png";
+        vitess_img_dark = "/img/home_icon/rapport_parking.png";
+        imgClass = "w-14 h-auto sm:w-16 md:w-24";
+        imgBg =
+          "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200";
+        border_top = "border-t border-t-red-200 dark:border-t-red-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "isNotActiveFromSearch") {
+      if (!hasDetails) {
+        main_text_color = "text-purple-900 dark:text-purple-300";
+        statut = `${t("Hors service")}`;
+        lite_bg_color =
+          "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+        activeTextColor = "text-purple-900 dark:text-purple-200";
+        active_bg_color = "bg-purple-200/50 dark:bg-purple-600/50";
+        vitess_img = "/img/home_icon/payer.png";
+        vitess_img_dark = "/img/home_icon/rapport_not_active.png";
+        imgClass = "w-14 h-auto sm:w-16 md:w-24";
+        imgBg =
+          "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200";
+        border_top = "border-t border-t-purple-200 dark:border-t-purple-600/30";
+        return true;
+      }
+      return false;
+    }
+
+    if (filter === "all") {
+      return true;
+    }
+
+    return true; // par défaut, tous les véhicules
   });
+
+  // const filteredVehiclesListe = vehiclesByDepartureTime?.filter((véhicule) => {
+  //   // ttttttttttttttttttt
+
+  //   // Trouver le véhicule correspondant dans updateData
+  //   const matchedVehicle =
+  //     currentDataFusionné &&
+  //     currentDataFusionné.find((v) => v.deviceID === véhicule?.deviceID);
+
+  //   const matchedVehicle2 =
+  //     dataFusionneeHome &&
+  //     dataFusionneeHome?.find((v) => v.deviceID === véhicule?.deviceID);
+
+  //   const isSpeedActive =
+  //     matchedVehicle2?.véhiculeDetails &&
+  //     matchedVehicle2?.véhiculeDetails[0] &&
+  //     matchedVehicle2?.véhiculeDetails[0]?.speedKPH > 0;
+
+  //   const isNotSpeedActive =
+  //     matchedVehicle2?.véhiculeDetails &&
+  //     matchedVehicle2?.véhiculeDetails[0] &&
+  //     matchedVehicle2?.véhiculeDetails[0]?.speedKPH <= 0;
+
+  //   const isMoving = matchedVehicle.véhiculeDetails?.some(
+  //     (detail) => detail.speedKPH >= 1
+  //   );
+
+  //   const hasDetails =
+  //     matchedVehicle.véhiculeDetails &&
+  //     matchedVehicle.véhiculeDetails.length > 0;
+
+  //   const noSpeed = matchedVehicle.véhiculeDetails?.every(
+  //     (detail) => detail.speedKPH <= 0
+  //   );
+
+  //   // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+  //   const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+  //     ? matchedVehicle.lastUpdateTime * 1000
+  //     : 0;
+  //   const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+  //   ///////////////////////////////////////////////////////////////////////////
+
+  //   ////////////////////////////////////////////////////
+  //   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
+  //   const getTodayTimestamp = () => {
+  //     const now = new Date();
+  //     now.setHours(0, 0, 0, 0); // Minuit
+  //     return Math.floor(now.getTime() / 1000); // Convertir en secondes
+  //   };
+  //   const todayTimestamp = getTodayTimestamp() * 1000;
+
+  //   const hasBeenMoving =
+  //     matchedVehicle.véhiculeDetails &&
+  //     matchedVehicle.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
+  //   const lastUpdateTimestampMs =
+  //     matchedVehicle.véhiculeDetails &&
+  //     matchedVehicle.véhiculeDetails[0] &&
+  //     matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+  //   const isNotStillSpeedActive =
+  //     lastUpdateTimestampMs &&
+  //     currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
+
+  //   ////////////////////////////x////////////////////////////////////////
+
+  //   if (hasDetails && isSpeedActive && !isNotStillSpeedActive) {
+  //     main_text_color = "text-green-700 dark:text-green-400";
+  //     statut = `${t("En mouvement rapide")}`;
+  //     lite_bg_color =
+  //       "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+  //     activeTextColor = "text-green-800 dark:text-green-200";
+  //     active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+  //     vitess_img = "/img/home_icon/active.png";
+  //     vitess_img_dark = "/img/home_icon/rapport_active.png";
+  //     imgClass = "w-12  h-auto sm:w-14 md:w-20";
+  //     imgBg =
+  //       "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+  //     border_top = "border-t border-t-green-200 dark:border-t-green-600/30 ";
+  //   } else if (
+  //     hasDetails &&
+  //     isActive &&
+  //     (!isSpeedActive || (isSpeedActive && isNotStillSpeedActive))
+  //   ) {
+  //     main_text_color = "text-red-900 dark:text-red-300";
+  //     statut = `${t("En Stationnement")}`;
+  //     lite_bg_color =
+  //       "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+  //     activeTextColor = "text-red-900 dark:text-red-200";
+  //     active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+  //     vitess_img = "/img/home_icon/rapport_parking2.png";
+  //     vitess_img_dark = "/img/home_icon/rapport_parking.png";
+
+  //     imgClass = "w-14  h-auto sm:w-16 md:w-24";
+  //     imgBg =
+  //       "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+  //     border_top = "border-t border-t-red-200 dark:border-t-red-600/30 ";
+  //   }
+  //   //
+  //   else if (!hasDetails || !isActive) {
+  //     main_text_color = "text-purple-900 dark:text-purple-300 ";
+  //     statut = `${t("Hors service")}`;
+  //     lite_bg_color =
+  //       "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
+  //     activeTextColor = "text-purple-900 dark:text-purple-200";
+  //     active_bg_color = "bg-purple-200/50 dark:bg-purple-600/50";
+  //     vitess_img = "/img/home_icon/payer.png";
+  //     vitess_img_dark = "/img/home_icon/rapport_not_active.png";
+
+  //     imgClass = "w-14  h-auto sm:w-16 md:w-24";
+  //     imgBg =
+  //       "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
+  //     border_top = "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
+  //   }
+  //   //
+  //   //
+  //   //
+  //   if (
+  //     isNotSpeedActive &&
+  //     hasDetails &&
+  //     isActive &&
+  //     filter === "notMovingNow"
+  //   ) {
+  //     main_text_color = "text-red-900 dark:text-red-300";
+  //     statut = `${t("En Stationnement")}`;
+  //     lite_bg_color =
+  //       "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
+  //     activeTextColor = "text-red-900 dark:text-red-200";
+  //     active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
+  //     vitess_img = "/img/home_icon/rapport_parking2.png";
+  //     vitess_img_dark = "/img/home_icon/rapport_parking.png";
+
+  //     imgClass = "w-14  h-auto sm:w-16 md:w-24";
+  //     imgBg =
+  //       "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
+  //     border_top = "border-t border-t-red-200 dark:border-t-red-600/30 ";
+  //   }
+
+  //   if (hasDetails && isActive && filter === "moving") {
+  //     main_text_color = "text-green-700 dark:text-green-400";
+  //     statut = `${t("En mouvement rapide")}`;
+  //     lite_bg_color =
+  //       "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
+  //     activeTextColor = "text-green-800 dark:text-green-200";
+  //     active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
+  //     vitess_img = "/img/home_icon/active.png";
+  //     vitess_img_dark = "/img/home_icon/rapport_active.png";
+  //     imgClass = "w-12  h-auto sm:w-14 md:w-20";
+  //     imgBg =
+  //       "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
+  //     border_top = "border-t border-t-green-200 dark:border-t-green-600/30 ";
+  //   }
+  //   //
+
+  //   if (filter === "isMoving") return hasDetails && isSpeedActive && !isNotStillSpeedActive;
+  //   if (filter === "parking") return hasDetails && noSpeed;
+  //   if (filter === "inactive") return !hasDetails;
+
+  //   if (filter === "haveBeenMoving") return hasDetails && isMoving;
+  //   if (filter === "haveNotBeenMoving") return hasDetails && isMoving;
+
+  //   return true; // "all" : tous les véhicules
+  // });
 
   //
   //
@@ -1370,187 +1717,6 @@ function RapportGroupe({
               <div className="relative pb-20 flex flex-col gap-4 h-[70vh] pt-6 rounded-lg overflow-auto bg-white-- md:px-[10vw]">
                 {filteredVehiclesListe.length > 0 ? (
                   filteredVehiclesListe?.map((véhicule, index) => {
-                    // Trouver le véhicule correspondant dans updateData
-                    const matchedVehicle =
-                      currentDataFusionné &&
-                      currentDataFusionné.find(
-                        (v) => v.deviceID === véhicule?.deviceID
-                      );
-
-                    const matchedVehicle2 =
-                      dataFusionneeHome &&
-                      dataFusionneeHome?.find(
-                        (v) => v.deviceID === véhicule?.deviceID
-                      );
-
-                    const isSpeedActive =
-                      matchedVehicle2?.véhiculeDetails &&
-                      matchedVehicle2?.véhiculeDetails[0] &&
-                      matchedVehicle2?.véhiculeDetails[0]?.speedKPH > 0;
-
-                    const isNotSpeedActive =
-                      matchedVehicle2?.véhiculeDetails &&
-                      matchedVehicle2?.véhiculeDetails[0] &&
-                      matchedVehicle2?.véhiculeDetails[0]?.speedKPH <= 0;
-
-                    const isMoving = matchedVehicle.véhiculeDetails?.some(
-                      (detail) => detail.speedKPH >= 1
-                    );
-
-                    const hasDetails =
-                      matchedVehicle.véhiculeDetails &&
-                      matchedVehicle.véhiculeDetails.length > 0;
-
-                    const noSpeed = matchedVehicle.véhiculeDetails?.every(
-                      (detail) => detail.speedKPH <= 0
-                    );
-
-                    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-                    const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
-                      ? matchedVehicle.lastUpdateTime * 1000
-                      : 0;
-                    const isActive =
-                      currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-                    ///////////////////////////////////////////////////////////////////////////
-
-                    ////////////////////////////////////////////////////
-                    // Fonction pour obtenir le timestamp d'aujourd'hui à minuit
-                    const getTodayTimestamp = () => {
-                      const now = new Date();
-                      now.setHours(0, 0, 0, 0); // Minuit
-                      return Math.floor(now.getTime() / 1000); // Convertir en secondes
-                    };
-                    const todayTimestamp = getTodayTimestamp() * 1000;
-
-                    const hasBeenMoving =
-                      matchedVehicle.véhiculeDetails &&
-                      matchedVehicle.véhiculeDetails?.some(
-                        (detail) => detail.speedKPH >= 1
-                      );
-
-                    const lastUpdateTimestampMs =
-                      matchedVehicle.véhiculeDetails &&
-                      matchedVehicle.véhiculeDetails[0] &&
-                      matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
-
-                    const isNotStillSpeedActive =
-                      lastUpdateTimestampMs &&
-                      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
-
-                    ////////////////////////////x////////////////////////////////////////
-
-                    let main_text_color = "text-red-900 dark:text-red-300";
-                    let statut = "";
-                    let lite_bg_color =
-                      "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-950/20";
-                    let activeTextColor = "text-red-900 dark:text-red-200";
-                    let active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
-                    let vitess_img = "img/cars/orange_vitess.png";
-                    let vitess_img_dark = "img/cars/orange_vitess.png";
-
-                    let imgClass = "w-14 sm:w-16 md:w-24";
-                    let imgBg = "bg-green-200/40";
-                    let border_top =
-                      "border-t border-t-red-200 dark:border-t-red-600/30 ";
-
-                    if (hasDetails && isSpeedActive && !isNotStillSpeedActive) {
-                      main_text_color = "text-green-700 dark:text-green-400";
-                      statut = `${t("En mouvement rapide")}`;
-                      lite_bg_color =
-                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
-                      activeTextColor = "text-green-800 dark:text-green-200";
-                      active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
-                      vitess_img = "/img/home_icon/active.png";
-                      vitess_img_dark = "/img/home_icon/rapport_active.png";
-                      imgClass = "w-12  h-auto sm:w-14 md:w-20";
-                      imgBg =
-                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
-                      border_top =
-                        "border-t border-t-green-200 dark:border-t-green-600/30 ";
-                    } else if (
-                      hasDetails &&
-                      isActive &&
-                      // hasBeenMoving &&
-                      // !isSpeedActive
-                      (!isSpeedActive ||
-                        (isSpeedActive && isNotStillSpeedActive))
-                    ) {
-                      main_text_color = "text-red-900 dark:text-red-300";
-                      statut = `${t("En Stationnement")}`;
-                      lite_bg_color =
-                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
-                      activeTextColor = "text-red-900 dark:text-red-200";
-                      active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
-                      vitess_img = "/img/home_icon/rapport_parking2.png";
-                      vitess_img_dark = "/img/home_icon/rapport_parking.png";
-
-                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
-                      imgBg =
-                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
-                      border_top =
-                        "border-t border-t-red-200 dark:border-t-red-600/30 ";
-                    }
-                    //
-                    else if (!hasDetails || !isActive) {
-                      main_text_color = "text-purple-900 dark:text-purple-300 ";
-                      statut = `${t("Hors service")}`;
-                      lite_bg_color =
-                        "bg-purple-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-purple-600/80 shadow-lg shadow-gray-950/20";
-                      activeTextColor = "text-purple-900 dark:text-purple-200";
-                      active_bg_color =
-                        "bg-purple-200/50 dark:bg-purple-600/50";
-                      vitess_img = "/img/home_icon/payer.png";
-                      vitess_img_dark = "/img/home_icon/rapport_not_active.png";
-
-                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
-                      imgBg =
-                        "bg-purple-200/40 dark:bg-purple-900 border-white dark:border-purple-400 dark:shadow-gray-600 shadow-md shadow-purple-200 ";
-                      border_top =
-                        "border-t border-t-purple-200 dark:border-t-purple-600/30 ";
-                    }
-                    //
-                    //
-                    //
-                    if (
-                      isNotSpeedActive &&
-                      hasDetails &&
-                      isActive &&
-                      filter === "notMovingNow"
-                    ) {
-                      main_text_color = "text-red-900 dark:text-red-300";
-                      statut = `${t("En Stationnement")}`;
-                      lite_bg_color =
-                        "bg-red-100/40 dark:bg-gray-900/40 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-red-600/80 shadow-lg shadow-gray-900/20";
-                      activeTextColor = "text-red-900 dark:text-red-200";
-                      active_bg_color = "bg-red-200/50 dark:bg-red-600/50";
-                      vitess_img = "/img/home_icon/rapport_parking2.png";
-                      vitess_img_dark = "/img/home_icon/rapport_parking.png";
-
-                      imgClass = "w-14  h-auto sm:w-16 md:w-24";
-                      imgBg =
-                        "bg-red-200/40 dark:bg-red-900 border-white dark:border-red-400 dark:shadow-gray-600 shadow-md shadow-red-200 ";
-                      border_top =
-                        "border-t border-t-red-200 dark:border-t-red-600/30 ";
-                    }
-
-                    if (hasDetails && isActive && filter === "moving") {
-                      main_text_color = "text-green-700 dark:text-green-400";
-                      statut = `${t("En mouvement rapide")}`;
-                      lite_bg_color =
-                        "bg-green-100/20 dark:bg-gray-900/30 dark:shadow-gray-600/50 dark:shadow-lg dark:border-l-[.5rem] dark:border-green-600/80  shadow-lg shadow-gray-950/20";
-                      activeTextColor = "text-green-800 dark:text-green-200";
-                      active_bg_color = "bg-green-300/50 dark:bg-green-500/50";
-                      vitess_img = "/img/home_icon/active.png";
-                      vitess_img_dark = "/img/home_icon/rapport_active.png";
-                      imgClass = "w-12  h-auto sm:w-14 md:w-20";
-                      imgBg =
-                        "bg-green-200/40 dark:bg-green-900 border-white dark:border-green-400 dark:shadow-gray-600 shadow-md shadow-green-200 ";
-                      border_top =
-                        "border-t border-t-green-200 dark:border-t-green-600/30 ";
-                    }
-                    //
-
                     return (
                       <div>
                         {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
@@ -2750,7 +2916,7 @@ function RapportGroupe({
             {/*  */}
             {/*  */}
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              * {t("Informations Generale")}
+              * {t("Informations Actuellement")}
             </h2>
 
             <div className="flex justify-between items-center pr-3">
@@ -2780,7 +2946,7 @@ function RapportGroupe({
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setFilter("movingNow");
+                  setFilter("isMovingRightNowToday");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -2798,7 +2964,7 @@ function RapportGroupe({
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setFilter("notMovingNow");
+                  setFilter("ispParkingRightNowToday");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -2818,7 +2984,7 @@ function RapportGroupe({
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setFilter("inactive");
+                  setFilter("isNotActiveRithtNowToday");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -2850,7 +3016,7 @@ function RapportGroupe({
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setFilter("moving");
+                  setFilter("hasBeenMovingToday");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
@@ -2870,7 +3036,7 @@ function RapportGroupe({
               <p
                 onClick={() => {
                   setvoirVehiculeListePupup(true);
-                  setFilter("parking");
+                  setFilter("hasNotBeenMovingToday");
                 }}
                 className="text-orange-400 underline cursor-pointer"
               >
