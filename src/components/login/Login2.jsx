@@ -112,21 +112,47 @@ function Login2() {
       <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <div className=" flex  gap-5 justify-center items-center">
-            <div className="order flex flex-col justify-center items-center">
+            {formData.country === "ht" ? (
+              <div className="order flex flex-col justify-center items-center">
+                <img
+                  alt="Your Company"
+                  src="/img/cars/logo.png"
+                  className="mx-auto-- translate-y-0 w-[4.4rem] w-auto-- "
+                />
+                <h2 className="text-blue-900 text-[1.3rem] font-bold mb-1.5">
+                  OCTAGONO<span className="text-orange-500">PLUS</span>
+                </h2>
+              </div>
+            ) : formData.country ? (
               <img
                 alt="Your Company"
-                src="/img/cars/logo.png"
-                className="mx-auto-- translate-y-0 w-[4.4rem] w-auto-- "
+                src="/img/logo/OctagonoGPS.png"
+                className="mx-auto-- w-[10rem]  w-auto--"
               />
-              <h2 className="text-blue-900 text-[1.3rem] font-bold mb-1.5">
-                OCTAGONO<span className="text-orange-500">PLUS</span>
-              </h2>
-            </div>
-            <img
-              alt="Your Company"
-              src="/img/logo/OctagonoGPS.png"
-              className="mx-auto-- w-[10rem]  w-auto--"
-            />
+            ) : (
+              <div className=" flex  gap-5 justify-center items-center scale-75">
+                {/* {formData.country === "ht" ? ( */}
+                <div className="order flex flex-col justify-center items-center">
+                  <img
+                    alt="Your Company"
+                    src="/img/cars/logo.png"
+                    className="mx-auto-- translate-y-0 w-[4.4rem] w-auto-- "
+                  />
+                  <h2 className="text-blue-900 text-[1.3rem] font-bold mb-1.5">
+                    OCTAGONO<span className="text-orange-500">PLUS</span>
+                  </h2>
+                </div>
+                {/* ) : formData.country ? ( */}
+                <img
+                  alt="Your Company"
+                  src="/img/logo/OctagonoGPS.png"
+                  className="mx-auto-- w-[10rem]  w-auto--"
+                />
+                {/* ) : (
+              "Auccun pays"
+            )} */}
+              </div>
+            )}
           </div>
           {/* <h2
             // onClick={() => {
@@ -274,7 +300,7 @@ function Login2() {
                 </label>
               </div>
 
-              <div
+              {/* <div
                 // to="/gestion_geofences?tab=geozone"
                 onClick={() => {
                   setReadDocumentation(true);
@@ -285,7 +311,7 @@ function Login2() {
               >
                 <FaBook className="text-blue-600" />
                 <h3 className="text-sm">{t("Manuel d'utilisation")}</h3>
-              </div>
+              </div> */}
             </div>
             {error && (
               <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>

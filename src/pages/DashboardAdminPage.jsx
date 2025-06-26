@@ -489,7 +489,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            18/06/2025 _ 1
+            25/06/2025 _ 1
           </p>
           {/*  */}
           {/*  */}

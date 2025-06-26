@@ -26,7 +26,7 @@ function TableauRecapitulatifComptes({ isLongueur }) {
       {/* fixed header */}
       <thead>
         <div className="h-auto border-l-2-- border-red-600- min- w-full -w-[150rem] w-full-">
-          <tr className="bg-orange-100 border-2 border-green-600 relative z-20 text-gray-700 dark:bg-gray-900 dark:text-gray-100">
+          <tr className="bg-orange-100 border-2 border-green-600 relative z-[3] text-gray-700 dark:bg-gray-900 dark:text-gray-100">
             {/* <th className="border min-w-[.4rem] dark:border-gray-600 py-2 ----- --px-1"></th> */}
             <th className="border  min-w-[3.21rem]  dark:border-gray-600 py-2 ---- px-2">
               #

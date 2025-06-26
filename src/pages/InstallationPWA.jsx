@@ -67,14 +67,14 @@ const InstallationPWA = () => {
   }, []);
 
   return (
-    <>
+    <div className="pl-4 font-semibold ">
       {status === "installed" && (
         <div
           onClick={handleInstallClick}
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
-          <p className="flex items-center gap-3 justify-center">
-            <GrInstallOption />
+          <p className="flex items-center gap-3 text-[.98rem] justify-center">
+            <GrInstallOption className="text-orange-500" />
             Application déjà installée
           </p>
         </div>
@@ -85,10 +85,10 @@ const InstallationPWA = () => {
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <p
-            className="flex items-center gap-3 justify-center cursor-pointer"
+            className="flex items-center gap-3 text-[.98rem] justify-center cursor-pointer"
             //  onClick={handleInstallClick}
           >
-            <GrInstallOption />
+            <GrInstallOption className="text-orange-500" />
             Installation non supportée
           </p>
         </div>
@@ -98,10 +98,10 @@ const InstallationPWA = () => {
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
           <p
-            className="flex items-center gap-3 justify-center cursor-pointer"
+            className="flex items-center gap-3 text-[.98rem] justify-center cursor-pointer"
             onClick={handleInstallClick}
           >
-            <GrInstallOption />
+            <GrInstallOption className="text-orange-500" />
             Installation non disponible
           </p>
         </div>
@@ -111,8 +111,8 @@ const InstallationPWA = () => {
           onClick={handleInstallClick}
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
-          <p className="flex items-center gap-3 justify-center cursor-pointer">
-            <GrInstallOption />
+          <p className="flex items-center gap-3 text-[.98rem] justify-center cursor-pointer">
+            <GrInstallOption className="text-orange-500" />
             Installer l'application
           </p>
         </div>
@@ -123,7 +123,7 @@ const InstallationPWA = () => {
           <div className="border-t-4 border-orange-500 border-solid rounded-full w-4 h-4 animate-spin"></div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

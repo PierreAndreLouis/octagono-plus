@@ -23,6 +23,7 @@ import {
 import { PiIntersectThreeBold } from "react-icons/pi";
 import { BiUniversalAccess } from "react-icons/bi";
 import { GiPathDistance } from "react-icons/gi";
+import InstallationPWA from "../../pages/InstallationPWA";
 
 function SideBarSysadmin({
   readDocumentationSideBar,
@@ -67,7 +68,7 @@ function SideBarSysadmin({
     <div
       className={`${
         readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
-      }  transition-all lg:translate-x-0-- bg-white fixed    left-0 top-[3rem] p-4 pt-3 z-[9] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] max-w-[18rem] min-h-[100vh]`}
+      }  transition-all lg:translate-x-0-- bg-white fixed    left-0 top-[3rem] p-4 pt-3 z-[9] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] md:max-w-[18rem] min-h-[100vh]`}
     >
       <IoClose
         onClick={() => {
@@ -75,20 +76,21 @@ function SideBarSysadmin({
         }}
         className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
       />
-      {documentationPage !== "Dashboard" && (
-        <button
-          onClick={backToPagePrecedent}
-          // disabled={historyRef.current.length === 0}
-          className={` ${
-            documentationPage === "Localisation_devices"
-              ? "top-[7rem] md:top-[2rem]"
-              : "top-[.5rem] md:top-[2rem]"
-          } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute z-[999999999999]  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
-        >
-          <FaArrowLeft />
-          <span className="text-[1rem]">{t("Retour")}</span>
-        </button>
-      )}
+      {documentationPage !== "Dashboard" &&
+        documentationPage !== "Rapport_unite" && (
+          <button
+            onClick={backToPagePrecedent}
+            // disabled={historyRef.current.length === 0}
+            className={` ${
+              documentationPage === "Localisation_devices"
+                ? "top-[7rem] md:top-[2rem]"
+                : "top-[.5rem] md:top-[2rem]"
+            } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute z-[999999999999]  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
+          >
+            <FaArrowLeft />
+            <span className="text-[1rem]">{t("Retour")}</span>
+          </button>
+        )}
       {/*  */}
       {/*  */}
       {/*  */}
@@ -672,6 +674,8 @@ function SideBarSysadmin({
             </div>
           </div>
         </div>
+
+        <InstallationPWA />
 
         <div className="ajouter-appareil-container transition-all hover:border-b  ">
           <div
