@@ -999,6 +999,74 @@ function RapportGroupe({
     return true; // par défaut, tous les véhicules
   });
 
+  function filteredVehiclesListeFonction(filter) {
+    return vehiclesByDepartureTime?.filter((véhicule) => {
+      const matchedVehicle = currentDataFusionné?.find(
+        (v) => v.deviceID === véhicule?.deviceID
+      );
+      const hasDetails = matchedVehicle?.véhiculeDetails?.length > 0;
+      const lastDetail = matchedVehicle?.véhiculeDetails?.[0];
+      const speed = lastDetail?.speedKPH ?? 0;
+      const lastUpdateMs = lastDetail?.timestamp
+        ? lastDetail.timestamp * 1000
+        : 0;
+      const isActive = matchedVehicle?.lastUpdateTime
+        ? currentTime - matchedVehicle.lastUpdateTime * 1000 <
+          twentyFourHoursInMs
+        : false;
+      const updatedToday = lastUpdateMs >= todayTimestamp;
+      const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
+      const movedToday = matchedVehicle?.véhiculeDetails?.some(
+        (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH >= 1
+      );
+      const movedBefore = matchedVehicle?.véhiculeDetails?.some(
+        (d) => d.speedKPH >= 1
+      );
+
+      switch (filter) {
+        case "isMovingRightNowToday":
+          return (
+            hasDetails &&
+            isActive &&
+            speed >= 1 &&
+            updatedRecently &&
+            updatedToday
+          );
+
+        case "ispParkingRightNowToday":
+          return (
+            hasDetails &&
+            isActive &&
+            updatedToday &&
+            (speed <= 0 || (speed >= 1 && !updatedRecently))
+          );
+
+        case "isNotActiveRithtNowToday":
+          return (
+            !hasDetails || currentTimeMs - lastUpdateMs > twentyFourHoursInMs
+          );
+
+        case "hasBeenMovingToday":
+          return movedToday;
+
+        case "hasNotBeenMovingToday":
+          return !movedToday && hasDetails && isActive;
+
+        case "hasBeenMovingFromSearch":
+          return hasDetails && movedBefore;
+
+        case "hasNotBeenMovingFromSearch":
+          return hasDetails && !movedBefore;
+
+        case "isNotActiveFromSearch":
+          return !hasDetails;
+
+        default:
+          return true;
+      }
+    });
+  }
+
   // const filteredVehiclesListe = vehiclesByDepartureTime?.filter((véhicule) => {
   //   // ttttttttttttttttttt
 
@@ -1594,7 +1662,11 @@ function RapportGroupe({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
+  }, [
+    runningAnimationProgressLoading,
+    progressAnimationStart,
+    runningAnimationProgressDuration,
+  ]);
 
   // useEffect(() => {
   //   if (runningAnimationProgressLoading && progressAnimationStart < 99) {
@@ -2808,6 +2880,7 @@ function RapportGroupe({
         <div
           onClick={() => {
             rapportFetchFonction();
+            setIsSearchingFromRapportGroupePage(true);
           }}
           className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
         >
@@ -2916,7 +2989,10 @@ function RapportGroupe({
             {/*  */}
             {/*  */}
             <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              * {t("Informations Actuellement")}
+              *{" "}
+              {isSearchingFromRapportGroupePage
+                ? t("Informations de recherche")
+                : t("Informations Actuellement")}
             </h2>
 
             <div className="flex justify-between items-center pr-3">
@@ -2936,113 +3012,203 @@ function RapportGroupe({
                 {t("voir")}
               </p>
             </div>
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                {t("Véhicule en mouvement")} :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {activeVehicleCount2?.length}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  setFilter("isMovingRightNowToday");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                {t("voir")}
-              </p>
-            </div>
+            {!isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicule en mouvement")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("isMovingRightNowToday")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("isMovingRightNowToday");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
 
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                {t("Véhicule en stationnement")} :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {notActiveVehicleCount2?.length || "0"}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  setFilter("ispParkingRightNowToday");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                {t("voir")}
-              </p>
-            </div>
+            {!isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicule en stationnement")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("ispParkingRightNowToday")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("ispParkingRightNowToday");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
 
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                {t("Véhicule hors service")} :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {currentDataFusionné?.length > 0
-                    ? véhiculeHorsService?.length || "0"
-                    : "0"}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  setFilter("isNotActiveRithtNowToday");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                {t("voir")}
-              </p>
-            </div>
+            {!isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicule hors service")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("isNotActiveRithtNowToday")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("isNotActiveRithtNowToday");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
 
             {/*  */}
             {/*  */}
             {/*  */}
-            <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+            {!isSearchingFromRapportGroupePage && (
+              <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+            )}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {!isSearchingFromRapportGroupePage && (
+              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+                * {t("Information sur les déplacements")}
+              </h2>
+            )}
 
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              * {t("Information sur les déplacements")}
-            </h2>
+            {!isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicules déplacés")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("hasBeenMovingToday")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("hasBeenMovingToday");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
+            {!isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicules non déplacés")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("hasNotBeenMovingToday")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("hasNotBeenMovingToday");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
 
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                {t("Véhicules déplacés")} :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {currentDataFusionné?.length > 0
-                    ? véhiculeActiveToday?.length || "0"
-                    : "0"}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  setFilter("hasBeenMovingToday");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                {t("voir")}
-              </p>
-            </div>
-            <div className="flex justify-between items-center pr-3">
-              <p>
-                {t("Véhicules non déplacés")} :{" "}
-                <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                  {/* {véhiculeActiveToday?.length || "0"} */}
-                  {currentDataFusionné?.length > 0
-                    ? véhiculeNotActiveToday?.length || "0"
-                    : "0"}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  setvoirVehiculeListePupup(true);
-                  setFilter("hasNotBeenMovingToday");
-                }}
-                className="text-orange-400 underline cursor-pointer"
-              >
-                {t("voir")}
-              </p>
-            </div>
+            {isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicules déplacés")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("hasBeenMovingFromSearch")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("hasBeenMovingFromSearch");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
+            {isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicules non déplacés")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction(
+                        "hasNotBeenMovingFromSearch"
+                      )?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("hasNotBeenMovingFromSearch");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
+
+            {isSearchingFromRapportGroupePage && (
+              <div className="flex justify-between items-center pr-3">
+                <p>
+                  {t("Véhicules hors service")} :{" "}
+                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                    {
+                      filteredVehiclesListeFonction("isNotActiveFromSearch")
+                        ?.length
+                    }
+                  </span>
+                </p>
+                <p
+                  onClick={() => {
+                    setvoirVehiculeListePupup(true);
+                    setFilter("isNotActiveFromSearch");
+                  }}
+                  className="text-orange-400 underline cursor-pointer"
+                >
+                  {t("voir")}
+                </p>
+              </div>
+            )}
 
             {/* ////////////////////////////////////////////////////////////////////////////// */}
             {!voirPlus && (

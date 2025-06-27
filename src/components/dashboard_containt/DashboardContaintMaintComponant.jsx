@@ -863,7 +863,11 @@ function DashboardContaintMaintComponant({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
+  }, [
+    runningAnimationProgressLoading,
+    progressAnimationStart,
+    runningAnimationProgressDuration,
+  ]);
 
   return (
     <div className="pb-6-">

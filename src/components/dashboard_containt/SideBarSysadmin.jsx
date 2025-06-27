@@ -207,7 +207,7 @@ function SideBarSysadmin({
                 <p className="text-gray-600 font-semibold">
                   {isDashboardHomePage
                     ? t("Mode Utilisateur")
-                    : t("Admin Dashboard")}
+                    : t("sysadmin Dashboard")}
                 </p>
               </div>
             </div>

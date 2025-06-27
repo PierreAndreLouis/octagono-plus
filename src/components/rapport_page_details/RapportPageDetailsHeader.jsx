@@ -723,8 +723,9 @@ function RapportPageDetailsHeader({
               }}
               title={`${t("Recherche par date")}`}
             >
-              {(totalDevice?.length < 100 && pageSection === "groupe") ||
-                (pageSection === "unite" && (
+              {/* {(totalDevice?.length < 100 && pageSection === "groupe") ||
+                ((pageSection === "unite" ||
+                  deviceListeSelected?.length < 100) && (
                   <div
                     onClick={() => {
                       setShowChooseDate(true);
@@ -733,7 +734,30 @@ function RapportPageDetailsHeader({
                   >
                     <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
                   </div>
-                ))}
+                ))} */}
+
+              {pageSection === "unite" && (
+                <div
+                  onClick={() => {
+                    setShowChooseDate(true);
+                  }}
+                  className="flex  gap-2 items-center cursor-pointer"
+                >
+                  <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+                </div>
+              )}
+
+              {pageSection === "groupe" &&
+                deviceListeSelected?.length < 200 && (
+                  <div
+                    onClick={() => {
+                      setShowChooseDate(true);
+                    }}
+                    className="flex  gap-2 items-center cursor-pointer"
+                  >
+                    <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+                  </div>
+                )}
             </Tooltip>
           </div>
         </div>

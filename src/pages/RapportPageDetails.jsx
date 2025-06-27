@@ -68,6 +68,7 @@ function RapportPageDetails() {
     homePageReload,
     setDonneeFusionnéForRapport,
     setRapportVehicleDetails,
+    setIsSearchingFromRapportGroupePage,
   } = useContext(DataContext);
 
   let x;
@@ -888,6 +889,7 @@ function RapportPageDetails() {
     if (pageSection === "groupe") {
       setDonneeFusionnéForRapport([]);
       setRapportVehicleDetails([]);
+      setIsSearchingFromRapportGroupePage(true);
     }
 
     const formatDateToISO = (date) => {
@@ -1087,6 +1089,7 @@ function RapportPageDetails() {
     if (pageSection === "groupe") {
       setDonneeFusionnéForRapport([]);
       setRapportVehicleDetails([]);
+      setIsSearchingFromRapportGroupePage(true);
     }
 
     const formatDateToISO = (date) => {
@@ -1423,7 +1426,7 @@ function RapportPageDetails() {
       {/* ////////////////////////////////////////////////////////////////////////////////////// */}
       {/* en groupe */}
 
-      {pageSection === "groupe" && totalDevice?.length > 100 && (
+      {pageSection === "groupe" && totalDevice?.length > 200 && (
         <div>
           <h2 className="font-bold mx-4 text-center mt-10 text-lg">
             Ce compte a plus de 100 appareils...
@@ -1440,7 +1443,7 @@ function RapportPageDetails() {
         </div>
       )}
 
-      {pageSection === "groupe" && totalDevice?.length <= 100 && (
+      {pageSection === "groupe" && totalDevice?.length <= 200 && (
         <RapportGroupe
           currentDataFusionné={currentDataFusionné}
           véhiculeActiveToday={véhiculeActiveToday}
