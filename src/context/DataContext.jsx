@@ -3616,7 +3616,7 @@ const DataContextProvider = ({ children }) => {
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
       // console.log("Almost thereeee..............");
-      setError("");
+      // setError("");
       console.log(result);
       if (result === "success") {
         console.log(
@@ -3626,10 +3626,10 @@ const DataContextProvider = ({ children }) => {
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
-        setError(
-          errorMessage ||
-            "Erreur lors de la modification lastLoginTime de l'utilisateur."
-        );
+        // setError(
+        //   errorMessage ||
+        //     "Erreur lors de la modification lastLoginTime de l'utilisateur."
+        // );
 
         handleUserError(xmlDoc);
       }
