@@ -1645,13 +1645,15 @@ function RapportGroupe({
   const intervalRef = useRef(null);
 
   useEffect(() => {
-    if (runningAnimationProgressLoading && progressAnimationStart < 99) {
+    if (runningAnimationProgressLoading) {
       if (intervalRef.current) clearInterval(intervalRef.current);
 
       intervalRef.current = setInterval(() => {
         setProgressAnimationStart((prev) => {
           if (prev >= 98) {
-            if (intervalRef.current) clearInterval(intervalRef.current);
+            clearInterval(intervalRef.current);
+            setRunningAnimationProgressLoading(false);
+
             return 99;
           }
           return prev + 1;
@@ -1659,14 +1661,8 @@ function RapportGroupe({
       }, runningAnimationProgressDuration);
     }
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [
-    runningAnimationProgressLoading,
-    progressAnimationStart,
-    runningAnimationProgressDuration,
-  ]);
+    return () => clearInterval(intervalRef.current);
+  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
 
   // useEffect(() => {
   //   if (runningAnimationProgressLoading && progressAnimationStart < 99) {
@@ -2880,7 +2876,7 @@ function RapportGroupe({
         <div
           onClick={() => {
             rapportFetchFonction();
-            setIsSearchingFromRapportGroupePage(true);
+            setIsSearchingFromRapportGroupePage(false);
           }}
           className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
         >

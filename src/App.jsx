@@ -301,7 +301,7 @@ function App() {
 
         {/* <Login2 /> */}
 
-        {isOffline && window.location.hostname !== "localhost" && (
+        {/* {isOffline && window.location.hostname !== "localhost" && (
           <div className="fixed z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/70">
             <div
               className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[90vw] `}
@@ -322,7 +322,7 @@ function App() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <SuccèsÉchecMessagePopup />
         {readDocumentation ? (
           <div className="transition-all">

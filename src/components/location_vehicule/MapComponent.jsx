@@ -244,16 +244,18 @@ function MapComponent({
     const isStillSpeedActive =
       timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
 
-    if (isDashboardHomePage) {
-      if (isRecentlyUpdate) return "/pin/ping_red.png";
-      return "/pin/ping_purple.png";
-    } else {
-      if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
-      if (speed > 0 && speed <= 20 && isStillSpeedActive)
-        return `/pin/ping_yellow_h${direction}.png`;
-      if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+    // if (isDashboardHomePage) {
+    //   if (isRecentlyUpdate) return "/pin/ping_red.png";
+    //   return "/pin/ping_purple.png";
+    // } else {
+    if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
+    if (speed > 0 && speed <= 20 && isStillSpeedActive)
+      return `/pin/ping_yellow_h${direction}.png`;
+    if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+    if (speed > 20 && isStillSpeedActive)
       return `/pin/ping_green_h${direction}.png`;
-    }
+    return "/pin/ping_red.png";
+    // }
   };
 
   const openGoogleMaps = (latitude, longitude) => {

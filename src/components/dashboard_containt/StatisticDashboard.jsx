@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
 import { FaChevronDown } from "react-icons/fa";
 import { MdUpdate } from "react-icons/md";
+import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 function StatisticDashboard({
   setChosseOtherGroupeDashboard,
@@ -14,11 +15,13 @@ function StatisticDashboard({
   setStatisticFilteredDeviceListeText,
   animatedTotal,
   animatedDeplaces,
+  animatedEnDéplacement,
   DeviceEnStationnement,
   animatedStationnement,
   DeviceInactifs,
   animatedInactifs,
   DeviceDéplacer,
+  EnDéplacement,
   allDevices,
 }) {
   const {
@@ -27,15 +30,23 @@ function StatisticDashboard({
     isDashboardHomePage,
     account,
     username,
+    homePageReloadWidthNoAnimation,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+
+  const [isDeviceEnDeplacement, setIsDeviceEnDeplacement] = useState(false);
 
   return (
     <div className="md:px-4-- pt-3--">
       <div className="w-full h-full shadow-lg shadow-black/5 bg-white rounded-lg p-4">
         <div className=" relative mb-4 ">
           <div className="">
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div
+              onClick={() => {
+                homePageReloadWidthNoAnimation();
+              }}
+              className="flex items-center gap-2 sm:gap-3"
+            >
               <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
                 {t("Pour Aujourd'hui")}
               </h1>
@@ -127,25 +138,57 @@ function StatisticDashboard({
           </div>
           <div
             onClick={() => {
-              setShowStatisticDeviceListeDashboard(true);
-              setStatisticFilteredDeviceListe(DeviceDéplacer);
-              setStatisticFilteredDeviceListeText("Appareils Déplacer");
+              // setShowStatisticDeviceListeDashboard(true);
+              if (isDeviceEnDeplacement) {
+                setStatisticFilteredDeviceListe(EnDéplacement);
+                setStatisticFilteredDeviceListeText("Appareils En déplacement");
+              } else {
+                setStatisticFilteredDeviceListe(DeviceDéplacer);
+                setStatisticFilteredDeviceListeText("Appareils Déplacer");
+              }
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border border-green-300  relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-green-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-              <div>
-                <div className="flex items-center  gap-2">
-                  <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                    {t("Déplacés")}
+              <div className=" w-full">
+                <div className="flex items-center  gap-2 w-full">
+                  <h3
+                    onClick={() => {
+                      setShowStatisticDeviceListeDashboard(true);
+                    }}
+                    className="text-gray-500 max-w-[70%]-- w-full  whitespace-nowrap text-ellipsis overflow-hidden  dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- "
+                  >
+                    {isDeviceEnDeplacement
+                      ? t("En Déplacement")
+                      : t("Déplacés")}
                   </h3>
+
+                  <div className=" text-[1.2rem] flex justify-end w-[30%]  text-green-800">
+                    <FaArrowRightArrowLeft
+                      onClick={() => {
+                        setIsDeviceEnDeplacement(!isDeviceEnDeplacement);
+                      }}
+                    />
+                  </div>
                 </div>
-                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
+                <h2
+                  onClick={() => {
+                    setShowStatisticDeviceListeDashboard(true);
+                  }}
+                  className="text-gray-900  dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- "
+                >
                   {/* {DeviceDéplacer?.length} */}
-                  {animatedDeplaces}
+                  {isDeviceEnDeplacement
+                    ? EnDéplacement?.length
+                    : animatedDeplaces}
                 </h2>
               </div>
-              <div className="absolute mt-1.5 right-4 bottom-4">
+              <div
+                onClick={() => {
+                  setShowStatisticDeviceListeDashboard(true);
+                }}
+                className="absolute mt-1.5 right-4 bottom-4"
+              >
                 <img
                   className=" w-12 md:w-14 lg:w-14--"
                   src="/img/home_icon/active.png"

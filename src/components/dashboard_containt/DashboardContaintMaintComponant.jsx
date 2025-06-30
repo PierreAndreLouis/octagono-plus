@@ -102,6 +102,8 @@ function DashboardContaintMaintComponant({
     homePageReload,
     username,
     fetchVehicleDataFromRapportGroupe,
+    showAnnimationProgresseBarDashboard,
+    setShowAnnimationProgresseBarDashboard,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -119,10 +121,38 @@ function DashboardContaintMaintComponant({
   const todayTimestamp = getTodayTimestamp();
   const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
   const twentyFourHoursInSec = 24 * 60 * 60;
+  const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+
   const currentTimeSec = getCurrentTimestamp();
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+  //
 
   const DeviceDéplacer = allDevices?.filter((device) => {
     return device?.lastStopTime > todayTimestamp;
+  });
+
+  const EnDéplacement = allDevices?.filter((véhicule) => {
+    const lastUpdateMs = véhicule?.véhiculeDetails?.[0]?.timestamp
+      ? véhicule?.véhiculeDetails?.[0].timestamp * 1000
+      : 0;
+
+    const hasDetails = véhicule?.véhiculeDetails?.length > 0;
+    const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH ?? 0;
+    const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
+
+    const isActive = véhicule?.lastUpdateTime
+      ? currentTime - véhicule.lastUpdateTime * 1000 < twentyFourHoursInMs
+      : false;
+    const updatedToday = lastUpdateMs >= todayTimestamp;
+
+    return (
+      hasDetails && isActive && speed >= 1 && updatedRecently && updatedToday
+    );
   });
 
   const DeviceEnStationnement = allDevices?.filter((device) => {
@@ -135,6 +165,8 @@ function DashboardContaintMaintComponant({
 
   const [animatedTotal, setAnimatedTotal] = useState(0);
   const [animatedDeplaces, setAnimatedDeplaces] = useState(0);
+  const [animatedEnDéplacement, setAnimatedEnDéplacement] = useState(0);
+
   const [animatedStationnement, setAnimatedStationnement] = useState(0);
   const [animatedInactifs, setAnimatedInactifs] = useState(0);
 
@@ -165,6 +197,12 @@ function DashboardContaintMaintComponant({
       1000,
       setAnimatedDeplaces
     );
+    // animateValue(
+    //   animatedEnDéplacement,
+    //   EnDéplacement.length,
+    //   1000,
+    //   setAnimatedEnDéplacement
+    // );
     animateValue(
       animatedStationnement,
       DeviceEnStationnement.length,
@@ -473,10 +511,21 @@ function DashboardContaintMaintComponant({
 
     if (isDashboardHomePage) {
       fetchAllComptes(adminAccount, adminUsername, adminPassword);
+      setShowAnnimationProgresseBarDashboard(true);
     } else {
       homePageReload(accountUser, usernameUser, passwordUser);
     }
   };
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setTimeout(() => {
+  //       fetchNewDataDevices();
+  //     }, 1000);
+  //   }, 1000 * 60 * 5);
+
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
   const [showFistGrapheOption2, setShowFistGrapheOption2] = useState(false);
@@ -846,13 +895,15 @@ function DashboardContaintMaintComponant({
   const intervalRef = useRef(null);
 
   useEffect(() => {
-    if (runningAnimationProgressLoading && progressAnimationStart < 99) {
+    if (runningAnimationProgressLoading) {
       if (intervalRef.current) clearInterval(intervalRef.current);
 
       intervalRef.current = setInterval(() => {
         setProgressAnimationStart((prev) => {
           if (prev >= 98) {
-            if (intervalRef.current) clearInterval(intervalRef.current);
+            clearInterval(intervalRef.current);
+            setRunningAnimationProgressLoading(false);
+
             return 99;
           }
           return prev + 1;
@@ -860,14 +911,8 @@ function DashboardContaintMaintComponant({
       }, runningAnimationProgressDuration);
     }
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [
-    runningAnimationProgressLoading,
-    progressAnimationStart,
-    runningAnimationProgressDuration,
-  ]);
+    return () => clearInterval(intervalRef.current);
+  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
 
   return (
     <div className="pb-6-">
@@ -1022,11 +1067,13 @@ function DashboardContaintMaintComponant({
         }
         animatedTotal={animatedTotal}
         animatedDeplaces={animatedDeplaces}
+        animatedEnDéplacement={animatedEnDéplacement}
         DeviceEnStationnement={DeviceEnStationnement}
         animatedStationnement={animatedStationnement}
         DeviceInactifs={DeviceInactifs}
         animatedInactifs={animatedInactifs}
         DeviceDéplacer={DeviceDéplacer}
+        EnDéplacement={EnDéplacement}
         allDevices={allDevices}
       />
       {/*  */}
@@ -1039,7 +1086,8 @@ function DashboardContaintMaintComponant({
       <div className="md:px-4-- pt-4 mx-2 md:mx-0">
         {progressBarForLoadingData > 0 &&
           progressBarForLoadingData < 100 &&
-          !fetchVehicleDataFromRapportGroupe && (
+          !fetchVehicleDataFromRapportGroupe &&
+          showAnnimationProgresseBarDashboard && (
             <div
               className="rounded-md shadow-sm shadow-black/10 overflow-hidden"
               style={{
@@ -1079,7 +1127,13 @@ function DashboardContaintMaintComponant({
           {/*  */}
 
           {/* Graphe des comptes */}
-          <div className="bg-white shadow-lg shadow-black/5 relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg">
+          <div
+            className={`${
+              currentAccountSelected || !isDashboardHomePage
+                ? "order-2 md:order-1"
+                : ""
+            } bg-white shadow-lg shadow-black/5 relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg`}
+          >
             {/* title section */}
             <div className="flex relative   mb-4 justify-between items-end- ">
               {((currentAccountSelected && isDashboardHomePage) ||
@@ -1097,14 +1151,6 @@ function DashboardContaintMaintComponant({
                     >
                       {t("Full Screen")}
                     </p>
-                    {!currentAccountSelected && (
-                      <FaAngleDoubleRight
-                        onClick={() => {
-                          setShowFistGrapheOption(!showFistGrapheOption);
-                        }}
-                        className="text-xl ml-3 mt-1 cursor-pointer"
-                      />
-                    )}
                   </div>
                   <p className="text-gray-500">
                     {t("Nombre d'appareils")} (
@@ -1228,7 +1274,13 @@ function DashboardContaintMaintComponant({
           {/*  */}
           {/*  */}
           {/* Graphe des Appareils */}
-          <div className="bg-white shadow-lg shadow-black/5 relative flex flex-col justify-between- p-3 md:col-span-1- rounded-lg">
+          <div
+            className={`${
+              currentAccountSelected || !isDashboardHomePage
+                ? "order-1 md:order-1"
+                : ""
+            } bg-white shadow-lg shadow-black/5 relative flex flex-col justify-between- p-3 md:col-span-1- rounded-lg`}
+          >
             <div className="flex items-center- items-start   mb-8">
               {showFistGrapheOption2 && (
                 <h2 className="font-semibold text-lg text-gray-700">

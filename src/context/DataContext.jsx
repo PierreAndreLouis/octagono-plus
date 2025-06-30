@@ -30,6 +30,11 @@ const DataContextProvider = ({ children }) => {
     });
   };
 
+  const [
+    showAnnimationProgresseBarDashboard,
+    setShowAnnimationProgresseBarDashboard,
+  ] = useState(true);
+
   const [documentationPage, setDocumentationPage] = useState("Dashboard");
 
   const [progressAnimationStart, setProgressAnimationStart] = useState(0);
@@ -1267,6 +1272,9 @@ const DataContextProvider = ({ children }) => {
           userData[fieldName] = fieldValue;
         }
         setDashboardLoadingEffect(true);
+        setShowAnnimationProgresseBarDashboard(true);
+
+        resetInteraction();
 
         // navigate("/home");
         if (account === "sysadmin") {
@@ -1293,6 +1301,9 @@ const DataContextProvider = ({ children }) => {
 
           fetchAllComptes(account, user, password);
         } else {
+          const lastLoginTime = Math.floor(Date.now() / 1000);
+
+          UpdateUserConnexion(account, user, password, lastLoginTime);
           setUserData(userData);
 
           navigate("/home");
@@ -3492,35 +3503,7 @@ const DataContextProvider = ({ children }) => {
           );
         }, 1000);
 
-        // setTimeout(() => {
-        //   fetchAccountUsers(id, pwd)
-        //     .then((users) => {
-        //       fetchUserDevices(id, users);
-        //       fetchUserGroupes(id, users);
-        //     })
-        //     .catch((err) => {
-        //       console.error(
-        //         "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-        //         err
-        //       );
-        //       setError("Erreur lors de la mise à jour des utilisateurs.");
-        //     });
-        // }, 2000);
-
         setCreateVéhiculeLoading(false);
-
-        // Ajouter l’utilisateur aux groupes sélectionnés
-
-        // let key;
-        // let groupe;
-
-        // if (groupeDuSelectedUser !== groupesSelectionnes) {
-        //   key = "dbput";
-        //   groupe = groupesSelectionnes;
-        // } else if (!groupesSelectionnes && groupeDuSelectedUser) {
-        //   key = "dbdel";
-        //   groupe = groupeDuSelectedUser;
-        // }
 
         setTimeout(() => {
           groupesNonSelectionnes.map((groupID) =>
@@ -3531,16 +3514,6 @@ const DataContextProvider = ({ children }) => {
         let key = "dbcreate";
 
         // if (groupesSelectionnes) {
-        //   key = "dbput";
-        // } else {
-        //   key = "dbcreate";
-        // }
-
-        // if (groupeDuSelectedUser !== groupesSelectionnes) {
-        //   key = "dbput";
-        // } else if (groupesSelectionnes && !groupeDuSelectedUser) {
-        //   key = "dbcreate";
-        // }
 
         setTimeout(() => {
           assignUserToGroup(
@@ -3566,29 +3539,6 @@ const DataContextProvider = ({ children }) => {
               setError("Erreur lors de la mise à jour de utilisateur.");
             });
         }, 10000);
-
-        // Retirer l’utilisateur des groupes non sélectionnés
-
-        // setTimeout(() => {
-        //   if (deviceSelectionnes) {
-        //     assignMultipleDevicesToGroup(
-        //       accountID,
-        //       userID,
-        //       password,
-        //       groupID,
-        //       deviceSelectionnes
-        //     );
-        //   }
-        //   if (usersSelectionnes) {
-        //     assignMultipleUsersToGroup(
-        //       accountID,
-        //       userID, // utilisateur qui fait la requête
-        //       password,
-        //       groupID,
-        //       usersSelectionnes
-        //     );
-        //   }
-        // }, 4000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -3620,6 +3570,77 @@ const DataContextProvider = ({ children }) => {
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
+    }
+  };
+  const UpdateUserConnexion = async (
+    accountID,
+    user,
+    password,
+    lastLoginTime
+  ) => {
+    // /////////
+
+    setError("");
+    setCreateVéhiculeLoading(true);
+    //  <Field name="GroupList">${userAccount}</Field>
+    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    const xmlData = `<GTSRequest command="dbput">
+      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Record table="User" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        <Field name="userID">${user}</Field>
+
+        <Field name="lastLoginTime">${lastLoginTime}</Field>
+
+        
+        
+      </Record>
+    </GTSRequest>`;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Modification d'un nouveau groupe", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      // console.log("Almost thereeee..............");
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        console.log(
+          "User lastLoginTime modifier avec success ++>>>>>>>>>>>>>>.",
+          lastLoginTime
+        );
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(
+          errorMessage ||
+            "Erreur lors de la modification lastLoginTime de l'utilisateur."
+        );
+
+        handleUserError(xmlDoc);
+      }
+
+      // console.log("End creating..............");
+    } catch (error) {
+      setError("Erreur lors de la modification lastLoginTime du user.");
+      console.error(
+        "Erreur lors de la modification lastLoginTime du user",
+        error
+      );
     }
   };
   const deleteUSerEnGestionAccount = async (
@@ -6294,7 +6315,14 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("data............", data);
+      console.log(
+        "data...... fetchvehiculeData......, accountID,    userID,  password,",
+        accountID,
+        userID,
+        password,
+        data
+      );
+
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -6322,13 +6350,13 @@ const DataContextProvider = ({ children }) => {
         if (véhiculeData?.length < 50) {
           setRunningAnimationProgressDuration(10);
         } else if (véhiculeData?.length < 100) {
-          setRunningAnimationProgressDuration(30);
+          setRunningAnimationProgressDuration(20);
         } else if (véhiculeData?.length < 200) {
-          setRunningAnimationProgressDuration(50);
+          setRunningAnimationProgressDuration(40);
         } else if (véhiculeData?.length < 300) {
-          setRunningAnimationProgressDuration(70);
+          setRunningAnimationProgressDuration(60);
         } else if (véhiculeData?.length < 400) {
-          setRunningAnimationProgressDuration(100);
+          setRunningAnimationProgressDuration(80);
         } else {
           setRunningAnimationProgressDuration(150);
         }
@@ -6558,27 +6586,79 @@ const DataContextProvider = ({ children }) => {
     timeFrom = null,
     timeTo = null
   ) => {
+    setShowAnnimationProgresseBarDashboard(true);
     fetchVehicleData(account, user, password, onlyLastResult, timeFrom, timeTo);
+  };
+  const homePageReloadWidthNoAnimation = () => {
+    // console.log("start........");
+    // setShowAnnimationProgresseBarDashboard(false);
+    // // setTimeout(() => {
+    // const accountUser = account || localStorage.getItem("account") || "";
+    // const usernameUser = username || localStorage.getItem("username") || "";
+    // const passwordUser = password || localStorage.getItem("password") || "";
+    // if (!accountUser || !usernameUser || !passwordUser) return;
+    // console.log(
+    //   "→ login from fonction",
+    //   accountUser,
+    //   usernameUser,
+    //   passwordUser
+    // );
+    // if (isDashboardHomePage) {
+    //   fetchAllComptes(adminAccount, adminUsername, adminPassword);
+    // } else {
+    //   homePageReload(accountUser, usernameUser, passwordUser);
+    // }
+    // // }, 1000);
   };
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // reloadHomePage();
-      if (updateAuto) {
-        if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
-          console.log("HomePage Reload start....");
-          // console.log("reload HomePage");
-          (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
-            fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-          });
-          setEstLancerUpdateAuto(true);
+      console.log("start........");
+      setShowAnnimationProgresseBarDashboard(false);
+
+      const accountUser = account || localStorage.getItem("account") || "";
+      const usernameUser = username || localStorage.getItem("username") || "";
+      const passwordUser = password || localStorage.getItem("password") || "";
+
+      if (!accountUser || !usernameUser || !passwordUser) return;
+      console.log(
+        "→ login from useefect",
+        accountUser,
+        usernameUser,
+        passwordUser
+      );
+
+      setTimeout(async () => {
+        if (isDashboardHomePage) {
+          await fetchAllComptes(adminAccount, adminUsername, adminPassword);
+        } else {
+          homePageReload(accountUser, usernameUser, passwordUser);
         }
-      }
-    }, 30000);
+      }, 1000);
+    }, 1000 * 60 * 5);
 
     return () => clearInterval(intervalId);
-  }, [updateAuto, véhiculeDataRef?.current, véhiculeData]);
+  }, []);
+
+  // Mise a jour les donnee de rapport page tous les 1 minutes
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     // reloadHomePage();
+  //     if (updateAuto) {
+  //       if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
+  //         console.log("HomePage Reload start....");
+  //         // console.log("reload HomePage");
+  //         (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
+  //           fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
+  //         });
+  //         setEstLancerUpdateAuto(true);
+  //       }
+  //     }
+  //   }, 30000);
+
+  //   return () => clearInterval(intervalId);
+  // }, [updateAuto, véhiculeDataRef?.current, véhiculeData]);
 
   //
   //
@@ -8633,6 +8713,70 @@ const DataContextProvider = ({ children }) => {
     // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
   };
 
+  const [isUserNotInteractingNow, setIsUserNotInteractingNow] = useState(false);
+  const [timeSinceLastInteraction, setTimeSinceLastInteraction] = useState(0);
+  const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes en millisecondes pour tester
+
+  const resetInteraction = () => {
+    localStorage.setItem("lastInteraction", new Date().toISOString());
+    setIsUserNotInteractingNow(false);
+    setTimeSinceLastInteraction(0);
+
+    const lastLoginTime = Math.floor(Date.now() / 1000);
+
+    UpdateUserConnexion(account, username, password, lastLoginTime);
+
+    if (window.location.hostname !== "localhost") {
+      // Exécuter la fonction seulement si ce n'est pas localhost
+      sendConfirmConnexionMail(account, user);
+      sendConfirmConnexionMail2(account, user);
+    }
+  };
+
+  useEffect(() => {
+    const updateLastInteraction = () => {
+      if (!isUserNotInteractingNow) {
+        localStorage.setItem("lastInteraction", new Date().toISOString());
+      }
+    };
+
+    const checkInactivity = () => {
+      const lastInteraction = localStorage.getItem("lastInteraction");
+      if (lastInteraction) {
+        const lastInteractionTime = new Date(lastInteraction).getTime();
+        const currentTime = new Date().getTime();
+        const elapsed = currentTime - lastInteractionTime;
+        setTimeSinceLastInteraction(elapsed);
+        if (elapsed > INACTIVITY_LIMIT) {
+          setIsUserNotInteractingNow(true);
+        } else {
+          setIsUserNotInteractingNow(false);
+        }
+      }
+    };
+
+    const handleInteraction = () => {
+      updateLastInteraction();
+      checkInactivity();
+    };
+
+    const events = ["mousemove", "click", "keydown"];
+    events.forEach((event) => {
+      window.addEventListener(event, handleInteraction);
+    });
+
+    const interval = setInterval(checkInactivity, 1000);
+
+    checkInactivity();
+
+    return () => {
+      events.forEach((event) => {
+        window.removeEventListener(event, handleInteraction);
+      });
+      clearInterval(interval);
+    };
+  }, [isUserNotInteractingNow]);
+
   // backToPagePrecedent
   return (
     <DataContext.Provider
@@ -8964,6 +9108,11 @@ const DataContextProvider = ({ children }) => {
         setRapportVehicleDetails,
         isSearchingFromRapportGroupePage,
         setIsSearchingFromRapportGroupePage,
+        showAnnimationProgresseBarDashboard,
+        setShowAnnimationProgresseBarDashboard,
+        homePageReloadWidthNoAnimation,
+        resetInteraction,
+        isUserNotInteractingNow,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

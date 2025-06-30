@@ -339,11 +339,23 @@ function ListeDesVehiculesGestion({
           </div>
         )}
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
+          <div className="mt-4  flex items-center gap-2">
+            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
+              {t("Véhicules déplacés")}
+            </p>
+            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 ">
+              {t("Véhicules non déplacés")}
+            </p>
+            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
+              {t("Véhicules hors service")}
+            </p>
+          </div>
           {/*  */}
 
           {filteredListeGestionDesVehicules?.length > 0 ? (
             filteredListeGestionDesVehicules
               ?.slice()
+              // .sort((a, b) => b.lastStopTime - a.lastStopTime)
               .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
               ?.map((device, index) => {
                 //
@@ -409,14 +421,32 @@ function ListeDesVehiculesGestion({
                       </button> */}
                     </div>
                     <div className="flex  gap-3  ">
-                      <FaCar
-                        className={`${text_color} text-[3rem] hidden sm:block  md:mr-4 `}
-                      />
+                      <div className=" hidden sm:flex flex-col  items-center">
+                        <FaCar
+                          className={`${text_color} text-[3rem]   md:mr-4 `}
+                        />
+                        <h3 className={`${text_color} font-bold text-2xl`}>
+                          {parseFloat(
+                            device?.véhiculeDetails[0]?.speedKPH
+                          ).toFixed(0)}{" "}
+                        </h3>
+                        <h3 className={`${text_color} font-bold text-lg`}>
+                          Km/h
+                        </h3>
+                      </div>
                       <div className=" w-full flex flex-wrap justify-between gap-x-4">
                         <div>
-                          <FaCar
-                            className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
-                          />
+                          <div className="flex sm:hidden gap-6 items-center">
+                            <FaCar
+                              className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
+                            />
+                            <h3 className={`${text_color} font-bold text-2xl`}>
+                              {parseFloat(
+                                device?.véhiculeDetails[0]?.speedKPH
+                              ).toFixed(0)}{" "}
+                              Km/h
+                            </h3>
+                          </div>
                           <div className=" border-b py-1">
                             <p className="font-bold">
                               {t("Description")} :

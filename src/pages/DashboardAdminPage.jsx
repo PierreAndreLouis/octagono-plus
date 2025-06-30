@@ -76,6 +76,11 @@ function DashboardAdminPage() {
     documentationPage,
     setDocumentationPage,
     setDonneeFusionnéForRapport,
+    resetInteraction,
+    isUserNotInteractingNow,
+    isAuthenticated,
+    adminPassword,
+    password,
   } = useContext(DataContext);
 
   useEffect(() => {
@@ -270,6 +275,36 @@ function DashboardAdminPage() {
     location.pathname.startsWith(route)
   );
 
+  //
+  const [inputPassword, setInputPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const reactiverSessionUser = (event) => {
+    event.preventDefault(); // Prevents the form from submitting
+
+    if (
+      (adminPassword && inputPassword === adminPassword) ||
+      (password && inputPassword === password)
+    ) {
+      resetInteraction();
+      setErrorMessage("");
+      setInputPassword("");
+    } else {
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
+    }
+  };
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
   return (
     // <>
     <div className="transition-all bg-gray-100">
@@ -354,6 +389,63 @@ function DashboardAdminPage() {
             </div>
           )}
           {/* container */}
+          {/* <div>
+            <p>
+              Temps depuis la dernière interaction :{" "}
+              {Math.floor(timeSinceLastInteraction / 1000)} secondes
+            </p>
+            {isUserNotInteractingNow ? (
+              <p>L'utilisateur est inactif depuis plus de 10 secondes.</p>
+            ) : (
+              <p>L'utilisateur est actif.</p>
+            )}
+            <button onClick={resetInteraction}>
+              Réinitialiser l'interaction
+            </button>
+          </div> */}
+          {isUserNotInteractingNow && isAuthenticated && (
+            <div className="fixed inset-0 z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] bg-black/50 backdrop-blur-sm-- flex justify-center items-center">
+              <form
+                onSubmit={reactiverSessionUser}
+                className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl p-8 shadow-2xl border border-gray-200"
+              >
+                <h2 className="text-2xl font-bold text-gray-800 mb-3 text-center">
+                  Session inactive
+                </h2>
+                <p className="text-gray-600 text-sm mb-6 text-center">
+                  Inactivité de 30 minutes détectée. Veuillez confirmer votre
+                  mot de passe pour continuer.
+                </p>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-2 mb-3 text-center">
+                    {errorMessage}
+                  </p>
+                )}
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Confirmer ton Mot de passe"
+                  required
+                  value={inputPassword}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+                    setErrorMessage("");
+                  }}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 mb-4"
+                />
+                <button
+                  type="submit"
+                  // onClick={() => {
+                  //   resetInteraction();
+                  // }}
+                  className="bg-orange-600 text-white text-sm font-medium px-4 py-3 rounded-xl w-full hover:bg-orange-700 transition-all duration-150"
+                >
+                  Confirmer
+                </button>
+              </form>
+            </div>
+          )}
           {documentationPage === "Dashboard" && (
             <DashboardContaintMaintComponant
               setChooseOtherAccountGestion={setChooseOtherAccountGestion}
@@ -508,7 +600,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            26/06/2025 _ 4
+            30/06/2025 _ 1
           </p>
           {/*  */}
           {/*  */}
