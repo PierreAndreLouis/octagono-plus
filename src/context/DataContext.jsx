@@ -1237,6 +1237,7 @@ const DataContextProvider = ({ children }) => {
       </GTSRequest>`;
 
     console.log("xmlData ===>", xmlData);
+    console.log("xxxx------------------xxxx", account, user, password, country)
 
     if (country === "rd") {
       currentAPI = "/octagono-gps-api/track/Service";
@@ -1283,7 +1284,7 @@ const DataContextProvider = ({ children }) => {
           setAdminUserData(userData);
 
           // localStorage.setItem("adminUserData", userData);
-          localStorage.setItem("adminUserData", JSON.stringify(adminUserData));
+          localStorage.setItem("adminUserData", JSON.stringify(userData));
 
           localStorage.setItem("adminAccount", account);
           localStorage.setItem("adminUsername", user);
@@ -1291,10 +1292,7 @@ const DataContextProvider = ({ children }) => {
 
           localStorage.setItem("currentCountry", country);
 
-          // setAdminAccount(localStorage.getItem("adminAccount") || "");
-          // setAdminUsername(localStorage.getItem("adminUsername") || "");
-          // setAdminPassword(localStorage.getItem("adminPassword") || "");
-
+      
           setAdminAccount(account);
           setAdminUsername(user);
           setAdminPassword(password);
@@ -1303,7 +1301,9 @@ const DataContextProvider = ({ children }) => {
         } else {
           const lastLoginTime = Math.floor(Date.now() / 1000);
 
-          UpdateUserConnexion(account, user, password, lastLoginTime);
+          if (account && user && password && lastLoginTime) {
+            UpdateUserConnexion(account, user, password, lastLoginTime);
+          }
           setUserData(userData);
 
           navigate("/home");
@@ -1315,10 +1315,7 @@ const DataContextProvider = ({ children }) => {
           localStorage.setItem("password", password);
           localStorage.setItem("currentCountry", country);
 
-          // setAccount(localStorage.getItem("account") || "");
-          // setUsername(localStorage.getItem("username") || "");
-          // setPassword(localStorage.getItem("password") || "");
-
+       
           setAccount(account);
           setUsername(user);
           setPassword(password);
@@ -1349,8 +1346,9 @@ const DataContextProvider = ({ children }) => {
         }
       }
     } catch (error) {
-      setError("Erreur lors de la connexion à l'API.");
-      console.error("Erreur lors de la connexion à l'API", error);
+      setError("Erreur lors de la connexion à l'API .");
+      console.log("account, user, password, country" , account, user, password, country  )
+      console.error("Erreur lors de la connexion à l'API from Login", error);
       setIsHomePageLoading(false);
     } finally {
       setIsHomePageLoading(false);
@@ -1358,226 +1356,7 @@ const DataContextProvider = ({ children }) => {
   };
 
   const TestDeRequetteDevices = async (account, user, password2) => {
-    const accountID = "test_create_account2";
-    const userID = "test4";
-    const password = "test4";
-
-    const userID2 = "admin";
-
-    //   const xmlData2 = `
-    // <GTSRequest command="dbget">
-    //   <Authorization account="${accountID}" user="${userID}" password="${password}" />
-
-    //   <Record table="Role" partial="true">
-    //     <Field name="accountID">${accountID}</Field>
-
-    //     </Record>
-    // </GTSRequest>
-    //     `;
-    // <Field name="userID">${userID}</Field>
-
-    const xmlData = `
-<GTSRequest command="dbget">
-  <Authorization account="${accountID}" user="${userID}" password="${password}" />
-  <Record table="RuleList" partial="true">
-    <Field name="accountID">${accountID}</Field>
-  </Record>
-</GTSRequest>
-    `;
-
-    // const xmlData = `<GTSRequest command="dbget">
-    //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
-    //     <Record table="Device" partial="true">
-    //       <Field name="accountID">${accountID}</Field>
-
-    //       <Field name="creationTime" />
-    //       <Field name="description" />
-    //       <Field name="deviceCode" />
-    //       <Field name="displayName" />
-    //       <Field name="equipmentType" />
-    //       <Field name="imeiNumber" />
-    //       <Field name="ipAddressCurrent" />
-    //       <Field name="isActive" />
-    //       <Field name="lastEventTimestamp" />
-    //       <Field name="lastGPSTimestamp" />
-    //       <Field name="lastOdometerKM" />
-    //       <Field name="lastStartTime" />
-    //       <Field name="lastStopTime" />
-    //       <Field name="lastTotalConnectTime" />
-    //       <Field name="lastUpdateTime" />
-    //       <Field name="lastValidLatitude" />
-    //       <Field name="lastValidLongitude" />
-    //       <Field name="licensePlate" />
-    //       <Field name="simPhoneNumber" />
-    //       <Field name="speedLimitKPH" />
-    //       <Field name="uniqueID" />
-
-    //     </Record>
-    //   </GTSRequest>`;
-
-    // Liste des groupe accesible par un utilisateur
-    //       <GTSRequest command="dbget">
-    //   <Authorization account="demo" user="admin" password="112233" />
-    //   <Record table="GroupList" partial="true">
-    //     <Field name="accountID">demo</Field>
-    //     <Field name="userID">admin</Field>
-    //   </Record>
-    // </GTSRequest>
-
-    //      `
-    // <GTSRequest command="dbget">
-    //   <Authorization account="${accountID}" user="${usr.userID}" password="${usr.password}" />
-    //   <Record table="Device" partial="true">
-    //     <Field name="accountID">${accountID}</Field>
-    //     <Field name="userID">${usr.userID}</Field>
-    //   </Record>
-    // </GTSRequest>
-    //     `
-
-    console.log("Requête envoyer :", xmlData);
-
-    // DataContext.jsx:2134 xmlData
-    // <GTSRequest command="dbput">
-    //   <Authorization account="demo" user="admin" password="112233" />
-    //   <Record table="DeviceList">
-    //     <Field name="accountID">demo</Field>
-    //     <Field name="groupID">monitoring</Field>
-    //     <Field name="deviceID">1818</Field>
-    //   </Record>
-    // </GTSRequest>
-
-    // const xmlData = `<GTSRequest command="dbcreate">
-    //       <Authorization account="${account2}" user="${user2}" password="${password2}" />
-    //       <Record table="Device" partial="true">
-
-    //    <Field name="accountID">${account2}</Field>
-    //    <Field name="deviceID">${deviceID}</Field>
-
-    //     <Field name="displayName">${displayName}</Field>
-    //   <Field name="description">${description}</Field>
-
-    //     <Field name="equipmentType">B2</Field>
-    //     <Field name="uniqueID">tk_345345</Field>
-    //     <Field name="imeiNumber">45342</Field>
-    //     <Field name="vehicleID">23452345</Field>
-    //     <Field name="licensePlate">SE-345345</Field>
-    //     <Field name="simPhoneNumber">509444444444444444</Field>
-    //     <Field name="isActive">1</Field>
-
-    //       </Record>
-    //     </GTSRequest>`;
-    //  <Field name="groupID">${groupID}</Field>
-
-    //       <Field name="displayName">${displayName}</Field>
-    //  <Field name="description">${description}</Field>
-    //  <Field name="notes">${notes}</Field>
-    //  <Field name="workOrderID">${workOrderID}</Field>
-
-    //        ` <GTSRequest command="dbput">
-    //   <Authorization account="${account}" user="${user}" password="${password}" />
-    //   <Record table="DeviceList">
-    //     <Field name="accountID">${account}</Field>
-    //     <Field name="groupID">${groupID}</Field>
-    //     <Field name="deviceID">${deviceID}</Field>
-    //   </Record>
-    // </GTSRequest>`
-
-    //   const xmlData = `<GTSRequest command="dbget">
-    //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
-    //     <Record table="DeviceList" partial="true">
-
-    //  <Field name="accountID">${account}</Field>
-    //  <Field name="groupID">${groupID}</Field>
-
-    //     </Record>
-    //   </GTSRequest>`;
-
-    // Pour trouver le nom du groupe auquel appartient Utilisateur
-
-    //     const xmlData = `<GTSRequest command="dbget">
-    //     <Authorization account="${account2}" user="${user2}" password="${password2}" />
-    //     <Record table="GroupList" partial="true">
-    //  <Field name="accountID">${account2}</Field>
-    //  <Field name="userID">${user2}</Field>
-
-    //     </Record>
-    //   </GTSRequest>`;
-
-    // const fullUrl = `${window.location.origin}/api/track/Service`;
-    // console.log("URL complète de l'API :", fullUrl);
-
-    try {
-      const response = await fetch(currentAPI, {
-        method: "POST",
-        headers: { "Content-Type": "application/xml" },
-        body: xmlData,
-      });
-
-      const data = await response.text();
-      console.log("message Retour message: ", data);
-      if (!response.ok) {
-        console.error("Réponse erreur serveur :", response.status, data);
-        throw new Error(`Erreur serveur : ${response.status}`);
-      }
-
-      const parser = new DOMParser();
-
-      const xmlDoc = parser.parseFromString(data, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        .getAttribute("result");
-
-      console.log("result", result);
-
-      if (result === "success") {
-        const records = xmlDoc.getElementsByTagName("Record");
-        let allUserData = [];
-
-        for (let r = 0; r < records.length; r++) {
-          const fields = records[r].getElementsByTagName("Field");
-          let userData = {};
-
-          for (let f = 0; f < fields.length; f++) {
-            const fieldName = fields[f].getAttribute("name");
-            const fieldValue = fields[f].textContent;
-            userData[fieldName] = fieldValue;
-          }
-
-          allUserData.push(userData);
-        }
-
-        try {
-          console.log("Data", allUserData);
-          // setUserData(allUserData); // tableau de comptes
-          // localStorage.setItem("userData", JSON.stringify(allUserData));
-        } catch (error) {
-          if (error.name === "QuotaExceededError") {
-            console.error("Quota dépassé pour userData.");
-          } else {
-            console.error("Erreur de stockage : ", error);
-          }
-        }
-
-        console.log("Données JSON de tous les comptes : ", allUserData);
-      } else if (result === "error") {
-        const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0].textContent;
-        setError(errorMessage || "Erreur lors de la connexion.");
-        //
-        console.log("errorMessage inactive", errorMessage);
-        if (errorMessage === "User inactive") {
-          console.log("Logout the user, and navigate to /login");
-          handleLogout();
-          navigate("/login");
-        }
-      }
-    } catch (error) {
-      setError("Erreur lors de la connexion à l'API.");
-      console.error("Erreur lors de la connexion à l'API", error);
-      setIsHomePageLoading(false);
-    } finally {
-      setIsHomePageLoading(false);
-    }
+   
   };
 
   const ListeDesRolePourLesUserFonction = async (account, user, password) => {
@@ -3567,7 +3346,7 @@ const DataContextProvider = ({ children }) => {
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
         `${t("Échec de la Modification de l'utilisateur")}`
-      );
+      ); 
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
@@ -3579,7 +3358,7 @@ const DataContextProvider = ({ children }) => {
     lastLoginTime
   ) => {
     // /////////
-
+if (!accountID && !user && !password && !lastLoginTime) return;
     setError("");
     setCreateVéhiculeLoading(true);
     //  <Field name="GroupList">${userAccount}</Field>
@@ -8724,7 +8503,10 @@ const DataContextProvider = ({ children }) => {
 
     const lastLoginTime = Math.floor(Date.now() / 1000);
 
-    UpdateUserConnexion(account, username, password, lastLoginTime);
+    if (account && username && password && lastLoginTime) {
+
+      UpdateUserConnexion(account, username, password, lastLoginTime);
+    }
 
     if (window.location.hostname !== "localhost") {
       // Exécuter la fonction seulement si ce n'est pas localhost
