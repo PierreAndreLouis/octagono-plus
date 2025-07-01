@@ -600,7 +600,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            30/06/2025 _ 3
+            30/06/2025 _ 4
           </p>
           {/*  */}
           {/*  */}

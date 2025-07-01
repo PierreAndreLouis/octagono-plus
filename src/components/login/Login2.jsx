@@ -72,7 +72,9 @@ function Login2() {
   };
 
   const demoAccountLogin = () => {
-    handleLogin("demo", "admin", "112233");
+    const { account, username, password, country } = formData;
+
+    handleLogin("demo", "admin", "112233", country);
   };
 
   //

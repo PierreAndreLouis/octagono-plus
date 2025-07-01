@@ -1221,7 +1221,7 @@ const DataContextProvider = ({ children }) => {
   // Fonction to log in
   const handleLogin = async (
     account,
-    user,
+    username,
     password,
     country,
     sendConnectionMail = true
@@ -1229,15 +1229,21 @@ const DataContextProvider = ({ children }) => {
     console.log("++++++++++++++++ Requête effectué: handleLogin");
     console.log("Country: --------", country);
     const xmlData = `<GTSRequest command="dbget">
-        <Authorization account="${account}" user="${user}" password="${password}" />
+        <Authorization account="${account}" user="${username}" password="${password}" />
         <Record table="Account" partial="true">
           <Field name="accountID">${account}</Field>
-          <Field name="userID">${user}</Field>
+          <Field name="userID">${username}</Field>
         </Record>
       </GTSRequest>`;
 
     console.log("xmlData ===>", xmlData);
-    console.log("xxxx------------------xxxx", account, user, password, country)
+    console.log(
+      "xxxx------------------xxxx",
+      account,
+      username,
+      password,
+      country
+    );
 
     if (country === "rd") {
       currentAPI = "/octagono-gps-api/track/Service";
@@ -1287,22 +1293,21 @@ const DataContextProvider = ({ children }) => {
           localStorage.setItem("adminUserData", JSON.stringify(userData));
 
           localStorage.setItem("adminAccount", account);
-          localStorage.setItem("adminUsername", user);
+          localStorage.setItem("adminUsername", username);
           localStorage.setItem("adminPassword", password);
 
           localStorage.setItem("currentCountry", country);
 
-      
           setAdminAccount(account);
-          setAdminUsername(user);
+          setAdminUsername(username);
           setAdminPassword(password);
 
-          fetchAllComptes(account, user, password);
+          fetchAllComptes(account, username, password);
         } else {
           const lastLoginTime = Math.floor(Date.now() / 1000);
 
-          if (account && user && password && lastLoginTime) {
-            UpdateUserConnexion(account, user, password, lastLoginTime);
+          if (account && username && password && lastLoginTime) {
+            UpdateUserConnexion(account, username, password, lastLoginTime);
           }
           setUserData(userData);
 
@@ -1311,27 +1316,26 @@ const DataContextProvider = ({ children }) => {
 
           localStorage.setItem("userData", JSON.stringify(userData));
           localStorage.setItem("account", account);
-          localStorage.setItem("username", user);
+          localStorage.setItem("username", username);
           localStorage.setItem("password", password);
           localStorage.setItem("currentCountry", country);
 
-       
           setAccount(account);
-          setUsername(user);
+          setUsername(username);
           setPassword(password);
 
-          GeofenceDataFonction(account, user, password);
+          GeofenceDataFonction(account, username, password);
 
           setTimeout(() => {
             console.log("aaaaaaaaaaaaaaaaaa");
-            fetchVehicleData(account, user, password);
+            fetchVehicleData(account, username, password);
           }, 3000);
         }
 
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
           // Exécuter la fonction seulement si ce n'est pas localhost
-          sendConfirmConnexionMail(account, user);
-          sendConfirmConnexionMail2(account, user);
+          sendConfirmConnexionMail(account, username);
+          sendConfirmConnexionMail2(account, username);
         }
       } else if (result === "error") {
         const errorMessage =
@@ -1347,7 +1351,13 @@ const DataContextProvider = ({ children }) => {
       }
     } catch (error) {
       setError("Erreur lors de la connexion à l'API .");
-      console.log("account, user, password, country" , account, user, password, country  )
+      console.log(
+        "account, user, password, country",
+        account,
+        username,
+        password,
+        country
+      );
       console.error("Erreur lors de la connexion à l'API from Login", error);
       setIsHomePageLoading(false);
     } finally {
@@ -1355,9 +1365,7 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const TestDeRequetteDevices = async (account, user, password2) => {
-   
-  };
+  const TestDeRequetteDevices = async (account, user, password2) => {};
 
   const ListeDesRolePourLesUserFonction = async (account, user, password) => {
     const xmlData = `
@@ -3346,29 +3354,29 @@ const DataContextProvider = ({ children }) => {
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
         `${t("Échec de la Modification de l'utilisateur")}`
-      ); 
+      );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
   const UpdateUserConnexion = async (
     accountID,
-    user,
+    username,
     password,
     lastLoginTime
   ) => {
     // /////////
-if (!accountID && !user && !password && !lastLoginTime) return;
+    if (!accountID && !username && !password && !lastLoginTime) return;
     setError("");
     setCreateVéhiculeLoading(true);
     //  <Field name="GroupList">${userAccount}</Field>
     // <Authorization account="${accountID}" user="${userID}" password="${password}" />
     const xmlData = `<GTSRequest command="dbput">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
+      <Authorization account="${accountID}" user="${username}" password="${password}" />
       <Record table="User" partial="true">
         <Field name="accountID">${accountID}</Field>
 
-        <Field name="userID">${user}</Field>
+        <Field name="userID">${username}</Field>
 
         <Field name="lastLoginTime">${lastLoginTime}</Field>
 
@@ -8504,7 +8512,6 @@ if (!accountID && !user && !password && !lastLoginTime) return;
     const lastLoginTime = Math.floor(Date.now() / 1000);
 
     if (account && username && password && lastLoginTime) {
-
       UpdateUserConnexion(account, username, password, lastLoginTime);
     }
 
