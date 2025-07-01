@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { PiIntersectThreeBold } from "react-icons/pi";
 
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function GestionUserOptionsPopup({
   setShowModifyUserPage,
@@ -25,6 +26,8 @@ function GestionUserOptionsPopup({
     adminPassword,
   } = useContext(DataContext);
   const navigate = useNavigate();
+
+  const [t, i18n] = useTranslation();
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
 
@@ -53,7 +56,7 @@ function GestionUserOptionsPopup({
         currentSelectedUserToConnect?.userID
       );
     } else {
-      setErrorIncorrectPassword("Mot de passe incorrect");
+      setErrorIncorrectPassword(`${t("Mot de passe incorrect")}`);
     }
   };
 
@@ -74,14 +77,14 @@ function GestionUserOptionsPopup({
             className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              Voulez-vous Supprimer l'utilisateur ?
+              {t("Voulez-vous Supprimer l'utilisateur")} ?
             </div>
             <div>
               <label
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
               >
-                Veuillez entrer votre mot de passe
+                {t("Veuillez entrer votre mot de passe")}
               </label>
               <p className="text-center text-red-500 px-4">
                 {errorIncorrectPassword}
@@ -91,7 +94,7 @@ function GestionUserOptionsPopup({
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mot de passe"
+                  placeholder={`${t("Mot de passe")}`}
                   required
                   value={inputPassword}
                   onChange={(e) => {
@@ -104,7 +107,7 @@ function GestionUserOptionsPopup({
             </div>
             <div className="grid grid-cols-2 gap-2 justify-start mt-5">
               <button className="py-1 px-5 bg-red-500 rounded-lg text-white">
-                Confirmer
+                {t("Confirmer")}
               </button>
 
               <h3
@@ -113,7 +116,7 @@ function GestionUserOptionsPopup({
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
               >
-                Annuler
+                {t("Annuler")}
               </h3>
             </div>
           </form>
@@ -128,11 +131,8 @@ function GestionUserOptionsPopup({
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
             />
             <div className="h-20--  bg-orange-100 dark:bg-gray-800 dark:shadow-gray-500 shadow-md text-gray-800 dark:text-gray-200 text-xl font-semibold text-center flex flex-col justify-center items-center px-2">
-              <h1
-          
-                className="px-3 mt-4 mb-2--"
-              >
-                Options de l'utilisateur
+              <h1 className="px-3 mt-4 mb-2--">
+                {t("Options de l'utilisateur")}
               </h1>
               <h2 className="px-3 notranslate mt-8-- text-orange-600 mb-4">
                 {currentSelectedUserToConnect?.description || "---"}
@@ -152,7 +152,7 @@ function GestionUserOptionsPopup({
                     );
 
                     setDeviceListeTitleGestion(
-                      "Utilisateur : " +
+                      `${t("Utilisateur")} : ` +
                         currentSelectedUserToConnect?.description
                     );
                     setShowSelectedUserOptionsPopup(false);
@@ -163,7 +163,7 @@ function GestionUserOptionsPopup({
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Liste des Appareils
+                  {t("Liste des Appareils")}
                 </h2>
               </Link>
               {/*  */}
@@ -198,7 +198,7 @@ function GestionUserOptionsPopup({
               >
                 <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Groupe affecté
+                  {t("Groupe affecté")}
                 </h2>
               </button>
               {/*  */}
@@ -215,7 +215,7 @@ function GestionUserOptionsPopup({
               >
                 <FaEdit className="text-[1.5rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Modifier l'utilisateur
+                  {t("Modifier l'utilisateur")}
                 </h2>
               </div>
               <div
@@ -227,7 +227,7 @@ function GestionUserOptionsPopup({
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
                 <h2 className="font-semibold text-red-900 dark:text-red-50">
-                  Supprimer l'utilisateur
+                  {t("Supprimer l'utilisateur")}
                 </h2>
               </div>
             </div>

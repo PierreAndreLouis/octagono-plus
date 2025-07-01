@@ -1,10 +1,14 @@
 import React, { useContext } from "react";
 import { DataContext } from "../../context/DataContext";
+import { useTranslation } from "react-i18next";
 
 function VehiculeDetailInformationComponent({
   currentVéhicule,
   setShowVehiculeListe,
 }) {
+
+    const [t, i18n] = useTranslation();
+  
   const { FormatDateHeure, username } = useContext(DataContext);
   const creationDateTime = (creationTime) => {
     // Convertir le timestamp en millisecondes
@@ -41,7 +45,7 @@ function VehiculeDetailInformationComponent({
         <div className="mt-8 bg-gray-100 py-4 rounded-xl px-4 sm:px-[10vw] flex flex-col gap-2 dark:bg-gray-800">
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Date de creation
+              {t("Date de creation")}
             </h3>
             {/* <div className="flex gap-3"> */}
             <p className="pl-3 text-gray-500 dark:text-gray-400">{date}</p>
@@ -52,7 +56,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Nom du véhicule
+              {t("Nom du véhicule")}
             </h3>
             <p className="pl-3 notranslate text-gray-500 dark:text-gray-400">
               {currentVéhicule?.description || ""}
@@ -61,7 +65,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Description du véhicule
+              {t("Description du véhicule")}
             </h3>
             <p className="pl-3 notranslate text-gray-500 dark:text-gray-400">
               {currentVéhicule?.description || ""}
@@ -71,7 +75,7 @@ function VehiculeDetailInformationComponent({
           {username === "admin" && (
             <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
               <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-                IMEI
+                {t("IMEI")}
               </h3>
               <p className="pl-3 text-gray-500 dark:text-gray-400">
                 {currentVéhicule?.imeiNumber || ""}
@@ -81,7 +85,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Plaque du véhicule
+              {t("Plaque du véhicule")}
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.licensePlate || ""}
@@ -90,7 +94,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Type d'appareil
+              {t("Type d'appareil")}
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.equipmentType || ""}
@@ -99,7 +103,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Adresse du véhicule
+              {t("Adresse du véhicule")}
             </h3>
             <p className="pl-3 notranslate text-gray-500 dark:text-gray-400">
               {currentVéhicule?.véhiculeDetails[0]?.backupAddress ||
@@ -110,7 +114,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Statut du véhicule
+              {t("Statut du véhicule")}
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.véhiculeDetails[0]?.speedKPH >= 1
@@ -121,19 +125,19 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Distance totale parcourue
+              {t("Distance totale parcourue")}
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.lastOdometerKM &&
               !isNaN(Number(currentVéhicule?.lastOdometerKM))
                 ? Number(currentVéhicule?.lastOdometerKM).toFixed(2) + " km"
-                : "Non disponible"}
+                : `${t("Non disponible")}`}
             </p>
           </div>
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              Numéro de la carte SIM
+              {t("Numéro de la carte SIM")}
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.simPhoneNumber || ""}
@@ -143,7 +147,7 @@ function VehiculeDetailInformationComponent({
       ) : (
         <div className="flex justify-center flex-col">
           <p className="text-center text-lg dark:text-gray-100">
-            Veuillez choisir un véhicule
+            {t("Veuillez choisir un véhicule")}
           </p>
           <button
             onClick={() => {
@@ -151,7 +155,7 @@ function VehiculeDetailInformationComponent({
             }}
             className="mx-auto border px-6 py-1 rounded-md mt-4 bg-orange-500 text-white font-semibold cursor-pointer"
           >
-            Choisir
+            {t("Choisir")}
           </button>
         </div>
       )}

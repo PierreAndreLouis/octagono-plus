@@ -88,6 +88,7 @@ function DashboardAdminPage() {
     isAuthenticated,
     adminPassword,
     password,
+    versionApplication,
   } = useContext(DataContext);
 
   useEffect(() => {
@@ -619,7 +620,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            01/07/2025 _ 2
+            {versionApplication}
           </p>
           {/*  */}
           {/*  */}

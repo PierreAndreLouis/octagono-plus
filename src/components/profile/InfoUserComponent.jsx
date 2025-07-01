@@ -26,6 +26,7 @@ function InfoUserComponent({
     resetIndexedDB,
     countRequête,
     currentCountry,
+    versionApplication,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -82,7 +83,7 @@ function InfoUserComponent({
             {t("Pays")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {currentCountry === "rd" ? "République Dominicaine" : "Haïti"}{" "}
+            {currentCountry === "rd" ? "República Dominicana" : "Haïti"}{" "}
           </p>
         </div>
 
@@ -144,7 +145,7 @@ function InfoUserComponent({
             {t("Version de l'application")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            01/07/2025 _ 2
+            {versionApplication}
           </p>
         </div>
 

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function ChooseOtherGroupeDashboard({
   chooseOtherAccountGestion,
@@ -13,6 +14,8 @@ function ChooseOtherGroupeDashboard({
 }) {
   const { currentAccountSelected, accountDevices, scrollToTop } =
     useContext(DataContext);
+  const [t, i18n] = useTranslation();
+
   return (
     <>
       {chooseOtherAccountGestion && (
@@ -20,7 +23,7 @@ function ChooseOtherGroupeDashboard({
           <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[90vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
-                Liste des Groupes
+                {t("Liste des Groupes")}
               </h2>
 
               <IoClose
@@ -34,7 +37,7 @@ function ChooseOtherGroupeDashboard({
               <input
                 className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
                 type="text"
-                placeholder="Rechercher un compte"
+                placeholder={`${t("Rechercher un compte")}`}
                 value={searchInputTerm}
                 onChange={(e) => {
                   setSearchInputTerm(e.target.value);
@@ -60,7 +63,7 @@ function ChooseOtherGroupeDashboard({
                 }}
                 className="font-bold bg-orange-500 text-white rounded-lg py-2 shadow-lg shadow-black/10"
               >
-                Tous les Groupe
+                {t("Tous les Groupes")}
               </button>{" "}
               {/*  */}
               {filterGestionGroupData?.map((groupe, index) => {
@@ -80,19 +83,20 @@ function ChooseOtherGroupeDashboard({
                     <FaUserCircle className="text-gray-500 text-[2.5rem] mt-1" />
                     <div>
                       <p className="text-gray-600">
-                        Nom du Groupe :{" "}
+                        {t("Nom du Groupe")} :{" "}
                         <span className="font-bold notranslate">
-                          {groupe?.description || "Pas de nom disponible"}
+                          {groupe?.description ||
+                            `${t("Pas de nom disponible")}`}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        ID du Compte :{" "}
+                        {t("ID du Compte")} :{" "}
                         <span className="font-bold notranslate">
                           {groupe?.accountID || ""}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        Nombre d'appareil :{" "}
+                        {t("Nombre d'appareil")} :{" "}
                         <span className="font-bold">
                           {groupe?.groupeDevices?.length}
                         </span>{" "}

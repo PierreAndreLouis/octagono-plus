@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { GrInstallOption } from "react-icons/gr";
 
 const InstallationPWA = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [t, i18n] = useTranslation();
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -75,7 +77,7 @@ const InstallationPWA = () => {
         >
           <p className="flex items-center gap-3 text-[.98rem] justify-center">
             <GrInstallOption className="text-orange-500" />
-            Application déjà installée
+            {t("Application déjà installée")}
           </p>
         </div>
       )}
@@ -89,7 +91,7 @@ const InstallationPWA = () => {
             //  onClick={handleInstallClick}
           >
             <GrInstallOption className="text-orange-500" />
-            Installation non supportée
+            {t("Installation non supportée")}
           </p>
         </div>
       )}
@@ -102,7 +104,7 @@ const InstallationPWA = () => {
             onClick={handleInstallClick}
           >
             <GrInstallOption className="text-orange-500" />
-            Installation non disponible
+            {t("Installation non disponible")}
           </p>
         </div>
       )}
@@ -113,13 +115,15 @@ const InstallationPWA = () => {
         >
           <p className="flex items-center gap-3 text-[.98rem] justify-center cursor-pointer">
             <GrInstallOption className="text-orange-500" />
-            Installer l'application
+            {t("Installer l'application")}
           </p>
         </div>
       )}
       {status === "loading" && (
         <div className="flex items-center justify-center">
-          <span className="text-orange-500 mr-3">Installation en cours...</span>
+          <span className="text-orange-500 mr-3">
+            {t("Installation en cours")}...
+          </span>
           <div className="border-t-4 border-orange-500 border-solid rounded-full w-4 h-4 animate-spin"></div>
         </div>
       )}

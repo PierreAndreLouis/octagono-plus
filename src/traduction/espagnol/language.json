@@ -714,7 +714,35 @@
   "Comptes": "Cuentas",
   "Utilisateurs": "Usuarios",
   "Appareils": "Dispositivos",
-  "sysadmin Dashboard": "Panel de Sysadmin"
+  "sysadmin Dashboard": "Panel de Sysadmin",
+
+
+
+  
+  "Session inactive": "Sesión inactiva",
+  "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer": "Se detectó inactividad de 30 minutos. Por favor, confirme su contraseña para continuar",
+  "Confirmer ton Mot de passe": "Confirme su contraseña",
+  "Application déjà installée": "Aplicación ya instalada",
+  "Installation non supportée": "Instalación no compatible",
+  "Installation non disponible": "Instalación no disponible",
+  "Installer l'application": "Instalar la aplicación",
+  "Installation en cours": "Instalación en curso",
+  "Appareils Actifs": "Dispositivos Activos",
+  "Appareils Inactifs": "Dispositivos Inactivos",
+  "Appareils En déplacement": "Dispositivos en movimiento",
+  "Appareils Déplacer": "Dispositivos desplazados",
+  "Voulez-vous Supprimer l'utilisateur": "¿Desea eliminar al usuario?",
+  "Options de l'utilisateur": "Opciones del usuario",
+  "Groupe affecté": "Grupo asignado",
+  "Supprimer l'utilisateur": "Eliminar usuario",
+  "Login": "Inicio de sesión",
+  "Nombre Appareil": "Cantidad de Dispositivos",
+  "Adresse du véhicule": "Dirección del vehículo",
+  "Statut du véhicule": "Estado del vehículo",
+  "Veuillez choisir un véhicule": "Por favor, elija un vehículo",
+  "Choisir": "Elegir",
+  "En Déplacement": "En Movimiento" 
+
 
 
 

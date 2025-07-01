@@ -111,7 +111,7 @@ function StatisticDashboard({
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
               setStatisticFilteredDeviceListe(allDevices);
-              setStatisticFilteredDeviceListeText("Tous les Appareils");
+              setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
@@ -141,10 +141,14 @@ function StatisticDashboard({
               // setShowStatisticDeviceListeDashboard(true);
               if (isDeviceEnDeplacement) {
                 setStatisticFilteredDeviceListe(EnDéplacement);
-                setStatisticFilteredDeviceListeText("Appareils En déplacement");
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils En déplacement")}`
+                );
               } else {
                 setStatisticFilteredDeviceListe(DeviceDéplacer);
-                setStatisticFilteredDeviceListeText("Appareils Déplacer");
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils Déplacer")}`
+                );
               }
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
@@ -201,7 +205,7 @@ function StatisticDashboard({
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
               setStatisticFilteredDeviceListe(DeviceEnStationnement);
-              setStatisticFilteredDeviceListeText("Appareils Actifs");
+              setStatisticFilteredDeviceListeText(`${t("Appareils Actifs")}`);
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
@@ -230,7 +234,7 @@ function StatisticDashboard({
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
               setStatisticFilteredDeviceListe(DeviceInactifs);
-              setStatisticFilteredDeviceListeText("Appareils Inactifs");
+              setStatisticFilteredDeviceListeText(`${t("Appareils Inactifs")}`);
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >

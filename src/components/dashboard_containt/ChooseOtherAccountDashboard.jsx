@@ -43,7 +43,7 @@ function ChooseOtherAccountDashboard({
                 onClick={() => {
                   setChooseOtherAccountGestion(false);
                 }}
-                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4"
+                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4" 
               />
             </div>
             <div className="flex pb-2 mx-3 mt-4 gap-2 justify-between items-center">

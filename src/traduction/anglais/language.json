@@ -744,7 +744,35 @@
   "Comptes": "Accounts",
   "Utilisateurs": "Users",
   "Appareils": "Devices",
-  "sysadmin Dashboard": "Sysadmin Dashboard"
+  "sysadmin Dashboard": "Sysadmin Dashboard",
+
+
+
+  
+  "Session inactive": "Inactive session",
+  "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer": "30 minutes of inactivity detected. Please confirm your password to continue",
+  "Confirmer ton Mot de passe": "Confirm your password",
+  "Application déjà installée": "Application already installed",
+  "Installation non supportée": "Installation not supported",
+  "Installation non disponible": "Installation not available",
+  "Installer l'application": "Install the application",
+  "Installation en cours": "Installation in progress",
+  "Appareils Actifs": "Active Devices",
+  "Appareils Inactifs": "Inactive Devices",
+  "Appareils En déplacement": "Devices in Motion",
+  "Appareils Déplacer": "Moving Devices",
+  "Voulez-vous Supprimer l'utilisateur": "Do you want to delete the user",
+  "Options de l'utilisateur": "User Options",
+  "Groupe affecté": "Assigned Group",
+  "Supprimer l'utilisateur": "Delete User",
+  "Login": "Login",
+  "Nombre Appareil": "Number of Devices",
+  "Adresse du véhicule": "Vehicle Address",
+  "Statut du véhicule": "Vehicle Status",
+  "Veuillez choisir un véhicule": "Please choose a vehicle",
+  "Choisir": "Choose",
+  "En Déplacement": "In Motion"
+
 
 
 

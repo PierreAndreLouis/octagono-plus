@@ -545,7 +545,7 @@ function GestionAppareilOptionPopup({
               >
                 <MdOutlineStickyNote2 className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {"Rapport de l'appareil"}
+                  {t("Rapport de l'appareil")}
                 </h2>
               </div>
               <div
@@ -557,7 +557,7 @@ function GestionAppareilOptionPopup({
               >
                 <RiShutDownLine className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {"Contrôle de l'appareil"}
+                  {t("Contrôle de l'appareil")}
                 </h2>
               </div>
               <div
@@ -570,7 +570,7 @@ function GestionAppareilOptionPopup({
               >
                 <FaInfoCircle className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {"Informations sur l'appareil"}
+                  {t("Informations sur l'appareil")}
                 </h2>
               </div>
               {adminAccount && (
@@ -583,7 +583,7 @@ function GestionAppareilOptionPopup({
                 >
                   <FaEdit className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
                   <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                    {"Modifier l'appareil"}
+                    {t("Modifier l'appareil")}
                   </h2>
                 </div>
               )}
@@ -597,7 +597,7 @@ function GestionAppareilOptionPopup({
                 >
                   <FaTrashAlt className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
                   <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                    {"Supprimer l'appareil"}
+                    {t("Supprimer l'appareil")}
                   </h2>
                 </div>
               )}

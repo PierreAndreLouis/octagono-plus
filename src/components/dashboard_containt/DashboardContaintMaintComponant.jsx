@@ -1316,7 +1316,7 @@ function DashboardContaintMaintComponant({
                       // setDocumentationPage("Gestion_des_appareils");
                       setShowStatisticDeviceListeDashboard(true);
                       setStatisticFilteredDeviceListe(allDevices);
-                      setStatisticFilteredDeviceListeText("Tous les Appareils");
+                      setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
                     }}
                     className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"
                   >

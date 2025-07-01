@@ -395,7 +395,7 @@ function ListeDesUtilisateur({
                             : "text-gray-800 border-[0.02rem] border-gray-50 "
                         }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                       >
-                        <p>Login</p> <IoMdLogIn className="text-xl" />
+                        <p>{t("Login")}</p> <IoMdLogIn className="text-xl" />
                       </button>
                       <button
                         onClick={() => {
