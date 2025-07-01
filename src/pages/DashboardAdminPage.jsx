@@ -1,6 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdLogIn } from "react-icons/io";
-import { IoClose, IoEarth, IoMenu } from "react-icons/io5";
+import {
+  IoClose,
+  IoEarth,
+  IoLogInOutline,
+  IoLogOut,
+  IoLogOutSharp,
+  IoMenu,
+} from "react-icons/io5";
 import {
   MdGTranslate,
   MdInstallDesktop,
@@ -404,7 +411,7 @@ function DashboardAdminPage() {
             </button>
           </div> */}
           {isUserNotInteractingNow && isAuthenticated && (
-            <div className="fixed inset-0 z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] bg-black/50 backdrop-blur-sm-- flex justify-center items-center">
+            <div className="fixed inset-0 z-[9999999] backdrop-blur-sm bg-black/50 backdrop-blur-sm-- flex justify-center  items-center">
               <form
                 onSubmit={reactiverSessionUser}
                 className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
@@ -436,15 +443,25 @@ function DashboardAdminPage() {
                   }}
                   className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 mb-4"
                 />
-                <button
-                  type="submit"
-                  // onClick={() => {
-                  //   resetInteraction();
-                  // }}
-                  className="bg-orange-600 text-white text-sm font-medium px-4 py-3 rounded-xl w-full hover:bg-orange-700 transition-all duration-150"
-                >
-                  {t("Confirmer")}
-                </button>
+                <div className="flex justify-center w-full items-center gap-2">
+                  <button
+                    type="submit"
+                    // onClick={() => {
+                    //   resetInteraction();
+                    // }}
+                    className="bg-orange-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg w-full hover:bg-orange-700 transition-all duration-150"
+                  >
+                    {t("Confirmer")}
+                  </button>
+                  <div
+                    onClick={() => {
+                      setLogOutPopup(true);
+                    }}
+                    className="flex h-full py-[.2rem] cursor-pointer px-2 justify-center items-center text-2xl rounded-lg border-2 text-orange-600 border-orange-600"
+                  >
+                    <IoLogInOutline />
+                  </div>
+                </div>
               </form>
             </div>
           )}
@@ -602,7 +619,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            01/07/2025 _ 1
+            01/07/2025 _ 2
           </p>
           {/*  */}
           {/*  */}

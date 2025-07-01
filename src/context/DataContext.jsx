@@ -1330,8 +1330,9 @@ const DataContextProvider = ({ children }) => {
             fetchVehicleData(account, username, password);
           }, 3000);
         }
+        const fromLoginFronction = true;
 
-        resetInteraction(account, username, password);
+        resetInteraction(account, username, password, fromLoginFronction);
 
         // if (window.location.hostname !== "localhost" || sendConnectionMail) {
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
@@ -6401,34 +6402,34 @@ const DataContextProvider = ({ children }) => {
   };
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log("start........");
-      setShowAnnimationProgresseBarDashboard(false);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     console.log("start........");
+  //     setShowAnnimationProgresseBarDashboard(false);
 
-      const accountUser = account || localStorage.getItem("account") || "";
-      const usernameUser = username || localStorage.getItem("username") || "";
-      const passwordUser = password || localStorage.getItem("password") || "";
+  //     const accountUser = account || localStorage.getItem("account") || "";
+  //     const usernameUser = username || localStorage.getItem("username") || "";
+  //     const passwordUser = password || localStorage.getItem("password") || "";
 
-      if (!accountUser || !usernameUser || !passwordUser) return;
-      console.log(
-        "→ login from useefect",
-        accountUser,
-        usernameUser,
-        passwordUser
-      );
+  //     if (!accountUser || !usernameUser || !passwordUser) return;
+  //     console.log(
+  //       "→ login from useefect",
+  //       accountUser,
+  //       usernameUser,
+  //       passwordUser
+  //     );
 
-      setTimeout(async () => {
-        if (isDashboardHomePage) {
-          await fetchAllComptes(adminAccount, adminUsername, adminPassword);
-        } else {
-          homePageReload(accountUser, usernameUser, passwordUser);
-        }
-      }, 1000);
-    }, 1000 * 60 * 5);
+  //     setTimeout(async () => {
+  //       if (isDashboardHomePage) {
+  //         await fetchAllComptes(adminAccount, adminUsername, adminPassword);
+  //       } else {
+  //         homePageReload(accountUser, usernameUser, passwordUser);
+  //       }
+  //     }, 1000);
+  //   }, 1000 * 60 * 5);
 
-    return () => clearInterval(intervalId);
-  }, []);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   // Mise a jour les donnee de rapport page tous les 1 minutes
   // useEffect(() => {
@@ -8506,7 +8507,12 @@ const DataContextProvider = ({ children }) => {
   const [timeSinceLastInteraction, setTimeSinceLastInteraction] = useState(0);
   const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes en millisecondes pour tester
 
-  const resetInteraction = (account, username, password) => {
+  const resetInteraction = (
+    account,
+    username,
+    password,
+    fromLoginFronction = false
+  ) => {
     localStorage.setItem("lastInteraction", new Date().toISOString());
     setIsUserNotInteractingNow(false);
     setTimeSinceLastInteraction(0);
@@ -8517,6 +8523,7 @@ const DataContextProvider = ({ children }) => {
     const storedUserName = localStorage.getItem("username");
     const storedPassword = localStorage.getItem("password");
 
+    if (fromLoginFronction) return;
     if (
       account ||
       (storedAccount && username) ||

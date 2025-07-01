@@ -748,7 +748,7 @@ function RapportPageDetailsHeader({
               )}
 
               {pageSection === "groupe" &&
-                deviceListeSelected?.length < 200 && (
+                deviceListeSelected?.length < 100 && (
                   <div
                     onClick={() => {
                       setShowChooseDate(true);

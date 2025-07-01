@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./App.css";
-import HomePage from "./pages/HomePage";
 import { ReloadPrompt } from "./pages/Prompt";
 import Login2 from "./components/login/Login2";
 import { GoTrash } from "react-icons/go";
@@ -25,7 +24,6 @@ import Navigation_bar from "./components/home/Navigation_bar";
 import SideBar from "./components/home/SideBar";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 import ModifierPage from "./pages/ModifierPage";
-import AjouterPage from "./pages/AjouterPage";
 import ProfilUserPage from "./pages/ProfilUserPage";
 import DetailsVehiculePage from "./pages/DetailsVehiculePage";
 import LocationPage from "./pages/LocationPage";
@@ -301,28 +299,6 @@ function App() {
 
         {/* <Login2 /> */}
 
-        {/* {isOffline && window.location.hostname !== "localhost" && (
-          <div className="fixed z-[99999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/70">
-            <div
-              className={` bg-orange-50 max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[90vw] `}
-            >
-              <div
-                className={` bg-orange-600 flex justify-center items-center py-4 px-4  mb-8 `}
-              >
-                <h2 className="font-bold text-white text-xl">
-                  Pas de connexion Internet.
-                </h2>
-              </div>
-              <div>
-                <h3
-                  className={`text-gray-800 block font-semibold text-lg py-4  text-center leading-6  mb-3 px-4`}
-                >
-                  Veuillez vérifier votre connexion Internet pour continuer.
-                </h3>
-              </div>
-            </div>
-          </div>
-        )} */}
         <SuccèsÉchecMessagePopup />
         {readDocumentation ? (
           <div className="transition-all">
@@ -1142,71 +1118,13 @@ function App() {
             <Route path="/login" element={<Login2 />} />
 
             <Route
-              path="/home2"
-              element={<PrivateRoute element={<HomePage />} />}
-            />
-
-            <Route
               path="/home"
               element={<PrivateRoute element={<DashboardAdminPage />} />}
             />
 
             <Route
-              path="/ajouter_vehicule"
-              element={<PrivateRoute element={<AjouterPage />} />}
-            />
-            <Route
-              path="/modifier_vehicule"
-              element={<PrivateRoute element={<ModifierPage />} />}
-            />
-
-            <Route
-              path="/User_Profile"
-              element={<PrivateRoute element={<ProfilUserPage />} />}
-            />
-
-            <Route
-              path="/gestion_geofences"
-              element={<PrivateRoute element={<GestionGeofences />} />}
-            />
-            {/*  */}
-            <Route
-              path="/gestion_des_comptes"
-              element={<PrivateRoute element={<GestionDesCompts />} />}
-            />
-            <Route
-              path="/liste_des_utilisateurs"
-              element={<PrivateRoute element={<ListeDesUtilisateur />} />}
-            />
-            <Route
-              path="/liste_des_vehicules"
-              element={<PrivateRoute element={<ListeDesVehiculesGestion />} />}
-            />
-            <Route
-              path="/liste_des_groupes"
-              element={<PrivateRoute element={<ListeDesGroupes />} />}
-            />
-            <Route
-              path="/Groupe_vehicule_location"
-              element={<PrivateRoute element={<LocationPage />} />}
-            />
-            <Route
-              path="/voiture_details"
-              element={<PrivateRoute element={<DetailsVehiculePage />} />}
-            />
-            <Route
-              path="/voiture_historique"
-              element={<PrivateRoute element={<HistoriquePage />} />}
-            />
-
-            <Route
-              path="/rapport_page_details"
-              element={<PrivateRoute element={<RapportPageDetails />} />}
-            />
-
-            <Route
-              path="/Change_Password"
-              element={<ProtectedChangePassword />}
+              path="/"
+              element={<PrivateRoute element={<DashboardAdminPage />} />}
             />
 
             <Route path="*" element={<Page_404 />} />
