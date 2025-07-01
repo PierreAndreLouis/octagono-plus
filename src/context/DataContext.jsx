@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "01/07/2025 _ 3";
+  let versionApplication = "01/07/2025 _ 4";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -8847,7 +8847,6 @@ const DataContextProvider = ({ children }) => {
         accountDevices,
         accountGroupes,
         accountUsers,
-        accountGeofences,
         createAccountEnGestionAccountFonction,
         modifyAccountEnGestionAccountFonction,
         deleteAccountEnGestionAccountFonction,
@@ -8880,7 +8879,6 @@ const DataContextProvider = ({ children }) => {
         confirmationMessagePopupName,
         setConfirmationMessagePopupName,
         modifyVehicleEnGestionAccount,
-        fetchUserDevices,
         userRole,
         ListeDesRolePourLesUserFonction,
         fetchAccountGeofences,
@@ -8891,7 +8889,6 @@ const DataContextProvider = ({ children }) => {
         isDashboardHomePage,
         setIsDashboardHomePage,
         clearDataIndexedbStore,
-        véhiculeDetails,
         showGeofenceInCarte,
         setShowGeofenceInCarte,
         chooseOtherLanguagePopup,
@@ -8915,8 +8912,6 @@ const DataContextProvider = ({ children }) => {
         setRunningAnimationProgressDuration,
         setMergedDataHome,
         setGeofenceData,
-        documentationPage,
-        setDocumentationPage,
         fetchVehicleDataFromRapportGroupe,
         setRapportVehicleDetails,
         isSearchingFromRapportGroupePage,

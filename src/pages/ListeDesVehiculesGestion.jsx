@@ -70,6 +70,17 @@ function ListeDesVehiculesGestion({
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
+  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+  const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+  // Fonction pour obtenir le timestamp actuel en millisecondes
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+
   //
   //
   //
@@ -358,6 +369,37 @@ function ListeDesVehiculesGestion({
               // .sort((a, b) => b.lastStopTime - a.lastStopTime)
               .sort((a, b) => b.lastUpdateTime - a.lastUpdateTime)
               ?.map((device, index) => {
+                const matchedVehicle = filteredListeGestionDesVehicules?.find(
+                  (v) => v.deviceID === device?.deviceID
+                );
+
+                const hasDetails = matchedVehicle?.véhiculeDetails?.length > 0;
+                const lastDetail = matchedVehicle?.véhiculeDetails?.[0];
+                const speed = lastDetail?.speedKPH ?? 0;
+                const lastUpdateMs = lastDetail?.timestamp
+                  ? lastDetail.timestamp * 1000
+                  : 0;
+
+                const isActive = matchedVehicle?.lastUpdateTime
+                  ? currentTime - matchedVehicle.lastUpdateTime * 1000 <
+                    twentyFourHoursInMs
+                  : false;
+
+                const updatedToday = lastUpdateMs >= todayTimestamp;
+                const updatedRecently =
+                  currentTimeMs - lastUpdateMs <= tenMinutesInMs;
+
+                const movedToday = matchedVehicle?.véhiculeDetails?.some(
+                  (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH >= 1
+                );
+
+                const neverMovedToday = matchedVehicle?.véhiculeDetails?.every(
+                  (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH <= 0
+                );
+
+                const movedBefore = matchedVehicle?.véhiculeDetails?.some(
+                  (d) => d.speedKPH >= 1
+                );
                 //
                 //
                 //
@@ -381,7 +423,14 @@ function ListeDesVehiculesGestion({
                   bg_color = "bg-purple-500";
                 }
 
-                if (device?.lastStopTime > todayTimestamp) {
+                if (
+                  device?.lastStopTime > todayTimestamp ||
+                  (hasDetails &&
+                    isActive &&
+                    speed >= 1 &&
+                    updatedRecently &&
+                    updatedToday)
+                ) {
                   border_color = "border-l-[.4rem] border-green-300";
                   text_color = "text-green-500/80";
                   bg_color = "bg-green-500";

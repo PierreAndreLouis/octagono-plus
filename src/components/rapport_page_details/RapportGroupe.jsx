@@ -4468,9 +4468,7 @@ function RapportGroupe({
                   <div className="flex justify-between  mt-4  items-center ">
                     <div className="sm:flex w-full gap-20 max-w-[50rem]-- mx-4-- justify-start items-center ">
                       <div className="flex gap-0 items-center text-xl">
-                        <p className="font-bold ">
-                          {tableSortByColorBg("Date du résultat")}:{" "}
-                        </p>
+                        <p className="font-bold ">{t("Date du résultat")}: </p>
                         <p className="text-[.9rem]--  text-xl">
                           <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
                             {

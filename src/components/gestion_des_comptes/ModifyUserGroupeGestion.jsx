@@ -275,7 +275,6 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
         addressCountry: currentSelectedUserToConnect.addressCountry || "",
         timeZone: currentSelectedUserToConnect.timeZone || "",
         maxAccessLevel: currentSelectedUserToConnect.maxAccessLevel || "",
-        maxAccessLevel: currentSelectedUserToConnect.maxAccessLevel || "",
 
         roleID: currentSelectedUserToConnect.roleID || "",
         password: currentSelectedUserToConnect.password || "",
