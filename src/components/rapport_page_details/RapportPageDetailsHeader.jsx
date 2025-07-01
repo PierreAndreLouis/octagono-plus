@@ -138,7 +138,7 @@ function RapportPageDetailsHeader({
   // };
 
   const generateTableGroupePDF = () => {
-    fonctiondownloadExelPDF();
+    // fonctiondownloadExelPDF();
 
     setTimeout(() => {
       const element = tableRef.current;
@@ -667,7 +667,7 @@ function RapportPageDetailsHeader({
                       />
                     </div>
                   )}
-                  {pageSection !== "unite" && (
+                  {/* {pageSection !== "unite" && (
                     <div
                       onClick={() => {
                         generateTableGroupePDF();
@@ -682,7 +682,7 @@ function RapportPageDetailsHeader({
                         alt=""
                       />
                     </div>
-                  )}
+                  )} */}
                   {pageSection !== "unite" && (
                     <div
                       onClick={() => {

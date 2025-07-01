@@ -2873,16 +2873,18 @@ function RapportGroupe({
         <h1 className="text-center mb-10 font-semibold text-xl mb-10 dark:text-gray-300">
           {t("Rapport détaillé en groupe")}
         </h1>
-        <div
-          onClick={() => {
-            rapportFetchFonction();
-            setIsSearchingFromRapportGroupePage(false);
-          }}
-          className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
-        >
-          <h3>{t("Mettre a jour les donnees")}</h3>
-          <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
-        </div>
+        {!preparationDownloadPDF && (
+          <div
+            onClick={() => {
+              rapportFetchFonction();
+              setIsSearchingFromRapportGroupePage(false);
+            }}
+            className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
+          >
+            <h3>{t("Mettre a jour les donnees")}</h3>
+            <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
+          </div>
+        )}
 
         {progressBarForLoadingData > 0 &&
           progressBarForLoadingData < 100 &&
@@ -4185,674 +4187,693 @@ function RapportGroupe({
           Exporter la table en Excel
         </button> */}
         {preparationDownloadPDF && <p className="min-h-[13rem]">.</p>}
-        <div
-          className={`
+        {!preparationDownloadPDF && (
+          <div
+            className={`
           ${preparationDownloadPDF ? " " : "shadow-md"}
            mt-20  py-3 dark:bg-gray-800 dark:shadow-lg dark:shadow-gray-700  bg-orange-50 p-2 rounded-md flex items-center gap-4`}
-        >
-          <BsTable className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
-          <div className="flex justify-between items-center  w-full">
-            <h2 className="font-semibold dark:text-orange-50 text-orange-900">
-              {t("Tableau récapitulatif")}{" "}
-            </h2>
-            <div onClick={() => {}} className="cursor-pointer relative">
-              <p
-                onClick={() => {
-                  setshowsortfilterpupup(true);
-                }}
-                className="font-semibold underline text-orange-600"
-              >
-                {t("Filtrer")}
-              </p>
-              {showsortfilterpupup && (
-                <div className="absolute z-[30] flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow-gray-900 dark:border shadow-lg shadow-gray-500 rounded-md p-3 top-10 -right-2 min-w-[20rem]">
-                  <div className="flex justify-between mb-2 items-center ">
-                    <p className="text-orange-500  font-semibold">
-                      {t("Filtrer par")} :
-                    </p>
-                    <IoClose
-                      onClick={() => {
-                        setshowsortfilterpupup(false);
-                      }}
-                      className="cursor-pointer text-2xl text-red-500"
-                    />{" "}
-                  </div>
-
-                  <div className="flex gap-2 mb-4 p-[.2rem] border  shadow-md shadow-orange-100 border-orange-100 rounded-lg justify-between">
-                    <p
-                      onClick={() => {
-                        setTableSortCroissant(true);
-                        // settableSortBy(vehiclesByDepartureTime);
-                        // settableSortByColorBg("vehiclesByDepartureTime");
-                        // settableSortBy(tableSortBy);
-                      }}
-                      className={` w-full py-1 font-semibold text-center ${
-                        tableSortCroissant ? "bg-orange-100 " : ""
-                      } rounded-lg border border-white/0  hover:border hover:border-orange-200`}
-                    >
-                      {t("Croissant")}
-                    </p>
-                    <p
-                      onClick={() => {
-                        // settableSortBy(tableSortBy);
-                        setTableSortCroissant(false);
-                        // settableSortBy(vehiclesByDepartureTime);
-                        // settableSortByColorBg("vehiclesByDepartureTime");
-                      }}
-                      className={`w-full py-1 font-semibold text-center  ${
-                        !tableSortCroissant ? "bg-orange-100 " : ""
-                      } rounded-lg  border border-white/0 hover:border hover:border-orange-200`}
-                    >
-                      {t("Décroissant")}
-                    </p>
-                  </div>
-
-                  <p
-                    onClick={() => {
-                      settableSortBy(vehiclesByDepartureTime);
-                      settableSortByColorBg("vehiclesByDepartureTime");
-                      setshowsortfilterpupup(false);
-                    }}
-                    className={`${
-                      tableSortByColorBg ===
-                        ("vehiclesByDepartureTime" || "") &&
-                      "bg-orange-50 dark:bg-gray-800"
-                    } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
-                  >
-                    {t("Heure de départ")}
-                  </p>
-
-                  <p
-                    onClick={() => {
-                      settableSortBy(vehiclesByDistance);
-                      settableSortByColorBg("vehiclesByDistance");
-                      setshowsortfilterpupup(false);
-
-                      console.log(
-                        "xxxxxxxxxxxxxxxxxxxxxxx",
-                        tableSortByColorBg
-                      );
-                    }}
-                    className={`${
-                      tableSortByColorBg === "vehiclesByDistance" &&
-                      "bg-orange-50 dark:bg-gray-800"
-                    } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
-                  >
-                    {t("Distance parcouru")}
-                  </p>
-                  <p
-                    onClick={() => {
-                      settableSortBy(vehiclesByMovingDuration);
-                      settableSortByColorBg("vehiclesByMovingDuration");
-                      setshowsortfilterpupup(false);
-
-                      console.log("xxxxxxxxxxxxxxxxxxxxxxx", tableSortBy);
-                    }}
-                    className={`${
-                      tableSortByColorBg === "vehiclesByMovingDuration" &&
-                      "bg-orange-50 dark:bg-gray-800"
-                    } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
-                  >
-                    {t("Temps en mouvement")}
-                  </p>
-                  <p
-                    onClick={() => {
-                      settableSortBy(vehiclesByMaxSpeed);
-                      settableSortByColorBg("vehiclesByMaxSpeed");
-                      setshowsortfilterpupup(false);
-                    }}
-                    className={`${
-                      tableSortByColorBg === "vehiclesByMaxSpeed" &&
-                      "bg-orange-50 dark:bg-gray-800"
-                    } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
-                  >
-                    {t("Vitesse maximale")}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-between  mt-4  items-center ">
-          <div className="sm:flex w-full gap-10 max-w-[50rem] mx-4-- justify-start items-center ">
-            <div className="flex gap-0 items-center">
-              <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
-              <p className="text-[.9rem]">
-                <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                  {
-                    <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
-                      {t("Du")}{" "}
-                      <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
-                        {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
-                        {anneeDebut === anneeFin ? "" : anneeDebut}
-                      </span>{" "}
-                      {t("au")}{" "}
-                      <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
-                        {jourFin} {moisFin} {anneeFin}
-                      </span>
-                    </span>
-                    // )
-                  }
-                </span>
-              </p>
-            </div>
-
-            <div className="flex gap-0 items-center">
-              <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
-
-              <p className="text-[.9rem]">
-                <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                  {t("De")}{" "}
-                  <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
-                    {heureDebut}
-                  </span>{" "}
-                  {t("à")}{" "}
-                  <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
-                    {heureFin}
-                  </span>{" "}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          {!preparationDownloadPDF && (
-            <div
-              onClick={() => {
-                exportToExcel();
-              }}
-              className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
-            >
-              <p>{t("Télécharger")}</p>
-              <img
-                className="w-[2rem] mr-3--"
-                src="/img/exel_download.png"
-                alt=""
-              />
-            </div>
-          )}
-
-          {preparationDownloadPDF && (
-            <p
-              onClick={() => {
-                exportToExcel();
-              }}
-              className=" lg:hidden cursor-pointer     py-1 px-4"
-            >
-              <img className="w-[2.6rem]" src="/img/exel_download.png" alt="" />
-            </p>
-          )}
-        </div>
-        <div className="mt-4  flex items-center gap-2">
-          <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
-            {t("Véhicules déplacés")}
-          </p>
-          <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
-            {t("Véhicules non déplacés")}
-          </p>
-          <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
-            {t("Véhicules hors service")}
-          </p>
-        </div>
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        {/*  */}
-        <div
-          className={`${
-            preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
-          }  w-full mt-4 mb-20 overflow-x-auto overflow-y-hidden`}
-        >
-          <thead className="">
-            <tr className="bg-orange-50  relative z-20 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-              <th className="border border-l-4  border-l-orange-200  min-w-[0rem] max-w-[0rem]"></th>
-              <th className="text-start border-l-4--   border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem] max-w-[4rem]">
-                #
-              </th>
-
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[18rem] max-w-[18rem]">
-                {t("Véhicule")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2  min-w-[13rem] max-w-[13rem]">
-                {t("Date et Heure de départ")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                {t("Date et Heure d'arrivée")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                {t("Vitesse moyenne")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                {t("Vitesse maximale")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                {t("Distance totale")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                {t("Nombre d'arrêts")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
-                {t("Temps en mouvement")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                {t("Adresse de départ")}
-              </th>
-              <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                {t("Adresse d'arrivée")}
-              </th>
-            </tr>
-          </thead>
-
-          <div
-            ref={tableRef}
-            className={` ${
-              preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
-            }  border-2-- pb-10 -translate-y-[3.1rem] w-full min-w-[160rem]  overflow-y-auto overflow-x-hidden`}
           >
-            <div>
-              {/* eeeeeeeeeeeeeeeeeeeee */}
-              {preparationDownloadPDF && (
-                <div>
-                  <p className="text-white">.</p>
-                  <p className="text-white">.</p>
-
-                  <h2 className="w-full  mt-20 text-center font-semibold text-gray-800 text-[3rem] dark:text-orange-50 ">
-                    {t("Tableau récapitulatif")}{" "}
-                  </h2>
-                  <div className="flex justify-between  mt-4  items-center ">
-                    <div className="sm:flex w-full gap-20 max-w-[50rem]-- mx-4-- justify-start items-center ">
-                      <div className="flex gap-0 items-center text-xl">
-                        <p className="font-bold ">{t("Date du résultat")}: </p>
-                        <p className="text-[.9rem]--  text-xl">
-                          <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                            {
-                              <span className="text-[.85rem]--  --sm:text-sm md:text-[1rem]-- text-xl  lg:text-lg--">
-                                {t("Du")}{" "}
-                                <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
-                                  {jourDebut}{" "}
-                                  {moisDebut === moisFin ? "" : moisDebut}{" "}
-                                  {anneeDebut === anneeFin ? "" : anneeDebut}
-                                </span>{" "}
-                                {t("au")}{" "}
-                                <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
-                                  {jourFin} {moisFin} {anneeFin}
-                                </span>
-                              </span>
-                              // )
-                            }
-                          </span>
-                        </p>
-                      </div>
-
-                      <div className="flex gap-0 items-center text-xl">
-                        <p className="font-bold ">{t("Heure du résultat")}: </p>
-
-                        <p className="text-[.9rem]-- text-xl">
-                          <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
-                            {t("De")}{" "}
-                            <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
-                              {heureDebut}
-                            </span>{" "}
-                            {t("à")}{" "}
-                            <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
-                              {heureFin}
-                            </span>{" "}
-                          </span>
-                        </p>
-                      </div>
+            <BsTable className="min-w-[2rem] text-[1.82rem] text-orange-400 " />
+            <div className="flex justify-between items-center  w-full">
+              <h2 className="font-semibold dark:text-orange-50 text-orange-900">
+                {t("Tableau récapitulatif")}{" "}
+              </h2>
+              <div onClick={() => {}} className="cursor-pointer relative">
+                <p
+                  onClick={() => {
+                    setshowsortfilterpupup(true);
+                  }}
+                  className="font-semibold underline text-orange-600"
+                >
+                  {t("Filtrer")}
+                </p>
+                {showsortfilterpupup && (
+                  <div className="absolute z-[30] flex flex-col gap-0 bg-white dark:bg-gray-700 dark:shadow-gray-900 dark:border shadow-lg shadow-gray-500 rounded-md p-3 top-10 -right-2 min-w-[20rem]">
+                    <div className="flex justify-between mb-2 items-center ">
+                      <p className="text-orange-500  font-semibold">
+                        {t("Filtrer par")} :
+                      </p>
+                      <IoClose
+                        onClick={() => {
+                          setshowsortfilterpupup(false);
+                        }}
+                        className="cursor-pointer text-2xl text-red-500"
+                      />{" "}
                     </div>
 
-                    {!preparationDownloadPDF && (
-                      <div
-                        onClick={() => {
-                          exportToExcel();
-                        }}
-                        className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
-                      >
-                        <p>{t("Télécharger")}</p>
-                        <img
-                          className="w-[2rem] mr-3--"
-                          src="/img/exel_download.png"
-                          alt=""
-                        />
-                      </div>
-                    )}
-
-                    {preparationDownloadPDF && (
+                    <div className="flex gap-2 mb-4 p-[.2rem] border  shadow-md shadow-orange-100 border-orange-100 rounded-lg justify-between">
                       <p
                         onClick={() => {
-                          exportToExcel();
+                          setTableSortCroissant(true);
+                          // settableSortBy(vehiclesByDepartureTime);
+                          // settableSortByColorBg("vehiclesByDepartureTime");
+                          // settableSortBy(tableSortBy);
                         }}
-                        className=" lg:hidden cursor-pointer     py-1 px-4"
+                        className={` w-full py-1 font-semibold text-center ${
+                          tableSortCroissant ? "bg-orange-100 " : ""
+                        } rounded-lg border border-white/0  hover:border hover:border-orange-200`}
                       >
-                        <img
-                          className="w-[2.6rem]"
-                          src="/img/exel_download.png"
-                          alt=""
-                        />
+                        {t("Croissant")}
                       </p>
-                    )}
-                  </div>
-                  <div className="mt-4 mb-8 flex items-center gap-2">
-                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
-                      {t("Véhicules déplacés")}
-                    </p>
-                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
-                      {t("Véhicules non déplacés")}
-                    </p>
-                    <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
-                      {t("Véhicules hors service")}
-                    </p>
-                  </div>
-                </div>
-              )}
-              {/* xxxxxxxxxxxxxxxxxxxxxxxx */}
-              <table
-                // ref={tableRef}
-                id="myTable"
-                className=" w-full text-left dark:bg-gray-800 dark:text-gray-200"
-              >
-                <thead>
-                  <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
-                    <th className="border border-l-4  border-l-red-600  min-w-[0rem] max-w-[0rem]"></th>
-                    <th className="border border-l-4--  border-l-red-600 dark:border-gray-600 py-3 px-2  min-w-[4rem] max-w-[4rem]">
-                      #
-                    </th>
+                      <p
+                        onClick={() => {
+                          // settableSortBy(tableSortBy);
+                          setTableSortCroissant(false);
+                          // settableSortBy(vehiclesByDepartureTime);
+                          // settableSortByColorBg("vehiclesByDepartureTime");
+                        }}
+                        className={`w-full py-1 font-semibold text-center  ${
+                          !tableSortCroissant ? "bg-orange-100 " : ""
+                        } rounded-lg  border border-white/0 hover:border hover:border-orange-200`}
+                      >
+                        {t("Décroissant")}
+                      </p>
+                    </div>
 
-                    <th className="border dark:border-gray-600 py-3 px-2  min-w-[18rem] max-w-[18rem]">
-                      {t("Véhicule")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                      {t("Date et Heure de départ")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
-                      {t("Date et Heure d'arrivée")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      {t("Vitesse moyenne")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      {t("Vitesse maximale")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      {t("Distance totale")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
-                      {t("Nombre d'arrêts")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
-                      {t("Temps en mouvement")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
-                      {t("Adresse de départ")}
-                    </th>
-                    <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]  max-w-[30rem]">
-                      {t("Adresse d'arrivée")}
-                    </th>
-                  </tr>
-                </thead>
+                    <p
+                      onClick={() => {
+                        settableSortBy(vehiclesByDepartureTime);
+                        settableSortByColorBg("vehiclesByDepartureTime");
+                        setshowsortfilterpupup(false);
+                      }}
+                      className={`${
+                        tableSortByColorBg ===
+                          ("vehiclesByDepartureTime" || "") &&
+                        "bg-orange-50 dark:bg-gray-800"
+                      } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
+                    >
+                      {t("Heure de départ")}
+                    </p>
 
-                <tbody className="  max-w-20">
-                  {(tableSortBy || vehiclesByDepartureTime)?.map(
-                    (véhicule, index) => {
-                      // Trouver le véhicule correspondant dans updateData
-                      const matchedVehicle =
-                        currentDataFusionné &&
-                        currentDataFusionné.find(
-                          (v) => v.deviceID === véhicule?.deviceID
+                    <p
+                      onClick={() => {
+                        settableSortBy(vehiclesByDistance);
+                        settableSortByColorBg("vehiclesByDistance");
+                        setshowsortfilterpupup(false);
+
+                        console.log(
+                          "xxxxxxxxxxxxxxxxxxxxxxx",
+                          tableSortByColorBg
                         );
+                      }}
+                      className={`${
+                        tableSortByColorBg === "vehiclesByDistance" &&
+                        "bg-orange-50 dark:bg-gray-800"
+                      } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
+                    >
+                      {t("Distance parcouru")}
+                    </p>
+                    <p
+                      onClick={() => {
+                        settableSortBy(vehiclesByMovingDuration);
+                        settableSortByColorBg("vehiclesByMovingDuration");
+                        setshowsortfilterpupup(false);
 
-                      const isMoving = matchedVehicle.véhiculeDetails?.some(
-                        (detail) => detail.speedKPH >= 1
-                      );
-
-                      const hasDetails =
-                        matchedVehicle.véhiculeDetails &&
-                        matchedVehicle.véhiculeDetails.length > 0;
-
-                      const noSpeed = matchedVehicle.véhiculeDetails?.every(
-                        (detail) => detail.speedKPH <= 0
-                      );
-
-                      // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-                      const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
-                        ? matchedVehicle.lastUpdateTime * 1000
-                        : 0;
-                      const isActive =
-                        currentTime - lastUpdateTimeMs < twentyHoursInMs;
-
-                      ///////////////////////////////////////////////////////////////////////////
-                      // iiiiiiiiiiiiiiiiiiiiiiiiiiii
-
-                      const lastUpdateTimestampMs =
-                        matchedVehicle.véhiculeDetails &&
-                        matchedVehicle.véhiculeDetails[0] &&
-                        matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
-
-                      ////////////////////////////////////////////////////////////////////
-
-                      let iconBg = "text-red-500 dark:text-red-500";
-                      let vehiculeBG =
-                        "bg-red-50/50-- hover:bg-red-100 dark:hover:bg-gray-700";
-
-                      if (hasDetails && isMoving) {
-                        iconBg =
-                          "text-green-500 bg-green-50/50  dark:text-green-500 border-l-green-600 dark:border-l-green-600";
-                        vehiculeBG =
-                          "bg-green-50/50-- text-green-800 dark:text-green-200 font-semibold hover:bg-green-100 dark:hover:bg-gray-700";
-                      } else if (hasDetails && noSpeed && isActive) {
-                        iconBg =
-                          "text-red-500  bg-red-50/50 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
-                        vehiculeBG =
-                          "bg-red-50/50--  text-red-700 dark:text-red-200  font-semibold hover:bg-red-100 dark:hover:bg-gray-700";
-                      } else if (!hasDetails || !isActive) {
-                        iconBg =
-                          "text-purple-800  bg-purple-50/50 dark:text-purple-100 border-l-purple-500 dark:border-l-purple-600";
-                        vehiculeBG =
-                          "bg-purple-50/50--  text-purple-800 dark:text-purple-200  font-semibold hover:bg-purple-100 dark:hover:bg-gray-700";
-                      }
-                      {
-                        /* yyyyyyyyyyyyyyyyyyyyyy */
-                      }
-
-                      ///////////////////////////////////////////////////////////////////////
-                      return (
-                        <tr key={index} className="border dark:border-gray-600">
-                          <td
-                            className={`${iconBg}   border font-semibold text-lg border-l-4  dark:bg-gray-900/70  dark:border-gray-600`}
-                          ></td>
-                          <td
-                            className={`${iconBg}   border font-semibold text-lg border-l-4--  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600`}
-                          >
-                            {index + 1 || "---"}
-                          </td>
-                          <td
-                            onClick={() => {
-                              handleClick(véhicule);
-                            }}
-                            className={`${vehiculeBG} notranslate border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
-                          >
-                            {véhicule?.description || "---"}
-                          </td>
-                          {/*  */}
-                          <td
-                            className={`${
-                              tableSortByColorBg ===
-                                ("vehiclesByDepartureTime" || "") &&
-                              "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2 notranslate   dark:border-gray-600`}
-                          >
-                            {véhicule?.véhiculeDetails[0]?.timestamp
-                              ? FormatDateHeure(
-                                  véhicule?.véhiculeDetails[
-                                    véhicule?.véhiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.date
-                              : ""}{" "}
-                            {véhicule?.véhiculeDetails[0]?.timestamp && (
-                              <span className="px-2">/</span>
-                            )}{" "}
-                            {véhicule?.véhiculeDetails[0]?.timestamp
-                              ? FormatDateHeure(
-                                  véhicule?.véhiculeDetails[
-                                    véhicule?.véhiculeDetails.length - 1
-                                  ]?.timestamp
-                                )?.time
-                              : `${t("Pas de date disponible")}`}{" "}
-                          </td>
-                          <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                            {véhicule?.véhiculeDetails[0]?.timestamp
-                              ? FormatDateHeure(
-                                  véhicule?.véhiculeDetails[0]?.timestamp
-                                )?.date
-                              : ""}{" "}
-                            {véhicule?.véhiculeDetails[0]?.timestamp && (
-                              <span className="px-2">/</span>
-                            )}{" "}
-                            {véhicule?.véhiculeDetails[0]?.timestamp
-                              ? FormatDateHeure(
-                                  véhicule?.véhiculeDetails[0]?.timestamp
-                                )?.time
-                              : `${t("Pas de date disponible")}`}{" "}
-                          </td>
-
-                          {/* Vitesse moyenne */}
-                          <td className="border py-3 px-2 notranslate dark:border-gray-600">
-                            {véhicule?.avgSpeed + " Km/h"}
-                          </td>
-                          {/* max speed */}
-                          <td
-                            className={`${
-                              tableSortByColorBg ===
-                                ("vehiclesByMaxSpeed" || "") &&
-                              "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
-                          >
-                            {(véhicule?.maxSpeed).toFixed(0) + " Km/h"}
-                          </td>
-
-                          {/* Distance totale */}
-                          <td
-                            className={`${
-                              tableSortByColorBg ===
-                                ("vehiclesByDistance" || "") &&
-                              "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2 notranslate dark:border-gray-600`}
-                          >
-                            {véhicule.totalDistance.toFixed(0)} km
-                          </td>
-
-                          {/* Nombre d'arret */}
-                          <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
-                            {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
-                            {véhicule.stopCount + " " + `${t("arrêts")}`}
-                          </td>
-
-                          {/* Temps actifs */}
-                          <td
-                            className={`${
-                              tableSortByColorBg ===
-                                ("vehiclesByMovingDuration" || "") &&
-                              "bg-orange-50 dark:bg-orange-950"
-                            } border py-3 px-2 notranslate dark:border-gray-600`}
-                          >
-                            {véhicule?.totalMovingDuration}
-                          </td>
-
-                          {/* Addresse départ */}
-                          <Tooltip
-                            title={`${t("Voir cette adresse sur la carte")}`}
-                            PopperProps={{
-                              modifiers: [
-                                {
-                                  name: "offset",
-                                  options: {
-                                    offset: [0, -30], // Décalage horizontal et vertical
-                                  },
-                                },
-                                {
-                                  name: "zIndex",
-                                  enabled: true,
-                                  phase: "write",
-                                  fn: ({ state }) => {
-                                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                                  },
-                                },
-                              ],
-                            }}
-                          >
-                            <td
-                              onClick={() => {
-                                afficherPositionTableauEnCarte(
-                                  véhicule,
-                                  véhicule?.véhiculeDetails[
-                                    véhicule?.véhiculeDetails?.length - 1
-                                  ]?.creationTime
-                                );
-                              }}
-                              className="border py-3 px-2 notranslate  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
-                            >
-                              {véhicule?.véhiculeDetails[
-                                véhicule?.véhiculeDetails.length - 1
-                              ]?.backupAddress ||
-                                véhicule?.véhiculeDetails[
-                                  véhicule?.véhiculeDetails.length - 1
-                                ]?.address ||
-                                `${t("Pas d'adresse disponible")}`}
-                            </td>
-                          </Tooltip>
-
-                          {/* Addresse départ */}
-                          <Tooltip
-                            title={`${t("Voir cette adresse sur la carte")}`}
-                            PopperProps={{
-                              modifiers: [
-                                {
-                                  name: "offset",
-                                  options: {
-                                    offset: [0, -30], // Décalage horizontal et vertical
-                                  },
-                                },
-                                {
-                                  name: "zIndex",
-                                  enabled: true,
-                                  phase: "write",
-                                  fn: ({ state }) => {
-                                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                                  },
-                                },
-                              ],
-                            }}
-                          >
-                            <td
-                              onClick={() => {
-                                afficherPositionTableauEnCarte(
-                                  véhicule,
-                                  véhicule?.véhiculeDetails[0]?.creationTime
-                                );
-                              }}
-                              className="border py-3 px-2 notranslate  cursor-pointer   dark:border-gray-600"
-                            >
-                              {véhicule?.véhiculeDetails[0]?.backupAddress ||
-                                véhicule?.véhiculeDetails[0]?.address ||
-                                `${t("Pas d'adresse disponible")}`}
-                            </td>
-                          </Tooltip>
-                        </tr>
-                      );
-                    }
-                  )}
-                </tbody>
-              </table>{" "}
+                        console.log("xxxxxxxxxxxxxxxxxxxxxxx", tableSortBy);
+                      }}
+                      className={`${
+                        tableSortByColorBg === "vehiclesByMovingDuration" &&
+                        "bg-orange-50 dark:bg-gray-800"
+                      } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
+                    >
+                      {t("Temps en mouvement")}
+                    </p>
+                    <p
+                      onClick={() => {
+                        settableSortBy(vehiclesByMaxSpeed);
+                        settableSortByColorBg("vehiclesByMaxSpeed");
+                        setshowsortfilterpupup(false);
+                      }}
+                      className={`${
+                        tableSortByColorBg === "vehiclesByMaxSpeed" &&
+                        "bg-orange-50 dark:bg-gray-800"
+                      } hover:bg-orange-50 p-2 rounded-lg dark:text-gray-100 dark:hover:bg-gray-800 `}
+                    >
+                      {t("Vitesse maximale")}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+        {!preparationDownloadPDF && (
+          <div className="flex justify-between  mt-4  items-center ">
+            <div className="sm:flex w-full gap-10 max-w-[50rem] mx-4-- justify-start items-center ">
+              <div className="flex gap-0 items-center">
+                <FaRegCalendarAlt className="text-gray-500/80 dark:text-gray-300 text-md mr-1 ml-0.5" />
+                <p className="text-[.9rem]">
+                  <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                    {
+                      <span className="text-[.85rem]-- sm:text-sm md:text-[1rem]  lg:text-lg--">
+                        {t("Du")}{" "}
+                        <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                          {jourDebut} {moisDebut === moisFin ? "" : moisDebut}{" "}
+                          {anneeDebut === anneeFin ? "" : anneeDebut}
+                        </span>{" "}
+                        {t("au")}{" "}
+                        <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                          {jourFin} {moisFin} {anneeFin}
+                        </span>
+                      </span>
+                      // )
+                    }
+                  </span>
+                </p>
+              </div>
+
+              <div className="flex gap-0 items-center">
+                <IoMdTime className="text-gray-500/80 dark:text-gray-300 text-xl mr-4-" />
+
+                <p className="text-[.9rem]">
+                  <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                    {t("De")}{" "}
+                    <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
+                      {heureDebut}
+                    </span>{" "}
+                    {t("à")}{" "}
+                    <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
+                      {heureFin}
+                    </span>{" "}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {!preparationDownloadPDF && (
+              <div
+                onClick={() => {
+                  exportToExcel();
+                }}
+                className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
+              >
+                <p>{t("Télécharger")}</p>
+                <img
+                  className="w-[2rem] mr-3--"
+                  src="/img/exel_download.png"
+                  alt=""
+                />
+              </div>
+            )}
+
+            {preparationDownloadPDF && (
+              <p
+                onClick={() => {
+                  exportToExcel();
+                }}
+                className=" lg:hidden cursor-pointer     py-1 px-4"
+              >
+                <img
+                  className="w-[2.6rem]"
+                  src="/img/exel_download.png"
+                  alt=""
+                />
+              </p>
+            )}
+          </div>
+        )}
+        {!preparationDownloadPDF && (
+          <div className="mt-4  flex items-center gap-2">
+            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
+              {t("Véhicules déplacés")}
+            </p>
+            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
+              {t("Véhicules non déplacés")}
+            </p>
+            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
+              {t("Véhicules hors service")}
+            </p>
+          </div>
+        )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {!preparationDownloadPDF && (
+          <div
+            className={`${
+              preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
+            }  w-full mt-4 mb-20 overflow-x-auto overflow-y-hidden`}
+          >
+            <thead className="">
+              <tr className="bg-orange-50  relative z-20 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                <th className="border border-l-4  border-l-orange-200  min-w-[0rem] max-w-[0rem]"></th>
+                <th className="text-start border-l-4--   border-l-orange-200 border dark:border-gray-600 py-3 px-2 min-w-[4rem] max-w-[4rem]">
+                  #
+                </th>
+
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[18rem] max-w-[18rem]">
+                  {t("Véhicule")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2  min-w-[13rem] max-w-[13rem]">
+                  {t("Date et Heure de départ")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
+                  {t("Date et Heure d'arrivée")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                  {t("Vitesse moyenne")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                  {t("Vitesse maximale")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                  {t("Distance totale")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                  {t("Nombre d'arrêts")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
+                  {t("Temps en mouvement")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
+                  {t("Adresse de départ")}
+                </th>
+                <th className="text-start border  dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
+                  {t("Adresse d'arrivée")}
+                </th>
+              </tr>
+            </thead>
+
+            <div
+              ref={tableRef}
+              className={` ${
+                preparationDownloadPDF ? "" : "md:h-[25rem] h-[20rem] "
+              }  border-2-- pb-10 -translate-y-[3.1rem] w-full min-w-[160rem]  overflow-y-auto overflow-x-hidden`}
+            >
+              <div>
+                {/* eeeeeeeeeeeeeeeeeeeee */}
+                {preparationDownloadPDF && (
+                  <div>
+                    <p className="text-white">.</p>
+                    <p className="text-white">.</p>
+
+                    <h2 className="w-full  mt-20 text-center font-semibold text-gray-800 text-[3rem] dark:text-orange-50 ">
+                      {t("Tableau récapitulatif")}{" "}
+                    </h2>
+                    <div className="flex justify-between  mt-4  items-center ">
+                      <div className="sm:flex w-full gap-20 max-w-[50rem]-- mx-4-- justify-start items-center ">
+                        <div className="flex gap-0 items-center text-xl">
+                          <p className="font-bold ">
+                            {t("Date du résultat")}:{" "}
+                          </p>
+                          <p className="text-[.9rem]--  text-xl">
+                            <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                              {
+                                <span className="text-[.85rem]--  --sm:text-sm md:text-[1rem]-- text-xl  lg:text-lg--">
+                                  {t("Du")}{" "}
+                                  <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                                    {jourDebut}{" "}
+                                    {moisDebut === moisFin ? "" : moisDebut}{" "}
+                                    {anneeDebut === anneeFin ? "" : anneeDebut}
+                                  </span>{" "}
+                                  {t("au")}{" "}
+                                  <span className="dark:text-orange-400 dark:font-normal font-semibold text-gray-950">
+                                    {jourFin} {moisFin} {anneeFin}
+                                  </span>
+                                </span>
+                                // )
+                              }
+                            </span>
+                          </p>
+                        </div>
+
+                        <div className="flex gap-0 items-center text-xl">
+                          <p className="font-bold ">
+                            {t("Heure du résultat")}:{" "}
+                          </p>
+
+                          <p className="text-[.9rem]-- text-xl">
+                            <span className="font-normal dark:text-orange-400 text-gray-700 pl-3">
+                              {t("De")}{" "}
+                              <span className="dark:text-orange-400 mx-1 dark:font-normal font-semibold text-gray-950">
+                                {heureDebut}
+                              </span>{" "}
+                              {t("à")}{" "}
+                              <span className="dark:text-orange-400 ml-1 dark:font-normal font-semibold text-gray-950">
+                                {heureFin}
+                              </span>{" "}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {!preparationDownloadPDF && (
+                        <div
+                          onClick={() => {
+                            exportToExcel();
+                          }}
+                          className="border  gap-2 items-center px-4 hidden lg:flex cursor-pointer border-green-600 font-semibold rounded-lg text-green-600"
+                        >
+                          <p>{t("Télécharger")}</p>
+                          <img
+                            className="w-[2rem] mr-3--"
+                            src="/img/exel_download.png"
+                            alt=""
+                          />
+                        </div>
+                      )}
+
+                      {preparationDownloadPDF && (
+                        <p
+                          onClick={() => {
+                            exportToExcel();
+                          }}
+                          className=" lg:hidden cursor-pointer     py-1 px-4"
+                        >
+                          <img
+                            className="w-[2.6rem]"
+                            src="/img/exel_download.png"
+                            alt=""
+                          />
+                        </p>
+                      )}
+                    </div>
+                    <div className="mt-4 mb-8 flex items-center gap-2">
+                      <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
+                        {t("Véhicules déplacés")}
+                      </p>
+                      <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 ">
+                        {t("Véhicules non déplacés")}
+                      </p>
+                      <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
+                        {t("Véhicules hors service")}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {/* xxxxxxxxxxxxxxxxxxxxxxxx */}
+                <table
+                  // ref={tableRef}
+                  id="myTable"
+                  className=" w-full text-left dark:bg-gray-800 dark:text-gray-200"
+                >
+                  <thead>
+                    <tr className="bg-orange-50 text-gray-700 border-- dark:bg-gray-900 dark:text-gray-100">
+                      <th className="border border-l-4  border-l-red-600  min-w-[0rem] max-w-[0rem]"></th>
+                      <th className="border border-l-4--  border-l-red-600 dark:border-gray-600 py-3 px-2  min-w-[4rem] max-w-[4rem]">
+                        #
+                      </th>
+
+                      <th className="border dark:border-gray-600 py-3 px-2  min-w-[18rem] max-w-[18rem]">
+                        {t("Véhicule")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
+                        {t("Date et Heure de départ")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[13rem] max-w-[13rem]">
+                        {t("Date et Heure d'arrivée")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                        {t("Vitesse moyenne")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                        {t("Vitesse maximale")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                        {t("Distance totale")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[10rem] max-w-[10rem]">
+                        {t("Nombre d'arrêts")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[12rem] max-w-[12rem]">
+                        {t("Temps en mouvement")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem] max-w-[30rem]">
+                        {t("Adresse de départ")}
+                      </th>
+                      <th className="border dark:border-gray-600 py-3 px-2 min-w-[30rem]  max-w-[30rem]">
+                        {t("Adresse d'arrivée")}
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="  max-w-20">
+                    {(tableSortBy || vehiclesByDepartureTime)?.map(
+                      (véhicule, index) => {
+                        // Trouver le véhicule correspondant dans updateData
+                        const matchedVehicle =
+                          currentDataFusionné &&
+                          currentDataFusionné.find(
+                            (v) => v.deviceID === véhicule?.deviceID
+                          );
+
+                        const isMoving = matchedVehicle.véhiculeDetails?.some(
+                          (detail) => detail.speedKPH >= 1
+                        );
+
+                        const hasDetails =
+                          matchedVehicle.véhiculeDetails &&
+                          matchedVehicle.véhiculeDetails.length > 0;
+
+                        const noSpeed = matchedVehicle.véhiculeDetails?.every(
+                          (detail) => detail.speedKPH <= 0
+                        );
+
+                        // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                        const lastUpdateTimeMs = matchedVehicle.lastUpdateTime
+                          ? matchedVehicle.lastUpdateTime * 1000
+                          : 0;
+                        const isActive =
+                          currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+                        ///////////////////////////////////////////////////////////////////////////
+                        // iiiiiiiiiiiiiiiiiiiiiiiiiiii
+
+                        const lastUpdateTimestampMs =
+                          matchedVehicle.véhiculeDetails &&
+                          matchedVehicle.véhiculeDetails[0] &&
+                          matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+
+                        ////////////////////////////////////////////////////////////////////
+
+                        let iconBg = "text-red-500 dark:text-red-500";
+                        let vehiculeBG =
+                          "bg-red-50/50-- hover:bg-red-100 dark:hover:bg-gray-700";
+
+                        if (hasDetails && isMoving) {
+                          iconBg =
+                            "text-green-500 bg-green-50/50  dark:text-green-500 border-l-green-600 dark:border-l-green-600";
+                          vehiculeBG =
+                            "bg-green-50/50-- text-green-800 dark:text-green-200 font-semibold hover:bg-green-100 dark:hover:bg-gray-700";
+                        } else if (hasDetails && noSpeed && isActive) {
+                          iconBg =
+                            "text-red-500  bg-red-50/50 dark:text-red-500 border-l-red-500 dark:border-l-red-600";
+                          vehiculeBG =
+                            "bg-red-50/50--  text-red-700 dark:text-red-200  font-semibold hover:bg-red-100 dark:hover:bg-gray-700";
+                        } else if (!hasDetails || !isActive) {
+                          iconBg =
+                            "text-purple-800  bg-purple-50/50 dark:text-purple-100 border-l-purple-500 dark:border-l-purple-600";
+                          vehiculeBG =
+                            "bg-purple-50/50--  text-purple-800 dark:text-purple-200  font-semibold hover:bg-purple-100 dark:hover:bg-gray-700";
+                        }
+                        {
+                          /* yyyyyyyyyyyyyyyyyyyyyy */
+                        }
+
+                        ///////////////////////////////////////////////////////////////////////
+                        return (
+                          <tr
+                            key={index}
+                            className="border dark:border-gray-600"
+                          >
+                            <td
+                              className={`${iconBg}   border font-semibold text-lg border-l-4  dark:bg-gray-900/70  dark:border-gray-600`}
+                            ></td>
+                            <td
+                              className={`${iconBg}   border font-semibold text-lg border-l-4--  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600`}
+                            >
+                              {index + 1 || "---"}
+                            </td>
+                            <td
+                              onClick={() => {
+                                handleClick(véhicule);
+                              }}
+                              className={`${vehiculeBG} notranslate border cursor-pointer  py-3 px-2  bg-gray-50-- dark:bg-gray-900/70  dark:border-gray-600 `}
+                            >
+                              {véhicule?.description || "---"}
+                            </td>
+                            {/*  */}
+                            <td
+                              className={`${
+                                tableSortByColorBg ===
+                                  ("vehiclesByDepartureTime" || "") &&
+                                "bg-orange-50 dark:bg-orange-950"
+                              } border py-3 px-2 notranslate   dark:border-gray-600`}
+                            >
+                              {véhicule?.véhiculeDetails[0]?.timestamp
+                                ? FormatDateHeure(
+                                    véhicule?.véhiculeDetails[
+                                      véhicule?.véhiculeDetails.length - 1
+                                    ]?.timestamp
+                                  )?.date
+                                : ""}{" "}
+                              {véhicule?.véhiculeDetails[0]?.timestamp && (
+                                <span className="px-2">/</span>
+                              )}{" "}
+                              {véhicule?.véhiculeDetails[0]?.timestamp
+                                ? FormatDateHeure(
+                                    véhicule?.véhiculeDetails[
+                                      véhicule?.véhiculeDetails.length - 1
+                                    ]?.timestamp
+                                  )?.time
+                                : `${t("Pas de date disponible")}`}{" "}
+                            </td>
+                            <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                              {véhicule?.véhiculeDetails[0]?.timestamp
+                                ? FormatDateHeure(
+                                    véhicule?.véhiculeDetails[0]?.timestamp
+                                  )?.date
+                                : ""}{" "}
+                              {véhicule?.véhiculeDetails[0]?.timestamp && (
+                                <span className="px-2">/</span>
+                              )}{" "}
+                              {véhicule?.véhiculeDetails[0]?.timestamp
+                                ? FormatDateHeure(
+                                    véhicule?.véhiculeDetails[0]?.timestamp
+                                  )?.time
+                                : `${t("Pas de date disponible")}`}{" "}
+                            </td>
+
+                            {/* Vitesse moyenne */}
+                            <td className="border py-3 px-2 notranslate dark:border-gray-600">
+                              {véhicule?.avgSpeed + " Km/h"}
+                            </td>
+                            {/* max speed */}
+                            <td
+                              className={`${
+                                tableSortByColorBg ===
+                                  ("vehiclesByMaxSpeed" || "") &&
+                                "bg-orange-50 dark:bg-orange-950"
+                              } border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600`}
+                            >
+                              {(véhicule?.maxSpeed).toFixed(0) + " Km/h"}
+                            </td>
+
+                            {/* Distance totale */}
+                            <td
+                              className={`${
+                                tableSortByColorBg ===
+                                  ("vehiclesByDistance" || "") &&
+                                "bg-orange-50 dark:bg-orange-950"
+                              } border py-3 px-2 notranslate dark:border-gray-600`}
+                            >
+                              {véhicule.totalDistance.toFixed(0)} km
+                            </td>
+
+                            {/* Nombre d'arret */}
+                            <td className="border py-3 px-2 notranslate   bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600">
+                              {/* {Object.entries(result3.stopsByVehicle)[index][1]} arrêts */}
+                              {véhicule.stopCount + " " + `${t("arrêts")}`}
+                            </td>
+
+                            {/* Temps actifs */}
+                            <td
+                              className={`${
+                                tableSortByColorBg ===
+                                  ("vehiclesByMovingDuration" || "") &&
+                                "bg-orange-50 dark:bg-orange-950"
+                              } border py-3 px-2 notranslate dark:border-gray-600`}
+                            >
+                              {véhicule?.totalMovingDuration}
+                            </td>
+
+                            {/* Addresse départ */}
+                            <Tooltip
+                              title={`${t("Voir cette adresse sur la carte")}`}
+                              PopperProps={{
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -30], // Décalage horizontal et vertical
+                                    },
+                                  },
+                                  {
+                                    name: "zIndex",
+                                    enabled: true,
+                                    phase: "write",
+                                    fn: ({ state }) => {
+                                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                    },
+                                  },
+                                ],
+                              }}
+                            >
+                              <td
+                                onClick={() => {
+                                  afficherPositionTableauEnCarte(
+                                    véhicule,
+                                    véhicule?.véhiculeDetails[
+                                      véhicule?.véhiculeDetails?.length - 1
+                                    ]?.creationTime
+                                  );
+                                }}
+                                className="border py-3 px-2 notranslate  cursor-pointer  bg-gray-50 dark:bg-gray-900/70  dark:border-gray-600"
+                              >
+                                {véhicule?.véhiculeDetails[
+                                  véhicule?.véhiculeDetails.length - 1
+                                ]?.backupAddress ||
+                                  véhicule?.véhiculeDetails[
+                                    véhicule?.véhiculeDetails.length - 1
+                                  ]?.address ||
+                                  `${t("Pas d'adresse disponible")}`}
+                              </td>
+                            </Tooltip>
+
+                            {/* Addresse départ */}
+                            <Tooltip
+                              title={`${t("Voir cette adresse sur la carte")}`}
+                              PopperProps={{
+                                modifiers: [
+                                  {
+                                    name: "offset",
+                                    options: {
+                                      offset: [0, -30], // Décalage horizontal et vertical
+                                    },
+                                  },
+                                  {
+                                    name: "zIndex",
+                                    enabled: true,
+                                    phase: "write",
+                                    fn: ({ state }) => {
+                                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                                    },
+                                  },
+                                ],
+                              }}
+                            >
+                              <td
+                                onClick={() => {
+                                  afficherPositionTableauEnCarte(
+                                    véhicule,
+                                    véhicule?.véhiculeDetails[0]?.creationTime
+                                  );
+                                }}
+                                className="border py-3 px-2 notranslate  cursor-pointer   dark:border-gray-600"
+                              >
+                                {véhicule?.véhiculeDetails[0]?.backupAddress ||
+                                  véhicule?.véhiculeDetails[0]?.address ||
+                                  `${t("Pas d'adresse disponible")}`}
+                              </td>
+                            </Tooltip>
+                          </tr>
+                        );
+                      }
+                    )}
+                  </tbody>
+                </table>{" "}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
