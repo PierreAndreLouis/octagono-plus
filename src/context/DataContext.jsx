@@ -1226,6 +1226,7 @@ const DataContextProvider = ({ children }) => {
     country,
     sendConnectionMail = true
   ) => {
+    console.log("version 30/6/2025_4");
     console.log("++++++++++++++++ Requête effectué: handleLogin");
     console.log("Country: --------", country);
     const xmlData = `<GTSRequest command="dbget">
@@ -1332,11 +1333,12 @@ const DataContextProvider = ({ children }) => {
           }, 3000);
         }
 
-        if (window.location.hostname !== "localhost" || sendConnectionMail) {
-          // Exécuter la fonction seulement si ce n'est pas localhost
-          sendConfirmConnexionMail(account, username);
-          sendConfirmConnexionMail2(account, username);
-        }
+        // if (window.location.hostname !== "localhost" || sendConnectionMail) {
+        // // if (window.location.hostname !== "localhost" || sendConnectionMail) {
+        //   // Exécuter la fonction seulement si ce n'est pas localhost
+        //   sendConfirmConnexionMail(account, username);
+        //   sendConfirmConnexionMail2(account, username);
+        // }
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
