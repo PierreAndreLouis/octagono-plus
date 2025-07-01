@@ -407,14 +407,16 @@ function DashboardAdminPage() {
             <div className="fixed inset-0 z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] bg-black/50 backdrop-blur-sm-- flex justify-center items-center">
               <form
                 onSubmit={reactiverSessionUser}
-                className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl p-8 shadow-2xl border border-gray-200"
+                className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
               >
                 <h2 className="text-2xl font-bold text-gray-800 mb-3 text-center">
-                  Session inactive
+                  {t("Session inactive")}
                 </h2>
                 <p className="text-gray-600 text-sm mb-6 text-center">
-                  Inactivité de 30 minutes détectée. Veuillez confirmer votre
-                  mot de passe pour continuer.
+                  {t(
+                    "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer"
+                  )}
+                  .
                 </p>
                 {errorMessage && (
                   <p className="text-red-500 text-sm mt-2 mb-3 text-center">
@@ -425,7 +427,7 @@ function DashboardAdminPage() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Confirmer ton Mot de passe"
+                  placeholder={`${t("Confirmer ton Mot de passe")}`}
                   required
                   value={inputPassword}
                   onChange={(e) => {
@@ -441,7 +443,7 @@ function DashboardAdminPage() {
                   // }}
                   className="bg-orange-600 text-white text-sm font-medium px-4 py-3 rounded-xl w-full hover:bg-orange-700 transition-all duration-150"
                 >
-                  Confirmer
+                  {t("Confirmer")}
                 </button>
               </form>
             </div>
@@ -600,7 +602,7 @@ function DashboardAdminPage() {
           {/*  */}
           {/*  */}
           <p className="absolute -bottom-8 text-gray-500 text-sm right-4">
-            30/06/2025 _ 5
+            01/07/2025 _ 1
           </p>
           {/*  */}
           {/*  */}

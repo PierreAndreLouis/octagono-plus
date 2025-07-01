@@ -5,6 +5,7 @@ import { DataContext } from "../context/DataContext";
 import ListeVehicule from "../components/vehicule_details/ListeVehicule";
 import VehiculeDetailInformationComponent from "../components/vehicule_details/VehiculeDetailInformationComponent";
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
+import { useTranslation } from "react-i18next";
 
 function DetailsVehiculePage() {
   const {
@@ -17,6 +18,8 @@ function DetailsVehiculePage() {
     accountDevices,
   } = useContext(DataContext); // fetchVehicleDetails importée du contexte
   let x;
+
+  const [t, i18n] = useTranslation();
 
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
@@ -105,7 +108,7 @@ function DetailsVehiculePage() {
               }}
               className="text-start notranslate w-[90%] overflow-hidden whitespace-nowrap text-ellipsis"
             >
-              {currentVéhicule?.description || "Choisis un véhicule"}
+              {currentVéhicule?.description || `${t("Choisissez un Appareil")}`}
             </p>
             <FaChevronDown className="mt-1" />
           </div>

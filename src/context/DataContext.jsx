@@ -1226,7 +1226,7 @@ const DataContextProvider = ({ children }) => {
     country,
     sendConnectionMail = true
   ) => {
-    console.log("version 30/6/2025_4");
+    console.log("version 01/07/2025 _ 1");
     console.log("++++++++++++++++ Requête effectué: handleLogin");
     console.log("Country: --------", country);
     const xmlData = `<GTSRequest command="dbget">
@@ -1282,8 +1282,6 @@ const DataContextProvider = ({ children }) => {
         setDashboardLoadingEffect(true);
         setShowAnnimationProgresseBarDashboard(true);
 
-        resetInteraction();
-
         // navigate("/home");
         if (account === "sysadmin") {
           setIsDashboardHomePage(true);
@@ -1333,12 +1331,14 @@ const DataContextProvider = ({ children }) => {
           }, 3000);
         }
 
+        resetInteraction(account, username, password);
+
         // if (window.location.hostname !== "localhost" || sendConnectionMail) {
-        // // if (window.location.hostname !== "localhost" || sendConnectionMail) {
-        //   // Exécuter la fonction seulement si ce n'est pas localhost
-        //   sendConfirmConnexionMail(account, username);
-        //   sendConfirmConnexionMail2(account, username);
-        // }
+        if (window.location.hostname !== "localhost" || sendConnectionMail) {
+          // Exécuter la fonction seulement si ce n'est pas localhost
+          sendConfirmConnexionMail(account, username);
+          sendConfirmConnexionMail2(account, username);
+        }
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -3425,7 +3425,7 @@ const DataContextProvider = ({ children }) => {
 
       // console.log("End creating..............");
     } catch (error) {
-      setError("Erreur lors de la modification lastLoginTime du user.");
+      // setError("Erreur lors de la modification lastLoginTime du user.");
       console.error(
         "Erreur lors de la modification lastLoginTime du user",
         error
@@ -8506,21 +8506,35 @@ const DataContextProvider = ({ children }) => {
   const [timeSinceLastInteraction, setTimeSinceLastInteraction] = useState(0);
   const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes en millisecondes pour tester
 
-  const resetInteraction = () => {
+  const resetInteraction = (account, username, password) => {
     localStorage.setItem("lastInteraction", new Date().toISOString());
     setIsUserNotInteractingNow(false);
     setTimeSinceLastInteraction(0);
 
     const lastLoginTime = Math.floor(Date.now() / 1000);
 
-    if (account && username && password && lastLoginTime) {
-      UpdateUserConnexion(account, username, password, lastLoginTime);
+    const storedAccount = localStorage.getItem("account");
+    const storedUserName = localStorage.getItem("username");
+    const storedPassword = localStorage.getItem("password");
+
+    if (
+      account ||
+      (storedAccount && username) ||
+      (storedUserName && password) ||
+      (storedPassword && lastLoginTime)
+    ) {
+      UpdateUserConnexion(
+        account || storedAccount,
+        username || storedUserName,
+        password || storedPassword,
+        lastLoginTime
+      );
     }
 
     if (window.location.hostname !== "localhost") {
       // Exécuter la fonction seulement si ce n'est pas localhost
-      sendConfirmConnexionMail(account, user);
-      sendConfirmConnexionMail2(account, user);
+      sendConfirmConnexionMail(account, username || storedUserName);
+      sendConfirmConnexionMail2(account, username || storedUserName);
     }
   };
 
