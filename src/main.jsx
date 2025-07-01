@@ -19,9 +19,9 @@ import { I18nextProvider } from "react-i18next";
 
 const savedLang = localStorage.getItem("lang") || "fr";
 
-// if (process.env.NODE_ENV === "production") {
-//   console.log = () => {};
-// }
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+}
 
 // console.log = () => {}; // désactive tous les console.log
 
