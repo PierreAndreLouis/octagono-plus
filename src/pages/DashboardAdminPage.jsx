@@ -450,7 +450,7 @@ function DashboardAdminPage() {
                     // onClick={() => {
                     //   resetInteraction();
                     // }}
-                    className="bg-orange-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg w-full hover:bg-orange-700 transition-all duration-150"
+                    className="bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg w-full hover:bg-orange-700 transition-all duration-150"
                   >
                     {t("Confirmer")}
                   </button>

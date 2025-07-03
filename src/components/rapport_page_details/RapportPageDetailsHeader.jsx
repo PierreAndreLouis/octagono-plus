@@ -747,17 +747,16 @@ function RapportPageDetailsHeader({
                 </div>
               )}
 
-              {pageSection === "groupe" &&
-                deviceListeSelected?.length < 100 && (
-                  <div
-                    onClick={() => {
-                      setShowChooseDate(true);
-                    }}
-                    className="flex  gap-2 items-center cursor-pointer"
-                  >
-                    <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
-                  </div>
-                )}
+              {pageSection === "groupe" && deviceListeSelected?.length < 50 && (
+                <div
+                  onClick={() => {
+                    setShowChooseDate(true);
+                  }}
+                  className="flex  gap-2 items-center cursor-pointer"
+                >
+                  <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+                </div>
+              )}
             </Tooltip>
           </div>
         </div>

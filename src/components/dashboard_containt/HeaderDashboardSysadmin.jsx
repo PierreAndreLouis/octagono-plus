@@ -27,7 +27,7 @@ function HeaderDashboardSysadmin({
         <div className="flex items-center gap-3">
           {/* {localStorage.getItem("currentCountry") === "ht" || */}
           {/* // currentCountry === "ht" ? ( */}
-          <img src="/img/cars/logo.png" className="w-[2.15rem]" alt="Logo" />
+          <img src="/img/cars/logo.png" className="w-[2.11rem]" alt="Logo" />
           {/* // ) : ( */}
           <img
             src="/img/logo/octagonogpsLogo.png"

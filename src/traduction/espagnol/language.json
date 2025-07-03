@@ -741,7 +741,13 @@
   "Statut du véhicule": "Estado del vehículo",
   "Veuillez choisir un véhicule": "Por favor, elija un vehículo",
   "Choisir": "Elegir",
-  "En Déplacement": "En Movimiento" 
+  "En Déplacement": "En Movimiento" ,
+
+
+
+  "Véhicules En déplacement": "Vehículos en movimiento",
+  "Il n’est pas possible de fournir un rapport global pour tous": "No es posible proporcionar un informe global para todos.",
+  "Ce compte comprend plus de 50 appareils": "Esta cuenta incluye más de 50 dispositivos"
 
 
 

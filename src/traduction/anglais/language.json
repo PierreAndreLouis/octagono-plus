@@ -771,7 +771,11 @@
   "Statut du véhicule": "Vehicle Status",
   "Veuillez choisir un véhicule": "Please choose a vehicle",
   "Choisir": "Choose",
-  "En Déplacement": "In Motion"
+  "En Déplacement": "In Motion",
+
+   "Véhicules En déplacement": "Vehicles in Motion",
+  "Il n’est pas possible de fournir un rapport global pour tous": "It is not possible to provide a global report for all.",
+  "Ce compte comprend plus de 50 appareils": "This account includes more than 50 devices"
 
 
 

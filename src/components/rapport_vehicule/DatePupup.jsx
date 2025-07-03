@@ -11,6 +11,7 @@ function DatePupup({
   setShowDatePicker2,
   selectedDate,
   setSelectedDate,
+  pageSection,
 }) {
   const [t, i18n] = useTranslation();
 
@@ -28,7 +29,7 @@ function DatePupup({
           onSubmit={handleApply}
           className="fixed z-[9999999999999999999] inset-0 flex justify-center items-center bg-black/50"
         >
-          <div className="border relative flex-col bg-gray-50 dark:bg-gray-800 w-full max-w-[25rem] mx-4 rounded-lg px-4 pl-2 py-1 flex gap-4-- shadow-lg">
+          <div className="border relative flex-col pt-6 bg-gray-50 dark:bg-gray-800 w-full max-w-[25rem] mx-4 rounded-lg px-4 pl-2 py-1 flex gap-4-- shadow-lg">
             <IoClose
               onClick={() => {
                 setShowChooseDate(false);
@@ -36,21 +37,27 @@ function DatePupup({
               className="absolute top-4 right-4 text-xl text-red-500 dark:text-red-400 cursor-pointer"
             />
 
-            <h2 className="font-semibold dark:text-gray-200 text-lg p-3 pb-0 text-gray-700">
-              {t("Recherche par intervalle de date")}
-            </h2>
-            <p
-              onClick={() => {
-                setShowDatePicker2(true);
-                setShowChooseDate(false);
-              }}
-              className="mx-3 shadow-lg-- shadow-gray-300/40 cursor-pointer bg-orange-100 p-2  mb-3 mt-2 rounded-lg"
-            >
-              {t("Sélectionner une intervalle de date")}
-            </p>
+            {pageSection === "unite" && (
+              <h2 className="font-semibold dark:text-gray-200 text-lg p-3 pb-0 text-gray-700">
+                {t("Recherche par intervalle de date")}
+              </h2>
+            )}
+            {pageSection === "unite" && (
+              <p
+                onClick={() => {
+                  setShowDatePicker2(true);
+                  setShowChooseDate(false);
+                }}
+                className="mx-3 shadow-lg-- shadow-gray-300/40 cursor-pointer bg-orange-100 p-2  mb-3 mt-2 rounded-lg"
+              >
+                {t("Sélectionner une intervalle de date")}
+              </p>
+            )}
             {/*  */}
             {/*  */}
-            <div className="border-b my-4 border-orange-400/50 dark:border-gray-700" />
+            {pageSection === "unite" && (
+              <div className="border-b my-4 border-orange-400/50 dark:border-gray-700" />
+            )}
             {/*  */}
             {/*  */}
             <h2 className="font-semibold dark:text-gray-200 text-lg px-3 text-gray-700">

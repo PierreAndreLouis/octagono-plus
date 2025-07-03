@@ -22,6 +22,7 @@ function ListeDesVehiculesGestion({
   setChooseOtherAccountGestion,
   fromDashboard = false,
   statisticFilteredDeviceListe,
+  statisticFilteredDeviceListeText,
 }) {
   const {
     FormatDateHeure,
@@ -352,7 +353,11 @@ function ListeDesVehiculesGestion({
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
           <div className="mt-4  flex items-center gap-2">
             <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
-              {t("Véhicules déplacés")}
+              {fromDashboard &&
+              statisticFilteredDeviceListeText ===
+                `${t("Appareils En déplacement")}`
+                ? `${t("Véhicules En déplacement")}`
+                : t("Véhicules déplacés")}
             </p>
             <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 ">
               {t("Véhicules non déplacés")}
@@ -470,14 +475,14 @@ function ListeDesVehiculesGestion({
                       </button> */}
                     </div>
                     <div className="flex  gap-3  ">
-                      <div className=" hidden sm:flex flex-col  items-center">
-                        <FaCar
-                          className={`${text_color} text-[3rem]   md:mr-4 `}
-                        />
+                      <div className=" hidden sm:flex flex-col  items-center   md:mr-4">
+                        <FaCar className={`${text_color} text-[3rem]   `} />
                         <h3 className={`${text_color} font-bold text-2xl`}>
-                          {parseFloat(
-                            device?.véhiculeDetails[0]?.speedKPH
-                          ).toFixed(0)}{" "}
+                          {updatedRecently
+                            ? parseFloat(
+                                device?.véhiculeDetails[0]?.speedKPH
+                              ).toFixed(0)
+                            : "0"}{" "}
                         </h3>
                         <h3 className={`${text_color} font-bold text-lg`}>
                           Km/h
@@ -489,10 +494,14 @@ function ListeDesVehiculesGestion({
                             <FaCar
                               className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
                             />
-                            <h3 className={`${text_color} font-bold text-2xl`}>
-                              {parseFloat(
-                                device?.véhiculeDetails[0]?.speedKPH
-                              ).toFixed(0)}{" "}
+                            <h3
+                              className={`${text_color} font-bold text-lg md:text-2xl`}
+                            >
+                              {updatedRecently
+                                ? parseFloat(
+                                    device?.véhiculeDetails[0]?.speedKPH
+                                  ).toFixed(0)
+                                : "0"}{" "}
                               Km/h
                             </h3>
                           </div>

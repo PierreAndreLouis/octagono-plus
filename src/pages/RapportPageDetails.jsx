@@ -1284,9 +1284,11 @@ function RapportPageDetails() {
         pageSection === "search" ? "pt-20" : " pt-40 "
       } flex flex-col max-w-screen bg-white rounded-lg   min-h-[100vh]  overflow-hidden justify-center-- items-center pb-20 `}
     >
+      {/* {pageSection === "unite" && ( */}
       <div>
         <DatePupup
           showChooseDate={showChooseDate}
+          pageSection={pageSection}
           handleApply={handleApply}
           setShowChooseDate={setShowChooseDate}
           setShowDatePicker2={setShowDatePicker2}
@@ -1294,6 +1296,7 @@ function RapportPageDetails() {
           setSelectedDate={setSelectedDate}
         />
       </div>
+      {/* )} */}
 
       {loadingHistoriqueFilter && (
         <div className="fixed z-30 inset-0 bg-gray-200/50 dark:bg-black/50">
@@ -1426,16 +1429,17 @@ function RapportPageDetails() {
       {/* ////////////////////////////////////////////////////////////////////////////////////// */}
       {/* en groupe */}
 
-      {pageSection === "groupe" && totalDevice?.length > 100 && (
+      {pageSection === "groupe" && totalDevice?.length > 50 && (
         <div>
           <h2 className="font-bold mx-4 text-center mt-10 text-lg">
-            Ce compte a plus de 100 appareils...
+            {t("Ce compte comprend plus de 50 appareils")}...
           </h2>
           <br />
           <p className="text-orange-700-- text-center text-lg">
             <span className="text-orange-600">
-              Nous ne pouvons pas vous donner un rapport pour tous les
-              appareils.
+              {t(
+                "Il n’est pas possible de fournir un rapport global pour tous"
+              )}
             </span>
             <br />
             {/* Nous vous remercions de votre compréhension. */}
@@ -1443,7 +1447,7 @@ function RapportPageDetails() {
         </div>
       )}
 
-      {pageSection === "groupe" && totalDevice?.length <= 100 && (
+      {pageSection === "groupe" && totalDevice?.length <= 50 && (
         <RapportGroupe
           currentDataFusionné={currentDataFusionné}
           véhiculeActiveToday={véhiculeActiveToday}

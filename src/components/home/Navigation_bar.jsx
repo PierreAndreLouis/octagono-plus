@@ -26,9 +26,17 @@ function NavigationBar({}) {
     setIsDashboardHomePage,
     documentationPage,
     setDocumentationPage,
+    scrollToTop,
+    accountUsers,
+    setListeGestionDesUsers,
+    currentAccountSelected,
+    setListeGestionDesVehicules,
+    accountDevices,
+    mergedDataHome,
   } = useContext(DataContext);
   let x;
   const [t, i18n] = useTranslation();
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   //
   //
@@ -156,6 +164,12 @@ function NavigationBar({}) {
           {isDashboardHomePage ? (
             <div
               onClick={() => {
+                if (currentAccountSelected) {
+                  setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+                } else {
+                  setListeGestionDesUsers(accountUsers);
+                }
+                scrollToTop();
                 setDocumentationPage("Gestion_des_utilisateurs");
               }}
               className={`${
@@ -196,6 +210,15 @@ function NavigationBar({}) {
 
           <div
             onClick={() => {
+              if (currentAccountSelected && isDashboardHomePage) {
+                setListeGestionDesVehicules(
+                  currentAccountSelected?.accountDevices
+                );
+              } else if (!currentAccountSelected && isDashboardHomePage) {
+                setListeGestionDesVehicules(accountDevices);
+              } else if (!isDashboardHomePage) {
+                setListeGestionDesVehicules(dataFusionné);
+              }
               setDocumentationPage("Gestion_des_appareils");
             }}
             className={`${
