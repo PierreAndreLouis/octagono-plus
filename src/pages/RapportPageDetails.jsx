@@ -20,6 +20,7 @@ import RapportPersonnel from "../components/rapport_page_details/RapportPersonne
 import DatePupup from "../components/rapport_vehicule/DatePupup";
 import DateTimePicker from "../components/home/DateTimePicker";
 import { FaBullseye } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -72,6 +73,8 @@ function RapportPageDetails() {
   } = useContext(DataContext);
 
   let x;
+
+  const [t, i18n] = useTranslation();
 
   // Le data converti en Objet
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
