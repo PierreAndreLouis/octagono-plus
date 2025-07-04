@@ -60,6 +60,7 @@ function SideBarSysadmin({
     geofenceData,
     setShowHistoriqueInMap,
     adminAccount,
+    setReadDocumentation,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -675,6 +676,25 @@ function SideBarSysadmin({
             </div>
           </div>
         </div>
+
+        {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
+          <div
+            onClick={() => {
+              closeSideBar();
+              setReadDocumentation(true);
+            }}
+            className={`${
+              documentationPage === "installation" ? "bg-orange-50" : ""
+            } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+          >
+            <MdGTranslate className="text-xl min-w-[1.5rem] text-orange-600" />
+            <div className="flex w-full justify-between">
+              <p className="text-gray-600 text-[1rem] font-semibold">
+                {t("Language")}
+              </p>
+            </div>
+          </div>
+        </div> */}
 
         <InstallationPWA />
 

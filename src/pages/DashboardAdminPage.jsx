@@ -89,6 +89,9 @@ function DashboardAdminPage() {
     adminPassword,
     password,
     versionApplication,
+    account,
+    username,
+    adminUsername,
   } = useContext(DataContext);
 
   useEffect(() => {
@@ -294,7 +297,32 @@ function DashboardAdminPage() {
       (adminPassword && inputPassword === adminPassword) ||
       (password && inputPassword === password)
     ) {
-      resetInteraction();
+      const storedAccount = account || localStorage.getItem("account");
+      const storedUserName = username || localStorage.getItem("username");
+      const storedPassword = password || localStorage.getItem("password");
+
+      const storedAccountADM =
+        adminAccount || localStorage.getItem("adminAccount");
+      const storedUserNameADM =
+        adminUsername || localStorage.getItem("adminUsername");
+      const storedPasswordADM =
+        adminPassword || localStorage.getItem("adminPassword");
+
+      let accountID;
+      let userID;
+      let passwordID;
+
+      if (isDashboardHomePage) {
+        accountID = storedAccountADM;
+        userID = storedUserNameADM;
+        passwordID = storedPasswordADM;
+      } else {
+        accountID = storedAccount;
+        userID = storedUserName;
+        passwordID = storedPassword;
+      }
+
+      resetInteraction(accountID, userID, passwordID);
       setErrorMessage("");
       setInputPassword("");
     } else {
