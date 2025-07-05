@@ -93,24 +93,6 @@ function Login2() {
 
   return (
     <div>
-      {/* <GoogleTranslate /> */}
-
-      {/* <div className="fixed top-0 right-4  ">
-        <div
-          onClick={() => {
-            // closeSideBar();
-            setChooseOtherLanguagePopup(true);
-          }}
-          className={` flex items-center  gap-2   border-b border-b-gray-200 py-1 mt-2 hover:bg-orange-50 cursor-pointer px-3`}
-        >
-          <MdGTranslate className="text-xl min-w-[1.5rem] text-blue-400" />
-          <div className="flex w-full justify-between">
-            <p className="text-gray-600 text-[1rem] font-semibold">
-              {t("Traduction")}
-            </p>
-          </div>
-        </div>
-      </div> */}
       <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <div className=" flex  gap-5 justify-center items-center">

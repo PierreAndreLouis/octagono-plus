@@ -1,61 +1,28 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { IoMdLogIn } from "react-icons/io";
 import { ImEnlarge } from "react-icons/im";
 import { FiAlertCircle } from "react-icons/fi";
 
-import {
-  IoCarSportOutline,
-  IoChevronDown,
-  IoClose,
-  IoMenu,
-} from "react-icons/io5";
-import {
-  MdInstallDesktop,
-  MdLockOutline,
-  MdPassword,
-  MdSwitchAccount,
-  MdUpdate,
-} from "react-icons/md";
-import { TbPointFilled } from "react-icons/tb";
-import { Link } from "react-router-dom";
-// import { DataContext } from "../../context/DataContext";
+import { IoClose } from "react-icons/io5";
+import { MdLockOutline } from "react-icons/md";
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { PiIntersectThreeBold } from "react-icons/pi";
-import {
-  FaAngleDoubleRight,
-  FaCar,
-  FaChevronDown,
-  FaLock,
-  FaLockOpen,
-  FaSearch,
-  FaUnlockAlt,
-  FaUserCircle,
-  FaUsers,
-} from "react-icons/fa";
-import { GoDot } from "react-icons/go";
+import { FaAngleDoubleRight, FaUnlockAlt, FaUserCircle } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useTranslation } from "react-i18next";
+
 import LocationPage from "../../pages/LocationPage";
 import ListeDesVehiculesGestion from "../../pages/ListeDesVehiculesGestion";
 import ListeDesUtilisateur from "../../pages/ListeDesUtilisateur";
 import ListeDesGroupes from "../../pages/ListeDesGroupes";
 import ListeDesAlertsGestion from "../../pages/ListeDesAlertsGestion";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Label,
-} from "recharts";
-import { useTranslation } from "react-i18next";
 import TableauRecapitulatifComptes from "./TableauRecapitulatifComptes";
 import DeviceListeDashboard from "./DeviceListeDashboard";
 import Graphe3BatonnetComptes from "./Graphe3BatonnetComptes";
 import StatisticDashboard from "./StatisticDashboard";
 
 function DashboardContaintMaintComponant({
-  setChooseOtherAccountGestion,
   setDocumentationPage,
   setChosseOtherGroupeDashboard,
   allDevices,
@@ -67,17 +34,10 @@ function DashboardContaintMaintComponant({
     listeGestionDesVehicules,
     accountDevices,
     setListeGestionDesUsers,
-    setShowSelectedUserOptionsPopup,
-    setCurrentSelectedUserToConnect,
     accountUsers,
     accountGroupes,
     account,
     password,
-    fetchAccountDevices,
-    fetchAccountUsers,
-    fetchUserDevices,
-    fetchUserGroupes,
-    dashboardLoadingEffect,
     setDashboardLoadingEffect,
     gestionAccountData,
     setListeGestionDesGroupe,
@@ -87,7 +47,6 @@ function DashboardContaintMaintComponant({
     adminAccount,
     adminUsername,
     adminPassword,
-    véhiculeDetails,
     setListeGestionDesVehicules,
     progressBarForLoadingData,
     statusDescriptions,
@@ -98,7 +57,6 @@ function DashboardContaintMaintComponant({
     runningAnimationProgressLoading,
     setRunningAnimationProgressLoading,
     runningAnimationProgressDuration,
-    setRunningAnimationProgressDuration,
     homePageReload,
     username,
     fetchVehicleDataFromRapportGroupe,
@@ -197,12 +155,7 @@ function DashboardContaintMaintComponant({
       1000,
       setAnimatedDeplaces
     );
-    // animateValue(
-    //   animatedEnDéplacement,
-    //   EnDéplacement.length,
-    //   1000,
-    //   setAnimatedEnDéplacement
-    // );
+
     animateValue(
       animatedStationnement,
       DeviceEnStationnement.length,
@@ -215,7 +168,6 @@ function DashboardContaintMaintComponant({
       1000,
       setAnimatedInactifs
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allDevices]);
 
   //
@@ -230,9 +182,7 @@ function DashboardContaintMaintComponant({
       name: item?.description.slice(0, 7), // 4 premières lettres
       fullName: item?.description,
       accountID: item?.accountID,
-      // start: parseInt(item?.lastStartTime),
       start: parseInt(item?.lastStartTime),
-      // start: 2 * 60 * 60 * 60 * 60 *60,
       stop: parseInt(item?.lastStopTime),
     }));
 
@@ -516,16 +466,6 @@ function DashboardContaintMaintComponant({
       homePageReload(accountUser, usernameUser, passwordUser);
     }
   };
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setTimeout(() => {
-  //       fetchNewDataDevices();
-  //     }, 1000);
-  //   }, 1000 * 60 * 5);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
 
   const [showFistGrapheOption, setShowFistGrapheOption] = useState(false);
   const [showFistGrapheOption2, setShowFistGrapheOption2] = useState(false);
@@ -873,25 +813,6 @@ function DashboardContaintMaintComponant({
     ?.filter((item) => item?.statusCode !== "0xF952")
     ?.slice(0, 2);
 
-  // useEffect(() => {
-  //   if (runningAnimationProgressLoading && progressAnimationStart < 99) {
-  //     const interval = setInterval(() => {
-  //       setProgressAnimationStart((prev) => {
-  //         if (prev >= 98) {
-  //           clearInterval(interval);
-  //           return 99;
-  //         }
-  //         return prev + 1;
-  //       });
-  //     }, runningAnimationProgressDuration);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [
-  //   runningAnimationProgressLoading,
-  //   runningAnimationProgressDuration,
-  //   progressAnimationStart,
-  // ]);
-
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -1028,11 +949,6 @@ function DashboardContaintMaintComponant({
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
                     {t("Liste des Alertes")} (
-                    {/* {
-                      listeGestionDesVehicules?.flatMap(
-                        (device) => device?.véhiculeDetails[0] || []
-                      )?.length
-                    } */}
                     {
                       (isDashboardHomePage
                         ? listeGestionDesVehicules
@@ -1820,9 +1736,6 @@ function DashboardContaintMaintComponant({
                           key={index}
                           className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
                         >
-                          {/* <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-gray-400/10">
-                        {index + 1}
-                      </p> */}
                           <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
                           <div>
                             <p className="text-gray-600">

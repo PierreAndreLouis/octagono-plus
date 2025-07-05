@@ -1,15 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+ 
 import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
-import { Link } from "react-router-dom";
-import { MdErrorOutline } from "react-icons/md";
+ import { MdErrorOutline } from "react-icons/md";
 import {
   FaArrowLeft,
   FaCar,
   FaChevronDown,
-  FaUserCircle,
-} from "react-icons/fa";
+ } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
@@ -18,8 +16,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   const {
     currentAccountSelected,
     setError,
-    password,
-    scrollToTop,
+     scrollToTop,
     FormatDateHeure,
     currentSelectedGroupeGestion,
     modifyGroupeEnGestionAccount,
@@ -106,9 +103,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   const deviceNonSelectionnes = allDevicesIDs?.filter(
     (deviceID) => !deviceSelectionnes.includes(deviceID)
   );
-  const userNonSelectionnes = allUsersIDs?.filter(
-    (userID) => !usersSelectionnes.includes(userID)
-  );
+ 
   //
 
   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
@@ -119,9 +114,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   //
 
   useEffect(() => {
-    // console.log("deviceSelectionnes", deviceSelectionnes);
-    // console.log("usersSelectionnes", usersSelectionnes);
-    // console.log("Device_______NonSelectionnes", deviceNonSelectionnes);
+  
   }, [deviceSelectionnes, usersSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle

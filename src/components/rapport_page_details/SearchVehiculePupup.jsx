@@ -13,9 +13,7 @@ function SearchVehiculePupup({
   handleClick,
   currentVéhicule,
   isMapcomponent,
-  setSearchQueryListPopup,
-  vehicles,
-  mapRef,
+  setSearchQueryListPopup, 
 }) {
   const {
     currentDataFusionné,
@@ -88,30 +86,7 @@ function SearchVehiculePupup({
       //
       //
       //
-
-      // let border_color = "bg-gray-50";
-      // let text_color = "text-orange-500/80";
-      // let bg_color = "bg-orange-500";
-      // if (currentTimeSec - device?.lastUpdateTime < twentyFourHoursInSec) {
-      //   border_color = "border-l-[.4rem] border-orange-300";
-      //   text_color = "text-orange-500/80";
-      //   bg_color = "bg-orange-500";
-      // } else if (
-      //   currentTimeSec - device?.lastUpdateTime >
-      //   twentyFourHoursInSec
-      // ) {
-      //   border_color = "border-l-[.4rem] border-purple-300";
-      //   text_color = "text-purple-500/80";
-      //   bg_color = "bg-purple-500";
-      // }
-
-      // if (device?.lastStopTime > todayTimestamp) {
-      //   border_color = "border-l-[.4rem] border-green-300";
-      //   text_color = "text-green-500/80";
-      //   bg_color = "bg-green-500";
-      // }
-
-      //
+ 
       //
       //
 

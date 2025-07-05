@@ -12,8 +12,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
   const {
     currentAccountSelected,
     setError,
-    password,
-    currentSelectedUserToConnect,
+     currentSelectedUserToConnect,
     scrollToTop,
     timeZoneData,
     userRole,
@@ -122,22 +121,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
       return;
     }
 
-    // const userID = addNewUserData.userID;
-
-    // const userExists = currentAccountSelected?.accountUsers?.some(
-    //   (user) => user?.userID === userID
-    // );
-
-    // if (userExists) {
-    //   setErrorID("Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre.");
-    //   return;
-    // }
-
-    // if (!currentAccountSelected) {
-    //   setChooseOneAccountToContinue(true);
-    //   setChooseOtherAccountGestion(true);
-    //   return;
-    // }
+    
 
     setShowConfirmAddGroupeGestionPopup(true);
   };

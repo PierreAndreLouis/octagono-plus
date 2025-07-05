@@ -9,11 +9,9 @@ import { useTranslation } from "react-i18next";
 
 function ModifyDeviceGestion({ setDocumentationPage }) {
   const {
-    setCurrentAccountSelected,
-    currentAccountSelected,
+     currentAccountSelected,
     setError,
-    password,
-    scrollToTop,
+     scrollToTop,
     currentSelectedDeviceGestion,
     modifyVehicleEnGestionAccount,
     gestionAccountData,
@@ -65,20 +63,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
     e.preventDefault();
     setError("");
 
-    // Si deviceID est unique, créer le véhicule
-    // const deviceID = addVéhiculeData.deviceID;
-
-    // Vérification si deviceID existe déjà
-    // const deviceExists = setCurrentAccountSelected?.accountDevices?.some(
-    //   (véhicule) => véhicule?.deviceID === deviceID
-    // );
-
-    // if (deviceExists) {
-    //   setErrorID(
-    //     "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre."
-    //   );
-    //   return;
-    // }
+  
 
     // Validation du numéro SIM
     if (isNaN(addVéhiculeData.simPhoneNumber)) {

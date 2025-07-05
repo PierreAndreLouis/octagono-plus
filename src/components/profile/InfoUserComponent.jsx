@@ -1,30 +1,21 @@
 import React, { useContext, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
-import LanguageComponent from "../home/LanguageComponent";
-import GoogleTranslate from "../home/GoogleTranslate";
-import GoogleTranslate2 from "../home/GoogleTranslate2";
-import LanguageSwitcher from "../home/LanguageSwitcher";
+
 import { useTranslation } from "react-i18next";
 
 function InfoUserComponent({
   account,
   username,
   userData,
-  setShowChangePasswordPopup,
   setLogOutPopup,
-  selectUTC,
-  SelectedTimeZone,
-  setChangeTimeZone,
+
   adminUserData,
 }) {
   const {
-    setUsername,
     adminAccount,
     adminUsername,
-    homePageReload,
     resetIndexedDB,
-    countRequête,
     currentCountry,
     versionApplication,
   } = useContext(DataContext);
@@ -88,12 +79,6 @@ function InfoUserComponent({
         </div>
 
         {/* Mot de passe */}
-        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
-          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Mot de passe :
-          </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">***-*</p>
-        </div> */}
 
         {/* Fuseau horaire */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
@@ -106,18 +91,7 @@ function InfoUserComponent({
               {adminUsername && adminUserData?.timeZone}{" "}
               {adminUsername && username && " / "}{" "}
               {username && userData?.timeZone}
-              {/* {selectUTC !== ""
-                ? "GMT" + (selectUTC >= 0 ? "+" : "") + selectUTC
-                : userData?.timeZone || "-----"} */}
             </p>
-            {/* <p
-              onClick={() => {
-                setChangeTimeZone(true);
-              }}
-              className="pl-3 text-orange-500 cursor-pointer dark:text-orange-500"
-            >
-              Modifier
-            </p> */}
           </div>
         </div>
 
@@ -132,14 +106,7 @@ function InfoUserComponent({
           </p>
         </div>
         {/* Adresse */}
-        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
-          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            Nombre de requête effectué par l'application :
-          </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {countRequête || "o"}
-          </p>
-        </div> */}
+
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             {t("Version de l'application")} :
@@ -169,16 +136,6 @@ function InfoUserComponent({
 
       {/* Boutons d'action */}
       <div className="flex  justify-center max-w-[30rem] mx-auto grid-cols-1 xs:grid-cols-2 mt-10 gap-2">
-        {username === "admin" && (
-          <div
-            onClick={() => {
-              setShowChangePasswordPopup(true);
-            }}
-            className="text-orange-500 w-full dark:text-orange-400 cursor-pointer text-center rounded-lg px-3 border border-orange-500 dark:border-orange-400 py-2 hover:bg-orange-100 dark:hover:bg-orange-900"
-          >
-            Changer le mot de passe{" "}
-          </div>
-        )}
         <button
           onClick={() => {
             setLogOutPopup(true);

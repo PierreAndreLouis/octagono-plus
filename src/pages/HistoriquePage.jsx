@@ -5,8 +5,8 @@ import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/img/cars/localisation.png";
 import { DataContext } from "../context/DataContext";
 import DateTimePicker from "../components/home/DateTimePicker";
-import Liste_options from "../components/home/Liste_options";
-import ShowVehiculeListeComponent from "../components/historique_vehicule/ShowVehiculeListeComponent";
+
+
 import ShowFilterComponent from "../components/historique_vehicule/ShowFilterComponent";
 import HistoriqueMainComponent from "../components/historique_vehicule/HistoriqueMainComponent";
 import HistoriqueHeader from "../components/historique_vehicule/HistoriqueHeader";
@@ -31,12 +31,12 @@ function HistoriquePage() {
     currentVéhicule,
     loadingHistoriqueFilter,
     setShowListOption,
-    showListeOption,
+
     véhiculeHistoriqueDetails,
     setCurrentVéhicule,
     showHistoriqueInMap,
     setShowHistoriqueInMap,
-    donneeFusionnéForRapport,
+
     setVéhiculeHistoriqueDetails,
     selectUTC,
     fetchHistoriqueVehicleDetails,

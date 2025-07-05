@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import { Link } from "react-router-dom";
 import {
-  FaRegEdit,
   FaUserPlus,
   FaChevronDown,
   FaUserCircle,
@@ -11,7 +9,6 @@ import {
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
-import { MdUpdate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 
 function ListeDesGroupes({
@@ -45,7 +42,7 @@ function ListeDesGroupes({
   const [deleteGroupeAccountPopup, setDeleteGroupeAccountPopup] =
     useState(false);
 
-  const [editAccountGestion, setEditAccountGestion] = useState(false);
+
 
   const [inputPassword, setInputPassword] = useState("");
 

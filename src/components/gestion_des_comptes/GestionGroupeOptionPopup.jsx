@@ -1,16 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
-import { PiIntersectThreeBold } from "react-icons/pi";
 
 import {
   FaCar,
-  FaEdit,
   FaRegEdit,
   FaTrashAlt,
-  FaUser,
-  FaUserCircle,
   FaUsers,
 } from "react-icons/fa";
 
@@ -23,12 +18,9 @@ function GestionGroupeOptionPopup({
   const {
     setListeGestionDesVehicules,
     setDeviceListeTitleGestion,
-    currentAccountSelected,
     currentSelectedGroupeGestion,
-    setListeGestionDesUsers,
     gestionAccountData,
     accountDevices,
-    setCurrentSelectedGroupeGestion,
   } = useContext(DataContext);
 
   const currentSelectedGroupeGestionDevices = () => {
@@ -65,27 +57,7 @@ function GestionGroupeOptionPopup({
       setListeGestionDesVehicules(updateListe);
     }, 500);
   };
-
-  // const currentSelectedGroupeGestionDevices = () => {
-  //   const foundGroupe = gestionAccountData
-  //     ?.flatMap((account) => account.accountGroupes)
-  //     ?.find((u) => u.groupID === currentSelectedGroupeGestion?.groupID);
-
-  //   const deviceIDsInInfo = new Set(
-  //     foundGroupe?.groupeDevices?.map((device) => device.deviceID)
-  //   );
-
-  //   // Filtre les éléments de deviceListe
-  //   const updateListe = accountDevices
-  //     ?.filter((device) => deviceIDsInInfo.has(device.deviceID));
-
-  //   console.log("updateListe", updateListe);
-
-  //   setTimeout(() => {
-  //     setListeGestionDesVehicules(updateListe);
-  //   }, 500);
-  // };
-
+ 
   return (
     <div>
       {showSelectedGroupeOptionsPopup && (

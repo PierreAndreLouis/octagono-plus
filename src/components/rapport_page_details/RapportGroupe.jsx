@@ -4646,7 +4646,8 @@ function RapportGroupe({
 
                         ///////////////////////////////////////////////////////////////////////////
                         // iiiiiiiiiiiiiiiiiiiiiiiiiiii
-
+  
+                        
                         const lastUpdateTimestampMs =
                           matchedVehicle.véhiculeDetails &&
                           matchedVehicle.véhiculeDetails[0] &&

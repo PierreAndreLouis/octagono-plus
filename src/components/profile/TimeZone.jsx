@@ -169,14 +169,8 @@ function TimeZone({ setChangeTimeZone, setChangeTimeZoneMessage }) {
           </div>
         </div>
         <div className="shadow-lg-- overflow-y-auto overflow-x-hidden max-h-[55vh] mt-[7.3rem] rounded-lg min-h-[100%] px-0 ">
-          {/* TimeStamp: {timestamp} <br />
-          selectUTC : {selectUTC || "---"} <br />
-          selectUTC + heure-- : {Number(selectUTC) + 5 || 0} <br />
-          Heure Actuelle: {FormatDateHeure(timestamp).time} <br />
-          Heure Actuelle + heures: {
-            FormatDateHeure(timestamp + newHours).time
-          }{" "}
-          <br /> */}
+      
+      
           {filteredData.map((item, index) => (
             <div
               key={index}

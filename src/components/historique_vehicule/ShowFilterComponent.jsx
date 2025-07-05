@@ -16,14 +16,12 @@ function ShowFilterComponent({
   handleCheckboxChange,
   applyFilter,
   setTypeDeVue,
-  timeFrom,
-  timeTo,
+ 
   startDate,
   startTime,
   endDate,
   endTime,
-  showVehiculeListe,
-  setShowVehiculeListe,
+   setShowVehiculeListe,
   handleApply,
 }) {
   const { currentVéhicule, setVéhiculeHistoriqueDetails } =

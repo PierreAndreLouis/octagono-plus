@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+
 import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
-import { Link } from "react-router-dom";
 import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
@@ -20,7 +19,6 @@ function CreateNewDeviceGestion({
     setCurrentAccountSelected,
     currentAccountSelected,
     setError,
-    password,
     createVehicleEnGestionAccount,
     scrollToTop,
     currentSelectedDeviceGestion,

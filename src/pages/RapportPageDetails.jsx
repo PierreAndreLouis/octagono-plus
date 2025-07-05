@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 
-import * as XLSX from "xlsx";
-
 import { Chart, registerables } from "chart.js";
 
 // Enregistrement des composants nécessaires
@@ -12,14 +10,12 @@ import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/img/cars/localisation.png";
 import { DataContext } from "../context/DataContext";
 
-import Liste_options from "../components/home/Liste_options";
 import RapportPageDetailsHeader from "../components/rapport_page_details/RapportPageDetailsHeader";
 import RapportGroupe from "../components/rapport_page_details/RapportGroupe";
 import RapportPageDetailsOptions from "../components/rapport_page_details/RapportPageDetailsOptions";
 import RapportPersonnel from "../components/rapport_page_details/RapportPersonnel";
 import DatePupup from "../components/rapport_vehicule/DatePupup";
 import DateTimePicker from "../components/home/DateTimePicker";
-import { FaBullseye } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 // Configurer les icônes de Leaflet
@@ -33,28 +29,21 @@ L.Icon.Default.mergeOptions({
 function RapportPageDetails() {
   const {
     currentVéhicule,
-    véhiculeHistoriqueDetails,
-    vehiclueHistoriqueRapportDetails,
     showHistoriqueInMap,
     selectUTC,
-    donneeFusionnéForRapport,
     véhiculeActiveToday,
     véhiculeNotActiveToday,
     véhiculeHorsService,
     currentDataFusionné,
     searchDonneeFusionnéForRapport,
-    showListeOption,
     setShowListOption,
-    setCurrentVéhicule,
     setVéhiculeHistoriqueDetails,
     rapportDataLoading,
     fetchSearchRapportVehicleDetails,
-    setRapportDataLoading,
     mergedDataHome,
     setSelectedVehicleToShowInMap,
     FormatDateHeure,
     vehiclesByDepartureTime,
-    currentPersonelVéhicule,
     setCurrentPersonelVéhicule,
     chooseFirstVéhicule,
     TimeFrom,
@@ -1336,10 +1325,7 @@ function RapportPageDetails() {
       )}
 
       <div className=" px-4 bg-white py-3 dark:bg-gray-800">
-        {showListeOption && <Liste_options />}
-
         <div className=" absolute sm:px-[10vw] z-1 bg-white dark:bg-gray-800  top-[1rem] rounded-lg  left-4 right-4 ">
-          {/* Header */}
           {/* {pageSection != "search--" && ( */}
           <div className="max-w-[60rem]-- mx-auto--">
             {/* {totalDevice?.length < 400 && ( */}

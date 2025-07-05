@@ -11,9 +11,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/img/cars/localisation.png";
-import iconLowSpeed from "/pin/ping_red.png";
-import iconMediumSpeed from "/pin/ping_yellow.png";
-import iconHighSpeed from "/pin/ping_green.png";
+
 import { DataContext } from "../../context/DataContext";
 import { Polygon } from "react-leaflet";
 import { IoClose, IoEarth } from "react-icons/io5";
@@ -37,14 +35,12 @@ L.Icon.Default.mergeOptions({
 
 function MapComponent({
   mapType,
-  isDashBoardComptnent,
   isAddingNewGeofence,
   setIsAddingNewGeofence,
   setDocumentationPage,
 }) {
   const {
     selectedVehicleToShowInMap,
-    currentDataFusionné,
     FormatDateHeure,
     historiqueSelectedLocationIndex,
     username,
@@ -58,29 +54,21 @@ function MapComponent({
     ModifierGeofence,
     accountDevices,
     currentAccountSelected,
-    gestionAccountData,
-    setIsDashboardHomePage,
+    
     isDashboardHomePage,
     adminUsername,
     accountGeofences,
-    mergedDataHome,
-    // showGeofenceInCarte,
-    // setShowGeofenceInCarte,
-
+    mergedDataHome, 
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
 
   // le data a utiliser
-  const navigate = useNavigate();
+
   const dataFusionnéHome = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-  // const dataFusionné =
-  //   (isDashboardHomePage && currentAccountSelected?.accountDevices) ??
-  //   (isDashboardHomePage && accountDevices) ??
-  //   currentDataFusionné;
-
+ 
   let dataFusionné;
   let CurrentGeofenceData;
 
@@ -95,9 +83,7 @@ function MapComponent({
     CurrentGeofenceData = geofenceData;
   }
 
-  // dataFusionné = currentDataFusionné;
-  // dataFusionné = currentDataFusionné;
-
+ 
   const vehiculeActive = dataFusionné;
 
   // Formatage des donnee pour la  carte

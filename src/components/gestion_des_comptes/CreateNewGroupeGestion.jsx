@@ -6,7 +6,6 @@ import {
   FaArrowLeft,
   FaCar,
   FaChevronDown,
-  FaUserCircle,
 } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
@@ -21,7 +20,6 @@ function CreateNewGroupeGestion({
   const {
     currentAccountSelected,
     setError,
-    password,
     scrollToTop,
     FormatDateHeure,
     currentSelectedGroupeGestion,

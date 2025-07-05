@@ -15,9 +15,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
     setDeviceListeTitleGestion,
     setListeGestionDesGroupe,
     setListeGestionDesGroupeTitre,
-    account,
-    username,
-    password,
+ 
     scrollToTop,
     setListeGestionDesGeofences,
     deleteAccountEnGestionAccountFonction,

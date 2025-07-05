@@ -2,18 +2,19 @@ import React, { useContext, useState } from "react";
 import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function ChooseOtherGeofenceDashboard({
   chooseOtherGeofencesGestion,
   setChooseOtherGeofencesGestion,
 }) {
   const {
-    setCurrentAccountSelected,
     setListeGestionDesVehicules,
-    currentAccountSelected,
-    accountDevices,
+
     listeGestionDesGeofences,
   } = useContext(DataContext);
+
+  const [t, i18n] = useTranslation();
 
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
@@ -34,7 +35,7 @@ function ChooseOtherGeofenceDashboard({
           <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[90vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
-                Liste des Comptes
+                {t("Liste des Comptes")}
               </h2>
 
               <IoClose
@@ -48,7 +49,7 @@ function ChooseOtherGeofenceDashboard({
               <input
                 className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
                 type="text"
-                placeholder="Rechercher un compte"
+                placeholder={`${t("Rechercher un compte")}`}
                 value={searchInputTerm}
                 onChange={(e) => {
                   setSearchInputTerm(e.target.value);
@@ -64,14 +65,12 @@ function ChooseOtherGeofenceDashboard({
               <button
                 onClick={() => {
                   {
-                    // setCurrentAccountSelected(null);
-                    // setAllDevices(accountDevices);
                     setChooseOtherGeofencesGestion(false);
                   }
                 }}
                 className="font-bold bg-orange-500 text-white rounded-lg py-2 shadow-lg shadow-black/10"
               >
-                Tous les Comptes
+                {t("Tous les Comptes")}
               </button>{" "}
               {/*  */}
               {filterGestionGeofenceData?.map((geofence, index) => {
@@ -79,9 +78,7 @@ function ChooseOtherGeofenceDashboard({
                   <div
                     key={index}
                     onClick={() => {
-                      //   setCurrentAccountSelected(account);
                       setListeGestionDesVehicules(geofence?.accountGeofences);
-                      //   setAllDevices(account?.accountDevices);
                       setChooseOtherGeofencesGestion(false);
                     }}
                     className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center- rounded-lg py-2 px-2 "
@@ -92,26 +89,26 @@ function ChooseOtherGeofenceDashboard({
                     <FaUserCircle className="text-gray-500 text-[2.5rem] mt-1" />
                     <div>
                       <p className="text-gray-600">
-                        Nom du compte :{" "}
+                        {t("Nom du compte")} :{" "}
                         <span className="font-bold notranslate notranslate">
                           {geofence?.description}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        ID du geofence :{" "}
+                        {t("ID du geofence")} :{" "}
                         <span className="font-bold notranslate">
                           {geofence?.geozoneID}
                         </span>{" "}
                       </p>
 
                       <p className="text-gray-600">
-                        ID du compte :{" "}
+                        {t("ID du compte")} :{" "}
                         <span className="font-bold notranslate">
                           {geofence?.accountID}
                         </span>{" "}
                       </p>
                       <p className="text-gray-600">
-                        Nombre de coordonnées :{" "}
+                        {t("Nombre de coordonnées")} :{" "}
                         <span className="font-bold">
                           {geofence?.coordinates?.length}
                         </span>{" "}
@@ -128,7 +125,5 @@ function ChooseOtherGeofenceDashboard({
     </>
   );
 }
-
-// export default ChooseOtherGeofenceDashboard;
 
 export default ChooseOtherGeofenceDashboard;

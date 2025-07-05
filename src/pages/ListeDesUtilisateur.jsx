@@ -1,21 +1,16 @@
 import React, { useContext, useState } from "react";
-import {
-  IoArrowBack,
-  IoChevronBackCircleOutline,
+import { 
   IoClose,
-  IoEarth,
   IoOptions,
   IoSearchOutline,
 } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import { Link } from "react-router-dom";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+ 
 import { FaChevronDown, FaUserCircle, FaUserPlus } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
-import { MdUpdate } from "react-icons/md";
-import { useTranslation } from "react-i18next";
+ import { useTranslation } from "react-i18next";
 
 function ListeDesUtilisateur({
   setDocumentationPage,
@@ -25,9 +20,7 @@ function ListeDesUtilisateur({
 }) {
   const {
     FormatDateHeure,
-    currentAccountSelected,
-    password,
-    setCurrentAccountSelected,
+    currentAccountSelected, 
     listeGestionDesUsers,
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
@@ -36,18 +29,12 @@ function ListeDesUtilisateur({
     setShowSelectedUserOptionsPopup,
     setListeGestionDesVehicules,
     gestionAccountData,
-    TestDeRequetteDevices,
     adminPassword,
-    accountUsers,
-    setMergedDataHome,
-    setGeofenceData,
-    clearDataIndexedbStore,
+    accountUsers, 
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
-  const currentTime = Date.now(); // Heure actuelle en millisecondes
-
+ 
   const [seConnecterAutreComptePopup, setSeConnecterAutreComptePopup] =
     useState(false);
 
@@ -63,19 +50,7 @@ function ListeDesUtilisateur({
 
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);
-      console.log("currentSelectedUserToConnect", currentSelectedUserToConnect);
-      // console.log(
-      //   currentSelectedUserToConnect?.accountID,
-      //   currentSelectedUserToConnect?.userID,
-      //   currentSelectedUserToConnect?.password,
-      //   currentCountry,
-      //   sendConnectionMail
-      // );
-      // clearDataIndexedbStore("mergedDataHome");
-      // clearDataIndexedbStore("geofenceData");
-      // clearDataIndexedbStore("donneeFusionnéForRapport");
-      // setMergedDataHome([]);
-      // setGeofenceData([]);
+      console.log("currentSelectedUserToConnect", currentSelectedUserToConnect); 
       setTimeout(() => {
         handleLogin(
           currentSelectedUserToConnect?.accountID,
@@ -91,24 +66,15 @@ function ListeDesUtilisateur({
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
-
-  // const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
-  //   useState(false);
-
+ 
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
-  const filterGestionAccountData = searchInputTerm
-    ? gestionAccountData.filter((item) =>
-        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
-      )
-    : gestionAccountData;
+ 
 
   const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
 
-  const listeGestionDesUsers2 = currentAccountSelected
-    ? currentAccountSelected?.accountUsers
-    : accountUsers;
+ 
 
   const filterUserAccountData = searchGroupInputTerm
     ? listeGestionDesUsers?.filter(

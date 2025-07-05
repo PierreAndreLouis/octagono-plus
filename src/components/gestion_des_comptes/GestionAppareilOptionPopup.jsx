@@ -2,18 +2,15 @@ import React, { useContext, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import { PiIntersectThreeBold } from "react-icons/pi";
 
 import {
-  FaCar,
   FaEdit,
   FaInfoCircle,
   FaMicrophone,
   FaTrashAlt,
-  FaUsers,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-import { FaLocationDot, FaLocationPin } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
 import { GiPathDistance } from "react-icons/gi";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { MdErrorOutline, MdOutlineStickyNote2 } from "react-icons/md";
@@ -28,10 +25,6 @@ function GestionAppareilOptionPopup({
   const {
     currentSelectedUserToConnect,
     fetchHistoriqueVehicleDetails,
-    setListeGestionDesVehicules,
-    setDeviceListeTitleGestion,
-    setListeGestionDesGroupeTitre,
-    setListeGestionDesGroupe,
     deleteUSerEnGestionAccount,
     currentAccountSelected,
     password,
@@ -41,7 +34,6 @@ function GestionAppareilOptionPopup({
     scrollToTop,
     TimeFrom,
     TimeTo,
-    setHistoriqueSelectedLocationIndex,
     setSelectedVehicleToShowInMap,
     setShowHistoriqueInMap,
     setCurrentVéhicule,
@@ -49,14 +41,9 @@ function GestionAppareilOptionPopup({
     deleteVehicleEnGestionAccount,
     adminAccount,
 
-    setShowListOption,
     envoyerSMS,
     smsError,
-
-    setVéhiculeHistoriqueDetails,
-    currentDataFusionné,
     lancerAppel,
-    username,
     isDashboardHomePage,
   } = useContext(DataContext);
   const navigate = useNavigate();
@@ -65,42 +52,14 @@ function GestionAppareilOptionPopup({
 
   const [deleteAppareilPopup, setDeleteAppareilPopup] = useState(false);
 
-  const [editAccountGestion, setEditAccountGestion] = useState(false);
+
 
   const [inputPassword, setInputPassword] = useState("");
   const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
 
-  const deleteUSerEnGestionAccountFonction = (e) => {
-    e.preventDefault();
-    if (inputPassword === adminPassword) {
-      setDeleteAppareilPopup(false);
+ 
 
-      deleteUSerEnGestionAccount(
-        currentAccountSelected?.accountID ||
-          gestionAccountData.find(
-            (account) =>
-              account.accountID === currentSelectedUserToConnect?.accountID
-          )?.accountID,
-        "admin",
-        currentAccountSelected?.password ||
-          gestionAccountData.find(
-            (account) =>
-              account.accountID === currentSelectedUserToConnect?.accountID
-          )?.password,
-        currentSelectedUserToConnect?.userID
-      );
-    } else {
-      setErrorIncorrectPassword("Mot de passe incorrect");
-    }
-  };
 
-  const foundUser = gestionAccountData
-    ?.flatMap((account) => account.accountUsers)
-    ?.find(
-      (u) =>
-        u.userID === currentSelectedUserToConnect?.userID &&
-        u.accountID === currentSelectedUserToConnect?.accountID
-    );
 
   const [errorMessage, setErrorMessage] = useState("");
 

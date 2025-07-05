@@ -11,10 +11,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
     currentAccountSelected,
     setError,
     scrollToTop,
-    account,
-    username,
-    password,
-    comptes,
+  
     timeZoneData,
     modifyAccountEnGestionAccountFonction,
     adminPassword,
@@ -115,16 +112,8 @@ function ModifyAccountPage({ setDocumentationPage }) {
       return;
     }
 
-    // const accountExists = comptes?.some(
-    //   (account) => account?.accountID === addNewAccountData.accountID
-    // );
-
-    // if (accountExists) {
-    //   setErrorID(
-    //     "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre."
-    //   );
-    //   return;
-    // }
+ 
+    
 
     setShowConfirmAddGroupeGestionPopup(true);
   };

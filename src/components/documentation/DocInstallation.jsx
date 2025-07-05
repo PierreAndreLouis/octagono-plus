@@ -10,7 +10,7 @@ function DocInstallation() {
   } = useContext(DataContext);
 
   return (
-    <div ref={docInstallationRef} className="transition-all mt-[5rem]  w-full">
+    <div ref={docInstallationRef} className="transition-all pt-[5rem]  w-full">
       <div className="px-4 transition-all mx-auto max-w-[35rem]">
         <h2 className="text-orange-600 font-semibold  mt-6 text-center">
           Manuel d'utilisation

@@ -97,9 +97,7 @@ function StatisticDashboard({
                 isLoading2 ? "animate-spin" : ""
               }  text-orange-500 min-w-2  translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
             >
-              {/* {isDashboardHomePage && ( */}
               <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
-              {/* )} */}
             </div>
           </div>
         </div>
@@ -138,7 +136,6 @@ function StatisticDashboard({
           </div>
           <div
             onClick={() => {
-              // setShowStatisticDeviceListeDashboard(true);
               if (isDeviceEnDeplacement) {
                 setStatisticFilteredDeviceListe(EnDéplacement);
                 setStatisticFilteredDeviceListeText(

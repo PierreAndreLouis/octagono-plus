@@ -14,19 +14,12 @@ function HeaderDashboardSysadmin({
 }) {
   const [t, i18n] = useTranslation();
 
-  const {
-    currentAccountSelected,
-    isDashboardHomePage,
-    account,
-    username,
-    currentCountry,
-  } = useContext(DataContext);
+  const { currentAccountSelected, isDashboardHomePage, account, username } =
+    useContext(DataContext);
   return (
     <header className="fixed z-[999999999999999999999] top-0 left-0 right-0 bg-white">
       <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-6 px-4 py-2">
         <div className="flex items-center gap-3">
-          {/* {localStorage.getItem("currentCountry") === "ht" || */}
-          {/* // currentCountry === "ht" ? ( */}
           <img src="/img/cars/logo.png" className="w-[2.11rem]" alt="Logo" />
           {/* // ) : ( */}
           <img
@@ -35,16 +28,6 @@ function HeaderDashboardSysadmin({
             alt="Logo"
           />
           {/* // )} */}
-
-          {/* <h2 className="text-md hidden md:block sm:text-xl font-bold opacity-70">
-            Octagono
-            <span className="text-orange-600">
-              {localStorage.getItem("currentCountry") === "ht" ||
-              currentCountry === "ht"
-                ? "Plus"
-                : "Gps"}
-            </span>
-          </h2> */}
         </div>
         <div className="flex gap-4 items-center">
           <div className="flex cursor-pointer gap-2 items-center">
@@ -66,8 +49,6 @@ function HeaderDashboardSysadmin({
               className=" text-gray-800 flex flex-col gap-0"
             >
               <p className="font-semibold notranslate max-w-[8rem] whitespace-nowrap text-ellipsis overflow-hidden text-gray-600">
-                {/* {currentAccountSelected?.description ||
-                  `${t("Tous les comptes")}`} */}
                 {isDashboardHomePage
                   ? currentAccountSelected
                     ? currentAccountSelected?.description

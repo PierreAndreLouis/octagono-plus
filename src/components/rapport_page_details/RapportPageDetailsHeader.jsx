@@ -22,26 +22,15 @@ import { useTranslation } from "react-i18next";
 
 function RapportPageDetailsHeader({
   setShowOptions,
-  showOptions,
-  // currentVéhicule,
-  setPersonnelDetails,
-  véhiculeActiveToday,
-  handleClick,
-  véhiculeNotActiveToday,
-  véhiculeHorsService,
-  personnelDetails,
-  formatTimestampToTimeWithTimezone,
-  formatTimestampToTime,
-  setpageSection,
+  showOptions, 
+  handleClick, 
+  personnelDetails, 
   setShowChooseDate,
   pageSection,
-  startDate,
-  startTime,
-  endDate,
-  endTime,
+
+  
   fonctiondownloadExelPDF,
-  totalDevice,
-}) {
+ }) {
   const {
     currentVéhicule,
     currentDataFusionné,
@@ -68,15 +57,7 @@ function RapportPageDetailsHeader({
   } else if (!isDashboardHomePage) {
     deviceListeSelected = dataFusionné;
   }
-
-  // const formatTime = (hours, minutes, seconds) => {
-  //   if (hours > 0 || minutes > 0 || seconds > 0) {
-  //     return `${hours > 0 ? hours + "h " : ""}${
-  //       minutes > 0 ? minutes + "m " : ""
-  //     }${seconds > 0 ? seconds + "s" : ""}`;
-  //   }
-  //   return "0s";
-  // };
+ 
 
   const [pdfDownloadPupup, setPdfDownloadPupup] = useState(false);
 
@@ -92,15 +73,7 @@ function RapportPageDetailsHeader({
     }
   };
 
-  // const generatePersonelPDF = () => {
-  //   console.log("Start PDF export");
-
-  //   const element = rapportPersonnelPDFtRef.current; // Cible l'élément avec useRef
-  //   html2pdf()
-  //     .from(element)
-  //     .save(`Rapport personnel (${currentVéhicule?.description}) .pdf`);
-  //   console.log("Finish PDF export");
-  // };
+  
 
   const generatePersonelPDF = () => {
     fonctiondownloadExelPDF();
@@ -170,31 +143,7 @@ function RapportPageDetailsHeader({
 
   const dernierDetails = donneeVehiculeDetails?.[0]?.timestamp;
 
-  // const timestampInSecondsDebut = premierDetail;
-  // const dateObjectDebut = new Date(timestampInSecondsDebut * 1000);
-
-  // Récupérer le jour, le mois et l'année séparément
-  // const jourDebut = dateObjectDebut.getUTCDate(); // Obtenir le jour
-  // const moisDebut = dateObjectDebut.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeDebut = dateObjectDebut.getFullYear(); // Obtenir l'année
-
-  // Trouver la date du rapport
-  // const timestampInSecondsFin = currentVéhicule?.véhiculeDetails[0]?.timestamp;
-  // const timestampInSecondsFin = dernierDetails;
-  // const dateObjectFin = new Date(timestampInSecondsFin * 1000);
-
-  // Récupérer le jour, le mois et l'année séparément
-  // const jourFin = dateObjectFin.getUTCDate(); // Obtenir le jour
-  // const moisFin = dateObjectFin.toLocaleString("fr-FR", { month: "long" }); // Obtenir le mois en toutes lettres
-  // const anneeFin = dateObjectFin.getFullYear(); // Obtenir l'année
-
-  // const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
-  // const [ordreCroissant, setordreCroissant] = useState(true);
-  // const [searchTerm, setSearchTerm] = useState(""); // Gère le terme de recherche de véhicule
-
-  const [lieuxFrequentePupup, setlieuxFrequentePupup] = useState(false);
-  const [lieuxFrequentePupupSearch, setlieuxFrequentePupupSearch] =
-    useState(false);
+ 
   const [checkboxes, setCheckboxes] = useState({
     en_marche: true,
     en_ralenti: true,
@@ -212,10 +161,7 @@ function RapportPageDetailsHeader({
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filtrer les adresses en fonction du terme de recherche
-  // const filteredAddresses = uniqueAddresses?.filter((adresse) =>
-  //   adresse.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+  
 
   const [searchQueryRapportPageDetailHeader, setRapportPageDetailHeader] =
     useState("");
@@ -239,14 +185,7 @@ function RapportPageDetailsHeader({
   );
 
   ///////////////////////////////////////////////////////////////////////////////
-
-  // const {
-  //   startDate,
-  //   startTime,
-  //   endDate,
-  //   endTime,
-  // } = useContext(DataContext);
-
+ 
   // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -266,12 +205,7 @@ function RapportPageDetailsHeader({
     return { day, month, year };
   };
 
-  // const {
-  //   day: jourDebut,
-  //   month: moisDebut,
-  //   year: anneeDebut,
-  // } = formatDate(startDate);
-  // const { day: jourFin, month: moisFin, year: anneeFin } = formatDate(endDate);
+ 
 
   const formatTo12Hour = (time) => {
     let [hours, minutes] = time.split(":").map(Number);
@@ -281,17 +215,7 @@ function RapportPageDetailsHeader({
     return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
   };
 
-  // Convertir les heures
-  // const heureDebut = formatTo12Hour(startTime);
-  // const heureFin = formatTo12Hour(endTime);
-
-  // console.log("Jour Début:", jourDebut);
-  // console.log("Mois Début:", moisDebut);
-  // console.log("Année Début:", anneeDebut);
-
-  // console.log("Jour Fin:", jourFin);
-  // console.log("Mois Fin:", moisFin);
-  // console.log("Année Fin:", anneeFin);
+  
 
   const formatTime = (hours, minutes, seconds) => {
     if (hours > 0 || minutes > 0 || seconds > 0) {
@@ -427,10 +351,7 @@ function RapportPageDetailsHeader({
   const heureFin = FormatDateHeure(
     pageSection === "unite" ? timestampInSecondsFin : mostOldTimestamp
   )?.time;
-
-  const [showHistoriquePupup, setshowHistoriquePupup] = useState(false);
-  const [ordreCroissant, setordreCroissant] = useState(false);
-
+ 
   return (
     <div className=" shadow-md-- shadow-gray-400/20 pb-2">
       <div

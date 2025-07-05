@@ -2,13 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import {
-  FaPlusCircle,
-  FaRegEdit,
-  FaTrashAlt,
-  FaUserAlt,
+ 
   FaCar,
   FaUserPlus,
-  FaUserCircle,
   FaChevronDown,
 } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
@@ -28,15 +24,11 @@ function ListeDesVehiculesGestion({
     FormatDateHeure,
     currentAccountSelected,
     listeGestionDesVehicules,
-    setListeGestionDesVehicules,
     currentSelectedUserToConnect,
-    setCurrentSelectedUserToConnect,
-    password,
     deleteVehicleEnGestionAccount,
     currentSelectedDeviceGestion,
     setCurrentSelectedDeviceGestion,
     deviceListeTitleGestion,
-    setDeviceListeTitleGestion,
     listeGestionDesUsers,
     listeGestionDesGroupe,
     scrollToTop,
@@ -71,7 +63,7 @@ function ListeDesVehiculesGestion({
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
-  const twentyHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+ 
   const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
 
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -89,60 +81,10 @@ function ListeDesVehiculesGestion({
 
   const [inputPassword, setInputPassword] = useState("");
 
-  const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
 
-  const [editAccountGestion, setEditAccountGestion] = useState(false);
 
-  // const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
-  //   useState(false);
 
-  const [searchInputTerm, setSearchInputTerm] = useState("");
-
-  const filterGestionAccountData = searchInputTerm
-    ? listeGestionDesUsers?.filter((item) =>
-        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
-      )
-    : listeGestionDesUsers;
-
-  const filterGroupeAccountData = searchInputTerm
-    ? listeGestionDesGroupe?.filter((item) =>
-        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
-      )
-    : listeGestionDesGroupe;
-
-  const deleteVehicleFonction = (e) => {
-    e.preventDefault();
-
-    if (inputPassword === adminPassword) {
-      deleteVehicleEnGestionAccount(
-        currentSelectedDeviceGestion?.deviceID,
-
-        currentAccountSelected?.accountID ||
-          gestionAccountData.find(
-            (account) =>
-              account.accountID === currentSelectedDeviceGestion?.accountID
-          )?.accountID,
-        "admin",
-        currentAccountSelected?.password ||
-          gestionAccountData.find(
-            (account) =>
-              account.accountID === currentSelectedDeviceGestion?.accountID
-          )?.password
-      );
-      setDeleteAccountPopup(false);
-    } else {
-      console.log("Mot de passe incorrect");
-    }
-  };
-
-  const [showUserListeToSelectDevice, setShowUserListeToSelectDevice] =
-    useState(true);
-
-  const [currentSelectedGroupeGestion, setCurrentSelectedGroupeGestion] =
-    useState();
-
-  const [showChooseUserMessage, setShowChooseUserMessage] = useState("");
-
+  
   const [showUserGroupeCategorieSection, setShowUserGroupeCategorieSection] =
     useState(true);
 
@@ -229,10 +171,8 @@ function ListeDesVehiculesGestion({
               {t("Liste des Appareils")}
             </h2>
 
-            {/* <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-          <span className="text-gray-700">Compte :</span>{" "}
-          {currentAccountSelected?.description}
-        </h3> */}
+          
+          
             <h3 className=" text-orange-600 text-md text-center font-bold-- ">
               {currentSelectedUserToConnect?.description && (
                 <span className="text-gray-700">{t("Utilisateur")} :</span>

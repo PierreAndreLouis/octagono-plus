@@ -17,7 +17,6 @@ function CreateNewUserGestion({
   const {
     currentAccountSelected,
     setError,
-    password,
     currentSelectedUserToConnect,
     scrollToTop,
     createNewUserEnGestionAccount,

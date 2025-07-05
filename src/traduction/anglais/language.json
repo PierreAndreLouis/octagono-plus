@@ -773,9 +773,29 @@
   "Choisir": "Choose",
   "En Déplacement": "In Motion",
 
-   "Véhicules En déplacement": "Vehicles in Motion",
+
+
+
+
+  
+  "Véhicules En déplacement": "Vehicles in Motion",
   "Il n’est pas possible de fournir un rapport global pour tous": "It is not possible to provide a global report for all.",
-  "Ce compte comprend plus de 50 appareils": "This account includes more than 50 devices"
+  "Ce compte comprend plus de 50 appareils": "This account includes more than 50 devices",
+  "Documentation": "Documentation",
+  "ID du geofence": "Geofence ID",
+  "Nombre de coordonnées": "Number of Coordinates",
+  "Choisissez une date et une heure": "Choose a Date and Time",
+  "Une recherche portant sur plus de 3 jours ralentira un peu la carte": "A search of more than 3 days will slightly slow down the map",
+  "Date de Début": "Start Date",
+  "Choisissez une date": "Choose a Date",
+  "Heure de Début": "Start Time",
+  "Date de Fin": "End Date",
+  "Heure de fin": "End Time",
+  "Page non trouvée": "Page Not Found",
+  "Oups ! La page que vous recherchez n'existe pas": "Oops! The page you are looking for does not exist",
+  "Retour à l'accueil": "Back to Home",
+  "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support": "If you think this is an error, please contact support"
+
 
 
 

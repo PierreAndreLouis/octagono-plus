@@ -6,19 +6,12 @@ import Tooltip from "@mui/material/Tooltip";
 import { useTranslation } from "react-i18next";
 
 function RapportPageDetailsOptions({
-  setPersonnelDetails,
-  personnelDetails,
-  setShowListOption,
-  setVéhiculeHistoriqueDetails,
-  currentVéhicule,
-  formatTimestampToTimeWithTimezone,
-  formatTimestampToTime,
+ 
   pageSection,
   setpageSection,
   setShowOptions,
   setSelectedVehicleToShowInMap,
-  // formatTimestampToTimeWithTimezone,
-  // formatTimestampToTime
+ 
 }) {
 
     const [t, i18n] = useTranslation();

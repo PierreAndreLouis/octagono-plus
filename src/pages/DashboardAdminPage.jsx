@@ -1,68 +1,103 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { IoMdLogIn } from "react-icons/io";
-import {
-  IoClose,
-  IoEarth,
-  IoLogInOutline,
-  IoLogOut,
-  IoLogOutSharp,
-  IoMenu,
-} from "react-icons/io5";
-import {
-  MdGTranslate,
-  MdInstallDesktop,
-  MdLocationPin,
-  MdLogout,
-  MdSpaceDashboard,
-  MdSwitchAccount,
-} from "react-icons/md";
-import { Link } from "react-router-dom";
-import { DataContext } from "../context/DataContext";
+import React, { Suspense, useContext, useEffect, useState } from "react";
+import { IoLogInOutline } from "react-icons/io5";
 
-import { PiIntersectThreeBold } from "react-icons/pi";
-import {
-  FaArrowLeft,
-  FaCar,
-  FaChevronDown,
-  FaSearch,
-  FaUserCircle,
-  FaUsers,
-} from "react-icons/fa";
-import { GoDot } from "react-icons/go";
-import DashboardContaintMaintComponant from "../components/dashboard_containt/DashboardContaintMaintComponant";
-import GestionDesCompts from "./GestionDesCompts";
-import ListeDesUtilisateur from "./ListeDesUtilisateur";
-import ListeDesVehiculesGestion from "./ListeDesVehiculesGestion";
-import ListeDesGroupes from "./ListeDesGroupes";
-import CreateNewAccountPage from "../components/gestion_des_comptes/CreateNewAccountPage";
-import ModifyAccountPage from "../components/gestion_des_comptes/ModifyAccountPage";
-import CreateNewUserGestion from "../components/gestion_des_comptes/CreateNewUserGestion";
-import ModifyUserGroupeGestion from "../components/gestion_des_comptes/ModifyUserGroupeGestion";
-import CreateNewGroupeGestion from "../components/gestion_des_comptes/CreateNewGroupeGestion";
-import ModifyGroupeGestion from "../components/gestion_des_comptes/ModifyGroupeGestion";
-import CreateNewDeviceGestion from "../components/gestion_des_comptes/CreateNewDeviceGestion";
-import ModifyDeviceGestion from "../components/gestion_des_comptes/ModifyDeviceGestion";
-import ChooseOtherAccountDashboard from "../components/dashboard_containt/ChooseOtherAccountDashboard";
-import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
-import Logout from "../components/login/Logout";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
-import ChooseOtherGroupeDashboard from "../components/dashboard_containt/ChooseOtherGroupeDashboard";
-import LocationPage from "./LocationPage";
-import { FaLocationPin } from "react-icons/fa6";
-import GestionGeofences from "./GestionGeofences";
-import GoogleTranslate from "../components/home/GoogleTranslate";
-import ListeDesAlertsGestion from "./ListeDesAlertsGestion";
-import { FiAlertCircle } from "react-icons/fi";
-import InfoUserComponent from "../components/profile/InfoUserComponent";
+import { DataContext } from "../context/DataContext";
 import { useTranslation } from "react-i18next";
-import GestionDesRoles from "./GestionDesRoles";
-import { BiUniversalAccess } from "react-icons/bi";
-import CreateNewRole from "../components/gestion_des_comptes/CreateNewRole";
+
+const DashboardContaintMaintComponant = React.lazy(() =>
+  import("../components/dashboard_containt/DashboardContaintMaintComponant")
+);
+
+const GestionDesCompts = React.lazy(() => import("./GestionDesCompts"));
+const ListeDesUtilisateur = React.lazy(() => import("./ListeDesUtilisateur"));
+const ListeDesVehiculesGestion = React.lazy(() =>
+  import("./ListeDesVehiculesGestion")
+);
+const ListeDesGroupes = React.lazy(() => import("./ListeDesGroupes"));
+const CreateNewAccountPage = React.lazy(() =>
+  import("../components/gestion_des_comptes/CreateNewAccountPage")
+);
+const ModifyAccountPage = React.lazy(() =>
+  import("../components/gestion_des_comptes/ModifyAccountPage")
+);
+const CreateNewUserGestion = React.lazy(() =>
+  import("../components/gestion_des_comptes/CreateNewUserGestion")
+);
+const ModifyUserGroupeGestion = React.lazy(() =>
+  import("../components/gestion_des_comptes/ModifyUserGroupeGestion")
+);
+const CreateNewGroupeGestion = React.lazy(() =>
+  import("../components/gestion_des_comptes/CreateNewGroupeGestion")
+);
+const ModifyGroupeGestion = React.lazy(() =>
+  import("../components/gestion_des_comptes/ModifyGroupeGestion")
+);
+const CreateNewDeviceGestion = React.lazy(() =>
+  import("../components/gestion_des_comptes/CreateNewDeviceGestion")
+);
+const ModifyDeviceGestion = React.lazy(() =>
+  import("../components/gestion_des_comptes/ModifyDeviceGestion")
+);
+
+const LocationPage = React.lazy(() => import("./LocationPage"));
+const GestionGeofences = React.lazy(() => import("./GestionGeofences"));
+const ListeDesAlertsGestion = React.lazy(() =>
+  import("./ListeDesAlertsGestion")
+);
+const InfoUserComponent = React.lazy(() =>
+  import("../components/profile/InfoUserComponent")
+);
+const GestionDesRoles = React.lazy(() => import("./GestionDesRoles"));
+const CreateNewRole = React.lazy(() =>
+  import("../components/gestion_des_comptes/CreateNewRole")
+);
+
+const DetailsVehiculePage = React.lazy(() => import("./DetailsVehiculePage"));
+const HistoriquePage = React.lazy(() => import("./HistoriquePage"));
+const RapportPageDetails = React.lazy(() => import("./RapportPageDetails"));
+
+const DocInstallation = React.lazy(() =>
+  import("../components/documentation/DocInstallation")
+);
+const SeConnecter = React.lazy(() =>
+  import("../components/documentation/SeConnecter")
+);
+const DocGestionAppareil = React.lazy(() =>
+  import("../components/documentation/DocGestionAppareil")
+);
+const DocPositionAppareil = React.lazy(() =>
+  import("../components/documentation/DocPositionAppareil")
+);
+const DocTrajetVehicule = React.lazy(() =>
+  import("../components/documentation/DocTrajetVehicule")
+);
+const DocHistorique = React.lazy(() =>
+  import("../components/documentation/DocHistorique")
+);
+const DocGestionGeozone = React.lazy(() =>
+  import("../components/documentation/DocGestionGeozone")
+);
+const DocRapportUnite = React.lazy(() =>
+  import("../components/documentation/DocRapportUnite")
+);
+const DocRapportGroupe = React.lazy(() =>
+  import("../components/documentation/DocRapportGroupe")
+);
+const DocAddVehicule = React.lazy(() =>
+  import("../components/documentation/DocAddVehicule")
+);
+const DocModifierVehicule = React.lazy(() =>
+  import("../components/documentation/DocModifierVehicule")
+);
+const DocLocationVehicule = React.lazy(() =>
+  import("../components/documentation/DocLocationVehicule")
+);
+
+import ChooseOtherAccountDashboard from "../components/dashboard_containt/ChooseOtherAccountDashboard";
+import Logout from "../components/login/Logout";
+import ChooseOtherGroupeDashboard from "../components/dashboard_containt/ChooseOtherGroupeDashboard";
 import HeaderDashboardSysadmin from "../components/dashboard_containt/HeaderDashboardSysadmin";
 import SideBarSysadmin from "../components/dashboard_containt/SideBarSysadmin";
-import DetailsVehiculePage from "./DetailsVehiculePage";
-import HistoriquePage from "./HistoriquePage";
-import RapportPageDetails from "./RapportPageDetails";
 import Navigation_bar from "../components/home/Navigation_bar";
 
 function DashboardAdminPage() {
@@ -92,6 +127,14 @@ function DashboardAdminPage() {
     account,
     username,
     adminUsername,
+    readDocumentation,
+    seConnecterRef,
+    docGestionAppareilRef,
+    docPositionAppareilRef,
+    docHistoriqueRef,
+    docRapportUniteRef,
+    docRapportGroupeRef,
+    docGestionGeozoneRef,
   } = useContext(DataContext);
 
   useEffect(() => {
@@ -335,8 +378,66 @@ function DashboardAdminPage() {
   //
   //
   //
+
+  const generatePersonelPDF = () => {
+    setTimeout(() => {
+      let element;
+      let pdfTitre;
+
+      //
+      if (documentationPage === "connecter") {
+        element = seConnecterRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment se connecter";
+      }
+      //
+      else if (documentationPage === "gestionAppareil") {
+        element = docGestionAppareilRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment ajouter, modifier ou supprimer un appareil";
+      }
+      //
+      else if (documentationPage === "positionAppareil") {
+        element = docPositionAppareilRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment voir la position géographique un appareil";
+      }
+      //
+      else if (documentationPage === "trajetAppareil") {
+        element = docTrajetVehiculeRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment voir le trajet d'un appareil";
+      }
+      //
+      else if (documentationPage === "historiqueAppareil") {
+        element = docHistoriqueRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment voir l'historique des mises a jour";
+      }
+      //
+      else if (documentationPage === "rapportUnite") {
+        element = docRapportUniteRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment voir la page Rapport unite";
+      }
+      //
+      else if (documentationPage === "rapportGroupe") {
+        element = docRapportGroupeRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment voir la page Rapport groupe";
+      }
+      //
+      else if (documentationPage === "gestionGeozone") {
+        element = docGestionGeozoneRef.current; // Cible l'élément avec useRef
+        pdfTitre = "comment créer ou modifier des geofences";
+      }
+
+      html2pdf().from(element).save(`${pdfTitre}.pdf`);
+    }, 1000); // Délai d'attente de 2 secondes
+  };
   //
   //
+
+  const LoadingLazyAnimation = () => {
+    return (
+      <div className="w-full h-full min-h-[70vh] flex justify-center items-center">
+        <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
+      </div>
+    );
+  };
   //
   //
   //
@@ -403,6 +504,7 @@ function DashboardAdminPage() {
           setChooseOtherLanguagePopup={setChooseOtherLanguagePopup}
           setAjouterGeofencePopup={setAjouterGeofencePopup}
           setLogOutPopup={setLogOutPopup}
+          generatePersonelPDF={generatePersonelPDF}
         />
         {/* Side Bar 2 */}
         <div
@@ -421,6 +523,22 @@ function DashboardAdminPage() {
             <div className="fixed  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
               <div className="w-full h-full flex justify-center items-center">
                 <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
+              </div>
+            </div>
+          )}
+
+          {readDocumentation && (
+            <div className="fixed overflow-hidden rounded-lg bg-white shadow-lg shadow-black/10 top-[5rem] right-[1rem] z-30">
+              <div
+                onClick={() => {
+                  generatePersonelPDF();
+                  setWaitToDownload(true);
+                  // generatePersonelPDF();
+                }}
+                className=" flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+              >
+                <p className="hidden md:block">Télécharger en PDF</p>
+                <img className="w-[2rem]" src="/img/pdf_download.png" alt="" />
               </div>
             </div>
           )}
@@ -494,155 +612,294 @@ function DashboardAdminPage() {
               </form>
             </div>
           )}
-          {documentationPage === "Dashboard" && (
-            <DashboardContaintMaintComponant
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-              setDocumentationPage={setDocumentationPage}
-              setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
-              allDevices={allDevices}
-            />
-          )}
+          <div>
+            {documentationPage === "Dashboard" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DashboardContaintMaintComponant
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                  setDocumentationPage={setDocumentationPage}
+                  setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
+                  allDevices={allDevices}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_des_comptes" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <GestionDesCompts setDocumentationPage={setDocumentationPage} />
+              </Suspense>
+            )}
+            {documentationPage === "Ajouter_nouveau_compte" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <CreateNewAccountPage
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Modifier_compte" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ModifyAccountPage
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_des_utilisateurs" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ListeDesUtilisateur
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Ajouter_nouveau_utilisateur" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <CreateNewUserGestion
+                  documentationPage={documentationPage}
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Modifier_utilisateur" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ModifyUserGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_des_appareils" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ListeDesVehiculesGestion
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Ajouter_nouveau_appareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <CreateNewDeviceGestion
+                  setDocumentationPage={setDocumentationPage}
+                  documentationPage={documentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Modifier_appareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ModifyDeviceGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_des_alerts" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ListeDesAlertsGestion
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_des_roles" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <GestionDesRoles
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Ajouter_nouveau_role" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <CreateNewRole
+                  accountIdFromRole={accountIdFromRole}
+                  documentationPage={documentationPage}
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Localisation_devices" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <LocationPage
+                  isDashBoardComptnent={isDashBoardComptnent}
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_des_groupes" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ListeDesGroupes
+                  setDocumentationPage={setDocumentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Ajouter_nouveau_groupe" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <CreateNewGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                  documentationPage={documentationPage}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Modifier_groupe" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <ModifyGroupeGestion
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+
+            {documentationPage === "userInfo" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <InfoUserComponent
+                  setDocumentationPage={setDocumentationPage}
+                />
+              </Suspense>
+            )}
+            {documentationPage === "Info_appareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DetailsVehiculePage />
+              </Suspense>
+            )}
+
+            {documentationPage === "Gestion_geofences" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <GestionGeofences
+                  setDocumentationPage={setDocumentationPage}
+                  isDashBoardComptnent={isDashBoardComptnent}
+                  setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+                  chooseAccountFromGeozoneSection={
+                    chooseAccountFromGeozoneSection
+                  }
+                  setChooseAccountFromGeozoneSection={
+                    setChooseAccountFromGeozoneSection
+                  }
+                />
+              </Suspense>
+            )}
+
+            {(documentationPage === "Historique_appareil" ||
+              documentationPage === "Trajet_appareil") && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <HistoriquePage />
+              </Suspense>
+            )}
+            {documentationPage === "Rapport_unite" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <RapportPageDetails />
+              </Suspense>
+            )}
+          </div>
+
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_des_comptes" && (
-            <GestionDesCompts setDocumentationPage={setDocumentationPage} />
-          )}
-          {documentationPage === "Ajouter_nouveau_compte" && (
-            <CreateNewAccountPage setDocumentationPage={setDocumentationPage} />
-          )}
-          {documentationPage === "Modifier_compte" && (
-            <ModifyAccountPage setDocumentationPage={setDocumentationPage} />
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_des_utilisateurs" && (
-            <ListeDesUtilisateur
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Ajouter_nouveau_utilisateur" && (
-            <CreateNewUserGestion
-              documentationPage={documentationPage}
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Modifier_utilisateur" && (
-            <ModifyUserGroupeGestion
-              setDocumentationPage={setDocumentationPage}
-            />
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_des_appareils" && (
-            <ListeDesVehiculesGestion
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Ajouter_nouveau_appareil" && (
-            <CreateNewDeviceGestion
-              setDocumentationPage={setDocumentationPage}
-              documentationPage={documentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Modifier_appareil" && (
-            <ModifyDeviceGestion setDocumentationPage={setDocumentationPage} />
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_des_alerts" && (
-            <ListeDesAlertsGestion
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_des_roles" && (
-            <GestionDesRoles
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
-          {documentationPage === "Ajouter_nouveau_role" && (
-            <CreateNewRole
-              accountIdFromRole={accountIdFromRole}
-              documentationPage={documentationPage}
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Localisation_devices" && (
-            <LocationPage
-              isDashBoardComptnent={isDashBoardComptnent}
-              setDocumentationPage={setDocumentationPage}
-            />
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_des_groupes" && (
-            <ListeDesGroupes
-              setDocumentationPage={setDocumentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}{" "}
-          {documentationPage === "Ajouter_nouveau_groupe" && (
-            <CreateNewGroupeGestion
-              setDocumentationPage={setDocumentationPage}
-              documentationPage={documentationPage}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            />
-          )}{" "}
-          {documentationPage === "Modifier_groupe" && (
-            <ModifyGroupeGestion setDocumentationPage={setDocumentationPage} />
-          )}{" "}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "userInfo" && (
-            <InfoUserComponent setDocumentationPage={setDocumentationPage} />
-          )}{" "}
-          {documentationPage === "Info_appareil" && <DetailsVehiculePage />}{" "}
           {/*  */}
           {/*  */}
           {/*  */}
-          {documentationPage === "Gestion_geofences" && (
-            <GestionGeofences
-              setDocumentationPage={setDocumentationPage}
-              isDashBoardComptnent={isDashBoardComptnent}
-              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-              chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
-              setChooseAccountFromGeozoneSection={
-                setChooseAccountFromGeozoneSection
-              }
-            />
-          )}{" "}
           {/*  */}
-          {(documentationPage === "Historique_appareil" ||
-            documentationPage === "Trajet_appareil") && <HistoriquePage />}{" "}
-          {documentationPage === "Rapport_unite" && <RapportPageDetails />}{" "}
+          <div className="bg-white rounded-lg">
+            {/* content */}
+            {documentationPage === "installation" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocInstallation />
+              </Suspense>
+            )}
+            {documentationPage === "connecter" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <SeConnecter />
+              </Suspense>
+            )}
+            {documentationPage === "gestionAppareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocGestionAppareil />
+              </Suspense>
+            )}
+            {documentationPage === "positionAppareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocPositionAppareil />
+              </Suspense>
+            )}
+            {documentationPage === "trajetAppareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocTrajetVehicule />
+              </Suspense>
+            )}
+            {documentationPage === "historiqueAppareil" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocHistorique />
+              </Suspense>
+            )}
+            {documentationPage === "gestionGeozone" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocGestionGeozone />
+              </Suspense>
+            )}
+            {documentationPage === "rapportUnite" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocRapportUnite />
+              </Suspense>
+            )}
+            {documentationPage === "rapportGroupe" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocRapportGroupe />
+              </Suspense>
+            )}
+            {documentationPage === "ajouter_véhicule" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocAddVehicule />
+              </Suspense>
+            )}
+            {documentationPage === "modifier_véhicule" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocModifierVehicule />
+              </Suspense>
+            )}
+            {documentationPage === "localisation_véhicule" && (
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <DocLocationVehicule />
+              </Suspense>
+            )}
+          </div>
+
           {/*  */}
           {/*  */}
           {/*  */}

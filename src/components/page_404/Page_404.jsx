@@ -1,7 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 function Page_404() {
+  const [t, i18n] = useTranslation();
+
   return (
     <div>
       {/* <div>
@@ -16,10 +19,10 @@ function Page_404() {
               404
             </h2>
             <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Page non trouvée
+              {t("Page non trouvée")}
             </p>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Oups ! La page que vous recherchez n'existe pas.
+              {t("Oups ! La page que vous recherchez n'existe pas")}.
             </p>
           </div>
           <div className="mt-8">
@@ -40,19 +43,23 @@ function Page_404() {
                   d="M3 12h18m-9-9l9 9-9 9"
                 />
               </svg>
-              Retour à l'accueil{" "}
+              {t("Retour à l'accueil")}{" "}
             </Link>
           </div>
         </div>
         <div className="mt-16 w-full max-w-2xl">
           <div className="relative">
-            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
             <div className="relative flex justify-center">
               <span className="px-2 bg-gray-100 dark:bg-gray-800 text-sm text-gray-500 dark:text-gray-400">
-                Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le
-                support
+                {t(
+                  "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support"
+                )}
               </span>
             </div>
           </div>

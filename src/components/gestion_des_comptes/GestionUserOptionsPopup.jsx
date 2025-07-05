@@ -21,7 +21,6 @@ function GestionUserOptionsPopup({
     setListeGestionDesGroupe,
     deleteUSerEnGestionAccount,
     currentAccountSelected,
-    password,
     gestionAccountData,
     adminPassword,
   } = useContext(DataContext);
@@ -31,7 +30,7 @@ function GestionUserOptionsPopup({
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
 
-  const [editAccountGestion, setEditAccountGestion] = useState(false);
+
 
   const [inputPassword, setInputPassword] = useState("");
   const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
@@ -60,13 +59,7 @@ function GestionUserOptionsPopup({
     }
   };
 
-  const foundUser = gestionAccountData
-    ?.flatMap((account) => account.accountUsers)
-    ?.find(
-      (u) =>
-        u.userID === currentSelectedUserToConnect?.userID &&
-        u.accountID === currentSelectedUserToConnect?.accountID
-    );
+ 
 
   return (
     <div>

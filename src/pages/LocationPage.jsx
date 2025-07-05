@@ -28,7 +28,6 @@ const LocationPage = ({
     selectedVehicleToShowInMap,
     setSelectedVehicleToShowInMap,
     currentVéhicule,
-    currentDataFusionné,
     accountDevices,
     currentAccountSelected,
     isDashboardHomePage,

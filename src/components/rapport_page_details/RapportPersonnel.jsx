@@ -25,7 +25,6 @@ import { IoSearchSharp } from "react-icons/io5";
 Chart.register(...registerables);
 import ReactECharts from "echarts-for-react";
 
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/img/cars/localisation.png";
 // import { DataContext } from "../context/DataContext";
@@ -42,22 +41,10 @@ function RapportPersonnel({
   heureActiveDebut,
   heureActiveFin,
   selectUTC,
-  formatTimestampToTimeWithTimezone,
-  formatTimestampToTime,
-  totalMovingHours,
-  totalMovingMinutes,
-  totalMovingSeconds,
-  totalStopHours,
-  totalStopMinutes,
-  totalStopSeconds,
+   formatTimestampToTime, 
   longestHours,
   longestMinutes,
-  longestSeconds,
-  calculateTotalDistance,
-  nombreArret,
-  minSpeed,
-  averageSpeed,
-  maxSpeed,
+  longestSeconds, 
   zoomCart,
   setzoomCart,
   typeDeVue,
@@ -76,18 +63,12 @@ function RapportPersonnel({
   options,
   uniqueAddresses,
   uniqueAddressesZerroSpeed,
-  setShowOptions,
-  startDate,
-  startTime,
-  endDate,
-  endTime,
+  setShowOptions, 
   downloadExelPDF,
-  longestDuration,
-}) {
+ }) {
   const {
     loadingHistoriqueFilter,
-    setShowListOption,
-    véhiculeHistoriqueDetails,
+     véhiculeHistoriqueDetails,
     setVéhiculeHistoriqueDetails,
     setCurrentVéhicule,
     currentDataFusionné,
@@ -95,11 +76,9 @@ function RapportPersonnel({
     setHistoriqueSelectedLocationIndex,
     FormatDateHeure,
     rapportPersonnelPDFtRef,
-    searchDonneeFusionnéForRapport,
-    currentVéhicule,
+     currentVéhicule,
     currentPersonelVéhicule,
-    setCurrentPersonelVéhicule,
-    rapportPersonelleData,
+     rapportPersonelleData,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();

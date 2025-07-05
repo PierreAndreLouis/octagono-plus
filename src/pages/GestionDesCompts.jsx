@@ -1,49 +1,26 @@
 import React, { useContext, useState } from "react";
 import { DataContext } from "../context/DataContext";
-import { Link } from "react-router-dom";
-import { FaArrowLeft, FaPlusCircle } from "react-icons/fa";
-import { MdErrorOutline, MdSwitchAccount, MdUpdate } from "react-icons/md";
+
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffectCircle";
 import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { FaPlusCircle } from "react-icons/fa";
+import { MdSwitchAccount } from "react-icons/md";
 
 function GestionDesCompts({ setDocumentationPage }) {
   const {
     FormatDateHeure,
-    account,
-    TestDeRequetteDevices,
     gestionAccountData,
     setCurrentAccountSelected,
     currentAccountSelected,
     getAllAccountsDataLoading,
     setCurrentSelectedUserToConnect,
     setShowAccountOptionsPopup,
-    ListeDesRolePourLesUserFonction,
-    comptes,
-    accountDevices,
-    accountGroupes,
-    accountUsers,
-    fetchAccountDevices,
-    fetchAccountGroupes,
-    fetchGroupeDevices,
-    fetchAccountUsers,
-    fetchUserDevices,
-    fetchUserGroupes,
-    fetchAllComptes,
-    testFonctin,
-    password,
-    fetchAccountGeofences,
-    accountGeofences,
-    adminAccount,
-    adminUsername,
+
     adminPassword,
-    véhiculeDetails,
     currentCountry,
     handleLogin,
-    setMergedDataHome,
-    setGeofenceData,
-    clearDataIndexedbStore,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -77,11 +54,6 @@ function GestionDesCompts({ setDocumentationPage }) {
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);
       const localStorageCurrentCountry = localStorage.getItem("currentCountry");
-      // clearDataIndexedbStore("mergedDataHome");
-      // clearDataIndexedbStore("geofenceData");
-      // clearDataIndexedbStore("donneeFusionnéForRapport");
-      // setMergedDataHome([]);
-      // setGeofenceData([]);
 
       handleLogin(
         currentAccountSelected?.accountID,
@@ -92,16 +64,6 @@ function GestionDesCompts({ setDocumentationPage }) {
       );
 
       setDocumentationPage("Dashboard");
-
-      // console.log("currentCountry", currentCountry);
-
-      // handleLogin(
-      //   setCurrentAccountSelected?.accountID,
-      //   "admin",
-      //   setCurrentAccountSelected?.password,
-      //   currentCountry,
-      //   sendConnectionMail
-      // );
     } else {
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }

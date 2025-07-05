@@ -10,9 +10,6 @@ function CreateNewAccountPage({ setDocumentationPage }) {
   const {
     setError,
     scrollToTop,
-    account,
-    username,
-    password,
     comptes,
     createAccountEnGestionAccountFonction,
     timeZoneData,

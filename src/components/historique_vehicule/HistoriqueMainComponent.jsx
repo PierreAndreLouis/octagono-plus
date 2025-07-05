@@ -1,35 +1,29 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
-// import { DataContext } from "../../context/DataContext";
+ 
 import { MdLocationPin, MdDateRange } from "react-icons/md";
 import { FaCar } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 import { Tooltip } from "@mui/material";
 import MapComponent from "../location_vehicule/MapComponent";
-import { MdOutlineFullscreen } from "react-icons/md";
-import { IoClose } from "react-icons/io5";
+ import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
 function HistoriqueMainComponent({
-  // currentVéhicule,
-  loadingHistoriqueFilter,
+   loadingHistoriqueFilter,
   véhiculeHistoriqueDetails,
   appliedCheckboxes,
-  setShowListOption,
-  // selectUTC,
-}) {
+ }) {
   const {
     FormatDateHeure,
     setHistoriqueSelectedLocationIndex,
     setSelectedVehicleToShowInMap,
     selectUTC,
     currentDataFusionné,
-    setCurrentVéhicule,
-    currentVéhicule,
+     currentVéhicule,
     selectedVehicleToShowInMap,
-    setVéhiculeHistoriqueDetails,
-  } = useContext(DataContext);
+   } = useContext(DataContext);
   let x;
 
   const [t, i18n] = useTranslation();
@@ -49,26 +43,7 @@ function HistoriqueMainComponent({
   x;
 
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // const targetDeviceID = "864893039477131";
-
-  // const véhicule = currentDataFusionné?.find(
-  //   (véhicule) => véhicule?.deviceID === targetDeviceID
-  // );
-
-  // if (véhicule) {
-  //   console.log("Véhicule trouvé :", véhicule);
-  //   console.log("VéhiculeDetails trouvé :", véhicule?.véhiculeDetails);
-  //   console.log(
-  //     "VéhiculeDetails Length trouvé :",
-  //     véhicule?.véhiculeDetails.length
-  //   );
-  // } else {
-  //   console.log("Aucun véhicule trouvé avec ce deviceID.");
-  // }
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  //
+ 
   //
   //
   //

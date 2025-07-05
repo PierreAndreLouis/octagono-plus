@@ -1,13 +1,11 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
-import TypeDeVue from "./TypeDeVue";
+import TypeDeVue from "../../components/historique_vehicule/TypeDeVue";
 import { MdCenterFocusStrong, MdClose } from "react-icons/md";
 import { Polyline, useMap } from "react-leaflet";
 import { FaChevronDown } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import { FaRegCirclePause } from "react-icons/fa6";
-import { FaCar } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa";
-import { FaArrowLeft } from "react-icons/fa";
+
 import { IoSpeedometerOutline } from "react-icons/io5";
 import { LuZoomIn } from "react-icons/lu";
 import { FaChevronLeft } from "react-icons/fa6";
@@ -15,8 +13,6 @@ import { FaChevronUp } from "react-icons/fa6";
 import { TbReload } from "react-icons/tb";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { IoEarth } from "react-icons/io5";
-
-import { RiSpeedUpFill } from "react-icons/ri";
 
 import { FaRegCirclePlay } from "react-icons/fa6";
 
@@ -61,12 +57,10 @@ function TrajetVehicule({
   composantLocationPage,
 }) {
   const {
-    selectUTC,
     FormatDateHeure,
     username,
     currentVéhicule,
-    véhiculeHistoriqueDetails,
-    showHistoriqueInMap,
+
     geofenceData,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
@@ -128,8 +122,7 @@ function TrajetVehicule({
 
   const [voirAjusterLaVitessePopup, setVoirAjusterLaVitessePopup] =
     useState(false);
-  const [voirCentrerLaCarteAutoPopup, setVoirCentrerLaCarteAutoPopup] =
-    useState(false);
+
   const [voirNiveauZoomAutoPopup, setVoirNiveauZoomAutoPopup] = useState(false);
 
   const [animatedPath, setAnimatedPath] = useState([]);
@@ -177,7 +170,6 @@ function TrajetVehicule({
   const animationTimeoutRef = useRef(null);
   const animationActiveRef = useRef(false);
   const animatedMarkerRef = useRef(null);
-  const centerIntervalRef = useRef(null);
 
   // On filtre les données pour l'animation : on associe à chaque position le véhicule
   // correspondant, en limitant le nombre de positions consécutives avec speedKPH <= 0.
@@ -368,8 +360,6 @@ function TrajetVehicule({
     }
 
     setTimeout(() => {
-      // Filtrage des données pour l'animation en associant chaque position à son véhicule
-      // Filtrage des données pour l'animation en associant chaque position à son véhicule
       const filteredData = filterAnimationData(positions, vehicles);
       if (filteredData.length === 0) return;
 

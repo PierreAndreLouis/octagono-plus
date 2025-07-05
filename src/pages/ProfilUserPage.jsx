@@ -6,7 +6,7 @@ import { DataContext } from "../context/DataContext";
 import InfoUserComponent from "../components/profile/InfoUserComponent";
 import TimeZone from "../components/profile/TimeZone";
 import ConfirmationPassword from "../components/Reutilisable/ConfirmationPassword";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+
 import { useTranslation } from "react-i18next";
 
 function ProfilUserPage() {
@@ -63,7 +63,9 @@ function ProfilUserPage() {
       navigate("/Change_Password");
       setShowChangePasswordPopup(false);
     } else {
-      setErrorMessage(`${t("Le mot de passe est incorrect. Veuillez réessayer")}`);
+      setErrorMessage(
+        `${t("Le mot de passe est incorrect. Veuillez réessayer")}`
+      );
     }
   };
   //

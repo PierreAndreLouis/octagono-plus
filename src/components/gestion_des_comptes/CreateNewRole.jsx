@@ -11,19 +11,13 @@ import { useTranslation } from "react-i18next";
 function CreateNewRole({
   setDocumentationPage,
   documentationPage,
-  setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
   accountIdFromRole,
 }) {
   const {
     currentAccountSelected,
     setError,
-    password,
-    currentSelectedUserToConnect,
     scrollToTop,
-    createNewUserEnGestionAccount,
-    timeZoneData,
-    userRole,
     adminPassword,
     accountDevices,
     accountGroupes,

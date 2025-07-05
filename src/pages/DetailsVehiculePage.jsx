@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../context/DataContext";
-import ListeVehicule from "../components/vehicule_details/ListeVehicule";
+
+
 import VehiculeDetailInformationComponent from "../components/vehicule_details/VehiculeDetailInformationComponent";
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 import { useTranslation } from "react-i18next";
@@ -12,7 +13,6 @@ function DetailsVehiculePage() {
     currentVéhicule,
     mergedDataHome,
     setCurrentVéhicule,
-    currentDataFusionné,
     isDashboardHomePage,
     currentAccountSelected,
     accountDevices,

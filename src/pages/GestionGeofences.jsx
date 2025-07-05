@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
-import { IoClose, IoEar, IoEarth, IoSearchOutline } from "react-icons/io5";
+import { IoClose, IoEarth, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link, useNavigate } from "react-router-dom";
-import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
+ 
 import { FaChevronDown, FaPlusCircle, FaUserPlus } from "react-icons/fa";
 import ChooseOtherGeofenceDashboard from "../components/dashboard_containt/ChooseOtherGeofenceDashboard";
 import { useTranslation } from "react-i18next";
-// import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+ 
 
 function GestionGeofences({
   // isDashboardHomePage = false,
@@ -16,27 +16,19 @@ function GestionGeofences({
   setChooseAccountFromGeozoneSection,
 }) {
   const {
-    ajouterGeofencePopup,
-    setAjouterGeofencePopup,
+     setAjouterGeofencePopup,
     geofenceData,
     FormatDateHeure,
-    account,
-    currentGeozone,
+     currentGeozone,
     setCurrentGeozone,
-    isEditingGeofence,
-    setIsEditingGeofence,
-    ModifierGeofence,
-    supprimerGeofence,
+     setIsEditingGeofence,
+     supprimerGeofence,
 
-    listeGestionDesGeofences,
-    gestionAccountData,
+     gestionAccountData,
     currentAccountSelected,
     accountGeofences,
-    setAccountGeofences,
-    //
-    isDashboardHomePage,
-    showGeofenceInCarte,
-    setShowGeofenceInCarte,
+     //
+    isDashboardHomePage, 
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -132,46 +124,7 @@ function GestionGeofences({
           chooseOtherGeofencesGestion={chooseOtherGeofencesGestion}
           setChooseOtherGeofencesGestion={setChooseOtherGeofencesGestion}
         />
-        {/* {showGeofenceInCartePopup && (
-          <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-            <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
-              <IoClose
-                onClick={() => {
-                  setShowGeofenceInCartePopup(false);
-                }}
-                className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
-              />
-
-              <h2 className="border-b  border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-6 font-semibold">
-                Affichage des geofences dans la carte ?
-              </h2>
-
-              <div
-                className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                  showGeofenceInCarte ? "bg-gray-100 dark:bg-gray-800/70" : ""
-                }`}
-                onClick={() => {
-                  setShowGeofenceInCarte(true);
-                  setShowGeofenceInCartePopup(false);
-                }}
-              >
-                <p>Oui</p>
-              </div>
-
-              <div
-                className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                  !showGeofenceInCarte ? "bg-gray-100 dark:bg-gray-800/70" : ""
-                }`}
-                onClick={() => {
-                  setShowGeofenceInCarte(false);
-                  setShowGeofenceInCartePopup(false);
-                }}
-              >
-                <p>Non</p>
-              </div>
-            </div>
-          </div>
-        )} */}
+        
         <h2
           onClick={() => {
             console.log(accountGeofences);
@@ -210,11 +163,7 @@ function GestionGeofences({
                 setIsEditingGeofence(false);
                 setCurrentGeozone();
                 setDocumentationPage("Localisation_devices");
-                // setDocumentationPage("Localisation_devices");
-
-                // if (!isDashboardHomePage) {
-                //   navigate("/Groupe_vehicule_location?tab=localisation");
-                // }
+                
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -250,14 +199,7 @@ function GestionGeofences({
                   <FaChevronDown />
                 </div>
               )}
-              {/* <div
-                onClick={() => {
-                  setShowGeofenceInCartePopup(true);
-                }}
-                className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
-              >
-                <IoEarth className="text-xl text-orange-500" />
-              </div> */}
+          
               {isDashboardHomePage && (
                 <div
                   onClick={() => {
@@ -268,14 +210,7 @@ function GestionGeofences({
                   <IoSearchOutline className="text-xl " />
                 </div>
               )}
-              {/* <div
-                        onClick={() => {
-                          // deviceUpdateFonction();
-                        }}
-                        className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
-                      >
-                        <MdUpdate className="text-xl " />
-                      </div> */}
+             
             </div>
           )}
           {(showFilterInputSection || !isDashboardHomePage) && (
@@ -416,31 +351,7 @@ function GestionGeofences({
                           {t("Modifier")}
                         </button>
 
-                        {/* {isActive && geozone?.isActive === (0 || 1) && (
-                          <button
-                            onClick={() => {
-                              setCurrentGeozone(geozone);
-                              setSupprimerGeozonePopup(true);
-                            }}
-                            className={`${
-                              isActive
-                                ? " bg-red-500 text-white"
-                                : "text-red-600 border-[0.02rem] border-red-500 "
-                            }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
-                          >
-                            {isActive &&
-                              geozone?.isActive === (0 || 1) &&
-                              "Supprimer"}
-
-                            {(isActive || !isActive) &&
-                              geozone?.isActive === 0 &&
-                              "Activer"}
-
-                            {!isActive &&
-                              geozone?.isActive === 1 &&
-                              "Désactiver"}
-                          </button>
-                        )} */}
+                        
                       </div>
                     </div>
                   );

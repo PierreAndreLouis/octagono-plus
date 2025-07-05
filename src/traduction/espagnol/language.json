@@ -745,9 +745,26 @@
 
 
 
+
+  
   "Véhicules En déplacement": "Vehículos en movimiento",
   "Il n’est pas possible de fournir un rapport global pour tous": "No es posible proporcionar un informe global para todos.",
-  "Ce compte comprend plus de 50 appareils": "Esta cuenta incluye más de 50 dispositivos"
+  "Ce compte comprend plus de 50 appareils": "Esta cuenta incluye más de 50 dispositivos",
+  "Documentation": "Documentación",
+  "ID du geofence": "ID de geocerca",
+  "Nombre de coordonnées": "Número de coordenadas",
+  "Choisissez une date et une heure": "Elija una fecha y una hora",
+  "Une recherche portant sur plus de 3 jours ralentira un peu la carte": "Una búsqueda de más de 3 días ralentizará un poco el mapa",
+  "Date de Début": "Fecha de inicio",
+  "Choisissez une date": "Elija una fecha",
+  "Heure de Début": "Hora de inicio",
+  "Date de Fin": "Fecha de fin",
+  "Heure de fin": "Hora de fin",
+  "Page non trouvée": "Página no encontrada",
+  "Oups ! La page que vous recherchez n'existe pas": "¡Ups! La página que busca no existe",
+  "Retour à l'accueil": "Volver al inicio",
+  "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support": "Si cree que esto es un error, por favor contacte al soporte"
+
 
 
 

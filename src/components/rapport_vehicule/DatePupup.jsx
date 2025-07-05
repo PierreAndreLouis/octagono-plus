@@ -69,23 +69,9 @@ function DatePupup({
                     </h2> */}
             {/* <p> {formatDate(selectedDate)}</p> */}
             <label className="px-3- w-full-- border border-orange-100 rounded-lg mx-4 mt-3 mb-6 bg-orange-100  dark:border-gray-600">
-              {/* <input
-                className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border p-2 rounded-lg w-full bg-orange-100 dark:bg-gray-400--  dark:border-gray-600 dark:text-gray-200--"
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-              /> */}
+             
 
-              {/* <DatePicker
-                id="date"
-                className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border p-2 rounded-lg w-full bg-orange-100 dark:bg-gray-400--  dark:border-gray-600 dark:text-gray-200--"
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Choisissez une date"
-                required
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                maxDate={today} // Désactive tous les jours futurs
-              /> */}
+           
               <DatePicker
                 id="date"
                 className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border- p-2 rounded-lg w-full bg-orange-100- dark:bg-gray-400--  dark:border-gray-600- dark:text-gray-200--"
@@ -95,9 +81,8 @@ function DatePupup({
                 selected={selectedDate} // Passer directement l'objet Date
                 onChange={(date) => {
                   if (date) {
-                    // const formattedDate = formatDateToISO(date); // Formater la date
-                    setSelectedDate(date); // Mettre à jour l'état avec l'objet Date
-                    // console.log("Date choisie :", formattedDate); // Afficher la date formatée dans la console
+                
+                    setSelectedDate(date); // Mettre à jour l'état  
                   }
                 }}
                 maxDate={today}

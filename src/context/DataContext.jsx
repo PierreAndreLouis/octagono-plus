@@ -1,15 +1,13 @@
 // DataContextProvider.js
 import React, { createContext, useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import moment from "moment-timezone";
 import emailjs from "emailjs-com";
-import Logout from "../components/login/Logout";
 import { useTranslation } from "react-i18next";
 
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "04/07/2025 _ 1";
+  let versionApplication = "05/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -167,38 +165,6 @@ const DataContextProvider = ({ children }) => {
     useState("");
   const [listeGestionDesUsers, setListeGestionDesUsers] = useState([]);
 
-  // Pour ajouter les véhiculeDetails pour chaque device
-
-  // useEffect(() => {
-  //   setAccountDevices((prevDevices) =>
-  //     prevDevices.map((device) => {
-  //       const matchingVehiculeDetails = véhiculeDetails.find(
-  //         (v) => v.deviceID === device.deviceID
-  //       );
-  //       return {
-  //         ...device,
-  //         véhiculeDetails: matchingVehiculeDetails?.véhiculeDetails || [],
-  //       };
-  //     })
-  //   );
-  // }, [véhiculeDetails]);
-
-  // const updateAccountDevicesWidthvéhiculeDetailsFonction = () => {
-  //   if (!véhiculeDetails || !accountDevices) return;
-  //   setAccountDevices((prevDevices) =>
-  //     prevDevices?.map((device) => {
-  //       const matchingVehiculeDetails = véhiculeDetails?.find(
-  //         (v) => v?.deviceID === device?.deviceID
-  //       );
-  //       return {
-  //         ...device,
-  //         véhiculeDetails: matchingVehiculeDetails?.véhiculeDetails || [],
-  //       };
-  //     })
-  //   );
-  // };
-
-  // Log des mises à jour
   useEffect(() => {
     console.log("🟢 currentAccountSelected CHANGÉ :", currentAccountSelected);
   }, [currentAccountSelected]);
@@ -244,9 +210,7 @@ const DataContextProvider = ({ children }) => {
     accountGeofences,
     accountGroupes,
     accountUsers,
-    // userDevices,
     groupeDevices,
-    // véhiculeDetails,
     userGroupes,
     gestionAccountData,
   ]);
@@ -300,9 +264,7 @@ const DataContextProvider = ({ children }) => {
     accountGeofences,
     accountGroupes,
     accountUsers,
-    // userDevices,
     groupeDevices,
-    // véhiculeDetails,
     userGroupes,
     gestionAccountData,
   ]);
@@ -316,34 +278,10 @@ const DataContextProvider = ({ children }) => {
     } else {
       setListeGestionDesVehicules(accountDevices);
       setListeGestionDesGeofences(accountGeofences);
-      // setListeGestionDesGroupe(
-      //   Array.from(
-      //     new Map(
-      //       gestionAccountData
-      //         ?.flatMap((account) => account.accountGroupes)
-      //         ?.map((group) => [group.groupID, group])
-      //     ).values()
-      //   )
-      // );
+
       setListeGestionDesGroupe(accountGroupes);
 
       setListeGestionDesUsers(accountUsers);
-
-      // setListeGestionDesUsers([
-      //   ...Array.from(
-      //     new Map(
-      //       gestionAccountData
-      //         ?.flatMap((account) => account.accountUsers || [])
-      //         ?.map((user) => [user.userID, user])
-      //     ).values()
-      //   ),
-      //   ...accountUsers.filter(
-      //     (user) =>
-      //       !gestionAccountData
-      //         ?.flatMap((account) => account.accountUsers || [])
-      //         ?.some((existingUser) => existingUser.userID === user.userID)
-      //   ),
-      // ]);
     }
   }, [currentAccountSelected]);
 
@@ -359,9 +297,6 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     geofenceDataRef.current = geofenceData;
   }, [geofenceData]);
-
-  // to know if the user is login or not
-  // const isAuthenticated = userData !== null || adminUserData !== null;
 
   // variable to store the user personal login info
   const [account, setAccount] = useState("");
@@ -455,13 +390,6 @@ const DataContextProvider = ({ children }) => {
     véhiculeDataRef.current = véhiculeData;
   }, [véhiculeData]);
 
-  // véhicule detail in home page
-  // const [vehicleDetails, setVehicleDetails] = useState(() => {
-  //   const storedVehicleDetails = localStorage.getItem("vehicleDetails");
-  //   return storedVehicleDetails && storedVehicleDetails !== "undefined"
-  //     ? JSON.parse(storedVehicleDetails)
-  //     : [];
-  // });
   const [vehicleDetails, setVehicleDetails] = useState([]);
 
   // const [mergedDataHome, setMergedDataHome] = useState(null);
@@ -812,10 +740,6 @@ const DataContextProvider = ({ children }) => {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("groupeDevices", { autoIncrement: true });
         }
-        // if (!db.objectStoreNames.contains("véhiculeDetails")) {
-        //   // Auto-incrémente sans keyPath pour stocker uniquement les données
-        //   db.createObjectStore("véhiculeDetails", { autoIncrement: true });
-        // }
 
         if (!db.objectStoreNames.contains("userGroupes")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
@@ -826,17 +750,6 @@ const DataContextProvider = ({ children }) => {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("accountUsers", { autoIncrement: true });
         }
-        // if (!db.objectStoreNames.contains("userDevices")) {
-        //   // Auto-incrémente sans keyPath pour stocker uniquement les données
-        //   db.createObjectStore("userDevices", { autoIncrement: true });
-        // }
-
-        // if (!db.objectStoreNames.contains("donneeFusionnéForRapport")) {
-        //   // Auto-incrémente sans keyPath pour stocker uniquement les données
-        //   db.createObjectStore("donneeFusionnéForRapport", {
-        //     autoIncrement: true,
-        //   });
-        // }
       };
 
       request.onerror = (error) => reject(error);
@@ -899,89 +812,50 @@ const DataContextProvider = ({ children }) => {
 
   useEffect(() => {
     getDataFromIndexedDB("geofenceData").then((data) => {
-      // if (data.length > 0) {
       setGeofenceData(data);
-      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("comptes").then((data) => {
-      // if (data.length > 0) {
       setComptes(data);
-      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountDevices").then((data) => {
-      // if (data.length > 0) {
       setAccountDevices(data);
-      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountGeofences").then((data) => {
-      // if (data.length > 0) {
       setAccountGeofences(data);
-      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountGroupes").then((data) => {
-      // if (data.length > 0) {
       setAccountGroupes(data);
-      // }
     });
   }, []);
   useEffect(() => {
     getDataFromIndexedDB("groupeDevices").then((data) => {
-      // if (data.length > 0) {
       setGroupeDevices(data);
-      // }
     });
   }, []);
 
-  // useEffect(() => {
-  //   getDataFromIndexedDB("véhiculeDetails").then((data) => {
-  //     // if (data.length > 0) {
-  //     setVehiculeDetails(data);
-  //     // }
-  //   });
-  // }, []);
-
   useEffect(() => {
     getDataFromIndexedDB("userGroupes").then((data) => {
-      // if (data.length > 0) {
       setUserGroupes(data);
-      // }
     });
   }, []);
 
   useEffect(() => {
     getDataFromIndexedDB("accountUsers").then((data) => {
-      // if (data.length > 0) {
       setAccountUsers(data);
-      // }
     });
   }, []);
-  // useEffect(() => {
-  //   getDataFromIndexedDB("userDevices").then((data) => {
-  //     // if (data.length > 0) {
-  //     setUserDevices(data);
-  //     // }
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   getDataFromIndexedDB("donneeFusionnéForRapport").then((data) => {
-  //     // if (data.length > 0) {
-  //     setDonneeFusionnéForRapport(data);
-  //     // }
-  //   });
-  // }, []);
 
   // Sauvegarder les données lorsqu'elles changent
   useEffect(() => {
@@ -1031,12 +905,6 @@ const DataContextProvider = ({ children }) => {
     }
   }, [groupeDevices]);
 
-  // useEffect(() => {
-  //   if (véhiculeDetails) {
-  //     saveDataToIndexedDB("véhiculeDetails", véhiculeDetails);
-  //   }
-  // }, [véhiculeDetails]);
-
   useEffect(() => {
     if (userGroupes) {
       saveDataToIndexedDB("userGroupes", userGroupes);
@@ -1048,19 +916,6 @@ const DataContextProvider = ({ children }) => {
       saveDataToIndexedDB("accountUsers", accountUsers);
     }
   }, [accountUsers]);
-
-  // useEffect(() => {
-  //   if (userDevices) {
-  //     saveDataToIndexedDB("userDevices", userDevices);
-  //   }
-  // }, [userDevices]);
-
-  // useEffect(() => {
-  //   // console.log("donneeFusionnéForRapport:", donneeFusionnéForRapport);
-  //   if (donneeFusionnéForRapport) {
-  //     saveDataToIndexedDB("donneeFusionnéForRapport", donneeFusionnéForRapport);
-  //   }
-  // }, [donneeFusionnéForRapport]);
 
   // Réinitialiser IndexedDB
   const resetIndexedDB = () => {
@@ -1091,10 +946,6 @@ const DataContextProvider = ({ children }) => {
         if (storeName === "geofenceData") {
           setGeofenceData([]);
         }
-        //   if (storeName === "donneeFusionnéForRapport") {
-        // setDonneeFusionnéForRapport([]);
-        //   }
-        //   //
       }, 3000);
     } catch (error) {
       console.error("Erreur d'ouverture de la base :", error);
@@ -1368,8 +1219,6 @@ const DataContextProvider = ({ children }) => {
       setIsHomePageLoading(false);
     }
   };
-
-  const TestDeRequetteDevices = async (account, user, password2) => {};
 
   const ListeDesRolePourLesUserFonction = async (account, user, password) => {
     const xmlData = `
@@ -1708,11 +1557,6 @@ const DataContextProvider = ({ children }) => {
     });
 
     return enrichedData;
-
-    // setAccountDevices((prev) => {
-    //   const filtered = prev?.filter((d) => d.accountID !== accountID);
-    //   return [...filtered, ...data];
-    // });
 
     return data;
   };
@@ -2224,212 +2068,6 @@ const DataContextProvider = ({ children }) => {
     return results;
   };
 
-  // useEffect(() => {
-  //   console.log("🔄 Fusion + enrichissement des données");
-  //   if (!comptes.length) return;
-
-  //   const merged = comptes?.map((acct) => {
-  //     const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
-
-  //     const devices = accountDevices?.filter(
-  //       (d) => d.accountID === acct.accountID
-  //     );
-
-  //     const geofences = accountGeofences?.filter(
-  //       (d) => d.accountID === acct.accountID
-  //     );
-
-  //     const groupes = accountGroupes?.filter(
-  //       (g) => g.accountID === acct.accountID
-  //     );
-
-  //     const usrDevs = userDevices?.filter((ud) =>
-  //       users.some((u) => u.userID === ud.userID)
-  //     );
-
-  //     const userGrp = userGroupes?.filter((ug) =>
-  //       users.some((u) => u.userID === ug.userID)
-  //     );
-
-  //     const grpDevs = groupeDevices?.filter((gd) =>
-  //       groupes.some((g) => g.groupID === gd.groupID)
-  //     );
-
-  // const vehDetails = véhiculeDetails?.filter((v) =>
-  //   devices.some((d) => d.deviceID === v.deviceID)
-  // );
-
-  //     // Map des groupes -> devices
-  //     const groupMap = {};
-  //     groupes?.forEach((group) => {
-  //       groupMap[group.groupID] =
-  //         grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
-  //         [];
-  //     });
-
-  //     // Map des devices -> véhiculeDetails
-  //     const deviceMap = {};
-  //     devices?.forEach((dev) => {
-  //       deviceMap[dev.deviceID] =
-  //         vehDetails.find((v) => v.deviceID === dev.deviceID)
-  //           ?.véhiculeDetails || [];
-  //     });
-
-  //     // Enrichir les users avec leurs groupes et devices
-  //     const updatedUsers = users?.map((u) => {
-  //       const userGroupes =
-  //         userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
-  //       const userDevices =
-  //         usrDevs.find((ud) => ud.userID === u.userID)?.userDevices || [];
-  //       return {
-  //         ...u,
-  //         userGroupes,
-  //         userDevices,
-  //       };
-  //     });
-
-  //     // Enrichir les groupes avec les devices
-  //     const updatedGroupes = groupes?.map((g) => ({
-  //       ...g,
-  //       groupeDevices: groupMap[g.groupID] || [],
-  //     }));
-
-  //     // Enrichir les devices avec les véhiculeDetails
-  //     const updatedDevices = devices?.map((d) => ({
-  //       ...d,
-  //       véhiculeDetails: deviceMap[d.deviceID] || [],
-  //     }));
-
-  //     return {
-  //       ...acct,
-  //       users: updatedUsers,
-  //       devices: updatedDevices,
-  //       geofences,
-  //       groupes: updatedGroupes,
-  //     };
-  //   });
-
-  //   setComptes(merged);
-  // }, [
-  //   comptes,
-  //   accountUsers,
-  //   accountDevices,
-  //   accountGeofences,
-  //   accountGroupes,
-  //   userDevices,
-  //   userGroupes,
-  //   groupeDevices,
-  //   véhiculeDetails,
-  // ]);
-
-  //
-  //
-  //
-  //
-  //
-  x;
-
-  // useEffect(() => {
-  //   console.log("🔄 Fusion + enrichissement des données");
-  //   if (!comptes.length) return;
-
-  //   const merged = comptes?.map((acct) => {
-  //     const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
-
-  //     const devices = accountDevices?.filter(
-  //       (d) => d.accountID === acct.accountID
-  //     );
-
-  //     const geofences = accountGeofences?.filter(
-  //       (d) => d.accountID === acct.accountID
-  //     );
-
-  //     const groupes = accountGroupes?.filter(
-  //       (g) => g.accountID === acct.accountID
-  //     );
-
-  //     // const vehDetails = véhiculeDetails?.filter((v) =>
-  //     //   devices.some((d) => d.deviceID === v.deviceID)
-  //     // );
-
-  //     const enrichedDevices = devices?.map((device) => ({
-  //       ...device,
-  //       véhiculeDetails:
-  //         véhiculeDetails?.find((v) => v.deviceID === device.deviceID)
-  //           ?.véhiculeDetails || [],
-  //     }));
-
-  //     const userGrp = userGroupes?.filter((ug) =>
-  //       users.some((u) => u.userID === ug.userID)
-  //     );
-
-  //     const grpDevs = groupeDevices?.filter((gd) =>
-  //       groupes.some((g) => g.groupID === gd.groupID)
-  //     );
-
-  //     // Création d’une map des devices de groupes
-  //     const groupMap = {};
-  //     groupes?.forEach((group) => {
-  //       groupMap[group.groupID] =
-  //         grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
-  //         [];
-  //     });
-
-  //     // Enrichissement des utilisateurs avec les groupes et les devices des groupes
-  //     const updatedUsers = users?.map((u) => {
-  //       const groupesDuUser =
-  //         userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
-
-  //       const devicesFromGroups =
-  //         groupesDuUser?.length > 0
-  //           ? groupesDuUser.flatMap(
-  //               (groupLink) => groupMap[groupLink.groupID] || []
-  //             )
-  //           : devices || [];
-
-  //       const uniqueDevices = Object.values(
-  //         devicesFromGroups?.reduce((acc, device) => {
-  //           acc[device.deviceID] = device;
-  //           return acc;
-  //         }, {})
-  //       );
-
-  //       return {
-  //         ...u,
-  //         userGroupes: groupesDuUser,
-  //         userDevices: uniqueDevices,
-  //       };
-  //     });
-
-  //     const updatedGroupes = groupes.map((g) => ({
-  //       ...g,
-  //       groupeDevices:
-  //         grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
-  //     }));
-
-  //     return {
-  //       ...acct,
-  //       accountUsers: updatedUsers,
-  //       accountDevices: enrichedDevices,
-  //       accountGeofences: geofences,
-  //       accountGroupes: updatedGroupes,
-  //     };
-  //   });
-
-  //   setGestionAccountData(merged);
-  //   console.log("✅ Résultat fusionné et enrichi :", merged);
-  // }, [
-  //   comptes,
-  //   accountDevices,
-  //   accountGeofences,
-  //   accountGroupes,
-  //   groupeDevices,
-  //   accountUsers,
-  //   userDevices,
-  //   userGroupes,
-  //   véhiculeDetails,
-  // ]);
-
   x;
   useEffect(() => {
     console.log("🔄 Fusion + enrichissement des données");
@@ -2526,20 +2164,6 @@ const DataContextProvider = ({ children }) => {
   ]);
 
   x;
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     comptes?.forEach((acct) => {
-  //       const id = acct.accountID;
-  //       const pwd = acct.password;
-  //       // Devices du compte
-  //       fetchAccountDevices(id, pwd).catch((err) => {
-  //         console.error("Erreur lors du chargement des devices :", err);
-  //       });
-  //     });
-  //   }, 1000 * 60 * 15);
-
-  //   return () => clearInterval(intervalId);
-  // }, [comptes]);
 
   //
   //
@@ -5299,20 +4923,6 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const [succesCreateGeofencePopup, setSuccesCreateGeofencePopup] =
-    useState(false);
-  const [succesModifierGeofencePopup, setSuccesModifierGeofencePopup] =
-    useState(false);
-  const [succesDeleteGeofencePopup, setSuccesDeleteGeofencePopup] =
-    useState(false);
-
-  const [errorCreateGeofencePopup, setErrorCreateGeofencePopup] =
-    useState(false);
-  const [errorModifierGeofencePopup, setErrorModifierGeofencePopup] =
-    useState(false);
-  const [errorDeleteGeofencePopup, setErrorDeleteGeofencePopup] =
-    useState(false);
-
   const [createGeofenceLoading, setCreateGeofenceLoading] = useState(false);
 
   const [currentGeozone, setCurrentGeozone] = useState();
@@ -5967,7 +5577,6 @@ const DataContextProvider = ({ children }) => {
   //
   //
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //  Home page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
   // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -6380,76 +5989,7 @@ const DataContextProvider = ({ children }) => {
     setShowAnnimationProgresseBarDashboard(true);
     fetchVehicleData(account, user, password, onlyLastResult, timeFrom, timeTo);
   };
-  const homePageReloadWidthNoAnimation = () => {
-    // console.log("start........");
-    // setShowAnnimationProgresseBarDashboard(false);
-    // // setTimeout(() => {
-    // const accountUser = account || localStorage.getItem("account") || "";
-    // const usernameUser = username || localStorage.getItem("username") || "";
-    // const passwordUser = password || localStorage.getItem("password") || "";
-    // if (!accountUser || !usernameUser || !passwordUser) return;
-    // console.log(
-    //   "→ login from fonction",
-    //   accountUser,
-    //   usernameUser,
-    //   passwordUser
-    // );
-    // if (isDashboardHomePage) {
-    //   fetchAllComptes(adminAccount, adminUsername, adminPassword);
-    // } else {
-    //   homePageReload(accountUser, usernameUser, passwordUser);
-    // }
-    // // }, 1000);
-  };
-
-  // Mise a jour les donnee de rapport page tous les 1 minutes
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     console.log("start........");
-  //     setShowAnnimationProgresseBarDashboard(false);
-
-  //     const accountUser = account || localStorage.getItem("account") || "";
-  //     const usernameUser = username || localStorage.getItem("username") || "";
-  //     const passwordUser = password || localStorage.getItem("password") || "";
-
-  //     if (!accountUser || !usernameUser || !passwordUser) return;
-  //     console.log(
-  //       "→ login from useefect",
-  //       accountUser,
-  //       usernameUser,
-  //       passwordUser
-  //     );
-
-  //     setTimeout(async () => {
-  //       if (isDashboardHomePage) {
-  //         await fetchAllComptes(adminAccount, adminUsername, adminPassword);
-  //       } else {
-  //         homePageReload(accountUser, usernameUser, passwordUser);
-  //       }
-  //     }, 1000);
-  //   }, 1000 * 60 * 5);
-
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
-  // Mise a jour les donnee de rapport page tous les 1 minutes
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     // reloadHomePage();
-  //     if (updateAuto) {
-  //       if (véhiculeDataRef?.current?.length > 0 || véhiculeData?.length > 0) {
-  //         console.log("HomePage Reload start....");
-  //         // console.log("reload HomePage");
-  //         (véhiculeDataRef?.current || véhiculeData)?.forEach((véhicule) => {
-  //           fetchVehicleDetails(véhicule?.deviceID, TimeFrom, TimeTo);
-  //         });
-  //         setEstLancerUpdateAuto(true);
-  //       }
-  //     }
-  //   }, 30000);
-
-  //   return () => clearInterval(intervalId);
-  // }, [updateAuto, véhiculeDataRef?.current, véhiculeData]);
+  const homePageReloadWidthNoAnimation = () => {};
 
   //
   //
@@ -7062,20 +6602,6 @@ const DataContextProvider = ({ children }) => {
     }
   }, [currentDataFusionné, donneeFusionnéForRapport]);
 
-  // Fonction pour mettre à jour le véhicule actuel
-  const updateCurrentVéhicule = () => {
-    if (currentDataFusionné?.length > 0) {
-      const updatedVéhicule = currentDataFusionné.find(
-        (véhicule) => véhicule?.deviceID === currentVéhicule?.deviceID
-      );
-      if (updatedVéhicule) {
-        setCurrentVéhicule(updatedVéhicule);
-        setVéhiculeHistoriqueDetails(updatedVéhicule?.véhiculeDetails);
-        setSelectedVehicleToShowInMap(updatedVéhicule.deviceID);
-      }
-    }
-  };
-
   // Pour mettre a jour le véhicule actuelle
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -7346,331 +6872,9 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
-
-  const createVehicle = async (
-    deviceID,
-    imeiNumber,
-    uniqueIdentifier,
-    description,
-    displayName,
-    licensePlate,
-    equipmentType,
-    simPhoneNumber,
-    vehicleID
-  ) => {
-    // if (!userData) return;
-    // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log("++++++++++++++++ Requête effectué: createVehicle");
-
-    // /////////
-
-    setError("");
-    setCreateVéhiculeLoading(true);
-
-    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
-    const xmlData = `<GTSRequest command="dbcreate">
-      <Authorization account="${account}" user="${username}" password="${password}" />
-      <Record table="Device" partial="true">
-        <Field name="accountID">${account}</Field>
-
-        <Field name="deviceID">${deviceID}</Field>
-        <Field name="description">${description}</Field>
-        <Field name="equipmentType">${equipmentType}</Field>
-        <Field name="uniqueID">${uniqueIdentifier}</Field>
-        <Field name="imeiNumber">${imeiNumber}</Field>
-        <Field name="vehicleID">${vehicleID}</Field>
-        <Field name="licensePlate">${licensePlate}</Field>
-        <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
-        <Field name="displayName">${displayName}</Field>
-        <Field name="isActive">1</Field>
-      </Record>
-    </GTSRequest>`;
-
-    try {
-      const response = await fetch(currentAPI, {
-        method: "POST",
-        headers: { "Content-Type": "application/xml" },
-        body: xmlData,
-      });
-
-      const data = await response.text();
-      // console.log("data from add véhicule", data);
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        .getAttribute("result");
-      // console.log("Almost thereeee..............");
-      setError("");
-
-      if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
-
-        setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte(
-          `${t("Vous avez ajouté l'appareil avec succès")}`
-        );
-        setConfirmationMessagePopupName(description);
-
-        setError("");
-        setCreateVéhiculeLoading(false);
-        navigate("/home");
-      } else {
-        const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0].textContent;
-        setError(errorMessage || "Erreur lors de la création du véhicule.");
-
-        handleUserError(xmlDoc);
-
-        // console.log("errorrrrrrrrr");
-
-        setShowConfirmationMessagePopup(true);
-        //  succès
-        setConfirmationMessagePopupTexte(
-          `${t("Échec de l'ajout du véhicule")}`
-        );
-        setConfirmationMessagePopupName(description);
-
-        setCreateVéhiculeLoading(false);
-        handleUserError(xmlDoc);
-      }
-
-      // console.log("End creating..............");
-    } catch (error) {
-      setError("Erreur lors de la création du véhicule.");
-      console.error("Erreur lors de la création du véhicule", error);
-
-      setShowConfirmationMessagePopup(true);
-      //  succès
-      setConfirmationMessagePopupTexte(`${t("Échec de l'ajout du véhicule")}`);
-      setConfirmationMessagePopupName(description);
-
-      setCreateVéhiculeLoading(false);
-    }
-  };
-  // Fonction pour modifier un véhicule
-  const updateVehicle = async (
-    deviceID,
-    imeiNumber,
-    uniqueID,
-    description,
-    displayName,
-    licensePlate,
-    equipmentType,
-    simPhoneNumber
-  ) => {
-    // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log("++++++++++++++++ Requête effectué: updateVehicle");
-
-    // /////////
-    // console.log("Start updating.....");
-    setCreateVéhiculeLoading(true);
-    const requestBody =
-      `<GTSRequest command="dbput">` +
-      `<Authorization account="${account}" user="${username}" password="${password}"/>` +
-      `<Record table="Device" partial="true">` +
-      `<Field name="accountID">${account}</Field>` +
-      `<Field name="deviceID">${deviceID}</Field>` +
-      `<Field name="description">${description}</Field>` +
-      `<Field name="equipmentType">${equipmentType}</Field>` +
-      `<Field name="uniqueID">${uniqueID}</Field>` +
-      `<Field name="imeiNumber">${imeiNumber}</Field>` +
-      `<Field name="licensePlate">${licensePlate}</Field>` +
-      `<Field name="simPhoneNumber">${simPhoneNumber}</Field>` +
-      `<Field name="displayName">${displayName}</Field>` +
-      `<Field name="isActive">1</Field>` +
-      `</Record>` +
-      `</GTSRequest>`;
-    // console.log("almost there.....");
-
-    try {
-      const response = await fetch(currentAPI, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/xml",
-        },
-        body: requestBody,
-      });
-
-      // console.log("wait updating.....");
-
-      if (response.ok) {
-        setVehicleData((prevVehicles) =>
-          prevVehicles.map((véhicule) =>
-            véhicule?.deviceID === deviceID
-              ? {
-                  ...véhicule,
-                  description,
-                  equipmentType,
-                  uniqueID,
-                  imeiNumber,
-                  licensePlate,
-                  simPhoneNumber,
-                  displayName,
-                }
-              : véhicule
-          )
-        );
-        // console.log("Véhicule modifié avec succès.");
-
-        setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte(
-          `${t("Vous avez modifié le véhicule avec succès")}`
-        );
-        setConfirmationMessagePopupName(description);
-
-        setCreateVéhiculeLoading(false);
-        navigate("/home");
-      } else {
-        console.error(
-          "Erreur lors de la modification du véhicule:",
-          response.statusText
-        );
-
-        setCreateVéhiculeLoading(false);
-        setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte(
-          `${t("Échec de la modification du véhicule")}`
-        );
-        setConfirmationMessagePopupName(description);
-      }
-
-      // console.log("finish updating.....");
-    } catch (error) {
-      setCreateVéhiculeLoading(false);
-      setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte(
-        `${t("Échec de la modification du véhicule")}`
-      );
-      setConfirmationMessagePopupName(description);
-
-      console.error(
-        "Erreur de connexion lors de la modification du véhicule:",
-        error
-      );
-    }
-  };
-  // Fonction pour supprimer un véhicule
-  const deleteVehicle = async (deviceID) => {
-    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
-
-    // /////////
-    setCreateVéhiculeLoading(true);
-
-    const requestBody =
-      `<GTSRequest command="dbdel">` +
-      `<Authorization account="${account}" user="${username}" password="${password}"/>` +
-      `<RecordKey table="Device" partial="true">` +
-      `<Field name="accountID">${account}</Field>` +
-      `<Field name="deviceID">${deviceID}</Field>` +
-      `</RecordKey>` +
-      `</GTSRequest>`;
-
-    console.log("requestBody", requestBody);
-
-    try {
-      const response = await fetch(currentAPI, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/xml",
-        },
-        body: requestBody,
-      });
-
-      // console.log("wait a little more.........");
-
-      if (response.ok) {
-        setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte(
-          `${t("Vous avez supprimé le véhicule avec succès")}`
-        );
-        setConfirmationMessagePopupName("");
-
-        console.log("Delete successsssssssss...............");
-        setVehicleData((prevVehicles) =>
-          prevVehicles.filter((véhicule) => véhicule?.deviceID !== deviceID)
-        );
-
-        //
-        // Supprimer le véhicule de IndexedDB
-        openDatabase().then((db) => {
-          const transaction = db.transaction(["mergedDataHome"], "readwrite");
-          const store = transaction.objectStore("mergedDataHome");
-
-          // Récupérer toutes les données actuelles
-          const getRequest = store.getAll();
-
-          getRequest.onsuccess = () => {
-            const existingData = getRequest.result || [];
-            const updatedData = existingData.filter(
-              (vehicle) => vehicle.deviceID !== deviceID
-            );
-
-            store.clear(); // Supprime les anciennes données
-            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-          };
-        });
-
-        // Supprimer le véhicule de IndexedDB
-        openDatabase().then((db) => {
-          const transaction = db.transaction(
-            ["donneeFusionnéForRapport"],
-            "readwrite"
-          );
-          const store = transaction.objectStore("donneeFusionnéForRapport");
-
-          // Récupérer toutes les données actuelles
-          const getRequest = store.getAll();
-
-          getRequest.onsuccess = () => {
-            const existingData = getRequest.result || [];
-            const updatedData = existingData.filter(
-              (vehicle) => vehicle.deviceID !== deviceID
-            );
-
-            store.clear(); // Supprime les anciennes données
-            updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-          };
-        });
-
-        // console.log("Véhicule supprimé avec succès.");
-
-        setCreateVéhiculeLoading(false);
-        navigate("/home");
-        // }
-      } else {
-        console.error(
-          "Erreur lors de la suppression du véhicule:",
-          response.statusText
-        );
-        setShowConfirmationMessagePopup(true);
-        setConfirmationMessagePopupTexte(
-          `${t("Échec de la suppression du véhicule")}`
-        );
-        setConfirmationMessagePopupName("");
-        //
-
-        setCreateVéhiculeLoading(false);
-      }
-
-      console.log("finish Deleting.........");
-    } catch (error) {
-      console.error(
-        "Erreur de connexion lors de la suppression du véhicule:",
-        error
-      );
-      setShowConfirmationMessagePopup(true);
-      setConfirmationMessagePopupTexte(
-        `${t("Échec de la suppression du véhicule")}`
-      );
-      setConfirmationMessagePopupName("");
-      //
-
-      setCreateVéhiculeLoading(false);
-    }
-  };
+  let createVehicle;
+  let updateVehicle;
+  let deleteVehicle;
 
   //
   //
@@ -8623,7 +7827,6 @@ const DataContextProvider = ({ children }) => {
         setShowListOption,
         fetchVehicleDetails,
         rapportPersonelleData,
-
         fetchHistoriqueVehicleDetails,
         véhiculeHistoriqueDetails,
         setCurrentVéhicule,
@@ -8726,14 +7929,6 @@ const DataContextProvider = ({ children }) => {
         setIsEditingGeofence,
         supprimerGeofence,
         activerOuDesactiverGeofence,
-        // succesModifierGeofencePopup,
-        // setSuccesModifierGeofencePopup,
-        // errorModifierGeofencePopup,
-        // setErrorModifierGeofencePopup,
-        // succesDeleteGeofencePopup,
-        // setSuccesDeleteGeofencePopup,
-        // errorDeleteGeofencePopup,
-        // setErrorDeleteGeofencePopup,
 
         vehiculeMouvementOrdered,
         vehiclesByDistance,
@@ -8802,7 +7997,6 @@ const DataContextProvider = ({ children }) => {
         showAccountOptionsPopup,
         setShowAccountOptionsPopup,
 
-        TestDeRequetteDevices,
         getAllAccountsData,
         gestionAccountData,
         currentAccountSelected,
@@ -8855,23 +8049,6 @@ const DataContextProvider = ({ children }) => {
         dashboardLoadingEffect,
         setDashboardLoadingEffect,
 
-        // successCreateAccountGestionPoupu,
-        // setSuccessCreateAccountGestionPoupu,
-        // echecCreateAccountGestionPoupu,
-        // setEchecCreateAccountGestionPoupu,
-        // successModifyAccountGestionPopup,
-        // setSuccessModifyAccountGestionPopup,
-        // echecModifyAccountGestionPopup,
-        // setEchecModifyAccountGestionPopup,
-        // successCreateUserGestionPopup,
-        // setSuccessCreateUserGestionPopup,
-        // echecCreateUserGestionPopup,
-        // setEchecCreateUserGestionPopup,
-        // successModifyUserGestionPopup,
-        // setSuccessModifyUserGestionPopup,
-        // echecModifyUserGestionPopup,
-        // setEchecModifyUserGestionPopup,
-
         showConfirmationMessagePopup,
         setShowConfirmationMessagePopup,
         confirmationMessagePopupTexte,
@@ -8880,7 +8057,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName,
         modifyVehicleEnGestionAccount,
         userRole,
-        ListeDesRolePourLesUserFonction,
         fetchAccountGeofences,
         listeGestionDesGeofences,
         setListeGestionDesGeofences,
