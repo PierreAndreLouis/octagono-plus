@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "05/07/2025 _ 1";
+  let versionApplication = "05/07/2025 _ 2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1448,17 +1448,17 @@ const DataContextProvider = ({ children }) => {
     if (fetchAllOtherData) {
       loadForManySecond();
       if (newData?.length < 20) {
-        setRunningAnimationProgressDuration(40);
-      } else if (newData?.length < 40) {
-        setRunningAnimationProgressDuration(60);
-      } else if (newData?.length < 60) {
-        setRunningAnimationProgressDuration(70);
-      } else if (newData?.length < 70) {
-        setRunningAnimationProgressDuration(80);
-      } else if (newData?.length < 80) {
-        setRunningAnimationProgressDuration(90);
-      } else {
         setRunningAnimationProgressDuration(100);
+      } else if (newData?.length < 40) {
+        setRunningAnimationProgressDuration(200);
+      } else if (newData?.length < 60) {
+        setRunningAnimationProgressDuration(300);
+      } else if (newData?.length < 70) {
+        setRunningAnimationProgressDuration(400);
+      } else if (newData?.length < 80) {
+        setRunningAnimationProgressDuration(500);
+      } else {
+        setRunningAnimationProgressDuration(600);
       }
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);

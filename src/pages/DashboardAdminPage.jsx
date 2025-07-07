@@ -433,7 +433,7 @@ function DashboardAdminPage() {
 
   const LoadingLazyAnimation = () => {
     return (
-      <div className="w-full h-full min-h-[70vh] flex justify-center items-center">
+      <div className="w-full h-full min-h-[70vh] flex justify-center items-center bg-white rounded-lg">
         <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
       </div>
     );
@@ -507,6 +507,24 @@ function DashboardAdminPage() {
           generatePersonelPDF={generatePersonelPDF}
         />
         {/* Side Bar 2 */}
+
+        {(dashboardLoadingEffect || dashboardLoadingEffectLogin) && (
+          <div className="fixed flex  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
+            <div
+              className={`${
+                readDocumentationSideBar
+                  ? "translate-x-0"
+                  : "-translate-x-[100%]"
+              } ${
+                !readDocumentationSideBar ? "hidden" : "lg:flex"
+              } transition-all lg:translate-x-0-- bg-white/0 hidden min-w-[10rem]  lg:relative left-0 top-[5rem] z-[0]`}
+            ></div>
+            <div className="w-full h-full flex justify-center items-center">
+              <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
+            </div>
+          </div>
+        )}
+
         <div
           className={`${
             readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
@@ -519,13 +537,13 @@ function DashboardAdminPage() {
           className="relative w-full pb-4 mb-10 pt-4 rounded-lg bg-gray-100
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
-          {(dashboardLoadingEffect || dashboardLoadingEffectLogin) && (
-            <div className="fixed  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
+          {/* {(dashboardLoadingEffect || dashboardLoadingEffectLogin) && (
+            <div className="absolute  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
               <div className="w-full h-full flex justify-center items-center">
                 <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
               </div>
             </div>
-          )}
+          )} */}
 
           {readDocumentation && (
             <div className="fixed overflow-hidden rounded-lg bg-white shadow-lg shadow-black/10 top-[5rem] right-[1rem] z-30">
@@ -543,20 +561,7 @@ function DashboardAdminPage() {
             </div>
           )}
           {/* container */}
-          {/* <div>
-            <p>
-              Temps depuis la dernière interaction :{" "}
-              {Math.floor(timeSinceLastInteraction / 1000)} secondes
-            </p>
-            {isUserNotInteractingNow ? (
-              <p>L'utilisateur est inactif depuis plus de 10 secondes.</p>
-            ) : (
-              <p>L'utilisateur est actif.</p>
-            )}
-            <button onClick={resetInteraction}>
-              Réinitialiser l'interaction
-            </button>
-          </div> */}
+
           {isUserNotInteractingNow && isAuthenticated && (
             <div className="fixed inset-0 z-[9999999] backdrop-blur-sm bg-black/50 backdrop-blur-sm-- flex justify-center  items-center">
               <form
