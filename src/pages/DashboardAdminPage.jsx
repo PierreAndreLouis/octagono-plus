@@ -99,6 +99,7 @@ import ChooseOtherGroupeDashboard from "../components/dashboard_containt/ChooseO
 import HeaderDashboardSysadmin from "../components/dashboard_containt/HeaderDashboardSysadmin";
 import SideBarSysadmin from "../components/dashboard_containt/SideBarSysadmin";
 import Navigation_bar from "../components/home/Navigation_bar";
+import { useNavigate } from "react-router-dom";
 
 function DashboardAdminPage() {
   const {
@@ -144,6 +145,7 @@ function DashboardAdminPage() {
   // Données des véhicules avec heures différentes
 
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   const [allDevices, setAllDevices] = useState([]);
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -301,9 +303,11 @@ function DashboardAdminPage() {
       const previousPage = storedHistory[storedHistory.length - 1];
       localStorage.setItem("customHistory", JSON.stringify(storedHistory));
       setDocumentationPage(previousPage);
+      navigate(`/${previousPage}`);
     } else {
       // Pas d'historique, on revient au fallback "Dashboard"
       setDocumentationPage("Dashboard");
+      navigate("/Dashboard");
       localStorage.setItem("customHistory", JSON.stringify(["Dashboard"]));
     }
   };
@@ -537,14 +541,6 @@ function DashboardAdminPage() {
           className="relative w-full pb-4 mb-10 pt-4 rounded-lg bg-gray-100
           md:px-4 min-h-screen mt-[2rem] md:mt-[4rem]  pb-32- mx-auto"
         >
-          {/* {(dashboardLoadingEffect || dashboardLoadingEffectLogin) && (
-            <div className="absolute  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
-              <div className="w-full h-full flex justify-center items-center">
-                <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
-              </div>
-            </div>
-          )} */}
-
           {readDocumentation && (
             <div className="fixed overflow-hidden rounded-lg bg-white shadow-lg shadow-black/10 top-[5rem] right-[1rem] z-30">
               <div

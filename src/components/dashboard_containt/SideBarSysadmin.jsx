@@ -34,6 +34,7 @@ import InstallationPWA from "../../pages/InstallationPWA";
 import { TbPointFilled } from "react-icons/tb";
 import { IoMdLogIn, IoMdStats } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 function SideBarSysadmin({
   readDocumentationSideBar,
@@ -210,7 +211,10 @@ function SideBarSysadmin({
         {/*  */}
         {/*  */}
         {/* Dashboard */}
-        <div className="ajouter-appareil-container transition-all hover:border-b  ">
+        <Link
+          to="/Dashboard"
+          className="ajouter-appareil-container transition-all hover:border-b  "
+        >
           <div
             onClick={() => {
               scrollToTop();
@@ -227,14 +231,17 @@ function SideBarSysadmin({
               <p className="text-gray-600 font-semibold">{t("Dashboard")}</p>
             </div>
           </div>
-        </div>
+        </Link>
         {/* 
         
         */}
 
         {isDashboardHomePage && (
           // {!currentAccountSelected && isDashboardHomePage && (
-          <div className="ajouter-appareil-container transition-all hover:border-b  ">
+          <Link
+            to="/Gestion_des_comptes"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
             <div
               onClick={() => {
                 scrollToTop();
@@ -256,7 +263,7 @@ function SideBarSysadmin({
                 </p>
               </div>
             </div>
-          </div>
+          </Link>
         )}
         {/*  */}
         {/*  */}
@@ -273,7 +280,10 @@ function SideBarSysadmin({
             {/*  */}
             {/*admi_ Dashboard */}
             {account && username && adminAccount === "sysadmin" && (
-              <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <Link
+                to="/Dashboard"
+                className="ajouter-appareil-container transition-all hover:border-b  "
+              >
                 <div
                   onClick={() => {
                     setIsDashboardHomePage(!isDashboardHomePage);
@@ -300,7 +310,7 @@ function SideBarSysadmin({
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
             {/*  */}
             {/*  */}
@@ -326,7 +336,10 @@ function SideBarSysadmin({
             {/*  */}
             {/* Gestion_des_utilisateurs */}
             {isDashboardHomePage && (
-              <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <Link
+                to="/Gestion_des_utilisateurs"
+                className="ajouter-appareil-container transition-all hover:border-b  "
+              >
                 <div
                   onClick={() => {
                     if (currentAccountSelected) {
@@ -357,7 +370,7 @@ function SideBarSysadmin({
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
             {/*  */}
             {/*  */}
@@ -370,7 +383,10 @@ function SideBarSysadmin({
             {/*  */}
             {/* Gestion_des_groupes */}
             {isDashboardHomePage && (
-              <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <Link
+                to="/Gestion_des_groupes"
+                className="ajouter-appareil-container transition-all hover:border-b  "
+              >
                 <div
                   onClick={() => {
                     if (currentAccountSelected) {
@@ -405,7 +421,7 @@ function SideBarSysadmin({
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
             {/*  */}
             {/*  */}
@@ -416,7 +432,10 @@ function SideBarSysadmin({
             {/*  */}
             {/*  */}
             {/* Gestion_des_appareils */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <Link
+              to="/Gestion_des_appareils"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
               <div
                 onClick={() => {
                   setDocumentationPage("Gestion_des_appareils");
@@ -451,7 +470,7 @@ function SideBarSysadmin({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
             {/*  */}
             {/*  */}
             {/*  */}
@@ -460,7 +479,10 @@ function SideBarSysadmin({
             {/* Gestion_des_roles */}
 
             {isDashboardHomePage && (
-              <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <Link
+                to="/Gestion_des_roles"
+                className="ajouter-appareil-container transition-all hover:border-b  "
+              >
                 <div
                   onClick={() => {
                     scrollToTop();
@@ -480,12 +502,15 @@ function SideBarSysadmin({
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
 
             {/*  */}
 
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <Link
+              to="/Gestion_geofences"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
               <div
                 onClick={() => {
                   if (currentAccountSelected) {
@@ -518,7 +543,7 @@ function SideBarSysadmin({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
             {/*  */}
             {/*  */}
             {/*  */}
@@ -526,7 +551,10 @@ function SideBarSysadmin({
             {/*  */}
             {/* Historique_appareil */}
             {/* {!isDashboardHomePage && ( */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <Link
+              to="/Historique_appareil"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
               <div
                 onClick={() => {
                   setShowHistoriqueInMap(false);
@@ -547,7 +575,7 @@ function SideBarSysadmin({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
             {/* )} */}
             {/*  */}
             {/*  */}
@@ -560,7 +588,10 @@ function SideBarSysadmin({
             {/*  */}
             {/* Trajet_appareil */}
             {/* {!isDashboardHomePage && ( */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <Link
+              to="/Trajet_appareil"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
               <div
                 onClick={() => {
                   scrollToTop();
@@ -579,12 +610,15 @@ function SideBarSysadmin({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
             {/* )} */}
             {/*  */}
             {/* Rapport_unite */}
             {(!isDashboardHomePage || currentAccountSelected) && (
-              <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <Link
+                to="/Rapport_unite"
+                className="ajouter-appareil-container transition-all hover:border-b  "
+              >
                 <div
                   onClick={() => {
                     scrollToTop();
@@ -602,7 +636,7 @@ function SideBarSysadmin({
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
 
             {/*  */}
@@ -617,7 +651,10 @@ function SideBarSysadmin({
             {/*  */}
 
             {/*  */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <Link
+              to="/Localisation_devices"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
               <div
                 onClick={() => {
                   if (currentAccountSelected) {
@@ -660,11 +697,14 @@ function SideBarSysadmin({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
             {/*  */}
             {/* Info_appareil */}
             {/* {!isDashboardHomePage && ( */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <Link
+              to="/Info_appareil"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
               <div
                 onClick={() => {
                   scrollToTop();
@@ -682,7 +722,7 @@ function SideBarSysadmin({
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
             {/* )} */}
             {/*  */}
             <div className="ajouter-appareil-container transition-all hover:border-b  ">

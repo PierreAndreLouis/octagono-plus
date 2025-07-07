@@ -10,6 +10,7 @@ import GestionAccountOptionPopup from "../components/gestion_des_comptes/Gestion
 import { PiIntersectThreeBold } from "react-icons/pi";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function ListeDesGroupes({
   setDocumentationPage,
@@ -38,6 +39,8 @@ function ListeDesGroupes({
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+          const navigate = useNavigate(); 
+  
 
   const [deleteGroupeAccountPopup, setDeleteGroupeAccountPopup] =
     useState(false);
@@ -314,8 +317,11 @@ function ListeDesGroupes({
                       setChooseOneAccountToContinue(true);
                       setChooseOtherAccountGestion(true);
                       setDocumentationPage("Ajouter_nouveau_groupe");
+                      navigate("/Ajouter_nouveau_groupe")
                     } else {
                       setDocumentationPage("Ajouter_nouveau_groupe");
+                      navigate("/Ajouter_nouveau_groupe")
+
                     }
                   }}
                   className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"

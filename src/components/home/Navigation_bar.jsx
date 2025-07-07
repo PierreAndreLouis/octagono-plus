@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { IoMdHome } from "react-icons/io";
 import { FaPlus, FaRegEdit, FaCar } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegCircleUser, FaUsers } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import { MdOutlineStickyNote2, MdSwitchAccount } from "react-icons/md";
@@ -37,6 +37,9 @@ function NavigationBar({}) {
   let x;
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+    const navigate = useNavigate();
+  
 
   //
   //
@@ -75,6 +78,7 @@ function NavigationBar({}) {
           <div
             onClick={() => {
               setDocumentationPage("Dashboard");
+              navigate("/Dashboard")
             }}
             className={`${
               documentationPage === "Dashboard"
@@ -97,6 +101,8 @@ function NavigationBar({}) {
             <div
               onClick={() => {
                 setDocumentationPage("Gestion_des_comptes");
+              navigate("/Gestion_des_comptes")
+
               }}
               className={`${
                 documentationPage === "Gestion_des_comptes"
@@ -112,6 +118,8 @@ function NavigationBar({}) {
               onClick={() => {
                 setShowHistoriqueInMap(true);
                 setDocumentationPage("Trajet_appareil");
+              navigate("/Trajet_appareil")
+
               }}
               className={`${
                 documentationPage === "Trajet_appareil"
@@ -143,6 +151,8 @@ function NavigationBar({}) {
             <div
               onClick={() => {
                 setDocumentationPage("Localisation_devices");
+              navigate("/Localisation_devices")
+
               }}
               className="min-w-14 h-14 cursor-pointer -translate-y-3 border-4 border-gray-200 dark:border-slate-800 bg-orange-500 dark:bg-orange-600 flex justify-center items-center rounded-full"
             >
@@ -171,6 +181,8 @@ function NavigationBar({}) {
                 }
                 scrollToTop();
                 setDocumentationPage("Gestion_des_utilisateurs");
+              navigate("/Gestion_des_utilisateurs")
+
               }}
               className={`${
                 documentationPage === "Gestion_des_utilisateurs"
@@ -187,6 +199,8 @@ function NavigationBar({}) {
             <div
               onClick={() => {
                 setDocumentationPage("Rapport_unite");
+              navigate("/Rapport_unite")
+
               }}
               className={`${
                 documentationPage === "Rapport_unite"
@@ -220,6 +234,8 @@ function NavigationBar({}) {
                 setListeGestionDesVehicules(dataFusionné);
               }
               setDocumentationPage("Gestion_des_appareils");
+              navigate("/Gestion_des_appareils")
+
             }}
             className={`${
               documentationPage === "Gestion_des_appareils"

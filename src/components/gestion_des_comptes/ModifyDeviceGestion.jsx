@@ -6,6 +6,7 @@ import { FaArrowLeft, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function ModifyDeviceGestion({ setDocumentationPage }) {
   const {
@@ -19,6 +20,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   // Pour afficher le popup de confirmation de password
   const [showConfirmAddVéhiculePopup, setShowConfirmAddVéhiculePopup] =
@@ -154,6 +156,7 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
           groupesSelectionnes
         );
         setDocumentationPage("Gestion_des_appareils");
+        navigate("/Gestion_des_appareils")
       }
 
       setShowConfirmAddVéhiculePopup(false);
@@ -299,6 +302,8 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_appareils");
+        navigate("/Gestion_des_appareils")
+
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -411,6 +416,8 @@ function ModifyDeviceGestion({ setDocumentationPage }) {
                     onClick={() => {
                       // setShowModifyNewDevicePage(false);
                       setDocumentationPage("Gestion_des_appareils");
+        navigate("/Gestion_des_appareils")
+
 
                       scrollToTop();
                     }}

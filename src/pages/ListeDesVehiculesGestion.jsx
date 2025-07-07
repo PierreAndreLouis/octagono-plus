@@ -1,16 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import {
- 
-  FaCar,
-  FaUserPlus,
-  FaChevronDown,
-} from "react-icons/fa";
+import { FaCar, FaUserPlus, FaChevronDown } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { MdUpdate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import GestionAppareilOptionPopup from "../components/gestion_des_comptes/GestionAppareilOptionPopup";
+import { useNavigate } from "react-router-dom";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
@@ -47,6 +43,7 @@ function ListeDesVehiculesGestion({
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
@@ -63,7 +60,6 @@ function ListeDesVehiculesGestion({
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
- 
   const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
 
   const currentTime = Date.now(); // Heure actuelle en millisecondes
@@ -81,10 +77,6 @@ function ListeDesVehiculesGestion({
 
   const [inputPassword, setInputPassword] = useState("");
 
-
-
-
-  
   const [showUserGroupeCategorieSection, setShowUserGroupeCategorieSection] =
     useState(true);
 
@@ -171,8 +163,6 @@ function ListeDesVehiculesGestion({
               {t("Liste des Appareils")}
             </h2>
 
-          
-          
             <h3 className=" text-orange-600 text-md text-center font-bold-- ">
               {currentSelectedUserToConnect?.description && (
                 <span className="text-gray-700">{t("Utilisateur")} :</span>
@@ -199,8 +189,10 @@ function ListeDesVehiculesGestion({
                         setChooseOneAccountToContinue(true);
                         setChooseOtherAccountGestion(true);
                         setDocumentationPage("Ajouter_nouveau_appareil");
+                        navigate("/Ajouter_nouveau_appareil");
                       } else {
                         setDocumentationPage("Ajouter_nouveau_appareil");
+                        navigate("/Ajouter_nouveau_appareil");
                       }
                     }}
                     className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"

@@ -11,6 +11,7 @@ import {
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function ModifyGroupeGestion({ setDocumentationPage }) {
   const {
@@ -25,6 +26,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   // Pour afficher le popup de confirmation de password
   const [
@@ -158,6 +160,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
           deviceNonSelectionnes
         );
         setDocumentationPage("Gestion_des_groupes");
+        navigate("/Gestion_des_groupes")
       }
 
       setShowConfirmModifyGroupeGestionPopup(false);
@@ -317,6 +320,8 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_groupes");
+        navigate("/Gestion_des_groupes")
+
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -432,6 +437,8 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                   <button
                     onClick={() => {
                       setDocumentationPage("Gestion_des_groupes");
+        navigate("/Gestion_des_groupes")
+
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"

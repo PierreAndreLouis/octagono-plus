@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { DataContext } from "../context/DataContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaPlusCircle } from "react-icons/fa";
 import { MdErrorOutline, MdSwitchAccount, MdUpdate } from "react-icons/md";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
@@ -16,6 +16,9 @@ function GestionDesRoles({ setDocumentationPage }) {
  
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+
+      const navigate = useNavigate(); 
+  
 
   const [inputSearchItem, setInputSearchItem] = useState("");
 
@@ -45,6 +48,7 @@ function GestionDesRoles({ setDocumentationPage }) {
             <button
               onClick={() => {
                 setDocumentationPage("Ajouter_nouveau_role");
+                navigate("/Ajouter_nouveau_role")
               }}
               className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >

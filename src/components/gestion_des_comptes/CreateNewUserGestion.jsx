@@ -7,6 +7,7 @@ import { IoMdRadioButtonOff, IoMdRadioButtonOn } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function CreateNewUserGestion({
   setDocumentationPage,
@@ -24,6 +25,7 @@ function CreateNewUserGestion({
     userRole,
     adminPassword,
   } = useContext(DataContext);
+    const navigate = useNavigate();
 
   const [t, i18n] = useTranslation();
 
@@ -237,6 +239,7 @@ function CreateNewUserGestion({
         );
 
         setDocumentationPage("Gestion_des_utilisateurs");
+        navigate("/Gestion_des_utilisateurs")
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -655,6 +658,8 @@ function CreateNewUserGestion({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_utilisateurs");
+        navigate("/Gestion_des_utilisateurs")
+
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -866,6 +871,8 @@ function CreateNewUserGestion({
                   <button
                     onClick={() => {
                       setDocumentationPage("Gestion_des_utilisateurs");
+        navigate("/Gestion_des_utilisateurs")
+
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"

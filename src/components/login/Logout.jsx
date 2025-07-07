@@ -66,6 +66,7 @@ function Logout({ setLogOutPopup }) {
 
                   <button
                     onClick={() => {
+                      setLogOutPopup(false);
                       handleLogout();
                       resetIndexedDB(); // Vide le localStorage
                       window.location.reload(); // Rafraîchit la page

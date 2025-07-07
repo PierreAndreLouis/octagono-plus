@@ -5,6 +5,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { FaArrowLeft, FaChevronDown } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function ModifyAccountPage({ setDocumentationPage }) {
   const {
@@ -18,6 +19,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   // Pour afficher le popup de confirmation de password
   const [
@@ -156,6 +158,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
       );
 
       setDocumentationPage("Gestion_des_comptes");
+      navigate("/Gestion_des_comptes")
       // }
       setShowConfirmAddGroupeGestionPopup(false);
       setErrorMessage("");
@@ -379,6 +382,8 @@ function ModifyAccountPage({ setDocumentationPage }) {
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_comptes");
+      navigate("/Gestion_des_comptes")
+
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -539,6 +544,8 @@ function ModifyAccountPage({ setDocumentationPage }) {
                   <button
                     onClick={() => {
                       setDocumentationPage("Gestion_des_comptes");
+      navigate("/Gestion_des_comptes")
+
                       scrollToTop();
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"

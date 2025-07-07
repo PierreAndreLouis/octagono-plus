@@ -54,21 +54,21 @@ function MapComponent({
     ModifierGeofence,
     accountDevices,
     currentAccountSelected,
-    
+
     isDashboardHomePage,
     adminUsername,
     accountGeofences,
-    mergedDataHome, 
+    mergedDataHome,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   // le data a utiliser
 
   const dataFusionnéHome = mergedDataHome ? Object.values(mergedDataHome) : [];
 
- 
   let dataFusionné;
   let CurrentGeofenceData;
 
@@ -83,7 +83,6 @@ function MapComponent({
     CurrentGeofenceData = geofenceData;
   }
 
- 
   const vehiculeActive = dataFusionné;
 
   // Formatage des donnee pour la  carte
@@ -645,6 +644,7 @@ function MapComponent({
 
       // setTimeout(() => {
       setDocumentationPage("Gestion_geofences");
+      navigate("/Gestion_geofences");
       // }, 1000);
     } else if (geofences?.coordinates.length >= 3 && isEditingGeofence) {
       const [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8] =
@@ -678,6 +678,7 @@ function MapComponent({
       );
 
       setDocumentationPage("Gestion_geofences");
+      navigate("/Gestion_geofences");
     } else {
       // console.log("pas d'assez de coordonnee...");
       setPasAssezDePositionAjouterErreur(true);
@@ -799,6 +800,8 @@ function MapComponent({
               setAjouterGeofencePopup(false);
 
               setDocumentationPage("Gestion_geofences");
+
+              navigate("/Gestion_geofences");
 
               // centrerSurGeofenceChoisis();
             }}
@@ -965,7 +968,7 @@ function MapComponent({
       {/*  */}
 
       {ajouterGeofencePopup && (
-        <div className="fixed flex justify-center items-center z-[99999999999] inset-0 bg-black/30 px-2">
+        <div className="fixed flex justify-center items-center z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/30 px-2">
           {/* {true && ( */}
           {createGeofenceLoading && (
             <div className="absolute z-[9] inset-0 bg-gray-100/70 dark:bg-gray-900/50">
@@ -983,6 +986,8 @@ function MapComponent({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_geofences");
+
+                  navigate("/Gestion_geofences");
                 }}
                 // to="/gestion_geofences?tab=geozone"
               >
@@ -1087,6 +1092,8 @@ function MapComponent({
                     setAjouterGeofencePopup(false);
 
                     setDocumentationPage("Gestion_geofences");
+
+                    navigate("/Gestion_geofences");
                   }}
                   // to="/gestion_geofences?tab=geozone"
                   className="px-4 w-full text-center cursor-pointer py-1 rounded-lg bg-red-500 text-white"

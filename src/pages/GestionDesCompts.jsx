@@ -7,6 +7,7 @@ import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { FaPlusCircle } from "react-icons/fa";
 import { MdSwitchAccount } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 function GestionDesCompts({ setDocumentationPage }) {
   const {
@@ -23,6 +24,10 @@ function GestionDesCompts({ setDocumentationPage }) {
     handleLogin,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+
+    const navigate = useNavigate(); 
+  
+
 
   const [inputSearchItem, setInputSearchItem] = useState("");
 
@@ -64,6 +69,7 @@ function GestionDesCompts({ setDocumentationPage }) {
       );
 
       setDocumentationPage("Dashboard");
+      navigate("/Dashboard")
     } else {
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
@@ -179,6 +185,8 @@ function GestionDesCompts({ setDocumentationPage }) {
             <button
               onClick={() => {
                 setDocumentationPage("Ajouter_nouveau_compte");
+      navigate("/Ajouter_nouveau_compte")
+
               }}
               className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >

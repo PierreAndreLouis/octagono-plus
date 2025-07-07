@@ -5,6 +5,7 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 import { FaCar, FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
 import { IoEarth } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function GestionAccountOptionPopup({ setDocumentationPage }) {
   const {
@@ -15,12 +16,13 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
     setDeviceListeTitleGestion,
     setListeGestionDesGroupe,
     setListeGestionDesGroupeTitre,
- 
+
     scrollToTop,
     setListeGestionDesGeofences,
     deleteAccountEnGestionAccountFonction,
     adminPassword,
   } = useContext(DataContext);
+    const navigate = useNavigate();
 
   const [t, i18n] = useTranslation();
 
@@ -123,6 +125,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_utilisateurs");
+                  navigate("/Gestion_des_utilisateurs");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
               >
@@ -143,6 +146,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
                     );
                     setDeviceListeTitleGestion(`${t("Tous les Appareils")}`);
                     setDocumentationPage("Gestion_des_appareils");
+                    navigate("/Gestion_des_appareils");
                   }, 200);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -162,6 +166,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
                   );
                   setListeGestionDesGroupeTitre(`${t("Tous les groupes")}`);
                   setDocumentationPage("Gestion_des_groupes");
+                  navigate("/Gestion_des_groupes");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -177,6 +182,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
                   );
                   // setListeGestionDesGroupeTitre("Tous les groupes");
                   setDocumentationPage("Gestion_geofences");
+                  navigate("/Gestion_geofences");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -192,6 +198,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               <div
                 onClick={() => {
                   setDocumentationPage("Modifier_compte");
+                  navigate("/Modifier_compte");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >

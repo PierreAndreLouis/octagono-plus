@@ -1,16 +1,13 @@
 import React, { useContext, useState } from "react";
-import { 
-  IoClose,
-  IoOptions,
-  IoSearchOutline,
-} from "react-icons/io5";
+import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
- 
+
 import { FaChevronDown, FaUserCircle, FaUserPlus } from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
- import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function ListeDesUtilisateur({
   setDocumentationPage,
@@ -20,7 +17,7 @@ function ListeDesUtilisateur({
 }) {
   const {
     FormatDateHeure,
-    currentAccountSelected, 
+    currentAccountSelected,
     listeGestionDesUsers,
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
@@ -30,11 +27,12 @@ function ListeDesUtilisateur({
     setListeGestionDesVehicules,
     gestionAccountData,
     adminPassword,
-    accountUsers, 
+    accountUsers,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
- 
+  const navigate = useNavigate();
+
   const [seConnecterAutreComptePopup, setSeConnecterAutreComptePopup] =
     useState(false);
 
@@ -50,7 +48,7 @@ function ListeDesUtilisateur({
 
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);
-      console.log("currentSelectedUserToConnect", currentSelectedUserToConnect); 
+      console.log("currentSelectedUserToConnect", currentSelectedUserToConnect);
       setTimeout(() => {
         handleLogin(
           currentSelectedUserToConnect?.accountID,
@@ -62,19 +60,16 @@ function ListeDesUtilisateur({
       }, 200);
 
       setDocumentationPage("Dashboard");
+      navigate("/Dashboard");
     } else {
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
- 
-  const [searchInputTerm, setSearchInputTerm] = useState("");
 
- 
+  const [searchInputTerm, setSearchInputTerm] = useState("");
 
   const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
-
- 
 
   const filterUserAccountData = searchGroupInputTerm
     ? listeGestionDesUsers?.filter(
@@ -175,8 +170,10 @@ function ListeDesUtilisateur({
                       setChooseOneAccountToContinue(true);
                       setChooseOtherAccountGestion(true);
                       setDocumentationPage("Ajouter_nouveau_utilisateur");
+                      navigate("/Ajouter_nouveau_utilisateur");
                     } else {
                       setDocumentationPage("Ajouter_nouveau_utilisateur");
+                      navigate("/Ajouter_nouveau_utilisateur");
                     }
                   }}
                   className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"

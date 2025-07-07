@@ -6,7 +6,6 @@ import customMarkerIcon from "/img/cars/localisation.png";
 import { DataContext } from "../context/DataContext";
 import DateTimePicker from "../components/home/DateTimePicker";
 
-
 import ShowFilterComponent from "../components/historique_vehicule/ShowFilterComponent";
 import HistoriqueMainComponent from "../components/historique_vehicule/HistoriqueMainComponent";
 import HistoriqueHeader from "../components/historique_vehicule/HistoriqueHeader";
@@ -509,7 +508,7 @@ function HistoriquePage() {
   }, [currentVéhicule]);
 
   return (
-    <div className="p-4 min-h-screen   bg-white flex flex-col gap-4  rounded-lg px-4 sm:px-12 md:px-20 lg:px-40">
+    <div className="p-4 min-h-screen relative   bg-white flex flex-col gap-4  rounded-lg px-4 sm:px-12 md:px-20 lg:px-40">
       <div className="z-50"></div>
 
       {/* Pour choisir une date */}
@@ -541,8 +540,8 @@ function HistoriquePage() {
       )}
 
       {/* entête de page pour l'historique */}
-      <div className="mb-6- mt-4- ">
-        <div className={`absolute z-[1] left-0 right-0`}>
+      <div className="mb-6- mt-4- relative">
+        <div className={`absolute z-[1] left-0 right-0 `}>
           <HistoriqueHeader
             setShowHistoriqueInMap={setShowHistoriqueInMap}
             showHistoriqueInMap={showHistoriqueInMap}

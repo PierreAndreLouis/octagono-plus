@@ -31,9 +31,12 @@ function GestionGeofences({
     isDashboardHomePage, 
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+  
 
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
-  const navigate = useNavigate();
+        const navigate = useNavigate(); 
+  
+  
 
   let currentGeofenceData;
 
@@ -163,6 +166,7 @@ function GestionGeofences({
                 setIsEditingGeofence(false);
                 setCurrentGeozone();
                 setDocumentationPage("Localisation_devices");
+                navigate("/Localisation_devices")
                 
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
@@ -184,6 +188,8 @@ function GestionGeofences({
                 <div
                   onClick={() => {
                     setDocumentationPage("Gestion_geofences");
+                navigate("/Gestion_geofences")
+
                     setChooseOtherAccountGestion(true);
                     setChooseAccountFromGeozoneSection(true);
                   }}
@@ -344,6 +350,8 @@ function GestionGeofences({
                             setIsEditingGeofence(true);
 
                             setDocumentationPage("Localisation_devices");
+                navigate("/Localisation_devices")
+
                           }}
                           // to="/Groupe_vehicule_location?tab=localisation"
                           className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"

@@ -8,6 +8,7 @@ import {
   FaTrashAlt,
   FaUsers,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function GestionGroupeOptionPopup({
   showSelectedGroupeOptionsPopup,
@@ -22,6 +23,9 @@ function GestionGroupeOptionPopup({
     gestionAccountData,
     accountDevices,
   } = useContext(DataContext);
+
+    const navigate = useNavigate();
+  
 
   const currentSelectedGroupeGestionDevices = () => {
     const foundGroupe = gestionAccountData
@@ -93,6 +97,7 @@ function GestionGroupeOptionPopup({
                   );
                   setShowSelectedGroupeOptionsPopup(false);
                   setDocumentationPage("Gestion_des_appareils");
+                  navigate("/Gestion_des_appareils")
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -106,6 +111,8 @@ function GestionGroupeOptionPopup({
                 onClick={() => {
                   setShowSelectedGroupeOptionsPopup(false);
                   setDocumentationPage("Gestion_des_utilisateurs");
+                  navigate("/Gestion_des_utilisateurs")
+
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -122,6 +129,7 @@ function GestionGroupeOptionPopup({
                   setShowSelectedGroupeOptionsPopup(false);
 
                   setDocumentationPage("Modifier_groupe");
+                  navigate("/Modifier_groupe")
                   // setCurrentSelectedGroupeGestion(groupe);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"

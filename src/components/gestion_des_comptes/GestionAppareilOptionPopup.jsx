@@ -3,12 +3,7 @@ import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 
-import {
-  FaEdit,
-  FaInfoCircle,
-  FaMicrophone,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaEdit, FaInfoCircle, FaMicrophone, FaTrashAlt } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { FaLocationDot } from "react-icons/fa6";
 import { GiPathDistance } from "react-icons/gi";
@@ -52,14 +47,8 @@ function GestionAppareilOptionPopup({
 
   const [deleteAppareilPopup, setDeleteAppareilPopup] = useState(false);
 
-
-
   const [inputPassword, setInputPassword] = useState("");
   const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
-
- 
-
-
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -446,6 +435,7 @@ function GestionAppareilOptionPopup({
                 onClick={() => {
                   setShowOptionAppareilOptionPopup(false);
                   setDocumentationPage("Localisation_devices");
+                  navigate("/Localisation_devices");
                   setSelectedVehicleToShowInMap(
                     currentSelectedDeviceGestion?.deviceID
                   );
@@ -465,6 +455,8 @@ function GestionAppareilOptionPopup({
                   fetchHistoriqueVehicleDetailsFonction();
 
                   setDocumentationPage("Trajet_appareil");
+                  navigate("/Trajet_appareil");
+
                   setShowHistoriqueInMap(true);
                   setShowOptionAppareilOptionPopup(false);
                 }}
@@ -484,6 +476,8 @@ function GestionAppareilOptionPopup({
                   setShowOptionAppareilOptionPopup(false);
                   setShowHistoriqueInMap(false);
                   setDocumentationPage("Historique_appareil");
+                  navigate("/Historique_appareil");
+
                   fetchHistoriqueVehicleDetailsFonction();
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -498,6 +492,8 @@ function GestionAppareilOptionPopup({
                   fetchHistoriqueVehicleDetailsFonction();
 
                   setDocumentationPage("Rapport_unite");
+                  navigate("/Rapport_unite");
+
                   setShowOptionAppareilOptionPopup(false);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -523,6 +519,8 @@ function GestionAppareilOptionPopup({
                 onClick={() => {
                   setCurrentVéhicule(currentSelectedDeviceGestion);
                   setDocumentationPage("Info_appareil");
+                  navigate("/Info_appareil");
+
                   setShowOptionAppareilOptionPopup(false);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -536,6 +534,8 @@ function GestionAppareilOptionPopup({
                 <div
                   onClick={() => {
                     setDocumentationPage("Modifier_appareil");
+                    navigate("/Modifier_appareil");
+
                     setShowOptionAppareilOptionPopup(false);
                   }}
                   className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
