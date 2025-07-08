@@ -15,7 +15,6 @@ import Page_404 from "./components/page_404/Page_404";
 import Login2 from "./components/login/Login2";
 import Navigation_bar from "./components/home/Navigation_bar";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
-import DashboardAdminPage from "./pages/DashboardAdminPage";
 import SuccèsÉchecMessagePopup from "./components/Reutilisable/SuccèsÉchecMessagePopup";
 import GoogleTranslate from "./components/home/GoogleTranslate";
 
@@ -537,7 +536,7 @@ function App() {
           readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
         } ${
           !readDocumentationSideBar ? "hidden" : "lg:flex"
-        } transition-all lg:translate-x-0--  --  lg:relative left-0 top-[5rem] p-4 z-[0]  min-w-[18rem] max-w-[17rem] min-h-[100vh]`}
+        } transition-all lg:translate-x-0--  --  lg:relative left-0 top-[5rem] lg:p-4 z-[0] min-w-0   lg:min-w-[18rem]  max-w-[17rem]--  min-h-[100vh]`}
       ></div>
     );
   };
@@ -579,7 +578,7 @@ function App() {
           setAllDevices={setAllDevices}
         />
         {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
-        {!shouldHideComponent && (
+        {isAuthenticated && (
           <HeaderDashboardSysadmin
             readDocumentationSideBar={readDocumentationSideBar}
             setDocumentationPage={setDocumentationPage}
@@ -591,7 +590,7 @@ function App() {
             setReadDocumentationSideBar={setReadDocumentationSideBar}
           />
         )}
-        {!shouldHideComponent && (
+        {isAuthenticated && (
           <SideBarSysadmin
             readDocumentationSideBar={readDocumentationSideBar}
             setReadDocumentationSideBar={setReadDocumentationSideBar}
@@ -614,7 +613,7 @@ function App() {
         )}
         {/* Side Bar 2 */}
         {(dashboardLoadingEffect || dashboardLoadingEffectLogin) &&
-          !shouldHideComponent && (
+          isAuthenticated && (
             <div className="fixed flex  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
               <div
                 className={`${
@@ -1317,6 +1316,33 @@ function App() {
                     <div className="w-full">
                       <Suspense fallback={<LoadingLazyAnimation />}>
                         <RapportPageDetails />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          <Route
+            path="/installation_application"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <DocInstallation />
                       </Suspense>
                     </div>
                   </div>

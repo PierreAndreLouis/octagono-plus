@@ -440,7 +440,7 @@ function ListeDesVehiculesGestion({
                           <div className=" border-b py-1">
                             <p className="font-bold">
                               {t("Description")} :
-                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
+                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.description ||
                                   device?.displayName ||
                                   `${t("Pas de nom disponible")}`}
@@ -450,7 +450,7 @@ function ListeDesVehiculesGestion({
                           <div className=" border-b py-1">
                             <p className="font-bold">
                               {t("Adresse")} :
-                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-5">
+                              <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.véhiculeDetails?.length >= 0
                                   ? device?.véhiculeDetails[0]?.address
                                   : `${t("Pas de nom disponible")}`}
@@ -460,16 +460,16 @@ function ListeDesVehiculesGestion({
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">
                               {t("Dernière mise a jour")} :
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                {FormatDateHeure(device?.lastUpdateTime).date}
+                                <span className="px-2">/</span>{" "}
+                                {FormatDateHeure(device?.lastUpdateTime).time}
+                              </span>
                             </p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {FormatDateHeure(device?.lastUpdateTime).date}
-                              <span className="px-2">/</span>{" "}
-                              {FormatDateHeure(device?.lastUpdateTime).time}
-                            </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold">{t("Account ID")} :</p>
-                            <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
+                            <span className=" dark:text-orange-500 notranslate text-gray-600 pl-2">
                               {device?.accountID}
                             </span>
                           </div>{" "}
@@ -482,19 +482,19 @@ function ListeDesVehiculesGestion({
                           >
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("deviceID")} :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.deviceID}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("Alerte")} :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {codeDescription}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("Code Alerte")} :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.véhiculeDetails?.length > 0 &&
                                   device?.véhiculeDetails[0]?.statusCode}
                               </span>
@@ -503,13 +503,13 @@ function ListeDesVehiculesGestion({
                               <p className="font-bold">
                                 {t("Plaque du véhicule")} :
                               </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.licensePlate}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("Telephone")} :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.simPhoneNumber}
                               </span>
                             </div>{" "}
@@ -517,13 +517,13 @@ function ListeDesVehiculesGestion({
                               <p className="font-bold">
                                 {typeof "Type d'appareil"} :
                               </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.equipmentType}
                               </span>
                             </div>{" "}
                             <div className="flex flex-wrap border-b py-1">
                               <p className="font-bold">{t("ImeiNumber")} :</p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {device?.imeiNumber}
                               </span>
                             </div>{" "}
@@ -531,7 +531,7 @@ function ListeDesVehiculesGestion({
                               <p className="font-bold">
                                 {t("Distance totale parcourue")} :
                               </p>
-                              <span className="notranslate dark:text-orange-500 text-gray-600 pl-5">
+                              <span className="notranslate dark:text-orange-500 text-gray-600 pl-2">
                                 {/* {device?.lastOdometerKM.toFixed(0)} */}
                                 {device?.lastOdometerKM &&
                                 !isNaN(Number(device?.lastOdometerKM))
@@ -544,7 +544,7 @@ function ListeDesVehiculesGestion({
                               <p className="font-bold">
                                 {t("Numéro de la carte SIM")} :
                               </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {/* 50941070132 */}
                                 {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
                               </span>
@@ -553,7 +553,7 @@ function ListeDesVehiculesGestion({
                               <p className="font-bold">
                                 {t("Date Creation")} :
                               </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                              <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                 {FormatDateHeure(device?.creationTime).date}
                                 <span className="px-2">/</span>{" "}
                                 {FormatDateHeure(device?.creationTime).time}

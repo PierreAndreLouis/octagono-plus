@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FaArrowLeft,
+  FaBook,
   FaCar,
   FaChevronDown,
   FaInfoCircle,
@@ -34,7 +35,7 @@ import InstallationPWA from "../../pages/InstallationPWA";
 import { TbPointFilled } from "react-icons/tb";
 import { IoMdLogIn, IoMdStats } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SideBarSysadmin({
   readDocumentationSideBar,
@@ -106,6 +107,7 @@ function SideBarSysadmin({
     setChooseOtherLanguagePopup,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   const scrollToTitle = (titleRef) => {
@@ -135,7 +137,8 @@ function SideBarSysadmin({
       />
       {documentationPage !== "Dashboard" &&
         documentationPage !== "Trajet_appareil" &&
-        documentationPage !== "Rapport_unite" && (
+        documentationPage !== "Rapport_unite" &&
+        documentationPage !== "Historique_appareil" && (
           <button
             onClick={backToPagePrecedent}
             // disabled={historyRef.current.length === 0}
@@ -236,7 +239,7 @@ function SideBarSysadmin({
         
         */}
 
-        {isDashboardHomePage && (
+        {isDashboardHomePage && !readDocumentation && (
           // {!currentAccountSelected && isDashboardHomePage && (
           <Link
             to="/Gestion_des_comptes"
@@ -724,6 +727,27 @@ function SideBarSysadmin({
               </div>
             </Link>
             {/* )} */}
+            {/* setReadDocumentation(false); */}
+            {/*  */}
+            {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
+              <div
+                onClick={() => {
+                  closeSideBar();
+                  setReadDocumentation(true);
+                  navigate("/installation_application");
+                }}
+                className={`${
+                  documentationPage === "installation" ? "bg-orange-50" : ""
+                } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <FaBook className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 text-[1rem] font-semibold">
+                    {t("Manuel d'utilisation")}
+                  </p>
+                </div>
+              </div>
+            </div> */}
             {/*  */}
             <div className="ajouter-appareil-container transition-all hover:border-b  ">
               <div

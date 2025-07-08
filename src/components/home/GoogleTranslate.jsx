@@ -22,7 +22,7 @@ const GoogleTranslate = () => {
     <>
       {chooseOtherLanguagePopup && (
         <div
-          className={` fixed inset-0-- bottom-0 top-0  transition-all w-[100vw] bg-black/50 dark:bg-gray-700 z-[9999999999999999999999999999999999999999999999999999] flex justify-center items-center`}
+          className={` fixed inset-0    transition-all bg-black/50 dark:bg-gray-700 z-[9999999999999999999999999999999999999999999999999999] flex justify-center items-center`}
         >
           <div className="min-h-[40vh] min-w-[95vw] sm:min-w-[30rem] bg-white relative rounded-lg p-4 flex justify-center items-center">
             <h2 className="absolute z-[9999] top-0 left-0 right-0 mt-3 text-center font-semibold">

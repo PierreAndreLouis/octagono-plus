@@ -1255,9 +1255,9 @@ function MapComponent({
                 ]}
                 icon={L.icon({
                   iconUrl: getMarkerIcon(véhicule),
-                  iconSize: [25, 41],
-                  iconAnchor: [12, 41],
-                  popupAnchor: [1, -34],
+                  iconSize: [18, 25],
+                  iconAnchor: [10, 20],
+                  popupAnchor: [1, -16],
                   shadowUrl:
                     "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
                   // shadowSize: [41, 41],

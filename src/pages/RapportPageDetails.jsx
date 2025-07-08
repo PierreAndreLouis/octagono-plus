@@ -1274,7 +1274,7 @@ function RapportPageDetails() {
     <div
       className={`${
         pageSection === "search" ? "pt-20" : " pt-40 "
-      } flex flex-col max-w-screen bg-white rounded-lg   min-h-[100vh]  overflow-hidden justify-center-- items-center pb-20 `}
+      } flex flex-col max-w-screen bg-white rounded-lg relative  min-h-[100vh]  overflow-hidden justify-center-- items-center pb-20 `}
     >
       {/* {pageSection === "unite" && ( */}
       <div>
@@ -1327,7 +1327,7 @@ function RapportPageDetails() {
       <div className=" px-4 bg-white py-3 dark:bg-gray-800">
         <div className=" absolute sm:px-[10vw] z-1 bg-white dark:bg-gray-800  top-[1rem] rounded-lg  left-4 right-4 ">
           {/* {pageSection != "search--" && ( */}
-          <div className="max-w-[60rem]-- mx-auto--">
+          <div className="md:max-w-[70vw] mx-auto pt-10">
             {/* {totalDevice?.length < 400 && ( */}
             <RapportPageDetailsOptions
               setPersonnelDetails={setPersonnelDetails}

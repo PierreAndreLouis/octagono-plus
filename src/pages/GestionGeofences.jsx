@@ -2,11 +2,10 @@ import React, { useContext, useState } from "react";
 import { IoClose, IoEarth, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link, useNavigate } from "react-router-dom";
- 
+
 import { FaChevronDown, FaPlusCircle, FaUserPlus } from "react-icons/fa";
 import ChooseOtherGeofenceDashboard from "../components/dashboard_containt/ChooseOtherGeofenceDashboard";
 import { useTranslation } from "react-i18next";
- 
 
 function GestionGeofences({
   // isDashboardHomePage = false,
@@ -16,27 +15,24 @@ function GestionGeofences({
   setChooseAccountFromGeozoneSection,
 }) {
   const {
-     setAjouterGeofencePopup,
+    setAjouterGeofencePopup,
     geofenceData,
     FormatDateHeure,
-     currentGeozone,
+    currentGeozone,
     setCurrentGeozone,
-     setIsEditingGeofence,
-     supprimerGeofence,
+    setIsEditingGeofence,
+    supprimerGeofence,
 
-     gestionAccountData,
+    gestionAccountData,
     currentAccountSelected,
     accountGeofences,
-     //
-    isDashboardHomePage, 
+    //
+    isDashboardHomePage,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
-  
 
   const [supprimerGeozonePopup, setSupprimerGeozonePopup] = useState(false);
-        const navigate = useNavigate(); 
-  
-  
+  const navigate = useNavigate();
 
   let currentGeofenceData;
 
@@ -127,7 +123,7 @@ function GestionGeofences({
           chooseOtherGeofencesGestion={chooseOtherGeofencesGestion}
           setChooseOtherGeofencesGestion={setChooseOtherGeofencesGestion}
         />
-        
+
         <h2
           onClick={() => {
             console.log(accountGeofences);
@@ -166,8 +162,7 @@ function GestionGeofences({
                 setIsEditingGeofence(false);
                 setCurrentGeozone();
                 setDocumentationPage("Localisation_devices");
-                navigate("/Localisation_devices")
-                
+                navigate("/Localisation_devices");
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -188,7 +183,7 @@ function GestionGeofences({
                 <div
                   onClick={() => {
                     setDocumentationPage("Gestion_geofences");
-                navigate("/Gestion_geofences")
+                    navigate("/Gestion_geofences");
 
                     setChooseOtherAccountGestion(true);
                     setChooseAccountFromGeozoneSection(true);
@@ -205,7 +200,7 @@ function GestionGeofences({
                   <FaChevronDown />
                 </div>
               )}
-          
+
               {isDashboardHomePage && (
                 <div
                   onClick={() => {
@@ -216,7 +211,6 @@ function GestionGeofences({
                   <IoSearchOutline className="text-xl " />
                 </div>
               )}
-             
             </div>
           )}
           {(showFilterInputSection || !isDashboardHomePage) && (
@@ -289,9 +283,10 @@ function GestionGeofences({
                         {index + 1}
                       </div>
                       <div className="flex  gap-3  ">
-                        <IoEarth className="text-[3rem] text-orange-500" />
+                        <IoEarth className="text-[3rem] text-orange-500 hidden md:block" />
                         <div className=" w-full flex flex-wrap justify-between gap-x-4">
                           <div>
+                            <IoEarth className="text-[3rem] text-orange-500 md:hidden" />
                             <div className="flex flex-wrap">
                               <p className="font-bold">
                                 {t("Nom du Geozone")} :
@@ -350,16 +345,13 @@ function GestionGeofences({
                             setIsEditingGeofence(true);
 
                             setDocumentationPage("Localisation_devices");
-                navigate("/Localisation_devices")
-
+                            navigate("/Localisation_devices");
                           }}
                           // to="/Groupe_vehicule_location?tab=localisation"
                           className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"
                         >
                           {t("Modifier")}
                         </button>
-
-                        
                       </div>
                     </div>
                   );

@@ -6,20 +6,17 @@ import Tooltip from "@mui/material/Tooltip";
 import { useTranslation } from "react-i18next";
 
 function RapportPageDetailsOptions({
- 
   pageSection,
   setpageSection,
   setShowOptions,
   setSelectedVehicleToShowInMap,
- 
 }) {
+  const [t, i18n] = useTranslation();
 
-    const [t, i18n] = useTranslation();
-  
   // const [setSelectedVehicleToShowInMap] = useContext(DataContext);
   return (
     <>
-      <div className="flex px-4 mb-2 w-full gap-2 justify-between max-w-[40rem]-- mx-auto mt-6">
+      <div className="flex px-4 mb-2 w-full gap-2 justify-between  mx-auto">
         <Tooltip
           PopperProps={{
             modifiers: [
@@ -78,7 +75,7 @@ function RapportPageDetailsOptions({
               },
             ],
           }}
-          title={`${t("Voir un rapport pour tous les véhicules")}`}  
+          title={`${t("Voir un rapport pour tous les véhicules")}`}
         >
           <button
             onClick={() => {
@@ -100,8 +97,6 @@ function RapportPageDetailsOptions({
             {t("Groupe")}
           </button>
         </Tooltip>
-    
-       
       </div>
     </>
   );

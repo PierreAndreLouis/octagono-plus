@@ -80,13 +80,13 @@ function DeviceListeDashboard() {
                 />
                 <p className="text-gray-600 font-bold">
                   {t("Nom du Groupe")} :{" "}
-                  <span className="font-normal notranslate text-gray-500 ml-2 ">
+                  <span className="font-normal notranslate text-gray-500 ml-0 ">
                     {device?.description}
                   </span>{" "}
                 </p>
                 <p className="text-gray-600 font-bold">
                   {t("Last Update")} :{" "}
-                  <span className="font-normal text-gray-500 ml-2">
+                  <span className="font-normal text-gray-500 ml-0">
                     {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
                     {FormatDateHeure(device?.lastUpdateTime)?.time}
                   </span>{" "}
