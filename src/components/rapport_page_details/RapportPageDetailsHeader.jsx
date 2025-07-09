@@ -22,15 +22,14 @@ import { useTranslation } from "react-i18next";
 
 function RapportPageDetailsHeader({
   setShowOptions,
-  showOptions, 
-  handleClick, 
-  personnelDetails, 
+  showOptions,
+  handleClick,
+  personnelDetails,
   setShowChooseDate,
   pageSection,
 
-  
   fonctiondownloadExelPDF,
- }) {
+}) {
   const {
     currentVéhicule,
     currentDataFusionné,
@@ -57,7 +56,6 @@ function RapportPageDetailsHeader({
   } else if (!isDashboardHomePage) {
     deviceListeSelected = dataFusionné;
   }
- 
 
   const [pdfDownloadPupup, setPdfDownloadPupup] = useState(false);
 
@@ -72,8 +70,6 @@ function RapportPageDetailsHeader({
       console.error("Tableau introuvable.");
     }
   };
-
-  
 
   const generatePersonelPDF = () => {
     fonctiondownloadExelPDF();
@@ -143,7 +139,6 @@ function RapportPageDetailsHeader({
 
   const dernierDetails = donneeVehiculeDetails?.[0]?.timestamp;
 
- 
   const [checkboxes, setCheckboxes] = useState({
     en_marche: true,
     en_ralenti: true,
@@ -160,8 +155,6 @@ function RapportPageDetailsHeader({
   }
 
   const [searchTerm, setSearchTerm] = useState("");
-
-  
 
   const [searchQueryRapportPageDetailHeader, setRapportPageDetailHeader] =
     useState("");
@@ -185,7 +178,7 @@ function RapportPageDetailsHeader({
   );
 
   ///////////////////////////////////////////////////////////////////////////////
- 
+
   // Fonction pour extraire le jour, le mois, l'année et l'heure en AM/PM
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -205,8 +198,6 @@ function RapportPageDetailsHeader({
     return { day, month, year };
   };
 
- 
-
   const formatTo12Hour = (time) => {
     let [hours, minutes] = time.split(":").map(Number);
     const isAM = hours < 12;
@@ -214,8 +205,6 @@ function RapportPageDetailsHeader({
     const period = isAM ? "AM" : "PM";
     return `${hours}:${String(minutes).padStart(2, "0")} ${period}`;
   };
-
-  
 
   const formatTime = (hours, minutes, seconds) => {
     if (hours > 0 || minutes > 0 || seconds > 0) {
@@ -351,7 +340,7 @@ function RapportPageDetailsHeader({
   const heureFin = FormatDateHeure(
     pageSection === "unite" ? timestampInSecondsFin : mostOldTimestamp
   )?.time;
- 
+
   return (
     <div className=" shadow-md-- shadow-gray-400/20 pb-2">
       <div
@@ -668,16 +657,17 @@ function RapportPageDetailsHeader({
                 </div>
               )}
 
-              {pageSection === "groupe" && deviceListeSelected?.length < 50 && (
-                <div
-                  onClick={() => {
-                    setShowChooseDate(true);
-                  }}
-                  className="flex  gap-2 items-center cursor-pointer"
-                >
-                  <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
-                </div>
-              )}
+              {pageSection === "groupe" &&
+                deviceListeSelected?.length < 1000 && (
+                  <div
+                    onClick={() => {
+                      setShowChooseDate(true);
+                    }}
+                    className="flex  gap-2 items-center cursor-pointer"
+                  >
+                    <FaRegCalendarAlt className="text-xl mt-2- text-orange-500" />
+                  </div>
+                )}
             </Tooltip>
           </div>
         </div>

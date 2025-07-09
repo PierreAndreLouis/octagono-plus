@@ -1418,7 +1418,7 @@ function RapportPageDetails() {
       {/* ////////////////////////////////////////////////////////////////////////////////////// */}
       {/* en groupe */}
 
-      {pageSection === "groupe" && totalDevice?.length > 50 && (
+      {/* {pageSection === "groupe" && totalDevice?.length > 50 && (
         <div>
           <h2 className="font-bold mx-4 text-center mt-10 text-lg">
             {t("Ce compte comprend plus de 50 appareils")}...
@@ -1427,16 +1427,15 @@ function RapportPageDetails() {
           <p className="text-orange-700-- text-center text-lg">
             <span className="text-orange-600">
               {t(
-                "Il n’est pas possible de fournir un rapport global pour tous"
+                "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide."
               )}
             </span>
             <br />
-            {/* Nous vous remercions de votre compréhension. */}
           </p>
         </div>
-      )}
+      )} */}
 
-      {pageSection === "groupe" && totalDevice?.length <= 50 && (
+      {pageSection === "groupe" && totalDevice?.length <= 1000 && (
         <RapportGroupe
           currentDataFusionné={currentDataFusionné}
           véhiculeActiveToday={véhiculeActiveToday}

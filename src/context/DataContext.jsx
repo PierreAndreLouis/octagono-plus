@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "07/07/2025 _ 4";
+  let versionApplication = "09/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -311,7 +311,10 @@ const DataContextProvider = ({ children }) => {
 
   let currentAPI = "/octagono-plus-api/track/Service";
 
-  if (currentCountry === "rd") {
+  if (
+    currentCountry === "rd" ||
+    localStorage.getItem("currentCountry") === "rd"
+  ) {
     currentAPI = "/octagono-gps-api/track/Service";
   } else {
     currentAPI = "/octagono-plus-api/track/Service";
@@ -1334,25 +1337,23 @@ const DataContextProvider = ({ children }) => {
 
   // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+  const failedAccounts = [];
+
   const processCompte = async (acct, isLastBatch = false) => {
     const id = acct?.accountID;
     const pwd = acct?.password;
 
     try {
       if (isLastBatch) {
-        await fetchAccountDevices(id, pwd); // 👈 await seulement ici
+        await fetchAccountDevices(id, pwd);
       } else {
         fetchAccountDevices(id, pwd);
       }
-      // fetchAccountDevices(id, pwd);
 
       fetchAccountGroupes(id, pwd)
         .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
         .catch((err) => {
-          console.error(
-            "Erreur lors du chargement des groupes ou des devices de groupes :",
-            err
-          );
+          console.error("Erreur groupes/devices :", err);
           setError("Erreur lors de la mise à jour des groupes.");
         });
 
@@ -1362,19 +1363,34 @@ const DataContextProvider = ({ children }) => {
           fetchUserGroupes(id, users);
         })
         .catch((err) => {
-          console.error(
-            "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-            err
-          );
+          console.error("Erreur utilisateurs/données :", err);
           setError("Erreur lors de la mise à jour des utilisateurs.");
         });
 
       fetchAccountGeofences(id, pwd);
-
-      // await delay(2000); // pause entre les groupes
     } catch (err) {
       console.error("Erreur pour le compte", id, ":", err);
-      setError("Erreur sur un ou plusieurs comptes.");
+      failedAccounts.push(id);
+      setError(
+        "Erreur sur un ou plusieurs comptes.",
+        failedAccounts.join(", ")
+      );
+    }
+
+    afficherComptesEchoues();
+  };
+
+  // Après traitement de tous les comptes
+  const afficherComptesEchoues = () => {
+    if (failedAccounts.length > 0) {
+      console.log(
+        "ssssssssssssssssssssssssssssssssssssssssssssssss Comptes échoués :",
+        failedAccounts.join(", ")
+      );
+    } else {
+      console.log(
+        "sssssssssssssssssssssssssssssssssssssssssssssssss Aucun compte n'a échoué."
+      );
     }
   };
 
@@ -1391,7 +1407,7 @@ const DataContextProvider = ({ children }) => {
         done += 1;
         setProgress(Math.round((done / total) * 100));
       }
-      if (!isLastBatch) await delay(2000); // pas de pause après le dernier lot
+      if (!isLastBatch) await delay(1200); // pas de pause après le dernier lot
     }
   };
 
@@ -1462,7 +1478,7 @@ const DataContextProvider = ({ children }) => {
       }
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
-      processAllComptes(newData, 20); // 👈 traitement séquentiel en lots de 3
+      processAllComptes(newData, 5); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
@@ -1531,14 +1547,14 @@ const DataContextProvider = ({ children }) => {
 
     // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-    const batchSize = 500; // 👈 modifiable (ex : 100 devices à la fois)
+    const batchSize = 50; // 👈 modifiable (ex : 100 devices à la fois)
     let vehDetails = [];
 
     for (let i = 0; i < data.length; i += batchSize) {
       const batch = data.slice(i, i + batchSize);
       const details = await fetchVehiculeDetails(accountID, batch, password);
       vehDetails = vehDetails.concat(details);
-      await delay(50); // 👈 modifiable (pause entre groupes)
+      await delay(1000); // 👈 modifiable (pause entre groupes)
     }
 
     // const vehDetails = await fetchVehiculeDetails(accountID, data, password);
@@ -4570,7 +4586,15 @@ const DataContextProvider = ({ children }) => {
     setAccount(localStorage.getItem("account") || "");
     setUsername(localStorage.getItem("username") || "");
     setPassword(localStorage.getItem("password") || "");
+    setCurrentCountry(localStorage.getItem("currentCountry") || "");
   }, []);
+  useEffect(() => {
+    // Récupérer les informations de localStorage
+    setAccount(localStorage.getItem("account") || "");
+    setUsername(localStorage.getItem("username") || "");
+    setPassword(localStorage.getItem("password") || "");
+    setCurrentCountry(localStorage.getItem("currentCountry") || "");
+  }, [account, username, password, currentCountry]);
 
   // pour stoker les donnees de l'utilisateur en local
   useEffect(() => {
@@ -4581,8 +4605,17 @@ const DataContextProvider = ({ children }) => {
     setCurrentCountry(localStorage.getItem("currentCountry") || "");
   }, []);
 
+  useEffect(() => {
+    // Récupérer les informations de localStorage
+    setAdminAccount(localStorage.getItem("adminAccount") || "");
+    setAdminUsername(localStorage.getItem("adminUsername") || "");
+    setAdminPassword(localStorage.getItem("adminPassword") || "");
+    setCurrentCountry(localStorage.getItem("currentCountry") || "");
+  }, [adminAccount, adminUsername, adminPassword, currentCountry]);
+
   // Fonction pour se déconnecter de l’application
   const handleLogout = () => {
+    clearCacheFonction();
     setShowSideBar(true);
     setLogOutPopup(false);
 
@@ -5616,7 +5649,7 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const processAllVehicles = async (vehicles, batchSize = 20) => {
+  const processAllVehicles = async (vehicles, batchSize = 10) => {
     const total = vehicles?.length;
     let done = 0;
 
@@ -5631,7 +5664,7 @@ const DataContextProvider = ({ children }) => {
         setProgressDataUser(Math.round((done / total) * 100));
       }
 
-      if (!isLastBatch) await delay(1000);
+      if (!isLastBatch) await delay(1500);
     }
   };
 
@@ -5639,7 +5672,7 @@ const DataContextProvider = ({ children }) => {
     vehicles,
     timeFrom,
     timeTo,
-    batchSize = 20
+    batchSize = 5
   ) => {
     const total = vehicles?.length;
     let done = 0;
@@ -5652,7 +5685,7 @@ const DataContextProvider = ({ children }) => {
         setProgress(Math.round((done / total) * 100));
         setProgressDataUser(Math.round((done / total) * 100));
       }
-      if (!isLastBatch) await delay(1000);
+      if (!isLastBatch) await delay(1500);
     }
   };
 
@@ -5705,6 +5738,12 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
+    console.log("currentAPI", currentAPI);
+    console.log("currentcountry", currentCountry);
+    console.log(
+      "localStorage.getItem()",
+      localStorage.getItem("currentCountry")
+    );
     console.log("xmlData : ===>", xmlData);
 
     try {
@@ -6102,6 +6141,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("Data........", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -7677,35 +7717,6 @@ const DataContextProvider = ({ children }) => {
     0xf020: `${t("Localisation")}`,
     0xf210: `${t("Arrived at Geozone")}`,
     0xf230: `${t("Departed at Geozone")}`,
-    // 0xf021: `${t("Localisation - Arrêté")}`,
-    // 0xf022: `${t("Localisation - Parking")}`,
-    // 0xf100: `${t("Localisation - Odomètre")}`,
-    // 0xf110: `${t("Localisation - Heures moteur")}`,
-    // 0xf120: `${t("Localisation - Niveau de carburant")}`,
-    // 0xf200: `${t("Changement d'état d'entrée")}`,
-    // 0xf201: `${t("Entrée activée")}`,
-    // 0xf202: `${t("Entrée désactivée")}`,
-    // 0xf210: `${t("Contact allumé")}`,
-    // 0xf211: `${t("Contact éteint")}`,
-    // 0xf301: `${t("Alimentation activée")}`,
-    // 0xf302: `${t("Alimentation désactivée")}`,
-    // 0xf310: `${t("Batterie faible")}`,
-    // 0xf311: `${t("Batterie OK")}`,
-    // 0xf320: `${t("En charge")}`,
-    // 0xf321: `${t("Non en charge")}`,
-    // 0xf400: `${t("Détection de remorquage")}`,
-    // 0xf500: `${t("Détection de collision")}`,
-    // 0xf600: `${t("Excès de vitesse")}`,
-    // 0xf601: `${t("Vitesse normale")}`,
-    // 0xf700: `${t("Entrée dans une zone géographique")}`,
-    // 0xf701: `${t("Sortie d'une zone géographique")}`,
-    // 0xf800: `${t("Informations de diagnostic")}`,
-    // 0xf900: `${t("Signal de vie")}`,
-    // 0xfa00: `${t("Connexion du conducteur")}`,
-    // 0xfa01: `${t("Déconnexion du conducteur")}`,
-    // 0xfb00: `${t("Alerte de panique")}`,
-    // 0xfc00: `${t("Rappel de maintenance")}`,
-    // Ajouter d'autres statuts spécifiques aux dispositifs Coban si nécessaire
   };
 
   const [isUserNotInteractingNow, setIsUserNotInteractingNow] = useState(false);
@@ -7793,6 +7804,64 @@ const DataContextProvider = ({ children }) => {
       clearInterval(interval);
     };
   }, [isUserNotInteractingNow]);
+
+  function clearCacheFonction() {
+    if ("caches" in window) {
+      caches.keys().then(function (names) {
+        for (let name of names) {
+          caches.delete(name);
+        }
+        console.log("Caches supprimés");
+      });
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      clearCacheFonction();
+      enforceCacheLimit(); // pour 30 MB
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []); // Pas de dépendances, exécution régulière
+
+  async function enforceCacheLimit(maxSizeMB = 50) {
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const cacheNames = await caches.keys();
+
+    for (const cacheName of cacheNames) {
+      const cache = await caches.open(cacheName);
+      const requests = await cache.keys();
+      let totalSize = 0;
+      const entries = [];
+
+      for (const request of requests) {
+        const response = await cache.match(request);
+        if (response) {
+          const cloned = response.clone();
+          const body = await cloned.arrayBuffer();
+          const size = body.byteLength;
+          totalSize += size;
+          entries.push({ request, size, response });
+        }
+      }
+
+      // Supprime les plus anciens si on dépasse la limite
+      if (totalSize > maxSizeBytes) {
+        console.log("Taille du cache dépassée. Nettoyage...");
+        entries.sort((a, b) => a.size - b.size); // supprime petits d’abord
+        while (totalSize > maxSizeBytes && entries.length > 0) {
+          const entry = entries.shift();
+          await cache.delete(entry.request);
+          totalSize -= entry.size;
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    enforceCacheLimit(); // pour 30 MB
+  }, []);
 
   // backToPagePrecedent
   return (
@@ -8098,6 +8167,7 @@ const DataContextProvider = ({ children }) => {
         resetInteraction,
         isUserNotInteractingNow,
         versionApplication,
+        clearCacheFonction,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

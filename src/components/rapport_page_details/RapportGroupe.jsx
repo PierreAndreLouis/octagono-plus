@@ -75,6 +75,7 @@ function RapportGroupe({
     accountDevices,
     isSearchingFromRapportGroupePage,
     setIsSearchingFromRapportGroupePage,
+    password,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   let x;
 
@@ -85,18 +86,25 @@ function RapportGroupe({
   const rapportFetchFonction = () => {
     let accountID;
     let userID;
-    let password;
+    let passwordUser;
 
     if (isDashboardHomePage && currentAccountSelected) {
       accountID = currentAccountSelected?.accountID;
       userID = "admin";
-      password = currentAccountSelected?.password;
+      passwordUser = currentAccountSelected?.password;
     } else if (!isDashboardHomePage) {
       accountID = account || localStorage.getItem("account") || "";
       userID = username || localStorage.getItem("username") || "";
-      password = localStorage.getItem("password") || "";
+      passwordUser = password || localStorage.getItem("password") || "";
     }
-    homePageReload(accountID, userID, password, onlyLastResult);
+    // homePageReload(
+    //   localStorage.getItem("account"),
+    //   localStorage.getItem("username"),
+    //   localStorage.getItem("password"),
+    //   onlyLastResult
+    // );
+    // homePageReload(account, username, password, onlyLastResult);
+    homePageReload(accountID, userID, passwordUser, onlyLastResult);
   };
 
   //
@@ -1686,6 +1694,9 @@ function RapportGroupe({
   //
   x;
 
+  const [plusDe50DevicePopupMessage, setPlusDe50DevicePopupMessage] =
+    useState(false);
+
   return (
     <>
       <div
@@ -2878,11 +2889,49 @@ function RapportGroupe({
             onClick={() => {
               rapportFetchFonction();
               setIsSearchingFromRapportGroupePage(false);
+              if (dataFusionneeHome?.length > 50) {
+                setPlusDe50DevicePopupMessage(true);
+              }
             }}
             className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
           >
             <h3>{t("Mettre a jour les donnees")}</h3>
             <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
+          </div>
+        )}
+
+        {plusDe50DevicePopupMessage && (
+          <div
+            className={` fixed inset-0  px-4  transition-all bg-black/50 dark:bg-gray-700 z-[9999999999999999999999999999999999999999999999999999] flex justify-center items-center`}
+          >
+            <div className="min-h-[40vh] min-w-[95vw] sm:min-w-[30rem] md:max-w-[40rem] bg-white relative rounded-lg p-4 flex justify-center items-center">
+              <h2 className="absolute z-[9999] top-0 left-0 right-0 mt-3 text-center font-semibold text-lg border-b pb-2 border-b-orange-600">
+                {t("Notez bien")}... !
+              </h2>
+              <button
+                onClick={() => setPlusDe50DevicePopupMessage(false)}
+                className="absolute z-[9999] bg-orange-500 text-white py-1 px-8 rounded-lg right-4 lg:right-4 bottom-4 mt-3 text-center font-semibold"
+              >
+                {t("Ok")}
+              </button>
+              <IoClose
+                onClick={() => setPlusDe50DevicePopupMessage(false)}
+                className="absolute top-4 z-[99999999999999999] right-4 text-[1.4rem] cursor-pointer text-red-500"
+              />
+              <div className="flex gap-3 flex-col w-full">
+                <h2 className="font-bold mx-4 text-center  text-lg">
+                  {t("Ce compte comprend plus de 50 appareils")}...
+                </h2>
+                <p className="text-orange-700-- text-center text-lg md:max-w-[30rem] mx-auto">
+                  <span className="text-orange-600 ">
+                    {t(
+                      "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide."
+                    )}
+                  </span>
+                  <br />
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -4646,8 +4695,7 @@ function RapportGroupe({
 
                         ///////////////////////////////////////////////////////////////////////////
                         // iiiiiiiiiiiiiiiiiiiiiiiiiiii
-  
-                        
+
                         const lastUpdateTimestampMs =
                           matchedVehicle.véhiculeDetails &&
                           matchedVehicle.véhiculeDetails[0] &&

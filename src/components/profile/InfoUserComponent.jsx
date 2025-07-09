@@ -18,6 +18,7 @@ function InfoUserComponent({
     resetIndexedDB,
     currentCountry,
     versionApplication,
+    isDashboardHomePage,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -30,13 +31,13 @@ function InfoUserComponent({
   let text_color = "text-red-600";
   // setUsername
   return (
-    <div>
+    <div className="bg-white rounded-lg">
       {/* Section de l'icône utilisateur */}
       <div
         onClick={() => {
           // setUsername("xxxxxxx");
         }}
-        className="flex mt-14  justify-center items-center"
+        className="flex pt-14  justify-center items-center"
       >
         <FaUserCircle className="text-gray-300 dark:text-gray-300 w-[25rem] h-24" />
       </div>
@@ -54,8 +55,9 @@ function InfoUserComponent({
             {t("Compte")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {adminAccount && adminAccount} {adminAccount && account && " / "}{" "}
-            {account && account}
+            {isDashboardHomePage
+              ? localStorage.getItem("adminAccount")
+              : localStorage.getItem("account")}
           </p>
         </div>
 
@@ -65,8 +67,9 @@ function InfoUserComponent({
             {t("Nom d'utilisateur")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {adminUsername && adminUsername}{" "}
-            {adminUsername && username && " / "} {username && username}
+            {isDashboardHomePage
+              ? localStorage.getItem("adminUsername")
+              : localStorage.getItem("username")}
           </p>
         </div>
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
@@ -135,7 +138,7 @@ function InfoUserComponent({
       </div>
 
       {/* Boutons d'action */}
-      <div className="flex  justify-center max-w-[30rem] mx-auto grid-cols-1 xs:grid-cols-2 mt-10 gap-2">
+      <div className="flex  justify-center max-w-[30rem] mx-auto grid-cols-1 xs:grid-cols-2 mt-10 pb-20 gap-2 ">
         <button
           onClick={() => {
             setLogOutPopup(true);

@@ -1,29 +1,29 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
- 
+
 import { MdLocationPin, MdDateRange } from "react-icons/md";
 import { FaCar } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 import { Tooltip } from "@mui/material";
 import MapComponent from "../location_vehicule/MapComponent";
- import { IoClose } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
 function HistoriqueMainComponent({
-   loadingHistoriqueFilter,
+  loadingHistoriqueFilter,
   véhiculeHistoriqueDetails,
   appliedCheckboxes,
- }) {
+}) {
   const {
     FormatDateHeure,
     setHistoriqueSelectedLocationIndex,
     setSelectedVehicleToShowInMap,
     selectUTC,
     currentDataFusionné,
-     currentVéhicule,
+    currentVéhicule,
     selectedVehicleToShowInMap,
-   } = useContext(DataContext);
+  } = useContext(DataContext);
   let x;
 
   const [t, i18n] = useTranslation();
@@ -43,7 +43,7 @@ function HistoriqueMainComponent({
   x;
 
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- 
+
   //
   //
   //
@@ -113,7 +113,7 @@ function HistoriqueMainComponent({
           </div>
         )}
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
-          <h2 className="text-xl md:text-4xl md:mb-4 text-orange-600">
+          <h2 className="text-xl md:text-4xl md:mb-4 text-orange-600 mt-8">
             {t("Historique")}{" "}
           </h2>
           <h2 className="text-gray-800 notranslate mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">

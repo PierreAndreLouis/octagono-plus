@@ -128,7 +128,7 @@ const LocationPage = ({
     : véhiculeData;
 
   useEffect(() => {
-    console.log("vehicles", vehicles);
+    // console.log("vehicles", vehicles);
   }, [vehicles]);
 
   // Les type de carte disponibles

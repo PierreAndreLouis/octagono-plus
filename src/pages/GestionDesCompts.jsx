@@ -25,9 +25,7 @@ function GestionDesCompts({ setDocumentationPage }) {
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
-    const navigate = useNavigate(); 
-  
-
+  const navigate = useNavigate();
 
   const [inputSearchItem, setInputSearchItem] = useState("");
 
@@ -69,7 +67,7 @@ function GestionDesCompts({ setDocumentationPage }) {
       );
 
       setDocumentationPage("Dashboard");
-      navigate("/Dashboard")
+      navigate("/Dashboard");
     } else {
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
@@ -185,8 +183,7 @@ function GestionDesCompts({ setDocumentationPage }) {
             <button
               onClick={() => {
                 setDocumentationPage("Ajouter_nouveau_compte");
-      navigate("/Ajouter_nouveau_compte")
-
+                navigate("/Ajouter_nouveau_compte");
               }}
               className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -210,20 +207,10 @@ function GestionDesCompts({ setDocumentationPage }) {
                 onChange={(e) => setInputSearchItem(e.target.value)}
                 className=" px-3 w-full focus:outline-0  dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400   sm:text-sm sm:leading-6"
               />
-              {/* <IoCloseOutline
-                  onClick={() => setInputSearchItem("")}
-                  className="text-2xl min-w-[2rem] mr-2 cursor-pointer text-red-500"
-                /> */}
+             
               <IoSearchOutline className="text-2xl text-gray-500 border-l cursor-pointer border-l-gray-400 min-w-[3rem]" />
             </div>
-            {/* <div
-                onClick={() => {
-                  // deviceUpdateFonction();
-                }}
-                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
-              >
-                <MdUpdate className="text-xl " />
-              </div> */}
+           
           </div>
           {/* Liste des Comptes */}
           <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
@@ -238,7 +225,7 @@ function GestionDesCompts({ setDocumentationPage }) {
                   <div
                     key={index}
                     onClick={() => {
-                      setCurrentAccountSelected(account);
+                      // setCurrentAccountSelected(account);
                       setCurrentSelectedUserToConnect(null);
                     }}
                     className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
@@ -318,6 +305,7 @@ function GestionDesCompts({ setDocumentationPage }) {
                         <div className="flex gap-2 md:flex-col md:max-w-[11rem] sm:justify-end w-full xs:justify-start justify-center">
                           <button
                             onClick={() => {
+                              setCurrentAccountSelected(account);
                               setSeConnecterAutreComptePopup(true);
                             }}
                             className={`  bg-orange-500-- text-orange-500  w-full cursor-pointer xs:w-auto mt-4 md:mt-0 text-sm- border-2 border-orange-500 border-gray-300- text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
@@ -327,6 +315,8 @@ function GestionDesCompts({ setDocumentationPage }) {
                           </button>{" "}
                           <button
                             onClick={() => {
+                              setCurrentAccountSelected(account);
+
                               setShowAccountOptionsPopup(true);
                             }}
                             className={`  bg-orange-500 text-white w-full cursor-pointer xs:w-auto mt-4 md:mt-0 text-sm- border-[0.02rem] border-gray-300- text-sm  font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}

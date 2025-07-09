@@ -835,6 +835,8 @@ function DashboardContaintMaintComponant({
     return () => clearInterval(intervalRef.current);
   }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
 
+  const [searchTermInput, setSearchTermInput] = useState("");
+
   return (
     <div className="pb-6-">
       {showStatisticDeviceListeDashboard && (
@@ -946,24 +948,11 @@ function DashboardContaintMaintComponant({
 
             {expandSection === "deviceAlerts" && (
               <div className="overflow-auto min- h-[90vh]">
-                <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
-                  <h2 className="mb-0">
-                    {t("Liste des Alertes")} (
-                    {
-                      (isDashboardHomePage
-                        ? listeGestionDesVehicules
-                        : dataFusionné
-                      )
-                        ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                        ?.filter((item) => item?.statusCode !== "0xF952")
-                        ?.length
-                    }
-                    )
-                  </h2>
-                </div>
                 <ListeDesAlertsGestion
                   setDocumentationPage={setDocumentationPage}
                   fromExpandSectionDashboard="true"
+                  searchTermInput={searchTermInput}
+                  setSearchTermInput={setSearchTermInput}
                 />
               </div>
             )}
@@ -1387,6 +1376,7 @@ function DashboardContaintMaintComponant({
                     setListeGestionDesVehicules(accountDevices);
                   }
                   setExpandSection("deviceAlerts");
+                  setSearchTermInput("");
                 }}
                 className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
               >
@@ -1523,7 +1513,24 @@ function DashboardContaintMaintComponant({
                   const color = COLORS[index % COLORS.length]; // correspondance avec le PieChart
 
                   return (
-                    <div key={index} className="flex gap-3 items-center">
+                    <div
+                      onClick={() => {
+                        setSearchTermInput(codeDescription);
+
+                        if (!isDashboardHomePage) {
+                          setListeGestionDesVehicules(dataFusionné);
+                        } else if (currentAccountSelected) {
+                          setListeGestionDesVehicules(
+                            currentAccountSelected?.accountDevices
+                          );
+                        } else {
+                          setListeGestionDesVehicules(accountDevices);
+                        }
+                        setExpandSection("deviceAlerts");
+                      }}
+                      key={index}
+                      className="flex cursor-pointer hover:bg-gray-200 gap-3 items-center"
+                    >
                       <div
                         style={{ backgroundColor: color }}
                         className="min-w-[1rem] min-h-[1rem] rounded-full bg-orange-600--"

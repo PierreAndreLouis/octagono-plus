@@ -78,7 +78,7 @@ function ProfilUserPage() {
   x;
 
   return (
-    <div className="px-4 pb-20 min-h-screen">
+    <div className="">
       {/* Log Out popup */}
       {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />}
 

@@ -175,18 +175,27 @@ function SideBarSysadmin({
         {/* Tous les comptes */}
         <div className="ajouter-appareil-container transition-all hover:border-b  ">
           <div
-            onClick={() => {
-              if (isDashboardHomePage) {
-                setChooseOtherAccountGestion(true);
-                setChooseOneAccountToContinue(false);
-                setChooseAccountFromGeozoneSection(false);
-              }
-              closeSideBar();
-            }}
             className={`$ flex items-center   justify-between  gap-2  border-b border-b-gray-200 py-4  cursor-pointer px-3`}
           >
-            <FaUserCircle className="text-[3rem] min-w-[1.5rem] text-gray-500" />
-            <div className="w-full">
+            <FaUserCircle
+              onClick={() => {
+                setDocumentationPage("userInfo");
+                navigate("/userInfo");
+                closeSideBar();
+              }}
+              className="text-[3rem] min-w-[1.5rem] text-gray-500"
+            />
+            <div
+              onClick={() => {
+                if (isDashboardHomePage) {
+                  setChooseOtherAccountGestion(true);
+                  setChooseOneAccountToContinue(false);
+                  setChooseAccountFromGeozoneSection(false);
+                }
+                closeSideBar();
+              }}
+              className="w-full"
+            >
               <p className="text-gray-600 font-semibold">
                 {isDashboardHomePage ? t("Compte Actuel") : t("Compte")}
               </p>

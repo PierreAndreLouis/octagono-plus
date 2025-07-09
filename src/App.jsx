@@ -160,6 +160,7 @@ function App() {
     docRapportUniteRef,
     docRapportGroupeRef,
     docGestionGeozoneRef,
+    clearCacheFonction,
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -425,6 +426,7 @@ function App() {
       (adminPassword && inputPassword === adminPassword) ||
       (password && inputPassword === password)
     ) {
+      clearCacheFonction();
       const storedAccount = account || localStorage.getItem("account");
       const storedUserName = username || localStorage.getItem("username");
       const storedPassword = password || localStorage.getItem("password");
@@ -673,7 +675,12 @@ function App() {
               onSubmit={reactiverSessionUser}
               className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
             >
-              <h2 className="text-2xl font-bold text-gray-800 mb-3 text-center">
+              <h2
+                onClick={() => {
+                  // clearCacheFonction();
+                }}
+                className="text-2xl font-bold text-gray-800 mb-3 text-center"
+              >
                 {t("Session inactive")}
               </h2>
               <p className="text-gray-600 text-sm mb-6 text-center">
@@ -1016,32 +1023,6 @@ function App() {
                       <Suspense fallback={<LoadingLazyAnimation />}>
                         <ModifyDeviceGestion
                           setDocumentationPage={setDocumentationPage}
-                        />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
-
-          <Route
-            path="/Gestion_des_alerts"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ListeDesAlertsGestion
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
                         />
                       </Suspense>
                     </div>

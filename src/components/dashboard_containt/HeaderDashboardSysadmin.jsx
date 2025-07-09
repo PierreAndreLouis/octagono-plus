@@ -3,7 +3,7 @@ import { FaChevronDown, FaUserCircle } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function HeaderDashboardSysadmin({
   setDocumentationPage,
@@ -14,13 +14,18 @@ function HeaderDashboardSysadmin({
   readDocumentationSideBar,
 }) {
   const [t, i18n] = useTranslation();
-
+  const navigate = useNavigate();
   const { currentAccountSelected, isDashboardHomePage, account, username } =
     useContext(DataContext);
   return (
     <header className="fixed z-[999999999999999999999] top-0 left-0 right-0 bg-white">
       <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-6 px-4 py-2">
-        <div className="flex items-center gap-2">
+        <div
+          onClick={() => {
+            navigate("/Dashboard");
+          }}
+          className="flex items-center gap-2"
+        >
           <img
             src="/img/cars/logo.png"
             className="w-[1.8rem] md:w-[2.11rem]"
@@ -41,7 +46,7 @@ function HeaderDashboardSysadmin({
                 onClick={() => {
                   setDocumentationPage("userInfo");
                 }}
-                className="text-[1.4rem] mr-2 text-gray-600"
+                className="text-[1.4rem] mr-2 text-gray-600" 
               />
             </Link>
 
