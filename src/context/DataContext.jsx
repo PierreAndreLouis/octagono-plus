@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "09/07/2025 _ 1";
+  let versionApplication = "11/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -212,6 +212,7 @@ const DataContextProvider = ({ children }) => {
     accountUsers,
     groupeDevices,
     userGroupes,
+    véhiculeDetails,
     gestionAccountData,
   ]);
 
@@ -266,6 +267,7 @@ const DataContextProvider = ({ children }) => {
     accountUsers,
     groupeDevices,
     userGroupes,
+    véhiculeDetails,
     gestionAccountData,
   ]);
 
@@ -702,7 +704,7 @@ const DataContextProvider = ({ children }) => {
   // Ouvrir la base de données
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 8);
+      const request = indexedDB.open("MyDatabase", 10);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -747,6 +749,11 @@ const DataContextProvider = ({ children }) => {
         if (!db.objectStoreNames.contains("userGroupes")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("userGroupes", { autoIncrement: true });
+        }
+
+        if (!db.objectStoreNames.contains("véhiculeDetails")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("véhiculeDetails", { autoIncrement: true });
         }
 
         if (!db.objectStoreNames.contains("accountUsers")) {
@@ -855,6 +862,12 @@ const DataContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    getDataFromIndexedDB("véhiculeDetails").then((data) => {
+      setVehiculeDetails(data);
+    });
+  }, []);
+
+  useEffect(() => {
     getDataFromIndexedDB("accountUsers").then((data) => {
       setAccountUsers(data);
     });
@@ -913,6 +926,12 @@ const DataContextProvider = ({ children }) => {
       saveDataToIndexedDB("userGroupes", userGroupes);
     }
   }, [userGroupes]);
+
+  useEffect(() => {
+    if (véhiculeDetails) {
+      saveDataToIndexedDB("véhiculeDetails", véhiculeDetails);
+    }
+  }, [véhiculeDetails]);
 
   useEffect(() => {
     if (accountUsers) {
@@ -1345,9 +1364,20 @@ const DataContextProvider = ({ children }) => {
 
     try {
       if (isLastBatch) {
-        await fetchAccountDevices(id, pwd);
+        await fetchAccountDevices(id, pwd)
+          .then((devices) => fetchVehiculeDetails(id, devices, pwd))
+          .catch((err) => {
+            console.error("Erreur device/details :", err);
+            setError("Erreur lors de la mise à jour des VehiculeDetails.");
+          });
       } else {
-        fetchAccountDevices(id, pwd);
+        // fetchAccountDevices(id, pwd);
+        fetchAccountDevices(id, pwd)
+          .then((devices) => fetchVehiculeDetails(id, devices, pwd))
+          .catch((err) => {
+            console.error("Erreur device/details :", err);
+            setError("Erreur lors de la mise à jour des VehiculeDetails.");
+          });
       }
 
       fetchAccountGroupes(id, pwd)
@@ -1518,6 +1548,8 @@ const DataContextProvider = ({ children }) => {
           <Field name="simPhoneNumber" />
           <Field name="speedLimitKPH" />
           <Field name="uniqueID" />
+          <Field name="lastEventStatusCode" />
+          
 
   </Record>
 </GTSRequest>
@@ -1550,12 +1582,12 @@ const DataContextProvider = ({ children }) => {
     const batchSize = 50; // 👈 modifiable (ex : 100 devices à la fois)
     let vehDetails = [];
 
-    for (let i = 0; i < data.length; i += batchSize) {
-      const batch = data.slice(i, i + batchSize);
-      const details = await fetchVehiculeDetails(accountID, batch, password);
-      vehDetails = vehDetails.concat(details);
-      await delay(1000); // 👈 modifiable (pause entre groupes)
-    }
+    // for (let i = 0; i < data.length; i += batchSize) {
+    //   const batch = data.slice(i, i + batchSize);
+    //   const details = await fetchVehiculeDetails(accountID, batch, password);
+    //   vehDetails = vehDetails.concat(details);
+    //   await delay(1000); // 👈 modifiable (pause entre groupes)
+    // }
 
     // const vehDetails = await fetchVehiculeDetails(accountID, data, password);
 
@@ -1574,7 +1606,7 @@ const DataContextProvider = ({ children }) => {
 
     return enrichedData;
 
-    return data;
+    // return data;
   };
 
   // 3) Récupérer accountGroupes
@@ -2074,6 +2106,15 @@ const DataContextProvider = ({ children }) => {
 
     const results = await Promise.all(promises);
 
+    //  setVehiculeDetails((prev) => {
+    //   // Supprimer tous les groupes de ce compte
+    //   const filtered = prev?.filter((g) => g.accountID !== accountID);
+    //   // Ajouter les nouveaux groupes
+    //   return [...filtered, ...data];
+    // });
+
+    // return data;
+
     // Mise à jour de l'état
     setVehiculeDetails((prev) => {
       const updatedDeviceIDs = new Set(results.map((r) => r.deviceID));
@@ -2083,6 +2124,38 @@ const DataContextProvider = ({ children }) => {
 
     return results;
   };
+
+  // const setAccountDevicesFonction = () => {
+  //   const newAccountDevices = accountDevices?.map((device) => {
+  //     const match = véhiculeDetails?.find(
+  //       (v) =>
+  //         v.deviceID === device.deviceID &&
+  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
+  //     );
+
+  //     if (match && match.véhiculeDetails.length > 0) {
+  //       return { ...device, véhiculeDetails: match.véhiculeDetails };
+  //     }
+
+  //     return device;
+  //   });
+
+  //   console.log("UPdate..... device initial + Details", newAccountDevices);
+
+  //   setAccountDevices(newAccountDevices);
+  // };
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setAccountDevicesFonction();
+  //   }, 3000);
+  // }, [vehicleDetails]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setAccountDevicesFonction();
+  //   }, 3000);
+  // }, []);
 
   x;
   useEffect(() => {
@@ -2103,10 +2176,6 @@ const DataContextProvider = ({ children }) => {
       const groupes = accountGroupes?.filter(
         (g) => g.accountID === acct.accountID
       );
-
-      // const usrDevs = userDevices?.filter((ud) =>
-      //   users.some((u) => u.userID === ud.userID)
-      // );
 
       const userGrp = userGroupes?.filter((ug) =>
         users.some((u) => u.userID === ug.userID)
@@ -2177,6 +2246,7 @@ const DataContextProvider = ({ children }) => {
     accountUsers,
     // userDevices,
     userGroupes,
+    véhiculeDetails,
   ]);
 
   x;
@@ -5734,6 +5804,8 @@ const DataContextProvider = ({ children }) => {
           <Field name="simPhoneNumber" />
           <Field name="speedLimitKPH" />
           <Field name="uniqueID" />
+          <Field name="lastEventStatusCode" />
+
           
         </Record>
       </GTSRequest>`;
@@ -8168,6 +8240,7 @@ const DataContextProvider = ({ children }) => {
         isUserNotInteractingNow,
         versionApplication,
         clearCacheFonction,
+        setAccountDevices,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

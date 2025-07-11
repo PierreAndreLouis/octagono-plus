@@ -31,10 +31,47 @@ function StatisticDashboard({
     account,
     username,
     homePageReloadWidthNoAnimation,
+    accountDevices,
+    véhiculeDetails,
+    setAccountDevices,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
   const [isDeviceEnDeplacement, setIsDeviceEnDeplacement] = useState(false);
+
+  //   const newAccountDevices = accountDevices?.forEach((device) => {
+  //     const match = véhiculeDetails?.find(
+  //       (v) =>
+  //         v.deviceID === device.deviceID &&
+  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
+  //     );
+
+  //     if (match && match.véhiculeDetails.length > 0) {
+  //       device.véhiculeDetails = match.véhiculeDetails;
+  //     }
+  //   });
+
+  // setAccountDevices(newAccountDevices)
+
+  const newAccountDevices = accountDevices?.map((device) => {
+    const match = véhiculeDetails?.find(
+      (v) =>
+        v.deviceID === device.deviceID &&
+        v.véhiculeDetails?.[0]?.accountID === device.accountID
+    );
+
+    if (match && match.véhiculeDetails.length > 0) {
+      return { ...device, véhiculeDetails: match.véhiculeDetails };
+    }
+
+    return device;
+  })
+
+  // const setAccountDevicesFonction = () => {
+  //   console.log("UPdate..... device initial + Details", newAccountDevices);
+
+  //   setAccountDevices(newAccountDevices);
+  // };
 
   return (
     <div className="md:px-4-- pt-3--">
@@ -43,7 +80,16 @@ function StatisticDashboard({
           <div className="">
             <div
               onClick={() => {
-                homePageReloadWidthNoAnimation();
+                console.log("device initial + Details", accountDevices);
+                console.log(
+                  "device initial + newAccountDevices ",
+                  newAccountDevices
+                );
+
+                console.log("device initial", accountDevices);
+                console.log("Details", véhiculeDetails);
+                // setAccountDevicesFonction();
+                // homePageReloadWidthNoAnimation();
               }}
               className="flex items-center gap-2 sm:gap-3"
             >

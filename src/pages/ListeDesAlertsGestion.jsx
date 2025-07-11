@@ -15,13 +15,38 @@ function ListeDesAlertsGestion({
 
     accountDevices,
     statusDescriptions,
+    véhiculeDetails,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
 
   const currentListe = fromDashboard
-    ? statisticFilteredDeviceListe
-    : listeGestionDesVehicules;
+    ? statisticFilteredDeviceListe?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      })
+    : listeGestionDesVehicules?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      });
 
   const filteredListeGestionDesVehicules = searchTermInput
     ? currentListe?.filter((item) => {

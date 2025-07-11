@@ -38,8 +38,7 @@ function NavigationBar({}) {
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-    const navigate = useNavigate();
-  
+  const navigate = useNavigate();
 
   //
   //
@@ -78,7 +77,7 @@ function NavigationBar({}) {
           <div
             onClick={() => {
               setDocumentationPage("Dashboard");
-              navigate("/Dashboard")
+              navigate("/Dashboard");
             }}
             className={`${
               documentationPage === "Dashboard"
@@ -87,7 +86,7 @@ function NavigationBar({}) {
             } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
           >
             <IoMdHome className="text-xl" />
-            <h3 className="text-sm">{t("Accueil")}</h3>
+            <h3 className="text-sm- text-[.8rem] ">{t("Accueil")}</h3>
           </div>
 
           {/*  */}
@@ -101,8 +100,7 @@ function NavigationBar({}) {
             <div
               onClick={() => {
                 setDocumentationPage("Gestion_des_comptes");
-              navigate("/Gestion_des_comptes")
-
+                navigate("/Gestion_des_comptes");
               }}
               className={`${
                 documentationPage === "Gestion_des_comptes"
@@ -111,15 +109,14 @@ function NavigationBar({}) {
               } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
             >
               <MdSwitchAccount className="text-xl" />
-              <h3 className="text-sm">{t("Comptes")}</h3>
+              <h3 className="text-sm- text-[.8rem] ">{t("Comptes")}</h3>
             </div>
           ) : (
             <div
               onClick={() => {
                 setShowHistoriqueInMap(true);
                 setDocumentationPage("Trajet_appareil");
-              navigate("/Trajet_appareil")
-
+                navigate("/Trajet_appareil");
               }}
               className={`${
                 documentationPage === "Trajet_appareil"
@@ -129,7 +126,7 @@ function NavigationBar({}) {
             >
               <GiPathDistance className="text-xl" />
               {/* <FaCar className="text-xl" /> */}
-              <h3 className="text-sm">{t("Trajet")}</h3>
+              <h3 className="text-sm- text-[.8rem] ">{t("Trajet")}</h3>
             </div>
           )}
 
@@ -151,8 +148,7 @@ function NavigationBar({}) {
             <div
               onClick={() => {
                 setDocumentationPage("Localisation_devices");
-              navigate("/Localisation_devices")
-
+                navigate("/Localisation_devices");
               }}
               className="min-w-14 h-14 cursor-pointer -translate-y-3 border-4 border-gray-200 dark:border-slate-800 bg-orange-500 dark:bg-orange-600 flex justify-center items-center rounded-full"
             >
@@ -181,8 +177,7 @@ function NavigationBar({}) {
                 }
                 scrollToTop();
                 setDocumentationPage("Gestion_des_utilisateurs");
-              navigate("/Gestion_des_utilisateurs")
-
+                navigate("/Gestion_des_utilisateurs");
               }}
               className={`${
                 documentationPage === "Gestion_des_utilisateurs"
@@ -193,14 +188,13 @@ function NavigationBar({}) {
               <FaUsers className="text-xl" />
               {/* <FaCar className="text-xl" /> */}
 
-              <h3 className="text-sm">{t("Utilisateurs")}</h3>
+              <h3 className="text-sm- text-[.8rem] ">{t("Utilisateurs")}</h3>
             </div>
           ) : (
             <div
               onClick={() => {
                 setDocumentationPage("Rapport_unite");
-              navigate("/Rapport_unite")
-
+                navigate("/Rapport_unite");
               }}
               className={`${
                 documentationPage === "Rapport_unite"
@@ -211,7 +205,7 @@ function NavigationBar({}) {
               <MdOutlineStickyNote2 className="text-xl" />
               {/* <FaCar className="text-xl" /> */}
 
-              <h3 className="text-sm">{t("Rapport")}</h3>
+              <h3 className="text-sm- text-[.8rem] ">{t("Rapport")}</h3>
             </div>
           )}
 
@@ -234,8 +228,7 @@ function NavigationBar({}) {
                 setListeGestionDesVehicules(dataFusionné);
               }
               setDocumentationPage("Gestion_des_appareils");
-              navigate("/Gestion_des_appareils")
-
+              navigate("/Gestion_des_appareils");
             }}
             className={`${
               documentationPage === "Gestion_des_appareils"
@@ -244,7 +237,7 @@ function NavigationBar({}) {
             } flex flex-col cursor-pointer hover:text-orange-500 dark:hover:text-orange-300 justify-center items-center`}
           >
             <FaCar className="text-xl" />
-            <h3 className="text-sm">{t("Appareils")}</h3>
+            <h3 className="text-sm- text-[.8rem] ">{t("Appareils")}</h3>
           </div>
 
           {/*  */}

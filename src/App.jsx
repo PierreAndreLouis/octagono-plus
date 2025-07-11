@@ -632,11 +632,11 @@ function App() {
             </div>
           )}
         {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
-        {/* {!readDocumentation && (
+        {!readDocumentation && (
           <div className="absolute z-[10000000000000000000000000000000000000000]">
             {!shouldHideComponent && <Navigation_bar />}
           </div>
-        )} */}
+        )}
         {errors && (
           <div className="space-y-2 fixed flex flex-col items-center justify-center w-full left-0 right-0  top-[3rem] z-[9999999999999999999999999999999999999999999999999999999999999999999999999]">
             {errors?.map((err) => (

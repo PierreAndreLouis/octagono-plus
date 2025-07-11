@@ -15,6 +15,18 @@ function ListeDesVehiculesGestion({
   fromDashboard = false,
   statisticFilteredDeviceListe,
   statisticFilteredDeviceListeText,
+  setStatisticFilteredDeviceListe,
+  setStatisticFilteredDeviceListeText,
+  animatedTotal,
+  animatedDeplaces,
+  animatedEnDéplacement,
+  DeviceEnStationnement,
+  animatedStationnement,
+  DeviceInactifs,
+  animatedInactifs,
+  DeviceDéplacer,
+  EnDéplacement,
+  allDevices,
 }) {
   const {
     FormatDateHeure,
@@ -40,6 +52,7 @@ function ListeDesVehiculesGestion({
     statusDescriptions,
     isDashboardHomePage,
     mergedDataHome,
+    véhiculeDetails,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -85,9 +98,33 @@ function ListeDesVehiculesGestion({
   const [showPasswordInput, setShowPasswordInput] = useState(false);
 
   const currentListe = fromDashboard
-    ? statisticFilteredDeviceListe
+    ? statisticFilteredDeviceListe?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      })
     : isDashboardHomePage
-    ? listeGestionDesVehicules
+    ? listeGestionDesVehicules?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      })
     : dataFusionné;
 
   const filteredListeGestionDesVehicules = searchTermInput
@@ -284,18 +321,51 @@ function ListeDesVehiculesGestion({
         )}
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
           <div className="mt-4  flex items-center gap-2">
-            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 ">
+            <p
+              onClick={() => {
+                if (
+                  statisticFilteredDeviceListeText ===
+                  `${t("Appareils En déplacement")}`
+                ) {
+                  setStatisticFilteredDeviceListe(EnDéplacement);
+                  setStatisticFilteredDeviceListeText(
+                    `${t("Appareils En déplacement")}`
+                  );
+                } else {
+                  setStatisticFilteredDeviceListe(DeviceDéplacer);
+                  setStatisticFilteredDeviceListeText(
+                    `${t("Appareils Déplacer")}`
+                  );
+                }
+              }}
+              className="px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+            >
               {fromDashboard &&
               statisticFilteredDeviceListeText ===
                 `${t("Appareils En déplacement")}`
                 ? `${t("Véhicules En déplacement")}`
                 : t("Véhicules déplacés")}
             </p>
-            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 ">
-              {t("Véhicules non déplacés")}
+            <p
+              onClick={() => {
+                setStatisticFilteredDeviceListe(DeviceEnStationnement);
+                setStatisticFilteredDeviceListeText(`${t("Appareils Actifs")}`);
+              }}
+              className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+            >
+              {t("Appareils Actifs")}
             </p>
-            <p className="px-2  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 ">
-              {t("Véhicules hors service")}
+
+            <p
+              onClick={() => {
+                setStatisticFilteredDeviceListe(DeviceInactifs);
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils Inactifs")}`
+                );
+              }}
+              className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+            >
+              {t("Appareils Inactifs")}
             </p>
           </div>
           {/*  */}

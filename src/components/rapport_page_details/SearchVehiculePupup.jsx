@@ -13,7 +13,7 @@ function SearchVehiculePupup({
   handleClick,
   currentVéhicule,
   isMapcomponent,
-  setSearchQueryListPopup, 
+  setSearchQueryListPopup,
 }) {
   const {
     currentDataFusionné,
@@ -86,7 +86,7 @@ function SearchVehiculePupup({
       //
       //
       //
- 
+
       //
       //
 
@@ -164,7 +164,7 @@ function SearchVehiculePupup({
                 }}
                 className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 "
               >
-                {t("Véhicules non déplacés")}
+                {t("Appareils Actifs")}
               </p>
             </Tooltip>
 

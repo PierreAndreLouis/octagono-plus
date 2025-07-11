@@ -33,6 +33,7 @@ const LocationPage = ({
     currentAccountSelected,
     isDashboardHomePage,
     ajouterGeofencePopup,
+    véhiculeDetails,
   } = useContext(DataContext);
   let x;
 
@@ -60,9 +61,33 @@ const LocationPage = ({
   let vehiculeActive;
 
   if (isDashboardHomePage && currentAccountSelected) {
-    vehiculeActive = currentAccountSelected?.accountDevices;
+    vehiculeActive = currentAccountSelected?.accountDevices?.map((device) => {
+      const match = véhiculeDetails?.find(
+        (v) =>
+          v.deviceID === device.deviceID &&
+          v.véhiculeDetails?.[0]?.accountID === device.accountID
+      );
+
+      if (match && match.véhiculeDetails.length > 0) {
+        return { ...device, véhiculeDetails: match.véhiculeDetails };
+      }
+
+      return device;
+    });
   } else if (isDashboardHomePage && !currentAccountSelected) {
-    vehiculeActive = accountDevices;
+    vehiculeActive = accountDevices?.map((device) => {
+      const match = véhiculeDetails?.find(
+        (v) =>
+          v.deviceID === device.deviceID &&
+          v.véhiculeDetails?.[0]?.accountID === device.accountID
+      );
+
+      if (match && match.véhiculeDetails.length > 0) {
+        return { ...device, véhiculeDetails: match.véhiculeDetails };
+      }
+
+      return device;
+    });
   } else if (!isDashboardHomePage) {
     vehiculeActive = dataFusionné;
   }

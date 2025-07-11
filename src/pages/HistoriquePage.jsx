@@ -508,7 +508,7 @@ function HistoriquePage() {
   }, [currentVéhicule]);
 
   return (
-    <div className="p-4 min-h-screen relative   bg-white flex flex-col gap-4  rounded-lg px-4 sm:px-12 md:px-20 lg:px-40">
+    <div className="p-4 min-h-screen relative   bg-white flex flex-col gap-4  rounded-lg px-4 ">
       <div className="z-50"></div>
 
       {/* Pour choisir une date */}

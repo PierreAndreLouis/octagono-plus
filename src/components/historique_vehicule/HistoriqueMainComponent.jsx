@@ -91,7 +91,7 @@ function HistoriqueMainComponent({
 
   return (
     <>
-      <div>
+      <div className=" w-full max-w-[60rem] mx-auto">
         {voirPositionSurCarte && (
           <div className="z-20 fixed bg-black/50 inset-0 pt-20 px-4">
             <div className="relative    h-[80vh] min-w-[90vw] my-20 rounded-lg mt-3 overflow-hidden">
@@ -224,7 +224,7 @@ function HistoriqueMainComponent({
                             // console.log(véhicule);
                           }}
                           key={index}
-                          className={`${lite_bg_color} shadow-md relative rounded-lg p-3`}
+                          className={`${lite_bg_color} shadow-md relative rounded-lg p-3 w-full`}
                         >
                           <div
                             // onClick={() => {

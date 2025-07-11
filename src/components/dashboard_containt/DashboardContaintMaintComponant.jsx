@@ -62,6 +62,7 @@ function DashboardContaintMaintComponant({
     fetchVehicleDataFromRapportGroupe,
     showAnnimationProgresseBarDashboard,
     setShowAnnimationProgresseBarDashboard,
+    véhiculeDetails,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -718,8 +719,32 @@ function DashboardContaintMaintComponant({
   const allData = (
     isDashboardHomePage
       ? currentAccountSelected
-        ? currentAccountSelected?.accountDevices
-        : accountDevices
+        ? currentAccountSelected?.accountDevices?.map((device) => {
+            const match = véhiculeDetails?.find(
+              (v) =>
+                v.deviceID === device.deviceID &&
+                v.véhiculeDetails?.[0]?.accountID === device.accountID
+            );
+
+            if (match && match.véhiculeDetails.length > 0) {
+              return { ...device, véhiculeDetails: match.véhiculeDetails };
+            }
+
+            return device;
+          })
+        : accountDevices?.map((device) => {
+            const match = véhiculeDetails?.find(
+              (v) =>
+                v.deviceID === device.deviceID &&
+                v.véhiculeDetails?.[0]?.accountID === device.accountID
+            );
+
+            if (match && match.véhiculeDetails.length > 0) {
+              return { ...device, véhiculeDetails: match.véhiculeDetails };
+            }
+
+            return device;
+          })
       : dataFusionné
   )
     ?.flatMap((device) => device?.véhiculeDetails[0] || [])
@@ -805,8 +830,32 @@ function DashboardContaintMaintComponant({
   const TouslesAlertesData = (
     isDashboardHomePage
       ? currentAccountSelected
-        ? currentAccountSelected?.accountDevices
-        : accountDevices
+        ? currentAccountSelected?.accountDevices?.map((device) => {
+            const match = véhiculeDetails?.find(
+              (v) =>
+                v.deviceID === device.deviceID &&
+                v.véhiculeDetails?.[0]?.accountID === device.accountID
+            );
+
+            if (match && match.véhiculeDetails.length > 0) {
+              return { ...device, véhiculeDetails: match.véhiculeDetails };
+            }
+
+            return device;
+          })
+        : accountDevices?.map((device) => {
+            const match = véhiculeDetails?.find(
+              (v) =>
+                v.deviceID === device.deviceID &&
+                v.véhiculeDetails?.[0]?.accountID === device.accountID
+            );
+
+            if (match && match.véhiculeDetails.length > 0) {
+              return { ...device, véhiculeDetails: match.véhiculeDetails };
+            }
+
+            return device;
+          })
       : dataFusionné
   )
     ?.flatMap((device) => device?.véhiculeDetails[0] || [])
@@ -864,6 +913,29 @@ function DashboardContaintMaintComponant({
                   statisticFilteredDeviceListeText={
                     statisticFilteredDeviceListeText
                   }
+                  setChosseOtherGroupeDashboard={setChosseOtherGroupeDashboard}
+                  lastUpdate={lastUpdate}
+                  fetchNewDataDevices={fetchNewDataDevices}
+                  isLoading2={isLoading2}
+                  setShowStatisticDeviceListeDashboard={
+                    setShowStatisticDeviceListeDashboard
+                  }
+                  setStatisticFilteredDeviceListe={
+                    setStatisticFilteredDeviceListe
+                  }
+                  setStatisticFilteredDeviceListeText={
+                    setStatisticFilteredDeviceListeText
+                  }
+                  animatedTotal={animatedTotal}
+                  animatedDeplaces={animatedDeplaces}
+                  animatedEnDéplacement={animatedEnDéplacement}
+                  DeviceEnStationnement={DeviceEnStationnement}
+                  animatedStationnement={animatedStationnement}
+                  DeviceInactifs={DeviceInactifs}
+                  animatedInactifs={animatedInactifs}
+                  DeviceDéplacer={DeviceDéplacer}
+                  EnDéplacement={EnDéplacement}
+                  allDevices={allDevices}
                 />
               </div>
             </div>
@@ -1352,10 +1424,46 @@ function DashboardContaintMaintComponant({
                 {isDashboardHomePage
                   ? currentAccountSelected
                     ? currentAccountSelected?.accountDevices
+
+                        ?.map((device) => {
+                          const match = véhiculeDetails?.find(
+                            (v) =>
+                              v.deviceID === device.deviceID &&
+                              v.véhiculeDetails?.[0]?.accountID ===
+                                device.accountID
+                          );
+
+                          if (match && match.véhiculeDetails.length > 0) {
+                            return {
+                              ...device,
+                              véhiculeDetails: match.véhiculeDetails,
+                            };
+                          }
+
+                          return device;
+                        })
+
                         ?.flatMap((device) => device?.véhiculeDetails[0] || [])
                         ?.filter((item) => item?.statusCode !== "0xF952")
                         ?.length
                     : accountDevices
+                        ?.map((device) => {
+                          const match = véhiculeDetails?.find(
+                            (v) =>
+                              v.deviceID === device.deviceID &&
+                              v.véhiculeDetails?.[0]?.accountID ===
+                                device.accountID
+                          );
+
+                          if (match && match.véhiculeDetails.length > 0) {
+                            return {
+                              ...device,
+                              véhiculeDetails: match.véhiculeDetails,
+                            };
+                          }
+
+                          return device;
+                        })
                         ?.flatMap((device) => device?.véhiculeDetails[0] || [])
                         ?.filter((item) => item?.statusCode !== "0xF952")
                         ?.length
@@ -1462,9 +1570,43 @@ function DashboardContaintMaintComponant({
               {isDashboardHomePage
                 ? currentAccountSelected
                   ? currentAccountSelected?.accountDevices
+                      ?.map((device) => {
+                        const match = véhiculeDetails?.find(
+                          (v) =>
+                            v.deviceID === device.deviceID &&
+                            v.véhiculeDetails?.[0]?.accountID ===
+                              device.accountID
+                        );
+
+                        if (match && match.véhiculeDetails.length > 0) {
+                          return {
+                            ...device,
+                            véhiculeDetails: match.véhiculeDetails,
+                          };
+                        }
+
+                        return device;
+                      })
                       ?.flatMap((device) => device?.véhiculeDetails[0] || [])
                       ?.filter((item) => item?.statusCode !== "0xF952")?.length
                   : accountDevices
+                      ?.map((device) => {
+                        const match = véhiculeDetails?.find(
+                          (v) =>
+                            v.deviceID === device.deviceID &&
+                            v.véhiculeDetails?.[0]?.accountID ===
+                              device.accountID
+                        );
+
+                        if (match && match.véhiculeDetails.length > 0) {
+                          return {
+                            ...device,
+                            véhiculeDetails: match.véhiculeDetails,
+                          };
+                        }
+
+                        return device;
+                      })
                       ?.flatMap((device) => device?.véhiculeDetails[0] || [])
                       ?.filter((item) => item?.statusCode !== "0xF952")?.length
                 : dataFusionné
@@ -1486,6 +1628,24 @@ function DashboardContaintMaintComponant({
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
+                      onClick={(data, index) => {
+                        const code = parseInt(data?.name, 16);
+                        const codeDescription =
+                          statusDescriptions[code] || t("Statut inconnu");
+
+                        setSearchTermInput(codeDescription);
+                        setExpandSection("deviceAlerts");
+
+                        if (!isDashboardHomePage) {
+                          setListeGestionDesVehicules(dataFusionné);
+                        } else if (currentAccountSelected) {
+                          setListeGestionDesVehicules(
+                            currentAccountSelected?.accountDevices
+                          );
+                        } else {
+                          setListeGestionDesVehicules(accountDevices);
+                        }
+                      }}
                     >
                       {dataPieChart?.map((entry, index) => (
                         <Cell
@@ -1516,6 +1676,7 @@ function DashboardContaintMaintComponant({
                     <div
                       onClick={() => {
                         setSearchTermInput(codeDescription);
+                        setExpandSection("deviceAlerts");
 
                         if (!isDashboardHomePage) {
                           setListeGestionDesVehicules(dataFusionné);
@@ -1526,7 +1687,6 @@ function DashboardContaintMaintComponant({
                         } else {
                           setListeGestionDesVehicules(accountDevices);
                         }
-                        setExpandSection("deviceAlerts");
                       }}
                       key={index}
                       className="flex cursor-pointer hover:bg-gray-200 gap-3 items-center"

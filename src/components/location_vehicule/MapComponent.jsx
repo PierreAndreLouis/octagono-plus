@@ -59,6 +59,7 @@ function MapComponent({
     adminUsername,
     accountGeofences,
     mergedDataHome,
+    véhiculeDetails,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
@@ -73,10 +74,34 @@ function MapComponent({
   let CurrentGeofenceData;
 
   if (isDashboardHomePage && currentAccountSelected) {
-    dataFusionné = currentAccountSelected?.accountDevices;
+    dataFusionné = currentAccountSelected?.accountDevices?.map((device) => {
+      const match = véhiculeDetails?.find(
+        (v) =>
+          v.deviceID === device.deviceID &&
+          v.véhiculeDetails?.[0]?.accountID === device.accountID
+      );
+
+      if (match && match.véhiculeDetails.length > 0) {
+        return { ...device, véhiculeDetails: match.véhiculeDetails };
+      }
+
+      return device;
+    });
     CurrentGeofenceData = currentAccountSelected?.accountGeofences;
   } else if (isDashboardHomePage && !currentAccountSelected) {
-    dataFusionné = accountDevices;
+    dataFusionné = accountDevices?.map((device) => {
+      const match = véhiculeDetails?.find(
+        (v) =>
+          v.deviceID === device.deviceID &&
+          v.véhiculeDetails?.[0]?.accountID === device.accountID
+      );
+
+      if (match && match.véhiculeDetails.length > 0) {
+        return { ...device, véhiculeDetails: match.véhiculeDetails };
+      }
+
+      return device;
+    });
     CurrentGeofenceData = accountGeofences || [];
   } else if (!isDashboardHomePage) {
     dataFusionné = dataFusionnéHome;
