@@ -116,6 +116,20 @@ function GestionGeofences({
   const [showGeofenceInCartePopup, setShowGeofenceInCartePopup] =
     useState(false);
 
+  const nombreDeRésultatParClique = 10;
+
+  const [voir10RésultatPlus, setVoir10RésultatPlus] = useState(1);
+
+  const filterGeofencesAccountDataPagination =
+    filterGeofencesAccountData?.slice(
+      0,
+      voir10RésultatPlus * nombreDeRésultatParClique
+    );
+
+  const afficherPlusDeRésultat = () => {
+    setVoir10RésultatPlus((prev) => prev + 1);
+  };
+
   return (
     <div className=" bg-white border-white  border rounded-lg">
       <div className="px-4 pb-40 ">
@@ -262,8 +276,8 @@ function GestionGeofences({
             // ?.filter((item) =>
             //   item.geozoneID.endsWith(`_${account}`)
             // )
-            filterGeofencesAccountData?.length > 0 ? (
-              filterGeofencesAccountData
+            filterGeofencesAccountDataPagination?.length > 0 ? (
+              filterGeofencesAccountDataPagination
                 ?.slice()
                 .sort((a, b) => b?.lastUpdateTime - a?.lastUpdateTime)
                 .map((geozone, index) => {
@@ -362,6 +376,19 @@ function GestionGeofences({
               </p>
             )
           }
+          {filterGeofencesAccountData?.length >
+            filterGeofencesAccountDataPagination?.length && (
+            <div className="w-full flex justify-center mt-[4rem]">
+              <button
+                onClick={() => {
+                  afficherPlusDeRésultat();
+                }}
+                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+              >
+                {t("Voir plus de Résultat")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,4 +1,10 @@
-import React, { useContext, Suspense, useEffect, useState } from "react";
+import React, {
+  useContext,
+  Suspense,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import "./App.css";
 import {
   Route,
@@ -161,6 +167,7 @@ function App() {
     docRapportGroupeRef,
     docGestionGeozoneRef,
     clearCacheFonction,
+    allDevices, setAllDevices
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -235,25 +242,28 @@ function App() {
 
   const [t, i18n] = useTranslation();
 
-  const [allDevices, setAllDevices] = useState([]);
-  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+ 
 
-  const data = isDashboardHomePage
-    ? currentAccountSelected?.accountDevices || accountDevices
-    : dataFusionné;
+  // const [allDevices, setAllDevices] = useState([]);
+  // const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-  useEffect(() => {
-    setAllDevices(data);
-  }, [
-    accountDevices,
-    currentAccountSelected,
-    isDashboardHomePage,
-    mergedDataHome,
-  ]);
+  // const data = isDashboardHomePage
+  //   ? currentAccountSelected?.accountDevices || accountDevices
+  //   : dataFusionné;
 
-  useEffect(() => {
-    setAllDevices(data);
-  }, []);
+  // useEffect(() => {
+
+  //   setAllDevices(data);
+  // }, [
+  //   accountDevices,
+  //   currentAccountSelected,
+  //   isDashboardHomePage,
+  //   mergedDataHome,
+  // ]);
+
+  // useEffect(() => {
+  //   setAllDevices(data);
+  // }, []);
 
   /////////////////////////////////////
 

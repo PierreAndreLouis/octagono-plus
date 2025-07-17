@@ -33,7 +33,7 @@ const DateTimePicker = ({
   }, [startDate, endDate, startTime, endTime]);
 
   return (
-    <div className="fixed inset-0 z-10 flex justify-center items-center bg-black/50 dark:bg-black/80">
+    <div className="fixed inset-0 z-10 flex justify-center items-center bg-black/50-- dark:bg-black/80">
       <form className="w-full flex justify-center" onSubmit={handleApply}>
         <div className="flex  relative w-full md:max-w-[30rem] md:px-8 flex-col p-4 py-8 space-y-4 mx-4 bg-gray-100 rounded-lg shadow-lg dark:bg-gray-800">
           <IoClose

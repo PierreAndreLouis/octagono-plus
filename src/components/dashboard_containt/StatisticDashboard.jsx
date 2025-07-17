@@ -18,11 +18,7 @@ function StatisticDashboard({
   animatedEnDéplacement,
   DeviceEnStationnement,
   animatedStationnement,
-  DeviceInactifs,
   animatedInactifs,
-  DeviceDéplacer,
-  EnDéplacement,
-  allDevices,
 }) {
   const {
     currentAccountSelected,
@@ -30,69 +26,24 @@ function StatisticDashboard({
     isDashboardHomePage,
     account,
     username,
-    homePageReloadWidthNoAnimation,
-    accountDevices,
-    véhiculeDetails,
-    setAccountDevices,
+    DeviceListeActif,
+    EnDéplacement,
+    setFilteredColorCategorieListe,
+    DeviceInactifs,
+    DeviceDéplacer,
+    allDevices,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
   const [isDeviceEnDeplacement, setIsDeviceEnDeplacement] = useState(false);
-
-  //   const newAccountDevices = accountDevices?.forEach((device) => {
-  //     const match = véhiculeDetails?.find(
-  //       (v) =>
-  //         v.deviceID === device.deviceID &&
-  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
-  //     );
-
-  //     if (match && match.véhiculeDetails.length > 0) {
-  //       device.véhiculeDetails = match.véhiculeDetails;
-  //     }
-  //   });
-
-  // setAccountDevices(newAccountDevices)
-
-  const newAccountDevices = accountDevices?.map((device) => {
-    const match = véhiculeDetails?.find(
-      (v) =>
-        v.deviceID === device.deviceID &&
-        v.véhiculeDetails?.[0]?.accountID === device.accountID
-    );
-
-    if (match && match.véhiculeDetails.length > 0) {
-      return { ...device, véhiculeDetails: match.véhiculeDetails };
-    }
-
-    return device;
-  })
-
-  // const setAccountDevicesFonction = () => {
-  //   console.log("UPdate..... device initial + Details", newAccountDevices);
-
-  //   setAccountDevices(newAccountDevices);
-  // };
+  const [isDeviceEnStationnement, setIsDeviceEnStationnement] = useState(true);
 
   return (
     <div className="md:px-4-- pt-3--">
       <div className="w-full h-full shadow-lg shadow-black/5 bg-white rounded-lg p-4">
         <div className=" relative mb-4 ">
           <div className="">
-            <div
-              onClick={() => {
-                console.log("device initial + Details", accountDevices);
-                console.log(
-                  "device initial + newAccountDevices ",
-                  newAccountDevices
-                );
-
-                console.log("device initial", accountDevices);
-                console.log("Details", véhiculeDetails);
-                // setAccountDevicesFonction();
-                // homePageReloadWidthNoAnimation();
-              }}
-              className="flex items-center gap-2 sm:gap-3"
-            >
+            <div className="flex items-center gap-2 sm:gap-3">
               <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
                 {t("Pour Aujourd'hui")}
               </h1>
@@ -154,7 +105,7 @@ function StatisticDashboard({
           <div
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
-              setStatisticFilteredDeviceListe(allDevices);
+              setFilteredColorCategorieListe(allDevices);
               setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
@@ -167,7 +118,6 @@ function StatisticDashboard({
                   </h3>
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                  {/* {allDevices?.length} */}
                   {animatedTotal}
                 </h2>
               </div>
@@ -183,12 +133,12 @@ function StatisticDashboard({
           <div
             onClick={() => {
               if (isDeviceEnDeplacement) {
-                setStatisticFilteredDeviceListe(EnDéplacement);
+                setFilteredColorCategorieListe(EnDéplacement);
                 setStatisticFilteredDeviceListeText(
                   `${t("Appareils En déplacement")}`
                 );
               } else {
-                setStatisticFilteredDeviceListe(DeviceDéplacer);
+                setFilteredColorCategorieListe(DeviceDéplacer);
                 setStatisticFilteredDeviceListeText(
                   `${t("Appareils Déplacer")}`
                 );
@@ -224,7 +174,6 @@ function StatisticDashboard({
                   }}
                   className="text-gray-900  dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- "
                 >
-                  {/* {DeviceDéplacer?.length} */}
                   {isDeviceEnDeplacement
                     ? EnDéplacement?.length
                     : animatedDeplaces}
@@ -246,25 +195,66 @@ function StatisticDashboard({
           </div>
           <div
             onClick={() => {
-              setShowStatisticDeviceListeDashboard(true);
-              setStatisticFilteredDeviceListe(DeviceEnStationnement);
-              setStatisticFilteredDeviceListeText(`${t("Appareils Actifs")}`);
+              if (isDeviceEnStationnement) {
+                setFilteredColorCategorieListe(DeviceEnStationnement);
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils en Stationnement")}`
+                );
+              } else {
+                setFilteredColorCategorieListe(DeviceListeActif);
+                setStatisticFilteredDeviceListeText(`${t("Appareils Actifs")}`);
+              }
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border border-orange-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-orange-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-              <div>
+              {/* <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
                     {t("Actifs")}
                   </h3>
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                  {/* {DeviceEnStationnement?.length} */}
                   {animatedStationnement}
                 </h2>
+              </div> */}
+              <div className=" w-full">
+                <div className="flex items-center  gap-2 w-full">
+                  <h3
+                    onClick={() => {
+                      setShowStatisticDeviceListeDashboard(true);
+                    }}
+                    className="text-gray-500 max-w-[70%]-- w-full  whitespace-nowrap text-ellipsis overflow-hidden  dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- "
+                  >
+                    {isDeviceEnStationnement ? t("Non Déplacer") : t("Actifs")}
+                  </h3>
+
+                  <div className=" text-[1.2rem] flex justify-end w-[30%]  text-green-800">
+                    <FaArrowRightArrowLeft
+                      onClick={() => {
+                        setIsDeviceEnStationnement(!isDeviceEnStationnement);
+                      }}
+                    />
+                  </div>
+                </div>
+                <h2
+                  onClick={() => {
+                    setShowStatisticDeviceListeDashboard(true);
+                  }}
+                  className="text-gray-900  dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- "
+                >
+                  {isDeviceEnStationnement
+                    ? animatedStationnement || 0
+                    : DeviceListeActif?.length || 0}{" "}
+                  {/* {DeviceEnStationnement?.length} - {DeviceListeActif?.length} */}
+                </h2>
               </div>
-              <div className="absolute mt-1.5 right-4 bottom-4 ">
+              <div
+                onClick={() => {
+                  setShowStatisticDeviceListeDashboard(true);
+                }}
+                className="absolute mt-1.5 right-4 bottom-4 "
+              >
                 <img
                   className=" w-8 md:w-10 lg:w-14--"
                   src="/img/cars/parking.png"
@@ -276,7 +266,7 @@ function StatisticDashboard({
           <div
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
-              setStatisticFilteredDeviceListe(DeviceInactifs);
+              setFilteredColorCategorieListe(DeviceInactifs);
               setStatisticFilteredDeviceListeText(`${t("Appareils Inactifs")}`);
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
@@ -289,7 +279,6 @@ function StatisticDashboard({
                   </h3>
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                  {/* {DeviceInactifs?.length} */}
                   {animatedInactifs}
                 </h2>
               </div>

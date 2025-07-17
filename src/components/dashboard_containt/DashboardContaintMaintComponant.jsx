@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ImEnlarge } from "react-icons/im";
 import { FiAlertCircle } from "react-icons/fi";
 
@@ -25,7 +25,6 @@ import StatisticDashboard from "./StatisticDashboard";
 function DashboardContaintMaintComponant({
   setDocumentationPage,
   setChosseOtherGroupeDashboard,
-  allDevices,
 }) {
   const {
     scrollToTop,
@@ -63,6 +62,14 @@ function DashboardContaintMaintComponant({
     showAnnimationProgresseBarDashboard,
     setShowAnnimationProgresseBarDashboard,
     véhiculeDetails,
+    setSelectedVehicleToShowInMap,
+    updateAppareilsEtGeofencesPourCarte,
+    DeviceDéplacer,
+    EnDéplacement,
+    DeviceEnStationnement,
+    DeviceInactifs,
+    allDevices,
+    filteredColorCategorieListe,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -74,7 +81,7 @@ function DashboardContaintMaintComponant({
   const getTodayTimestamp = () => {
     const now = new Date();
     now.setHours(0, 0, 0, 0); // Minuit
-    return Math.floor(now.getTime() / 1000); // secondes
+    return Math.floor(now.getTime() / 1000); // secondesallDevices
   };
 
   const todayTimestamp = getTodayTimestamp();
@@ -91,37 +98,6 @@ function DashboardContaintMaintComponant({
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   //
 
-  const DeviceDéplacer = allDevices?.filter((device) => {
-    return device?.lastStopTime > todayTimestamp;
-  });
-
-  const EnDéplacement = allDevices?.filter((véhicule) => {
-    const lastUpdateMs = véhicule?.véhiculeDetails?.[0]?.timestamp
-      ? véhicule?.véhiculeDetails?.[0].timestamp * 1000
-      : 0;
-
-    const hasDetails = véhicule?.véhiculeDetails?.length > 0;
-    const speed = véhicule?.véhiculeDetails?.[0]?.speedKPH ?? 0;
-    const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
-
-    const isActive = véhicule?.lastUpdateTime
-      ? currentTime - véhicule.lastUpdateTime * 1000 < twentyFourHoursInMs
-      : false;
-    const updatedToday = lastUpdateMs >= todayTimestamp;
-
-    return (
-      hasDetails && isActive && speed >= 1 && updatedRecently && updatedToday
-    );
-  });
-
-  const DeviceEnStationnement = allDevices?.filter((device) => {
-    return currentTimeSec - device?.lastUpdateTime < twentyFourHoursInSec;
-  });
-
-  const DeviceInactifs = allDevices?.filter((device) => {
-    return currentTimeSec - device?.lastUpdateTime > twentyFourHoursInSec;
-  });
-
   const [animatedTotal, setAnimatedTotal] = useState(0);
   const [animatedDeplaces, setAnimatedDeplaces] = useState(0);
   const [animatedEnDéplacement, setAnimatedEnDéplacement] = useState(0);
@@ -132,40 +108,50 @@ function DashboardContaintMaintComponant({
   const preparationDownloadPDF = false;
 
   const animateValue = (start, end, duration, setter) => {
+    // Si la différence est trop petite, on ne fait pas d'animation
+    if (Math.abs(end - start) < 5) {
+      setter(end);
+      return;
+    }
+
+    let frameId = null;
     const startTime = performance.now();
 
     const animate = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const value = Math.floor(start + (end - start) * progress);
+      const eased = progress * (2 - progress); // easing simple (easeOut)
+
+      const value = Math.floor(start + (end - start) * eased);
       setter(value);
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        frameId = requestAnimationFrame(animate);
       }
     };
 
-    requestAnimationFrame(animate);
+    cancelAnimationFrame(frameId); // au cas où
+    frameId = requestAnimationFrame(animate);
   };
 
   useEffect(() => {
     animateValue(animatedTotal, allDevices.length, 1000, setAnimatedTotal);
     animateValue(
       animatedDeplaces,
-      DeviceDéplacer.length,
+      DeviceDéplacer?.length,
       1000,
       setAnimatedDeplaces
     );
 
     animateValue(
       animatedStationnement,
-      DeviceEnStationnement.length,
+      DeviceEnStationnement?.length,
       1000,
       setAnimatedStationnement
     );
     animateValue(
       animatedInactifs,
-      DeviceInactifs.length,
+      DeviceInactifs?.length,
       1000,
       setAnimatedInactifs
     );
@@ -247,7 +233,7 @@ function DashboardContaintMaintComponant({
   };
 
   const barSpacing = 70; // 3rem en px
-  const barCount = graphData.length;
+  const barCount = graphData?.length;
   const fixedWidth = barCount * barSpacing;
 
   /////////////////////////////////////
@@ -262,33 +248,33 @@ function DashboardContaintMaintComponant({
   };
 
   // Préparation des données
-  const formatBarData = (data) =>
-    data?.map((account) => {
-      const devices = account.accountDevices || [];
-      const total = devices.length;
-      const actifs = devices.filter(
-        (d) => currentTimeSec - d?.lastUpdateTime < twentyFourHoursInSec
-      ).length;
+  // const formatBarData = (data) =>
+  //   data?.map((account) => {
+  //     const devices = account.accountDevices || [];
+  //     const total = devices.length;
+  //     const actifs = devices.filter(
+  //       (d) => currentTimeSec - d?.lastUpdateTime < twentyFourHoursInSec
+  //     ).length;
 
-      const inactifs = total - actifs;
+  //     const inactifs = total - actifs;
 
-      return {
-        name: account?.description, // fullName pour le popup
-        shortName:
-          (expandSection === "graphe"
-            ? account?.description?.slice(0, 26)
-            : account?.description?.slice(0, 6)) +
-          "(" +
-          account?.accountDevices?.length +
-          ")", // 5 lettres pour l’axe X
-        total,
-        actifs,
-        inactifs,
-        totalDisplay: transformValue(total),
-        actifsDisplay: transformValue(actifs),
-        inactifsDisplay: transformValue(inactifs),
-      };
-    });
+  //     return {
+  //       name: account?.description, // fullName pour le popup
+  //       shortName:
+  //         (expandSection === "graphe"
+  //           ? account?.description?.slice(0, 26)
+  //           : account?.description?.slice(0, 6)) +
+  //         "(" +
+  //         account?.accountDevices?.length +
+  //         ")", // 5 lettres pour l’axe X
+  //       total,
+  //       actifs,
+  //       inactifs,
+  //       totalDisplay: transformValue(total),
+  //       actifsDisplay: transformValue(actifs),
+  //       inactifsDisplay: transformValue(inactifs),
+  //     };
+  //   });
 
   //
   //
@@ -298,19 +284,60 @@ function DashboardContaintMaintComponant({
   //
   //
   //
-  const graphData2 = formatBarData(gestionAccountData)?.sort(
-    (a, b) => b.total - a.total
+  // const graphData2 = formatBarData(gestionAccountData)?.sort(
+  //   (a, b) => b.total - a.total
+  // );
+
+  const graphData2 = useMemo(() => {
+    if (!gestionAccountData) return [];
+
+    return gestionAccountData
+      .map((account) => {
+        const devices = account.accountDevices || [];
+
+        let actifs = 0;
+        const total = devices.length;
+
+        for (let i = 0; i < total; i++) {
+          const d = devices[i];
+          if (currentTimeSec - d?.lastUpdateTime < twentyFourHoursInSec) {
+            actifs++;
+          }
+        }
+
+        const inactifs = total - actifs;
+        const name = account?.description || "N/A";
+        const short =
+          expandSection === "graphe" ? name.slice(0, 26) : name.slice(0, 6);
+
+        return {
+          name,
+          shortName: `${short}(${total})`,
+          total,
+          actifs,
+          inactifs,
+          totalDisplay: transformValue(total),
+          actifsDisplay: transformValue(actifs),
+          inactifsDisplay: transformValue(inactifs),
+        };
+      })
+      .sort((a, b) => b.total - a.total);
+  }, [gestionAccountData, expandSection, currentTimeSec]);
+
+  const barSpacing2 = expandSection === "graphe" ? 160 : 80;
+  // const fixedWidth2 = graphData2?.length * barSpacing2;
+
+  const [voirToutGrapheAccount, setVoirToutGrapheAccount] = useState(false);
+  const comptesAffichésDansGrapheAccount = useMemo(
+    () => (voirToutGrapheAccount ? graphData2 : graphData2?.slice(0, 10)),
+    [voirToutGrapheAccount, graphData2]
   );
 
-  /////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////
-
-  const barSpacing2 = expandSection === "graphe" ? 160 : 70;
-  const fixedWidth2 = graphData2?.length * barSpacing2;
+  // Calcul largeur du graphe uniquement sur les données affichées
+  const fixedWidth2 = useMemo(
+    () => comptesAffichésDansGrapheAccount?.length * barSpacing2,
+    [comptesAffichésDansGrapheAccount, barSpacing2]
+  );
 
   // Custom Tooltip pour afficher les vraies valeurs
   const CustomTooltip2 = ({ active, payload }) => {
@@ -333,6 +360,28 @@ function DashboardContaintMaintComponant({
     }
     return null;
   };
+
+  const nombreAppareilsAvecCoordonnées = useMemo(() => {
+    const data = isDashboardHomePage
+      ? currentAccountSelected?.accountDevices || accountDevices
+      : dataFusionné;
+
+    return data?.filter(
+      (v) =>
+        !(
+          v.lastValidLatitude === "0.0" ||
+          v.lastValidLongitude === "0.0" ||
+          v.lastValidLatitude === "" ||
+          v.lastValidLongitude === "" ||
+          v.véhiculeDetails.length <= 0
+        )
+    )?.length;
+  }, [
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    dataFusionné,
+  ]);
 
   /////////////////////////////////////
   /////////////////////////////////////
@@ -564,7 +613,7 @@ function DashboardContaintMaintComponant({
           </div>
         </div>
         <div className=" ">
-          {DeviceDéplacer.length > 0 ? (
+          {DeviceDéplacer?.length > 0 ? (
             <div
               className="w-full  flex flex-col justify-end h-[250px] overflow-x-auto p-4 pb-0 pl-0 bg-gray-100- rounded-xl"
               style={{
@@ -716,49 +765,179 @@ function DashboardContaintMaintComponant({
   //
   //
 
-  const allData = (
-    isDashboardHomePage
+  // const allData = (
+  //   isDashboardHomePage
+  //     ? currentAccountSelected
+  //       ? currentAccountSelected?.accountDevices?.map((device) => {
+  //           const match = véhiculeDetails?.find(
+  //             (v) =>
+  //               v.deviceID === device.deviceID &&
+  //               v.véhiculeDetails?.[0]?.accountID === device.accountID
+  //           );
+
+  //           if (match && match.véhiculeDetails.length > 0) {
+  //             return { ...device, véhiculeDetails: match.véhiculeDetails };
+  //           }
+
+  //           return device;
+  //         })
+  //       : accountDevices?.map((device) => {
+  //           const match = véhiculeDetails?.find(
+  //             (v) =>
+  //               v.deviceID === device.deviceID &&
+  //               v.véhiculeDetails?.[0]?.accountID === device.accountID
+  //           );
+
+  //           if (match && match.véhiculeDetails.length > 0) {
+  //             return { ...device, véhiculeDetails: match.véhiculeDetails };
+  //           }
+
+  //           return device;
+  //         })
+  //     : dataFusionné
+  // )
+  //   ?.flatMap((device) => device?.véhiculeDetails[0] || [])
+  //   ?.filter((item) => item?.statusCode !== "0xF952");
+
+  // const statusCountMap = allData?.reduce((acc, item) => {
+  //   const status = item.statusCode;
+  //   acc[status] = (acc[status] || 0) + 1;
+  //   return acc;
+  // }, {});
+
+  // const dataPieChart = Object.entries(statusCountMap || {}).map(
+  //   ([name, value]) => ({ name, value })
+  // );
+
+  // const RADIAN = Math.PI / 180;
+  // const renderCustomizedLabel = ({
+  //   cx,
+  //   cy,
+  //   midAngle,
+  //   innerRadius,
+  //   outerRadius,
+  //   percent,
+  // }) => {
+  //   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  //   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  //   const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  //   return (
+  //     <text
+  //       x={x}
+  //       y={y}
+  //       fill="white"
+  //       textAnchor="middle"
+  //       dominantBaseline="central"
+  //       className="text-sm font-bold"
+  //     >
+  //       {(percent * 100).toFixed(0)}%
+  //     </text>
+  //   );
+  // };
+
+  // const CustomTooltipChartPie = ({ active, payload }) => {
+  //   if (active && payload && payload.length) {
+  //     const { name, value } = payload[0];
+  //     const code = parseInt(name, 16);
+  //     const codeDescription = statusDescriptions[code] || "Statut inconnu";
+
+  //     return (
+  //       <div className="bg-white shadow-md rounded p-2 text-sm text-gray-800">
+  //         <p>
+  //           <strong>{t("Code")}:</strong> {name}
+  //         </p>
+  //         <p>
+  //           <strong>{t("Quantité")}:</strong> {value}
+  //         </p>
+  //         <p>
+  //           <strong>{t("Description")}:</strong> {codeDescription}
+  //         </p>
+  //       </div>
+  //     );
+  //   }
+
+  //   return null;
+  // };
+
+  // Mémoïsation de la fusion véhiculeDetails dans devices
+  const enrichedDevices = useMemo(() => {
+    const sourceDevices = isDashboardHomePage
       ? currentAccountSelected
-        ? currentAccountSelected?.accountDevices?.map((device) => {
-            const match = véhiculeDetails?.find(
-              (v) =>
-                v.deviceID === device.deviceID &&
-                v.véhiculeDetails?.[0]?.accountID === device.accountID
-            );
+        ? currentAccountSelected.accountDevices
+        : accountDevices
+      : dataFusionné;
 
-            if (match && match.véhiculeDetails.length > 0) {
-              return { ...device, véhiculeDetails: match.véhiculeDetails };
-            }
+    if (!sourceDevices || !véhiculeDetails) return [];
 
-            return device;
-          })
-        : accountDevices?.map((device) => {
-            const match = véhiculeDetails?.find(
-              (v) =>
-                v.deviceID === device.deviceID &&
-                v.véhiculeDetails?.[0]?.accountID === device.accountID
-            );
+    // Créer un index pour accélérer la recherche
+    const vehiculeIndex = new Map();
+    for (const v of véhiculeDetails) {
+      if (v.deviceID && v.véhiculeDetails?.length > 0) {
+        vehiculeIndex.set(v.deviceID, v.véhiculeDetails);
+      }
+    }
 
-            if (match && match.véhiculeDetails.length > 0) {
-              return { ...device, véhiculeDetails: match.véhiculeDetails };
-            }
+    return sourceDevices.map((device) => {
+      const vehiculeDetailsForDevice = vehiculeIndex.get(device.deviceID);
+      if (vehiculeDetailsForDevice) {
+        return { ...device, véhiculeDetails: vehiculeDetailsForDevice };
+      }
+      return device;
+    });
+  }, [
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    dataFusionné,
+    véhiculeDetails,
+  ]);
 
-            return device;
-          })
-      : dataFusionné
-  )
-    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-    ?.filter((item) => item?.statusCode !== "0xF952");
+  // Mémoïsation de allData filtrée
+  const allData = useMemo(() => {
+    if (!enrichedDevices) return [];
+    return enrichedDevices
+      .flatMap((device) =>
+        device?.véhiculeDetails?.[0] ? [device.véhiculeDetails[0]] : []
+      )
+      .filter((item) => item?.statusCode !== "0xF952");
+  }, [enrichedDevices]);
 
-  const statusCountMap = allData?.reduce((acc, item) => {
-    const status = item.statusCode;
-    acc[status] = (acc[status] || 0) + 1;
-    return acc;
-  }, {});
+  // Mémoïsation du statusCountMap
+  const statusCountMap = useMemo(() => {
+    if (!allData) return {};
+    return allData.reduce((acc, item) => {
+      const status = item.statusCode;
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+  }, [allData]);
 
-  const dataPieChart = Object.entries(statusCountMap || {}).map(
-    ([name, value]) => ({ name, value })
-  );
+  // Format pour PieChart
+  const dataPieChart = useMemo(() => {
+    return Object.entries(statusCountMap).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }, [statusCountMap]);
+
+  // Handler clic optimisé
+  const handlePieClick = (data) => {
+    if (!data || !data.name) return;
+    const code = parseInt(data.name, 16);
+    const codeDescription = statusDescriptions[code] || t("Statut inconnu");
+
+    setSearchTermInput(codeDescription);
+    setExpandSection("deviceAlerts");
+
+    if (!isDashboardHomePage) {
+      setListeGestionDesVehicules(dataFusionné);
+    } else if (currentAccountSelected) {
+      setListeGestionDesVehicules(currentAccountSelected.accountDevices);
+    } else {
+      setListeGestionDesVehicules(accountDevices);
+    }
+  };
 
   const COLORS = [
     "#f87171", // rouge clair
@@ -827,41 +1006,6 @@ function DashboardContaintMaintComponant({
 
   const [unlockCarteScroll, setUnlockCarteScroll] = useState(false);
 
-  const TouslesAlertesData = (
-    isDashboardHomePage
-      ? currentAccountSelected
-        ? currentAccountSelected?.accountDevices?.map((device) => {
-            const match = véhiculeDetails?.find(
-              (v) =>
-                v.deviceID === device.deviceID &&
-                v.véhiculeDetails?.[0]?.accountID === device.accountID
-            );
-
-            if (match && match.véhiculeDetails.length > 0) {
-              return { ...device, véhiculeDetails: match.véhiculeDetails };
-            }
-
-            return device;
-          })
-        : accountDevices?.map((device) => {
-            const match = véhiculeDetails?.find(
-              (v) =>
-                v.deviceID === device.deviceID &&
-                v.véhiculeDetails?.[0]?.accountID === device.accountID
-            );
-
-            if (match && match.véhiculeDetails.length > 0) {
-              return { ...device, véhiculeDetails: match.véhiculeDetails };
-            }
-
-            return device;
-          })
-      : dataFusionné
-  )
-    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-    ?.filter((item) => item?.statusCode !== "0xF952")
-    ?.slice(0, 2);
-
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -885,16 +1029,135 @@ function DashboardContaintMaintComponant({
   }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
 
   const [searchTermInput, setSearchTermInput] = useState("");
+  //////////////////////////////////////////////////////
+  const [
+    voirPlusDeColonneDansTableauCompte,
+    setVoirPlusDeColonneDansTableauCompte,
+  ] = useState(false);
 
+  const ListeDesAlertes = useMemo(() => {
+    const devices =
+      isDashboardHomePage && currentAccountSelected
+        ? currentAccountSelected?.accountDevices
+        : isDashboardHomePage
+        ? accountDevices
+        : dataFusionné;
+
+    if (!devices || devices.length === 0) return 0;
+
+    // Étape 1 : enrichir avec véhiculeDetails
+    const enrichis = devices.map((device) => {
+      const match = véhiculeDetails?.find(
+        (v) =>
+          v.deviceID === device.deviceID &&
+          v.véhiculeDetails?.[0]?.accountID === device.accountID
+      );
+
+      if (match && match.véhiculeDetails?.length > 0) {
+        return {
+          ...device,
+          véhiculeDetails: match.véhiculeDetails,
+        };
+      }
+
+      return device;
+    });
+
+    // Étape 2 : extraire et filtrer
+    const tousLesDetails = enrichis.flatMap(
+      (d) => d?.véhiculeDetails?.[0] || []
+    );
+
+    return tousLesDetails.filter((item) => item?.statusCode !== "0xF952");
+  }, [
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    dataFusionné,
+    véhiculeDetails,
+  ]);
+
+  /////////////////////////////////////////////
+
+  const previewUsers = useMemo(() => {
+    if (currentAccountSelected) {
+      return currentAccountSelected?.accountUsers?.slice(0, 3) || [];
+    }
+
+    const usersFromAccounts =
+      gestionAccountData?.flatMap((account) => account.accountUsers || []) ||
+      [];
+
+    const uniqueUsersMap = new Map(usersFromAccounts.map((u) => [u.userID, u]));
+
+    accountUsers.forEach((user) => {
+      if (!uniqueUsersMap.has(user.userID)) {
+        uniqueUsersMap.set(user.userID, user);
+      }
+    });
+
+    return Array.from(uniqueUsersMap.values()).slice(0, 3);
+  }, [currentAccountSelected, gestionAccountData, accountUsers]);
+
+  const totalUsers = currentAccountSelected
+    ? currentAccountSelected?.accountUsers?.length
+    : accountUsers?.length;
+
+  const handleVoirTousLesUsers = () => {
+    if (currentAccountSelected) {
+      setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+    } else {
+      setListeGestionDesUsers(accountUsers);
+    }
+    setExpandSection("userListe");
+  };
+  /////////////////////////////////////////////////////////////////////////
+
+  // Mémoïsation de la liste à afficher
+  const groupesAffichés = useMemo(() => {
+    if (currentAccountSelected) {
+      return currentAccountSelected.accountGroupes || [];
+    }
+
+    const groupesFusionnés = [
+      ...new Map(
+        gestionAccountData
+          ?.flatMap((account) => account.accountGroupes || [])
+          .map((group) => [group.groupID, group])
+      ).values(),
+    ];
+
+    return groupesFusionnés;
+  }, [currentAccountSelected, gestionAccountData]);
+
+  const afficherGroupes = groupesAffichés.slice(0, 4);
+
+  const handleVoirTousLesGroupe = () => {
+    if (currentAccountSelected) {
+      setListeGestionDesGroupe(currentAccountSelected.accountGroupes || []);
+    } else {
+      const groupesFusionnés = [
+        ...new Map(
+          gestionAccountData
+            ?.flatMap((account) => account.accountGroupes || [])
+            .map((group) => [group.groupID, group])
+        ).values(),
+      ];
+      setListeGestionDesGroupe(groupesFusionnés);
+    }
+
+    setListeGestionDesGroupeTitre(t("Tous les Groupes"));
+    setExpandSection("userGroupe");
+  };
   return (
-    <div className="pb-6-">
+    <div className="pb-20 md:pb-0">
       {showStatisticDeviceListeDashboard && (
         <div className="fixed px-3-- inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
-          <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw]">
+          <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw] ">
             <div className="absolute flex justify-center items-center top-0 left-0 right-0 h-[4rem] bg-orange-200 z-[8]">
               <h2 className="font-bold text-lg">
                 {statisticFilteredDeviceListeText} - (
-                {statisticFilteredDeviceListe?.length})
+                {filteredColorCategorieListe?.length})
               </h2>
             </div>
             <IoClose
@@ -904,7 +1167,7 @@ function DashboardContaintMaintComponant({
               }}
               className="absolute top-5 right-4 z-[99999999999] text-[1.6rem] cursor-pointer text-red-600"
             />
-            <div className=" min-h-[80vh] max-h-[90vh] overflow-auto">
+            <div className=" min-h-[80vh] max-h-[80vh] mt-[4rem] overflow-auto">
               <div>
                 <ListeDesVehiculesGestion
                   setDocumentationPage={setDocumentationPage}
@@ -950,6 +1213,12 @@ function DashboardContaintMaintComponant({
               <IoClose
                 onClick={() => {
                   setExpandSection("");
+                  if (expandSection === "graphe") {
+                    setVoirToutGrapheAccount(false);
+                  }
+                  if (expandSection === "tableau") {
+                    setVoirPlusDeColonneDansTableauCompte(false);
+                  }
                 }}
               />
             </div>
@@ -972,15 +1241,28 @@ function DashboardContaintMaintComponant({
                   barSpacing2={barSpacing2}
                   CustomTooltip2={CustomTooltip2}
                   fixedWidth2={fixedWidth2}
+                  comptesAffichésDansGrapheAccount={
+                    comptesAffichésDansGrapheAccount
+                  }
                 />
               </div>
             )}
             {expandSection === "tableau" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                  <h2 className="mb-10">{t("Tableau des Comptes")}</h2>
+                  <h2 className="mb-10">{t("Statistiques par compte")}</h2>
                 </div>
-                <TableauRecapitulatifComptes isLongueur="true" />
+                <TableauRecapitulatifComptes
+                  isLongueur="true"
+                  voirPlusDeColonneDansTableauCompte={
+                    voirPlusDeColonneDansTableauCompte
+                  }
+                  setDocumentationPage={setDocumentationPage}
+                  setExpandSection={setExpandSection}
+                  setStatisticFilteredDeviceListeText={
+                    setStatisticFilteredDeviceListeText
+                  }
+                />
               </div>
             )}
             {expandSection === "userListe" && (
@@ -1025,6 +1307,7 @@ function DashboardContaintMaintComponant({
                   fromExpandSectionDashboard="true"
                   searchTermInput={searchTermInput}
                   setSearchTermInput={setSearchTermInput}
+                  ListeDesAlertes={ListeDesAlertes}
                 />
               </div>
             )}
@@ -1126,6 +1409,7 @@ function DashboardContaintMaintComponant({
                     <p
                       onClick={() => {
                         setExpandSection("carte");
+                        setSelectedVehicleToShowInMap(null);
                       }}
                       className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
                     >
@@ -1133,25 +1417,7 @@ function DashboardContaintMaintComponant({
                     </p>
                   </div>
                   <p className="text-gray-500">
-                    {t("Nombre d'appareils")} (
-                    {
-                      (isDashboardHomePage
-                        ? currentAccountSelected
-                          ? currentAccountSelected?.accountDevices
-                          : accountDevices
-                        : dataFusionné
-                      ).filter(
-                        (v) =>
-                          !(
-                            v.lastValidLatitude === "0.0" ||
-                            v.lastValidLongitude === "0.0" ||
-                            v.lastValidLatitude === "" ||
-                            v.lastValidLongitude === "" ||
-                            v.véhiculeDetails.length <= 0
-                          )
-                      )?.length
-                    }
-                    )
+                    {t("Nombre d'appareils")} ({nombreAppareilsAvecCoordonnées})
                   </p>
                 </div>
               )}
@@ -1166,6 +1432,7 @@ function DashboardContaintMaintComponant({
                         <p
                           onClick={() => {
                             setExpandSection("graphe");
+                            setVoirToutGrapheAccount(true);
                           }}
                           className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
                         >
@@ -1212,21 +1479,32 @@ function DashboardContaintMaintComponant({
                     barSpacing2={barSpacing2}
                     CustomTooltip2={CustomTooltip2}
                     fixedWidth2={fixedWidth2}
+                    comptesAffichésDansGrapheAccount={
+                      comptesAffichésDansGrapheAccount
+                    }
                   />
                 </div>
               )}
               {(currentAccountSelected || !isDashboardHomePage) && (
                 <div className="w-full h-[15rem]-- relative overflow-hidden rounded-md">
-                  <LocationPage fromDashboard="true" />
+                  {/* <LocationPage fromDashboard="true" /> */}
+                  <img
+                    src="/img/cartegeographie.png"
+                    className="w-full min-h-[20rem] object-cover "
+                    alt=""
+                  />
                   {!unlockCarteScroll && (
                     <div className="absolute flex justify-center items-center inset-0 bg-black/10 z-[8]">
                       <div
                         onClick={() => {
-                          setUnlockCarteScroll(true);
+                          // setUnlockCarteScroll(true);
+                          setExpandSection("carte");
+                          setSelectedVehicleToShowInMap(null);
+                          updateAppareilsEtGeofencesPourCarte();
                         }}
                         className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
                       >
-                        <FaUnlockAlt className="text-[1.3rem]" />
+                        <ImEnlarge className="text-[1.3rem]" />
                       </div>
                     </div>
                   )}
@@ -1272,11 +1550,12 @@ function DashboardContaintMaintComponant({
                 isDashboardHomePage && (
                   <div className="flex w-full justify-between items-center">
                     <h2 className="font-semibold text-lg text-gray-700">
-                      {t("Tableau des comptes")} ({comptes?.length})
+                      {t("Statistiques par compte")} ({comptes?.length})
                     </h2>
                     <p
                       onClick={() => {
                         setExpandSection("tableau");
+                        setVoirPlusDeColonneDansTableauCompte(true);
                       }}
                       className="font-semibold absolute-- top-4 right-4 text-sm underline cursor-pointer text-orange-500"
                     >
@@ -1321,7 +1600,16 @@ function DashboardContaintMaintComponant({
             </div>
             <div className="  rounded-md overflow-hidden ">
               {!currentAccountSelected && isDashboardHomePage && (
-                <TableauRecapitulatifComptes isLongueur="false" />
+                <TableauRecapitulatifComptes
+                  isLongueur="false"
+                  voirPlusDeColonneDansTableauCompte={
+                    voirPlusDeColonneDansTableauCompte
+                  }
+                  setDocumentationPage={setDocumentationPage}
+                  setStatisticFilteredDeviceListeText={
+                    setStatisticFilteredDeviceListeText
+                  }
+                />
               )}
               {(currentAccountSelected || !isDashboardHomePage) && (
                 <DeviceListeDashboard />
@@ -1367,44 +1655,31 @@ function DashboardContaintMaintComponant({
         </div>
 
         {!currentAccountSelected && isDashboardHomePage && (
-          <div className="w-full relative bg-white min-h-[15rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
+          <div className="w-full relative bg-white min-h-[20rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
             <div className="w-full overflow-hidden rounded-md z-0">
-              <LocationPage fromDashboard="true" />
+              <img
+                src="/img/cartegeographie.png"
+                className="w-full min-h-[20rem] object-cover "
+                alt=""
+              />
+              {/* <LocationPage fromDashboard="true" /> */}
             </div>
 
             {!unlockCarteScroll && (
               <div className="absolute flex justify-center items-center inset-0 bg-black/20 z-[8]">
                 <div
                   onClick={() => {
-                    setUnlockCarteScroll(true);
+                    // setUnlockCarteScroll(true);
+                    setExpandSection("carte");
+                    setSelectedVehicleToShowInMap(null);
+                    updateAppareilsEtGeofencesPourCarte();
                   }}
                   className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
                 >
-                  <FaUnlockAlt className="text-[1.3rem]" />
+                  <ImEnlarge className="text-[1.3rem]" />
                 </div>
               </div>
             )}
-
-            {/* {!expandSection && ( */}
-            <div
-              onClick={() => {
-                setExpandSection("carte");
-              }}
-              className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[8] top-5 right-1 cursor-pointer"
-            >
-              <ImEnlarge className="text-[1.1rem]" />
-            </div>
-            {unlockCarteScroll && (
-              <div
-                onClick={() => {
-                  setUnlockCarteScroll(false);
-                }}
-                className="absolute w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500 z-[8] top-[5.5rem] right-1 cursor-pointer"
-              >
-                <MdLockOutline className="text-[1.5rem]" />
-              </div>
-            )}
-            {/* )} */}
           </div>
         )}
         {/*  */}
@@ -1420,57 +1695,7 @@ function DashboardContaintMaintComponant({
           <div className="bg-orange-100 shadow-inner md:col-span-2 shadow-black/10 -300/80 mt-6 p-3 rounded-lg">
             <div className="flex mb-4 justify-between items-center ">
               <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                {t("Tous les Alertes")} (
-                {isDashboardHomePage
-                  ? currentAccountSelected
-                    ? currentAccountSelected?.accountDevices
-
-                        ?.map((device) => {
-                          const match = véhiculeDetails?.find(
-                            (v) =>
-                              v.deviceID === device.deviceID &&
-                              v.véhiculeDetails?.[0]?.accountID ===
-                                device.accountID
-                          );
-
-                          if (match && match.véhiculeDetails.length > 0) {
-                            return {
-                              ...device,
-                              véhiculeDetails: match.véhiculeDetails,
-                            };
-                          }
-
-                          return device;
-                        })
-
-                        ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                        ?.filter((item) => item?.statusCode !== "0xF952")
-                        ?.length
-                    : accountDevices
-                        ?.map((device) => {
-                          const match = véhiculeDetails?.find(
-                            (v) =>
-                              v.deviceID === device.deviceID &&
-                              v.véhiculeDetails?.[0]?.accountID ===
-                                device.accountID
-                          );
-
-                          if (match && match.véhiculeDetails.length > 0) {
-                            return {
-                              ...device,
-                              véhiculeDetails: match.véhiculeDetails,
-                            };
-                          }
-
-                          return device;
-                        })
-                        ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                        ?.filter((item) => item?.statusCode !== "0xF952")
-                        ?.length
-                  : dataFusionné
-                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                      ?.filter((item) => item?.statusCode !== "0xF952")?.length}
-                )
+                {t("Tous les Alertes")} ({ListeDesAlertes?.length})
               </h2>
               <button
                 onClick={() => {
@@ -1488,12 +1713,12 @@ function DashboardContaintMaintComponant({
                 }}
                 className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
               >
-                {t("Voir tous")}
+                {t("Full Screen")}
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2-- gap-3">
-              {TouslesAlertesData ? (
-                TouslesAlertesData?.map((details, index) => {
+              {ListeDesAlertes ? (
+                ListeDesAlertes?.slice(0, 2)?.map((details, index) => {
                   const code = parseInt(details.statusCode, 16);
                   const codeDescription =
                     statusDescriptions[code] || "Statut inconnu";
@@ -1564,55 +1789,80 @@ function DashboardContaintMaintComponant({
               )}
             </div>
           </div>
-          <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-orange-100-- bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
+          <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
+            <h2 className="font-semibold text-lg m-2 mb-4 text-gray-700">
+              {t("Chart des Alertes")} ({allData.length})
+            </h2>
+
+            {dataPieChart.length > 0 ? (
+              <div className="w-full h-[15rem] scale-110 mt-10">
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={dataPieChart}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      onClick={(data) => handlePieClick(data)}
+                    >
+                      {dataPieChart.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+
+                    <Tooltip
+                      content={
+                        <CustomTooltipChartPie
+                          t={t}
+                          statusDescriptions={statusDescriptions}
+                        />
+                      }
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="flex h-full justify-center items-center font-semibold text-lg">
+                <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+              </div>
+            )}
+
+            <div className="rounded-lg max-h-[6rem] flex flex-col gap-1 px-3 mb-2 overflow-auto">
+              {dataPieChart.map((status, index) => {
+                const code = parseInt(status.name, 16);
+                const codeDescription =
+                  statusDescriptions[code] || t("Statut inconnu");
+                const color = COLORS[index % COLORS.length];
+
+                return (
+                  <div
+                    onClick={() => handlePieClick(status)}
+                    key={index}
+                    className="flex cursor-pointer hover:bg-gray-200 gap-3 items-center"
+                  >
+                    <div
+                      style={{ backgroundColor: color }}
+                      className="min-w-[1rem] min-h-[1rem] rounded-full"
+                    />
+                    <p>{status.name}</p>
+                    <p className="whitespace-nowrap">
+                      {codeDescription} ({status.value})
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-orange-100-- bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
             <h2 className="font-semibold text-lg m-2 mb-0 mb-4-- text-gray-700">
-              {t("Chart des Alertes")} (
-              {isDashboardHomePage
-                ? currentAccountSelected
-                  ? currentAccountSelected?.accountDevices
-                      ?.map((device) => {
-                        const match = véhiculeDetails?.find(
-                          (v) =>
-                            v.deviceID === device.deviceID &&
-                            v.véhiculeDetails?.[0]?.accountID ===
-                              device.accountID
-                        );
-
-                        if (match && match.véhiculeDetails.length > 0) {
-                          return {
-                            ...device,
-                            véhiculeDetails: match.véhiculeDetails,
-                          };
-                        }
-
-                        return device;
-                      })
-                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                      ?.filter((item) => item?.statusCode !== "0xF952")?.length
-                  : accountDevices
-                      ?.map((device) => {
-                        const match = véhiculeDetails?.find(
-                          (v) =>
-                            v.deviceID === device.deviceID &&
-                            v.véhiculeDetails?.[0]?.accountID ===
-                              device.accountID
-                        );
-
-                        if (match && match.véhiculeDetails.length > 0) {
-                          return {
-                            ...device,
-                            véhiculeDetails: match.véhiculeDetails,
-                          };
-                        }
-
-                        return device;
-                      })
-                      ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                      ?.filter((item) => item?.statusCode !== "0xF952")?.length
-                : dataFusionné
-                    ?.flatMap((device) => device?.véhiculeDetails[0] || [])
-                    ?.filter((item) => item?.statusCode !== "0xF952")?.length}
-              )
+              {t("Chart des Alertes")} ({ListeDesAlertes?.length})
             </h2>
 
             {dataPieChart?.length > 0 ? (
@@ -1703,7 +1953,7 @@ function DashboardContaintMaintComponant({
                   );
                 })}
             </div>
-          </div>
+          </div> */}
         </div>
         {/*  */}
         {/*  */}
@@ -1718,218 +1968,111 @@ function DashboardContaintMaintComponant({
         {/* Other info */}
         {isDashboardHomePage && (
           <div className="grid grid-cols-1 mt-5 md:grid-cols-2 items-stretch justify-center  gap-4 ">
-            <div className="bg-white shadow-lg shadow-black/5 md:col-span-2-  p-3 h-full rounded-lg">
-              <div className="flex mb-4 justify-between items-end ">
-                <div className=" flex w-full justify-between items-center">
-                  <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                    {t("Tous les Utilisateurs")} (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountUsers?.length
-                      : accountUsers?.length}
-                    )
+            <div className="bg-white shadow-lg shadow-black/5 p-3 h-full rounded-lg">
+              <div className="flex mb-4 justify-between items-end">
+                <div className="flex w-full justify-between items-center">
+                  <h2 className="font-semibold text-lg text-gray-700">
+                    {t("Tous les Utilisateurs")} ({totalUsers})
                   </h2>
                   <button
-                    onClick={() => {
-                      if (currentAccountSelected) {
-                        setListeGestionDesUsers(
-                          currentAccountSelected?.accountUsers
-                        );
-                      } else {
-                        setListeGestionDesUsers(accountUsers);
-                      }
-                      setExpandSection("userListe");
-                      // setDocumentationPage("Gestion_des_utilisateurs");
-                      // scrollToTop();
-                    }}
+                    onClick={handleVoirTousLesUsers}
                     className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
                   >
-                    {t("Voir tous")}
+                    {t("Full Screen")}
                   </button>
                 </div>
               </div>
-              <div className="h-full max-h-[20rem]-- flex flex-col gap-4 overflow-auto-- overflow-hidden--">
-                {(currentAccountSelected
-                  ? currentAccountSelected?.accountUsers
-                  : [
-                      ...Array.from(
-                        new Map(
-                          gestionAccountData
-                            ?.flatMap((account) => account.accountUsers || [])
-                            ?.map((user) => [user.userID, user])
-                        ).values()
-                      ),
-                      ...accountUsers.filter(
-                        (user) =>
-                          !gestionAccountData
-                            ?.flatMap((account) => account.accountUsers || [])
-                            ?.some(
-                              (existingUser) =>
-                                existingUser.userID === user.userID
-                            )
-                      ),
-                    ]
-                )?.slice(0, 3)?.length > 0 ? (
-                  (currentAccountSelected
-                    ? currentAccountSelected?.accountUsers
-                    : [
-                        ...Array.from(
-                          new Map(
-                            gestionAccountData
-                              ?.flatMap((account) => account.accountUsers || [])
-                              ?.map((user) => [user.userID, user])
-                          ).values()
-                        ),
-                        ...accountUsers.filter(
-                          (user) =>
-                            !gestionAccountData
-                              ?.flatMap((account) => account.accountUsers || [])
-                              ?.some(
-                                (existingUser) =>
-                                  existingUser.userID === user.userID
-                              )
-                        ),
-                      ]
-                  )
-                    ?.slice(0, 3)
-                    .map((user, index) => {
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => {}}
-                          className="shadow-lg- shadow-inner border- border-gray-200 cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10 flex gap-3 items-center- rounded-lg py-[.85rem] px-2 "
-                        >
-                          <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
-                          <div>
-                            <p className="text-gray-600">
-                              {t("Nom de l'utilisateur")} :{" "}
-                              <span className="font-bold notranslate">
-                                {user?.description}
-                              </span>{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              {t("Account ID")} :{" "}
-                              <span className="font-bold notranslate">
-                                {user?.accountID}
-                              </span>{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              {t("Nombre d'appareil")} :{" "}
-                              <span className="font-bold">
-                                {user?.userDevices?.length}
-                              </span>{" "}
-                            </p>
 
-                            <p className="text-gray-600">
-                              {t("Nombre de Groupe")} :{" "}
-                              <span className="font-bold">
-                                {user?.userGroupes?.length}
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })
+              <div className="flex flex-col gap-4 max-h-[25rem] overflow-y-auto">
+                {previewUsers.length > 0 ? (
+                  previewUsers.map((user, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-50/50 shadow-inner shadow-black/10 flex gap-3 rounded-lg py-3 px-2"
+                    >
+                      <FaUserCircle className="text-orange-500/80 text-[2.5rem] mt-1" />
+                      <div>
+                        <p className="text-gray-600">
+                          {t("Nom de l'utilisateur")} :{" "}
+                          <span className="font-bold notranslate">
+                            {user?.description}
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Account ID")} :{" "}
+                          <span className="font-bold notranslate">
+                            {user?.accountID}
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Nombre d'appareil")} :{" "}
+                          <span className="font-bold">
+                            {user?.userDevices?.length}
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Nombre de Groupe")} :{" "}
+                          <span className="font-bold">
+                            {user?.userGroupes?.length}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  ))
                 ) : (
-                  <div className="flex h-full   justify-center items-center font-semibold text-lg">
+                  <div className="flex justify-center items-center font-semibold text-lg h-full">
                     <p className="mb-10 md:mt-10">{t("Pas de résultat")}</p>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 md:col-span-1- mt-10 md:mt-0 rounded-lg">
-              <div className=" flex pb-4 w-full justify-between items-center">
-                <h2 className="font-semibold text-lg mb-4-- text-gray-700">
-                  {t("Tous les Groupes")} (
-                  {currentAccountSelected
-                    ? currentAccountSelected?.accountGroupes?.length
-                    : accountGroupes?.length}
-                  )
+            <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 rounded-lg">
+              <div className="flex pb-4 justify-between items-center">
+                <h2 className="font-semibold text-lg text-gray-700">
+                  {t("Tous les Groupes")} ({groupesAffichés.length})
                 </h2>
                 <button
-                  onClick={() => {
-                    if (currentAccountSelected) {
-                      setListeGestionDesGroupe(
-                        currentAccountSelected?.accountGroupes
-                      );
-                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                    } else {
-                      // setListeGestionDesGroupe(accountGroupes);
-                      setListeGestionDesGroupe(
-                        Array.from(
-                          new Map(
-                            gestionAccountData
-                              ?.flatMap((account) => account.accountGroupes)
-                              ?.map((group) => [group.groupID, group])
-                          ).values()
-                        )
-                      );
-                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                    }
-                    setExpandSection("userGroupe");
-                    // setDocumentationPage("Gestion_des_groupes");
-                    // scrollToTop();
-                  }}
+                  onClick={handleVoirTousLesGroupe}
                   className="py-1 text-sm px-4 rounded-md bg-orange-500 text-white font-semibold"
                 >
-                  {t("Voir tous")}
+                  {t("Full Screen")}
                 </button>
               </div>
-              <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto--">
-                {(currentAccountSelected
-                  ? currentAccountSelected?.accountGroupes
-                  : Array.from(
-                      new Map(
-                        gestionAccountData
-                          ?.flatMap((account) => account.accountGroupes)
-                          ?.map((group) => [group.groupID, group])
-                      ).values()
-                    )
-                )?.slice(0, 4)?.length > 0 ? (
-                  (currentAccountSelected
-                    ? currentAccountSelected?.accountGroupes
-                    : Array.from(
-                        new Map(
-                          gestionAccountData
-                            ?.flatMap((account) => account.accountGroupes)
-                            ?.map((group) => [group.groupID, group])
-                        ).values()
-                      )
-                  )
-                    ?.slice(0, 4)
-                    ?.map((user, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- bg-gray-50 /50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-2 px-2 "
-                        >
-                          <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
-                          <div>
-                            <p className="text-gray-600">
-                              {t("Account ID")} :{" "}
-                              <span className="font-bold notranslate notranslate">
-                                {user?.accountID}
-                              </span>{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              {t("Nom du Groupe")} :{" "}
-                              <span className="font-bold notranslate">
-                                {user?.description || "---"}
-                              </span>{" "}
-                            </p>
-                            <p className="text-gray-600">
-                              {t("Nombre d'appareil")} :{" "}
-                              <span className="font-bold">
-                                {user?.groupeDevices?.length}
-                              </span>{" "}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })
+
+              <div className="flex flex-col gap-4 h-full">
+                {afficherGroupes.length > 0 ? (
+                  afficherGroupes.map((group, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-50 shadow-inner shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 cursor-pointer"
+                    >
+                      <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
+                      <div>
+                        <p className="text-gray-600">
+                          {t("Account ID")} :{" "}
+                          <span className="font-bold notranslate">
+                            {group?.accountID}
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Nom du Groupe")} :{" "}
+                          <span className="font-bold notranslate">
+                            {group?.description || "---"}
+                          </span>
+                        </p>
+                        <p className="text-gray-600">
+                          {t("Nombre d'appareil")} :{" "}
+                          <span className="font-bold">
+                            {group?.groupeDevices?.length}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  ))
                 ) : (
-                  <div className="flex h-full   justify-center items-center font-semibold text-lg">
-                    <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+                  <div className="flex justify-center items-center font-semibold text-lg">
+                    <p>{t("Pas de résultat")}</p>
                   </div>
                 )}
               </div>

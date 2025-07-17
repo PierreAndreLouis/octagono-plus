@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -58,42 +58,80 @@ const LocationPage = ({
   // Le data converti en Objet
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
-  let vehiculeActive;
+  // let vehiculeActive;
 
-  if (isDashboardHomePage && currentAccountSelected) {
-    vehiculeActive = currentAccountSelected?.accountDevices?.map((device) => {
-      const match = véhiculeDetails?.find(
-        (v) =>
-          v.deviceID === device.deviceID &&
-          v.véhiculeDetails?.[0]?.accountID === device.accountID
-      );
+  // if (isDashboardHomePage && currentAccountSelected) {
+  //   vehiculeActive = currentAccountSelected?.accountDevices?.map((device) => {
+  //     const match = véhiculeDetails?.find(
+  //       (v) =>
+  //         v.deviceID === device.deviceID &&
+  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
+  //     );
 
-      if (match && match.véhiculeDetails.length > 0) {
-        return { ...device, véhiculeDetails: match.véhiculeDetails };
-      }
+  //     if (match && match.véhiculeDetails.length > 0) {
+  //       return { ...device, véhiculeDetails: match.véhiculeDetails };
+  //     }
 
-      return device;
-    });
-  } else if (isDashboardHomePage && !currentAccountSelected) {
-    vehiculeActive = accountDevices?.map((device) => {
-      const match = véhiculeDetails?.find(
-        (v) =>
-          v.deviceID === device.deviceID &&
-          v.véhiculeDetails?.[0]?.accountID === device.accountID
-      );
+  //     return device;
+  //   });
+  // } else if (isDashboardHomePage && !currentAccountSelected) {
+  //   vehiculeActive = accountDevices?.map((device) => {
+  //     const match = véhiculeDetails?.find(
+  //       (v) =>
+  //         v.deviceID === device.deviceID &&
+  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
+  //     );
 
-      if (match && match.véhiculeDetails.length > 0) {
-        return { ...device, véhiculeDetails: match.véhiculeDetails };
-      }
+  //     if (match && match.véhiculeDetails.length > 0) {
+  //       return { ...device, véhiculeDetails: match.véhiculeDetails };
+  //     }
 
-      return device;
-    });
-  } else if (!isDashboardHomePage) {
-    vehiculeActive = dataFusionné;
-  }
+  //     return device;
+  //   });
+  // } else if (!isDashboardHomePage) {
+  //   vehiculeActive = dataFusionné;
+  // }
 
-  // vehiculeActive = currentDataFusionné;
-  // vehiculeActive = currentDataFusionné;
+  const vehiculeActive = useMemo(() => {
+    if (isDashboardHomePage && currentAccountSelected) {
+      return currentAccountSelected?.accountDevices?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      });
+    } else if (isDashboardHomePage && !currentAccountSelected) {
+      return accountDevices?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      });
+    } else if (!isDashboardHomePage) {
+      return dataFusionné;
+    }
+    return [];
+  }, [
+    isDashboardHomePage,
+    currentAccountSelected,
+    véhiculeDetails,
+    accountDevices,
+    dataFusionné,
+  ]);
 
   // le formatage des véhicules afficher sur la carte
   const véhiculeData =
@@ -232,18 +270,21 @@ const LocationPage = ({
   };
 
   // Pour filtrer la recherche
-  const filteredVehicles = vehiculeActive?.filter(
-    (véhicule) =>
-      véhicule?.imeiNumber
-        .toLowerCase()
-        .includes(searchQueryLocationPage.toLowerCase()) ||
-      véhicule?.simPhoneNumber
-        .toLowerCase()
-        .includes(searchQueryLocationPage.toLowerCase()) ||
-      véhicule.description
-        .toLowerCase()
-        .includes(searchQueryLocationPage.toLowerCase())
-  );
+  const filteredVehicles = useMemo(() => {
+    return vehiculeActive?.filter(
+      (véhicule) =>
+        véhicule?.imeiNumber
+          .toLowerCase()
+          .includes(searchQueryLocationPage.toLowerCase()) ||
+        véhicule?.simPhoneNumber
+          .toLowerCase()
+          .includes(searchQueryLocationPage.toLowerCase()) ||
+        véhicule.description
+          .toLowerCase()
+          .includes(searchQueryLocationPage.toLowerCase())
+    );
+  }, [vehiculeActive, searchQueryLocationPage]);
+
   //
   //
   //

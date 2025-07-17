@@ -81,15 +81,6 @@ function SearchVehiculePupup({
         véhicule.véhiculeDetails[0] &&
         véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-      const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
-
-      //
-      //
-      //
-
-      //
-      //
-
       if (isSearching) {
         if (filterSearchVehiculePopupByCategorie === "all") {
           return true;
@@ -106,6 +97,15 @@ function SearchVehiculePupup({
         } else if (filterSearchVehiculePopupByCategorie === "deplace") {
           return hasBeenMoving;
         } else if (filterSearchVehiculePopupByCategorie === "non deplace") {
+          // Exclure les véhicules qui ont bougé, qui sont en mouvement ou hors service
+          if (hasBeenMoving || isHorsService) return false;
+
+          const isMoving =
+            véhicule?.véhiculeDetails &&
+            véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+
+          if (isMoving) return false;
+
           return isParking;
         } else if (filterSearchVehiculePopupByCategorie === "hors service") {
           return isHorsService;
@@ -117,6 +117,21 @@ function SearchVehiculePupup({
   const foundVehicle = currentDataFusionné?.find(
     (v) => v.deviceID === selectedVehicleToShowInMap
   );
+
+  const nombreDeRésultatParClique = 10;
+
+  const [voir10RésultatPlus, setVoir10RésultatPlus] = useState(1);
+
+  const filteredVehiclesPupupByCategoriePagination =
+    filteredVehiclesPupupByCategorie &&
+    filteredVehiclesPupupByCategorie?.slice(
+      0,
+      voir10RésultatPlus * nombreDeRésultatParClique
+    );
+
+  const afficherPlusDeRésultat = () => {
+    setVoir10RésultatPlus((prev) => prev + 1);
+  };
   return (
     <div className="fixed min-h-[100vh] px-2  z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
       <div className=" sm:mx-auto   min-w-[90vw]  md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
@@ -164,7 +179,7 @@ function SearchVehiculePupup({
                 }}
                 className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 "
               >
-                {t("Appareils Actifs")}
+                {t("Appareils non déplacés")}
               </p>
             </Tooltip>
 
@@ -233,98 +248,114 @@ function SearchVehiculePupup({
           />
         </div>
         <div className="overflow-auto  mt-14 h-[62vh] md:h-[55vh] ">
-          {filteredVehiclesPupupByCategorie?.length > 0 ? (
-            filteredVehiclesPupupByCategorie?.map((véhicule, index) => {
-              const isMoving =
-                véhicule?.véhiculeDetails &&
-                véhicule?.véhiculeDetails?.some(
-                  (detail) => detail.speedKPH >= 1
+          {filteredVehiclesPupupByCategoriePagination?.length > 0 ? (
+            filteredVehiclesPupupByCategoriePagination?.map(
+              (véhicule, index) => {
+                const isMoving =
+                  véhicule?.véhiculeDetails &&
+                  véhicule?.véhiculeDetails?.some(
+                    (detail) => detail.speedKPH >= 1
+                  );
+
+                const hasDetails =
+                  véhicule?.véhiculeDetails &&
+                  véhicule?.véhiculeDetails.length > 0;
+
+                const noSpeed = véhicule?.véhiculeDetails?.every(
+                  (detail) => detail.speedKPH <= 0
                 );
 
-              const hasDetails =
-                véhicule?.véhiculeDetails &&
-                véhicule?.véhiculeDetails.length > 0;
+                // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                const lastUpdateTimeMs = véhicule?.lastUpdateTime
+                  ? véhicule?.lastUpdateTime * 1000
+                  : 0;
+                const isActive =
+                  currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-              const noSpeed = véhicule?.véhiculeDetails?.every(
-                (detail) => detail.speedKPH <= 0
-              );
+                const lastUpdateTimestampMs =
+                  véhicule.véhiculeDetails &&
+                  véhicule.véhiculeDetails[0] &&
+                  véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-              // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-              const lastUpdateTimeMs = véhicule?.lastUpdateTime
-                ? véhicule?.lastUpdateTime * 1000
-                : 0;
-              const isActive = currentTime - lastUpdateTimeMs < twentyHoursInMs;
+                const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
 
-              const lastUpdateTimestampMs =
-                véhicule.véhiculeDetails &&
-                véhicule.véhiculeDetails[0] &&
-                véhicule.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
+                //
+                //
+                //
+                //
+                const hasBeenMoving = véhicule?.lastStopTime > todayTimestamp;
 
-              const isToday = lastUpdateTimestampMs - todayTimestamp > 0;
+                const isParking =
+                  currentTimeSec - véhicule?.lastUpdateTime <
+                  twentyFourHoursInSec;
 
-              //
-              //
-              //
-              //
-              const hasBeenMoving = véhicule?.lastStopTime > todayTimestamp;
+                const isHorsService =
+                  currentTimeSec - véhicule?.lastUpdateTime >
+                  twentyFourHoursInSec;
 
-              const isParking =
-                currentTimeSec - véhicule?.lastUpdateTime <
-                twentyFourHoursInSec;
+                let iconBg = "text-red-500 dark:text-red-500";
 
-              const isHorsService =
-                currentTimeSec - véhicule?.lastUpdateTime >
-                twentyFourHoursInSec;
-
-              let iconBg = "text-red-500 dark:text-red-500";
-
-              if (isSearching) {
-                if (isMoving) {
-                  iconBg = "text-green-500 dark:text-green-500";
-                } else if (hasDetails && noSpeed) {
-                  iconBg = "text-red-500 dark:text-red-500";
-                } else if (!hasDetails) {
-                  iconBg = "text-purple-500 dark:text-purple-500";
+                if (isSearching) {
+                  if (isMoving) {
+                    iconBg = "text-green-500 dark:text-green-500";
+                  } else if (hasDetails && noSpeed) {
+                    iconBg = "text-red-500 dark:text-red-500";
+                  } else if (!hasDetails) {
+                    iconBg = "text-purple-500 dark:text-purple-500";
+                  }
+                } else {
+                  if (hasBeenMoving) {
+                    iconBg = "text-green-500 dark:text-green-500";
+                  } else if (isParking) {
+                    iconBg = "text-red-500 dark:text-red-500";
+                  } else if (isHorsService) {
+                    iconBg = "text-purple-500 dark:text-purple-500";
+                  }
                 }
-              } else {
-                if (hasBeenMoving) {
-                  iconBg = "text-green-500 dark:text-green-500";
-                } else if (isParking) {
-                  iconBg = "text-red-500 dark:text-red-500";
-                } else if (isHorsService) {
-                  iconBg = "text-purple-500 dark:text-purple-500";
-                }
+                return (
+                  <div
+                    key={véhicule.deviseID}
+                    onClick={() => {
+                      handleClick(véhicule);
+                      setShowOptions(false);
+                      setSelectedVehicleToShowInMap(véhicule?.deviceID);
+                      console.log(véhicule);
+                    }}
+                    className={`${
+                      véhicule.description ===
+                        (isMapcomponent === "true"
+                          ? foundVehicle?.description
+                          : currentVéhicule?.description) &&
+                      "bg-orange-50 dark:bg-gray-800"
+                    }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 notranslate dark:bg-gray-600-- dark:hover:bg-gray-800`}
+                  >
+                    <FaCar
+                      className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg  `}
+                    />
+                    <p className="text-gray-700 notranslate dark:text-white">
+                      {index + 1} - {véhicule.description || "---"}
+                    </p>
+                  </div>
+                );
               }
-              return (
-                <div
-                  key={véhicule.deviseID}
-                  onClick={() => {
-                    handleClick(véhicule);
-                    setShowOptions(false);
-                    setSelectedVehicleToShowInMap(véhicule?.deviceID);
-                    console.log(véhicule);
-                  }}
-                  className={`${
-                    véhicule.description ===
-                      (isMapcomponent === "true"
-                        ? foundVehicle?.description
-                        : currentVéhicule?.description) &&
-                    "bg-orange-50 dark:bg-gray-800"
-                  }  cursor-pointer flex gap-4 py-4 items-center border-b border-gray-300 px-3 hover:bg-orange-50 notranslate dark:bg-gray-600-- dark:hover:bg-gray-800`}
-                >
-                  <FaCar
-                    className={` ${iconBg}   text-orange-600/80--- min-w-8 text-lg  `}
-                  />
-                  <p className="text-gray-700 notranslate dark:text-white">
-                    {index + 1} - {véhicule.description || "---"}
-                  </p>
-                </div>
-              );
-            })
+            )
           ) : (
             <p className="text-center dark:text-gray-50 px-3 mt-10">
               {t("Pas de resultat")}
             </p>
+          )}
+          {filteredVehiclesPupupByCategorie?.length >
+            filteredVehiclesPupupByCategoriePagination?.length && (
+            <div className="w-full flex justify-center mt-[4rem]">
+              <button
+                onClick={() => {
+                  afficherPlusDeRésultat();
+                }}
+                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+              >
+                {t("Voir plus de Résultat")}
+              </button>
+            </div>
           )}
         </div>
       </div>

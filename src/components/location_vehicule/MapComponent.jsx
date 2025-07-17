@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -7,10 +7,12 @@ import {
   ScaleControl,
   AttributionControl,
   useMap,
+  useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/img/cars/localisation.png";
+import MarkerClusterGroup from "react-leaflet-cluster";
 
 import { DataContext } from "../../context/DataContext";
 import { Polygon } from "react-leaflet";
@@ -38,6 +40,7 @@ function MapComponent({
   isAddingNewGeofence,
   setIsAddingNewGeofence,
   setDocumentationPage,
+  tileLayers,
 }) {
   const {
     selectedVehicleToShowInMap,
@@ -54,12 +57,15 @@ function MapComponent({
     ModifierGeofence,
     accountDevices,
     currentAccountSelected,
-
+    updateAppareilsEtGeofencesPourCarte,
     isDashboardHomePage,
     adminUsername,
     accountGeofences,
     mergedDataHome,
     véhiculeDetails,
+    appareilPourAfficherSurCarte,
+    geofencePourAfficherSurCarte,
+    documentationPage,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
@@ -68,93 +74,84 @@ function MapComponent({
 
   // le data a utiliser
 
-  const dataFusionnéHome = mergedDataHome ? Object.values(mergedDataHome) : [];
-
-  let dataFusionné;
-  let CurrentGeofenceData;
-
-  if (isDashboardHomePage && currentAccountSelected) {
-    dataFusionné = currentAccountSelected?.accountDevices?.map((device) => {
-      const match = véhiculeDetails?.find(
+  const véhiculeData = useMemo(() => {
+    return appareilPourAfficherSurCarte
+      ?.map((véhicule) => {
+        const details =
+          véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0] ||
+          {};
+        return {
+          deviceID: véhicule?.deviceID || "",
+          accountID: véhicule?.accountID || "",
+          description: véhicule.description || "Véhicule",
+          lastValidLatitude:
+            details.latitude || véhicule?.lastValidLatitude || "",
+          lastValidLongitude:
+            details.longitude || véhicule?.lastValidLongitude || "",
+          address: details.backupAddress || details.address || "",
+          imeiNumber: véhicule?.imeiNumber || "",
+          isActive: véhicule?.isActive || "",
+          licensePlate: véhicule?.licensePlate || "",
+          simPhoneNumber: véhicule?.simPhoneNumber || "",
+          timestamp: details.timestamp || véhicule?.lastUpdateTime || "",
+          speedKPH: details.speedKPH,
+          heading: details.heading || 0,
+        };
+      })
+      ?.filter(
         (v) =>
-          v.deviceID === device.deviceID &&
-          v.véhiculeDetails?.[0]?.accountID === device.accountID
+          v.lastValidLatitude !== "0.0" &&
+          v.lastValidLongitude !== "0.0" &&
+          v.lastValidLatitude !== "" &&
+          v.lastValidLongitude !== ""
       );
-
-      if (match && match.véhiculeDetails.length > 0) {
-        return { ...device, véhiculeDetails: match.véhiculeDetails };
-      }
-
-      return device;
-    });
-    CurrentGeofenceData = currentAccountSelected?.accountGeofences;
-  } else if (isDashboardHomePage && !currentAccountSelected) {
-    dataFusionné = accountDevices?.map((device) => {
-      const match = véhiculeDetails?.find(
-        (v) =>
-          v.deviceID === device.deviceID &&
-          v.véhiculeDetails?.[0]?.accountID === device.accountID
-      );
-
-      if (match && match.véhiculeDetails.length > 0) {
-        return { ...device, véhiculeDetails: match.véhiculeDetails };
-      }
-
-      return device;
-    });
-    CurrentGeofenceData = accountGeofences || [];
-  } else if (!isDashboardHomePage) {
-    dataFusionné = dataFusionnéHome;
-    CurrentGeofenceData = geofenceData;
-  }
-
-  const vehiculeActive = dataFusionné;
+  }, [appareilPourAfficherSurCarte, historiqueSelectedLocationIndex]);
 
   // Formatage des donnee pour la  carte
-  const véhiculeData = vehiculeActive
-    ?.map((véhicule) => ({
-      deviceID: véhicule?.deviceID || "",
-      accountID: véhicule?.accountID || "",
-      description: véhicule.description || "Véhicule",
-      lastValidLatitude:
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.latitude ||
-        véhicule?.lastValidLatitude ||
-        "",
-      lastValidLongitude:
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.longitude ||
-        véhicule?.lastValidLongitude ||
-        "",
-      address:
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.backupAddress ||
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.address ||
-        "",
-      imeiNumber: véhicule?.imeiNumber || "",
-      isActive: véhicule?.isActive || "",
-      licensePlate: véhicule?.licensePlate || "",
-      simPhoneNumber: véhicule?.simPhoneNumber || "",
-      timestamp:
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.timestamp ||
-        véhicule?.lastUpdateTime ||
-        "",
-      speedKPH:
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.speedKPH,
-      heading:
-        véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-          ?.heading || 0,
-    }))
-    ?.filter(
-      (v) =>
-        v.lastValidLatitude !== "0.0" &&
-        v.lastValidLongitude !== "0.0" &&
-        v.lastValidLatitude !== "" &&
-        v.lastValidLongitude !== ""
-    );
+  // const véhiculeData = appareilPourAfficherSurCarte
+  //   ?.map((véhicule) => ({
+  //     deviceID: véhicule?.deviceID || "",
+  //     accountID: véhicule?.accountID || "",
+  //     description: véhicule.description || "Véhicule",
+  //     lastValidLatitude:
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.latitude ||
+  //       véhicule?.lastValidLatitude ||
+  //       "",
+  //     lastValidLongitude:
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.longitude ||
+  //       véhicule?.lastValidLongitude ||
+  //       "",
+  //     address:
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.backupAddress ||
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.address ||
+  //       "",
+  //     imeiNumber: véhicule?.imeiNumber || "",
+  //     isActive: véhicule?.isActive || "",
+  //     licensePlate: véhicule?.licensePlate || "",
+  //     simPhoneNumber: véhicule?.simPhoneNumber || "",
+  //     timestamp:
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.timestamp ||
+  //       véhicule?.lastUpdateTime ||
+  //       "",
+  //     speedKPH:
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.speedKPH,
+  //     heading:
+  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
+  //         ?.heading || 0,
+  //   }))
+  //   ?.filter(
+  //     (v) =>
+  //       v.lastValidLatitude !== "0.0" &&
+  //       v.lastValidLongitude !== "0.0" &&
+  //       v.lastValidLatitude !== "" &&
+  //       v.lastValidLongitude !== ""
+  //   );
 
   // une reference pour la carte
   const mapRef = useRef(null);
@@ -163,35 +160,6 @@ function MapComponent({
   const vehicles = selectedVehicleToShowInMap
     ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
     : véhiculeData;
-  const tileLayers = {
-    terrain: {
-      url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
-      attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>',
-    },
-
-    satelite: {
-      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-    },
-
-    streets: {
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="https://www.opentopomap.org">OpenTopoMap</a> contributors',
-    },
-
-    humanitarian: {
-      url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://hot.openstreetmap.org">Humanitarian OpenStreetMap Team</a>',
-    },
-    positron: {
-      url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="https://www.carto.com/attributions">CARTO</a>',
-    },
-  };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -221,7 +189,6 @@ function MapComponent({
     }, 500);
 
     return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
-    // }, [selectedVehicleToShowInMap, vehicles]);
   }, [selectedVehicleToShowInMap]);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
@@ -236,7 +203,7 @@ function MapComponent({
   const twentyFourHoursInSec = 24 * 60 * 60;
   const currentTimeSec = getCurrentTimestamp();
 
-  const getMarkerIcon = (véhicule) => {
+  const getMarkerIcon = (véhicule, getColor = false) => {
     const speed = parseFloat(véhicule?.speedKPH);
     const direction = Math.round(véhicule?.heading / 45.0) % 8;
     const timestamp = véhicule?.timestamp * 1000; // Convertir en millisecondes
@@ -258,13 +225,22 @@ function MapComponent({
     //   if (isRecentlyUpdate) return "/pin/ping_red.png";
     //   return "/pin/ping_purple.png";
     // } else {
-    if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
-    if (speed > 0 && speed <= 20 && isStillSpeedActive)
-      return `/pin/ping_yellow_h${direction}.png`;
-    if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
-    if (speed > 20 && isStillSpeedActive)
-      return `/pin/ping_green_h${direction}.png`;
-    return "/pin/ping_red.png";
+    if (!getColor) {
+      if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
+      if (speed > 0 && speed <= 20 && isStillSpeedActive)
+        return `/pin/ping_yellow_h${direction}.png`;
+      if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+      if (speed > 20 && isStillSpeedActive)
+        return `/pin/ping_green_h${direction}.png`;
+      return "/pin/ping_red.png";
+    } else {
+      if (isNotRecentlyUpdate) return "bg-purple-600";
+      if (speed > 0 && speed <= 20 && isStillSpeedActive)
+        return `bg-yellow-600`;
+      if (speed <= 0 || !isStillSpeedActive) return "bg-red-500";
+      if (speed > 20 && isStillSpeedActive) return `bg-green-600`;
+      return "bg-red-500";
+    }
     // }
   };
 
@@ -807,8 +783,24 @@ function MapComponent({
 
   const [showGeofenceInCartePopup, setShowGeofenceInCartePopup] =
     useState(false);
-  const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(true);
+  const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(false);
 
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+
+  const MapClickHandlerClosePopup = ({ onMapClick }) => {
+    useMapEvents({
+      click: () => {
+        onMapClick(); // Quand la carte est cliquée (hors marker)
+      },
+    });
+    return null;
+  };
+
+  useEffect(() => {
+    updateAppareilsEtGeofencesPourCarte();
+  }, [currentAccountSelected]);
+
+  let getColor = true;
   return (
     <div
       onClick={() => {
@@ -817,6 +809,102 @@ function MapComponent({
       ref={ref1}
       className="relative"
     >
+      {selectedVehicle && (
+        <div className="fixed bottom-4 right-4 overflow-hidden bg-white p-4 rounded-md shadow-lg max-w-sm z-[1000]">
+          <div className="w-[70vw] max-w-[20rem] relative ">
+            <div className="absolute z-10 -top-[2.7rem] text-lg -right-2 flex justify-center items-center text-white cursor-pointer w-[2rem] h-[2rem] border border-white  rounded-full ">
+              <IoClose
+                onClick={() => {
+                  setSelectedVehicle(null);
+                }}
+              />
+            </div>
+            <div
+              className={`${getMarkerIcon(
+                selectedVehicle,
+                getColor
+              )}  bg-orange-500 absolute z-4 -top-[3rem] -left-5 -right-5 h-10 `}
+            >
+              .
+            </div>
+            <p className="font-bold text-[1rem] mt-[2rem]">
+              <span>{t("Description")} :</span>{" "}
+              <span className="notranslate">
+                {selectedVehicle?.description || `${t("Non disponible")}`}
+              </span>
+            </p>
+
+            <p>
+              <strong>{t("accountID")} :</strong>{" "}
+              <span className="notranslate">
+                {selectedVehicle?.accountID || `${t("Non disponible")}`}
+              </span>
+            </p>
+
+            <p>
+              <strong>{t("Adresse")} :</strong>{" "}
+              <span className="notranslate">
+                {selectedVehicle?.address || `${t("Non disponible")}`}
+              </span>
+            </p>
+
+            <p>
+              <strong>{t("Vitesse")} :</strong>{" "}
+              {selectedVehicle?.speedKPH &&
+              !isNaN(Number(selectedVehicle?.speedKPH))
+                ? Number(selectedVehicle?.speedKPH).toFixed(0) + " km/h"
+                : `${t("Non disponible")}`}
+            </p>
+
+            <p>
+              <strong>{t("Statut")} : </strong>
+              {selectedVehicle?.speedKPH ? "" : `${t("Hors service")}`}
+              {selectedVehicle?.speedKPH < 1 && `${t("En stationnement")}`}
+              {selectedVehicle?.speedKPH > 20 && `${t("En mouvement rapide")}`}
+              {selectedVehicle?.speedKPH >= 1 &&
+                selectedVehicle?.speedKPH <= 20 &&
+                `${t("En mouvement lent")}`}
+            </p>
+            <p>
+              <strong>{t("Plaque d'immatriculation")} :</strong>{" "}
+              {selectedVehicle?.licensePlate || `${t("Chargement...")}`}
+            </p>
+            {(username === "admin" || adminUsername === "admin") && (
+              <p>
+                <strong>{t("IMEI")} :</strong>{" "}
+                {selectedVehicle?.imeiNumber || `${t("Chargement...")}`}
+              </p>
+            )}
+            <p>
+              <strong>{t("Telephone")} :</strong>{" "}
+              {selectedVehicle?.simPhoneNumber || `${t("Chargement...")}`}
+            </p>
+            <p>
+              <strong>{t("Last Update")} :</strong>{" "}
+              {selectedVehicle?.timestamp
+                ? FormatDateHeure(selectedVehicle.timestamp)?.date
+                : `${t("Pas de date disponible")}`}
+              <span className="px-3">/</span>
+              {FormatDateHeure(selectedVehicle.timestamp)?.time}
+            </p>
+
+            <button
+              onClick={() =>
+                openGoogleMaps(
+                  selectedVehicle?.lastValidLatitude,
+                  selectedVehicle?.lastValidLongitude
+                )
+              }
+              className={`${getMarkerIcon(
+                selectedVehicle,
+                getColor
+              )}  mt-2 px-3 py-1  text-white rounded-md`}
+            >
+              {t("Voir sur Google Maps")}
+            </button>
+          </div>
+        </div>
+      )}
       {isAddingNewGeofence && (
         <div className="fixed  z-[9999999999] shadow-lg right-[1rem] lg:right-[2rem] md:top-[5rem] top-[11rem]  ">
           <button
@@ -918,7 +1006,7 @@ function MapComponent({
         className="border overflow-hidden absolute right-1 top-[10rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
       >
         <div className="relative">
-          {!showGeofenceInCarte && (
+          {/* {!showGeofenceInCarte && (
             <>
               <div className="absolute text-orange-400 -top-10 -bottom-10 left-[45%] rotate-45 w-[.1rem] bg-red-400">
                 .
@@ -927,10 +1015,10 @@ function MapComponent({
                 .
               </div>
             </>
-          )}
+          )} */}
           <IoEarth
             className={`${
-              showGeofenceInCarte ? "text-green-500" : "text-orange-500"
+              !showGeofenceInCarte ? "text-green-500" : "text-orange-500"
             } text-2xl `}
           />
         </div>
@@ -1205,68 +1293,114 @@ function MapComponent({
         <AttributionControl position="bottomleft" />
 
         <ZoomTextUpdater />
+        <MapClickHandlerClosePopup
+          onMapClick={() => setSelectedVehicle(null)}
+        />
 
         {/* Composant qui gère le clic sur la carte */}
 
         {!isAddingNewGeofence &&
           showGeofenceInCarte &&
-          CurrentGeofenceData?.filter((isActiveGeofence) => {
-            const activeGeofence = isActiveGeofence?.isActive === 1;
-            return activeGeofence;
-          })?.map((geofence, index) => {
-            // Filtrer les coordonnées valides
-            const validCoordinates = geofence?.coordinates?.filter(
-              (point) =>
-                point.lat !== null &&
-                point.lng !== null &&
-                point.lat !== "" &&
-                point.lng !== "" &&
-                point.lat !== 0 &&
-                point.lng !== 0
-            );
+          geofencePourAfficherSurCarte
+            ?.filter((isActiveGeofence) => {
+              const activeGeofence = isActiveGeofence?.isActive === 1;
+              return activeGeofence;
+            })
+            ?.map((geofence, index) => {
+              // Filtrer les coordonnées valides
+              const validCoordinates = geofence?.coordinates?.filter(
+                (point) =>
+                  point.lat !== null &&
+                  point.lng !== null &&
+                  point.lat !== "" &&
+                  point.lng !== "" &&
+                  point.lat !== 0 &&
+                  point.lng !== 0
+              );
 
-            if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
+              if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
 
-            // Calculer le centre du geofence
-            const latitudes = validCoordinates?.map((point) => point.lat);
-            const longitudes = validCoordinates?.map((point) => point.lng);
-            const center = [
-              (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
-              (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-            ];
+              // Calculer le centre du geofence
+              const latitudes = validCoordinates?.map((point) => point.lat);
+              const longitudes = validCoordinates?.map((point) => point.lng);
+              const center = [
+                (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+                (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+              ];
 
-            return (
-              <React.Fragment key={index}>
-                <Polygon
-                  positions={validCoordinates?.map((point) => [
-                    point.lat,
-                    point.lng,
-                  ])}
-                  pathOptions={{
-                    color: geofence?.color || "", // Couleur de la bordure
-                    fillColor: geofence?.color || "#000000", // Couleur du fond
-                    fillOpacity: 0.1, // Opacité du fond
-                    weight: 1, // Épaisseur des lignes
-                  }}
-                />
+              return (
+                <React.Fragment key={index}>
+                  <Polygon
+                    positions={validCoordinates?.map((point) => [
+                      point.lat,
+                      point.lng,
+                    ])}
+                    pathOptions={{
+                      color: geofence?.color || "", // Couleur de la bordure
+                      fillColor: geofence?.color || "#000000", // Couleur du fond
+                      fillOpacity: 0.1, // Opacité du fond
+                      weight: 1, // Épaisseur des lignes
+                    }}
+                  />
 
-                <Marker
-                  position={center}
-                  icon={L.divIcon({
-                    className: "geofence-label",
-                    html: `<div 
+                  <Marker
+                    position={center}
+                    icon={L.divIcon({
+                      className: "geofence-label",
+                      html: `<div 
                            class="bg-gray-100 notranslate px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
                            
                            style="font-size: ${textSize}; width: ${widthSize}; color: #706f6f; {geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
                            ${geofence?.description}
                            </div>`,
-                  })}
-                />
-              </React.Fragment>
-            );
-          })}
+                    })}
+                  />
+                </React.Fragment>
+              );
+            })}
 
-        {!isAddingNewGeofence &&
+        {!isAddingNewGeofence && (
+          <MarkerClusterGroup
+            chunkedLoading
+            spiderfyOnMaxZoom={false}
+            showCoverageOnHover={false}
+            maxClusterRadius={50}
+          >
+            {vehicles?.map((véhicule, index) => {
+              const FormatDateHeureTimestamp = FormatDateHeure(
+                véhicule.timestamp
+              );
+
+              return (
+                <Marker
+                  key={index}
+                  position={[
+                    véhicule.lastValidLatitude || 0,
+                    véhicule.lastValidLongitude || 0,
+                  ]}
+                  icon={L.icon({
+                    iconUrl: getMarkerIcon(véhicule),
+                    iconSize: [18, 25],
+                    iconAnchor: [10, 20],
+                    popupAnchor: [1, -16],
+                    shadowUrl:
+                      "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+                    shadowSize: [1, 1],
+                  })}
+                  eventHandlers={{
+                    click: () => setSelectedVehicle(véhicule),
+                  }}
+                >
+                  {/* <Popup>
+                    <div></div>
+                  </Popup> */}
+                </Marker>
+              );
+            })}
+          </MarkerClusterGroup>
+        )}
+
+        {/* {!isAddingNewGeofence &&
           vehicles?.map((véhicule, index) => {
             const FormatDateHeureTimestamp = FormatDateHeure(
               véhicule.timestamp
@@ -1311,11 +1445,7 @@ function MapComponent({
                         {véhicule.address || `${t("Non disponible")}`}
                       </span>
                     </p>
-                    {/* <p>
-                      <strong>Date creation :</strong>{" "}
-                      {véhicule.address || `${t("Non disponible")}`}
-                    </p> */}
-
+                
                     <p>
                       <strong>{t("Vitesse")} :</strong>{" "}
                       {véhicule.speedKPH && !isNaN(Number(véhicule.speedKPH))
@@ -1370,7 +1500,7 @@ function MapComponent({
                 </Popup>
               </Marker>
             );
-          })}
+          })} */}
 
         {/*  */}
         {/*  */}

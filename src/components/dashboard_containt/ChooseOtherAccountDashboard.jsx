@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { FaUserCircle } from "react-icons/fa";
@@ -21,13 +21,28 @@ function ChooseOtherAccountDashboard({
     setCurrentAccountSelected,
     setListeGestionDesVehicules,
     currentAccountSelected,
-    accountDevices,
     setListeGestionDesGeofences,
     scrollToTop,
     accountGeofences,
+    updateAppareilsEtGeofencesPourCarte,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+
+  const nombreDeRésultatParClique = 10;
+
+  // const [voir10RésultatPlus, setVoir10RésultatPlus] = useState(1);
+  const [voir10DePlus, setVoir10DePlus] = useState(1);
+
+  const filterGestionAccountDataPagination =
+    filterGestionAccountData &&
+    filterGestionAccountData
+      // ?.sort((a, b) => b?.accountDevices?.length - a?.accountDevices?.length)
+      ?.slice(0, voir10DePlus * nombreDeRésultatParClique);
+
+  const afficherPlusDeRésultat = () => {
+    setVoir10DePlus((prev) => prev + 1);
+  };
 
   return (
     <>
@@ -42,8 +57,9 @@ function ChooseOtherAccountDashboard({
               <IoClose
                 onClick={() => {
                   setChooseOtherAccountGestion(false);
+                  setVoir10DePlus(1);
                 }}
-                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4" 
+                className="absolute text-2xl text-red-600 top-4 cursor-pointer right-4"
               />
             </div>
             <div className="flex pb-2 mx-3 mt-4 gap-2 justify-between items-center">
@@ -83,7 +99,7 @@ function ChooseOtherAccountDashboard({
                         setChooseOtherAccountGestion(false);
                       } else {
                         setCurrentAccountSelected(null);
-                        setAllDevices(accountDevices);
+                        // setAllDevices(accountDevices);
                         setChooseOtherAccountGestion(false);
                         setListeGestionDesGeofences(accountGeofences);
                       }
@@ -95,7 +111,7 @@ function ChooseOtherAccountDashboard({
                 </button>
               )}
               {/*  */}
-              {filterGestionAccountData?.map((account, index) => {
+              {filterGestionAccountDataPagination?.map((account, index) => {
                 return (
                   <div
                     key={index}
@@ -106,7 +122,8 @@ function ChooseOtherAccountDashboard({
                         setCurrentAccountSelected(account);
                         setListeGestionDesVehicules(account?.accountDevices);
                         setListeGestionDesGeofences(account?.accountGeofences);
-                        setAllDevices(account?.accountDevices);
+                        setVoir10DePlus(1);
+                        // setAllDevices(account?.accountDevices);
                       }
 
                       setChooseOtherAccountGestion(false);
@@ -160,6 +177,19 @@ function ChooseOtherAccountDashboard({
                   </div>
                 );
               })}
+              {filterGestionAccountData?.length >
+                filterGestionAccountDataPagination?.length && (
+                <div className="w-full flex justify-center mt-[4rem]">
+                  <button
+                    onClick={() => {
+                      afficherPlusDeRésultat();
+                    }}
+                    className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+                  >
+                    {t("Voir plus de Résultat")}
+                  </button>
+                </div>
+              )}
               {/*  */}
             </div>
           </div>

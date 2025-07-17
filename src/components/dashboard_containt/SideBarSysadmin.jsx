@@ -73,6 +73,7 @@ function SideBarSysadmin({
     readDocumentation,
     documentationPage,
     setDocumentationPage,
+    setSelectedVehicleToShowInMap,
 
     installation_sur_application_ref,
     installation_sur_chrome_ref,
@@ -103,8 +104,9 @@ function SideBarSysadmin({
     rapport_groupe_telecharger_pdf_ref,
     creer_geozone_ref,
     modifier_geozone_ref,
-
+    updateAppareilsEtGeofencesPourCarte,
     setChooseOtherLanguagePopup,
+    setFilteredColorCategorieListe,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -233,6 +235,7 @@ function SideBarSysadmin({
               setDocumentationPage("Dashboard");
               closeSideBar();
               setReadDocumentation(false);
+              setSelectedVehicleToShowInMap(null);
             }}
             className={`${
               documentationPage === "Dashboard" ? "bg-orange-50" : ""
@@ -406,11 +409,11 @@ function SideBarSysadmin({
                         currentAccountSelected?.accountGroupes
                       );
 
-                      setListeGestionDesGroupeTitre("Tous les Groupe");
+                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                     } else {
                       setListeGestionDesGroupe(accountGroupes);
 
-                      setListeGestionDesGroupeTitre("Tous les Groupe");
+                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                     }
                     scrollToTop();
                     setDocumentationPage("Gestion_des_groupes");
@@ -450,6 +453,7 @@ function SideBarSysadmin({
             >
               <div
                 onClick={() => {
+                  setFilteredColorCategorieListe(null);
                   setDocumentationPage("Gestion_des_appareils");
                   scrollToTop();
                   closeSideBar();
@@ -669,6 +673,8 @@ function SideBarSysadmin({
             >
               <div
                 onClick={() => {
+                  setSelectedVehicleToShowInMap(null);
+
                   if (currentAccountSelected) {
                     setListeGestionDesVehicules(
                       currentAccountSelected?.accountDevices
@@ -676,6 +682,7 @@ function SideBarSysadmin({
                   } else {
                     setListeGestionDesVehicules(accountDevices);
                   }
+                  updateAppareilsEtGeofencesPourCarte();
                   scrollToTop();
                   setDocumentationPage("Localisation_devices");
                   setAjouterGeofencePopup(false);

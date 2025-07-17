@@ -26,7 +26,7 @@
   "Actifs": "Activos",
 
   "TableauRecapitulatifComptes": "--------------------------------------------------------",
-  "Compte": "Cuenta",
+  "Compte": "Cuentas",
   "Déplacé": "Movido",
   "Hors service": "Fuera de servicio",
   "Utilisateur": "Usuario",
@@ -55,7 +55,7 @@
   "Liste des Alertes": "Lista de Alertas",
   "Sélectionner un Groupe": "Seleccionar un Grupo",
 
-  "Déplacés": "Movidos",
+  "Déplacés": "Movido(s)",
   "Position des appareils": "Posición de los Dispositivos",
   "Full Screen": "Pantalla Completa",
   "Nombre d'appareils": "Número de Dispositivos",
@@ -139,7 +139,7 @@
   "Dernière connexion": "Última Conexión",
   "Mot de passe incorrect. Veuillez réessayer": "Contraseña incorrecta. Inténtalo de nuevo.",
   "Voulez-vous changer de Compte ?": "¿Quieres cambiar de cuenta?",
-  "Veuillez entrer votre mot de passe": "Por favor ingresa tu contraseña",
+  "Veuillez entrer votre mot de passe": "Por favor ingresa su contraseña",
   "Mot de passe": "Contraseña",
   "Confirmer": "Confirmar",
   "Annuler": "Cancelar",
@@ -396,7 +396,7 @@
   "Voir le trajet du véhicule sur la carte": "Ver la Ruta del Vehículo en el Mapa",
   "Trajet": "Ruta",
   "Voir un historique sur l'état du véhicule": "Ver Historial del Estado del Vehículo",
-  "Historique": "Historial",
+  "Historique": "Historico",
   "Bloquer ou débloquer le véhicule": "Bloquear o Desbloquear el Vehículo",
   "Contrôle": "Control",
   "Voir les informations personnelles du véhicule": "Ver Información del Vehículo",
@@ -763,7 +763,28 @@
   "Page non trouvée": "Página no encontrada",
   "Oups ! La page que vous recherchez n'existe pas": "¡Ups! La página que busca no existe",
   "Retour à l'accueil": "Volver al inicio",
-  "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support": "Si cree que esto es un error, por favor contacte al soporte"
+  "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support": "Si cree que esto es un error, por favor contacte al soporte",
+
+
+
+
+  
+  "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.": "El proceso puede tardar un poco según la cantidad de vehículos, pero sigue siendo rápido.",
+  "Notez bien": "Tenga en cuenta",
+  "Voir plus de Résultat": "Ver más resultados",
+
+  "Résultat": "Resultado",
+  "Recherche une alerte": "Buscar una alerta",
+  "Appareils non déplacés": "Vehículo(s) no desplazado(s)",
+  "Appareils en Stationnement": "Vehículo(s) estacionado(s)",
+  "Non Déplacer": "No desplazado(s)",
+  "Appareils Déplacés": "Vehículo(s) desplazado(s)",
+  "Statistiques par compte": "Estadísticas por cuenta",
+
+
+"Nombre appareils": "Número de Vehículos"
+
+
 
 
 

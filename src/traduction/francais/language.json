@@ -29,7 +29,7 @@
 
 
 "TableauRecapitulatifComptes": "--------------------------------------------------------",
-"Compte": "Compte",
+"Compte": "Comptes",
 "Déplacé": "Déplacé",
 "Hors service": "Hors service",
 "Utilisateur": "Utilisateur",
@@ -868,7 +868,30 @@
 
 
 "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.": "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.",
-"Notez bien": "Notez bien"
+"Notez bien": "Notez bien",
+"Voir plus de Résultat": "Voir plus de Résultat",
+
+"Résultat": "Résultat",
+"Recherche une alerte": "Recherche une alerte",
+"Appareils non déplacés": "Appareil(s) non déplacé(s)",
+"Appareils en Stationnement": "Appareil(s) en Stationnement",
+"Non Déplacer": "Non Déplacé(s)",
+"Appareils Déplacés": "Appareils Déplacé(s)",
+"Statistiques par compte": "Statistiques par compte",
+"Nombre appareils": "Nombre appareils",
+
+
+
+
+
+
+
+"": "",
+"": "",
+"": "",
+"": ""
+
+
 
 
 

@@ -12,6 +12,7 @@ import {
 } from "recharts";
 function Graphe3BatonnetComptes({
   graphData2,
+  comptesAffichésDansGrapheAccount,
   barSpacing2,
   CustomTooltip2,
   fixedWidth2,
@@ -27,7 +28,7 @@ function Graphe3BatonnetComptes({
         <div style={{ width: `${fixedWidth2}px`, height: "100%" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={graphData2}
+              data={comptesAffichésDansGrapheAccount}
               layout="horizontal"
               margin={{ top: 20, right: 30, left: 0, bottom: -10 }}
               barCategoryGap={barSpacing2 - 10}

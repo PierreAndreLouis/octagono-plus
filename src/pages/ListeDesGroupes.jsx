@@ -1,11 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import {
-  FaUserPlus,
-  FaChevronDown,
-  FaUserCircle,
-} from "react-icons/fa";
+import { FaUserPlus, FaChevronDown, FaUserCircle } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
@@ -39,13 +35,10 @@ function ListeDesGroupes({
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
-          const navigate = useNavigate(); 
-  
+  const navigate = useNavigate();
 
   const [deleteGroupeAccountPopup, setDeleteGroupeAccountPopup] =
     useState(false);
-
-
 
   const [inputPassword, setInputPassword] = useState("");
 
@@ -85,21 +78,15 @@ function ListeDesGroupes({
       showSelectedGroupeOptionsPopup
     );
   }, [showSelectedGroupeOptionsPopup]);
-
-  // useEffect(() => {
-  //   console.log(
-  //     "currentSelectedGroupeGestion +++++++++++++",
-  //     currentSelectedGroupeGestion
-  //   );
-  // }, [currentSelectedGroupeGestion]);
-
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
-  const filterGestionAccountData = searchInputTerm
-    ? listeGestionDesUsers?.filter((item) =>
-        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
-      )
-    : listeGestionDesUsers;
+  const filterGestionAccountData = useMemo(() => {
+    if (!searchInputTerm) return listeGestionDesUsers;
+    const term = searchInputTerm.toLowerCase();
+    return listeGestionDesUsers?.filter((item) =>
+      item?.description?.toLowerCase().includes(term)
+    );
+  }, [searchInputTerm, listeGestionDesUsers]);
 
   const [showChooseOtherUserGroupePopup, setShowChooseOtherUserGroupePopup] =
     useState(false);
@@ -107,17 +94,38 @@ function ListeDesGroupes({
   const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
 
-  const listeGestionDesGroupe2 = currentAccountSelected
-    ? currentAccountSelected?.accountGroupes
-    : accountGroupes;
+  const filterGroupeAccountData = useMemo(() => {
+    if (!searchGroupInputTerm) return listeGestionDesGroupe;
+    const term = searchGroupInputTerm.toLowerCase();
+    return listeGestionDesGroupe?.filter((item) =>
+      item?.description?.toLowerCase().includes(term)
+    );
+  }, [searchGroupInputTerm, listeGestionDesGroupe]);
 
-  const filterGroupeAccountData = searchGroupInputTerm
-    ? listeGestionDesGroupe?.filter((item) =>
-        item?.description
-          .toLowerCase()
-          .includes(searchGroupInputTerm.toLowerCase())
-      )
-    : listeGestionDesGroupe;
+  const sortedGroupes = useMemo(() => {
+    return [...(filterGroupeAccountData || [])].sort(
+      (a, b) => b?.creationTime - a?.creationTime
+    );
+  }, [filterGroupeAccountData]);
+
+  const groupUsersMap = useMemo(() => {
+    const map = new Map();
+    (gestionAccountData || []).forEach((account) => {
+      (account.accountUsers || []).forEach((user) => {
+        (user.userGroupes || []).forEach((group) => {
+          if (!map.has(group.groupID)) map.set(group.groupID, []);
+          map.get(group.groupID).push(user);
+        });
+      });
+    });
+    return map;
+  }, [gestionAccountData]);
+
+  const [itemsToShow, setItemsToShow] = useState(10);
+
+  const groupesToDisplay = useMemo(() => {
+    return sortedGroupes.slice(0, itemsToShow);
+  }, [sortedGroupes, itemsToShow]);
 
   return (
     <div>
@@ -278,37 +286,42 @@ function ListeDesGroupes({
       )}
 
       <div className="px-4 pb-40 pt-10 bg-white rounded-lg">
-        {fromExpandSectionDashboard === "false" && (
-          <div className="mb-[4rem]">
-            <h2
-              onClick={() => {
-                fetchAccountGroupes();
-              }}
-              className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
-            >
-              {t("Liste des groupes")}
-            </h2>
+        {/* {fromExpandSectionDashboard === "false" && ( */}
+        <div className="mb-[4rem]">
+          {fromExpandSectionDashboard === "false" && (
+            <>
+              <h2
+                onClick={() => {
+                  fetchAccountGroupes();
+                }}
+                className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
+              >
+                {t("Liste des groupes")}
+              </h2>
 
-            <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-              {currentSelectedUserToConnect?.description && (
-                <span className="text-gray-700">{t("Utilisateur")} :</span>
-              )}{" "}
-              <span className="notranslate">
-                {currentSelectedUserToConnect?.description}
-              </span>
-            </h3>
-            <h3 className=" text-orange-600 text-md text-center font-bold-- ">
-              {listeGestionDesGroupeTitre && (
-                <span className="text-gray-700">{t("Groupe")} :</span>
-              )}{" "}
-              {listeGestionDesGroupeTitre}
-            </h3>
-            <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">{t("Nombre de Groupe")} :</span>{" "}
-              {filterGroupeAccountData?.length}
-            </h3>
+              <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+                {currentSelectedUserToConnect?.description && (
+                  <span className="text-gray-700">{t("Utilisateur")} :</span>
+                )}{" "}
+                <span className="notranslate">
+                  {currentSelectedUserToConnect?.description}
+                </span>
+              </h3>
+              <h3 className=" text-orange-600 text-md text-center font-bold-- ">
+                {listeGestionDesGroupeTitre && (
+                  <span className="text-gray-700">{t("Groupe")} :</span>
+                )}{" "}
+                {listeGestionDesGroupeTitre}
+              </h3>
+              <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
+                <span className="text-gray-700">{t("Nombre de Groupe")} :</span>{" "}
+                {filterGroupeAccountData?.length}
+              </h3>
+            </>
+          )}
 
-            <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+          <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+            {fromExpandSectionDashboard === "false" && (
               <div className="flex gap-2 justify-center mt-4">
                 <div
                   onClick={() => {
@@ -317,11 +330,10 @@ function ListeDesGroupes({
                       setChooseOneAccountToContinue(true);
                       setChooseOtherAccountGestion(true);
                       setDocumentationPage("Ajouter_nouveau_groupe");
-                      navigate("/Ajouter_nouveau_groupe")
+                      navigate("/Ajouter_nouveau_groupe");
                     } else {
                       setDocumentationPage("Ajouter_nouveau_groupe");
-                      navigate("/Ajouter_nouveau_groupe")
-
+                      navigate("/Ajouter_nouveau_groupe");
                     }
                   }}
                   className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
@@ -335,8 +347,10 @@ function ListeDesGroupes({
                   </div>
                 </div>{" "}
               </div>
+            )}
 
-              {!showFilterInputSection && (
+            {!showFilterInputSection &&
+              fromExpandSectionDashboard === "false" && (
                 <div className="flex gap-2 w-full justify-between items-center">
                   <div
                     onClick={() => {
@@ -361,69 +375,64 @@ function ListeDesGroupes({
                   >
                     <IoSearchOutline className="text-xl " />
                   </div>
-                  {/* <div
-                onClick={() => {
-                  // deviceUpdateFonction();
-                }}
-                className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
-              >
-                <MdUpdate className="text-xl " />
-              </div> */}
                 </div>
               )}
 
-              {showFilterInputSection && (
-                <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
-                  <input
-                    id="search"
-                    name="search"
-                    type="search"
-                    placeholder={`${t("Recherche un Groupe")}`}
-                    required
-                    value={searchGroupInputTerm}
-                    onChange={(e) => {
-                      setSearchGroupInputTerm(e.target.value);
-                    }}
-                    className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
-                  />
-                  <div
-                    onClick={() => {
-                      {
-                        setShowFilterInputSection(false);
-                        setSearchTermInput("");
-                      }
-                    }}
-                    className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
-                  >
-                    <IoClose className="text-xl text-red-600" />
-                  </div>
+            {(showFilterInputSection ||
+              fromExpandSectionDashboard === "true") && (
+              <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+                <input
+                  id="search"
+                  name="search"
+                  type="search"
+                  placeholder={`${t("Recherche un Groupe")}`}
+                  required
+                  value={searchGroupInputTerm}
+                  onChange={(e) => {
+                    setSearchGroupInputTerm(e.target.value);
+                  }}
+                  className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                />
+                <div
+                  onClick={() => {
+                    {
+                      setShowFilterInputSection(false);
+                      setSearchGroupInputTerm("");
+                    }
+                  }}
+                  className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+                >
+                  <IoClose className="text-xl text-red-600" />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        {/* )} */}
 
         <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
           {/*  */}
           {/*  */}
           {/*  */}
 
-          {filterGroupeAccountData?.length > 0 ? (
-            filterGroupeAccountData
+          {groupesToDisplay?.length > 0 ? (
+            groupesToDisplay
               ?.slice()
               .sort((a, b) => b?.creationTime - a?.creationTime)
               ?.map((groupe, index) => {
-                const userListeAffected = (
-                  currentAccountSelected ||
-                  gestionAccountData.find(
-                    (account) => account.accountID === groupe?.accountID
-                  )
-                )?.accountUsers?.filter((user) => {
-                  const groupes = user?.userGroupes || [];
-                  return groupes?.some(
-                    (group) => group?.groupID === groupe?.groupID
-                  );
-                });
+                // const userListeAffected = (
+                //   currentAccountSelected ||
+                //   gestionAccountData.find(
+                //     (account) => account.accountID === groupe?.accountID
+                //   )
+                // )?.accountUsers?.filter((user) => {
+                //   const groupes = user?.userGroupes || [];
+                //   return groupes?.some(
+                //     (group) => group?.groupID === groupe?.groupID
+                //   );
+                // });
+                const userListeAffected =
+                  groupUsersMap.get(groupe.groupID) || [];
 
                 const foundGroupe = gestionAccountData
                   ?.flatMap((account) => account.accountGroupes)
@@ -509,7 +518,16 @@ function ListeDesGroupes({
               {t("Pas de résultat")}
             </div>
           )}
-
+          {itemsToShow < sortedGroupes.length && (
+            <div className="flex justify-center w-full">
+              <button
+                onClick={() => setItemsToShow(itemsToShow + 10)}
+                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+              >
+                {t("Voir plus de Résultat")}
+              </button>
+            </div>
+          )}
           {/*  */}
           {/*  */}
         </div>

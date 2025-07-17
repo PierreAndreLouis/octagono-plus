@@ -1,161 +1,213 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
 
-function TableauRecapitulatifComptes({ isLongueur }) {
-  const { gestionAccountData } = useContext(DataContext);
-  const [t, i18n] = useTranslation();
-  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
+function TableauRecapitulatifComptes({
+  isLongueur,
+  voirPlusDeColonneDansTableauCompte,
+  setDocumentationPage,
+  setExpandSection,
+  setStatisticFilteredDeviceListeText,
+}) {
+  const {
+    gestionAccountData,
+    setCurrentAccountSelected,
+    setFilteredColorCategorieListe,
+  } = useContext(DataContext);
+  const [t] = useTranslation();
+
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
   const getTodayTimestamp = () => {
     const now = new Date();
-    now.setHours(0, 0, 0, 0); // Minuit
-    return Math.floor(now.getTime() / 1000); // secondes
+    now.setHours(0, 0, 0, 0);
+    return Math.floor(now.getTime() / 1000);
   };
 
-  const todayTimestamp = getTodayTimestamp();
-  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
-  const twentyFourHoursInSec = 24 * 60 * 60;
-  const currentTimeSec = getCurrentTimestamp();
+  const todayTimestamp = useMemo(getTodayTimestamp, []);
+  const currentTimeSec = useMemo(() => Math.floor(Date.now() / 1000), []);
+  const twentyFourHoursInSec = 86400;
+
+  const comptesAnalysés = useMemo(() => {
+    if (!gestionAccountData) return [];
+
+    return gestionAccountData
+      .slice()
+      .sort(
+        (a, b) =>
+          (b.accountDevices?.length || 0) - (a.accountDevices?.length || 0)
+      )
+      .map((acct, i) => {
+        const devices = acct.accountDevices || [];
+        const totalDevices = devices.length;
+
+        let moved = 0;
+        let actifs = 0;
+
+        for (let j = 0; j < devices.length; j++) {
+          const d = devices[j];
+          if (d.lastStopTime > todayTimestamp) moved++;
+          if (currentTimeSec - d.lastUpdateTime < twentyFourHoursInSec)
+            actifs++;
+        }
+
+        return {
+          index: i + 1,
+          id: acct.accountID,
+          totalDevices,
+          moved,
+          actifs,
+          inactifs: totalDevices - actifs,
+          nbUsers: acct.accountUsers?.length || 0,
+          nbGroups: acct.accountGroupes?.length || 0,
+          nbGeofences: acct.accountGeofences?.length || 0,
+          type: acct.accountType || "-",
+          isManager: acct.isAccountManager ? "Oui" : "Non",
+          isActive: acct.isActive ? "Oui" : "Non",
+        };
+      });
+  }, [gestionAccountData, todayTimestamp, currentTimeSec]);
+
+  const comptesVisibles = useMemo(() => {
+    return comptesAnalysés.slice(0, page * pageSize);
+  }, [comptesAnalysés, page]);
+
+  const tableauClass =
+    isLongueur === "true" ? "h-[75vh]" : "md:h-[20rem] h-[20rem]";
+
+  useEffect(() => {
+    if (page > 1) {
+      setPage(1);
+    }
+  }, [setDocumentationPage]);
+
+  const handleChooseCompte = (acct) => {
+    const acctID = acct?.id;
+    const foundAccount = gestionAccountData?.find(
+      (c) => c.accountID === acctID
+    );
+    setCurrentAccountSelected(foundAccount);
+    // console.log("foundAccount", foundAccount);
+    // console.log("gestionAccountData", gestionAccountData);
+  };
+
+  const handleSetAllDevice = (acct) => {
+    const acctID = acct?.id;
+    const foundAccount = gestionAccountData?.find(
+      (c) => c.accountID === acctID
+    );
+
+    const accountDevice = foundAccount?.accountDevice;
+
+    setFilteredColorCategorieListe("foundAccount", foundAccount);
+    setFilteredColorCategorieListe(accountDevice);
+    console.log(accountDevice);
+    setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
+  };
 
   return (
-    <div
-      className={`w-full  overflow-x-auto overflow-y-hidden ${
-        isLongueur === "true" ? "" : " h-[20rem] "
-      } `}
-    >
-      {/* fixed header */}
-      <thead>
-        <div className="h-auto border-l-2-- border-red-600- min- w-full -w-[150rem] w-full-">
-          <tr className="bg-orange-100 border-2 border-green-600 relative z-[3] text-gray-700 dark:bg-gray-900 dark:text-gray-100">
-            {/* <th className="border min-w-[.4rem] dark:border-gray-600 py-2 ----- --px-1"></th> */}
-            <th className="border  min-w-[3.21rem]  dark:border-gray-600 py-2 ---- px-2">
-              #
-            </th>
-            <th className="border min-w-[11.94rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Compte")}
-            </th>
-            <th className="border dark:border-gray-600 min-w-[6rem] py-2 ---- px-2">
-              {t("Total")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Déplacé")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Actifs")}
-            </th>
-
-            <th className="border  min-w-[8rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Hors service")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Utilisateur")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Groupe")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Geofence")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Type")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("Manager")}
-            </th>
-            <th className="border  min-w-[6rem] dark:border-gray-600 py-2 ---- px-2">
-              {t("IsActif")}
-            </th>
-          </tr>
-        </div>
-      </thead>
-
-      <div
-        className={`border-2 pb-10 -translate-y-[3.1rem] w-full min-w-[78rem] overflow-y-auto overflow-x-hidden ${(isLongueur =
-          "true" ? "h-[75vh] " : "md:h-[25rem] h-[20rem]")}`}
-      >
-        {/* en-tête PDF, téléchargement… */}
-
-        <table
-          id="myTable"
-          className="w-full-- text-left dark:bg-gray-800 dark:text-gray-200 border-2 border-red-500-- "
-        >
-          {/* second fixed header */}
-          <thead>
-            <tr className="bg-orange-50 h-[2.8rem]   text-gray-700 dark:bg-gray-900 dark:text-gray-100">
-              {/* <th className=""></th> */}
-              <th className="">#</th>
-              <th className="">Compte</th>
-              <th className="">Total </th>
-              <th className="">Déplacés</th>
-              <th className="">Actifs</th>
-              <th className="">Hors service</th>
-              <th className="">Utilisateurs</th>
-              <th className="">Groupes</th>
-              <th className="">Geofences</th>
-              <th className="">Type</th>
-              <th className="">Manager</th>
-              <th className="">Actif</th>
+    <div className={`w-full overflow-x-auto overflow-y-hidden`}>
+      <div className={`min-w-[55rem] overflow-y-auto ${tableauClass}`}>
+        <table className="w-full text-left dark:bg-gray-800 dark:text-gray-200 border">
+          <thead className="bg-orange-50 h-[2.8rem] text-gray-700 dark:bg-gray-900 dark:text-gray-100 sticky top-0 z-10 ">
+            <tr>
+              <th>#</th>
+              <th>{t("Compte")}</th>
+              <th>{t("Nombre appareils")}</th>
+              <th>{t("Appareils Déplacés")}</th>
+              <th>{t("Appareils Actifs")}</th>
+              <th>{t("Appareils Hors service")}</th>
+              {/*  */}
+              {voirPlusDeColonneDansTableauCompte && (
+                <>
+                  <th>{t("Utilisateur")}</th>
+                  <th>{t("Groupe")}</th>
+                  <th>{t("Geofence")}</th>
+                  {/* <th>{t("Type")}</th> */}
+                  {/* <th>{t("Manager")}</th> */}
+                  <th>{t("Actif")}</th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
-            {gestionAccountData
-              ?.slice()
-              .sort(
-                (a, b) =>
-                  (b.accountDevices?.length || 0) -
-                  (a.accountDevices?.length || 0)
-              )
-              .map((acct, i) => {
-                const totalDevices = acct.accountDevices?.length || 0;
-                const movedDevices = acct.accountDevices?.filter(
-                  (d) => d.lastStopTime > todayTimestamp
-                ).length;
-                const activeDevices = acct.accountDevices?.filter(
-                  (d) =>
-                    currentTimeSec - d.lastUpdateTime < twentyFourHoursInSec
-                ).length;
-                const inactiveDevices = acct.accountDevices?.filter(
-                  (d) =>
-                    currentTimeSec - d.lastUpdateTime >= twentyFourHoursInSec
-                ).length;
-                const nbUsers = acct.accountUsers?.length || 0;
-                const nbGroups = acct.accountGroupes?.length || 0;
-                const nbGeofences = acct.accountGeofences?.length || 0;
-
-                return (
-                  <tr key={i} className="border dark:border-gray-600">
-                    {/* <td className="border-l-4 w-0"></td> */}
-                    <td className="py-3  w-[3rem] px-2 border">{i + 1}</td>
-                    <td className="notranslate py-3 px-2 w-[12rem] border">
-                      {acct.accountID}
-                    </td>
-                    <td className="py-3 w-[6rem] px-2 border">
-                      {totalDevices}
-                    </td>
-                    <td className="py-3 px-2 border w-[6rem]">
-                      {movedDevices}
-                    </td>
-                    <td className="py-3 px-2 border w-[6rem]">
-                      {activeDevices}
-                    </td>
-                    <td className="py-3 px-2 border w-[8rem]">
-                      {inactiveDevices}
-                    </td>
-                    <td className="py-3 px-2 border w-[6rem]">{nbUsers}</td>
-                    <td className="py-3 px-2 border w-[6rem]">{nbGroups}</td>
-                    <td className="py-3 px-2 border w-[6rem]">{nbGeofences}</td>
-                    <td className="py-3 px-2 border w-[6rem]">
-                      {acct.accountType}
-                    </td>
-                    <td className="py-3 px-2 border w-[6rem]">
-                      {acct.isAccountManager}
-                    </td>
-                    <td className="py-3 min-w-[5rem] px-2">{acct.isActive}</td>
-                  </tr>
-                );
-              })}
+            {comptesVisibles.map((acct) => (
+              <tr key={acct.index} className="border dark:border-gray-600">
+                <td className="py-3 w-[3rem] px-2">{acct.index}</td>
+                <td
+                  onClick={() => {
+                    handleChooseCompte(acct);
+                    if (isLongueur === "true") {
+                      setExpandSection("");
+                    }
+                  }}
+                  className="py-3 px-2 w-[12rem] notranslate cursor-pointer hover:bg-orange-50"
+                >
+                  {acct.id}
+                </td>
+                <td
+                  onClick={() => {
+                    handleSetAllDevice(acct);
+                  }}
+                  className="py-3  px-2 cursor-pointer hover:bg-orange-50"
+                >
+                  {acct.totalDevices}
+                </td>
+                <td className="py-3 px-2">{acct.moved}</td>
+                <td className="py-3 px-2">{acct.actifs}</td>
+                <td className="py-3 px-2">{acct.inactifs}</td>
+                {/*  */}
+                {voirPlusDeColonneDansTableauCompte && (
+                  <>
+                    <td className="py-3 px-2">{acct.nbUsers}</td>
+                    <td className="py-3 px-2">{acct.nbGroups}</td>
+                    <td className="py-3 px-2">{acct.nbGeofences}</td>
+                    {/* <td className="py-3 px-2">{acct.type}</td> */}
+                    {/* <td className="py-3 px-2">{acct.isManager}</td> */}
+                    <td className="py-3 px-2">{acct.isActive}</td>
+                  </>
+                )}
+              </tr>
+            ))}
           </tbody>
         </table>
+
+        {comptesAnalysés.length > comptesVisibles.length ? (
+          <div
+            className={`${
+              isLongueur === "true" ? "justify-center" : "justify-between"
+            } flex  items-center mt-4`}
+          >
+            <button
+              onClick={() => setPage(page + 1)}
+              className="text-sm mb-10 py-1 px-4 rounded-lg bg-orange-500 font-bold text-white"
+            >
+              {t("Voir plus")}
+            </button>
+            {isLongueur !== "true" && (
+              <button
+                onClick={() => setPage(page + 1)}
+                className="text-sm mb-10 py-1 px-4 rounded-lg bg-orange-500 font-bold text-white"
+              >
+                {t("Voir plus")}
+              </button>
+            )}
+          </div>
+        ) : (
+          <div
+            className={`${
+              isLongueur === "true" ? "justify-center" : "justify-between"
+            } flex  items-center mt-4`}
+          >
+            <button
+              onClick={() => setPage(1)}
+              className="text-sm mb-10 py-1 px-4 rounded-lg bg-orange-500 font-bold text-white"
+            >
+              {t("Voir moins")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

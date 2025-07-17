@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 
@@ -66,25 +66,43 @@ function ListeDesUtilisateur({
     }
   };
 
-  const [searchInputTerm, setSearchInputTerm] = useState("");
-
   const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
   const [showFilterInputSection, setShowFilterInputSection] = useState(false);
 
-  const filterUserAccountData = searchGroupInputTerm
-    ? listeGestionDesUsers?.filter(
-        (item) =>
-          item?.description
-            .toLowerCase()
-            .includes(searchGroupInputTerm.toLowerCase()) ||
-          item?.accountID
-            .toLowerCase()
-            .includes(searchGroupInputTerm.toLowerCase()) ||
-          item?.userID
-            .toLowerCase()
-            .includes(searchGroupInputTerm.toLowerCase())
-      )
-    : listeGestionDesUsers;
+  const filterUserAccountData = useMemo(() => {
+    if (!searchGroupInputTerm) return listeGestionDesUsers;
+    const term = searchGroupInputTerm.toLowerCase();
+    return listeGestionDesUsers?.filter(
+      (item) =>
+        item?.description?.toLowerCase().includes(term) ||
+        item?.accountID?.toLowerCase().includes(term) ||
+        item?.userID?.toLowerCase().includes(term)
+    );
+  }, [searchGroupInputTerm, listeGestionDesUsers]);
+
+  const sortedUsers = useMemo(() => {
+    return [...(filterUserAccountData || [])].sort(
+      (a, b) => b?.creationTime - a?.creationTime
+    );
+  }, [filterUserAccountData]);
+
+  const userMap = useMemo(() => {
+    const map = new Map();
+    gestionAccountData?.forEach((account) => {
+      account?.accountUsers?.forEach((user) => {
+        const key = `${user.userID}_${user.accountID}`;
+        map.set(key, user);
+      });
+    });
+    return map;
+  }, [gestionAccountData]);
+
+  //////////////////////////////////////////////////////////////////////
+  const [itemsToShow, setItemsToShow] = useState(10);
+
+  const usersToDisplay = useMemo(() => {
+    return sortedUsers.slice(0, itemsToShow);
+  }, [sortedUsers, itemsToShow]);
 
   return (
     <div>
@@ -149,20 +167,24 @@ function ListeDesUtilisateur({
       )}
 
       <div className="px-4 bg-white rounded-lg pt-10 mt-4-- pb-40">
-        {fromExpandSectionDashboard === "false" && (
-          <div className="mb-[4rem]">
-            <h2 className="notranslate mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
-              {t("Liste des Utilisateur")}
-            </h2>
+        {/* {fromExpandSectionDashboard === "false" && ( */}
+        <div className="mb-[4rem]">
+          {fromExpandSectionDashboard === "false" && (
+            <>
+              <h2 className="notranslate mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+                {t("Liste des Utilisateur")}
+              </h2>
 
-            <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
-              <span className="text-gray-700">
-                {t("Nombre d'utilisateur")} :
-              </span>{" "}
-              {filterUserAccountData?.length}
-            </h3>
-
-            <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+              <h3 className="mt-[10rem]-- mb-10 text-orange-600 text-md text-center font-bold-- ">
+                <span className="text-gray-700">
+                  {t("Nombre d'utilisateur")} :
+                </span>{" "}
+                {filterUserAccountData?.length}
+              </h3>
+            </>
+          )}
+          <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+            {fromExpandSectionDashboard === "false" && (
               <div className="flex    gap-2 justify-between mt-4">
                 <button
                   onClick={() => {
@@ -187,21 +209,10 @@ function ListeDesUtilisateur({
                   </div>
                 </button>{" "}
               </div>
-              {/* <div
-            onClick={() => {
-              setChooseOtherAccountGestion(true);
-              }}
-              className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-              >
-              <h3 className="w-full text-center font-semibold">
-              <span>
-                {currentAccountSelected?.description || "Choisissez un compte"}
-              </span>
-            </h3>
-            <FaChevronDown />
-          </div> */}
+            )}
 
-              {!showFilterInputSection && (
+            {!showFilterInputSection &&
+              fromExpandSectionDashboard === "false" && (
                 <div className="flex gap-2 w-full justify-between items-center">
                   <div
                     onClick={() => {
@@ -229,153 +240,167 @@ function ListeDesUtilisateur({
                 </div>
               )}
 
-              {showFilterInputSection && (
-                <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
-                  <input
-                    id="search"
-                    name="search"
-                    type="search"
-                    placeholder={`${t("Recherche un utilisateur")}`}
-                    required
-                    value={searchGroupInputTerm}
-                    onChange={(e) => {
-                      setSearchGroupInputTerm(e.target.value);
-                    }}
-                    className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
-                  />
-                  <div
-                    onClick={() => {
-                      {
-                        setShowFilterInputSection(false);
-                        setSearchTermInput("");
-                      }
-                    }}
-                    className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
-                  >
-                    <IoClose className="text-xl text-red-600" />
-                  </div>
+            {(showFilterInputSection ||
+              fromExpandSectionDashboard === "true") && (
+              <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+                <input
+                  id="search"
+                  name="search"
+                  type="search"
+                  placeholder={`${t("Recherche un utilisateur")}`}
+                  required
+                  value={searchGroupInputTerm}
+                  onChange={(e) => {
+                    setSearchGroupInputTerm(e.target.value);
+                  }}
+                  className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                />
+                <div
+                  onClick={() => {
+                    {
+                      setShowFilterInputSection(false);
+                      setSearchGroupInputTerm("");
+                    }
+                  }}
+                  className=" cursor-pointer border-l border-l-gray-300 px-3  py-2 "
+                >
+                  <IoClose className="text-xl text-red-600" />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+            {fromExpandSectionDashboard === "true" && searchGroupInputTerm && (
+              <div className="flex justify-center w-full">
+                <p className="text-lg">
+                  {t("Résultat")}:{" "}
+                  <span className="font-bold text-orange-600">
+                    {sortedUsers?.length}
+                  </span>{" "}
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        {/* )} */}
         <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-          {filterUserAccountData.length > 0 ? (
-            filterUserAccountData
-              ?.slice()
-              .sort((a, b) => b?.creationTime - a?.creationTime)
-              ?.map((user, index) => {
-                const foundUser = gestionAccountData
-                  ?.flatMap((account) => account.accountUsers)
-                  ?.find(
-                    (u) =>
-                      u.userID === user?.userID &&
-                      u.accountID === user?.accountID
-                  );
+          {usersToDisplay.length > 0 ? (
+            usersToDisplay?.map((user, index) => {
+              const foundUser = userMap.get(
+                `${user?.userID}_${user?.accountID}`
+              );
 
-                return (
-                  <div
-                    onClick={() => {
-                      setCurrentSelectedUserToConnect(foundUser);
-                      setListeGestionDesVehicules(foundUser?.userDevices);
-                    }}
-                    key={index}
-                    className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
-                  >
-                    <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                      {index + 1}
-                    </div>
-                    <div className="flex  gap-3  ">
-                      <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
-                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                        <div>
-                          <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
-                          <div className="flex flex-wrap">
-                            <p className="font-bold- text-gray-700">
-                              {t("Nom Utilisateur")} :
-                            </p>
-                            <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
-                              {user?.description}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap">
-                            <p className="font-bold- text-gray-700">
-                              {t("UserID")} :
-                            </p>
-                            <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
-                              {user?.userID}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap">
-                            <p className="font-bold- text-gray-700">
-                              {t("AccountID")} :
-                            </p>
-                            <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
-                              {user?.accountID}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap">
-                            <p className="font-bold- text-gray-700">
-                              {t("Groupes affectés")} :
-                            </p>
-                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                              {foundUser?.userGroupes?.length > 0
-                                ? foundUser?.userGroupes?.length
-                                : `${t("Aucun")}`}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap">
-                            <p className="font-bold- text-gray-700">
-                              {t("Nombre d'Appareils")} :
-                            </p>
-                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {foundUser?.userDevices?.length || "0"}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap">
-                            <p className="font-bold- text-gray-700">
-                              {t("Dernière connexion")} :
-                            </p>
-                            <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                              {FormatDateHeure(user?.lastLoginTime).date}
+              return (
+                <div
+                  onClick={() => {
+                    setCurrentSelectedUserToConnect(foundUser);
+                    setListeGestionDesVehicules(foundUser?.userDevices);
+                  }}
+                  key={index}
+                  className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                >
+                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                    {index + 1}
+                  </div>
+                  <div className="flex  gap-3  ">
+                    <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
+                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                      <div>
+                        <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
+                        <div className="flex flex-wrap">
+                          <p className="font-bold- text-gray-700">
+                            {t("Nom Utilisateur")} :
+                          </p>
+                          <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
+                            {user?.description}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap">
+                          <p className="font-bold- text-gray-700">
+                            {t("UserID")} :
+                          </p>
+                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
+                            {user?.userID}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap">
+                          <p className="font-bold- text-gray-700">
+                            {t("AccountID")} :
+                          </p>
+                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
+                            {user?.accountID}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap">
+                          <p className="font-bold- text-gray-700">
+                            {t("Groupes affectés")} :
+                          </p>
+                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                            {foundUser?.userGroupes?.length > 0
+                              ? foundUser?.userGroupes?.length
+                              : `${t("Aucun")}`}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap">
+                          <p className="font-bold- text-gray-700">
+                            {t("Nombre d'Appareils")} :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            {foundUser?.userDevices?.length || "0"}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap">
+                          <p className="font-bold- text-gray-700">
+                            {t("Dernière connexion")} :
+                          </p>
+                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                            {FormatDateHeure(user?.lastLoginTime).date}
 
-                              <span className="px-3">-</span>
-                              {FormatDateHeure(user?.lastLoginTime).time}
-                            </span>
-                          </div>{" "}
-                        </div>
+                            <span className="px-3">-</span>
+                            {FormatDateHeure(user?.lastLoginTime).time}
+                          </span>
+                        </div>{" "}
                       </div>
                     </div>
-                    <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                      {" "}
-                      <button
-                        onClick={() => {
-                          setSeConnecterAutreComptePopup(true);
-                        }}
-                        className={`${
-                          true
-                            ? " bg-gray-200 text-gray-800"
-                            : "text-gray-800 border-[0.02rem] border-gray-50 "
-                        }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                      >
-                        <p>{t("Login")}</p> <IoMdLogIn className="text-xl" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowSelectedUserOptionsPopup(true);
-                          setCurrentSelectedUserToConnect(user);
-                        }}
-                        className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                      >
-                        <p>{t("Options")}</p> <IoOptions className="text-xl" />
-                      </button>
-                    </div>
                   </div>
-                );
-              })
+                  <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                    {" "}
+                    <button
+                      onClick={() => {
+                        setSeConnecterAutreComptePopup(true);
+                      }}
+                      className={`${
+                        true
+                          ? " bg-gray-200 text-gray-800"
+                          : "text-gray-800 border-[0.02rem] border-gray-50 "
+                      }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                    >
+                      <p>{t("Login")}</p> <IoMdLogIn className="text-xl" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowSelectedUserOptionsPopup(true);
+                        setCurrentSelectedUserToConnect(user);
+                      }}
+                      className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                    >
+                      <p>{t("Options")}</p> <IoOptions className="text-xl" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })
           ) : (
             <div className="flex h-full   justify-center items-center font-semibold text-lg">
               <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+            </div>
+          )}
+          {itemsToShow < sortedUsers.length && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setItemsToShow(itemsToShow + 10)}
+                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+              >
+                {t("Voir plus de Résultat")}
+              </button>
             </div>
           )}
         </div>

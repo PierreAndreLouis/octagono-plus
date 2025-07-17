@@ -44,7 +44,7 @@ function DeviceListeDashboard() {
 
   return (
     <div className=" flex flex-col gap-4  h-full max-h-[20rem]-- overflow-y-auto-">
-      {DataDevices.length > 0 ? (
+      {DataDevices?.length > 0 ? (
         DataDevices?.map((device, index) => {
           let border_color = "bg-gray-50";
           let text_color = "text-orange-500/80";

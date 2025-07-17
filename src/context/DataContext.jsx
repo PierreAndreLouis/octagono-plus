@@ -1,5 +1,11 @@
 // DataContextProvider.js
-import React, { createContext, useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { useTranslation } from "react-i18next";
@@ -7,11 +13,32 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "11/07/2025 _ 1";
+  let versionApplication = "16/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
+  const getTodayTimestamp = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Minuit
+    return Math.floor(now.getTime() / 1000); // secondes
+  };
+
+  const todayTimestamp = getTodayTimestamp();
+  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000); // secondes
+  const twentyFourHoursInSec = 24 * 60 * 60;
+  const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+
+  const currentTimeSec = getCurrentTimestamp();
+  const currentTime = Date.now(); // Heure actuelle en millisecondes
+
+  const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
+
+  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+  const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
+  //
 
   // Pour compter le nombre de requêtes
   const [countRequête, setCountRequête] = useState(() => {
@@ -689,6 +716,62 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
+
+  const [appareilPourAfficherSurCarte, setAppareilPourAfficherSurCarte] =
+    useState([]);
+  let [geofencePourAfficherSurCarte, setGeofencePourAfficherSurCarte] =
+    useState([]);
+
+  const updateAppareilsEtGeofencesPourCarte = () => {
+    console.log("xxxxxxxxxxxxxxxxxxxxxxx");
+    const dataFusionnéHome = mergedDataHome
+      ? Object.values(mergedDataHome)
+      : [];
+    if (isDashboardHomePage && currentAccountSelected) {
+      const appareils = currentAccountSelected?.accountDevices?.map(
+        (device) => {
+          const match = véhiculeDetails?.find(
+            (v) =>
+              v.deviceID === device.deviceID &&
+              v.véhiculeDetails?.[0]?.accountID === device.accountID
+          );
+
+          if (match && match.véhiculeDetails.length > 0) {
+            return { ...device, véhiculeDetails: match.véhiculeDetails };
+          }
+
+          return device;
+        }
+      );
+      setAppareilPourAfficherSurCarte(appareils);
+      setGeofencePourAfficherSurCarte(currentAccountSelected?.accountGeofences);
+      //
+    } else if (isDashboardHomePage && !currentAccountSelected) {
+      const appareils = accountDevices?.map((device) => {
+        const match = véhiculeDetails?.find(
+          (v) =>
+            v.deviceID === device.deviceID &&
+            v.véhiculeDetails?.[0]?.accountID === device.accountID
+        );
+
+        if (match && match.véhiculeDetails.length > 0) {
+          return { ...device, véhiculeDetails: match.véhiculeDetails };
+        }
+
+        return device;
+      });
+      setAppareilPourAfficherSurCarte(appareils);
+
+      setGeofencePourAfficherSurCarte(accountGeofences);
+    } else if (!isDashboardHomePage) {
+      setAppareilPourAfficherSurCarte(dataFusionnéHome);
+      setGeofencePourAfficherSurCarte(geofenceData);
+    }
+
+    console.log("appareilPourAfficherSurCarte", appareilPourAfficherSurCarte);
+    console.log("geofencePourAfficherSurCarte", geofencePourAfficherSurCarte);
+  };
+
   //
   //
   //
@@ -696,12 +779,107 @@ const DataContextProvider = ({ children }) => {
   //
   //
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //
+
+  const [allDevices, setAllDevices] = useState([]);
+  const [filteredColorCategorieListe, setFilteredColorCategorieListe] =
+    useState(null);
+
+  useEffect(() => {
+    const initialList = isDashboardHomePage
+      ? currentAccountSelected?.accountDevices || accountDevices
+      : mergedDataHome
+      ? Object.values(mergedDataHome)
+      : [];
+
+    setAllDevices(initialList);
+  }, [
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    mergedDataHome,
+  ]);
+
+  const {
+    DeviceDéplacer,
+    EnDéplacement,
+    DeviceEnStationnement,
+    DeviceInactifs,
+    DeviceListeActif,
+  } = useMemo(() => {
+    const d = {
+      DeviceDéplacer: [],
+      EnDéplacement: [],
+      DeviceEnStationnement: [],
+      DeviceInactifs: [],
+      DeviceListeActif: [],
+    };
+
+    const idsÀExclure = new Set();
+
+    allDevices.forEach((device) => {
+      const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+      const lastStopTime = device?.lastStopTime ?? 0;
+
+      if (lastStopTime > todayTimestamp) {
+        d.DeviceDéplacer.push(device);
+        idsÀExclure.add(device.deviceID);
+      }
+
+      const details = device?.véhiculeDetails?.[0];
+      const hasDetails = device?.véhiculeDetails?.length > 0;
+      const speed = details?.speedKPH ?? 0;
+      const lastUpdateMs = details?.timestamp ? details.timestamp * 1000 : 0;
+      const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
+      const updatedToday = lastUpdateMs >= todayTimestamp;
+
+      const isActive = device?.lastUpdateTime
+        ? currentTimeMs - device.lastUpdateTime * 1000 < twentyFourHoursInSec
+        : false;
+
+      if (
+        hasDetails &&
+        isActive &&
+        speed >= 1 &&
+        updatedRecently &&
+        updatedToday
+      ) {
+        d.EnDéplacement.push(device);
+        idsÀExclure.add(device.deviceID);
+      }
+
+      // if (currentTimeSec - lastUpdateTimeSec >= twentyFourHoursInSec) {
+      //   d.DeviceInactifs.push(device);
+      //   idsÀExclure.add(device.deviceID);
+      // }
+
+      if (currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) {
+        d.DeviceListeActif.push(device);
+      } else {
+        d.DeviceInactifs.push(device);
+      }
+    });
+
+    // Maintenant, filtrer les appareils stationnés
+    allDevices.forEach((device) => {
+      const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+      if (
+        currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
+        !idsÀExclure.has(device.deviceID)
+      ) {
+        d.DeviceEnStationnement.push(device);
+      }
+    });
+
+    return d;
+  }, [allDevices, todayTimestamp]);
+
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //
-  //
+
   //   //
 
   // Ouvrir la base de données
+
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open("MyDatabase", 10);
@@ -1175,7 +1353,9 @@ const DataContextProvider = ({ children }) => {
           setAdminUsername(username);
           setAdminPassword(password);
 
-          fetchAllComptes(account, username, password);
+          setTimeout(() => {
+            fetchAllComptes(account, username, password);
+          }, 3000);
         } else {
           const lastLoginTime = Math.floor(Date.now() / 1000);
 
@@ -1356,7 +1536,101 @@ const DataContextProvider = ({ children }) => {
 
   // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+  // const failedAccounts = [];
+
+  // const processCompte = async (acct, isLastBatch = false) => {
+  //   const id = acct?.accountID;
+  //   const pwd = acct?.password;
+
+  //   try {
+  //     if (isLastBatch) {
+  //       await fetchAccountDevices(id, pwd)
+  //         .then((devices) => fetchVehiculeDetails(id, devices, pwd))
+  //         .catch((err) => {
+  //           console.error("Erreur device/details :", err);
+  //           setError("Erreur lors de la mise à jour des VehiculeDetails.");
+  //         });
+  //     } else {
+  //       // fetchAccountDevices(id, pwd);
+  //       fetchAccountDevices(id, pwd)
+  //         .then((devices) => fetchVehiculeDetails(id, devices, pwd))
+  //         .catch((err) => {
+  //           console.error("Erreur device/details :", err);
+  //           setError("Erreur lors de la mise à jour des VehiculeDetails.");
+  //         });
+  //     }
+
+  //     fetchAccountGroupes(id, pwd)
+  //       .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+  //       .catch((err) => {
+  //         console.error("Erreur groupes/devices :", err);
+  //         setError("Erreur lors de la mise à jour des groupes.");
+  //       });
+
+  //     fetchAccountUsers(id, pwd)
+  //       .then((users) => {
+  //         fetchUserDevices(id, users);
+  //         fetchUserGroupes(id, users);
+  //       })
+  //       .catch((err) => {
+  //         console.error("Erreur utilisateurs/données :", err);
+  //         setError("Erreur lors de la mise à jour des utilisateurs.");
+  //       });
+
+  //     fetchAccountGeofences(id, pwd);
+
+  //   } catch (err) {
+  //     console.error("Erreur pour le compte", id, ":", err);
+  //     failedAccounts.push(id);
+  //     setError(
+  //       "Erreur sur un ou plusieurs comptes.",
+  //       failedAccounts.join(", ")
+  //     );
+  //   }
+
+  //   afficherComptesEchoues();
+  // };
+
+  // // Après traitement de tous les comptes
+  // const afficherComptesEchoues = () => {
+  //   if (failedAccounts.length > 0) {
+  //     console.log(
+  //       "ssssssssssssssssssssssssssssssssssssssssssssssss Comptes échoués :",
+  //       failedAccounts.join(", ")
+  //     );
+  //   } else {
+  //     console.log(
+  //       "sssssssssssssssssssssssssssssssssssssssssssssssss Aucun compte n'a échoué."
+  //     );
+  //   }
+  // };
+
+  // const processAllComptes = async (comptes, batchSize = 10) => {
+  //   const total = comptes?.length;
+  //   let done = 0;
+
+  //   for (let i = 0; i < total; i += batchSize) {
+  //     const batch = comptes?.slice(i, i + batchSize);
+  //     const isLastBatch = i + batchSize >= total;
+
+  //     for (const acct of batch) {
+  //       await processCompte(acct, isLastBatch);
+  //       done += 1;
+  //       setProgress(Math.round((done / total) * 100));
+  //     }
+  //     if (!isLastBatch) await delay(1000); // pas de pause après le dernier lot
+  //   }
+  // };
+
   const failedAccounts = [];
+
+  const processInBatches = async (items, batchSize, asyncCallback) => {
+    for (let i = 0; i < items.length; i += batchSize) {
+      const batch = items.slice(i, i + batchSize);
+      await Promise.all(batch.map(asyncCallback));
+      await delay(200); // pour éviter "ERR_INSUFFICIENT_RESOURCES"
+    }
+  };
 
   const processCompte = async (acct, isLastBatch = false) => {
     const id = acct?.accountID;
@@ -1365,15 +1639,26 @@ const DataContextProvider = ({ children }) => {
     try {
       if (isLastBatch) {
         await fetchAccountDevices(id, pwd)
-          .then((devices) => fetchVehiculeDetails(id, devices, pwd))
+          .then(async (devices) => {
+            if (devices && devices.length > 0) {
+              await processInBatches(devices, 40, (device) =>
+                fetchVehiculeDetails(id, [device], pwd)
+              );
+            }
+          })
           .catch((err) => {
             console.error("Erreur device/details :", err);
             setError("Erreur lors de la mise à jour des VehiculeDetails.");
           });
       } else {
-        // fetchAccountDevices(id, pwd);
         fetchAccountDevices(id, pwd)
-          .then((devices) => fetchVehiculeDetails(id, devices, pwd))
+          .then(async (devices) => {
+            if (devices && devices.length > 0) {
+              await processInBatches(devices, 40, (device) =>
+                fetchVehiculeDetails(id, [device], pwd)
+              );
+            }
+          })
           .catch((err) => {
             console.error("Erreur device/details :", err);
             setError("Erreur lors de la mise à jour des VehiculeDetails.");
@@ -1381,16 +1666,28 @@ const DataContextProvider = ({ children }) => {
       }
 
       fetchAccountGroupes(id, pwd)
-        .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+        .then(async (groupes) => {
+          if (groupes && groupes.length > 0) {
+            await processInBatches(groupes, 20, (groupe) =>
+              fetchGroupeDevices(id, [groupe], pwd)
+            );
+          }
+        })
         .catch((err) => {
           console.error("Erreur groupes/devices :", err);
           setError("Erreur lors de la mise à jour des groupes.");
         });
 
       fetchAccountUsers(id, pwd)
-        .then((users) => {
-          fetchUserDevices(id, users);
-          fetchUserGroupes(id, users);
+        .then(async (users) => {
+          if (users && users.length > 0) {
+            await processInBatches(users, 20, (user) =>
+              fetchUserDevices(id, [user])
+            );
+            await processInBatches(users, 20, (user) =>
+              fetchUserGroupes(id, [user])
+            );
+          }
         })
         .catch((err) => {
           console.error("Erreur utilisateurs/données :", err);
@@ -1410,7 +1707,6 @@ const DataContextProvider = ({ children }) => {
     afficherComptesEchoues();
   };
 
-  // Après traitement de tous les comptes
   const afficherComptesEchoues = () => {
     if (failedAccounts.length > 0) {
       console.log(
@@ -1424,12 +1720,12 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const processAllComptes = async (comptes, batchSize = 5) => {
+  const processAllComptes = async (comptes, batchSize) => {
     const total = comptes?.length;
     let done = 0;
 
     for (let i = 0; i < total; i += batchSize) {
-      const batch = comptes?.slice(i, i + batchSize);
+      const batch = comptes.slice(i, i + batchSize);
       const isLastBatch = i + batchSize >= total;
 
       for (const acct of batch) {
@@ -1437,7 +1733,8 @@ const DataContextProvider = ({ children }) => {
         done += 1;
         setProgress(Math.round((done / total) * 100));
       }
-      if (!isLastBatch) await delay(1200); // pas de pause après le dernier lot
+
+      if (!isLastBatch) await delay(1000);
     }
   };
 
@@ -1508,7 +1805,7 @@ const DataContextProvider = ({ children }) => {
       }
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
-      processAllComptes(newData, 5); // 👈 traitement séquentiel en lots de 3
+      processAllComptes(newData, 4); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
@@ -8241,6 +8538,18 @@ const DataContextProvider = ({ children }) => {
         versionApplication,
         clearCacheFonction,
         setAccountDevices,
+        appareilPourAfficherSurCarte,
+        geofencePourAfficherSurCarte,
+        updateAppareilsEtGeofencesPourCarte,
+        DeviceDéplacer,
+        EnDéplacement,
+        DeviceEnStationnement,
+        DeviceInactifs,
+        DeviceListeActif,
+        allDevices,
+        setAllDevices,
+        filteredColorCategorieListe,
+        setFilteredColorCategorieListe,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

@@ -63,6 +63,7 @@ function TrajetVehicule({
 
     geofenceData,
   } = useContext(DataContext);
+
   const [t, i18n] = useTranslation();
 
   const geofences = geofenceData;
