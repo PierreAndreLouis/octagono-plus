@@ -432,10 +432,11 @@ function GestionAppareilOptionPopup({
               {/*  */}
 
               <Link
+                to="/Localisation_devices"
                 onClick={() => {
                   setShowOptionAppareilOptionPopup(false);
                   setDocumentationPage("Localisation_devices");
-                  navigate("/Localisation_devices");
+                  // navigate("/Localisation_devices");
                   setSelectedVehicleToShowInMap(
                     currentSelectedDeviceGestion?.deviceID
                   );

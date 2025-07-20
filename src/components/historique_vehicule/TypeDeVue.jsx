@@ -20,7 +20,12 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
               className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
             />
 
-            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+            <h2
+              onClick={() => {
+                // setVéhiculeDataWidthData();
+              }}
+              className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold"
+            >
               {t("Choisissez un type de vue")}:
             </h2>
 

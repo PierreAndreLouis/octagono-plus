@@ -143,7 +143,7 @@ function InfoUserComponent({
           onClick={() => {
             setLogOutPopup(true);
           }}
-          className="bg-orange-500 w-full dark:bg-orange-400 text-center rounded-lg px-3 text-white py-2 hover:bg-orange-600 dark:hover:bg-orange-500"
+          className="bg-orange-500 mx-4 w-full dark:bg-orange-400 text-center rounded-lg px-3 text-white py-2 hover:bg-orange-600 dark:hover:bg-orange-500"
         >
           {t("Se déconnecter")}{" "}
         </button>

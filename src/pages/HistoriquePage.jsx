@@ -12,6 +12,7 @@ import HistoriqueHeader from "../components/historique_vehicule/HistoriqueHeader
 import TrajetVehicule from "../components/historique_vehicule/TrajetVehicule";
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -46,6 +47,7 @@ function HistoriquePage() {
     accountDevices,
     gestionAccountData,
     currentSelectedDeviceGestion,
+    comptes,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -101,28 +103,54 @@ function HistoriquePage() {
   // Pour enregistrer les valeur des checkboxes
   const [appliedCheckboxes, setAppliedCheckboxes] = useState(checkboxes);
 
-  // // Filtrage pour supprimer les doublons et respecter l'intervalle de 10 minutes
-  const ecar10minuteArret = [];
-  let lastZeroSpeedTimestamp = null;
+  const ecar10minuteArret = useMemo(() => {
+    const filtered = [];
+    let lastZeroSpeedTimestamp = null;
 
-  véhiculeHistoriqueDetails
-    ?.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
-    .forEach((details) => {
-      const timestamp = parseInt(details.timestamp);
-      const speedKPH = parseFloat(details.speedKPH);
+    véhiculeHistoriqueDetails
+      ?.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
+      .forEach((details) => {
+        const timestamp = parseInt(details.timestamp);
+        const speedKPH = parseFloat(details.speedKPH);
 
-      if (speedKPH <= 0) {
-        if (
-          lastZeroSpeedTimestamp === null ||
-          lastZeroSpeedTimestamp - timestamp >= 60 * 10 // 10 minutes
-        ) {
-          ecar10minuteArret.push(details);
-          lastZeroSpeedTimestamp = timestamp;
+        if (speedKPH <= 0) {
+          if (
+            lastZeroSpeedTimestamp === null ||
+            lastZeroSpeedTimestamp - timestamp >= 60 * 10
+          ) {
+            filtered.push(details);
+            lastZeroSpeedTimestamp = timestamp;
+          }
+        } else {
+          filtered.push(details);
         }
-      } else {
-        ecar10minuteArret.push(details);
-      }
-    });
+      });
+
+    return filtered;
+  }, [véhiculeHistoriqueDetails]);
+
+  // // Filtrage pour supprimer les doublons et respecter l'intervalle de 10 minutes
+  // const ecar10minuteArret = [];
+  // let lastZeroSpeedTimestamp = null;
+
+  // véhiculeHistoriqueDetails
+  //   ?.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
+  //   .forEach((details) => {
+  //     const timestamp = parseInt(details.timestamp);
+  //     const speedKPH = parseFloat(details.speedKPH);
+
+  //     if (speedKPH <= 0) {
+  //       if (
+  //         lastZeroSpeedTimestamp === null ||
+  //         lastZeroSpeedTimestamp - timestamp >= 60 * 10 // 10 minutes
+  //       ) {
+  //         ecar10minuteArret.push(details);
+  //         lastZeroSpeedTimestamp = timestamp;
+  //       }
+  //     } else {
+  //       ecar10minuteArret.push(details);
+  //     }
+  //   });
 
   // filtrer en fonction des statut choisis.
   const filteredVehicles = ecar10minuteArret?.filter(
@@ -138,21 +166,38 @@ function HistoriquePage() {
   const historiqueInMap = filteredVehicles
     ? Object.values(filteredVehicles)
     : [];
-  const véhiculeData = historiqueInMap?.map((véhicule) => ({
-    description:
-      // currentVéhicule?.displayName ||
-      currentVéhicule?.description || "Véhicule",
-    lastValidLatitude: véhicule?.latitude || "",
-    lastValidLongitude: véhicule?.longitude || "",
-    address: véhicule?.backupAddress || véhicule?.address || "",
-    imeiNumber: currentVéhicule?.imeiNumber || "",
-    isActive: currentVéhicule?.isActive || "",
-    licensePlate: currentVéhicule?.licensePlate || "",
-    simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
-    speedKPH: véhicule?.speedKPH || 0, // Ajout de la vitesse
-    timestamp: véhicule?.timestamp || 0, // Ajout de la vitesse
-    heading: véhicule?.heading || "",
-  }));
+
+  const véhiculeData = useMemo(() => {
+    return historiqueInMap?.map((véhicule) => ({
+      description: currentVéhicule?.description || "Véhicule",
+      lastValidLatitude: véhicule?.latitude || "",
+      lastValidLongitude: véhicule?.longitude || "",
+      address: véhicule?.backupAddress || véhicule?.address || "",
+      imeiNumber: currentVéhicule?.imeiNumber || "",
+      isActive: currentVéhicule?.isActive || "",
+      licensePlate: currentVéhicule?.licensePlate || "",
+      simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
+      speedKPH: véhicule?.speedKPH || 0,
+      timestamp: véhicule?.timestamp || 0,
+      heading: véhicule?.heading || "",
+    }));
+  }, [historiqueInMap, currentVéhicule]);
+
+  // const véhiculeData = historiqueInMap?.map((véhicule) => ({
+  //   description:
+  //     // currentVéhicule?.displayName ||
+  //     currentVéhicule?.description || "Véhicule",
+  //   lastValidLatitude: véhicule?.latitude || "",
+  //   lastValidLongitude: véhicule?.longitude || "",
+  //   address: véhicule?.backupAddress || véhicule?.address || "",
+  //   imeiNumber: currentVéhicule?.imeiNumber || "",
+  //   isActive: currentVéhicule?.isActive || "",
+  //   licensePlate: currentVéhicule?.licensePlate || "",
+  //   simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
+  //   speedKPH: véhicule?.speedKPH || 0, // Ajout de la vitesse
+  //   timestamp: véhicule?.timestamp || 0, // Ajout de la vitesse
+  //   heading: véhicule?.heading || "",
+  // }));
 
   // les donnees pret a être utiliser apres formatage
   const [vehicles, setvehicles] = useState(véhiculeData);
@@ -263,18 +308,33 @@ function HistoriquePage() {
   };
 
   // Pour filtrer le recherche
-  const filteredVehiclesPupup = deviceListeChosen?.filter(
-    (véhicule) =>
-      véhicule?.imeiNumber
-        .toLowerCase()
-        .includes(searchQueryHistoriquePage.toLowerCase()) ||
-      véhicule?.simPhoneNumber
-        .toLowerCase()
-        .includes(searchQueryHistoriquePage.toLowerCase()) ||
-      véhicule.description
-        .toLowerCase()
-        .includes(searchQueryHistoriquePage.toLowerCase())
-  );
+  const filteredVehiclesPupup = useMemo(() => {
+    return deviceListeChosen?.filter(
+      (véhicule) =>
+        véhicule?.imeiNumber
+          ?.toLowerCase()
+          ?.includes(searchQueryHistoriquePage.toLowerCase()) ||
+        véhicule?.simPhoneNumber
+          ?.toLowerCase()
+          ?.includes(searchQueryHistoriquePage.toLowerCase()) ||
+        véhicule.description
+          ?.toLowerCase()
+          ?.includes(searchQueryHistoriquePage.toLowerCase())
+    );
+  }, [deviceListeChosen, searchQueryHistoriquePage]);
+
+  // const filteredVehiclesPupup = deviceListeChosen?.filter(
+  //   (véhicule) =>
+  //     véhicule?.imeiNumber
+  //       .toLowerCase()
+  //       .includes(searchQueryHistoriquePage.toLowerCase()) ||
+  //     véhicule?.simPhoneNumber
+  //       .toLowerCase()
+  //       .includes(searchQueryHistoriquePage.toLowerCase()) ||
+  //     véhicule.description
+  //       .toLowerCase()
+  //       .includes(searchQueryHistoriquePage.toLowerCase())
+  // );
 
   // Récupérer les positions successives pour les lignes rouges
   const positions = vehicles.map((véhicule) => [
@@ -376,20 +436,48 @@ function HistoriquePage() {
     settimeFrom(timeFromFetch);
     settimeTo(timeToFetch);
 
-    console.log("timeFrom:", timeFromFetch);
-    console.log("timeToo:", timeToFetch);
-
     setShowDatePicker(false);
   };
 
   // Fonction pour appliquer les filtres
   const applyFilter = () => {
-    console.log(timeFrom);
-    console.log("////////////");
-    console.log(timeTo);
     handleApply();
 
+    const foundDevice = accountDevices?.filter(
+      (item) =>
+        item?.deviceID === currentVéhicule.deviceID &&
+        item?.accountID === currentVéhicule.accountID
+    );
+    const foundAccount = comptes?.filter(
+      (c) => c.accountID === currentVéhicule.accountID
+    );
+
+    let accountID;
+    let userPassword;
+    //
+    //
+    //
+    //
     if (isDashboardHomePage) {
+      if (currentAccountSelected) {
+        accountID =
+          currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedDeviceGestion?.accountID
+          )?.accountID;
+
+        userPassword =
+          currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) =>
+              account.accountID === currentSelectedDeviceGestion?.accountID
+          )?.password;
+      } else {
+        accountID = foundDevice?.[0]?.accountID;
+        userPassword = foundAccount?.[0]?.password;
+      }
+
       fetchHistoriqueVehicleDetails(
         currentVéhicule.deviceID,
 
@@ -397,17 +485,22 @@ function HistoriquePage() {
 
         timeToFetch || timeTo,
 
-        currentAccountSelected?.accountID ||
-          gestionAccountData.find(
-            (account) =>
-              account.accountID === currentSelectedDeviceGestion?.accountID
-          )?.accountID,
+        accountID,
         "admin",
-        currentAccountSelected?.password ||
-          gestionAccountData.find(
-            (account) =>
-              account.accountID === currentSelectedDeviceGestion?.accountID
-          )?.password
+        userPassword
+      );
+
+      console.log(
+        "Infoooooooo",
+        currentVéhicule.deviceID,
+
+        timeFromFetch || timeFrom,
+
+        timeToFetch || timeTo,
+
+        accountID,
+        "admin",
+        userPassword
       );
     } else {
       fetchHistoriqueVehicleDetails(
@@ -601,6 +694,8 @@ function HistoriquePage() {
             appliedCheckboxes={appliedCheckboxes}
             setShowListOption={setShowListOption}
             selectUTC={selectUTC}
+            setCheckboxes={setCheckboxes}
+            handleCheckboxChange={handleCheckboxChange}
           />
         </div>
       ) : (

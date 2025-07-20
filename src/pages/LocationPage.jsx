@@ -34,6 +34,10 @@ const LocationPage = ({
     isDashboardHomePage,
     ajouterGeofencePopup,
     véhiculeDetails,
+    updateAppareilsEtGeofencesPourCarte,
+    appareilPourAfficherSurCarte,
+    historiqueSelectedLocationIndex,
+    véhiculeHistoriqueDetails,
   } = useContext(DataContext);
   let x;
 
@@ -57,40 +61,6 @@ const LocationPage = ({
 
   // Le data converti en Objet
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
-
-  // let vehiculeActive;
-
-  // if (isDashboardHomePage && currentAccountSelected) {
-  //   vehiculeActive = currentAccountSelected?.accountDevices?.map((device) => {
-  //     const match = véhiculeDetails?.find(
-  //       (v) =>
-  //         v.deviceID === device.deviceID &&
-  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
-  //     );
-
-  //     if (match && match.véhiculeDetails.length > 0) {
-  //       return { ...device, véhiculeDetails: match.véhiculeDetails };
-  //     }
-
-  //     return device;
-  //   });
-  // } else if (isDashboardHomePage && !currentAccountSelected) {
-  //   vehiculeActive = accountDevices?.map((device) => {
-  //     const match = véhiculeDetails?.find(
-  //       (v) =>
-  //         v.deviceID === device.deviceID &&
-  //         v.véhiculeDetails?.[0]?.accountID === device.accountID
-  //     );
-
-  //     if (match && match.véhiculeDetails.length > 0) {
-  //       return { ...device, véhiculeDetails: match.véhiculeDetails };
-  //     }
-
-  //     return device;
-  //   });
-  // } else if (!isDashboardHomePage) {
-  //   vehiculeActive = dataFusionné;
-  // }
 
   const vehiculeActive = useMemo(() => {
     if (isDashboardHomePage && currentAccountSelected) {
@@ -133,40 +103,56 @@ const LocationPage = ({
     dataFusionné,
   ]);
 
-  // le formatage des véhicules afficher sur la carte
-  const véhiculeData =
-    vehiculeActive &&
-    vehiculeActive
-      ?.map((véhicule) => ({
-        deviceID: véhicule?.deviceID || "---",
-        description: véhicule.description || "Véhicule",
-        lastValidLatitude:
-          véhicule?.véhiculeDetails?.[0]?.latitude ||
-          véhicule?.lastValidLatitude ||
-          "",
-        lastValidLongitude:
-          véhicule?.véhiculeDetails?.[0]?.longitude ||
-          véhicule?.lastValidLongitude ||
-          "",
-        address: véhicule?.véhiculeDetails?.[0]?.address || "",
-        imeiNumber: véhicule?.imeiNumber || "",
-        isActive: véhicule?.isActive || "",
-        licensePlate: véhicule?.licensePlate || "",
-        simPhoneNumber: véhicule?.simPhoneNumber || "",
-        speedKPH: véhicule?.véhiculeDetails?.[0]?.speedKPH || 0,
-      }))
-      .filter(
+  useEffect(() => {
+    console.log(
+      "appareilPourAfficherSurCarte====================",
+      appareilPourAfficherSurCarte
+    );
+  }, [historiqueSelectedLocationIndex, appareilPourAfficherSurCarte]);
+
+  const véhiculeData = useMemo(() => {
+    return appareilPourAfficherSurCarte
+      ?.map((véhicule) => {
+        // const details = véhicule?.véhiculeDetails?.[0] || {};
+        const details = véhicule?.véhiculeDetails?.[0] || {}; // ← ici, on choisit entre global ou local
+
+        return {
+          deviceID: véhicule?.deviceID || "",
+          accountID: véhicule?.accountID || "",
+          description: véhicule.description || "Véhicule",
+          lastValidLatitude:
+            details.latitude || véhicule?.lastValidLatitude || "",
+          lastValidLongitude:
+            details.longitude || véhicule?.lastValidLongitude || "",
+          address: details.backupAddress || details.address || "",
+          imeiNumber: véhicule?.imeiNumber || "",
+          isActive: véhicule?.isActive || "",
+          licensePlate: véhicule?.licensePlate || "",
+          simPhoneNumber: véhicule?.simPhoneNumber || "",
+          timestamp: details.timestamp || "",
+          // timestamp: details.timestamp || véhicule?.lastUpdateTime || "",
+          speedKPH: details.speedKPH,
+          heading: details.heading || 0,
+        };
+      })
+      ?.filter(
         (v) =>
           v.lastValidLatitude !== "0.0" &&
           v.lastValidLongitude !== "0.0" &&
           v.lastValidLatitude !== "" &&
           v.lastValidLongitude !== ""
       );
+  }, [appareilPourAfficherSurCarte, véhiculeDetails]);
+
+  const vehicles = selectedVehicleToShowInMap
+    ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
+    : véhiculeData;
 
   // Pour afficher une seule véhicule sur la carte
   const handleVehicleClick = (véhicule) => {
     setSelectedVehicleToShowInMap(véhicule?.deviceID);
     setShowVehiculeListe(!showVehiculeListe);
+    updateAppareilsEtGeofencesPourCarte();
   };
 
   // Pour mettre a jour le véhicules choisis pour afficher sur la carte
@@ -177,22 +163,23 @@ const LocationPage = ({
   // Pour afficher tous les véhicules en Generale sur la carte
   const showAllVehicles = () => {
     setSelectedVehicleToShowInMap(null);
+    updateAppareilsEtGeofencesPourCarte();
   };
 
   // Pour définir le type de carte
   const [mapType, setMapType] = useState("streets");
 
   // Une reference pour la carte
-  const mapRef = useRef(null);
+  // const mapRef = useRef(null);
 
   // Pour trouver le véhicules a afficher parmi la liste
-  const vehicles = selectedVehicleToShowInMap
-    ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
-    : véhiculeData;
+  // const vehicles = selectedVehicleToShowInMap
+  //   ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
+  //   : véhiculeData;
 
-  useEffect(() => {
-    // console.log("vehicles", vehicles);
-  }, [vehicles]);
+  // useEffect(() => {
+  //   // console.log("vehicles", vehicles);
+  // }, [vehicles]);
 
   // Les type de carte disponibles
   const tileLayers = {
@@ -226,34 +213,34 @@ const LocationPage = ({
   };
 
   // Pour centrer une seule ou tous les véhicules
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (mapRef.current && vehicles?.length) {
-        if (selectedVehicleToShowInMap) {
-          // Si un véhicule est sélectionné, centrer sur lui
-          const selectedVehicleData = vehicles?.find(
-            (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap
-          );
-          if (selectedVehicleData) {
-            const { lastValidLatitude, lastValidLongitude } =
-              selectedVehicleData;
-            mapRef.current.setView([lastValidLatitude, lastValidLongitude], 20);
-          }
-        } else {
-          // Sinon, ajuster pour inclure tous les véhicules
-          const bounds = L.latLngBounds(
-            vehicles.map((véhicule) => [
-              véhicule.lastValidLatitude,
-              véhicule.lastValidLongitude,
-            ])
-          );
-          mapRef.current.fitBounds(bounds);
-        }
-      }
-    }, 500);
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     if (mapRef.current && vehicles?.length) {
+  //       if (selectedVehicleToShowInMap) {
+  //         // Si un véhicule est sélectionné, centrer sur lui
+  //         const selectedVehicleData = vehicles?.find(
+  //           (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap
+  //         );
+  //         if (selectedVehicleData) {
+  //           const { lastValidLatitude, lastValidLongitude } =
+  //             selectedVehicleData;
+  //           mapRef.current.setView([lastValidLatitude, lastValidLongitude], 20);
+  //         }
+  //       } else {
+  //         // Sinon, ajuster pour inclure tous les véhicules
+  //         const bounds = L.latLngBounds(
+  //           vehicles.map((véhicule) => [
+  //             véhicule.lastValidLatitude,
+  //             véhicule.lastValidLongitude,
+  //           ])
+  //         );
+  //         mapRef.current.fitBounds(bounds);
+  //       }
+  //     }
+  //   }, 500);
 
-    return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
-  }, [selectedVehicleToShowInMap, vehicles]);
+  //   return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
+  // }, [selectedVehicleToShowInMap, vehicles]);
 
   // Pour changer de type de map
   const handleMapTypeChange = (type) => {
@@ -354,6 +341,8 @@ const LocationPage = ({
           isAddingNewGeofence={isAddingNewGeofence}
           setIsAddingNewGeofence={setIsAddingNewGeofence}
           setDocumentationPage={setDocumentationPage}
+          vehicles={vehicles}
+          véhiculeData={véhiculeData}
         />
       </div>
     </div>

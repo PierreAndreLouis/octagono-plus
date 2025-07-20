@@ -1206,7 +1206,7 @@ function DashboardContaintMaintComponant({
         </div>
       )}
       {/*  */}
-      {expandSection && (
+      {expandSection && !showStatisticDeviceListeDashboard && (
         <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
           <div className="w-full  mx-auto md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
             <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
@@ -1261,6 +1261,9 @@ function DashboardContaintMaintComponant({
                   setExpandSection={setExpandSection}
                   setStatisticFilteredDeviceListeText={
                     setStatisticFilteredDeviceListeText
+                  }
+                  setShowStatisticDeviceListeDashboard={
+                    setShowStatisticDeviceListeDashboard
                   }
                 />
               </div>
@@ -1608,6 +1611,9 @@ function DashboardContaintMaintComponant({
                   setDocumentationPage={setDocumentationPage}
                   setStatisticFilteredDeviceListeText={
                     setStatisticFilteredDeviceListeText
+                  }
+                  setShowStatisticDeviceListeDashboard={
+                    setShowStatisticDeviceListeDashboard
                   }
                 />
               )}

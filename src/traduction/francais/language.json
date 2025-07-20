@@ -873,10 +873,10 @@
 
 "Résultat": "Résultat",
 "Recherche une alerte": "Recherche une alerte",
-"Appareils non déplacés": "Appareil(s) non déplacé(s)",
-"Appareils en Stationnement": "Appareil(s) en Stationnement",
-"Non Déplacer": "Non Déplacé(s)",
-"Appareils Déplacés": "Appareils Déplacé(s)",
+"Appareils non déplacés": "Appareils non déplacés",
+"Appareils en Stationnement": "Appareils en Stationnement",
+"Non Déplacer": "Non Déplacés",
+"Appareils Déplacés": "Appareils Déplacés",
 "Statistiques par compte": "Statistiques par compte",
 "Nombre appareils": "Nombre appareils",
 
@@ -886,7 +886,12 @@
 
 
 
-"": "",
+"Options du groupe": "Options du groupe",
+"Afficher Les Appareils": "Afficher Les Appareils",
+"Liste des utilisateurs affectés": "Liste des utilisateurs affectés",
+"Liste Les Appareils": "Liste Les Appareils",
+"Modifier le groupe": "Modifier le groupe",
+"Supprimer le groupe": "Supprimer le groupe",
 "": "",
 "": "",
 "": ""

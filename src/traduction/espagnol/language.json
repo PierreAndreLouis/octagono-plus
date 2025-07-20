@@ -55,7 +55,7 @@
   "Liste des Alertes": "Lista de Alertas",
   "Sélectionner un Groupe": "Seleccionar un Grupo",
 
-  "Déplacés": "Movido(s)",
+  "Déplacés": "Movidos",
   "Position des appareils": "Posición de los Dispositivos",
   "Full Screen": "Pantalla Completa",
   "Nombre d'appareils": "Número de Dispositivos",
@@ -775,10 +775,10 @@
 
   "Résultat": "Resultado",
   "Recherche une alerte": "Buscar una alerta",
-  "Appareils non déplacés": "Vehículo(s) no desplazado(s)",
-  "Appareils en Stationnement": "Vehículo(s) estacionado(s)",
-  "Non Déplacer": "No desplazado(s)",
-  "Appareils Déplacés": "Vehículo(s) desplazado(s)",
+  "Appareils non déplacés": "Vehículos no desplazados",
+  "Appareils en Stationnement": "Vehículos estacionados",
+  "Non Déplacer": "No desplazados",
+  "Appareils Déplacés": "Vehículos desplazados",
   "Statistiques par compte": "Estadísticas por cuenta",
 
 

@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "16/07/2025 _ 1";
+  let versionApplication = "19/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -570,6 +570,11 @@ const DataContextProvider = ({ children }) => {
   const [selectedVehicleToShowInMap, setSelectedVehicleToShowInMap] =
     useState(null);
 
+  const [
+    selectedVehicleHistoriqueToShowInMap,
+    setSelectedVehicleHistoriqueToShowInMap,
+  ] = useState(false);
+
   //loading for Historique page
   const [loadingHistoriqueFilter, setLoadingHistoriqueFilter] = useState(false);
 
@@ -582,7 +587,7 @@ const DataContextProvider = ({ children }) => {
   );
 
   const [historiqueSelectedLocationIndex, setHistoriqueSelectedLocationIndex] =
-    useState(0);
+    useState(null);
 
   //
   //
@@ -716,60 +721,39 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
-
   const [appareilPourAfficherSurCarte, setAppareilPourAfficherSurCarte] =
     useState([]);
   let [geofencePourAfficherSurCarte, setGeofencePourAfficherSurCarte] =
     useState([]);
 
   const updateAppareilsEtGeofencesPourCarte = () => {
+    // setHistoriqueSelectedLocationIndex(null);
     console.log("xxxxxxxxxxxxxxxxxxxxxxx");
     const dataFusionnéHome = mergedDataHome
       ? Object.values(mergedDataHome)
       : [];
+    //
+    //
     if (isDashboardHomePage && currentAccountSelected) {
-      const appareils = currentAccountSelected?.accountDevices?.map(
-        (device) => {
-          const match = véhiculeDetails?.find(
-            (v) =>
-              v.deviceID === device.deviceID &&
-              v.véhiculeDetails?.[0]?.accountID === device.accountID
-          );
+      const appareils = currentAccountSelected?.accountDevices;
 
-          if (match && match.véhiculeDetails.length > 0) {
-            return { ...device, véhiculeDetails: match.véhiculeDetails };
-          }
-
-          return device;
-        }
+      setAppareilPourAfficherSurCarte(
+        addVehiculeDetailsFonction(appareils, véhiculeDetails)
       );
-      setAppareilPourAfficherSurCarte(appareils);
       setGeofencePourAfficherSurCarte(currentAccountSelected?.accountGeofences);
       //
     } else if (isDashboardHomePage && !currentAccountSelected) {
-      const appareils = accountDevices?.map((device) => {
-        const match = véhiculeDetails?.find(
-          (v) =>
-            v.deviceID === device.deviceID &&
-            v.véhiculeDetails?.[0]?.accountID === device.accountID
-        );
+      const appareils = accountDevices;
 
-        if (match && match.véhiculeDetails.length > 0) {
-          return { ...device, véhiculeDetails: match.véhiculeDetails };
-        }
-
-        return device;
-      });
-      setAppareilPourAfficherSurCarte(appareils);
+      setAppareilPourAfficherSurCarte(
+        addVehiculeDetailsFonction(appareils, véhiculeDetails)
+      );
 
       setGeofencePourAfficherSurCarte(accountGeofences);
     } else if (!isDashboardHomePage) {
       setAppareilPourAfficherSurCarte(dataFusionnéHome);
       setGeofencePourAfficherSurCarte(geofenceData);
     }
-
-    console.log("appareilPourAfficherSurCarte", appareilPourAfficherSurCarte);
-    console.log("geofencePourAfficherSurCarte", geofencePourAfficherSurCarte);
   };
 
   //
@@ -780,6 +764,22 @@ const DataContextProvider = ({ children }) => {
   //
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   //
+
+  const addVehiculeDetailsFonction = (deviceListe, véhiculeDetails) => {
+    return deviceListe?.map((device) => {
+      const match = véhiculeDetails?.find(
+        (v) =>
+          v.deviceID === device.deviceID &&
+          v.véhiculeDetails?.[0]?.accountID === device.accountID
+      );
+
+      if (match && match.véhiculeDetails.length > 0) {
+        return { ...device, véhiculeDetails: match.véhiculeDetails };
+      }
+
+      return device;
+    });
+  };
 
   const [allDevices, setAllDevices] = useState([]);
   const [filteredColorCategorieListe, setFilteredColorCategorieListe] =
@@ -793,6 +793,9 @@ const DataContextProvider = ({ children }) => {
       : [];
 
     setAllDevices(initialList);
+    setListeGestionDesVehicules(
+      addVehiculeDetailsFonction(initialList, véhiculeDetails)
+    );
   }, [
     isDashboardHomePage,
     currentAccountSelected,
@@ -817,59 +820,58 @@ const DataContextProvider = ({ children }) => {
 
     const idsÀExclure = new Set();
 
-    allDevices.forEach((device) => {
-      const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
-      const lastStopTime = device?.lastStopTime ?? 0;
+    addVehiculeDetailsFonction(allDevices, véhiculeDetails).forEach(
+      (device) => {
+        const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+        const lastStopTime = device?.lastStopTime ?? 0;
 
-      if (lastStopTime > todayTimestamp) {
-        d.DeviceDéplacer.push(device);
-        idsÀExclure.add(device.deviceID);
+        if (lastStopTime > todayTimestamp) {
+          d.DeviceDéplacer.push(device);
+          idsÀExclure.add(device.deviceID);
+        }
+
+        const details = device?.véhiculeDetails?.[0];
+        const hasDetails = device?.véhiculeDetails?.length > 0;
+        const speed = details?.speedKPH ?? 0;
+        const lastUpdateMs = details?.timestamp ? details.timestamp * 1000 : 0;
+        const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
+        const updatedToday = lastUpdateMs >= todayTimestamp;
+
+        const isActive = device?.lastUpdateTime
+          ? currentTimeMs - device.lastUpdateTime * 1000 < twentyFourHoursInSec
+          : false;
+
+        if (
+          hasDetails &&
+          isActive &&
+          speed >= 1 &&
+          updatedRecently &&
+          updatedToday
+        ) {
+          d.EnDéplacement.push(device);
+          idsÀExclure.add(device.deviceID);
+        }
+
+        if (currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) {
+          d.DeviceListeActif.push(device);
+        } else {
+          d.DeviceInactifs.push(device);
+        }
       }
-
-      const details = device?.véhiculeDetails?.[0];
-      const hasDetails = device?.véhiculeDetails?.length > 0;
-      const speed = details?.speedKPH ?? 0;
-      const lastUpdateMs = details?.timestamp ? details.timestamp * 1000 : 0;
-      const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
-      const updatedToday = lastUpdateMs >= todayTimestamp;
-
-      const isActive = device?.lastUpdateTime
-        ? currentTimeMs - device.lastUpdateTime * 1000 < twentyFourHoursInSec
-        : false;
-
-      if (
-        hasDetails &&
-        isActive &&
-        speed >= 1 &&
-        updatedRecently &&
-        updatedToday
-      ) {
-        d.EnDéplacement.push(device);
-        idsÀExclure.add(device.deviceID);
-      }
-
-      // if (currentTimeSec - lastUpdateTimeSec >= twentyFourHoursInSec) {
-      //   d.DeviceInactifs.push(device);
-      //   idsÀExclure.add(device.deviceID);
-      // }
-
-      if (currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) {
-        d.DeviceListeActif.push(device);
-      } else {
-        d.DeviceInactifs.push(device);
-      }
-    });
+    );
 
     // Maintenant, filtrer les appareils stationnés
-    allDevices.forEach((device) => {
-      const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
-      if (
-        currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
-        !idsÀExclure.has(device.deviceID)
-      ) {
-        d.DeviceEnStationnement.push(device);
+    addVehiculeDetailsFonction(allDevices, véhiculeDetails).forEach(
+      (device) => {
+        const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+        if (
+          currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
+          !idsÀExclure.has(device.deviceID)
+        ) {
+          d.DeviceEnStationnement.push(device);
+        }
       }
-    });
+    );
 
     return d;
   }, [allDevices, todayTimestamp]);
@@ -1382,7 +1384,7 @@ const DataContextProvider = ({ children }) => {
           setTimeout(() => {
             console.log("aaaaaaaaaaaaaaaaaa");
             fetchVehicleData(account, username, password);
-          }, 3000);
+          }, 2000);
         }
         const fromLoginFronction = true;
 
@@ -1636,6 +1638,37 @@ const DataContextProvider = ({ children }) => {
     const id = acct?.accountID;
     const pwd = acct?.password;
 
+    fetchAccountGroupes(id, pwd)
+      .then(async (groupes) => {
+        if (groupes && groupes.length > 0) {
+          await processInBatches(groupes, 30, (groupe) =>
+            fetchGroupeDevices(id, [groupe], pwd)
+          );
+        }
+      })
+      .catch((err) => {
+        console.error("Erreur groupes/devices :", err);
+        setError("Erreur lors de la mise à jour des groupes.");
+      });
+
+    fetchAccountUsers(id, pwd)
+      .then(async (users) => {
+        if (users && users.length > 0) {
+          await processInBatches(users, 40, (user) =>
+            fetchUserDevices(id, [user])
+          );
+          await processInBatches(users, 40, (user) =>
+            fetchUserGroupes(id, [user])
+          );
+        }
+      })
+      .catch((err) => {
+        console.error("Erreur utilisateurs/données :", err);
+        setError("Erreur lors de la mise à jour des utilisateurs.");
+      });
+
+    fetchAccountGeofences(id, pwd);
+
     try {
       if (isLastBatch) {
         await fetchAccountDevices(id, pwd)
@@ -1664,37 +1697,7 @@ const DataContextProvider = ({ children }) => {
             setError("Erreur lors de la mise à jour des VehiculeDetails.");
           });
       }
-
-      fetchAccountGroupes(id, pwd)
-        .then(async (groupes) => {
-          if (groupes && groupes.length > 0) {
-            await processInBatches(groupes, 20, (groupe) =>
-              fetchGroupeDevices(id, [groupe], pwd)
-            );
-          }
-        })
-        .catch((err) => {
-          console.error("Erreur groupes/devices :", err);
-          setError("Erreur lors de la mise à jour des groupes.");
-        });
-
-      fetchAccountUsers(id, pwd)
-        .then(async (users) => {
-          if (users && users.length > 0) {
-            await processInBatches(users, 20, (user) =>
-              fetchUserDevices(id, [user])
-            );
-            await processInBatches(users, 20, (user) =>
-              fetchUserGroupes(id, [user])
-            );
-          }
-        })
-        .catch((err) => {
-          console.error("Erreur utilisateurs/données :", err);
-          setError("Erreur lors de la mise à jour des utilisateurs.");
-        });
-
-      fetchAccountGeofences(id, pwd);
+      //////////////////////////
     } catch (err) {
       console.error("Erreur pour le compte", id, ":", err);
       failedAccounts.push(id);
@@ -8066,6 +8069,8 @@ const DataContextProvider = ({ children }) => {
       localStorage.setItem("customHistory", JSON.stringify(storedHistory));
       sessionStorage.setItem("isGoingBack", "true");
       console.log("Navigation vers :", lastPath);
+      setDocumentationPage(lastPath.replace(/^\//, ""));
+
       // Petite astuce : on force une redirection propre
       setTimeout(() => {
         navigate(lastPath);
@@ -8550,6 +8555,9 @@ const DataContextProvider = ({ children }) => {
         setAllDevices,
         filteredColorCategorieListe,
         setFilteredColorCategorieListe,
+        addVehiculeDetailsFonction,
+        selectedVehicleHistoriqueToShowInMap,
+        setSelectedVehicleHistoriqueToShowInMap,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

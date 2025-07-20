@@ -229,7 +229,7 @@ function StatisticDashboard({
                     {isDeviceEnStationnement ? t("Non Déplacer") : t("Actifs")}
                   </h3>
 
-                  <div className=" text-[1.2rem] flex justify-end w-[30%]  text-green-800">
+                  <div className=" text-[1.2rem] flex justify-end w-[30%]  text-orange-600">
                     <FaArrowRightArrowLeft
                       onClick={() => {
                         setIsDeviceEnStationnement(!isDeviceEnStationnement);

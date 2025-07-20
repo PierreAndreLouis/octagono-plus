@@ -8,11 +8,14 @@ function TableauRecapitulatifComptes({
   setDocumentationPage,
   setExpandSection,
   setStatisticFilteredDeviceListeText,
+  setShowStatisticDeviceListeDashboard,
 }) {
   const {
     gestionAccountData,
     setCurrentAccountSelected,
     setFilteredColorCategorieListe,
+    addVehiculeDetailsFonction,
+    véhiculeDetails,
   } = useContext(DataContext);
   const [t] = useTranslation();
 
@@ -93,16 +96,70 @@ function TableauRecapitulatifComptes({
   };
 
   const handleSetAllDevice = (acct) => {
+    setShowStatisticDeviceListeDashboard(true);
+    const acctID = acct?.id;
+    const foundAccount = gestionAccountData?.find(
+      (c) => c.accountID === acctID
+    );
+    const accountDevice = foundAccount?.accountDevices;
+
+    // const accountDevice = foundAccount?.accountDevices?.filter((device) => device?.lastStopTime > todayTimestamp);
+
+    setFilteredColorCategorieListe(
+      addVehiculeDetailsFonction(accountDevice, véhiculeDetails)
+    );
+    setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
+  };
+
+  const handleSetDeviceDéplacer = (acct) => {
+    setShowStatisticDeviceListeDashboard(true);
     const acctID = acct?.id;
     const foundAccount = gestionAccountData?.find(
       (c) => c.accountID === acctID
     );
 
-    const accountDevice = foundAccount?.accountDevice;
+    const accountDevice = foundAccount?.accountDevices?.filter(
+      (device) => device?.lastStopTime > todayTimestamp
+    );
 
-    setFilteredColorCategorieListe("foundAccount", foundAccount);
-    setFilteredColorCategorieListe(accountDevice);
-    console.log(accountDevice);
+    setFilteredColorCategorieListe(
+      addVehiculeDetailsFonction(accountDevice, véhiculeDetails)
+    );
+    setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
+  };
+
+  const handleSetDeviceActif = (acct) => {
+    setShowStatisticDeviceListeDashboard(true);
+    const acctID = acct?.id;
+    const foundAccount = gestionAccountData?.find(
+      (c) => c.accountID === acctID
+    );
+
+    const accountDevice = foundAccount?.accountDevices?.filter(
+      (device) => currentTimeSec - device?.lastUpdateTime < twentyFourHoursInSec
+    );
+
+    setFilteredColorCategorieListe(
+      addVehiculeDetailsFonction(accountDevice, véhiculeDetails)
+    );
+    setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
+  };
+
+  const handleSetDeviceInActif = (acct) => {
+    setShowStatisticDeviceListeDashboard(true);
+    const acctID = acct?.id;
+    const foundAccount = gestionAccountData?.find(
+      (c) => c.accountID === acctID
+    );
+
+    const accountDevice = foundAccount?.accountDevices?.filter(
+      (device) =>
+        currentTimeSec - device?.lastUpdateTime >= twentyFourHoursInSec
+    );
+
+    setFilteredColorCategorieListe(
+      addVehiculeDetailsFonction(accountDevice, véhiculeDetails)
+    );
     setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
   };
 
@@ -154,9 +211,30 @@ function TableauRecapitulatifComptes({
                 >
                   {acct.totalDevices}
                 </td>
-                <td className="py-3 px-2">{acct.moved}</td>
-                <td className="py-3 px-2">{acct.actifs}</td>
-                <td className="py-3 px-2">{acct.inactifs}</td>
+                <td
+                  onClick={() => {
+                    handleSetDeviceDéplacer(acct);
+                  }}
+                  className="py-3 px-2 hover:bg-orange-50 cursor-pointer"
+                >
+                  {acct.moved}
+                </td>
+                <td
+                  onClick={() => {
+                    handleSetDeviceActif(acct);
+                  }}
+                  className="py-3 px-2 hover:bg-orange-50 cursor-pointer"
+                >
+                  {acct.actifs}
+                </td>
+                <td
+                  onClick={() => {
+                    handleSetDeviceInActif(acct);
+                  }}
+                  className="py-3 px-2 hover:bg-orange-50 cursor-pointer"
+                >
+                  {acct.inactifs}
+                </td>
                 {/*  */}
                 {voirPlusDeColonneDansTableauCompte && (
                   <>

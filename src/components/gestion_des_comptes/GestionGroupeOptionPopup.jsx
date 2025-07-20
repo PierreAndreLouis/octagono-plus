@@ -2,13 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 
-import {
-  FaCar,
-  FaRegEdit,
-  FaTrashAlt,
-  FaUsers,
-} from "react-icons/fa";
+import { FaCar, FaRegEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function GestionGroupeOptionPopup({
   showSelectedGroupeOptionsPopup,
@@ -24,8 +20,9 @@ function GestionGroupeOptionPopup({
     accountDevices,
   } = useContext(DataContext);
 
-    const navigate = useNavigate();
-  
+  const [t, i18n] = useTranslation();
+
+  const navigate = useNavigate();
 
   const currentSelectedGroupeGestionDevices = () => {
     const foundGroupe = gestionAccountData
@@ -48,20 +45,15 @@ function GestionGroupeOptionPopup({
       }
     });
 
-    console.log("✅ DeviceIDs trouvés :", foundDeviceIDs);
-    console.log("❌ DeviceIDs non trouvés :", notFoundDeviceIDs);
-
     const updateListe = accountDevices?.filter((device) =>
       deviceIDsInInfo.has(device.deviceID)
     );
-
-    console.log("updateListe", updateListe);
 
     setTimeout(() => {
       setListeGestionDesVehicules(updateListe);
     }, 500);
   };
- 
+
   return (
     <div>
       {showSelectedGroupeOptionsPopup && (
@@ -78,10 +70,12 @@ function GestionGroupeOptionPopup({
                 // }}
                 className="px-3 mt-4 mb-2--"
               >
-                Options du groupe
+                {t("Options du groupe")}
               </h1>
               <h2 className="px-3 notranslate mt-8-- text-orange-600 mb-4">
-                {currentSelectedGroupeGestion?.description || "---"}
+                {currentSelectedGroupeGestion?.description ||
+                  currentSelectedGroupeGestion?.groupID ||
+                  "---"}
               </h2>
             </div>
             <div className="p-4 flex flex-col gap-4 py-6 pb-10">
@@ -97,13 +91,13 @@ function GestionGroupeOptionPopup({
                   );
                   setShowSelectedGroupeOptionsPopup(false);
                   setDocumentationPage("Gestion_des_appareils");
-                  navigate("/Gestion_des_appareils")
+                  navigate("/Gestion_des_appareils");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Afficher Les Appareils
+                  {t("Liste Les Appareils")}
                 </h2>
               </button>
 
@@ -111,14 +105,13 @@ function GestionGroupeOptionPopup({
                 onClick={() => {
                   setShowSelectedGroupeOptionsPopup(false);
                   setDocumentationPage("Gestion_des_utilisateurs");
-                  navigate("/Gestion_des_utilisateurs")
-
+                  navigate("/Gestion_des_utilisateurs");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaUsers className="text-[1.2rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Liste des utilisateurs affectés
+                  {t("Liste des utilisateurs affectés")}
                 </h2>
               </button>
               {/*  */}
@@ -129,14 +122,14 @@ function GestionGroupeOptionPopup({
                   setShowSelectedGroupeOptionsPopup(false);
 
                   setDocumentationPage("Modifier_groupe");
-                  navigate("/Modifier_groupe")
+                  navigate("/Modifier_groupe");
                   // setCurrentSelectedGroupeGestion(groupe);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
                 <FaRegEdit className="text-[1.2rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  Modifier le groupe
+                  {t("Modifier le groupe")}
                 </h2>
               </button>
 
@@ -154,7 +147,7 @@ function GestionGroupeOptionPopup({
               >
                 <FaTrashAlt className="text-[1.7rem] min-w-8 text-red-500 dark:text-red-50" />
                 <h2 className="font-semibold text-red-900 dark:text-red-50">
-                  Supprimer le groupe
+                  {t("Supprimer le groupe")}
                 </h2>
               </div>
             </div>

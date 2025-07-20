@@ -15,14 +15,23 @@ function HeaderDashboardSysadmin({
 }) {
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
-  const { currentAccountSelected, isDashboardHomePage, account, username } =
-    useContext(DataContext);
+  const {
+    currentAccountSelected,
+    isDashboardHomePage,
+    account,
+    username,
+    appareilPourAfficherSurCarte,
+  } = useContext(DataContext);
   return (
     <header className="fixed z-[999999999999999999999] top-0 left-0 right-0 bg-white">
       <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-6 px-4 py-2">
         <div
           onClick={() => {
-            navigate("/Dashboard");
+            // navigate("/Dashboard");
+            console.log(
+              "appareilPourAfficherSurCarte",
+              appareilPourAfficherSurCarte
+            );
           }}
           className="flex items-center gap-2"
         >
@@ -46,7 +55,7 @@ function HeaderDashboardSysadmin({
                 onClick={() => {
                   setDocumentationPage("userInfo");
                 }}
-                className="text-[1.4rem] mr-2 text-gray-600" 
+                className="text-[1.4rem] mr-2 text-gray-600"
               />
             </Link>
 

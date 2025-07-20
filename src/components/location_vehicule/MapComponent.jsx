@@ -40,7 +40,6 @@ function MapComponent({
   isAddingNewGeofence,
   setIsAddingNewGeofence,
   setDocumentationPage,
-  tileLayers,
 }) {
   const {
     selectedVehicleToShowInMap,
@@ -66,20 +65,25 @@ function MapComponent({
     appareilPourAfficherSurCarte,
     geofencePourAfficherSurCarte,
     documentationPage,
+    addVehiculeDetailsFonction,
+    véhiculeHistoriqueDetails,
+    selectedVehicleHistoriqueToShowInMap,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
 
-  // le data a utiliser
-
   const véhiculeData = useMemo(() => {
     return appareilPourAfficherSurCarte
       ?.map((véhicule) => {
-        const details =
-          véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0] ||
-          {};
+        // const details =
+        //   historiqueSelectedLocationIndex != null
+        //     ? véhiculeHistoriqueDetails?.[historiqueSelectedLocationIndex] || {}
+        //     : véhicule?.véhiculeDetails?.[0] || {};
+
+        const details = véhicule?.véhiculeDetails?.[0] || {};
+
         return {
           deviceID: véhicule?.deviceID || "",
           accountID: véhicule?.accountID || "",
@@ -93,7 +97,8 @@ function MapComponent({
           isActive: véhicule?.isActive || "",
           licensePlate: véhicule?.licensePlate || "",
           simPhoneNumber: véhicule?.simPhoneNumber || "",
-          timestamp: details.timestamp || véhicule?.lastUpdateTime || "",
+          timestamp: details.timestamp || "",
+          // timestamp: details.timestamp || véhicule?.lastUpdateTime || "",
           speedKPH: details.speedKPH,
           heading: details.heading || 0,
         };
@@ -105,62 +110,55 @@ function MapComponent({
           v.lastValidLatitude !== "" &&
           v.lastValidLongitude !== ""
       );
-  }, [appareilPourAfficherSurCarte, historiqueSelectedLocationIndex]);
+  }, [appareilPourAfficherSurCarte]);
 
-  // Formatage des donnee pour la  carte
-  // const véhiculeData = appareilPourAfficherSurCarte
-  //   ?.map((véhicule) => ({
-  //     deviceID: véhicule?.deviceID || "",
-  //     accountID: véhicule?.accountID || "",
-  //     description: véhicule.description || "Véhicule",
-  //     lastValidLatitude:
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.latitude ||
-  //       véhicule?.lastValidLatitude ||
-  //       "",
-  //     lastValidLongitude:
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.longitude ||
-  //       véhicule?.lastValidLongitude ||
-  //       "",
-  //     address:
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.backupAddress ||
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.address ||
-  //       "",
-  //     imeiNumber: véhicule?.imeiNumber || "",
-  //     isActive: véhicule?.isActive || "",
-  //     licensePlate: véhicule?.licensePlate || "",
-  //     simPhoneNumber: véhicule?.simPhoneNumber || "",
-  //     timestamp:
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.timestamp ||
-  //       véhicule?.lastUpdateTime ||
-  //       "",
-  //     speedKPH:
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.speedKPH,
-  //     heading:
-  //       véhicule?.véhiculeDetails?.[historiqueSelectedLocationIndex || 0]
-  //         ?.heading || 0,
-  //   }))
-  //   ?.filter(
-  //     (v) =>
-  //       v.lastValidLatitude !== "0.0" &&
-  //       v.lastValidLongitude !== "0.0" &&
-  //       v.lastValidLatitude !== "" &&
-  //       v.lastValidLongitude !== ""
-  //   );
-
-  // une reference pour la carte
   const mapRef = useRef(null);
 
-  // Définir le véhicule a afficher sur la carte
-  const vehicles = selectedVehicleToShowInMap
-    ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
-    : véhiculeData;
+  const véhiculeHistoriqueUnique = useMemo(() => {
+    if (historiqueSelectedLocationIndex != null && selectedVehicleToShowInMap) {
+      const véhicule = appareilPourAfficherSurCarte?.find(
+        (item) => item?.deviceID === selectedVehicleToShowInMap
+      );
+      const details =
+        véhiculeHistoriqueDetails?.[historiqueSelectedLocationIndex] || {};
+      return {
+        deviceID: véhicule?.deviceID || "",
+        accountID: véhicule?.accountID || "",
+        description: véhicule?.description || "Véhicule",
+        lastValidLatitude:
+          details?.latitude || véhicule?.lastValidLatitude || "",
+        lastValidLongitude:
+          details?.longitude || véhicule?.lastValidLongitude || "",
+        address: details?.backupAddress || details?.address || "",
+        imeiNumber: véhicule?.imeiNumber || "",
+        isActive: véhicule?.isActive || "",
+        licensePlate: véhicule?.licensePlate || "",
+        simPhoneNumber: véhicule?.simPhoneNumber || "",
+        timestamp: details?.timestamp || "",
+        speedKPH: details?.speedKPH,
+        heading: details?.heading || 0,
+      };
+    }
+    return null;
+  }, [
+    appareilPourAfficherSurCarte,
+    selectedVehicleToShowInMap,
+    historiqueSelectedLocationIndex,
+  ]);
 
+  let vehicles;
+
+  if (historiqueSelectedLocationIndex != null && véhiculeHistoriqueUnique) {
+    vehicles = [véhiculeHistoriqueUnique];
+  } else if (selectedVehicleToShowInMap) {
+    vehicles = véhiculeData.filter(
+      (v) => v.deviceID === selectedVehicleToShowInMap
+    );
+  } else {
+    vehicles = véhiculeData;
+  }
+
+  // pour centrer la carter sur la position sélectionner
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (mapRef.current && vehicles?.length) {
@@ -206,43 +204,103 @@ function MapComponent({
   const getMarkerIcon = (véhicule, getColor = false) => {
     const speed = parseFloat(véhicule?.speedKPH);
     const direction = Math.round(véhicule?.heading / 45.0) % 8;
-    const timestamp = véhicule?.timestamp * 1000; // Convertir en millisecondes
+    const timestamp = véhicule?.timestamp * 1000; // En millisecondes
     const lastUpdateTime = véhicule?.timestamp;
 
-    const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+    const tenMinutesInMs = 10 * 60 * 1000;
     const currentTimeMs = Date.now();
+    const currentTimeSec = Math.floor(currentTimeMs / 1000);
+    const twentyFourHoursInSec = 24 * 60 * 60;
 
     const isRecentlyUpdate =
       currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
-
     const isNotRecentlyUpdate =
       currentTimeSec - lastUpdateTime > twentyFourHoursInSec;
-
     const isStillSpeedActive =
       timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
 
-    // if (isDashboardHomePage) {
-    //   if (isRecentlyUpdate) return "/pin/ping_red.png";
-    //   return "/pin/ping_purple.png";
-    // } else {
     if (!getColor) {
       if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
-      if (speed > 0 && speed <= 20 && isStillSpeedActive)
+
+      if (
+        speed > 0 &&
+        speed <= 20 &&
+        (isStillSpeedActive || historiqueSelectedLocationIndex)
+      )
         return `/pin/ping_yellow_h${direction}.png`;
-      if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
-      if (speed > 20 && isStillSpeedActive)
+
+      if (speed > 20 && (isStillSpeedActive || historiqueSelectedLocationIndex))
         return `/pin/ping_green_h${direction}.png`;
+
       return "/pin/ping_red.png";
     } else {
       if (isNotRecentlyUpdate) return "bg-purple-600";
-      if (speed > 0 && speed <= 20 && isStillSpeedActive)
-        return `bg-yellow-600`;
-      if (speed <= 0 || !isStillSpeedActive) return "bg-red-500";
-      if (speed > 20 && isStillSpeedActive) return `bg-green-600`;
+
+      if (
+        speed > 0 &&
+        speed <= 20 &&
+        (isStillSpeedActive || historiqueSelectedLocationIndex)
+      )
+        return "bg-yellow-600";
+
+      if (speed > 20 && (isStillSpeedActive || historiqueSelectedLocationIndex))
+        return "bg-green-600";
+
       return "bg-red-500";
     }
-    // }
   };
+
+  // const getMarkerIcon = (véhicule, getColor = false) => {
+  //   const speed = parseFloat(véhicule?.speedKPH);
+  //   const direction = Math.round(véhicule?.heading / 45.0) % 8;
+  //   const timestamp = véhicule?.timestamp * 1000; // Convertir en millisecondes
+  //   const lastUpdateTime = véhicule?.timestamp;
+
+  //   const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
+  //   const currentTimeMs = Date.now();
+
+  //   const isRecentlyUpdate =
+  //     currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
+
+  //   const isNotRecentlyUpdate =
+  //     currentTimeSec - lastUpdateTime > twentyFourHoursInSec;
+
+  //   const isStillSpeedActive =
+  //     timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
+
+  //   // if (isDashboardHomePage) {
+  //   //   if (isRecentlyUpdate) return "/pin/ping_red.png";
+  //   //   return "/pin/ping_purple.png";
+  //   // } else {
+  //   if (!getColor) {
+  //     if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
+  //     if (speed > 0 && speed <= 20 && isStillSpeedActive)
+  //       return `/pin/ping_yellow_h${direction}.png`;
+
+  //     if (speed > 0 && speed <= 20 && historiqueSelectedLocationIndex)
+  //       return `/pin/ping_yellow_h${direction}.png`;
+
+  //     if (speed <= 0 || !isStillSpeedActive) return "/pin/ping_red.png";
+  //     if (speed > 20 && isStillSpeedActive)
+  //       return `/pin/ping_green_h${direction}.png`;
+
+  //     if (speed > 20 && historiqueSelectedLocationIndex)
+  //       return `/pin/ping_green_h${direction}.png`;
+  //     return "/pin/ping_red.png";
+  //   } else {
+  //     if (isNotRecentlyUpdate) return "bg-purple-600";
+  //     if (speed > 0 && speed <= 20 && isStillSpeedActive)
+  //       return `bg-yellow-600`;
+
+  //     if (speed > 0 && speed <= 20 && historiqueSelectedLocationIndex)
+  //       return `bg-yellow-600`;
+  //     if (speed <= 0 || !isStillSpeedActive) return "bg-red-500";
+  //     if (speed > 20 && isStillSpeedActive) return `bg-green-600`;
+  //     if (speed > 20 && historiqueSelectedLocationIndex) return `bg-green-600`;
+  //     return "bg-red-500";
+  //   }
+  //   // }
+  // };
 
   const openGoogleMaps = (latitude, longitude) => {
     const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
@@ -326,6 +384,36 @@ function MapComponent({
   ///////////////////////////////////////////
   ///////////////////////////////////////////
   ///////////////////////////////////////////
+  const tileLayers = {
+    terrain: {
+      url: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
+      attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>',
+    },
+
+    satelite: {
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+    },
+
+    streets: {
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      attribution:
+        '&copy; <a href="https://www.opentopomap.org">OpenTopoMap</a> contributors',
+    },
+
+    humanitarian: {
+      url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://hot.openstreetmap.org">Humanitarian OpenStreetMap Team</a>',
+    },
+    positron: {
+      url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+      attribution:
+        '&copy; <a href="https://www.carto.com/attributions">CARTO</a>',
+    },
+  };
+
   ///////////////////////////////////////////
   ///////////////////////////////////////////
   ///////////////////////////////////////////
@@ -405,8 +493,6 @@ function MapComponent({
 
   function MapClickHandler({ setClickedPosition1 }) {
     useMapEvent("click", (e) => {
-      // console.log("Position cliquée :", e.latlng);
-
       if (addOrEditPosition === "position1" && clickedPosition1 === undefined) {
         setClickedPosition1(e.latlng);
       } else if (
@@ -796,6 +882,14 @@ function MapComponent({
     return null;
   };
 
+  const onClickVehicle = (véhicule) => {
+    if (historiqueSelectedLocationIndex && véhiculeHistoriqueUnique) {
+      setSelectedVehicle(véhiculeHistoriqueUnique);
+    } else {
+      setSelectedVehicle(véhicule);
+    }
+  };
+
   useEffect(() => {
     updateAppareilsEtGeofencesPourCarte();
   }, [currentAccountSelected]);
@@ -810,7 +904,7 @@ function MapComponent({
       className="relative"
     >
       {selectedVehicle && (
-        <div className="fixed bottom-4 right-4 overflow-hidden bg-white p-4 rounded-md shadow-lg max-w-sm z-[1000]">
+        <div className="fixed bottom-[4rem] md:bottom-4 right-4 overflow-hidden bg-white p-4 rounded-md shadow-lg max-w-sm z-[1000]">
           <div className="w-[70vw] max-w-[20rem] relative ">
             <div className="absolute z-10 -top-[2.7rem] text-lg -right-2 flex justify-center items-center text-white cursor-pointer w-[2rem] h-[2rem] border border-white  rounded-full ">
               <IoClose
@@ -823,7 +917,7 @@ function MapComponent({
               className={`${getMarkerIcon(
                 selectedVehicle,
                 getColor
-              )}  bg-orange-500 absolute z-4 -top-[3rem] -left-5 -right-5 h-10 `}
+              )}   absolute z-4 -top-[3rem] -left-5 -right-5 h-10 `}
             >
               .
             </div>
@@ -885,7 +979,8 @@ function MapComponent({
                 ? FormatDateHeure(selectedVehicle.timestamp)?.date
                 : `${t("Pas de date disponible")}`}
               <span className="px-3">/</span>
-              {FormatDateHeure(selectedVehicle.timestamp)?.time}
+              {FormatDateHeure(selectedVehicle.timestamp)?.time} -{" "}
+              {selectedVehicle.timestamp}
             </p>
 
             <button
@@ -957,10 +1052,6 @@ function MapComponent({
                   if (clickedPosition7 != null) {
                     setPositionIndex(8);
                   }
-                  // console.log(clickedPosition1);
-                  // console.log(clickedPosition2);
-                  // console.log(clickedPosition3);
-                  // console.log(clickedPosition4);
                 }}
               >
                 <span className="w-[1.5rem] h-[1.5rem] flex justify-center items-center rounded-full bg-green-600 text-white">
@@ -1190,10 +1281,6 @@ function MapComponent({
               <div className="mt-10 max-w-[25rem] flex justify-center  mx-auto gap-3 ">
                 <button
                   type="submit"
-                  // onClick={() => {
-                  //   console.log("Les donnees trouver..............xxxxxxxxxxx");
-                  //   addGeofenceFonction();
-                  // }}
                   className="px-4 w-full cursor-pointer py-1 rounded-lg bg-green-500 text-white"
                 >
                   {isEditingGeofence ? `${t("Modifier")}` : `${t("Ajouter")}`}
@@ -1387,9 +1474,10 @@ function MapComponent({
                       "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
                     shadowSize: [1, 1],
                   })}
-                  eventHandlers={{
-                    click: () => setSelectedVehicle(véhicule),
-                  }}
+                  // eventHandlers={{
+                  //   click: () => setSelectedVehicle(véhicule),
+                  // }}
+                  eventHandlers={{ click: () => onClickVehicle(véhicule) }}
                 >
                   {/* <Popup>
                     <div></div>

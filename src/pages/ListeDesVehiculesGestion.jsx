@@ -7,6 +7,7 @@ import { MdUpdate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import GestionAppareilOptionPopup from "../components/gestion_des_comptes/GestionAppareilOptionPopup";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
@@ -53,6 +54,7 @@ function ListeDesVehiculesGestion({
     setAllDevices,
     filteredColorCategorieListe,
     setFilteredColorCategorieListe,
+    addVehiculeDetailsFonction,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -97,35 +99,30 @@ function ListeDesVehiculesGestion({
   const [searchTermInput, setSearchTermInput] = useState("");
   const [showPasswordInput, setShowPasswordInput] = useState(false);
 
-  const currentListe = fromDashboard
-    ? statisticFilteredDeviceListe?.map((device) => {
-        const match = véhiculeDetails?.find(
-          (v) =>
-            v.deviceID === device.deviceID &&
-            v.véhiculeDetails?.[0]?.accountID === device.accountID
-        );
+  const currentListe = useMemo(() => {
+    if (fromDashboard) {
+      return addVehiculeDetailsFonction(
+        statisticFilteredDeviceListe,
+        véhiculeDetails
+      );
+    }
 
-        if (match && match.véhiculeDetails.length > 0) {
-          return { ...device, véhiculeDetails: match.véhiculeDetails };
-        }
+    if (isDashboardHomePage) {
+      return addVehiculeDetailsFonction(
+        listeGestionDesVehicules,
+        véhiculeDetails
+      );
+    }
 
-        return device;
-      })
-    : isDashboardHomePage
-    ? listeGestionDesVehicules?.map((device) => {
-        const match = véhiculeDetails?.find(
-          (v) =>
-            v.deviceID === device.deviceID &&
-            v.véhiculeDetails?.[0]?.accountID === device.accountID
-        );
-
-        if (match && match.véhiculeDetails.length > 0) {
-          return { ...device, véhiculeDetails: match.véhiculeDetails };
-        }
-
-        return device;
-      })
-    : dataFusionné;
+    return dataFusionné;
+  }, [
+    fromDashboard,
+    isDashboardHomePage,
+    statisticFilteredDeviceListe,
+    listeGestionDesVehicules,
+    dataFusionné,
+    véhiculeDetails,
+  ]);
 
   const displayListeDevice = filteredColorCategorieListe
     ? filteredColorCategorieListe
@@ -364,34 +361,31 @@ function ListeDesVehiculesGestion({
         </div>
         {/* )} */}
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
-          <div className="mt-4  flex items-center gap-2">
+          <div className="mt-4  flex items-center gap-2 flex-wrap">
             <p
               onClick={() => {
                 if (
                   statisticFilteredDeviceListeText ===
                   `${t("Appareils En déplacement")}`
                 ) {
-                  // if (fromDashboard) {
-                  //   // setStatisticFilteredDeviceListe(EnDéplacement);
-                  // } else {
-                  // }
-                  setStatisticFilteredDeviceListeText(
-                    `${t("Appareils En déplacement")}`
-                  );
+                  if (fromDashboard) {
+                    setStatisticFilteredDeviceListeText(
+                      `${t("Appareils En déplacement")}`
+                    );
+                  }
                   setFilteredColorCategorieListe(EnDéplacement);
                 } else {
-                  // if (fromDashboard) {
-                  //   // setStatisticFilteredDeviceListe(DeviceDéplacer);
-
-                  // } else {
-                  // }
-                  setStatisticFilteredDeviceListeText(
-                    `${t("Appareils Déplacer")}`
-                  );
+                  if (fromDashboard) {
+                    setStatisticFilteredDeviceListeText(
+                      `${t("Appareils Déplacer")}`
+                    );
+                  }
                   setFilteredColorCategorieListe(DeviceDéplacer);
                 }
               }}
-              className="px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+              className={
+                "px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+              }
             >
               {fromDashboard &&
               statisticFilteredDeviceListeText ===
@@ -401,14 +395,11 @@ function ListeDesVehiculesGestion({
             </p>
             <p
               onClick={() => {
-                // if (fromDashboard) {
-                //   // setStatisticFilteredDeviceListe(DeviceEnStationnement);
-
-                // } else {
-                // }
-                setStatisticFilteredDeviceListeText(
-                  `${t("Appareils non déplacés")}`
-                );
+                if (fromDashboard) {
+                  setStatisticFilteredDeviceListeText(
+                    `${t("Appareils non déplacés")}`
+                  );
+                }
                 setFilteredColorCategorieListe(DeviceEnStationnement);
               }}
               className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
@@ -418,19 +409,31 @@ function ListeDesVehiculesGestion({
 
             <p
               onClick={() => {
-                // if (fromDashboard) {
-                //   // setStatisticFilteredDeviceListe(DeviceInactifs);
-
-                // } else {
-                // }
-                setStatisticFilteredDeviceListeText(
-                  `${t("Appareils Inactifs")}`
-                );
+                if (fromDashboard) {
+                  setStatisticFilteredDeviceListeText(
+                    `${t("Appareils Inactifs")}`
+                  );
+                }
                 setFilteredColorCategorieListe(DeviceInactifs);
               }}
               className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
             >
               {t("Appareils Inactifs")}
+            </p>
+            <p
+              onClick={() => {
+                if (fromDashboard) {
+                  setStatisticFilteredDeviceListeText(
+                    `${t("Tous les Appareils")}`
+                  );
+                }
+                setFilteredColorCategorieListe(
+                  addVehiculeDetailsFonction(allDevices, véhiculeDetails)
+                );
+              }}
+              className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+            >
+              {t("Tous")}
             </p>
           </div>
           {/*  */}
@@ -657,39 +660,52 @@ function ListeDesVehiculesGestion({
                             </span>
                           </div>{" "}
                         </div>
-                        {showMoreDeviceInfo === index ? (
-                          <p
-                            onClick={() => {
+                        <p
+                          onClick={() => {
+                            if (showMoreDeviceInfo === index) {
                               setShowMoreDeviceInfo();
-                            }}
-                            className={`${text_color} font-semibold mt-2  cursor-pointer underline`}
-                          >
-                            {t("Voir moins")}
-                          </p>
-                        ) : (
-                          <p
-                            onClick={() => {
+                            } else {
                               setShowMoreDeviceInfo(index);
-                            }}
-                            className={` ${text_color} font-semibold mt-2  cursor-pointer underline`}
-                          >
-                            {t("Voir plus")}
-                          </p>
-                        )}
+                            }
+                          }}
+                          className={`${text_color} hidden md:block font-semibold mt-2  cursor-pointer underline`}
+                        >
+                          {showMoreDeviceInfo === index
+                            ? t("Voir moins")
+                            : t("Voir plus")}
+                        </p>
                       </div>
                     </div>
                   </div>
                   {/* {isDashboardHomePage && ( */}
                   <div
-                    className="flex justify-end md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- 
+                    className="flex justify-between md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- 
                       items-center "
                   >
+                    <div
+                      onClick={() => {
+                        if (showMoreDeviceInfo === index) {
+                          setShowMoreDeviceInfo();
+                        } else {
+                          setShowMoreDeviceInfo(index);
+                        }
+                      }}
+                      className={` ${text_color} flex md:hidden justify-center items-center border-2   rounded-lg  w-[50%] py-[.3rem]  cursor-pointer`}
+                    >
+                      <p
+                        className={`${text_color} font-semibold   cursor-pointer `}
+                      >
+                        {showMoreDeviceInfo === index
+                          ? t("Voir moins")
+                          : t("Voir plus")}
+                      </p>
+                    </div>
                     <button
                       onClick={() => {
                         setCurrentSelectedDeviceGestion(device);
                         setShowOptionAppareilOptionPopup(true);
                       }}
-                      className={` bg-orange-500 text-white  text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-4 flex justify-center items-center`}
+                      className={` ${bg_color} text-white  text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-4 flex justify-center items-center`}
                     >
                       <p className="text-sm mr-2">{t("Options")}</p>
 

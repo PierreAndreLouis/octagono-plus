@@ -40,7 +40,6 @@ import { Link, useNavigate } from "react-router-dom";
 function SideBarSysadmin({
   readDocumentationSideBar,
   setReadDocumentationSideBar,
-  backToPagePrecedent,
   setChooseOtherAccountGestion,
   setChooseOneAccountToContinue,
   setChooseAccountFromGeozoneSection,
@@ -107,6 +106,7 @@ function SideBarSysadmin({
     updateAppareilsEtGeofencesPourCarte,
     setChooseOtherLanguagePopup,
     setFilteredColorCategorieListe,
+    backToPagePrecedent,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -137,12 +137,46 @@ function SideBarSysadmin({
         }}
         className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
       />
-      {documentationPage !== "Dashboard" &&
+
+      <button
+        onClick={() => {
+          backToPagePrecedent();
+          backToPagePrecedent();
+        }}
+        className={`
+    ${
+      documentationPage === "Localisation_devices"
+        ? "top-[7rem] md:top-[2rem]"
+        : "top-[.5rem] md:top-[2rem]"
+    }
+    text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1
+    flex gap-2 items-center absolute z-[999999999999] -right-[6.6rem] md:-right-[7rem]
+    ${
+      [
+        "Dashboard",
+        "Trajet_appareil",
+        "Rapport_unite",
+        "Historique_appareil",
+      ].includes(documentationPage)
+        ? "hidden lg:flex"
+        : "flex"
+    }
+    text-gray-600 cursor-pointer
+  `}
+      >
+        <FaArrowLeft />
+        <span className="text-[1rem]">{t("Retour")}</span>
+      </button>
+
+      {/* {documentationPage !== "Dashboard" &&
         documentationPage !== "Trajet_appareil" &&
         documentationPage !== "Rapport_unite" &&
         documentationPage !== "Historique_appareil" && (
           <button
-            onClick={backToPagePrecedent}
+            onClick={() => {
+              backToPagePrecedent();
+              backToPagePrecedent();
+            }}
             // disabled={historyRef.current.length === 0}
             className={` ${
               documentationPage === "Localisation_devices"
@@ -153,7 +187,7 @@ function SideBarSysadmin({
             <FaArrowLeft />
             <span className="text-[1rem]">{t("Retour")}</span>
           </button>
-        )}
+        )} */}
       {/*  */}
       {/*  */}
       {/*  */}

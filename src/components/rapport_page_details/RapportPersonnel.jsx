@@ -41,10 +41,10 @@ function RapportPersonnel({
   heureActiveDebut,
   heureActiveFin,
   selectUTC,
-   formatTimestampToTime, 
+  formatTimestampToTime,
   longestHours,
   longestMinutes,
-  longestSeconds, 
+  longestSeconds,
   zoomCart,
   setzoomCart,
   typeDeVue,
@@ -63,12 +63,12 @@ function RapportPersonnel({
   options,
   uniqueAddresses,
   uniqueAddressesZerroSpeed,
-  setShowOptions, 
+  setShowOptions,
   downloadExelPDF,
- }) {
+}) {
   const {
     loadingHistoriqueFilter,
-     véhiculeHistoriqueDetails,
+    véhiculeHistoriqueDetails,
     setVéhiculeHistoriqueDetails,
     setCurrentVéhicule,
     currentDataFusionné,
@@ -76,9 +76,9 @@ function RapportPersonnel({
     setHistoriqueSelectedLocationIndex,
     FormatDateHeure,
     rapportPersonnelPDFtRef,
-     currentVéhicule,
+    currentVéhicule,
     currentPersonelVéhicule,
-     rapportPersonelleData,
+    rapportPersonelleData,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -263,12 +263,7 @@ function RapportPersonnel({
           ref={rapportPersonnelPDFtRef}
           className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full"
         >
-          <h1
-            onClick={() => {
-              console.log("rapportPersonelleData", rapportPersonelleData);
-            }}
-            className="text-center mb-2 font-semibold text-xl mt-16-- dark:text-gray-300"
-          >
+          <h1 className="text-center mb-2 mt-[2rem] md:mt-0 font-semibold text-xl mt-16-- dark:text-gray-300">
             {t("Rapport détaillé du véhicule")}
           </h1>
           <h1 className="text-center notranslate mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
