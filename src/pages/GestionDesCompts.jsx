@@ -3,13 +3,23 @@ import { DataContext } from "../context/DataContext";
 
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import LoadingPageEffectCircle from "../components/Reutilisable/LoadingPageEffectCircle";
-import { IoCloseOutline, IoOptions, IoSearchOutline } from "react-icons/io5";
+import {
+  IoClose,
+  IoCloseOutline,
+  IoOptions,
+  IoSearchOutline,
+} from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { FaPlusCircle } from "react-icons/fa";
 import { MdSwitchAccount } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-function GestionDesCompts({ setDocumentationPage }) {
+function GestionDesCompts({
+  setDocumentationPage,
+  showChooseItemToModifyMessage,
+  setshowChooseItemToModifyMessage,
+  showChooseItemToModifyPage,
+}) {
   const {
     FormatDateHeure,
     gestionAccountData,
@@ -187,6 +197,17 @@ function GestionDesCompts({ setDocumentationPage }) {
           </div>
           {/* Liste des Comptes */}
           <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+            {showChooseItemToModifyMessage &&
+              showChooseItemToModifyPage === "Gestion_des_comptes" && (
+                <div className=" flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
+                  <p className="w-full">{showChooseItemToModifyMessage}</p>
+                  <IoClose
+                    onClick={() => {
+                      setshowChooseItemToModifyMessage("");
+                    }}
+                  />
+                </div>
+              )}
             {filterListeDesComptePagination?.map((account, index) => {
               return (
                 <div
@@ -222,14 +243,6 @@ function GestionDesCompts({ setDocumentationPage }) {
                           </span>
                         </div>{" "}
                         {/*  */}
-                        <div className="flex flex-wrap mt-1">
-                          <p className="font-bold- text-gray-700">
-                            {t("Nombre d'utilisateurs")} :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {account?.accountUsers?.length}
-                          </span>
-                        </div>{" "}
                         {/*  */}
                         <div className="flex flex-wrap mt-1">
                           <p className="font-bold- text-gray-700">
@@ -237,6 +250,14 @@ function GestionDesCompts({ setDocumentationPage }) {
                           </p>
                           <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                             {account?.accountDevices?.length}
+                          </span>
+                        </div>{" "}
+                        <div className="flex flex-wrap mt-1">
+                          <p className="font-bold- text-gray-700">
+                            {t("Nombre d'utilisateurs")} :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            {account?.accountUsers?.length}
                           </span>
                         </div>{" "}
                         {/*  */}
@@ -283,6 +304,7 @@ function GestionDesCompts({ setDocumentationPage }) {
                         <button
                           onClick={() => {
                             setCurrentAccountSelected(account);
+                            setshowChooseItemToModifyMessage("");
 
                             setShowAccountOptionsPopup(true);
                           }}

@@ -32,6 +32,8 @@ function StatisticDashboard({
     DeviceInactifs,
     DeviceDéplacer,
     allDevices,
+    addVehiculeDetailsFonction,
+    véhiculeDetails,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -105,7 +107,9 @@ function StatisticDashboard({
           <div
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
-              setFilteredColorCategorieListe(allDevices);
+              setFilteredColorCategorieListe(
+                addVehiculeDetailsFonction(allDevices, véhiculeDetails)
+              );
               setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"

@@ -20,7 +20,11 @@ function SearchVehiculePupup({
     selectedVehicleToShowInMap,
     setSelectedVehicleToShowInMap,
     searchDonneeFusionnéForRapport,
+    isDashboardHomePage,
+    accountDevices,
+    mergedDataHome,
   } = useContext(DataContext);
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   const [t, i18n] = useTranslation();
 
@@ -114,9 +118,9 @@ function SearchVehiculePupup({
     }
   );
 
-  const foundVehicle = currentDataFusionné?.find(
-    (v) => v.deviceID === selectedVehicleToShowInMap
-  );
+  const foundVehicle = (
+    isDashboardHomePage ? accountDevices : dataFusionné
+  )?.find((v) => v.deviceID === selectedVehicleToShowInMap);
 
   const nombreDeRésultatParClique = 10;
 
@@ -133,8 +137,8 @@ function SearchVehiculePupup({
     setVoir10RésultatPlus((prev) => prev + 1);
   };
   return (
-    <div className="fixed min-h-[100vh] px-2  z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
-      <div className=" sm:mx-auto   min-w-[90vw]  md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
+    <div className="fixed min-h-[100vh]   z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
+      <div className=" sm:mx-auto   w-full  md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
         <div className="absolute  top-[1rem] left-2 right-2 md:left-4  md:right-4 py-2">
           <div className="mt-4 mb-4   flex items-center gap-2">
             <Tooltip
@@ -319,7 +323,6 @@ function SearchVehiculePupup({
                       handleClick(véhicule);
                       setShowOptions(false);
                       setSelectedVehicleToShowInMap(véhicule?.deviceID);
-                      console.log(véhicule);
                     }}
                     className={`${
                       véhicule.description ===

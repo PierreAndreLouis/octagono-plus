@@ -813,7 +813,48 @@
   "Appareils Déplacés": "Moved Devices",
   "Statistiques par compte": "Statistics by Account",
 
-"Nombre appareils": "Number of devices"
+"Nombre appareils": "Number of devices",
+
+
+
+
+  "Options du groupe": "Group options",
+  "Afficher Les Appareils": "Show devices",
+  "Liste des utilisateurs affectés": "List of assigned users",
+  "Liste Les Appareils": "Device list",
+  "Modifier le groupe": "Edit group",
+  "Supprimer le groupe": "Delete group",
+  "Rechercher une option": "Search for an option",
+  "Veuillez cliquer sur l'option de l'utilisateur a modifier, puis sur 'Modifier l'utilisateur'": "Please click on the user option to modify, then on 'Edit user'",
+  "Veuillez cliquer sur l'option du groupe a modifier, puis sur 'Modifier le groupe'": "Please click on the group option to modify, then on 'Edit group'",
+  "Veuillez cliquer sur l'option de l'appareil a modifier, puis sur 'Modifier l'appareil'": "Please click on the device option to modify, then on 'Edit device'",
+  "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité modifier": "Please click on the 'Edit' button of the geofence you want to modify",
+
+  "Informations utilisateur": "User information",
+
+  "Ajouter un nouveau compte": "Add a new account",
+  "Modifier un compte": "Edit an account",
+  "Supprimer un compte": "Delete an account",
+
+  "Ajouter un nouveau utilisateur": "Add a new user",
+  "Modifier un utilisateur": "Edit a user",
+  "Supprimer un utilisateur": "Delete a user",
+
+  "Gestion des groupes": "Group management",
+  "Ajouter un nouveau groupe": "Add a new group",
+  "Modifier un groupe": "Edit a group",
+  "Supprimer un groupe": "Delete a group",
+
+  "Gestion des appareils": "Device management",
+  "Ajouter un nouveau appareil": "Add a new device",
+  "Modifier un appareil": "Edit a device",
+  "Supprimer un appareil": "Delete a device",
+
+  "Gestion des geofences": "Geofence management",
+  "Ajouter une nouvelle geozone": "Add a new geofence",
+  "Modifier une geozone": "Edit a geofence",
+  "Supprimer une geozone": "Delete a geofence"
+
 
 
 

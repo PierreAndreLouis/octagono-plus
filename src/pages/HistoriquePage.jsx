@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import customMarkerIcon from "/img/cars/localisation.png";
+import customMarkerIcon from "/pin/ping_red.png";
 import { DataContext } from "../context/DataContext";
 import DateTimePicker from "../components/home/DateTimePicker";
 

@@ -7,7 +7,7 @@ Chart.register(...registerables);
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import customMarkerIcon from "/img/cars/localisation.png";
+import customMarkerIcon from "/pin/ping_red.png";
 import { DataContext } from "../context/DataContext";
 
 import RapportPageDetailsHeader from "../components/rapport_page_details/RapportPageDetailsHeader";

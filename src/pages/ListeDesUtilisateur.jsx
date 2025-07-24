@@ -14,6 +14,11 @@ function ListeDesUtilisateur({
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
   fromExpandSectionDashboard = "false",
+  // showChooseUserToModifyMessage,
+  // setShowChooseUserToModifyMessage,
+  showChooseItemToModifyMessage,
+  setshowChooseItemToModifyMessage,
+  showChooseItemToModifyPage,
 }) {
   const {
     FormatDateHeure,
@@ -282,6 +287,17 @@ function ListeDesUtilisateur({
         </div>
         {/* )} */}
         <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+          {showChooseItemToModifyMessage &&
+            showChooseItemToModifyPage === "Gestion_des_utilisateurs" && (
+              <div className=" flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
+                <p className="w-full">{showChooseItemToModifyMessage}</p>
+                <IoClose
+                  onClick={() => {
+                    showChooseItemToModifyMessage("");
+                  }}
+                />
+              </div>
+            )}
           {usersToDisplay.length > 0 ? (
             usersToDisplay?.map((user, index) => {
               const foundUser = userMap.get(
@@ -329,14 +345,22 @@ function ListeDesUtilisateur({
                             {user?.accountID}
                           </span>
                         </div>{" "}
-                        <div className="flex flex-wrap">
+                        <div
+                          onClick={() => {
+                            console.log(
+                              "foundUser?.userGroupes",
+                              foundUser?.userGroupes
+                            );
+                          }}
+                          className="flex flex-wrap"
+                        >
                           <p className="font-bold- text-gray-700">
                             {t("Groupes affectés")} :
                           </p>
                           <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
                             {foundUser?.userGroupes?.length > 0
                               ? foundUser?.userGroupes?.length
-                              : `${t("Aucun")}`}
+                              : `${t("All")}`}
                           </span>
                         </div>{" "}
                         <div className="flex flex-wrap">
@@ -379,6 +403,7 @@ function ListeDesUtilisateur({
                       onClick={() => {
                         setShowSelectedUserOptionsPopup(true);
                         setCurrentSelectedUserToConnect(user);
+                        showChooseItemToModifyMessage("");
                       }}
                       className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                     >

@@ -130,6 +130,7 @@ import Logout from "./components/login/Logout";
 import ChooseOtherGroupeDashboard from "./components/dashboard_containt/ChooseOtherGroupeDashboard";
 import HeaderDashboardSysadmin from "./components/dashboard_containt/HeaderDashboardSysadmin";
 import SideBarSysadmin from "./components/dashboard_containt/SideBarSysadmin";
+import AjouterGeofence from "./components/location_vehicule/AjouterGeofence";
 
 function App() {
   const {
@@ -167,7 +168,8 @@ function App() {
     docRapportGroupeRef,
     docGestionGeozoneRef,
     clearCacheFonction,
-    allDevices, setAllDevices
+    allDevices,
+    setAllDevices,
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -241,8 +243,6 @@ function App() {
   // Données des véhicules avec heures différentes
 
   const [t, i18n] = useTranslation();
-
- 
 
   // const [allDevices, setAllDevices] = useState([]);
   // const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -553,6 +553,37 @@ function App() {
     );
   };
 
+  const [showChooseUserToModifyMessage, setShowChooseUserToModifyMessage] =
+    useState(false);
+  const [showChooseGroupeToModifyMessage, setShowChooseGroupeToModifyMessage] =
+    useState(false);
+  const [
+    showChooseAppareilToModifyMessage,
+    setShowChooseAppareilToModifyMessage,
+  ] = useState(false);
+  const [
+    showChooseGeofencesToModifyMessage,
+    setShowChooseGeofencesToModifyMessage,
+  ] = useState(false);
+
+  const [showChooseCompteToModifyMessage, setShowChooseCompteToModifyMessage] =
+    useState(false);
+
+  const [showChooseItemToModifyMessage, setshowChooseItemToModifyMessage] =
+    useState("");
+  const [showChooseItemToModifyPage, setshowChooseItemToModifyPage] =
+    useState("");
+
+  useEffect(() => {
+    if (showChooseItemToModifyMessage) {
+      const timer = setTimeout(() => {
+        setshowChooseItemToModifyMessage("");
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showChooseItemToModifyMessage]);
+
   return (
     <div className="dark:bg-gray-700 md:p-4 bg-gray-100">
       <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800">
@@ -621,6 +652,13 @@ function App() {
             setAjouterGeofencePopup={setAjouterGeofencePopup}
             setLogOutPopup={setLogOutPopup}
             generatePersonelPDF={generatePersonelPDF}
+            //
+
+            //
+            showChooseItemToModifyMessage={showChooseItemToModifyMessage}
+            setshowChooseItemToModifyMessage={setshowChooseItemToModifyMessage}
+            showChooseItemToModifyPage={showChooseItemToModifyPage}
+            setshowChooseItemToModifyPage={setshowChooseItemToModifyPage}
           />
         )}
         {/* Side Bar 2 */}
@@ -848,6 +886,15 @@ function App() {
                       <Suspense fallback={<LoadingLazyAnimation />}>
                         <GestionDesCompts
                           setDocumentationPage={setDocumentationPage}
+                          showChooseItemToModifyMessage={
+                            showChooseItemToModifyMessage
+                          }
+                          setshowChooseItemToModifyMessage={
+                            setshowChooseItemToModifyMessage
+                          }
+                          showChooseItemToModifyPage={
+                            showChooseItemToModifyPage
+                          }
                         />
                       </Suspense>
                     </div>
@@ -907,11 +954,14 @@ function App() {
                       <Suspense fallback={<LoadingLazyAnimation />}>
                         <ListeDesUtilisateur
                           setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
+                          showChooseItemToModifyMessage={
+                            showChooseItemToModifyMessage
                           }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
+                          setshowChooseItemToModifyMessage={
+                            setshowChooseItemToModifyMessage
+                          }
+                          showChooseItemToModifyPage={
+                            showChooseItemToModifyPage
                           }
                         />
                       </Suspense>
@@ -985,6 +1035,15 @@ function App() {
                           }
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
+                          }
+                          showChooseItemToModifyMessage={
+                            showChooseItemToModifyMessage
+                          }
+                          setshowChooseItemToModifyMessage={
+                            setshowChooseItemToModifyMessage
+                          }
+                          showChooseItemToModifyPage={
+                            showChooseItemToModifyPage
                           }
                         />
                       </Suspense>
@@ -1118,6 +1177,33 @@ function App() {
           />
 
           <Route
+            path="/Ajouter_modifier_geofence"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <AjouterGeofence
+                          isDashBoardComptnent={isDashBoardComptnent}
+                          setDocumentationPage={setDocumentationPage}
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                        />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+
+          <Route
             path="/Gestion_des_groupes"
             element={
               <PrivateRoute
@@ -1133,6 +1219,15 @@ function App() {
                           }
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
+                          }
+                          showChooseItemToModifyMessage={
+                            showChooseItemToModifyMessage
+                          }
+                          setshowChooseItemToModifyMessage={
+                            setshowChooseItemToModifyMessage
+                          }
+                          showChooseItemToModifyPage={
+                            showChooseItemToModifyPage
                           }
                         />
                       </Suspense>
@@ -1252,6 +1347,15 @@ function App() {
                           setChooseAccountFromGeozoneSection={
                             setChooseAccountFromGeozoneSection
                           }
+                          showChooseItemToModifyMessage={
+                            showChooseItemToModifyMessage
+                          }
+                          setshowChooseItemToModifyMessage={
+                            setshowChooseItemToModifyMessage
+                          }
+                          showChooseItemToModifyPage={
+                            showChooseItemToModifyPage
+                          }
                         />
                       </Suspense>
                     </div>
@@ -1314,15 +1418,7 @@ function App() {
               />
             }
           />
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
+
           {/*  */}
           <Route
             path="/installation_application"

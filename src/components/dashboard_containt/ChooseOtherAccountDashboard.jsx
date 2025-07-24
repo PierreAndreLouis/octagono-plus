@@ -7,8 +7,7 @@ import { useTranslation } from "react-i18next";
 function ChooseOtherAccountDashboard({
   chooseOtherAccountGestion,
   setChooseOtherAccountGestion,
-  searchInputTerm,
-  setSearchInputTerm,
+
   filterGestionAccountData,
   setAllDevices,
   chooseOneAccountToContinue,
@@ -25,7 +24,20 @@ function ChooseOtherAccountDashboard({
     scrollToTop,
     accountGeofences,
     updateAppareilsEtGeofencesPourCarte,
+    gestionAccountData,
   } = useContext(DataContext);
+
+  const [searchInputTerm, setSearchInputTerm] = useState("");
+
+  const filterListeDesCompte = searchInputTerm
+    ? gestionAccountData.filter(
+        (item) =>
+          item?.description
+            .toLowerCase()
+            .includes(searchInputTerm.toLowerCase()) ||
+          item?.accountID.toLowerCase().includes(searchInputTerm.toLowerCase())
+      )
+    : gestionAccountData;
 
   const [t, i18n] = useTranslation();
 
@@ -35,10 +47,16 @@ function ChooseOtherAccountDashboard({
   const [voir10DePlus, setVoir10DePlus] = useState(1);
 
   const filterGestionAccountDataPagination =
-    filterGestionAccountData &&
-    filterGestionAccountData
-      // ?.sort((a, b) => b?.accountDevices?.length - a?.accountDevices?.length)
+    filterListeDesCompte &&
+    filterListeDesCompte
+      ?.sort((a, b) => b?.accountDevices?.length - a?.accountDevices?.length)
       ?.slice(0, voir10DePlus * nombreDeRésultatParClique);
+
+  //     const filterListeDesComptePagination =
+  // filterListeDesCompte &&
+  // filterListeDesCompte
+  //   .sort((a, b) => b?.accountDevices?.length - a?.accountDevices?.length)
+  //   ?.slice(0, voir10RésultatPlus * nombreDeRésultatParClique);
 
   const afficherPlusDeRésultat = () => {
     setVoir10DePlus((prev) => prev + 1);
@@ -48,9 +66,9 @@ function ChooseOtherAccountDashboard({
     <>
       {chooseOtherAccountGestion && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999999999999999999999999999999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[83vh] rounded-lg">
+          <div className="bg-white overflow-hidden w-full mx-0 max-w-[40rem] min-h-[83vh] rounded-lg">
             <div className="relative">
-              <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
+              <h2 className="text-center font-semibold text-lg bg-orange-100 py-3">
                 {t("Liste des Comptes")}
               </h2>
 
@@ -89,7 +107,7 @@ function ChooseOtherAccountDashboard({
                 />
               </div>
             )}
-            <div className="flex overflow-auto h-[66vh] pb-20 flex-col gap-4 mx-3">
+            <div className="flex overflow-auto h-[60vh] pb-20 flex-col gap-4 mx-3">
               {documentationPage !== "Ajouter_nouveau_role" && (
                 <button
                   onClick={() => {
@@ -177,7 +195,8 @@ function ChooseOtherAccountDashboard({
                   </div>
                 );
               })}
-              {filterGestionAccountData?.length >
+              {(filterListeDesCompte?.length ||
+                filterGestionAccountData?.length) >
                 filterGestionAccountDataPagination?.length && (
                 <div className="w-full flex justify-center mt-[4rem]">
                   <button

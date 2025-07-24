@@ -782,10 +782,47 @@
   "Statistiques par compte": "Estadísticas por cuenta",
 
 
-"Nombre appareils": "Número de Vehículos"
+"Nombre appareils": "Número de Vehículos",
 
 
 
+
+  "Options du groupe": "Opciones del grupo",
+  "Afficher Les Appareils": "Mostrar los dispositivos",
+  "Liste des utilisateurs affectés": "Lista de usuarios asignados",
+  "Liste Les Appareils": "Lista de dispositivos",
+  "Modifier le groupe": "Modificar el grupo",
+  "Supprimer le groupe": "Eliminar el grupo",
+  "Rechercher une option": "Buscar una opción",
+  "Veuillez cliquer sur l'option de l'utilisateur a modifier, puis sur 'Modifier l'utilisateur'": "Haga clic en la opción del usuario que desea modificar y luego en 'Modificar el usuario'",
+  "Veuillez cliquer sur l'option du groupe a modifier, puis sur 'Modifier le groupe'": "Haga clic en la opción del grupo que desea modificar y luego en 'Modificar el grupo'",
+  "Veuillez cliquer sur l'option de l'appareil a modifier, puis sur 'Modifier l'appareil'": "Haga clic en la opción del dispositivo que desea modificar y luego en 'Modificar el dispositivo'",
+  "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité modifier": "Haga clic en el botón 'Modificar' de la geozona que desea cambiar",
+  
+  "Informations utilisateur": "Información del usuario",
+
+  "Ajouter un nouveau compte": "Agregar una nueva cuenta",
+  "Modifier un compte": "Modificar una cuenta",
+  "Supprimer un compte": "Eliminar una cuenta",
+
+  "Ajouter un nouveau utilisateur": "Agregar un nuevo usuario",
+  "Modifier un utilisateur": "Modificar un usuario",
+  "Supprimer un utilisateur": "Eliminar un usuario",
+
+  "Gestion des groupes": "Gestión de grupos",
+  "Ajouter un nouveau groupe": "Agregar un nuevo grupo",
+  "Modifier un groupe": "Modificar un grupo",
+  "Supprimer un groupe": "Eliminar un grupo",
+
+  "Gestion des appareils": "Gestión de dispositivos",
+  "Ajouter un nouveau appareil": "Agregar un nuevo dispositivo",
+  "Modifier un appareil": "Modificar un dispositivo",
+  "Supprimer un appareil": "Eliminar un dispositivo",
+
+  "Gestion des geofences": "Gestión de geozonas",
+  "Ajouter une nouvelle geozone": "Agregar una nueva geozona",
+  "Modifier une geozone": "Modificar una geozona",
+  "Supprimer une geozone": "Eliminar una geozona"
 
 
 

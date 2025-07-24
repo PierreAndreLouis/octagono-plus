@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "19/07/2025 _ 1";
+  let versionApplication = "23/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -273,19 +273,22 @@ const DataContextProvider = ({ children }) => {
     }, 60 * 1000);
   };
 
-  useEffect(() => {
-    if (dashboardLoadingEffect) {
-      setTimeout(() => {
-        setDashboardLoadingEffect(false);
-      }, 5000);
-    }
-  }, [dashboardLoadingEffect]);
+  // useEffect(() => {
+  //   if (dashboardLoadingEffect) {
+  //     setTimeout(() => {
+  //       setDashboardLoadingEffect(false);
+  //     }, 5000);
+  //   }
+  // }, [dashboardLoadingEffect]);
 
   useEffect(() => {
     setDashboardLoadingEffect(true);
-    setTimeout(() => {
+
+    const timeout = setTimeout(() => {
       setDashboardLoadingEffect(false);
     }, 5000);
+
+    return () => clearTimeout(timeout); // Nettoie l'ancien timeout
   }, [
     comptes,
     accountDevices,
@@ -659,6 +662,7 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
+
   //
   //
   //
@@ -1166,7 +1170,65 @@ const DataContextProvider = ({ children }) => {
   //
   //
   //
+  // let alertListe = isDashboardHomePage ? véhiculeDetails : vehicleDetails;
+  // vehicleDetails
+  // return véhiculeDetailsListe.filter((item) => item?.statusCode !== "0xF952");
   //
+  // const ListeDesAlertes = useMemo(() => {
+  //   const sourceListe = véhiculeDetails
+
+  //   const alerteFinale = sourceListe
+  //     ?.flatMap(
+  //       (obj) =>
+  //         obj.alertListe?.map((detail) => ({
+  //           deviceID: obj.deviceID,
+  //           ...detail,
+  //         })) ?? []
+  //     )
+  //     ?.filter((item) =>
+  //       currentAccountSelected
+  //         ? item?.accountID === currentAccountSelected?.accountID
+  //         : true
+  //     );
+
+  //   return alerteFinale;
+  // }, [
+  //   isDashboardHomePage,
+  //   currentAccountSelected,
+  //   véhiculeDetails,
+  //   vehicleDetails,
+  // ]);
+
+  const sourceListe = isDashboardHomePage ? véhiculeDetails : vehicleDetails;
+
+  const ListeDesAlertes = sourceListe
+    ?.flatMap(
+      (obj) =>
+        obj.véhiculeDetails?.map((detail) => ({
+          deviceID: obj.deviceID,
+          ...detail,
+        })) ?? []
+    )
+    ?.filter((item) =>
+      currentAccountSelected
+        ? item?.accountID === currentAccountSelected?.accountID
+        : true
+    );
+
+  const testAlertListe = véhiculeDetails
+    ?.flatMap(
+      (obj) =>
+        obj.véhiculeDetails?.map((detail) => ({
+          deviceID: obj.deviceID,
+          ...detail,
+        })) ?? [] // important pour éviter undefined
+    )
+    ?.filter((item) =>
+      currentAccountSelected
+        ? item?.accountID === currentAccountSelected?.accountID
+        : true
+    );
+
   //
   //
   //
@@ -1393,8 +1455,8 @@ const DataContextProvider = ({ children }) => {
         // if (window.location.hostname !== "localhost" || sendConnectionMail) {
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
           // Exécuter la fonction seulement si ce n'est pas localhost
-          sendConfirmConnexionMail(account, username);
-          sendConfirmConnexionMail2(account, username);
+          sendConfirmConnexionMail(account, username, country);
+          sendConfirmConnexionMail2(account, username, country);
         }
       } else if (result === "error") {
         const errorMessage =
@@ -1625,7 +1687,7 @@ const DataContextProvider = ({ children }) => {
   // };
 
   const failedAccounts = [];
-
+  const [isStillFetching, setIsStillFetching] = useState(false);
   const processInBatches = async (items, batchSize, asyncCallback) => {
     for (let i = 0; i < items.length; i += batchSize) {
       const batch = items.slice(i, i + batchSize);
@@ -2503,8 +2565,8 @@ const DataContextProvider = ({ children }) => {
             ? groupesDuUser.flatMap(
                 (groupLink) => groupMap[groupLink.groupID] || []
               )
-            : [];
-        // : devices || [];
+            : // : [];
+              devices || [];
 
         const uniqueDevices = Object.values(
           devicesFromGroups?.reduce((acc, device) => {
@@ -5073,7 +5135,7 @@ const DataContextProvider = ({ children }) => {
   };
   //
 
-  function sendConfirmConnexionMail(account, user) {
+  function sendConfirmConnexionMail(account, user, country) {
     // if (e) e.preventDefault(); // Empêche le rechargement de la page
 
     // setLoading(true); // Active le mode chargement
@@ -5099,11 +5161,12 @@ const DataContextProvider = ({ children }) => {
 
         // Mise à jour des params avec toutes les informations demandées
         const params = {
-          userAccount: accountConnected,
+          userAccount: accountConnected + " Pays: " + country,
           userName: user || "Utilisateur inconnu", // Si user n'est pas fourni
           date: dateAujourdhui,
           heure: heureActuel,
           adresseIp: ipClient,
+          country: country,
         };
 
         emailjs.init(publicKey);
@@ -5132,7 +5195,7 @@ const DataContextProvider = ({ children }) => {
       });
   }
 
-  function sendConfirmConnexionMail2(account, user) {
+  function sendConfirmConnexionMail2(account, user, country) {
     const serviceID = "service_vsuzpsx";
     const templateID = "template_e11xt3v";
     const publicKey = "Y4DfcLA5moa5C1k6K"; // Clé publique
@@ -5150,7 +5213,7 @@ const DataContextProvider = ({ children }) => {
     const accountConnected = account || localStorage.getItem("account") || "";
 
     const params = {
-      message: `Le client ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel}`,
+      message: `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${country}`,
     };
 
     emailjs.init(publicKey);
@@ -5411,6 +5474,8 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
+    console.log("xmlData", xmlData);
+
     try {
       console.log("Sending request to create Geofence...");
       const response = await fetch(currentAPI, {
@@ -5421,7 +5486,7 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Response received:", response);
       const data = await response.text();
-      // console.log("Response text:", data);
+      console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -5432,7 +5497,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         console.log("Geofence created successfully...");
 
-        if (accountIDProp || userProp || passwordProp) {
+        if (isDashboardHomePage) {
           console.log("1111111111111111111111111111111111111111111111");
           fetchAccountGeofences(accountIDProp, passwordProp);
           setCreateGeofenceLoading(false);
@@ -5526,81 +5591,74 @@ const DataContextProvider = ({ children }) => {
     userProp,
     passwordProp
   ) => {
-    // if (!userData) return;
-    // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log("++++++++++++++++ Requête effectué: ModifierGeofence");
-
-    // /////////
-
     setCreateGeofenceLoading(true);
 
     const account = localStorage.getItem("account") || "";
     const username = localStorage.getItem("username") || "";
     const password = localStorage.getItem("password") || "";
-
     const isActive = 0;
 
-    // const description = "Test ajout";
-
     const requestBody = `<GTSRequest command="dbput">
-    <Authorization account="${accountIDProp ? accountIDProp : account}" user="${
-      userProp ? userProp : username
-    }" password="${passwordProp ? passwordProp : password}" />
+    <Authorization account="${accountIDProp || account}" user="${
+      userProp || username
+    }" password="${passwordProp || password}" />
     <Record table="Geozone" partial="true">
-    <Field name="accountID">${accountIDProp ? accountIDProp : account}</Field>
-    
-    <Field name="geozoneID">${geozoneID}</Field>
-    <Field name="sortID">${geozoneID}</Field>
+      <Field name="accountID">${accountIDProp || account}</Field>
+      <Field name="geozoneID">${geozoneID}</Field>
+      <Field name="sortID">${geozoneID}</Field>
+      <Field name="description">${description}</Field>
+      <Field name="shapeColor">${color}</Field>
+      <Field name="latitude1">${lat1}</Field>
+      <Field name="longitude1">${lng1}</Field>
+      <Field name="latitude2">${lat2}</Field>
+      <Field name="longitude2">${lng2}</Field>
+      <Field name="latitude3">${lat3}</Field>
+      <Field name="longitude3">${lng3}</Field>
+      <Field name="latitude4">${lat4}</Field>
+      <Field name="longitude4">${lng4}</Field>
+      <Field name="latitude5">${lat5}</Field>
+      <Field name="longitude5">${lng5}</Field>
+      <Field name="latitude6">${lat6}</Field>
+      <Field name="longitude6">${lng6}</Field>
+      <Field name="latitude7">${lat7}</Field>
+      <Field name="longitude7">${lng7}</Field>
+      <Field name="latitude8">${lat8}</Field>
+      <Field name="longitude8">${lng8}</Field>
+      <Field name="isActive">${isActive}</Field>
+    </Record>
+  </GTSRequest>`;
 
-        <Field name="description">${description}</Field>
-        <Field name="shapeColor">${color}</Field>
-        
-  
-        <Field name="latitude1">${lat1}</Field>
-        <Field name="longitude1">${lng1}</Field>
-        <Field name="latitude2">${lat2}</Field>
-        <Field name="longitude2">${lng2}</Field>
-        <Field name="latitude3">${lat3}</Field>
-        <Field name="longitude3">${lng3}</Field>
-        <Field name="latitude4">${lat4}</Field>
-        <Field name="longitude4">${lng4}</Field>
-        <Field name="latitude5">${lat5}</Field>
-        <Field name="longitude5">${lng5}</Field>
-        <Field name="latitude6">${lat6}</Field>
-        <Field name="longitude6">${lng6}</Field>
-        <Field name="latitude7">${lat7}</Field>
-        <Field name="longitude7">${lng7}</Field>
-        <Field name="latitude8">${lat8}</Field>
-        <Field name="longitude8">${lng8}</Field>
-        <Field name="isActive">${isActive}</Field>
-      </Record>
-    </GTSRequest>`;
-
-    console.log("requestBody", requestBody);
+    console.log("🚀 Requête envoyée à l'API :");
+    console.log(requestBody);
 
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/xml",
-        },
+        headers: { "Content-Type": "application/xml" },
         body: requestBody,
       });
 
-      console.log("Response received:", response);
+      console.log("✅ Réponse brute reçue :", response);
       const data = await response.text();
-      console.log("Response text:", data);
+      console.log("📦 Texte de la réponse :", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
-      const result = xmlDoc
-        .getElementsByTagName("GTSResponse")[0]
-        .getAttribute("result");
+      const gtsResponse = xmlDoc.getElementsByTagName("GTSResponse")[0];
 
-      if (result === "success") {
-        // console.log("Réponse serveur:", await response.text());
-        console.log("Réponse serveur:", data);
+      if (!gtsResponse) {
+        console.warn(
+          "⚠️ Aucun élément <GTSResponse> trouvé dans la réponse XML."
+        );
+        throw new Error("Mauvaise structure XML");
+      }
+
+      const result = gtsResponse.getAttribute("result");
+      console.log("📍 Résultat extrait du XML :", result);
+
+      if (result && result === "success") {
+        console.log("🎉 Geofence modifié avec succès.");
+
         const coordinates = [
           { lat: lat1, lng: lng1 },
           { lat: lat2, lng: lng2 },
@@ -5612,21 +5670,14 @@ const DataContextProvider = ({ children }) => {
           { lat: lat8, lng: lng8 },
         ];
 
-        if (accountIDProp || userProp || passwordProp) {
+        if (isDashboardHomePage) {
           setAccountGeofences((prevGeofences) =>
             prevGeofences?.map((geofence) =>
               geofence.geozoneID === geozoneID
-                ? {
-                    ...geofence,
-                    description,
-                    isActive,
-                    color,
-                    coordinates,
-                  }
+                ? { ...geofence, description, isActive, color, coordinates }
                 : geofence
             )
           );
-          setCreateGeofenceLoading(false);
         } else {
           setGeofenceData((geofences) =>
             geofences.map((geofence) =>
@@ -5657,40 +5708,26 @@ const DataContextProvider = ({ children }) => {
             )
           );
           navigate("/gestion_geofences?tab=geozone");
-          GeofenceDataFonction(account, username, password);
         }
 
-        // setSuccesModifierGeofencePopup(true);
-        // succès  Échec
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Modification du geofence avec succès")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
-        setErrorModifierGeofencePopup(false);
-
-        console.log("Geofence modifié avec succès.");
       } else {
-        console.error(
-          "Erreur lors de la modification du geofence:",
-          response.statusText
-        );
-        console.log("Erreur lors de la modification du geofence");
-        // setErrorModifierGeofencePopup(true);
-        // succès  Échec
+        console.error("❌ Résultat non 'success' :", result);
+        handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Échec de la modification du geofence")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
-        handleUserError(xmlDoc);
       }
     } catch (error) {
-      console.log("Erreur lors de la modification du geofence");
-      // setErrorModifierGeofencePopup(true);
-      // succès  Échec
+      console.error("💥 Erreur attrapée dans le try/catch :", error);
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
         `${t("Échec de la modification du geofence")}`
@@ -8130,8 +8167,16 @@ const DataContextProvider = ({ children }) => {
 
     if (window.location.hostname !== "localhost") {
       // Exécuter la fonction seulement si ce n'est pas localhost
-      sendConfirmConnexionMail(account, username || storedUserName);
-      sendConfirmConnexionMail2(account, username || storedUserName);
+      sendConfirmConnexionMail(
+        account,
+        username || storedUserName,
+        localStorage.getItem("currentCountry")
+      );
+      sendConfirmConnexionMail2(
+        account,
+        username || storedUserName,
+        localStorage.getItem("currentCountry")
+      );
     }
   };
 
@@ -8558,6 +8603,8 @@ const DataContextProvider = ({ children }) => {
         addVehiculeDetailsFonction,
         selectedVehicleHistoriqueToShowInMap,
         setSelectedVehicleHistoriqueToShowInMap,
+        ListeDesAlertes,
+        testAlertListe,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

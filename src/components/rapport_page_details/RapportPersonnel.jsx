@@ -26,7 +26,7 @@ Chart.register(...registerables);
 import ReactECharts from "echarts-for-react";
 
 import "leaflet/dist/leaflet.css";
-import customMarkerIcon from "/img/cars/localisation.png";
+import customMarkerIcon from "/pin/ping_red.png";
 // import { DataContext } from "../context/DataContext";
 import { RiPinDistanceLine } from "react-icons/ri";
 import { SlSpeedometer } from "react-icons/sl";

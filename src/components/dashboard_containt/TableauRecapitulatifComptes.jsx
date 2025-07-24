@@ -9,6 +9,8 @@ function TableauRecapitulatifComptes({
   setExpandSection,
   setStatisticFilteredDeviceListeText,
   setShowStatisticDeviceListeDashboard,
+  setExpandSectionTable,
+  setVoirPlusDeColonneDansTableauCompte,
 }) {
   const {
     gestionAccountData,
@@ -16,6 +18,8 @@ function TableauRecapitulatifComptes({
     setFilteredColorCategorieListe,
     addVehiculeDetailsFonction,
     véhiculeDetails,
+    setListeGestionDesUsers,
+    setListeGestionDesGroupe,
   } = useContext(DataContext);
   const [t] = useTranslation();
 
@@ -167,23 +171,23 @@ function TableauRecapitulatifComptes({
     <div className={`w-full overflow-x-auto overflow-y-hidden`}>
       <div className={`min-w-[55rem] overflow-y-auto ${tableauClass}`}>
         <table className="w-full text-left dark:bg-gray-800 dark:text-gray-200 border">
-          <thead className="bg-orange-50 h-[2.8rem] text-gray-700 dark:bg-gray-900 dark:text-gray-100 sticky top-0 z-10 ">
+          <thead className="bg-orange-50 h-[2.8rem] text-gray-700 dark:bg-gray-900 dark:text-gray-100 sticky top-0 z-0-- ">
             <tr>
               <th>#</th>
-              <th>{t("Compte")}</th>
-              <th>{t("Nombre appareils")}</th>
-              <th>{t("Appareils Déplacés")}</th>
-              <th>{t("Appareils Actifs")}</th>
-              <th>{t("Appareils Hors service")}</th>
+              <th className="text-center">{t("Compte")}</th>
+              <th className="text-center">{t("Nombre appareils")}</th>
+              <th className="text-center">{t("Déplacés")}</th>
+              <th className="text-center">{t("Actifs")}</th>
+              <th className="text-center">{t("Inactifs")}</th>
               {/*  */}
               {voirPlusDeColonneDansTableauCompte && (
                 <>
-                  <th>{t("Utilisateur")}</th>
-                  <th>{t("Groupe")}</th>
-                  <th>{t("Geofence")}</th>
-                  {/* <th>{t("Type")}</th> */}
-                  {/* <th>{t("Manager")}</th> */}
-                  <th>{t("Actif")}</th>
+                  <th className="text-center">{t("Utilisateur")}</th>
+                  <th className="text-center">{t("Groupe")}</th>
+                  <th className="text-center">{t("Geofence")}</th>
+                  {/* <th className="text-center">{t("Type")}</th> */}
+                  {/* <th className="text-center">{t("Manager")}</th> */}
+                  <th className="text-center">{t("Actif")}</th>
                 </>
               )}
             </tr>
@@ -196,10 +200,12 @@ function TableauRecapitulatifComptes({
                   onClick={() => {
                     handleChooseCompte(acct);
                     if (isLongueur === "true") {
+                      setExpandSectionTable("");
                       setExpandSection("");
+                      setVoirPlusDeColonneDansTableauCompte(false);
                     }
                   }}
-                  className="py-3 px-2 w-[12rem] notranslate cursor-pointer hover:bg-orange-50"
+                  className="py-3 text-center px-2 w-[12rem] notranslate cursor-pointer hover:bg-orange-50"
                 >
                   {acct.id}
                 </td>
@@ -207,7 +213,7 @@ function TableauRecapitulatifComptes({
                   onClick={() => {
                     handleSetAllDevice(acct);
                   }}
-                  className="py-3  px-2 cursor-pointer hover:bg-orange-50"
+                  className="py-3 w-[11rem] text-center  px-2 cursor-pointer hover:bg-orange-50"
                 >
                   {acct.totalDevices}
                 </td>
@@ -215,7 +221,7 @@ function TableauRecapitulatifComptes({
                   onClick={() => {
                     handleSetDeviceDéplacer(acct);
                   }}
-                  className="py-3 px-2 hover:bg-orange-50 cursor-pointer"
+                  className="py-3 text-center px-2 hover:bg-orange-50 cursor-pointer"
                 >
                   {acct.moved}
                 </td>
@@ -223,7 +229,7 @@ function TableauRecapitulatifComptes({
                   onClick={() => {
                     handleSetDeviceActif(acct);
                   }}
-                  className="py-3 px-2 hover:bg-orange-50 cursor-pointer"
+                  className="py-3 text-center px-2 hover:bg-orange-50 cursor-pointer"
                 >
                   {acct.actifs}
                 </td>
@@ -231,19 +237,52 @@ function TableauRecapitulatifComptes({
                   onClick={() => {
                     handleSetDeviceInActif(acct);
                   }}
-                  className="py-3 px-2 hover:bg-orange-50 cursor-pointer"
+                  className="py-3 text-center px-2 hover:bg-orange-50 cursor-pointer"
                 >
                   {acct.inactifs}
                 </td>
                 {/*  */}
                 {voirPlusDeColonneDansTableauCompte && (
                   <>
-                    <td className="py-3 px-2">{acct.nbUsers}</td>
-                    <td className="py-3 px-2">{acct.nbGroups}</td>
-                    <td className="py-3 px-2">{acct.nbGeofences}</td>
+                    <td
+                      onClick={() => {
+                        const foundUserAccount = gestionAccountData?.find(
+                          (ac) => ac?.accountID === acct?.id
+                        );
+                        const accountUsers = foundUserAccount?.accountUsers;
+
+                        console.log("acct.id", acct.id);
+                        console.log("gestionAccountData", gestionAccountData);
+                        console.log("foundUserAccount", foundUserAccount);
+                        console.log("accountUsers", accountUsers);
+
+                        setListeGestionDesUsers(accountUsers);
+                        setExpandSection("userListe");
+                      }}
+                      className="py-3 px-2 text-center hover:bg-orange-50 cursor-pointer"
+                    >
+                      {acct.nbUsers}
+                    </td>
+                    <td
+                      onClick={() => {
+                        const foundUserAccount = gestionAccountData?.find(
+                          (ac) => ac?.accountID === acct?.id
+                        );
+                        const accountGroupe = foundUserAccount?.accountGroupes;
+
+                        setListeGestionDesGroupe(accountGroupe);
+                        setExpandSection("userGroupe");
+                      }}
+                      className="py-3 px-2 text-center cursor-pointer hover:bg-orange-50"
+                    >
+                      {acct.nbGroups}
+                    </td>
+                    <td className="py-3 px-2 text-center">
+                      {acct.nbGeofences}
+                    </td>
                     {/* <td className="py-3 px-2">{acct.type}</td> */}
                     {/* <td className="py-3 px-2">{acct.isManager}</td> */}
-                    <td className="py-3 px-2">{acct.isActive}</td>
+                    <td className="py-3 px-2 text-center">{acct.isActive}</td>
                   </>
                 )}
               </tr>

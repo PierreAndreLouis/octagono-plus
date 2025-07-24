@@ -33,6 +33,7 @@ function DashboardContaintMaintComponant({
     listeGestionDesVehicules,
     accountDevices,
     setListeGestionDesUsers,
+    listeGestionDesUsers,
     accountUsers,
     accountGroupes,
     account,
@@ -70,12 +71,17 @@ function DashboardContaintMaintComponant({
     DeviceInactifs,
     allDevices,
     filteredColorCategorieListe,
+    listeGestionDesGroupe,
+    vehicleDetails,
+    ListeDesAlertes,
+    testAlertListe,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
   const [expandSection, setExpandSection] = useState("");
+  const [expandSectionTable, setExpandSectionTable] = useState("");
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
   const getTodayTimestamp = () => {
@@ -905,15 +911,14 @@ function DashboardContaintMaintComponant({
 
   // Mémoïsation du statusCountMap
   const statusCountMap = useMemo(() => {
-    if (!allData) return {};
-    return allData.reduce((acc, item) => {
+    if (!ListeDesAlertes) return {};
+    return ListeDesAlertes.reduce((acc, item) => {
       const status = item.statusCode;
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
-  }, [allData]);
+  }, [ListeDesAlertes]);
 
-  // Format pour PieChart
   const dataPieChart = useMemo(() => {
     return Object.entries(statusCountMap).map(([name, value]) => ({
       name,
@@ -1034,48 +1039,6 @@ function DashboardContaintMaintComponant({
     voirPlusDeColonneDansTableauCompte,
     setVoirPlusDeColonneDansTableauCompte,
   ] = useState(false);
-
-  const ListeDesAlertes = useMemo(() => {
-    const devices =
-      isDashboardHomePage && currentAccountSelected
-        ? currentAccountSelected?.accountDevices
-        : isDashboardHomePage
-        ? accountDevices
-        : dataFusionné;
-
-    if (!devices || devices.length === 0) return 0;
-
-    // Étape 1 : enrichir avec véhiculeDetails
-    const enrichis = devices.map((device) => {
-      const match = véhiculeDetails?.find(
-        (v) =>
-          v.deviceID === device.deviceID &&
-          v.véhiculeDetails?.[0]?.accountID === device.accountID
-      );
-
-      if (match && match.véhiculeDetails?.length > 0) {
-        return {
-          ...device,
-          véhiculeDetails: match.véhiculeDetails,
-        };
-      }
-
-      return device;
-    });
-
-    // Étape 2 : extraire et filtrer
-    const tousLesDetails = enrichis.flatMap(
-      (d) => d?.véhiculeDetails?.[0] || []
-    );
-
-    return tousLesDetails.filter((item) => item?.statusCode !== "0xF952");
-  }, [
-    isDashboardHomePage,
-    currentAccountSelected,
-    accountDevices,
-    dataFusionné,
-    véhiculeDetails,
-  ]);
 
   /////////////////////////////////////////////
 
@@ -1206,6 +1169,48 @@ function DashboardContaintMaintComponant({
         </div>
       )}
       {/*  */}
+
+      {expandSectionTable &&
+        !showStatisticDeviceListeDashboard &&
+        expandSection === "" && (
+          <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
+            <div className="w-full  mx-auto md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
+              <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
+                <IoClose
+                  onClick={() => {
+                    setExpandSectionTable("");
+                    setVoirPlusDeColonneDansTableauCompte(false);
+                  }}
+                />
+              </div>
+              {expandSectionTable === "tableau" && (
+                <div className="h-full flex justify-between flex-col">
+                  <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
+                    <h2 className="mb-10">{t("Statistiques par compte")}</h2>
+                  </div>
+                  <TableauRecapitulatifComptes
+                    isLongueur="true"
+                    voirPlusDeColonneDansTableauCompte={
+                      voirPlusDeColonneDansTableauCompte
+                    }
+                    setDocumentationPage={setDocumentationPage}
+                    setExpandSection={setExpandSection}
+                    setStatisticFilteredDeviceListeText={
+                      setStatisticFilteredDeviceListeText
+                    }
+                    setShowStatisticDeviceListeDashboard={
+                      setShowStatisticDeviceListeDashboard
+                    }
+                    setExpandSectionTable={setExpandSectionTable}
+                    setVoirPlusDeColonneDansTableauCompte={
+                      setVoirPlusDeColonneDansTableauCompte
+                    }
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       {expandSection && !showStatisticDeviceListeDashboard && (
         <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
           <div className="w-full  mx-auto md:mx-auto overflow-hidden flex-  items-end- md:max-w-[90vw] --min-h-[70vh] max-h-[90vh]  bg-white rounded-lg">
@@ -1215,9 +1220,6 @@ function DashboardContaintMaintComponant({
                   setExpandSection("");
                   if (expandSection === "graphe") {
                     setVoirToutGrapheAccount(false);
-                  }
-                  if (expandSection === "tableau") {
-                    setVoirPlusDeColonneDansTableauCompte(false);
                   }
                 }}
               />
@@ -1247,33 +1249,15 @@ function DashboardContaintMaintComponant({
                 />
               </div>
             )}
-            {expandSection === "tableau" && (
-              <div className="h-full flex justify-between flex-col">
-                <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                  <h2 className="mb-10">{t("Statistiques par compte")}</h2>
-                </div>
-                <TableauRecapitulatifComptes
-                  isLongueur="true"
-                  voirPlusDeColonneDansTableauCompte={
-                    voirPlusDeColonneDansTableauCompte
-                  }
-                  setDocumentationPage={setDocumentationPage}
-                  setExpandSection={setExpandSection}
-                  setStatisticFilteredDeviceListeText={
-                    setStatisticFilteredDeviceListeText
-                  }
-                  setShowStatisticDeviceListeDashboard={
-                    setShowStatisticDeviceListeDashboard
-                  }
-                />
-              </div>
-            )}
+
             {expandSection === "userListe" && (
               <div className="overflow-auto min- h-[90vh]">
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
                     {t("Liste des utilisateurs")} ({" "}
-                    {currentAccountSelected
+                    {listeGestionDesUsers
+                      ? listeGestionDesUsers?.length
+                      : currentAccountSelected
                       ? currentAccountSelected?.accountUsers?.length
                       : accountUsers?.length}
                     )
@@ -1290,7 +1274,9 @@ function DashboardContaintMaintComponant({
                 <div className="w-full flex justify-center items-center py-3 mt-5-- translate-y-8 font-bold text-xl">
                   <h2 className="mb-0">
                     {t("Liste des Groupes")} ({" "}
-                    {currentAccountSelected
+                    {listeGestionDesGroupe
+                      ? listeGestionDesGroupe?.length
+                      : currentAccountSelected
                       ? currentAccountSelected?.accountGroupes?.length
                       : accountGroupes?.length}
                     )
@@ -1557,7 +1543,7 @@ function DashboardContaintMaintComponant({
                     </h2>
                     <p
                       onClick={() => {
-                        setExpandSection("tableau");
+                        setExpandSectionTable("tableau");
                         setVoirPlusDeColonneDansTableauCompte(true);
                       }}
                       className="font-semibold absolute-- top-4 right-4 text-sm underline cursor-pointer text-orange-500"
@@ -1614,6 +1600,10 @@ function DashboardContaintMaintComponant({
                   }
                   setShowStatisticDeviceListeDashboard={
                     setShowStatisticDeviceListeDashboard
+                  }
+                  setExpandSectionTable={setExpandSectionTable}
+                  setVoirPlusDeColonneDansTableauCompte={
+                    setVoirPlusDeColonneDansTableauCompte
                   }
                 />
               )}
@@ -1700,20 +1690,44 @@ function DashboardContaintMaintComponant({
         <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
           <div className="bg-orange-100 shadow-inner md:col-span-2 shadow-black/10 -300/80 mt-6 p-3 rounded-lg">
             <div className="flex mb-4 justify-between items-center ">
-              <h2 className="font-semibold text-lg mb-4-- text-gray-700">
+              <h2
+                onClick={() => {
+                  console.log("ListeDesAlertes", ListeDesAlertes);
+                  console.log("testAlertListe", testAlertListe);
+
+                  console.log(
+                    "véhiculeDetails",
+                    véhiculeDetails
+                      ?.flatMap(
+                        (obj) =>
+                          obj.véhiculeDetails?.map((detail) => ({
+                            deviceID: obj.deviceID,
+                            ...detail,
+                          })) ?? [] // important pour éviter undefined
+                      )
+                      ?.filter((item) =>
+                        currentAccountSelected
+                          ? item?.accountID ===
+                            currentAccountSelected?.accountID
+                          : true
+                      )
+                  );
+                }}
+                className="font-semibold text-lg mb-4-- text-gray-700"
+              >
                 {t("Tous les Alertes")} ({ListeDesAlertes?.length})
               </h2>
               <button
                 onClick={() => {
-                  if (!isDashboardHomePage) {
-                    setListeGestionDesVehicules(dataFusionné);
-                  } else if (currentAccountSelected) {
-                    setListeGestionDesVehicules(
-                      currentAccountSelected?.accountDevices
-                    );
-                  } else {
-                    setListeGestionDesVehicules(accountDevices);
-                  }
+                  // if (!isDashboardHomePage) {
+                  //   setListeGestionDesVehicules(dataFusionné);
+                  // } else if (currentAccountSelected) {
+                  //   setListeGestionDesVehicules(
+                  //     currentAccountSelected?.accountDevices
+                  //   );
+                  // } else {
+                  //   setListeGestionDesVehicules(accountDevices);
+                  // }
                   setExpandSection("deviceAlerts");
                   setSearchTermInput("");
                 }}
@@ -1795,9 +1809,9 @@ function DashboardContaintMaintComponant({
               )}
             </div>
           </div>
-          <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
+          <div className="col-span-1 flex overflow-hidden-- flex-col justify-between bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
             <h2 className="font-semibold text-lg m-2 mb-4 text-gray-700">
-              {t("Chart des Alertes")} ({allData.length})
+              {t("Chart des Alertes")} ({ListeDesAlertes?.length})
             </h2>
 
             {dataPieChart.length > 0 ? (
@@ -1849,7 +1863,10 @@ function DashboardContaintMaintComponant({
 
                 return (
                   <div
-                    onClick={() => handlePieClick(status)}
+                    onClick={() => {
+                      handlePieClick(status);
+                      console.log();
+                    }}
                     key={index}
                     className="flex cursor-pointer hover:bg-gray-200 gap-3 items-center"
                   >
@@ -2051,7 +2068,7 @@ function DashboardContaintMaintComponant({
                   afficherGroupes.map((group, index) => (
                     <div
                       key={index}
-                      className="bg-gray-50 shadow-inner shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 cursor-pointer"
+                      className="bg-gray-50 shadow-inner shadow-black/10 flex gap-3 items-center rounded-lg py-2 px-2 "
                     >
                       <PiIntersectThreeBold className="text-orange-500/80 text-[2.5rem] mt-1" />
                       <div>

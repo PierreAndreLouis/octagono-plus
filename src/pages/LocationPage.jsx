@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef, useMemo } from "react";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import customMarkerIcon from "/img/cars/localisation.png";
+import customMarkerIcon from "/pin/ping_red.png";
 import { DataContext } from "../context/DataContext";
 import HeaderLocation from "../components/location_vehicule/HeaderLocation";
 import MapComponent from "../components/location_vehicule/MapComponent";

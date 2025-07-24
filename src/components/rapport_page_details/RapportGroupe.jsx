@@ -5,7 +5,7 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import { MdLocationPin, MdUpdate } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import customMarkerIcon from "/img/cars/localisation.png";
+import customMarkerIcon from "/pin/ping_red.png";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineFullscreen } from "react-icons/md";
 import { BsTable } from "react-icons/bs";

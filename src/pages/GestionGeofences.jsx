@@ -13,6 +13,13 @@ function GestionGeofences({
   setDocumentationPage,
   setChooseOneAccountToContinue,
   setChooseAccountFromGeozoneSection,
+  showChooseGeofencesToModifyMessage,
+  setShowChooseGeofencesToModifyMessage,
+
+  ///////////////////////
+  showChooseItemToModifyMessage,
+  setshowChooseItemToModifyMessage,
+  showChooseItemToModifyPage,
 }) {
   const {
     setAjouterGeofencePopup,
@@ -175,8 +182,8 @@ function GestionGeofences({
                 setAjouterGeofencePopup(true);
                 setIsEditingGeofence(false);
                 setCurrentGeozone();
-                setDocumentationPage("Localisation_devices");
-                navigate("/Localisation_devices");
+                setDocumentationPage("Ajouter_modifier_geofence");
+                navigate("/Ajouter_modifier_geofence");
               }}
               className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
@@ -272,6 +279,17 @@ function GestionGeofences({
         {/*  */}
 
         <div className="hidden-- flex mt-[5rem]  flex-col gap-6 max-w-[50rem] mx-auto">
+          {showChooseItemToModifyMessage &&
+            showChooseItemToModifyPage === "Gestion_geofences" && (
+              <div className=" flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
+                <p className="w-full">{showChooseItemToModifyMessage}</p>
+                <IoClose
+                  onClick={() => {
+                    setshowChooseItemToModifyMessage("");
+                  }}
+                />
+              </div>
+            )}
           {
             // ?.filter((item) =>
             //   item.geozoneID.endsWith(`_${account}`)
@@ -357,9 +375,9 @@ function GestionGeofences({
                             setCurrentGeozone(geozone);
                             setAjouterGeofencePopup(true);
                             setIsEditingGeofence(true);
-
-                            setDocumentationPage("Localisation_devices");
-                            navigate("/Localisation_devices");
+                            setshowChooseItemToModifyMessage("");
+                            setDocumentationPage("Ajouter_modifier_geofence");
+                            navigate("/Ajouter_modifier_geofence");
                           }}
                           // to="/Groupe_vehicule_location?tab=localisation"
                           className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FaArrowLeft,
@@ -15,6 +15,7 @@ import {
   IoChevronDown,
   IoClose,
   IoEarth,
+  IoSearch,
   IoStatsChartSharp,
 } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
@@ -48,6 +49,22 @@ function SideBarSysadmin({
   setListeGestionDesGeofences,
   setAjouterGeofencePopup,
   setLogOutPopup,
+  //
+  showChooseUserToModifyMessage,
+  setShowChooseUserToModifyMessage,
+  showChooseGroupeToModifyMessage,
+  setShowChooseGroupeToModifyMessage,
+  showChooseAppareilToModifyMessage,
+  setShowChooseAppareilToModifyMessage,
+  showChooseGeofencesToModifyMessage,
+  setShowChooseGeofencesToModifyMessage,
+  showChooseCompteToModifyMessage,
+  setShowChooseCompteToModifyMessage,
+  ///////////////////////
+  showChooseItemToModifyMessage,
+  setshowChooseItemToModifyMessage,
+  showChooseItemToModifyPage,
+  setshowChooseItemToModifyPage,
 }) {
   const {
     scrollToTop,
@@ -107,6 +124,8 @@ function SideBarSysadmin({
     setChooseOtherLanguagePopup,
     setFilteredColorCategorieListe,
     backToPagePrecedent,
+    setIsEditingGeofence,
+    setCurrentGeozone,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -125,6 +144,397 @@ function SideBarSysadmin({
     }
   };
 
+  const [searchGroupInputTerm, setSearchGroupInputTerm] = useState("");
+  const optionListe = [
+    {
+      name: t("Dashboard"),
+      isSysadmin: false,
+      link: "/Dashboard",
+      setVariable: () => setDocumentationPage("Dashboard"),
+    },
+
+    // Comptes
+    {
+      name: t("Gestion des comptes"),
+      isSysadmin: true,
+      link: "/Gestion_des_comptes",
+      setVariable: () => setDocumentationPage("Gestion_des_comptes"),
+    },
+    {
+      name: t("Ajouter un nouveau compte"),
+      isSysadmin: true,
+      link: "/Ajouter_nouveau_compte",
+      setVariable: () => setDocumentationPage("Ajouter_nouveau_compte"),
+    },
+    {
+      name: t("Modifier un compte"),
+      isSysadmin: true,
+      link: "/Gestion_des_comptes",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_comptes");
+        setshowChooseItemToModifyPage("Gestion_des_comptes");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option du Compte a modifier, puis sur 'Modifier le Compte'"
+          )}`
+        );
+      },
+    },
+    {
+      name: t("Supprimer un compte"),
+      isSysadmin: true,
+      link: "/Gestion_des_comptes",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_comptes");
+        setshowChooseItemToModifyPage("Gestion_des_comptes");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option du Compte a supprimer, puis sur 'Supprimer le Compte'"
+          )}`
+        );
+      },
+    },
+
+    // Utilisateurs
+    {
+      name: t("Gestion des Utilisateurs"),
+      isSysadmin: true,
+      link: "/Gestion_des_utilisateurs",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_utilisateurs");
+
+        if (currentAccountSelected) {
+          setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+        } else {
+          setListeGestionDesUsers(accountUsers);
+        }
+      },
+    },
+    {
+      name: t("Ajouter un nouveau utilisateur"),
+      isSysadmin: true,
+      link: "/Ajouter_nouveau_utilisateur",
+      setVariable: () => {
+        setDocumentationPage("Ajouter_nouveau_utilisateur");
+      },
+    },
+    {
+      name: t("Modifier un utilisateur"),
+      isSysadmin: true,
+      link: "/Gestion_des_utilisateurs",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_utilisateurs");
+        setshowChooseItemToModifyPage("Gestion_des_utilisateurs");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option de l'utilisateur a modifier, puis sur 'Modifier l'utilisateur'"
+          )}`
+        );
+        if (currentAccountSelected) {
+          setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+        } else {
+          setListeGestionDesUsers(accountUsers);
+        }
+      },
+    },
+    {
+      name: t("Supprimer un utilisateur"),
+      isSysadmin: true,
+      link: "/Gestion_des_utilisateurs",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_utilisateurs");
+        setshowChooseItemToModifyPage("Gestion_des_utilisateurs");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option de l'utilisateur a supprimer, puis sur 'Supprimer l'utilisateur'"
+          )}`
+        );
+        if (currentAccountSelected) {
+          setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+        } else {
+          setListeGestionDesUsers(accountUsers);
+        }
+      },
+    },
+
+    // Groupes
+    {
+      name: t("Gestion des Groupe"),
+      isSysadmin: true,
+      link: "/Gestion_des_groupes",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_groupes");
+
+        if (currentAccountSelected) {
+          setListeGestionDesGroupe(currentAccountSelected?.accountGroupes);
+
+          setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+        } else {
+          setListeGestionDesGroupe(accountGroupes);
+
+          setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+        }
+      },
+    },
+    {
+      name: t("Ajouter un nouveau groupe"),
+      isSysadmin: true,
+      link: "/Ajouter_nouveau_groupe",
+      setVariable: () => setDocumentationPage("Ajouter_nouveau_groupe"),
+    },
+    {
+      name: t("Modifier un groupe"),
+      isSysadmin: true,
+      link: "/Gestion_des_groupes",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_groupes");
+        setshowChooseItemToModifyPage("Gestion_des_groupes");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option du groupe a modifier, puis sur 'Modifier le groupe'"
+          )}`
+        );
+        if (currentAccountSelected) {
+          setListeGestionDesGroupe(currentAccountSelected?.accountGroupes);
+
+          setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+        } else {
+          setListeGestionDesGroupe(accountGroupes);
+
+          setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+        }
+      },
+    },
+    {
+      name: t("Supprimer un groupe"),
+      isSysadmin: true,
+      link: "/Gestion_des_groupes",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_groupes");
+        setshowChooseItemToModifyPage("Gestion_des_groupes");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option du groupe a supprimer, puis sur 'Supprimer le groupe'"
+          )}`
+        );
+        if (currentAccountSelected) {
+          setListeGestionDesGroupe(currentAccountSelected?.accountGroupes);
+
+          setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+        } else {
+          setListeGestionDesGroupe(accountGroupes);
+
+          setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+        }
+      },
+    },
+
+    // Appareils
+    {
+      name: t("Gestion des Appareils"),
+      isSysadmin: false,
+      link: "/Gestion_des_appareils",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_appareils");
+
+        if (currentAccountSelected && isDashboardHomePage) {
+          setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
+        } else if (!currentAccountSelected && isDashboardHomePage) {
+          setListeGestionDesVehicules(accountDevices);
+        } else if (!isDashboardHomePage) {
+          setListeGestionDesVehicules(dataFusionné);
+        }
+      },
+    },
+    {
+      name: t("Ajouter un nouveau appareil"),
+      isSysadmin: true,
+      link: "/Ajouter_nouveau_appareil",
+      setVariable: () => setDocumentationPage("Ajouter_nouveau_appareil"),
+    },
+    {
+      name: t("Modifier un appareil"),
+      isSysadmin: true,
+      link: "/Gestion_des_appareils",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_appareils");
+        setshowChooseItemToModifyPage("Gestion_des_appareils");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option de l'appareil a modifier, puis sur 'Modifier l'appareil'"
+          )}`
+        );
+        if (currentAccountSelected && isDashboardHomePage) {
+          setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
+        } else if (!currentAccountSelected && isDashboardHomePage) {
+          setListeGestionDesVehicules(accountDevices);
+        } else if (!isDashboardHomePage) {
+          setListeGestionDesVehicules(dataFusionné);
+        }
+      },
+    },
+    {
+      name: t("Supprimer un appareil"),
+      isSysadmin: true,
+      link: "/Gestion_des_appareils",
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_appareils");
+        setshowChooseItemToModifyPage("Gestion_des_appareils");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur l'option de l'appareil a supprimer, puis sur 'Supprimer l'appareil'"
+          )}`
+        );
+        if (currentAccountSelected && isDashboardHomePage) {
+          setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
+        } else if (!currentAccountSelected && isDashboardHomePage) {
+          setListeGestionDesVehicules(accountDevices);
+        } else if (!isDashboardHomePage) {
+          setListeGestionDesVehicules(dataFusionné);
+        }
+      },
+    },
+
+    // Geofences
+    {
+      name: t("Gestion des Geofences"),
+      isSysadmin: false,
+      link: "/Gestion_geofences",
+      setVariable: () => {
+        setDocumentationPage("Gestion_geofences");
+
+        if (currentAccountSelected) {
+          setListeGestionDesGeofences(currentAccountSelected?.accountGeofences);
+        } else {
+          setListeGestionDesGeofences(accountGeofences);
+        }
+      },
+    },
+    {
+      name: t("Ajouter une nouvelle geozone"),
+      isSysadmin: false,
+      link: "/Ajouter_modifier_geofence",
+      setVariable: () => {
+        if (isDashboardHomePage && !currentAccountSelected) {
+          setChooseOneAccountToContinue(true);
+          setChooseOtherAccountGestion(true);
+        }
+        setDocumentationPage("Ajouter_modifier_geofence");
+        setAjouterGeofencePopup(true);
+        setIsEditingGeofence(false);
+        setCurrentGeozone();
+      },
+    },
+    {
+      name: t("Modifier une geozone"),
+      isSysadmin: true,
+      link: "/Gestion_geofences",
+      setVariable: () => {
+        setDocumentationPage("Gestion_geofences");
+        setshowChooseItemToModifyPage("Gestion_geofences");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité modifier"
+          )}`
+        );
+        if (currentAccountSelected) {
+          setListeGestionDesGeofences(currentAccountSelected?.accountGeofences);
+        } else {
+          setListeGestionDesGeofences(accountGeofences);
+        }
+      },
+    },
+    {
+      name: t("Supprimer une geozone"),
+      isSysadmin: true,
+      link: "/Gestion_geofences",
+      setVariable: () => {
+        setDocumentationPage("Gestion_geofences");
+        setshowChooseItemToModifyPage("Gestion_geofences");
+        setshowChooseItemToModifyMessage(
+          `${t(
+            "Veuillez cliquer sur le bouton 'Supprimer' du geofence souhaité Supprimé"
+          )}`
+        );
+        if (currentAccountSelected) {
+          setListeGestionDesGeofences(currentAccountSelected?.accountGeofences);
+        } else {
+          setListeGestionDesGeofences(accountGeofences);
+        }
+      },
+    },
+
+    // Autres
+    {
+      name: t("Historique d'un Appareils"),
+      isSysadmin: false,
+      link: "/Historique_appareil",
+      setVariable: () => {
+        setDocumentationPage("Historique_appareil");
+        setShowHistoriqueInMap(false);
+      },
+    },
+    {
+      name: t("Trajet d'un Appareils"),
+      isSysadmin: false,
+      link: "/Trajet_appareil",
+      setVariable: () => {
+        setDocumentationPage("Trajet_appareil");
+        setShowHistoriqueInMap(true);
+      },
+    },
+    {
+      name: t("Rapport"),
+      isSysadmin: false,
+      link: "/Rapport_unite",
+      setVariable: () => setDocumentationPage("Rapport_unite"),
+    },
+    {
+      name: t("Localisation Appareils"),
+      isSysadmin: false,
+      link: "/Localisation_devices",
+      setVariable: () => {
+        setDocumentationPage("Localisation_devices");
+        if (currentAccountSelected) {
+          setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
+        } else {
+          setListeGestionDesVehicules(accountDevices);
+        }
+      },
+    },
+    {
+      name: t("Informations sur un Appareils"),
+      isSysadmin: false,
+      link: "/Info_appareil",
+      setVariable: () => setDocumentationPage("Info_appareil"),
+    },
+    {
+      name: t("Gestion des Roles"),
+      isSysadmin: true,
+      link: "/Gestion_des_roles",
+      setVariable: () => setDocumentationPage("Gestion_des_roles"),
+    },
+    {
+      name: t("Informations utilisateur"),
+      isSysadmin: false,
+      link: "/userInfo",
+      setVariable: () => setDocumentationPage("userInfo"),
+    },
+  ];
+
+  const filteredOptionListe = useMemo(() => {
+    if (!searchGroupInputTerm) return optionListe;
+    const term = searchGroupInputTerm.toLowerCase();
+    const allListe = optionListe?.filter(
+      (item) => item?.name?.toLowerCase().includes(term)
+      //  && (isDashboardHomePage && !item?.isSysadmin)
+    );
+
+    const filteredListe = allListe?.filter((item) => !item?.isSysadmin);
+
+    return isDashboardHomePage ? allListe : filteredListe;
+  }, [searchGroupInputTerm, optionListe]);
+
   return (
     <div
       className={`${
@@ -138,7 +548,7 @@ function SideBarSysadmin({
         className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
       />
 
-      <button
+      {/* <button
         onClick={() => {
           backToPagePrecedent();
           backToPagePrecedent();
@@ -150,7 +560,7 @@ function SideBarSysadmin({
         : "top-[.5rem] md:top-[2rem]"
     }
     text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1
-    flex gap-2 items-center absolute z-[999999999999] -right-[6.6rem] md:-right-[7rem]
+    flex gap-2  items-center absolute z-[999999999999] -right-[6.6rem] md:-right-[7rem]
     ${
       [
         "Dashboard",
@@ -166,12 +576,10 @@ function SideBarSysadmin({
       >
         <FaArrowLeft />
         <span className="text-[1rem]">{t("Retour")}</span>
-      </button>
+      </button> */}
 
-      {/* {documentationPage !== "Dashboard" &&
-        documentationPage !== "Trajet_appareil" &&
-        documentationPage !== "Rapport_unite" &&
-        documentationPage !== "Historique_appareil" && (
+      {documentationPage !== "Dashboard" &&
+        documentationPage !== "Ajouter_modifier_geofence" && (
           <button
             onClick={() => {
               backToPagePrecedent();
@@ -182,12 +590,12 @@ function SideBarSysadmin({
               documentationPage === "Localisation_devices"
                 ? "top-[7rem] md:top-[2rem]"
                 : "top-[.5rem] md:top-[2rem]"
-            } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1 flex gap-2 items-center absolute z-[999999999999]  -right-[6.6rem] md:-right-[7rem] lg:hidden-- text-gray-600 cursor-pointer`}
+            } text-xl border-- shadow-lg-- shadow-black/10 bg-white rounded-md px-2 py-1  gap-2 items-center absolute z-[999999999999]  -right-[6.6rem] md:-right-[7rem] lg:flex hidden text-gray-600 cursor-pointer`}
           >
             <FaArrowLeft />
             <span className="text-[1rem]">{t("Retour")}</span>
           </button>
-        )} */}
+        )}
       {/*  */}
       {/*  */}
       {/*  */}
@@ -209,9 +617,9 @@ function SideBarSysadmin({
         {/*  */}
         {/*  */}
         {/* Tous les comptes */}
-        <div className="ajouter-appareil-container transition-all hover:border-b  ">
+        <div className="ajouter-appareil-container transition-all   ">
           <div
-            className={`$ flex items-center   justify-between  gap-2  border-b border-b-gray-200 py-4  cursor-pointer px-3`}
+            className={`$ flex items-center   justify-between  gap-2   py-4  cursor-pointer px-3`}
           >
             <FaUserCircle
               onClick={() => {
@@ -252,6 +660,49 @@ function SideBarSysadmin({
         {/*  */}
         {/*  */}
         {/*  */}
+        <div className="relative">
+          <div className="mb-4 border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+            <input
+              id="search"
+              name="search"
+              type="search"
+              placeholder={`${t("Rechercher une option")}`}
+              required
+              value={searchGroupInputTerm}
+              onChange={(e) => {
+                setSearchGroupInputTerm(e.target.value);
+              }}
+              className=" px-3 w-full focus:outline-none dark:text-white  dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+            />
+          </div>
+          {searchGroupInputTerm && (
+            <div className="absolute top-[3rem] overflow-auto max-h-[100vh] left-0 w-full bg-white shadow-lg shadow-black/50 rounded-lg p-3 pl-0">
+              {filteredOptionListe?.length > 0 ? (
+                filteredOptionListe?.map((option, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        if (option.link) navigate(option.link);
+                        if (option.setVariable) option.setVariable();
+                        setSearchGroupInputTerm("");
+                        closeSideBar();
+                      }}
+                      className="flex cursor-pointer gap-3 items-center pl-3 w-full hover:bg-orange-50"
+                      key={index}
+                    >
+                      <IoSearch className="text-orange-300" />
+                      <p className="py-2 ">{option?.name}</p>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-center font-semibold py-3">{`${t(
+                  "Pas de résultat"
+                )}`}</p>
+              )}
+            </div>
+          )}
+        </div>
         {/*  */}
         {/*  */}
         {/*  */}

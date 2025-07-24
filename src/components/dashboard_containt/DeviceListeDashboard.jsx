@@ -69,7 +69,7 @@ function DeviceListeDashboard() {
             <div
               key={index}
               onClick={() => {}}
-              className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10  cursor-pointer relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-[1rem] px-2 `}
+              className={`${border_color} bg-gray-50 shadow-lg-- shadow-inner shadow-gray-500/10   relative overflow-hidden-- 50 shadow-black/10-- flex gap-3 items-center- rounded-lg py-[1rem] px-2 `}
             >
               <FaCar
                 className={`${text_color} text-[2rem] hidden sm:block min-w-[2.5rem] mt-1`}
@@ -79,7 +79,7 @@ function DeviceListeDashboard() {
                   className={`${text_color} text-[2rem] sm:hidden min-w-[2.5rem] mt-1`}
                 />
                 <p className="text-gray-600 font-bold">
-                  {t("Nom du Groupe")} :{" "}
+                  {t("Description")} :{" "}
                   <span className="font-normal notranslate text-gray-500 ml-0 ">
                     {device?.description}
                   </span>{" "}

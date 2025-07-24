@@ -27,11 +27,11 @@ function HeaderDashboardSysadmin({
       <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-6 px-4 py-2">
         <div
           onClick={() => {
-            // navigate("/Dashboard");
-            console.log(
-              "appareilPourAfficherSurCarte",
-              appareilPourAfficherSurCarte
-            );
+            navigate("/Dashboard");
+            // console.log(
+            //   "appareilPourAfficherSurCarte",
+            //   appareilPourAfficherSurCarte
+            // );
           }}
           className="flex items-center gap-2"
         >
@@ -90,7 +90,7 @@ function HeaderDashboardSysadmin({
           </div>
           <div
             onClick={() => {
-              setReadDocumentationSideBar(!readDocumentationSideBar);
+              setReadDocumentationSideBar(true);
             }}
             className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
           >

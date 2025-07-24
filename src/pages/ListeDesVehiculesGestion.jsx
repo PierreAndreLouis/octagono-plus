@@ -18,6 +18,13 @@ function ListeDesVehiculesGestion({
   statisticFilteredDeviceListeText,
   setStatisticFilteredDeviceListe,
   setStatisticFilteredDeviceListeText,
+  showChooseAppareilToModifyMessage,
+  setShowChooseAppareilToModifyMessage,
+
+  /////////////////////
+  showChooseItemToModifyMessage,
+  setshowChooseItemToModifyMessage,
+  showChooseItemToModifyPage,
 }) {
   const {
     FormatDateHeure,
@@ -437,6 +444,17 @@ function ListeDesVehiculesGestion({
             </p>
           </div>
           {/*  */}
+          {showChooseItemToModifyMessage &&
+            showChooseItemToModifyPage === "Gestion_des_appareils" && (
+              <div className=" flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
+                <p className="w-full">{showChooseItemToModifyMessage}</p>
+                <IoClose
+                  onClick={() => {
+                    setshowChooseItemToModifyMessage("");
+                  }}
+                />
+              </div>
+            )}
 
           {/* // .sort((a, b) => b.lastStopTime - a.lastStopTime) */}
           {filteredAndCutListeGestionDesVehicules?.length > 0 ? (
@@ -704,6 +722,7 @@ function ListeDesVehiculesGestion({
                       onClick={() => {
                         setCurrentSelectedDeviceGestion(device);
                         setShowOptionAppareilOptionPopup(true);
+                        setshowChooseItemToModifyMessage("");
                       }}
                       className={` ${bg_color} text-white  text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-4 flex justify-center items-center`}
                     >
