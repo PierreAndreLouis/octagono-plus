@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "23/07/2025 _ 1";
+  let versionApplication = "23/07/2025 _ 2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();

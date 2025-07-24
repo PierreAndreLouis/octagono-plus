@@ -661,7 +661,14 @@ function SideBarSysadmin({
         {/*  */}
         {/*  */}
         <div className="relative">
-          <div className="mb-4 border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
+          <div
+            onClick={() => {
+              setReadDocumentationSideBar(true);
+              setReadDocumentationSideBar(true);
+              setReadDocumentationSideBar(true);
+            }}
+            className="mb-4 border border-gray-300 rounded-md overflow-hidden flex justify-between items-center"
+          >
             <input
               id="search"
               name="search"

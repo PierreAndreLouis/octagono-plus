@@ -490,7 +490,7 @@ function MapComponent({
         onClick={() => {
           setShowGeofenceInCartePopup(true);
         }}
-        className="border overflow-hidden absolute right-1 top-[10rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+        className="border overflow-hidden absolute right-1 top-[14rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
       >
         <div className="relative">
           <IoEarth
