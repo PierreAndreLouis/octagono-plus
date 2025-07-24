@@ -535,15 +535,20 @@ function SideBarSysadmin({
     return isDashboardHomePage ? allListe : filteredListe;
   }, [searchGroupInputTerm, optionListe]);
 
+  const [showSideBar2, setShowSideBar2] = useState(false);
+
   return (
     <div
       className={`${
-        readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
+        readDocumentationSideBar || showSideBar2
+          ? "translate-x-0"
+          : "-translate-x-[100%]"
       }  transition-all lg:translate-x-0-- bg-white fixed    left-0 top-[3rem] p-4 pt-3 z-[9] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] md:max-w-[18rem] min-h-[100vh]`}
     >
       <IoClose
         onClick={() => {
           setReadDocumentationSideBar(false);
+          setShowSideBar2(false);
         }}
         className="text-3xl absolute top-[7.5rem]- top-3 right-[1.1rem] lg:hidden-- text-red-600 cursor-pointer"
       />
@@ -626,6 +631,7 @@ function SideBarSysadmin({
                 setDocumentationPage("userInfo");
                 navigate("/userInfo");
                 closeSideBar();
+                setShowSideBar2(false);
               }}
               className="text-[3rem] min-w-[1.5rem] text-gray-500"
             />
@@ -637,6 +643,7 @@ function SideBarSysadmin({
                   setChooseAccountFromGeozoneSection(false);
                 }
                 closeSideBar();
+                setShowSideBar2(false);
               }}
               className="w-full"
             >
@@ -663,8 +670,7 @@ function SideBarSysadmin({
         <div className="relative">
           <div
             onClick={() => {
-              setReadDocumentationSideBar(true);
-              setReadDocumentationSideBar(true);
+              setShowSideBar2(true);
               setReadDocumentationSideBar(true);
             }}
             className="mb-4 border border-gray-300 rounded-md overflow-hidden flex justify-between items-center"
@@ -693,6 +699,7 @@ function SideBarSysadmin({
                         if (option.setVariable) option.setVariable();
                         setSearchGroupInputTerm("");
                         closeSideBar();
+                        setShowSideBar2(false);
                       }}
                       className="flex cursor-pointer gap-3 items-center pl-3 w-full hover:bg-orange-50"
                       key={index}
@@ -726,6 +733,8 @@ function SideBarSysadmin({
               scrollToTop();
               setDocumentationPage("Dashboard");
               closeSideBar();
+              setShowSideBar2(false);
+
               setReadDocumentation(false);
               setSelectedVehicleToShowInMap(null);
             }}
@@ -742,7 +751,6 @@ function SideBarSysadmin({
         {/* 
         
         */}
-
         {isDashboardHomePage && !readDocumentation && (
           // {!currentAccountSelected && isDashboardHomePage && (
           <Link
@@ -754,6 +762,7 @@ function SideBarSysadmin({
                 scrollToTop();
                 setDocumentationPage("Gestion_des_comptes");
                 closeSideBar();
+                setShowSideBar2(false);
               }}
               className={`${
                 documentationPage === "Gestion_des_comptes" ||
@@ -780,7 +789,6 @@ function SideBarSysadmin({
         {/*  */}
         {/*  */}
         {/*  */}
-
         {!readDocumentation ? (
           <div>
             {/*  */}
@@ -797,6 +805,7 @@ function SideBarSysadmin({
                     scrollToTop();
                     setDocumentationPage("Dashboard");
                     closeSideBar();
+                    setShowSideBar2(false);
                   }}
                   className={`${
                     documentationPage === "Admin_Dashboard"
@@ -859,6 +868,7 @@ function SideBarSysadmin({
                     scrollToTop();
                     setDocumentationPage("Gestion_des_utilisateurs");
                     closeSideBar();
+                    setShowSideBar2(false);
                   }}
                   className={`${
                     documentationPage === "Gestion_des_utilisateurs"
@@ -910,6 +920,7 @@ function SideBarSysadmin({
                     scrollToTop();
                     setDocumentationPage("Gestion_des_groupes");
                     closeSideBar();
+                    setShowSideBar2(false);
                   }}
                   className={`${
                     documentationPage === "Gestion_des_groupes"
@@ -949,6 +960,8 @@ function SideBarSysadmin({
                   setDocumentationPage("Gestion_des_appareils");
                   scrollToTop();
                   closeSideBar();
+                  setShowSideBar2(false);
+
                   if (currentAccountSelected && isDashboardHomePage) {
                     setListeGestionDesVehicules(
                       currentAccountSelected?.accountDevices
@@ -996,6 +1009,7 @@ function SideBarSysadmin({
                     scrollToTop();
                     setDocumentationPage("Gestion_des_roles");
                     closeSideBar();
+                    setShowSideBar2(false);
                   }}
                   className={`${
                     documentationPage === "Gestion_des_roles"
@@ -1031,6 +1045,7 @@ function SideBarSysadmin({
                   scrollToTop();
                   setDocumentationPage("Gestion_geofences");
                   closeSideBar();
+                  setShowSideBar2(false);
                 }}
                 className={`${
                   documentationPage === "Gestion_geofences"
@@ -1069,6 +1084,7 @@ function SideBarSysadmin({
                   scrollToTop();
                   setDocumentationPage("Historique_appareil");
                   closeSideBar();
+                  setShowSideBar2(false);
                 }}
                 className={`${
                   documentationPage === "Historique_appareil"
@@ -1106,6 +1122,7 @@ function SideBarSysadmin({
                   setShowHistoriqueInMap(true);
                   setDocumentationPage("Trajet_appareil");
                   closeSideBar();
+                  setShowSideBar2(false);
                 }}
                 className={`${
                   documentationPage === "Trajet_appareil" ? "bg-orange-50" : ""
@@ -1132,6 +1149,7 @@ function SideBarSysadmin({
                     scrollToTop();
                     setDocumentationPage("Rapport_unite");
                     closeSideBar();
+                    setShowSideBar2(false);
                   }}
                   className={`${
                     documentationPage === "Rapport_unite" ? "bg-orange-50" : ""
@@ -1179,6 +1197,7 @@ function SideBarSysadmin({
                   setDocumentationPage("Localisation_devices");
                   setAjouterGeofencePopup(false);
                   closeSideBar();
+                  setShowSideBar2(false);
                 }}
                 className={`${
                   documentationPage === "Localisation_devices"
@@ -1221,6 +1240,7 @@ function SideBarSysadmin({
                   scrollToTop();
                   setDocumentationPage("Info_appareil");
                   closeSideBar();
+                  setShowSideBar2(false);
                 }}
                 className={`${
                   documentationPage === "Info_appareil" ? "bg-orange-50" : ""
@@ -1241,6 +1261,8 @@ function SideBarSysadmin({
               <div
                 onClick={() => {
                   closeSideBar();
+          setShowSideBar2(false);
+
                   setReadDocumentation(true);
                   navigate("/installation_application");
                 }}
@@ -1261,6 +1283,8 @@ function SideBarSysadmin({
               <div
                 onClick={() => {
                   closeSideBar();
+                  setShowSideBar2(false);
+
                   setChooseOtherLanguagePopup(true);
                 }}
                 className={`${
@@ -1282,6 +1306,8 @@ function SideBarSysadmin({
               <div
                 onClick={() => {
                   closeSideBar();
+                  setShowSideBar2(false);
+
                   setLogOutPopup(true);
                 }}
                 className={`${
@@ -1302,6 +1328,7 @@ function SideBarSysadmin({
             onClick={() => {
               scrollToTop();
               closeSideBar();
+              setShowSideBar2(false);
             }}
           >
             {/*  */}
@@ -2010,7 +2037,6 @@ function SideBarSysadmin({
             </div>
           </div>
         )}
-
         {/*  */}
       </div>
     </div>

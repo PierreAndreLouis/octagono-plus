@@ -368,7 +368,7 @@ function ListeDesVehiculesGestion({
         </div>
         {/* )} */}
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
-          <div className="mt-4  flex items-center gap-2 flex-wrap">
+          <div className="mt-4  grid grid-cols-2 md:flex items-center gap-2 flex-wrap">
             <p
               onClick={() => {
                 if (

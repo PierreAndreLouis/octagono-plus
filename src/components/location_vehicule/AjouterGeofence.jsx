@@ -357,73 +357,79 @@ const AjouterGeofence = ({
           </button>
         </div>
       </div>
-      <div className="z-0 absolute inset-0 top-[5rem]  min-h-screen">
-        <MapContainer
-          center={[18.5944, -72.3074]}
-          zoom={13}
-          scrollWheelZoom={true}
-          style={{ height: "500px", width: "100%" }}
-          attributionControl={false}
-          ref={mapRef}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-
-          <ScaleControl position="bottomleft" />
-          <AttributionControl position="bottomright" />
-          <MapClickHandler />
-
-          {markers.map((pos, index) => (
-            <Marker
-              // icon={customMarkerIcon}
-              key={index}
-              position={pos}
-              draggable={true}
-              eventHandlers={{ dragend: handleDragEnd(index) }}
-            >
-              <Popup>
-                <div>
-                  <p>
-                    {t("Marqueur")} {index + 1}
-                    <br />
-                    {t("Coordonnées")} : {pos[0].toFixed(5)},{" "}
-                    {pos[1].toFixed(5)}
-                  </p>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation(); // ← Empêche le click de se propager à la carte
-                      setMarkers((prev) => prev.filter((_, i) => i !== index));
-                    }}
-                    className=" px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
-                  >
-                    {t("Supprimer")}
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-
-          {markers.length >= 3 && (
-            <Polygon
-              positions={markers}
-              pathOptions={{
-                color: polygonColor,
-                fillColor: polygonColor,
-                fillOpacity: 0.2,
-                weight: 2,
-              }}
+      <div
+        className="z-0 absolute inset-0 top-[5rem] "
+        // style={{ height: "calc(100vh - 5rem)" }}
+      >
+        <div className=" h-full">
+          <MapContainer
+            center={[18.5944, -72.3074]}
+            zoom={13}
+            scrollWheelZoom={true}
+            style={{ height: "100%", width: "100%" }}
+            attributionControl={false}
+            ref={mapRef}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-          )}
 
-          {markers.length >= 3 && (
-            <Marker
-              position={calculatePolygonCenter(markers)}
-              icon={L.divIcon({
-                className: "custom-label",
-                html: `<div style="
+            <ScaleControl position="bottomleft" />
+            <AttributionControl position="bottomright" />
+            <MapClickHandler />
+
+            {markers.map((pos, index) => (
+              <Marker
+                // icon={customMarkerIcon}
+                key={index}
+                position={pos}
+                draggable={true}
+                eventHandlers={{ dragend: handleDragEnd(index) }}
+              >
+                <Popup>
+                  <div>
+                    <p>
+                      {t("Marqueur")} {index + 1}
+                      <br />
+                      {t("Coordonnées")} : {pos[0].toFixed(5)},{" "}
+                      {pos[1].toFixed(5)}
+                    </p>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // ← Empêche le click de se propager à la carte
+                        setMarkers((prev) =>
+                          prev.filter((_, i) => i !== index)
+                        );
+                      }}
+                      className=" px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+                    >
+                      {t("Supprimer")}
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+
+            {markers.length >= 3 && (
+              <Polygon
+                positions={markers}
+                pathOptions={{
+                  color: polygonColor,
+                  fillColor: polygonColor,
+                  fillOpacity: 0.2,
+                  weight: 2,
+                }}
+              />
+            )}
+
+            {markers.length >= 3 && (
+              <Marker
+                position={calculatePolygonCenter(markers)}
+                icon={L.divIcon({
+                  className: "custom-label",
+                  html: `<div style="
                  background-color: white;
   border-radius: 5px;
   padding: 2px 5px;
@@ -437,10 +443,11 @@ const AjouterGeofence = ({
   transform: translateX(-50%);">
                 ${zoneDescription}
               </div>`,
-              })}
-            />
-          )}
-        </MapContainer>
+                })}
+              />
+            )}
+          </MapContainer>{" "}
+        </div>
       </div>
     </div>
   );

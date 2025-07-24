@@ -128,7 +128,7 @@ function HistoriqueMainComponent({
 
         <div className="flex flex-col gap-4">
           {/* -{filterByColor}- */}
-          <div className="mt-4  flex items-center gap-2 flex-wrap">
+          <div className="mt-4 grid grid-cols-2  md:flex items-center gap-2 flex-wrap">
             <p
               onClick={() => {
                 setFilterByColor("mouvement rapide");
@@ -270,7 +270,6 @@ function HistoriqueMainComponent({
                           setSelectedVehicleHistoriqueToShowInMap(true);
 
                           setvoirPositionSurCarte(true);
-
                         }}
                         key={index}
                         className={`${lite_bg_color} shadow-md relative rounded-lg p-3 w-full`}

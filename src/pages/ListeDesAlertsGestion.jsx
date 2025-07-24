@@ -159,6 +159,13 @@ function ListeDesAlertsGestion({
                       </span>
                     </div>
                     <div className="border-b py-1">
+                      <p className="font-bold inline">{t("Vitesse")}:</p>
+                      <span className="text-gray-600 pl-2">
+                        {/* {alert?.speedKPH}  */}
+                        {parseFloat(alert?.speedKPH).toFixed(0)} Km/h
+                      </span>
+                    </div>
+                    <div className="border-b py-1">
                       <p className="font-bold inline">{t("Description")}:</p>
                       <span className="text-gray-600 pl-2">
                         {currentDevice?.description || "---"}
