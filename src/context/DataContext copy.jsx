@@ -9,12 +9,11 @@ import React, {
 import { useLocation, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { useTranslation } from "react-i18next";
-import pLimit from "p-limit";
 
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "25/07/2025 _ 1";
+  let versionApplication = "24/07/2025 _ 2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -818,24 +817,20 @@ const DataContextProvider = ({ children }) => {
         const details = device?.véhiculeDetails?.[0];
         const hasDetails = device?.véhiculeDetails?.length > 0;
         const speed = details?.speedKPH ?? 0;
-        const lastUpdateMs = details?.timestamp * 1000;
+        const lastUpdateMs = details?.timestamp ? details.timestamp * 1000 : 0;
         const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
         const updatedToday = lastUpdateMs >= todayTimestamp;
 
-        const isActive =
-          currentTimeMs - device?.lastUpdateTime * 1000 < twentyFourHoursInSec;
-
-        // device?.lastUpdateTime
-        // ?
-        // : false;
+        const isActive = device?.lastUpdateTime
+          ? currentTimeMs - device.lastUpdateTime * 1000 < twentyFourHoursInSec
+          : false;
 
         if (
-          // hasDetails &&
-          // isActive &&
+          hasDetails &&
+          isActive &&
           speed >= 1 &&
-          updatedRecently
-          // &&
-          // updatedToday
+          updatedRecently &&
+          updatedToday
         ) {
           d.EnDéplacement.push(device);
           idsÀExclure.add(device.deviceID);
@@ -1787,20 +1782,20 @@ const DataContextProvider = ({ children }) => {
   // };
 
   // Composant principal ou logique d'utilisation
-  // const failedAccounts = [];
+  const failedAccounts = [];
 
-  // const processInBatches = async (items, batchSize, asyncCallback) => {
-  //   for (let i = 0; i < items.length; i += batchSize) {
-  //     const batch = items.slice(i, i + batchSize);
-  //     const results = await Promise.allSettled(batch.map(asyncCallback));
-  //     results.forEach((res, idx) => {
-  //       if (res.status === "rejected") {
-  //         console.error(`Erreur dans le batch à l'élément ${idx}:`, res.reason);
-  //       }
-  //     });
-  //     await delay(200);
-  //   }
-  // };
+  const processInBatches = async (items, batchSize, asyncCallback) => {
+    for (let i = 0; i < items.length; i += batchSize) {
+      const batch = items.slice(i, i + batchSize);
+      const results = await Promise.allSettled(batch.map(asyncCallback));
+      results.forEach((res, idx) => {
+        if (res.status === "rejected") {
+          console.error(`Erreur dans le batch à l'élément ${idx}:`, res.reason);
+        }
+      });
+      await delay(200);
+    }
+  };
 
   // const processCompte = async (acct, isLastBatch = false) => {
   //   const id = acct?.accountID;
@@ -1860,70 +1855,74 @@ const DataContextProvider = ({ children }) => {
   //   afficherComptesEchoues();
   // };
 
-  //   const processCompte = async (acct) => {
-  //   const id = acct?.accountID;
-  //   const pwd = acct?.password;
 
-  //   try {
-  //     const groupesPromise = fetchAccountGroupes(id, pwd).then(async (groupes) => {
-  //       if (groupes?.length > 0) {
-  //         await Promise.allSettled(
-  //           groupes.map((g) => fetchGroupeDevices(id, [g], pwd))
-  //         );
-  //       }
-  //     });
+  const processCompte = async (acct) => {
+  const id = acct?.accountID;
+  const pwd = acct?.password;
 
-  //     const usersPromise = fetchAccountUsers(id, pwd).then(async (users) => {
-  //       if (users?.length > 0) {
-  //         await Promise.allSettled([
-  //           ...users.map((u) => fetchUserDevices(id, [u])),
-  //           ...users.map((u) => fetchUserGroupes(id, [u])),
-  //         ]);
-  //       }
-  //     });
+  try {
+    const groupesPromise = fetchAccountGroupes(id, pwd).then(async (groupes) => {
+      if (groupes?.length > 0) {
+        await Promise.allSettled(
+          groupes.map((g) => fetchGroupeDevices(id, [g], pwd))
+        );
+      }
+    });
 
-  //     const geofencesPromise = fetchAccountGeofences(id, pwd);
+    const usersPromise = fetchAccountUsers(id, pwd).then(async (users) => {
+      if (users?.length > 0) {
+        await Promise.allSettled([
+          ...users.map((u) => fetchUserDevices(id, [u])),
+          ...users.map((u) => fetchUserGroupes(id, [u])),
+        ]);
+      }
+    });
 
-  //     const devicesPromise = fetchAccountDevices(id, pwd).then(async (devices) => {
-  //       if (devices?.length > 0) {
-  //         await Promise.allSettled(
-  //           devices.map((d) => fetchVehiculeDetails(id, [d], pwd))
-  //         );
-  //       }
-  //     });
+    const geofencesPromise = fetchAccountGeofences(id, pwd);
 
-  //     const results = await Promise.allSettled([
-  //       groupesPromise,
-  //       usersPromise,
-  //       geofencesPromise,
-  //       devicesPromise,
-  //     ]);
+    const devicesPromise = fetchAccountDevices(id, pwd).then(async (devices) => {
+      if (devices?.length > 0) {
+        await Promise.allSettled(
+          devices.map((d) => fetchVehiculeDetails(id, [d], pwd))
+        );
+      }
+    });
 
-  //     results.forEach((res, i) => {
-  //       if (res.status === "rejected") {
-  //         console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
-  //         failedAccounts.push(id);
-  //         setError(`Erreur pour le compte ${id} à l'étape ${i}`);
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.error("Erreur pour le compte", id, ":", err);
-  //     failedAccounts.push(id);
-  //     setError("Erreur sur un ou plusieurs comptes.", failedAccounts.join(", "));
-  //   }
+    const results = await Promise.allSettled([
+      groupesPromise,
+      usersPromise,
+      geofencesPromise,
+      devicesPromise,
+    ]);
 
-  //   afficherComptesEchoues();
-  // };
+    results.forEach((res, i) => {
+      if (res.status === "rejected") {
+        console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
+        failedAccounts.push(id);
+        setError(`Erreur pour le compte ${id} à l'étape ${i}`);
+      }
+    });
+  } catch (err) {
+    console.error("Erreur pour le compte", id, ":", err);
+    failedAccounts.push(id);
+    setError("Erreur sur un ou plusieurs comptes.", failedAccounts.join(", "));
+  }
 
-  // const afficherComptesEchoues = () => {
-  //   if (failedAccounts.length > 0) {
-  //     console.log("Comptes échoués :", failedAccounts.join(", "));
-  //   } else {
-  //     console.log("Aucun compte n'a échoué.");
-  //   }
-  // };
+  afficherComptesEchoues();
+};
 
-  //1 const processAllComptes = async (comptes, batchSize) => {
+
+
+
+  const afficherComptesEchoues = () => {
+    if (failedAccounts.length > 0) {
+      console.log("Comptes échoués :", failedAccounts.join(", "));
+    } else {
+      console.log("Aucun compte n'a échoué.");
+    }
+  };
+
+  // const processAllComptes = async (comptes, batchSize) => {
   //   const total = comptes?.length;
   //   let done = 0;
 
@@ -1954,118 +1953,28 @@ const DataContextProvider = ({ children }) => {
   //
   //
 
-  //   const processAllComptes = async (comptes, batchSize) => {
-  //   const total = comptes?.length;
-  //   let done = 0;
 
-  //   for (let i = 0; i < total; i += batchSize) {
-  //     const batch = comptes.slice(i, i + batchSize);
-
-  //     await Promise.allSettled(
-  //       batch.map(async (acct) => {
-  //         await processCompte(acct);
-  //         done += 1;
-  //         setProgress(Math.round((done / total) * 100)); // mise à jour à chaque compte
-  //       })
-  //     );
-
-  //     await delay(500); // plus court
-  //   }
-  // };
-
-  const failedAccounts = [];
-  const limit = pLimit(100); // limite à 15 requêtes en parallèle
-
-  const processCompte = async (acct) => {
-    const id = acct?.accountID;
-    const pwd = acct?.password;
-
-    try {
-      const groupesPromise = fetchAccountGroupes(id, pwd).then(
-        async (groupes) => {
-          if (groupes?.length > 0) {
-            await Promise.allSettled(
-              groupes.map((g) => limit(() => fetchGroupeDevices(id, [g], pwd)))
-            );
-          }
-        }
-      );
-
-      const usersPromise = fetchAccountUsers(id, pwd).then(async (users) => {
-        if (users?.length > 0) {
-          await Promise.allSettled([
-            ...users.map((u) => limit(() => fetchUserDevices(id, [u]))),
-            ...users.map((u) => limit(() => fetchUserGroupes(id, [u]))),
-          ]);
-        }
-      });
-
-      const geofencesPromise = fetchAccountGeofences(id, pwd);
-
-      const devicesPromise = fetchAccountDevices(id, pwd).then(
-        async (devices) => {
-          if (devices?.length > 0) {
-            await Promise.allSettled(
-              devices.map((d) =>
-                limit(() => fetchVehiculeDetails(id, [d], pwd))
-              )
-            );
-          }
-        }
-      );
-
-      const results = await Promise.allSettled([
-        groupesPromise,
-        usersPromise,
-        geofencesPromise,
-        devicesPromise,
-      ]);
-
-      results.forEach((res, i) => {
-        if (res.status === "rejected") {
-          console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
-          failedAccounts.push(id);
-          setError(`Erreur pour le compte ${id} à l'étape ${i}`);
-        }
-      });
-    } catch (err) {
-      console.error("Erreur pour le compte", id, ":", err);
-      failedAccounts.push(id);
-      setError(
-        "Erreur sur un ou plusieurs comptes.",
-        failedAccounts.join(", ")
-      );
-    }
-
-    afficherComptesEchoues();
-  };
-
-  const afficherComptesEchoues = () => {
-    if (failedAccounts.length > 0) {
-      console.log("Comptes échoués :", failedAccounts.join(", "));
-    } else {
-      console.log("Aucun compte n'a échoué.");
-    }
-  };
 
   const processAllComptes = async (comptes, batchSize) => {
-    const total = comptes?.length;
-    let done = 0;
+  const total = comptes?.length;
+  let done = 0;
 
-    for (let i = 0; i < total; i += batchSize) {
-      const batch = comptes.slice(i, i + batchSize);
+  for (let i = 0; i < total; i += batchSize) {
+    const batch = comptes.slice(i, i + batchSize);
 
-      await Promise.allSettled(
-        batch.map(async (acct) => {
-          await processCompte(acct);
-          done += 1;
-          setProgress(Math.round((done / total) * 100)); // mise à jour à chaque compte
-        })
-      );
+    await Promise.allSettled(
+      batch.map(async (acct) => {
+        await processCompte(acct);
+        done += 1;
+        setProgress(Math.round((done / total) * 100)); // mise à jour à chaque compte
+      })
+    );
 
-      await delay(500); // délai court entre les batches
-    }
-  };
+    await delay(500); // plus court
+  }
+};
+
+
 
   const fetchAllComptes = async (
     account,
@@ -2135,8 +2044,8 @@ const DataContextProvider = ({ children }) => {
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
       setProgressDataUser(10);
-      setProgress(2);
-      processAllComptes(newData, 10); // 👈 traitement séquentiel en lots de 3
+      setProgress(4);
+      processAllComptes(newData, 5); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 

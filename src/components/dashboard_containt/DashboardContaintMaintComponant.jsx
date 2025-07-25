@@ -1169,7 +1169,6 @@ function DashboardContaintMaintComponant({
         </div>
       )}
       {/*  */}
-
       {expandSectionTable &&
         !showStatisticDeviceListeDashboard &&
         expandSection === "" && (
@@ -1336,7 +1335,7 @@ function DashboardContaintMaintComponant({
       {/*  */}
       {/* {progressBarForLoadingData}-{progressAnimationStart} */}
       <div className="md:px-4-- pt-4 mx-2 md:mx-0">
-        {/* {progressBarForLoadingData > 0 &&
+        {progressAnimationStart > 0 &&
           progressBarForLoadingData < 100 &&
           !fetchVehicleDataFromRapportGroupe &&
           showAnnimationProgresseBarDashboard && (
@@ -1350,7 +1349,11 @@ function DashboardContaintMaintComponant({
             >
               <div
                 style={{
-                  width: `${progressAnimationStart}%`,
+                  width: `${
+                    isDashboardHomePage
+                      ? progressBarForLoadingData
+                      : progressAnimationStart
+                  }%`,
                   background: "#4caf50",
                   color: "#fff",
                   padding: "4px",
@@ -1359,11 +1362,16 @@ function DashboardContaintMaintComponant({
                 }}
               >
                 <p className="font-semibold drop-shadow-2xl">
-                  {Math.floor(progressAnimationStart)}%
+                  {Math.floor(
+                    isDashboardHomePage
+                      ? progressBarForLoadingData
+                      : progressAnimationStart
+                  )}
+                  %
                 </p>
               </div>
             </div>
-          )} */}
+          )}
 
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-2 items-stretch justify-center  gap-4 ">
