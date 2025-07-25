@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview --port 8000"
+    "preview": "vite preview --port 8000",
+    "start": "node server.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -17,9 +18,12 @@
     "@reduxjs/toolkit": "^2.3.0",
     "cdnjs": "^0.3.2",
     "chart.js": "^4.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
     "emailjs-com": "^3.2.0",
+    "express": "^5.1.0",
     "firebase": "^10.14.1",
     "framer-motion": "^11.13.1",
     "html2pdf.js": "^0.10.2",
@@ -27,6 +31,7 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "leaflet": "^1.9.4",
     "moment-timezone": "^0.5.46",
+    "nodemailer": "^7.0.5",
     "p-limit": "^6.2.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
@@ -60,5 +65,10 @@
     "tailwindcss": "^3.4.13",
     "vite": "^5.4.8",
     "vite-plugin-pwa": "^0.20.5"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

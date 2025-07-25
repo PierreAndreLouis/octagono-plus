@@ -826,7 +826,22 @@
   "Gestion des geofences": "Gestión de geozonas",
   "Ajouter une nouvelle geozone": "Agregar una nueva geozona",
   "Modifier une geozone": "Modificar una geozona",
-  "Supprimer une geozone": "Eliminar una geozona"
+  "Supprimer une geozone": "Eliminar una geozona",
+
+
+
+  "Veuillez ajouter au moins 3 positions": "Por favor, agregue al menos 3 posiciones",
+"Veuillez ajouter une description": "Por favor, agregue una descripción",
+"Choisir une couleur": "Elegir un color",
+"Modifier Geofence": "Editar Geocerca",
+"Créer Geofence": "Crear Geocerca",
+"Marqueur": "Marcador",
+"Coordonnées": "Coordenadas",
+
+
+"Ce nom de Geozone existe deja": "Este nombre de Zona Geográfica ya existe",
+"Liste des appareils de": "Lista de dispositivos de"
+
 
 
 

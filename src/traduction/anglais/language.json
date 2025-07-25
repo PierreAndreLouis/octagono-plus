@@ -858,7 +858,22 @@
 
 "succès": "succès",
 "échec": "failed",
-"Échec": "Failed"
+"Échec": "Failed",
+
+
+"Veuillez ajouter au moins 3 positions": "Please add at least 3 positions",
+"Veuillez ajouter une description": "Please add a description",
+"Choisir une couleur": "Choose a color",
+"Modifier Geofence": "Edit Geofence",
+"Créer Geofence": "Create Geofence",
+"Marqueur": "Marker",
+"Coordonnées": "Coordinates",
+
+
+
+"Ce nom de Geozone existe deja": "This Geozone name already exists",
+"Liste des appareils de": "Device list of"
+
 
 
 

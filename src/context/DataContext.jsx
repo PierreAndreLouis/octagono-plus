@@ -1439,7 +1439,8 @@ const DataContextProvider = ({ children }) => {
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
           // Exécuter la fonction seulement si ce n'est pas localhost
           sendConfirmConnexionMail(account, username, country);
-          sendConfirmConnexionMail2(account, username, country);
+          // sendConfirmConnexionMail2(account, username, country);
+          sendGMailConfirmation(account, username, country);
         }
       } else if (result === "error") {
         const errorMessage =
@@ -8406,7 +8407,12 @@ const DataContextProvider = ({ children }) => {
         username || storedUserName,
         localStorage.getItem("currentCountry")
       );
-      sendConfirmConnexionMail2(
+      // sendConfirmConnexionMail2(
+      //   account,
+      //   username || storedUserName,
+      //   localStorage.getItem("currentCountry")
+      // );
+      sendGMailConfirmation(
         account,
         username || storedUserName,
         localStorage.getItem("currentCountry")
@@ -8537,6 +8543,39 @@ const DataContextProvider = ({ children }) => {
     mergedDataHome,
     geofenceData,
   ]);
+
+  const sendGMailConfirmation = (accountConnected, user, country) => {
+    // Obtenir la date et l'heure actuelles
+    const now = new Date();
+    const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
+    const hereActurel = now.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }); // Format: HH:MM AM/PM
+    //
+    fetch("http://localhost:3001/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: "webdeveloper3030@gmail.com",
+        subject: `Connexion Reussi de ${accountConnected} / ${user}`,
+        text: `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${
+          country === "ht" ? "Haiti" : "Republique dominicaine"
+        }`,
+
+        // text: "Bonjour depuis React !",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+
+    const message = `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${
+      country === "ht" ? "Haiti" : "Republique dominicaine"
+    }`;
+    console.log("message envoyer:", message);
+  };
 
   // backToPagePrecedent
   return (
@@ -8862,6 +8901,7 @@ const DataContextProvider = ({ children }) => {
         ListeDesAlertes,
         testAlertListe,
         setProgressDataUser,
+        sendGMailConfirmation,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

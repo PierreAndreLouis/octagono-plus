@@ -19,6 +19,7 @@ function InfoUserComponent({
     currentCountry,
     versionApplication,
     isDashboardHomePage,
+    sendGMailConfirmation,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -35,7 +36,8 @@ function InfoUserComponent({
       {/* Section de l'icône utilisateur */}
       <div
         onClick={() => {
-          // setUsername("xxxxxxx");
+          console.log("xxxxxxx");
+          // sendGMailConfirmation("Foodforthepoor", "monitoring", "ht");
         }}
         className="flex pt-14  justify-center items-center"
       >
