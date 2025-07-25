@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../context/DataContext";
+import { useTranslation } from "react-i18next";
 
 function SuccèsÉchecMessagePopup({
   message,
@@ -17,13 +18,9 @@ function SuccèsÉchecMessagePopup({
     setConfirmationMessagePopupName,
   } = useContext(DataContext);
 
+  const [t, i18n] = useTranslation();
+
   //
-  //
-  //
-  //   setShowConfirmationMessagePopup(true);
-  // setConfirmationMessagePopupTexte("Vous avez ajouté l'appareil avec succès");
-  // setConfirmationMessagePopupTexte("Échec de l'ajout du véhicule.");
-  // setConfirmationMessagePopupName(description);
 
   //
   //
@@ -33,14 +30,17 @@ function SuccèsÉchecMessagePopup({
   let button_bg;
   let text_color;
 
-  if (confirmationMessagePopupTexte?.includes("succès")) {
+  if (
+    confirmationMessagePopupTexte?.includes(`${t("succès")}`) ||
+    confirmationMessagePopupTexte?.includes("Successfully")
+  ) {
     body_bg = "bg-green-50";
     header_bg = "bg-green-600";
     button_bg = "bg-green-500";
     text_color = "text-green-600";
   } else if (
-    confirmationMessagePopupTexte?.includes("échec") ||
-    confirmationMessagePopupTexte?.includes("Échec")
+    confirmationMessagePopupTexte?.includes(`${t("échec")}`) ||
+    confirmationMessagePopupTexte?.includes(`${t("Échec")}`)
   ) {
     body_bg = "bg-red-50";
     header_bg = "bg-red-600";
@@ -64,9 +64,9 @@ function SuccèsÉchecMessagePopup({
               className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
             >
               <h2 className="font-bold text-white text-xl">
-                {confirmationMessagePopupTexte?.includes("succès")
-                  ? "Succès"
-                  : "Échec"}
+                {confirmationMessagePopupTexte?.includes(`${t("succès")}`)
+                  ? `${t("Succès")}`
+                  : `${t("Échec")}`}
 
                 {confirmationMessagePopupTexte === "Redémarrer l'application"
                   ? "Redémarrer l'application"
@@ -80,92 +80,11 @@ function SuccèsÉchecMessagePopup({
                 {confirmationMessagePopupTexte
                   ? confirmationMessagePopupTexte
                   : ""}
-                {/* {composant_from === "succès ajout de véhicule" &&
-                  "Vous avez ajouté le véhicule avec succès."} */}
-                {/* {composant_from === "échec ajout de véhicule" &&
-                  "Échec de l'ajout du véhicule."} */}
-
-                {/* {composant_from === "succès modification de véhicule" &&
-                  "Vous avez modifié le véhicule avec succès."} */}
-                {/* {composant_from === "échec modification de véhicule" &&
-                  "Échec de la modification du véhicule."} */}
-
-                {/* {composant_from === "succès suppression de véhicule" &&
-                  "Vous avez supprimé le véhicule avec succès."} */}
-                {/* {composant_from === "échec suppression de véhicule" &&
-                  "Échec de la suppression du véhicule."} */}
-
-                {/* setShowConfirmationMessagePopup(true);
-  setConfirmationMessagePopupTexte("Vous avez supprimé le véhicule avec succès.");
-  setConfirmationMessagePopupTexte("Échec de la suppression du véhicule.");
-  setConfirmationMessagePopupName(description); */}
-
-                {/* {composant_from === "succès modification timezone" &&
-                  "Le fuseau horaire prendra automatiquement effet lors de la prochaine mise à jour des véhicules."} */}
 
                 {composant_from === "Redémarrer l'application" &&
                   "Etes vous sur de redémarrer l'application ?"}
-
-                {/* {composant_from === "succès de creation du geozone" &&
-  "Creation du geozone avec succès "}
-                {composant_from === "échec de la creation du geozone" &&
-                  "Échec de la creation du geozone "} */}
-
-                {/* {composant_from === "succès de modification du geozone" &&
-                  "Modification du geozone avec succès "}
-                {composant_from === "échec de la modification du geozone" &&
-                  "Échec de la modification du geozone "} */}
-                {/* {composant_from === "succès de suppression du geozone" &&
-                  "Suppression du geozone avec succès"} */}
-                {/* {composant_from === "échec de la suppression du geozone" &&
-                  "Échec de la suppression du geozone"} */}
-                {/* {composant_from === "succès ajout de Groupe" &&
-                  "Creation du groupe avec succès"}
-                {composant_from === "échec ajout la creation du groupe" &&
-                  "Échec de la creation du groupe"}
-                {composant_from === "succès modification de Groupe" &&
-                  "Modification du Groupe avec succès"}
-                {composant_from === "échec modification du groupe" &&
-                  "Échec de la modification du groupe"}
-
-                {composant_from === "succès suppression de Groupe" &&
-                  "Suppression du groupe avec succès"}
-
-                {composant_from === "échec suppression du groupe" &&
-                  "Échec de la suppression du groupe"}
-
-                {composant_from === "succès creation de nouveau compte" &&
-                  "Creation du compte avec succès"}
-                {composant_from === "échec de creation de nouveau compte" &&
-                  "Échec de creation du nouveau compte"}
-
-                {composant_from === "succès modification de nouveau compte" &&
-                  "Modification du compte avec succès"}
-
-                {composant_from === "échec de modification de nouveau compte" &&
-                  "Échec de la modification du nouveau compte"}
-
-                {composant_from === "succès creation nouveau user" &&
-                  "Creation de l'utilisateur avec succès"}
-
-                {composant_from === "échec creation nouveau user" &&
-                  "Échec de la creation de l'utilisateur"}
-
-                {composant_from === "succès modification du user" &&
-                  "Modification de l'utilisateur avec succès"}
-
-                {composant_from === "échec modification du user" &&
-                  "Échec de la modification de l'utilisateur"} */}
               </h3>
 
-              {/* {composant_from ===
-                ("succès ajout de véhicule" ||
-                  "échec ajout de véhicule" ||
-                  "succès suppression de véhicule" ||
-                  "Échec de la modification du véhicule" ||
-                  "Échec de la suppression du véhicule" ||
-                  "succès modification de véhicule") && (
-              )} */}
               <h4 className="text-center text-lg text-gray-600 font-semibold">
                 {confirmationMessagePopupName
                   ? confirmationMessagePopupName
@@ -177,10 +96,9 @@ function SuccèsÉchecMessagePopup({
                 onClick={() => {
                   setShowConfirmationMessagePopup(false);
                 }}
-                // to="/home?tab=acceuil"
                 className={` ${button_bg} cursor-pointer py-1 text-center px-10  rounded-lg text-white`}
               >
-                OK
+                {t("Ok")}
               </Link>
             </div>
           </div>
@@ -189,7 +107,5 @@ function SuccèsÉchecMessagePopup({
     </>
   );
 }
-
-// export default SuccèsÉchecMessagePopup;
 
 export default SuccèsÉchecMessagePopup;

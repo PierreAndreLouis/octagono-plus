@@ -69,35 +69,35 @@ function GestionGeofences({
     `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
 
   const supprimerOuModifierGeozone = () => {
-    // activerOuDesactiverGeofence(geozoneID, 0);
+    const foundAccount = gestionAccountData.find(
+      (account) => account.accountID === currentGeozone?.accountID
+    );
 
-    if (
-      (isCurrentGeozoneActive && currentGeozone?.isActive === (0 || 1)) ||
-      isDashboardHomePage
-    ) {
-      supprimerGeofence(
-        geozoneID,
+    let accountIDUser;
+    let userIDUser;
+    let passwordUser;
 
-        gestionAccountData.find(
-          (account) => account.accountID === currentGeozone?.accountID
-        )?.accountID,
-        "admin",
-        gestionAccountData.find(
-          (account) => account.accountID === currentGeozone?.accountID
-        )?.password
-      );
+    if (isDashboardHomePage && currentAccountSelected) {
+      accountIDUser = currentAccountSelected?.accountID;
+      userIDUser = "admin";
+      passwordUser = currentAccountSelected?.password;
+    } else if (isDashboardHomePage && !currentAccountSelected) {
+      accountIDUser = foundAccount?.accountID;
+      userIDUser = "admin";
+      passwordUser = foundAccount?.password;
+    } else if (!isDashboardHomePage) {
+      accountIDUser = localStorage.getItem("accountID");
+      userIDUser = localStorage.getItem("username");
+      passwordUser = localStorage.getItem("password");
     }
 
-    if (
-      (isCurrentGeozoneActive || !isCurrentGeozoneActive) &&
-      currentGeozone?.isActive === 0
-    ) {
-      // activerOuDesactiverGeofence(geozoneID, 1);
-    }
+    supprimerGeofence(
+      geozoneID,
 
-    if (!isCurrentGeozoneActive && currentGeozone?.isActive === 1) {
-      // activerOuDesactiverGeofence(geozoneID, 0);
-    }
+      accountIDUser,
+      userIDUser,
+      passwordUser
+    );
   };
 
   // /////////////////////////////////////////////////////////////////
@@ -355,7 +355,8 @@ function GestionGeofences({
                         </div>
                       </div>
                       <div className="flex  justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-end ">
-                        {isDashboardHomePage && (
+                        {(isDashboardHomePage ||
+                          localStorage.getItem("password")) && (
                           <button
                             onClick={() => {
                               setCurrentGeozone(geozone);

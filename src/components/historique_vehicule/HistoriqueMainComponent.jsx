@@ -110,8 +110,8 @@ function HistoriqueMainComponent({
                 </div>
               </button>
 
-              <div className=" -translate-y-[10rem]">
-                <MapComponent mapType={mapType} />
+              <div className=" -translate-y-[10rem] mt-[6rem]">
+                <MapComponent mapType={mapType} fromHistorique = "true"/>
               </div>
             </div>
           </div>

@@ -353,7 +353,7 @@ function RapportPageDetails() {
     },
     yAxis: {
       type: "value",
-      name: "Vitesse (km/h)",
+      name: `${t("Vitesse")} (Km/h)`,
     },
     series: [
       {

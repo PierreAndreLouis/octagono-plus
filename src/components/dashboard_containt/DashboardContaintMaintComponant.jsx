@@ -1336,7 +1336,7 @@ function DashboardContaintMaintComponant({
       {/*  */}
       {/* {progressBarForLoadingData}-{progressAnimationStart} */}
       <div className="md:px-4-- pt-4 mx-2 md:mx-0">
-        {progressBarForLoadingData > 0 &&
+        {/* {progressBarForLoadingData > 0 &&
           progressBarForLoadingData < 100 &&
           !fetchVehicleDataFromRapportGroupe &&
           showAnnimationProgresseBarDashboard && (
@@ -1363,7 +1363,7 @@ function DashboardContaintMaintComponant({
                 </p>
               </div>
             </div>
-          )}
+          )} */}
 
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-2 items-stretch justify-center  gap-4 ">

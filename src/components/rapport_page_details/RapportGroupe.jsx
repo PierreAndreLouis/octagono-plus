@@ -4225,7 +4225,7 @@ function RapportGroupe({
                   </div>
                 </button>
                 <div className=" -translate-y-[10rem]">
-                  <MapComponent mapType={mapType} />
+                  <MapComponent fromRapportGroupe="true" mapType={mapType} />
                 </div>
               </div>
             )}

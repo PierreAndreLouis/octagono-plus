@@ -668,6 +668,10 @@
   "Vous avez supprimé le véhicule avec succès": "Vehículo eliminado con éxito",
   "Échec de la suppression du véhicule": "Error al eliminar el vehículo",
 
+"succès": "éxito",
+"échec": "error",
+"Échec": "Error",
+
   
   "Low Battery": "Batería Baja",
   "In motion": "En Movimiento",

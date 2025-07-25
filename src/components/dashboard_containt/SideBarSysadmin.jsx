@@ -520,6 +520,12 @@ function SideBarSysadmin({
       link: "/userInfo",
       setVariable: () => setDocumentationPage("userInfo"),
     },
+    {
+      name: t("Language"),
+      isSysadmin: false,
+      link: "",
+      setVariable: () => setChooseOtherLanguagePopup(true),
+    },
   ];
 
   const filteredOptionListe = useMemo(() => {
@@ -658,7 +664,14 @@ function SideBarSysadmin({
                   : account + " / " + username}
               </p>
             </div>
-            {isDashboardHomePage && <FaChevronDown className="text-lg" />}
+            {isDashboardHomePage && (
+              <FaChevronDown
+                onClick={() => {
+                  setChooseOtherAccountGestion(true);
+                }}
+                className="text-lg"
+              />
+            )}
           </div>
         </div>
         {/*  */}
@@ -1284,7 +1297,6 @@ function SideBarSysadmin({
                 onClick={() => {
                   closeSideBar();
                   setShowSideBar2(false);
-
                   setChooseOtherLanguagePopup(true);
                 }}
                 className={`${

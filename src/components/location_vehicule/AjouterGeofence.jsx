@@ -14,6 +14,7 @@ import "leaflet/dist/leaflet.css";
 import { DataContext } from "../../context/DataContext";
 import customMarkerIcon from "/pin/ping_red.png";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 // Configurer les icônes de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -42,11 +43,15 @@ const AjouterGeofence = ({
     isEditingGeofence,
     currentAccountSelected,
     isDashboardHomePage,
+    accountGeofences,
+    geofenceData,
   } = useContext(DataContext);
   const [markers, setMarkers] = useState([]);
   const [polygonColor, setPolygonColor] = useState("#FF0000");
   const [zoneDescription, setZoneDescription] = useState("");
   const mapRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const [t, i18n] = useTranslation();
 
@@ -121,6 +126,14 @@ const AjouterGeofence = ({
 
     if (!zoneDescription) {
       alert(`${t("Veuillez ajouter une description")}`);
+      return;
+    }
+    const foundGeozone = (
+      isDashboardHomePage ? accountGeofences : geofenceData
+    )?.find((geozone) => geozone?.description === zoneDescription);
+
+    if (!isEditingGeofence && foundGeozone) {
+      alert(`${t("Ce nom de Geozone existe deja")}`);
       return;
     }
 
@@ -216,6 +229,7 @@ const AjouterGeofence = ({
         username,
         password
       );
+
       console.log("Données envoyées pour création (sans geozoneID)");
     }
   };
@@ -324,23 +338,31 @@ const AjouterGeofence = ({
               placeholder={`${t("Description de la zone")}`}
               value={zoneDescription}
               onChange={(e) => setZoneDescription(e.target.value)}
-              className="px-4 rounded-lg py-1 focus-within:outline-none border border-gray-800"
+              className="px-4 rounded-lg py-1 focus-within:outline-none border border-gray-800 max-w-[10rem]"
             />
           </div>
           <div className="flex items-end- flex-col gap-1 ">
             <p className="font-semibold">{t("Couleur")}</p>
-            <div className="max-w-[3rem] rounded-md cursor-pointer mt-[.1rem] overflow-hidden">
+            <div className="max-w-[3rem]  cursor-pointer overflow-hidden">
               <input
                 type="color"
                 value={polygonColor}
                 onChange={(e) => setPolygonColor(e.target.value)}
                 title={`${t("Choisir une couleur")}`}
-                className="scale-150"
+                className="scale-150- -translate-y-1  h-[2.3rem] rounded-lg cursor-pointer"
               />
             </div>
           </div>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center mb-2">
+          <button
+            className="py-[.25rem] rounded-lg bg-red-600 text-white px-4 border border-red-800 flex-nowrap font-semibold"
+            onClick={() => {
+              navigate("/Gestion_geofences");
+            }}
+          >
+            {t("Annuler")}
+          </button>
           <button
             className="py-[.25rem] rounded-lg bg-red-100 text-red-800 px-4 border border-red-800 flex-nowrap font-semibold"
             onClick={handleResetMarkers}
@@ -392,8 +414,8 @@ const AjouterGeofence = ({
                     <p>
                       {t("Marqueur")} {index + 1}
                       <br />
-                      {t("Coordonnées")} : {pos[0].toFixed(5)},{" "}
-                      {pos[1].toFixed(5)}
+                      {/* {t("Coordonnées")} : {pos[0].toFixed(5)},{" "}
+                      {pos[1].toFixed(5)} */}
                     </p>
                     <button
                       onClick={(e) => {

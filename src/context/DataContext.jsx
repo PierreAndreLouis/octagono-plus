@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "23/07/2025 _ 4";
+  let versionApplication = "24/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -267,10 +267,10 @@ const DataContextProvider = ({ children }) => {
     useState(false);
 
   const loadForManySecond = () => {
-    setDashboardLoadingEffectLogin(true);
-    setTimeout(() => {
-      setDashboardLoadingEffectLogin(false);
-    }, 60 * 1000);
+    // setDashboardLoadingEffectLogin(true);
+    // setTimeout(() => {
+    //   setDashboardLoadingEffectLogin(false);
+    // }, 60 * 1000);
   };
 
   // useEffect(() => {
@@ -280,26 +280,6 @@ const DataContextProvider = ({ children }) => {
   //     }, 5000);
   //   }
   // }, [dashboardLoadingEffect]);
-
-  useEffect(() => {
-    setDashboardLoadingEffect(true);
-
-    const timeout = setTimeout(() => {
-      setDashboardLoadingEffect(false);
-    }, 5000);
-
-    return () => clearTimeout(timeout); // Nettoie l'ancien timeout
-  }, [
-    comptes,
-    accountDevices,
-    accountGeofences,
-    accountGroupes,
-    accountUsers,
-    groupeDevices,
-    userGroupes,
-    véhiculeDetails,
-    gestionAccountData,
-  ]);
 
   useEffect(() => {
     if (currentAccountSelected) {
@@ -1417,9 +1397,7 @@ const DataContextProvider = ({ children }) => {
           setAdminUsername(username);
           setAdminPassword(password);
 
-          setTimeout(() => {
-            fetchAllComptes(account, username, password);
-          }, 3000);
+          fetchAllComptes(account, username, password);
         } else {
           const lastLoginTime = Math.floor(Date.now() / 1000);
 
@@ -1686,13 +1664,136 @@ const DataContextProvider = ({ children }) => {
   //   }
   // };
 
+  // const failedAccounts = [];
+
+  // const processInBatches = async (items, batchSize, asyncCallback) => {
+  //   for (let i = 0; i < items.length; i += batchSize) {
+  //     const batch = items.slice(i, i + batchSize);
+  //     await Promise.all(batch.map(asyncCallback));
+  //     await delay(200); // pour éviter "ERR_INSUFFICIENT_RESOURCES"
+  //   }
+  // };
+
+  // const processCompte = async (acct, isLastBatch = false) => {
+  //   const id = acct?.accountID;
+  //   const pwd = acct?.password;
+
+  //   fetchAccountGroupes(id, pwd)
+  //     .then(async (groupes) => {
+  //       if (groupes && groupes.length > 0) {
+  //         await processInBatches(groupes, 30, (groupe) =>
+  //           fetchGroupeDevices(id, [groupe], pwd)
+  //         );
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error("Erreur groupes/devices :", err);
+  //       setError("Erreur lors de la mise à jour des groupes.");
+  //     });
+
+  //   fetchAccountUsers(id, pwd)
+  //     .then(async (users) => {
+  //       if (users && users.length > 0) {
+  //         await processInBatches(users, 40, (user) =>
+  //           fetchUserDevices(id, [user])
+  //         );
+  //         await processInBatches(users, 40, (user) =>
+  //           fetchUserGroupes(id, [user])
+  //         );
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error("Erreur utilisateurs/données :", err);
+  //       setError("Erreur lors de la mise à jour des utilisateurs.");
+  //     });
+
+  //   fetchAccountGeofences(id, pwd);
+
+  //   try {
+  //     if (isLastBatch) {
+  //       await fetchAccountDevices(id, pwd)
+  //         .then(async (devices) => {
+  //           if (devices && devices.length > 0) {
+  //             await processInBatches(devices, 40, (device) =>
+  //               fetchVehiculeDetails(id, [device], pwd)
+  //             );
+  //           }
+  //         })
+  //         .catch((err) => {
+  //           console.error("Erreur device/details :", err);
+  //           setError("Erreur lors de la mise à jour des VehiculeDetails.");
+  //         });
+  //     } else {
+  //       fetchAccountDevices(id, pwd)
+  //         .then(async (devices) => {
+  //           if (devices && devices.length > 0) {
+  //             await processInBatches(devices, 40, (device) =>
+  //               fetchVehiculeDetails(id, [device], pwd)
+  //             );
+  //           }
+  //         })
+  //         .catch((err) => {
+  //           console.error("Erreur device/details :", err);
+  //           setError("Erreur lors de la mise à jour des VehiculeDetails.");
+  //         });
+  //     }
+  //     //////////////////////////
+  //   } catch (err) {
+  //     console.error("Erreur pour le compte", id, ":", err);
+  //     failedAccounts.push(id);
+  //     setError(
+  //       "Erreur sur un ou plusieurs comptes.",
+  //       failedAccounts.join(", ")
+  //     );
+  //   }
+
+  //   afficherComptesEchoues();
+  // };
+
+  // const afficherComptesEchoues = () => {
+  //   if (failedAccounts.length > 0) {
+  //     console.log(
+  //       "ssssssssssssssssssssssssssssssssssssssssssssssss Comptes échoués :",
+  //       failedAccounts.join(", ")
+  //     );
+  //   } else {
+  //     console.log(
+  //       "sssssssssssssssssssssssssssssssssssssssssssssssss Aucun compte n'a échoué."
+  //     );
+  //   }
+  // };
+
+  // const processAllComptes = async (comptes, batchSize) => {
+  //   const total = comptes?.length;
+  //   let done = 0;
+
+  //   for (let i = 0; i < total; i += batchSize) {
+  //     const batch = comptes.slice(i, i + batchSize);
+  //     const isLastBatch = i + batchSize >= total;
+
+  //     for (const acct of batch) {
+  //       await processCompte(acct, isLastBatch);
+  //       done += 1;
+  //       setProgress(Math.round((done / total) * 100));
+  //     }
+
+  //     if (!isLastBatch) await delay(1000);
+  //   }
+  // };
+
+  // Composant principal ou logique d'utilisation
   const failedAccounts = [];
-  const [isStillFetching, setIsStillFetching] = useState(false);
+
   const processInBatches = async (items, batchSize, asyncCallback) => {
     for (let i = 0; i < items.length; i += batchSize) {
       const batch = items.slice(i, i + batchSize);
-      await Promise.all(batch.map(asyncCallback));
-      await delay(200); // pour éviter "ERR_INSUFFICIENT_RESOURCES"
+      const results = await Promise.allSettled(batch.map(asyncCallback));
+      results.forEach((res, idx) => {
+        if (res.status === "rejected") {
+          console.error(`Erreur dans le batch à l'élément ${idx}:`, res.reason);
+        }
+      });
+      await delay(200);
     }
   };
 
@@ -1700,66 +1801,48 @@ const DataContextProvider = ({ children }) => {
     const id = acct?.accountID;
     const pwd = acct?.password;
 
-    fetchAccountGroupes(id, pwd)
-      .then(async (groupes) => {
-        if (groupes && groupes.length > 0) {
-          await processInBatches(groupes, 30, (groupe) =>
-            fetchGroupeDevices(id, [groupe], pwd)
-          );
-        }
-      })
-      .catch((err) => {
-        console.error("Erreur groupes/devices :", err);
-        setError("Erreur lors de la mise à jour des groupes.");
-      });
-
-    fetchAccountUsers(id, pwd)
-      .then(async (users) => {
-        if (users && users.length > 0) {
-          await processInBatches(users, 40, (user) =>
-            fetchUserDevices(id, [user])
-          );
-          await processInBatches(users, 40, (user) =>
-            fetchUserGroupes(id, [user])
-          );
-        }
-      })
-      .catch((err) => {
-        console.error("Erreur utilisateurs/données :", err);
-        setError("Erreur lors de la mise à jour des utilisateurs.");
-      });
-
-    fetchAccountGeofences(id, pwd);
-
     try {
-      if (isLastBatch) {
-        await fetchAccountDevices(id, pwd)
-          .then(async (devices) => {
-            if (devices && devices.length > 0) {
-              await processInBatches(devices, 40, (device) =>
-                fetchVehiculeDetails(id, [device], pwd)
-              );
-            }
-          })
-          .catch((err) => {
-            console.error("Erreur device/details :", err);
-            setError("Erreur lors de la mise à jour des VehiculeDetails.");
-          });
-      } else {
-        fetchAccountDevices(id, pwd)
-          .then(async (devices) => {
-            if (devices && devices.length > 0) {
-              await processInBatches(devices, 40, (device) =>
-                fetchVehiculeDetails(id, [device], pwd)
-              );
-            }
-          })
-          .catch((err) => {
-            console.error("Erreur device/details :", err);
-            setError("Erreur lors de la mise à jour des VehiculeDetails.");
-          });
-      }
-      //////////////////////////
+      const tasks = [
+        // Groupes + devices par groupe
+        fetchAccountGroupes(id, pwd).then(async (groupes) => {
+          if (groupes?.length > 0) {
+            await processInBatches(groupes, 30, (g) =>
+              fetchGroupeDevices(id, [g], pwd)
+            );
+          }
+        }),
+
+        // Utilisateurs + devices/groupes par utilisateur
+        fetchAccountUsers(id, pwd).then(async (users) => {
+          if (users?.length > 0) {
+            await Promise.allSettled([
+              processInBatches(users, 40, (u) => fetchUserDevices(id, [u])),
+              processInBatches(users, 40, (u) => fetchUserGroupes(id, [u])),
+            ]);
+          }
+        }),
+
+        // Géofences
+        fetchAccountGeofences(id, pwd),
+
+        // Devices + détails véhicules
+        fetchAccountDevices(id, pwd).then(async (devices) => {
+          if (devices?.length > 0) {
+            await processInBatches(devices, 40, (d) =>
+              fetchVehiculeDetails(id, [d], pwd)
+            );
+          }
+        }),
+      ];
+
+      const results = await Promise.allSettled(tasks);
+      results.forEach((res, i) => {
+        if (res.status === "rejected") {
+          console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
+          failedAccounts.push(id);
+          setError(`Erreur pour le compte ${id} à l'étape ${i}`);
+        }
+      });
     } catch (err) {
       console.error("Erreur pour le compte", id, ":", err);
       failedAccounts.push(id);
@@ -1774,14 +1857,9 @@ const DataContextProvider = ({ children }) => {
 
   const afficherComptesEchoues = () => {
     if (failedAccounts.length > 0) {
-      console.log(
-        "ssssssssssssssssssssssssssssssssssssssssssssssss Comptes échoués :",
-        failedAccounts.join(", ")
-      );
+      console.log("Comptes échoués :", failedAccounts.join(", "));
     } else {
-      console.log(
-        "sssssssssssssssssssssssssssssssssssssssssssssssss Aucun compte n'a échoué."
-      );
+      console.log("Aucun compte n'a échoué.");
     }
   };
 
@@ -1793,15 +1871,28 @@ const DataContextProvider = ({ children }) => {
       const batch = comptes.slice(i, i + batchSize);
       const isLastBatch = i + batchSize >= total;
 
-      for (const acct of batch) {
-        await processCompte(acct, isLastBatch);
-        done += 1;
-        setProgress(Math.round((done / total) * 100));
-      }
+      const results = await Promise.allSettled(
+        batch.map((acct) => processCompte(acct, isLastBatch))
+      );
+
+      results.forEach((res, idx) => {
+        if (res.status === "rejected") {
+          console.warn(`Échec du compte`, batch[idx].accountID, res.reason);
+        }
+      });
+
+      done += batch.length;
+      setProgress(Math.round((done / total) * 100));
 
       if (!isLastBatch) await delay(1000);
     }
   };
+
+  //
+  //
+  //
+  //
+  //
 
   const fetchAllComptes = async (
     account,
@@ -5531,10 +5622,10 @@ const DataContextProvider = ({ children }) => {
           ]);
 
           setCreateGeofenceLoading(false);
-          navigate("/gestion_geofences?tab=geozone");
           GeofenceDataFonction(account, username, password);
         }
 
+        navigate("/gestion_geofences?tab=geozone");
         // setSuccesCreateGeofencePopup(true);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
@@ -5707,9 +5798,9 @@ const DataContextProvider = ({ children }) => {
                 : geofence
             )
           );
-          navigate("/gestion_geofences?tab=geozone");
         }
 
+        navigate("/gestion_geofences?tab=geozone");
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Modification du geofence avec succès")}`
@@ -5808,7 +5899,7 @@ const DataContextProvider = ({ children }) => {
         // console.log("Réponse serveur:", await response.text());
         console.log("Réponse serveur:", data);
 
-        if (accountIDProp || userProp || passwordProp) {
+        if (isDashboardHomePage) {
           setAccountGeofences((prevGeofence) =>
             prevGeofence.filter((geofence) => geofence.geozoneID !== geozoneID)
           );
@@ -5816,34 +5907,6 @@ const DataContextProvider = ({ children }) => {
           setGeofenceData((geofences) =>
             geofences.filter((geofence) => geofence?.geozoneID !== geozoneID)
           );
-          // Supprimer la geozone de IndexedDB
-          openDatabase().then((db) => {
-            const transaction = db.transaction(["geofenceData"], "readwrite");
-            const store = transaction.objectStore("geofenceData");
-
-            const deleteRequest = store.openCursor();
-            deleteRequest.onsuccess = (event) => {
-              const cursor = event.target.result;
-              if (cursor) {
-                if (cursor.value.geozoneID === geozoneID) {
-                  cursor.delete();
-                }
-                cursor.continue();
-              }
-            };
-
-            transaction.oncomplete = () => {
-              console.log("Geozone supprimée de IndexedDB.");
-            };
-
-            transaction.onerror = () => {
-              console.error(
-                "Erreur lors de la suppression de la geozone dans IndexedDB."
-              );
-            };
-          });
-
-          //
 
           navigate("/gestion_geofences?tab=geozone");
         }
@@ -5857,10 +5920,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName("");
 
         setCreateGeofenceLoading(false);
-        setErrorDeleteGeofencePopup(false);
-        // GeofenceDataFonction();
-
-        //
 
         console.log("Geofence Supprimer avec succès.");
       } else {
@@ -5877,6 +5936,7 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName("");
         setCreateGeofenceLoading(false);
+        handleUserError(xmlDoc);
       }
     } catch (error) {
       console.log("Erreur lors de la Suppression du geofence");
@@ -5887,7 +5947,6 @@ const DataContextProvider = ({ children }) => {
       );
       setConfirmationMessagePopupName("");
       setCreateGeofenceLoading(false);
-      handleUserError(xmlDoc);
     }
   };
 
@@ -8281,6 +8340,28 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     enforceCacheLimit(); // pour 30 MB
   }, []);
+
+  useEffect(() => {
+    setDashboardLoadingEffect(true);
+
+    const timeout = setTimeout(() => {
+      setDashboardLoadingEffect(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout); // Nettoie l'ancien timeout
+  }, [
+    comptes,
+    accountDevices,
+    accountGeofences,
+    accountGroupes,
+    accountUsers,
+    groupeDevices,
+    userGroupes,
+    véhiculeDetails,
+    gestionAccountData,
+    mergedDataHome,
+    geofenceData,
+  ]);
 
   // backToPagePrecedent
   return (

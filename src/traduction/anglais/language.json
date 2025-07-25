@@ -853,7 +853,13 @@
   "Gestion des geofences": "Geofence management",
   "Ajouter une nouvelle geozone": "Add a new geofence",
   "Modifier une geozone": "Edit a geofence",
-  "Supprimer une geozone": "Delete a geofence"
+  "Supprimer une geozone": "Delete a geofence",
+
+
+"succès": "succès",
+"échec": "failed",
+"Échec": "Failed"
+
 
 
 

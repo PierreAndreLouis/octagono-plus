@@ -37,7 +37,8 @@ L.Icon.Default.mergeOptions({
 
 function MapComponent({
   mapType,
-
+  fromHistorique,
+  fromRapportGroupe,
   setDocumentationPage,
 }) {
   const {
@@ -354,6 +355,14 @@ function MapComponent({
 
   const [showGeofenceInCartePopup, setShowGeofenceInCartePopup] =
     useState(false);
+
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setShowGeofenceInCarte(true);
+    } else {
+      setShowGeofenceInCarte(false);
+    }
+  }, [currentAccountSelected]);
   const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(false);
 
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -389,7 +398,15 @@ function MapComponent({
       className="relative"
     >
       {selectedVehicle && (
-        <div className="fixed bottom-[4rem] md:bottom-4 right-4 overflow-hidden bg-white p-4 rounded-md shadow-lg max-w-sm z-[1000]">
+        <div
+          className={`bottom-[4rem] lg:bottom-4  ${
+            fromHistorique === "true" ? "bottom-[6rem] lg:bottom-[6rem]" : ""
+          } ${
+            fromRapportGroupe === "true"
+              ? "bottom-[7rem] lg:bottom-[6.2rem]"
+              : ""
+          } fixed   right-4 overflow-hidden bg-white p-4 rounded-md shadow-lg max-w-sm z-[1000]`}
+        >
           <div className="w-[70vw] max-w-[20rem] relative ">
             <div className="absolute z-10 -top-[2.7rem] text-lg -right-2 flex justify-center items-center text-white cursor-pointer w-[2rem] h-[2rem] border border-white  rounded-full ">
               <IoClose
@@ -455,7 +472,7 @@ function MapComponent({
               </p>
             )}
             <p>
-              <strong>{t("Telephone")} :</strong>{" "}
+              <strong>{t("SIM")} :</strong>{" "}
               {selectedVehicle?.simPhoneNumber || `${t("Chargement...")}`}
             </p>
             <p>
@@ -465,7 +482,7 @@ function MapComponent({
                 : `${t("Pas de date disponible")}`}
               <span className="px-3">/</span>
               {FormatDateHeure(selectedVehicle.timestamp)?.time} -{" "}
-              {selectedVehicle.timestamp}
+              {/* {selectedVehicle.timestamp} */}
             </p>
 
             <button
@@ -605,8 +622,8 @@ function MapComponent({
                       point.lng,
                     ])}
                     pathOptions={{
-                      color: geofence?.color || "", // Couleur de la bordure
-                      fillColor: geofence?.color || "#000000", // Couleur du fond
+                      color: geofence?.color || "#067510", // Couleur de la bordure
+                      fillColor: geofence?.color || "#11cc22", // Couleur du fond
                       fillOpacity: 0.1, // Opacité du fond
                       weight: 1, // Épaisseur des lignes
                     }}
@@ -628,13 +645,43 @@ function MapComponent({
               );
             })}
 
-        <MarkerClusterGroup
-          chunkedLoading
-          spiderfyOnMaxZoom={false}
-          showCoverageOnHover={false}
-          maxClusterRadius={50}
-        >
-          {vehicles?.map((véhicule, index) => {
+        {vehicles?.length > 300 ? (
+          <MarkerClusterGroup
+            chunkedLoading
+            spiderfyOnMaxZoom={false}
+            showCoverageOnHover={false}
+            maxClusterRadius={50}
+          >
+            {vehicles?.map((véhicule, index) => {
+              const FormatDateHeureTimestamp = FormatDateHeure(
+                véhicule.timestamp
+              );
+
+              return (
+                <Marker
+                  key={index}
+                  position={[
+                    véhicule.lastValidLatitude || 0,
+                    véhicule.lastValidLongitude || 0,
+                  ]}
+                  icon={L.icon({
+                    iconUrl: getMarkerIcon(véhicule),
+                    iconSize: [25, 35],
+                    iconAnchor: [12, 35],
+                    popupAnchor: [1, -33],
+                    shadowUrl:
+                      "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+                    shadowSize: [1, 1],
+                  })}
+                  eventHandlers={{ click: () => onClickVehicle(véhicule) }}
+                >
+                  {/* <Popup></Popup> */}
+                </Marker>
+              );
+            })}
+          </MarkerClusterGroup>
+        ) : (
+          vehicles?.map((véhicule, index) => {
             const FormatDateHeureTimestamp = FormatDateHeure(
               véhicule.timestamp
             );
@@ -648,26 +695,20 @@ function MapComponent({
                 ]}
                 icon={L.icon({
                   iconUrl: getMarkerIcon(véhicule),
-                  iconSize: [25, 35],
+                  iconSize: [20, 30],
                   iconAnchor: [12, 35],
                   popupAnchor: [1, -33],
-                  // iconSize: [25, 35],
-                  // iconAnchor: [12, 20],
-                  // popupAnchor: [1, -16],
                   shadowUrl:
                     "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
                   shadowSize: [1, 1],
                 })}
-                // eventHandlers={{
-                //   click: () => setSelectedVehicle(véhicule),
-                // }}
                 eventHandlers={{ click: () => onClickVehicle(véhicule) }}
               >
                 {/* <Popup></Popup> */}
               </Marker>
             );
-          })}
-        </MarkerClusterGroup>
+          })
+        )}
 
         {/*  */}
         {/*  */}
