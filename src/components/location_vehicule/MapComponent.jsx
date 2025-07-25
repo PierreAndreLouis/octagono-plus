@@ -23,6 +23,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import SuccèsÉchecMessagePopup from "../../components/Reutilisable/SuccèsÉchecMessagePopup";
+import { TbMapPinPin } from "react-icons/tb";
 // import SuccèsÉchecMessagePopup from "../components/Reutilisable/SuccèsÉchecMessagePopup";
 
 // Configurer les icônes de Leaflet
@@ -388,6 +389,9 @@ function MapComponent({
     updateAppareilsEtGeofencesPourCarte();
   }, [currentAccountSelected]);
 
+  const [isMarkerClusterGroupMode, setisMarkerClusterGroupMode] =
+    useState(true);
+
   let getColor = true;
   return (
     <div
@@ -505,18 +509,35 @@ function MapComponent({
 
       <div
         onClick={() => {
-          setShowGeofenceInCartePopup(true);
+          setShowGeofenceInCarte(!showGeofenceInCarte);
         }}
-        className="border overflow-hidden absolute right-1 top-[14rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+        className="border overflow-hidden absolute right-[1rem] top-[14rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
       >
         <div className="relative">
           <IoEarth
             className={`${
-              !showGeofenceInCarte ? "text-green-500" : "text-orange-500"
+              showGeofenceInCarte ? "text-green-500" : "text-orange-500"
             } text-2xl `}
           />
         </div>
       </div>
+
+      {!selectedVehicleToShowInMap && (
+        <div
+          onClick={() => {
+            setisMarkerClusterGroupMode(!isMarkerClusterGroupMode);
+          }}
+          className="border overflow-hidden absolute right-[1rem] top-[19rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+        >
+          <div className="relative">
+            <TbMapPinPin
+              className={`${
+                isMarkerClusterGroupMode ? "text-green-500" : "text-orange-500"
+              } text-2xl `}
+            />
+          </div>
+        </div>
+      )}
 
       {showGeofenceInCartePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
@@ -645,7 +666,7 @@ function MapComponent({
               );
             })}
 
-        {vehicles?.length > 300 ? (
+        {isMarkerClusterGroupMode ? (
           <MarkerClusterGroup
             chunkedLoading
             spiderfyOnMaxZoom={false}

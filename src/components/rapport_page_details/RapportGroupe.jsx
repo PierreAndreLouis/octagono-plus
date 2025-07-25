@@ -4214,14 +4214,14 @@ function RapportGroupe({
             ) : (
               <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
                 <button
-                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[99] top-[4rem] right-[0.3rem]"
+                  className="absolute shadow-lg shadow-white rounded-full z-[99] top-[45%] right-[50%] translate-x-[50%]"
                   onClick={() => {
                     setzoomPosition(true);
                     setSelectedVehicleToShowInMap(null);
                   }}
                 >
-                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-                    <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
+                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-orange-600 shadow-xl">
+                    <MdOutlineFullscreen className="text-white -500 text-[2rem]" />
                   </div>
                 </button>
                 <div className=" -translate-y-[10rem]">

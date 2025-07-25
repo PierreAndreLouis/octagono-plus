@@ -338,7 +338,7 @@ const AjouterGeofence = ({
               placeholder={`${t("Description de la zone")}`}
               value={zoneDescription}
               onChange={(e) => setZoneDescription(e.target.value)}
-              className="px-4 rounded-lg py-1 focus-within:outline-none border border-gray-800 max-w-[10rem]"
+              className="px-4 rounded-md py-[.23rem] focus-within:outline-none border border-gray-800 max-w-[10rem]"
             />
           </div>
           <div className="flex items-end- flex-col gap-1 ">
@@ -349,7 +349,7 @@ const AjouterGeofence = ({
                 value={polygonColor}
                 onChange={(e) => setPolygonColor(e.target.value)}
                 title={`${t("Choisir une couleur")}`}
-                className="scale-150- -translate-y-1  h-[2.3rem] rounded-lg cursor-pointer"
+                className="scale-150- -translate-y-[.18rem]  h-[2.3rem] rounded-lg cursor-pointer"
               />
             </div>
           </div>
@@ -410,13 +410,11 @@ const AjouterGeofence = ({
                 eventHandlers={{ dragend: handleDragEnd(index) }}
               >
                 <Popup>
-                  <div>
-                    <p>
+                  <div className="">
+                    <i className="font-bold">
                       {t("Marqueur")} {index + 1}
-                      <br />
-                      {/* {t("Coordonnées")} : {pos[0].toFixed(5)},{" "}
-                      {pos[1].toFixed(5)} */}
-                    </p>
+                    </i>
+                    <br />
                     <button
                       onClick={(e) => {
                         e.preventDefault();
@@ -425,7 +423,7 @@ const AjouterGeofence = ({
                           prev.filter((_, i) => i !== index)
                         );
                       }}
-                      className=" px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+                      className=" px-3 mt-2 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
                     >
                       {t("Supprimer")}
                     </button>
