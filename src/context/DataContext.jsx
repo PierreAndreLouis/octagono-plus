@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "25/07/2025 _ 1";
+  let versionApplication = "26/07/2025 _ 1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1435,11 +1435,7 @@ const DataContextProvider = ({ children }) => {
 
         resetInteraction(account, username, password, fromLoginFronction);
 
-        // if (window.location.hostname !== "localhost" || sendConnectionMail) {
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
-          // Exécuter la fonction seulement si ce n'est pas localhost
-          sendConfirmConnexionMail(account, username, country);
-          // sendConfirmConnexionMail2(account, username, country);
           sendGMailConfirmation(account, username, country);
         }
       } else if (result === "error") {
@@ -5402,104 +5398,6 @@ const DataContextProvider = ({ children }) => {
   };
   //
 
-  function sendConfirmConnexionMail(account, user, country) {
-    // if (e) e.preventDefault(); // Empêche le rechargement de la page
-
-    // setLoading(true); // Active le mode chargement
-
-    const serviceID = "service_1fuirwo";
-    const templateID = "template_1ohyj6l";
-    const publicKey = "1c_u66zneOqI3RQi0"; // Clé publique
-
-    const accountConnected = account || localStorage.getItem("account") || "";
-    const now = new Date();
-    const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
-    const heureActuel = now.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }); // Format: HH:MM AM/PM
-
-    // Récupérer l'adresse IP publique
-    fetch("https://api4.ipify.org?format=json")
-      .then((response) => response.json())
-      .then((data) => {
-        const ipClient = data.ip; // Adresse IP du client
-
-        // Mise à jour des params avec toutes les informations demandées
-        const params = {
-          userAccount: accountConnected + " Pays: " + country,
-          userName: user || "Utilisateur inconnu", // Si user n'est pas fourni
-          date: dateAujourdhui,
-          heure: heureActuel,
-          adresseIp: ipClient,
-          country: country,
-        };
-
-        emailjs.init(publicKey);
-
-        emailjs
-          .send(serviceID, templateID, params)
-          .then((res) => {
-            console.log(res);
-            console.log("Envoi du mail de connexion avec succès");
-          })
-          .catch((err) => {
-            console.log(err);
-            console.log(
-              "Erreur lors de l'envoi du message. Veuillez réessayer."
-            );
-          })
-          .finally(() => {
-            console.log("Envoi du mail de connexion terminé");
-          });
-      })
-      .catch((error) => {
-        console.error(
-          "Erreur lors de la récupération de l'adresse IP :",
-          error
-        );
-      });
-  }
-
-  function sendConfirmConnexionMail2(account, user, country) {
-    const serviceID = "service_vsuzpsx";
-    const templateID = "template_e11xt3v";
-    const publicKey = "Y4DfcLA5moa5C1k6K"; // Clé publique
-
-    // Obtenir la date et l'heure actuelles
-    const now = new Date();
-    const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
-    const hereActurel = now.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }); // Format: HH:MM AM/PM
-
-    // Exemple de client connecté (vous pouvez récupérer cette valeur dynamiquement)
-    const accountConnected = account || localStorage.getItem("account") || "";
-
-    const params = {
-      message: `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${country}`,
-    };
-
-    emailjs.init(publicKey);
-
-    emailjs
-      .send(serviceID, templateID, params)
-      .then((res) => {
-        console.log(res);
-        // alert("Votre message a été envoyé avec succès !");
-      })
-      .catch((err) => {
-        console.log(err);
-        // alert("Erreur lors de l'envoi du message. Veuillez réessayer.");
-      })
-      .finally(() => {
-        // setLoading(false); // Désactive le mode chargement après l'envoi
-      });
-  }
-
   x;
   //
   //
@@ -8402,16 +8300,6 @@ const DataContextProvider = ({ children }) => {
 
     if (window.location.hostname !== "localhost") {
       // Exécuter la fonction seulement si ce n'est pas localhost
-      sendConfirmConnexionMail(
-        account,
-        username || storedUserName,
-        localStorage.getItem("currentCountry")
-      );
-      // sendConfirmConnexionMail2(
-      //   account,
-      //   username || storedUserName,
-      //   localStorage.getItem("currentCountry")
-      // );
       sendGMailConfirmation(
         account,
         username || storedUserName,
@@ -8554,11 +8442,11 @@ const DataContextProvider = ({ children }) => {
       hour12: true,
     }); // Format: HH:MM AM/PM
     //
-    fetch("http://localhost:3001/send-email", {
+    fetch("https://octagono-plus-email-server.onrender.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        to: "webdeveloper3030@gmail.com",
+        to: ["webdeveloper3030@gmail.com", "jfstjoy@gmail.com"],
         subject: `Connexion Reussi de ${accountConnected} / ${user}`,
         text: `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${
           country === "ht" ? "Haiti" : "Republique dominicaine"
@@ -8576,6 +8464,14 @@ const DataContextProvider = ({ children }) => {
     }`;
     console.log("message envoyer:", message);
   };
+
+  useEffect(() => {
+    document.documentElement.style.overflow =
+      documentationPage === "Localisation_devices" ||
+      documentationPage === "Trajet_appareil"
+        ? "hidden"
+        : "auto";
+  }, [documentationPage]);
 
   // backToPagePrecedent
   return (

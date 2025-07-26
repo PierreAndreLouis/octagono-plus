@@ -440,6 +440,24 @@ function TrajetVehicule({
     return null;
   };
 
+  // useEffect(() => {
+  //   if (mapRef.current) {
+  //     const coordinates = [
+  //       { lat: 17.79297219635383, lng: -74.46607937065865 },
+  //       { lat: 19.81964982383767, lng: -74.57589816742004 },
+  //       { lat: 20.180774787037656, lng: -70.42474764983946 },
+  //       { lat: 17.83656772376724, lng: -70.14165652823564 },
+  //     ];
+
+  //     const avgLat =
+  //       coordinates.reduce((sum, c) => sum + c.lat, 0) / coordinates.length;
+  //     const avgLng =
+  //       coordinates.reduce((sum, c) => sum + c.lng, 0) / coordinates.length;
+
+  //     mapRef.current.setView([avgLat, avgLng], 7);
+  //   }
+  // }, []);
+
   return (
     <div>
       <div className="relative">

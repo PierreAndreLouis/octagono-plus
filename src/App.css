@@ -3,6 +3,9 @@
     display: none;
   }
 }
+/* html {
+  overflow: hidden;
+} */
 
 @media (max-width: 325px) {
   #date-icon {

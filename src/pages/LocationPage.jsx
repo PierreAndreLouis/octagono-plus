@@ -285,7 +285,7 @@ const LocationPage = ({
   const [isAddingNewGeofence, setIsAddingNewGeofence] = useState(false);
 
   return (
-    <div className="relative ">
+    <div className="relative overflow-hidden">
       {/* {!isAddingNewGeofence &&
         (fromDashboard === "true" ? (
           ""

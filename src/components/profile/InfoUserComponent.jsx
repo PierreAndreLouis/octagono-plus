@@ -37,7 +37,7 @@ function InfoUserComponent({
       <div
         onClick={() => {
           console.log("xxxxxxx");
-          // sendGMailConfirmation("Foodforthepoor", "monitoring", "ht");
+          sendGMailConfirmation("Test envoie Email", "Pedro", "ht");
         }}
         className="flex pt-14  justify-center items-center"
       >

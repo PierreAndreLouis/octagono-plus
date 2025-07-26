@@ -1113,7 +1113,7 @@ function DashboardContaintMaintComponant({
     setExpandSection("userGroupe");
   };
   return (
-    <div className="pb-20 md:pb-0">
+    <div className="pb-20 md:pb-0 overflow-hidden">
       {showStatisticDeviceListeDashboard && (
         <div className="fixed px-3-- inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
           <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw] ">

@@ -273,7 +273,7 @@ function ListeDesVehiculesGestion({
       setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
       setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
     }
-  }, [currentAccountSelected, documentationPage]);
+  }, [currentAccountSelected, documentationPage, listeGestionDesVehicules]);
 
   // useEffect(() => {
   //   if (sortedGroups.length > 0) {

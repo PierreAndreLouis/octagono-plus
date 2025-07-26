@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
 
@@ -6,24 +6,30 @@ function VehiculeDetailInformationComponent({
   currentVéhicule,
   setShowVehiculeListe,
 }) {
+  const [t, i18n] = useTranslation();
 
-    const [t, i18n] = useTranslation();
-  
-  const { FormatDateHeure, username } = useContext(DataContext);
+  const { FormatDateHeure, username, currentCountry } = useContext(DataContext);
+
+  const country = currentCountry || localStorage.getItem("currentCountry");
+  let locale = "fr-FR";
+
+  useEffect(() => {
+    if (country === "ht") locale = "fr-FR";
+    else if (country === "rd") locale = "es-ES";
+    else if (country === "en") locale = "en-US";
+  }, [currentCountry]);
+
   const creationDateTime = (creationTime) => {
-    // Convertir le timestamp en millisecondes
     const date = new Date(creationTime * 1000);
 
-    // Extraire les parties de la date en texte clair
-    const formattedDate = date.toLocaleDateString("fr-FR", {
-      weekday: "long", // Jour de la semaine (ex : Lundi)
+    const formattedDate = date.toLocaleDateString(locale, {
+      weekday: "long",
       year: "numeric",
-      month: "long", // Mois en texte (ex : septembre)
+      month: "long",
       day: "numeric",
     });
 
-    // Extraire les parties de l'heure
-    const formattedTime = date.toLocaleTimeString("fr-FR", {
+    const formattedTime = date.toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
@@ -47,11 +53,11 @@ function VehiculeDetailInformationComponent({
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
               {t("Date de creation")}
             </h3>
-            {/* <div className="flex gap-3"> */}
             <p className="pl-3 text-gray-500 dark:text-gray-400">{date}</p>
-            {/* <p className="pl-3-- text-gray-500 dark:text-gray-400">à</p> */}
-            <p className="pl-3 text-gray-500 dark:text-gray-400"> à {time}</p>
-            {/* </div> */}
+            <p className="pl-3 text-gray-500 dark:text-gray-400">
+              {" "}
+              {t("à")} {time}
+            </p>
           </div>
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
@@ -118,8 +124,8 @@ function VehiculeDetailInformationComponent({
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.véhiculeDetails[0]?.speedKPH >= 1
-                ? "En Déplacement"
-                : "En Stationnement" || ""}
+                ? `${t("En Déplacement")}`
+                : `${t("En Stationnement")}` || ""}
             </p>
           </div>
 
