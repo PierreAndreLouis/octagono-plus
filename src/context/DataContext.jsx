@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "26/07/2025 _ 1";
+  let versionApplication = "26/07/2025 _ 2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -8448,7 +8448,7 @@ const DataContextProvider = ({ children }) => {
       body: JSON.stringify({
         to: ["webdeveloper3030@gmail.com", "jfstjoy@gmail.com"],
         subject: `Connexion Reussi de ${accountConnected} / ${user}`,
-        text: `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${
+        text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
           country === "ht" ? "Haiti" : "Republique dominicaine"
         }`,
 
@@ -8459,7 +8459,10 @@ const DataContextProvider = ({ children }) => {
       .then((data) => console.log(data))
       .catch((err) => console.error(err));
 
-    const message = `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${
+    // const message = `Le client ${user} du compte ${accountConnected} s'est connecté le ${dateAujourdhui} à ${hereActurel} en ${
+    //   country === "ht" ? "Haiti" : "Republique dominicaine"
+    // }`;
+    const message = `Le client ${user}\n du compte ${accountConnected}\n s'est connecté le ${dateAujourdhui}\n à ${hereActurel}\n en ${
       country === "ht" ? "Haiti" : "Republique dominicaine"
     }`;
     console.log("message envoyer:", message);
