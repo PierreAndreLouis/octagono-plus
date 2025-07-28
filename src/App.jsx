@@ -548,7 +548,7 @@ function App() {
           readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
         } ${
           !readDocumentationSideBar ? "hidden" : "lg:flex"
-        } transition-all lg:translate-x-0--  --  lg:relative left-0 top-[5rem] lg:p-4 z-[0] min-w-0   lg:min-w-[18rem]  max-w-[17rem]--  min-h-[100vh]`}
+        } transition-all lg:translate-x-0--  --  lg:relative left-0 top-[5rem] lg:p-4 z-[0] min-w-0   lg:min-w-[21rem]   min-h-[100vh]`}
       ></div>
     );
   };
@@ -672,7 +672,7 @@ function App() {
                     : "-translate-x-[100%]"
                 } ${
                   !readDocumentationSideBar ? "hidden" : "lg:flex"
-                } transition-all lg:translate-x-0-- bg-white/0 hidden min-w-[10rem]  lg:relative left-0 top-[5rem] z-[0]`}
+                } transition-all lg:translate-x-0-- bg-white/0 hidden min-w-[11.7rem]  lg:relative left-0 top-[5rem] z-[0]`}
               ></div>
               <div className="w-full h-full flex justify-center items-center">
                 <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />

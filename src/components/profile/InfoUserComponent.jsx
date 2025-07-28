@@ -112,16 +112,16 @@ function InfoUserComponent({
         </div>
         {/* Adresse */}
 
-        <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             {t("Version de l'application")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
             {versionApplication}
           </p>
-        </div>
+        </div> */}
 
-        <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             {t("Redémarrer l'application")} :
           </h3>
@@ -136,7 +136,7 @@ function InfoUserComponent({
           >
             {t("Cliquez ici")}
           </p>
-        </div>
+        </div> */}
       </div>
 
       {/* Boutons d'action */}

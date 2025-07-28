@@ -17,6 +17,7 @@ function Login2() {
     setReadDocumentation,
     setChooseOtherLanguagePopup,
     chooseOtherLanguagePopup,
+    versionApplication,
   } = useContext(DataContext);
   let x;
 
@@ -311,6 +312,11 @@ function Login2() {
             </div>
           </form>
         </div>
+      </div>
+      <div className="flex justify-end pb-4">
+        <p className="mr-6 mt-6 font-semibold ">
+          {t("version")} : {versionApplication}
+        </p>
       </div>
     </div>
   );

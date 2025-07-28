@@ -524,22 +524,24 @@ function ListeDesVehiculesGestion({
           {sortedGroups?.length > 0 ? (
             sortedGroups?.map(([accountID, devices]) => (
               <div key={accountID}>
-                <div
-                  className="flex justify-between text-md items-center border-b border-gray-300 cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
-                  onClick={() => toggleGroup(accountID)}
-                >
-                  <h2>
-                    {t("Liste des appareils de")} :{" "}
-                    <span className="font-semibold">{accountID}</span> (
-                    {devices?.length})
-                  </h2>
-                  <div></div>
-                  {openGroups[accountID] ? (
-                    <FaChevronRight />
-                  ) : (
-                    <FaChevronDown />
-                  )}
-                </div>
+                {!currentAccountSelected && isDashboardHomePage && (
+                  <div
+                    className="flex justify-between text-md items-center border-b border-gray-300 cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
+                    onClick={() => toggleGroup(accountID)}
+                  >
+                    <h2>
+                      {t("Liste des appareils de")} :{" "}
+                      <span className="font-semibold">{accountID}</span> (
+                      {devices?.length})
+                    </h2>
+                    <div></div>
+                    {openGroups[accountID] ? (
+                      <FaChevronRight />
+                    ) : (
+                      <FaChevronDown />
+                    )}
+                  </div>
+                )}
                 {openGroups[accountID] && (
                   <div className="flex flex-col gap-4 mt-6">
                     {devices
@@ -747,7 +749,7 @@ function ListeDesVehiculesGestion({
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
-                                        {typeof "Type d'appareil"} :
+                                        {t("Type d'appareil")} :
                                       </p>
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                         {device?.equipmentType}

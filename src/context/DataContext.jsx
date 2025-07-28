@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "26/07/2025 _ 2";
+  let versionApplication = "1.2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -829,14 +829,7 @@ const DataContextProvider = ({ children }) => {
         // ?
         // : false;
 
-        if (
-          // hasDetails &&
-          // isActive &&
-          speed >= 1 &&
-          updatedRecently
-          // &&
-          // updatedToday
-        ) {
+        if (speed >= 1 && updatedRecently) {
           d.EnDéplacement.push(device);
           idsÀExclure.add(device.deviceID);
         }
@@ -1186,19 +1179,53 @@ const DataContextProvider = ({ children }) => {
 
   const sourceListe = isDashboardHomePage ? véhiculeDetails : vehicleDetails;
 
-  const ListeDesAlertes = sourceListe
-    ?.flatMap(
-      (obj) =>
-        obj.véhiculeDetails?.map((detail) => ({
-          deviceID: obj.deviceID,
-          ...detail,
-        })) ?? []
-    )
-    ?.filter((item) =>
-      currentAccountSelected
-        ? item?.accountID === currentAccountSelected?.accountID
-        : true
-    );
+  const ListeDesAlertes = useMemo(() => {
+    return sourceListe
+      ?.flatMap(
+        (obj) =>
+          obj.véhiculeDetails?.map((detail) => {
+            const speed = parseFloat(detail.speedKPH);
+            const lastUpdateMs = parseInt(detail.timestamp) * 1000;
+            const updatedRecently =
+              currentTimeMs - lastUpdateMs <= tenMinutesInMs;
+
+            if (detail.statusCode === "0xF112") {
+              if (!(speed >= 1 && updatedRecently)) {
+                detail.statusCode = "0xF020";
+              }
+            }
+
+            return {
+              deviceID: obj.deviceID,
+              ...detail,
+            };
+          }) ?? []
+      )
+      ?.filter((item) =>
+        currentAccountSelected
+          ? item?.accountID === currentAccountSelected?.accountID
+          : true
+      );
+  }, [
+    isDashboardHomePage,
+    véhiculeDetails,
+    vehicleDetails,
+    currentAccountSelected,
+  ]);
+
+  // const ListeDesAlertes = sourceListe
+  //   ?.flatMap(
+  //     (obj) =>
+  //       obj.véhiculeDetails?.map((detail) => ({
+  //         deviceID: obj.deviceID,
+  //         ...detail,
+  //       })) ?? []
+  //   )
+  //   ?.filter((item) =>
+  //     currentAccountSelected
+  //       ? item?.accountID === currentAccountSelected?.accountID
+  //       : true
+  //   );
 
   const testAlertListe = véhiculeDetails
     ?.flatMap(
@@ -8430,6 +8457,8 @@ const DataContextProvider = ({ children }) => {
     gestionAccountData,
     mergedDataHome,
     geofenceData,
+    véhiculeHistoriqueDetails,
+    rapportVehicleDetails,
   ]);
 
   const sendGMailConfirmation = (accountConnected, user, country) => {

@@ -10,6 +10,7 @@ import MapComponent from "../location_vehicule/MapComponent";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { LuArrowDownUp } from "react-icons/lu";
 
 function HistoriqueMainComponent({
   loadingHistoriqueFilter,
@@ -47,38 +48,73 @@ function HistoriqueMainComponent({
     }, 200);
   }, [véhiculeHistoriqueDetails]);
 
+  const [isReverseListe, setIsReverseListe] = useState(false);
+
   const filteredVehicles = useMemo(() => {
     if (!véhiculeHistoriqueDetails) return [];
 
-    return véhiculeHistoriqueDetails
-      .filter((véhicule) => {
-        const estValideParCheckbox =
-          (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
-          (appliedCheckboxes.en_ralenti &&
-            véhicule.speedKPH >= 1 &&
-            véhicule.speedKPH <= 20) ||
-          (appliedCheckboxes.en_arret && véhicule.speedKPH < 1);
+    const filtrés = véhiculeHistoriqueDetails.filter((véhicule) => {
+      const estValideParCheckbox =
+        (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
+        (appliedCheckboxes.en_ralenti &&
+          véhicule.speedKPH >= 1 &&
+          véhicule.speedKPH <= 20) ||
+        (appliedCheckboxes.en_arret && véhicule.speedKPH < 1);
 
-        const estValideParCouleur =
-          !filterByColor ||
-          (filterByColor === "mouvement lent" &&
-            véhicule.speedKPH > 0 &&
-            véhicule.speedKPH < 20) ||
-          (filterByColor === "mouvement rapide" && véhicule.speedKPH > 20) ||
-          (filterByColor === "en stationnement" && véhicule.speedKPH <= 0) ||
-          (filterByColor === "all" && véhicule.speedKPH >= -1);
+      const estValideParCouleur =
+        !filterByColor ||
+        (filterByColor === "mouvement lent" &&
+          véhicule.speedKPH > 0 &&
+          véhicule.speedKPH < 20) ||
+        (filterByColor === "mouvement rapide" && véhicule.speedKPH > 20) ||
+        (filterByColor === "en stationnement" && véhicule.speedKPH <= 0) ||
+        (filterByColor === "all" && véhicule.speedKPH >= -1);
 
-        return filterByColor === null
-          ? estValideParCheckbox
-          : estValideParCouleur;
-      })
-      .reverse();
+      return filterByColor === null
+        ? estValideParCheckbox
+        : estValideParCouleur;
+    });
+
+    return isReverseListe ? filtrés.reverse() : filtrés;
   }, [
     véhiculeHistoriqueDetails,
     appliedCheckboxes,
     filterByColor,
-    appliedCheckboxes,
+    isReverseListe,
   ]);
+
+  // const filteredVehicles = useMemo(() => {
+  //   if (!véhiculeHistoriqueDetails) return [];
+
+  //   return véhiculeHistoriqueDetails
+  //     .filter((véhicule) => {
+  //       const estValideParCheckbox =
+  //         (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
+  //         (appliedCheckboxes.en_ralenti &&
+  //           véhicule.speedKPH >= 1 &&
+  //           véhicule.speedKPH <= 20) ||
+  //         (appliedCheckboxes.en_arret && véhicule.speedKPH < 1);
+
+  //       const estValideParCouleur =
+  //         !filterByColor ||
+  //         (filterByColor === "mouvement lent" &&
+  //           véhicule.speedKPH > 0 &&
+  //           véhicule.speedKPH < 20) ||
+  //         (filterByColor === "mouvement rapide" && véhicule.speedKPH > 20) ||
+  //         (filterByColor === "en stationnement" && véhicule.speedKPH <= 0) ||
+  //         (filterByColor === "all" && véhicule.speedKPH >= -1);
+
+  //       return filterByColor === null
+  //         ? estValideParCheckbox
+  //         : estValideParCouleur;
+  //     })
+  //     .reverse();
+  // }, [
+  //   véhiculeHistoriqueDetails,
+  //   appliedCheckboxes,
+  //   filterByColor,
+  //   appliedCheckboxes,
+  // ]);
 
   const nombreDeRésultatParClique = 10;
 
@@ -111,15 +147,27 @@ function HistoriqueMainComponent({
               </button>
 
               <div className=" -translate-y-[10rem] mt-[6rem]">
-                <MapComponent mapType={mapType} fromHistorique = "true"/>
+                <MapComponent mapType={mapType} fromHistorique="true" />
               </div>
             </div>
           </div>
         )}
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
-          <h2 className="text-xl md:text-4xl md:mb-4 text-orange-600 mt-8">
-            {t("Historique")}{" "}
-          </h2>
+          <div className="flex gap-3 justify-center items-center md:mb-4 mt-8">
+            <h2 className="text-xl md:text-4xl  text-orange-600 ">
+              {t("Historique")}{" "}
+            </h2>
+            {filteredVehiclesPagination?.length > 0 && (
+              <p
+                onClick={() => {
+                  setIsReverseListe(!isReverseListe);
+                }}
+                className="text-lg  cursor-pointer"
+              >
+                <LuArrowDownUp className="text-[1.8rem]  mt-2" />
+              </p>
+            )}
+          </div>
           <h2 className="text-gray-800 notranslate mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
             {currentVéhicule?.description ||
               `${t("Pas de véhicule sélectionné")}`}
@@ -187,7 +235,8 @@ function HistoriqueMainComponent({
                 filteredVehiclesPagination.map((véhicule, reversedIndex) => {
                   const index =
                     filteredVehiclesPagination.length - 1 - reversedIndex; // Calculer l'index original
-                  const numero = filteredVehiclesPagination.length - index;
+                  const numero = filteredVehiclesPagination?.length - index;
+                  const numero2 = filteredVehicles?.length;
 
                   const speed = véhicule.speedKPH || 0;
 
@@ -277,7 +326,7 @@ function HistoriqueMainComponent({
                         <div
                           className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
                         >
-                          {numero}
+                          {isReverseListe ? numero2 : numero}
                         </div>
                         <div className="flex relative gap-3 md:py-4--">
                           <div className="flex  flex-col items-center md:min-w-32">

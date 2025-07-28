@@ -126,6 +126,7 @@ function SideBarSysadmin({
     backToPagePrecedent,
     setIsEditingGeofence,
     setCurrentGeozone,
+    versionApplication,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -549,7 +550,7 @@ function SideBarSysadmin({
         readDocumentationSideBar || showSideBar2
           ? "translate-x-0"
           : "-translate-x-[100%]"
-      }  transition-all lg:translate-x-0-- bg-white fixed    left-0 top-[3rem] p-4 pt-3 z-[9] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] md:max-w-[18rem] min-h-[100vh]`}
+      }  transition-all lg:translate-x-0-- bg-white fixed    left-0 top-[3rem] p-4 pt-3  z-[9] shadow-lg lg:shadow-none shadow-black/20   w-[100vw] md:max-w-[21rem] min-h-[100vh]`}
     >
       <IoClose
         onClick={() => {
@@ -617,7 +618,7 @@ function SideBarSysadmin({
         onClick={() => {
           scrollToTop();
         }}
-        className="h-[105vh] pb-52 mt-5 font-semibold-- flex flex-col overflow-auto"
+        className="h-[105vh] pb-[20rem] mt-5 font-semibold-- flex flex-col overflow-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {/* Debut */}
@@ -802,475 +803,472 @@ function SideBarSysadmin({
         {/*  */}
         {/*  */}
         {/*  */}
-        {!readDocumentation ? (
-          <div>
-            {/*  */}
-            {/*  */}
-            {/*admi_ Dashboard */}
-            {account && username && adminAccount === "sysadmin" && (
-              <Link
-                to="/Dashboard"
-                className="ajouter-appareil-container transition-all hover:border-b  "
-              >
-                <div
-                  onClick={() => {
-                    setIsDashboardHomePage(!isDashboardHomePage);
-                    scrollToTop();
-                    setDocumentationPage("Dashboard");
-                    closeSideBar();
-                    setShowSideBar2(false);
-                  }}
-                  className={`${
-                    documentationPage === "Admin_Dashboard"
-                      ? "bg-orange-50"
-                      : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                >
-                  {isDashboardHomePage ? (
-                    <FaUserCircle className="text-xl min-w-[1.5rem] text-orange-600" />
-                  ) : (
-                    <MdOutlineSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
-                  )}
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      {isDashboardHomePage
-                        ? t("Mode Utilisateur")
-                        : t("sysadmin Dashboard")}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Gestion_des_comptes */}
-
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Gestion_des_utilisateurs */}
-            {isDashboardHomePage && (
-              <Link
-                to="/Gestion_des_utilisateurs"
-                className="ajouter-appareil-container transition-all hover:border-b  "
-              >
-                <div
-                  onClick={() => {
-                    if (currentAccountSelected) {
-                      setListeGestionDesUsers(
-                        currentAccountSelected?.accountUsers
-                      );
-                    } else {
-                      setListeGestionDesUsers(accountUsers);
-                    }
-                    scrollToTop();
-                    setDocumentationPage("Gestion_des_utilisateurs");
-                    closeSideBar();
-                    setShowSideBar2(false);
-                  }}
-                  className={`${
-                    documentationPage === "Gestion_des_utilisateurs"
-                      ? "bg-orange-50"
-                      : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                >
-                  <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      {t("Gestion des Utilisateurs")} (
-                      {currentAccountSelected
-                        ? currentAccountSelected?.accountUsers?.length
-                        : accountUsers?.length}
-                      )
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Gestion_des_groupes */}
-            {isDashboardHomePage && (
-              <Link
-                to="/Gestion_des_groupes"
-                className="ajouter-appareil-container transition-all hover:border-b  "
-              >
-                <div
-                  onClick={() => {
-                    if (currentAccountSelected) {
-                      setListeGestionDesGroupe(
-                        currentAccountSelected?.accountGroupes
-                      );
-
-                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                    } else {
-                      setListeGestionDesGroupe(accountGroupes);
-
-                      setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                    }
-                    scrollToTop();
-                    setDocumentationPage("Gestion_des_groupes");
-                    closeSideBar();
-                    setShowSideBar2(false);
-                  }}
-                  className={`${
-                    documentationPage === "Gestion_des_groupes"
-                      ? "bg-orange-50"
-                      : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                >
-                  <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      {t("Gestion des Groupe")} (
-                      {currentAccountSelected
-                        ? currentAccountSelected?.accountGroupes?.length
-                        : accountGroupes?.length}
-                      )
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Gestion_des_appareils */}
+        <div>
+          {/*  */}
+          {/*  */}
+          {/*admi_ Dashboard */}
+          {account && username && adminAccount === "sysadmin" && (
             <Link
-              to="/Gestion_des_appareils"
+              to="/Dashboard"
               className="ajouter-appareil-container transition-all hover:border-b  "
             >
               <div
                 onClick={() => {
-                  setFilteredColorCategorieListe(null);
-                  setDocumentationPage("Gestion_des_appareils");
+                  setIsDashboardHomePage(!isDashboardHomePage);
                   scrollToTop();
+                  setDocumentationPage("Dashboard");
                   closeSideBar();
                   setShowSideBar2(false);
-
-                  if (currentAccountSelected && isDashboardHomePage) {
-                    setListeGestionDesVehicules(
-                      currentAccountSelected?.accountDevices
-                    );
-                  } else if (!currentAccountSelected && isDashboardHomePage) {
-                    setListeGestionDesVehicules(accountDevices);
-                  } else if (!isDashboardHomePage) {
-                    setListeGestionDesVehicules(dataFusionné);
-                  }
                 }}
                 className={`${
-                  documentationPage === "Gestion_des_appareils"
-                    ? "bg-orange-50"
-                    : ""
+                  documentationPage === "Admin_Dashboard" ? "bg-orange-50" : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <FaCar className="text-xl min-w-[1.5rem] text-orange-600" />
+                {isDashboardHomePage ? (
+                  <FaUserCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+                ) : (
+                  <MdOutlineSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
+                )}
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
-                    {t("Gestion des Appareils")} (
                     {isDashboardHomePage
-                      ? currentAccountSelected
-                        ? currentAccountSelected?.accountDevices?.length
-                        : accountDevices?.length
-                      : dataFusionné?.length}
-                    )
+                      ? t("Mode Utilisateur")
+                      : t("sysadmin Dashboard")}
                   </p>
                 </div>
               </div>
             </Link>
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
+          )}
 
-            {/* Gestion_des_roles */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
 
-            {isDashboardHomePage && (
-              <Link
-                to="/Gestion_des_roles"
-                className="ajouter-appareil-container transition-all hover:border-b  "
-              >
-                <div
-                  onClick={() => {
-                    scrollToTop();
-                    setDocumentationPage("Gestion_des_roles");
-                    closeSideBar();
-                    setShowSideBar2(false);
-                  }}
-                  className={`${
-                    documentationPage === "Gestion_des_roles"
-                      ? "bg-orange-50"
-                      : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                >
-                  <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      {t("Gestion des Roles")}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
+          {/*  */}
+          <Link
+            to="/Localisation_devices"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                setSelectedVehicleToShowInMap(null);
 
-            {/*  */}
+                if (currentAccountSelected) {
+                  setListeGestionDesVehicules(
+                    currentAccountSelected?.accountDevices
+                  );
+                } else {
+                  setListeGestionDesVehicules(accountDevices);
+                }
+                updateAppareilsEtGeofencesPourCarte();
+                scrollToTop();
+                setDocumentationPage("Localisation_devices");
+                setAjouterGeofencePopup(false);
+                closeSideBar();
+                setShowSideBar2(false);
+              }}
+              className={`${
+                documentationPage === "Localisation_devices"
+                  ? "bg-orange-50"
+                  : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <MdLocationPin className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Localisation Appareils")} (
+                  {
+                    (isDashboardHomePage
+                      ? currentAccountSelected
+                        ? currentAccountSelected?.accountDevices
+                        : accountDevices
+                      : dataFusionné
+                    )?.filter(
+                      (v) =>
+                        v.lastValidLatitude !== "0.0" &&
+                        v.lastValidLongitude !== "0.0" &&
+                        v.lastValidLatitude !== "" &&
+                        v.lastValidLongitude !== ""
+                    )?.length
+                  }
+                  )
+                </p>
+              </div>
+            </div>
+          </Link>
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Gestion_des_comptes */}
 
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Gestion_des_utilisateurs */}
+          {isDashboardHomePage && (
             <Link
-              to="/Gestion_geofences"
+              to="/Gestion_des_utilisateurs"
               className="ajouter-appareil-container transition-all hover:border-b  "
             >
               <div
                 onClick={() => {
                   if (currentAccountSelected) {
-                    setListeGestionDesGeofences(
-                      currentAccountSelected?.accountGeofences
+                    setListeGestionDesUsers(
+                      currentAccountSelected?.accountUsers
                     );
                   } else {
-                    setListeGestionDesGeofences(accountGeofences);
+                    setListeGestionDesUsers(accountUsers);
                   }
                   scrollToTop();
-                  setDocumentationPage("Gestion_geofences");
+                  setDocumentationPage("Gestion_des_utilisateurs");
                   closeSideBar();
                   setShowSideBar2(false);
                 }}
                 className={`${
-                  documentationPage === "Gestion_geofences"
+                  documentationPage === "Gestion_des_utilisateurs"
                     ? "bg-orange-50"
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
+                <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
-                    {t("Gestion des Geofences")} (
-                    {isDashboardHomePage
-                      ? currentAccountSelected
-                        ? currentAccountSelected?.accountGeofences?.length
-                        : accountGeofences?.length
-                      : geofenceData?.length}
+                    {t("Gestion des Utilisateurs")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountUsers?.length
+                      : accountUsers?.length}
                     )
                   </p>
                 </div>
               </div>
             </Link>
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Historique_appareil */}
-            {/* {!isDashboardHomePage && ( */}
+          )}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Gestion_des_groupes */}
+          {isDashboardHomePage && (
             <Link
-              to="/Historique_appareil"
+              to="/Gestion_des_groupes"
               className="ajouter-appareil-container transition-all hover:border-b  "
             >
               <div
                 onClick={() => {
-                  setShowHistoriqueInMap(false);
-                  scrollToTop();
-                  setDocumentationPage("Historique_appareil");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                }}
-                className={`${
-                  documentationPage === "Historique_appareil"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <IoStatsChartSharp className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {t("Historique d'un Appareils")}
-                  </p>
-                </div>
-              </div>
-            </Link>
-            {/* )} */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Trajet_appareil */}
-            {/* {!isDashboardHomePage && ( */}
-            <Link
-              to="/Trajet_appareil"
-              className="ajouter-appareil-container transition-all hover:border-b  "
-            >
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setShowHistoriqueInMap(true);
-                  setDocumentationPage("Trajet_appareil");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                }}
-                className={`${
-                  documentationPage === "Trajet_appareil" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <GiPathDistance className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {t("Trajet d'un Appareils")}
-                  </p>
-                </div>
-              </div>
-            </Link>
-            {/* )} */}
-            {/*  */}
-            {/* Rapport_unite */}
-            {(!isDashboardHomePage || currentAccountSelected) && (
-              <Link
-                to="/Rapport_unite"
-                className="ajouter-appareil-container transition-all hover:border-b  "
-              >
-                <div
-                  onClick={() => {
-                    scrollToTop();
-                    setDocumentationPage("Rapport_unite");
-                    closeSideBar();
-                    setShowSideBar2(false);
-                  }}
-                  className={`${
-                    documentationPage === "Rapport_unite" ? "bg-orange-50" : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                >
-                  <MdOutlineStickyNote2 className="text-xl min-w-[1.5rem] text-orange-600" />
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      {t("Rapport")}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
-
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-
-            {/*  */}
-            <Link
-              to="/Localisation_devices"
-              className="ajouter-appareil-container transition-all hover:border-b  "
-            >
-              <div
-                onClick={() => {
-                  setSelectedVehicleToShowInMap(null);
-
                   if (currentAccountSelected) {
-                    setListeGestionDesVehicules(
-                      currentAccountSelected?.accountDevices
+                    setListeGestionDesGroupe(
+                      currentAccountSelected?.accountGroupes
                     );
+
+                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                   } else {
-                    setListeGestionDesVehicules(accountDevices);
+                    setListeGestionDesGroupe(accountGroupes);
+
+                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
                   }
-                  updateAppareilsEtGeofencesPourCarte();
                   scrollToTop();
-                  setDocumentationPage("Localisation_devices");
-                  setAjouterGeofencePopup(false);
+                  setDocumentationPage("Gestion_des_groupes");
                   closeSideBar();
                   setShowSideBar2(false);
                 }}
                 className={`${
-                  documentationPage === "Localisation_devices"
+                  documentationPage === "Gestion_des_groupes"
                     ? "bg-orange-50"
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <MdLocationPin className="text-xl min-w-[1.5rem] text-orange-600" />
+                <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
-                    {t("Localisation Appareils")} (
-                    {
-                      (isDashboardHomePage
-                        ? currentAccountSelected
-                          ? currentAccountSelected?.accountDevices
-                          : accountDevices
-                        : dataFusionné
-                      )?.filter(
-                        (v) =>
-                          v.lastValidLatitude !== "0.0" &&
-                          v.lastValidLongitude !== "0.0" &&
-                          v.lastValidLatitude !== "" &&
-                          v.lastValidLongitude !== ""
-                      )?.length
-                    }
+                    {t("Gestion des Groupe")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountGroupes?.length
+                      : accountGroupes?.length}
                     )
                   </p>
                 </div>
               </div>
             </Link>
-            {/*  */}
-            {/* Info_appareil */}
-            {/* {!isDashboardHomePage && ( */}
+          )}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
+          {/* Gestion_des_roles */}
+
+          {isDashboardHomePage && (
             <Link
-              to="/Info_appareil"
+              to="/Gestion_des_roles"
               className="ajouter-appareil-container transition-all hover:border-b  "
             >
               <div
                 onClick={() => {
                   scrollToTop();
-                  setDocumentationPage("Info_appareil");
+                  setDocumentationPage("Gestion_des_roles");
                   closeSideBar();
                   setShowSideBar2(false);
                 }}
                 className={`${
-                  documentationPage === "Info_appareil" ? "bg-orange-50" : ""
+                  documentationPage === "Gestion_des_roles"
+                    ? "bg-orange-50"
+                    : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <FaInfoCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+                <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
-                    {t("Informations sur un Appareils")}
+                    {t("Gestion des Roles")}
                   </p>
                 </div>
               </div>
             </Link>
-            {/* )} */}
-            {/* setReadDocumentation(false); */}
-            {/*  */}
-            {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
+          )}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Historique_appareil */}
+          {/* {!isDashboardHomePage && ( */}
+          <Link
+            to="/Historique_appareil"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                setShowHistoriqueInMap(false);
+                scrollToTop();
+                setDocumentationPage("Historique_appareil");
+                closeSideBar();
+                setShowSideBar2(false);
+              }}
+              className={`${
+                documentationPage === "Historique_appareil"
+                  ? "bg-orange-50"
+                  : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <IoStatsChartSharp className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Historique d'un Appareils")}
+                </p>
+              </div>
+            </div>
+          </Link>
+          {/* )} */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Trajet_appareil */}
+          {/* {!isDashboardHomePage && ( */}
+          <Link
+            to="/Trajet_appareil"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                scrollToTop();
+                setShowHistoriqueInMap(true);
+                setDocumentationPage("Trajet_appareil");
+                closeSideBar();
+                setShowSideBar2(false);
+              }}
+              className={`${
+                documentationPage === "Trajet_appareil" ? "bg-orange-50" : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <GiPathDistance className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Trajet d'un Appareils")}
+                </p>
+              </div>
+            </div>
+          </Link>
+          {/* )} */}
+          {/*  */}
+          {/* Rapport_unite */}
+          {(!isDashboardHomePage || currentAccountSelected) && (
+            <Link
+              to="/Rapport_unite"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
+              <div
+                onClick={() => {
+                  scrollToTop();
+                  setDocumentationPage("Rapport_unite");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                }}
+                className={`${
+                  documentationPage === "Rapport_unite" ? "bg-orange-50" : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <MdOutlineStickyNote2 className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">{t("Rapport")}</p>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Gestion_des_appareils */}
+          <Link
+            to="/Gestion_des_appareils"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                setFilteredColorCategorieListe(null);
+                setDocumentationPage("Gestion_des_appareils");
+                scrollToTop();
+                closeSideBar();
+                setShowSideBar2(false);
+
+                if (currentAccountSelected && isDashboardHomePage) {
+                  setListeGestionDesVehicules(
+                    currentAccountSelected?.accountDevices
+                  );
+                } else if (!currentAccountSelected && isDashboardHomePage) {
+                  setListeGestionDesVehicules(accountDevices);
+                } else if (!isDashboardHomePage) {
+                  setListeGestionDesVehicules(dataFusionné);
+                }
+              }}
+              className={`${
+                documentationPage === "Gestion_des_appareils"
+                  ? "bg-orange-50"
+                  : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <FaCar className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Gestion des Appareils")} (
+                  {isDashboardHomePage
+                    ? currentAccountSelected
+                      ? currentAccountSelected?.accountDevices?.length
+                      : accountDevices?.length
+                    : dataFusionné?.length}
+                  )
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
+          <Link
+            to="/Gestion_geofences"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                if (currentAccountSelected) {
+                  setListeGestionDesGeofences(
+                    currentAccountSelected?.accountGeofences
+                  );
+                } else {
+                  setListeGestionDesGeofences(accountGeofences);
+                }
+                scrollToTop();
+                setDocumentationPage("Gestion_geofences");
+                closeSideBar();
+                setShowSideBar2(false);
+              }}
+              className={`${
+                documentationPage === "Gestion_geofences" ? "bg-orange-50" : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Gestion des Geofences")} (
+                  {isDashboardHomePage
+                    ? currentAccountSelected
+                      ? currentAccountSelected?.accountGeofences?.length
+                      : accountGeofences?.length
+                    : geofenceData?.length}
+                  )
+                </p>
+              </div>
+            </div>
+          </Link>
+          {/*  */}
+
+          {/*  */}
+          {/* Info_appareil */}
+          {/* {!isDashboardHomePage && ( */}
+          <Link
+            to="/Info_appareil"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                scrollToTop();
+                setDocumentationPage("Info_appareil");
+                closeSideBar();
+                setShowSideBar2(false);
+              }}
+              className={`${
+                documentationPage === "Info_appareil" ? "bg-orange-50" : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <FaInfoCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Informations sur un Appareils")}
+                </p>
+              </div>
+            </div>
+          </Link>
+          {/* )} */}
+          {/* setReadDocumentation(false); */}
+          {/*  */}
+          {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
               <div
                 onClick={() => {
                   closeSideBar();
@@ -1291,764 +1289,57 @@ function SideBarSysadmin({
                 </div>
               </div>
             </div> */}
-            {/*  */}
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  closeSideBar();
-                  setShowSideBar2(false);
-                  setChooseOtherLanguagePopup(true);
-                }}
-                className={`${
-                  documentationPage === "installation" ? "bg-orange-50" : ""
-                } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <MdGTranslate className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 text-[1rem] font-semibold">
-                    {t("Language")}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <InstallationPWA />
-
-            <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  closeSideBar();
-                  setShowSideBar2(false);
-
-                  setLogOutPopup(true);
-                }}
-                className={`${
-                  documentationPage === "" ? "bg-orange-50" : ""
-                } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <MdLogout className="text-xl min-w-[1.5rem] text-red-500" />
-                <div className="flex w-full justify-between">
-                  <p className="text-red-600 text-[1rem] font-semibold">
-                    {t("Déconnexion")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div
-            onClick={() => {
-              scrollToTop();
-              closeSideBar();
-              setShowSideBar2(false);
-            }}
-          >
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("installation");
-                }}
-                className={`${
-                  documentationPage === "installation" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <MdInstallDesktop className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">Installation</p>
-
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "installation"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "installation"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(installation_sur_application_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Installation directement sur l'application
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(installation_sur_chrome_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Installation avec Google Chrome
-                  </p>
-                </div>
-              </div>
-            </div>
-
+          {/*  */}
+          <div className="ajouter-appareil-container transition-all hover:border-b  ">
             <div
               onClick={() => {
-                scrollToTop();
-
-                setDocumentationPage("connecter");
+                closeSideBar();
+                setShowSideBar2(false);
+                setChooseOtherLanguagePopup(true);
               }}
               className={`${
-                documentationPage === "connecter" ? "bg-orange-50" : ""
-              } flex items-center-- gap-4 border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
+                documentationPage === "installation" ? "bg-orange-50" : ""
+              } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
             >
-              <IoMdLogIn className="text-2xl min-w-[1.5rem] text-orange-600" />
-              <p className="font-semibold text-gray-700">Se connecter</p>
-            </div>
-
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("gestionAppareil");
-                }}
-                className={`${
-                  documentationPage === "gestionAppareil" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <IoCarSportOutline className="text-2xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Gestion des appareils
-                  </p>
-
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "gestionAppareil"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "gestionAppareil"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(ajouter_nouveau_appareil_section_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Ajouter un nouvel appareil
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(modidier_appareil_section_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Modifier un appareil
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(supprimer_appareil_section_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Supprimer un appareil
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Fin */}
-
-            {/*  */}
-
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("positionAppareil");
-                }}
-                className={`${
-                  documentationPage === "positionAppareil" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <LuMapPin className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Position d'un véhicule
-                  </p>
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "positionAppareil"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "positionAppareil"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(voir_position_appareil_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Voir la position d'un véhicule{" "}
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(position_choisir_autre_appareil_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Choisir un autre appareil
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(position_voir_tous_appareil_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Voir tous les autres appareils
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(position_type_de_vue_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Modifier la vue de la carte
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Fin */}
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("trajetAppareil");
-                }}
-                className={`${
-                  documentationPage === "trajetAppareil" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <GiPathDistance className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Trajet d'un véhicule
-                  </p>
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "trajetAppareil"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "trajetAppareil"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(voir_trajet_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Voir le trajet d'un véhicule
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(trajet_recentrer_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Recentrer la carte
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(trajet_choix_autre_appareil_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Choisir un autre appareil
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(trajet_type_de_vue_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Modifier la vue de la carte
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(trajet_recherche_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Recherche par intervalle de dates
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(trajet_retracer_trajet_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Retracer le trajet du véhicule
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Fin */}
-
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-
-                  setDocumentationPage("historiqueAppareil");
-                }}
-                className={`${
-                  documentationPage === "historiqueAppareil"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <IoMdStats className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Historique d'un appareil
-                  </p>
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "historiqueAppareil"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "historiqueAppareil"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(voir_historique_appareil_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    {" "}
-                    Voir l'historique de l'appareil
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(voir_position_historiquer_sur_carte_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Voir une position historique sur la carte
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(historique_choix_autre_appareil_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Choisir un autre appareil
-                  </p>
-                </div>
-
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(historique_recherche_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Recherche par intervalle de dates{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Fin */}
-
-            {/* <h3 className="font-bold text-gray-600 px-4 py-3 mt-5">
-                               Rapport des appareils
-                             </h3> */}
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-
-                  setDocumentationPage("rapportUnite");
-                }}
-                className={`${
-                  documentationPage === "rapportUnite" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                {/* <LuMapPin className="text-xl min-w-[1.5rem] text-orange-600" /> */}
-                <p className="translate-x-1 text-xl font-bold min-w-[1.5rem] text-orange-600">
-                  U
+              <MdGTranslate className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 text-[1rem] font-semibold">
+                  {t("Language")}
                 </p>
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Rapport par unité
-                  </p>
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "rapportUnite"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "rapportUnite"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(aller_page_rapport_unite_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    {" "}
-                    Accéder à la page du rapport d’unité
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(aller_page_rapport_unite_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Choisir un autre appareil
-                  </p>
-                </div>
-
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(rapport_unite_recherche_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Recherche par intervalle de dates
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(rapport_unite_telecherche_pdf_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Télécharger le rapport en PDF
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Fin */}
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-
-                  setDocumentationPage("rapportGroupe");
-                }}
-                className={`${
-                  documentationPage === "rapportGroupe" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <p className="translate-x-1 text-xl font-bold min-w-[1.5rem] text-orange-600">
-                  G
-                </p>
-                {/* <LuMapPin className="text-xl min-w-[1.5rem] text-orange-600" /> */}
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Rapport en groupe
-                  </p>
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "rapportGroupe"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "rapportGroupe"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(voir_rapport_groupe_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    {" "}
-                    Accéder à la page du rapport de groupe
-                  </p>
-                </div>
-
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(rapport_groupe_recherche_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Effectuer une recherche
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(rapport_groupe_telecharger_pdf_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Télécharger le rapport en PDF / Excel
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Fin */}
-
-            {/* <h3 className="font-bold text-gray-600 px-4 py-3 mt-5">
-                               Gestion des Geozones
-                             </h3> */}
-            {/* Debut */}
-            <div className="ajouter-appareil-container transition-all ">
-              <div
-                onClick={() => {
-                  scrollToTop();
-
-                  setDocumentationPage("gestionGeozone");
-                }}
-                className={`${
-                  documentationPage === "gestionGeozone" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-4  border-b py-3 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <IoEarth className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="font-semibold text-gray-700">
-                    Gestion des géozones
-                  </p>
-                  <IoChevronDown
-                    className={`${
-                      documentationPage === "gestionGeozone"
-                        ? "rotate-180"
-                        : "rotate-0"
-                    } transition-all min-w-[2rem] text-xl mt-1 text-gray-900`}
-                  />
-                </div>
-              </div>
-              <div
-                className={`${
-                  documentationPage === "gestionGeozone"
-                    ? "max-h-[14rem] pb-6"
-                    : ""
-                } ajouter-appareil-other overflow-hidden `}
-              >
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(creer_geozone_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer py-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    {" "}
-                    Créer une géozone
-                  </p>
-                </div>
-                <div
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollToTitle(modifier_geozone_ref);
-                    }, 100);
-                  }}
-                  className="flex hover:text-orange-700 cursor-pointer pb-2 pr-4 pl-4 gap-5 items-center--"
-                >
-                  <TbPointFilled className="mt-1" />
-                  <p className="font-semibold text-gray-700">
-                    Modifier une géozone
-                  </p>
-                </div>
               </div>
             </div>
           </div>
-        )}
+
+          <InstallationPWA />
+
+          <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <div
+              onClick={() => {
+                closeSideBar();
+                setShowSideBar2(false);
+
+                setLogOutPopup(true);
+              }}
+              className={`${
+                documentationPage === "" ? "bg-orange-50" : ""
+              } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <MdLogout className="text-xl min-w-[1.5rem] text-red-500" />
+              <div className="flex w-full justify-between">
+                <p className="text-red-600 text-[1rem] font-semibold">
+                  {t("Déconnexion")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+
         {/*  */}
       </div>
     </div>

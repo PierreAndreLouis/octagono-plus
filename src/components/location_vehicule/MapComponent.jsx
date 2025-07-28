@@ -358,12 +358,12 @@ function MapComponent({
     useState(false);
 
   useEffect(() => {
-    if (currentAccountSelected) {
+    if (currentAccountSelected || !isDashboardHomePage) {
       setShowGeofenceInCarte(true);
     } else {
       setShowGeofenceInCarte(false);
     }
-  }, [currentAccountSelected]);
+  }, [currentAccountSelected, isDashboardHomePage]);
   const [showGeofenceInCarte, setShowGeofenceInCarte] = useState(false);
 
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -503,7 +503,7 @@ function MapComponent({
                 ? FormatDateHeure(selectedVehicle.timestamp)?.date
                 : `${t("Pas de date disponible")}`}
               <span className="px-3">/</span>
-              {FormatDateHeure(selectedVehicle.timestamp)?.time} -{" "}
+              {FormatDateHeure(selectedVehicle.timestamp)?.time}
               {/* {selectedVehicle.timestamp} */}
             </p>
 

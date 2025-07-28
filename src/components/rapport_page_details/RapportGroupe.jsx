@@ -4136,7 +4136,7 @@ function RapportGroupe({
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {nombreTotaleArret > 0
                     ? nombreTotaleArret + "" + `${t("arrêts")}`
-                    : " 0 " + `${t("arrêts")}`}
+                    : " 0 " + ` ${t("arrêts")}`}
                 </span>
               </p>
               {/*  */}

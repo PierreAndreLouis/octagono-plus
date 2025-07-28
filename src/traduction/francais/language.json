@@ -1,100 +1,70 @@
 {
-    "Dashboard page section": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "Retour": "Retour",
-  "Compte Actuel": "Compte Actuel",
+  "Compte Actuel": "Compte actuel",
   "Tous les comptes": "Tous les comptes",
-  "Dashboard": "Dashboard",
-  "Gestion des comptes": "Gestion des comptes",
-  "Gestion des Utilisateurs": "Gestion des Utilisateurs",
-  "Gestion des Groupe": "Gestion des Groupe",
-  "Gestion des Appareils": "Gestion des Appareils",
-  "Gestion des Alertes": "Gestion des Alertes",
-  "Gestion des Geofences": "Gestion des Geofences",
-"Localisation Appareils": "Localisation Appareils", 
-"Traduction": "Traduction",
-"Déconnexion": "Déconnexion",
-
-
-
-
-
-  "Dashboard page component": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "AccountID": "AccountID",
+  "Dashboard": "Tableau de bord",
+  "Gestion des comptes": "Gestion des compte(s)",
+  "Gestion des Utilisateurs": "Gestion des utilisateur(s)",
+  "Gestion des Groupe": "Gestion des groupe(s)",
+  "Gestion des Appareils": "Gestion des appareil(s)",
+  "Gestion des Alertes": "Gestion des alerte(s)",
+  "Gestion des Geofences": "Gestion des zones géographiques",
+  "Localisation Appareils": "Localisation des appareil(s)",
+  "Traduction": "Traduction",
+  "Déconnexion": "Déconnexion",
   "Départ": "Départ",
   "Arrivée": "Arrivée",
-  "Durée trajet": "Durée trajet",
+  "Durée trajet": "Durée du trajet",
   "Total": "Total",
-  "Inactifs": "Inactifs",
-   "Actifs": "Actifs",
-
-
-"TableauRecapitulatifComptes": "--------------------------------------------------------",
-"Compte": "Comptes",
-"Déplacé": "Déplacé",
-"Hors service": "Hors service",
-"Utilisateur": "Utilisateur",
-"Groupe": "Groupe",
-"Geofence": "Geofence",
-"Type": "Type",
-"Manager": "Manager",
-"IsActif": "IsActif",
-
-"Pas de données disponibles": "Pas de données disponibles",
-
-
-
-"Nom du Groupe": "Nom du Groupe",
-"Last Update": "Last Update",
-"Pas de résultat": "Pas de résultat",
-
-
-  "Pour Aujourd'hui": "Pour Aujourd'hui",
-  "Statistiques pour aujourd'hui": "Statistiques pour aujourd'hui",
-
-
-
+  "Inactifs": "Inactif(s)",
+  "Actifs": "Actif(s)",
+  "Compte": "Compte(s)",
+  "Déplacé": "Déplacé(s)",
+  "Hors service": "Hors service",
+  "Utilisateur": "Utilisateur(s)",
+  "Groupe": "Groupe(s)",
+  "Geofence": "Zone géographique",
+  "Type": "Type",
+  "Manager": "Gestionnaire",
+  "IsActif": "Est actif",
+  "Pas de données disponibles": "Aucune donnée disponible",
+  "Nom du Groupe": "Nom du groupe",
+  "Pas de résultat": "Aucun résultat",
+  "Pour Aujourd'hui": "Pour aujourd'hui",
+  "Statistiques pour aujourd'hui": "Statistique(s) pour aujourd'hui",
   "Code": "Code",
-"Quantité": "Quantité",
-"Description": "Description",
-"Graphe des Comptes": "Graphe des Comptes",
-"Tableau des Comptes": "Tableau des Comptes",
-"Liste des utilisateurs": "Liste des utilisateurs",
-"Liste des Groupes": "Liste des Groupes",
-"Liste des Alertes": "Liste des Alertes",
-"Sélectionner un Groupe": "Sélectionner un Groupe",
-
-"Déplacés": "Déplacés",
-"Position des appareils": "Position des appareils",
-"Full Screen": "Full Screen",
-"Nombre d'appareils": "Nombre d'appareils",
-
-"Nombre de comptes": "Nombre de comptes",
-"Tous les appareils": "Tous les appareils",
-"Tableau des comptes": "Tableau des comptes",
-"Liste des Appareils": "Liste des Appareils",
-"Voir tous": "Voir tous",
-"Tous les Alertes": "Tous les Alertes",
-"Pas d'adresse disponible": "Pas d'adresse disponible",
-"Adresse": "Adresse",
-"Account ID": "Account ID",
-"Alerte": "Alerte",
-"Last update": "Last update",
-"Chart des Alertes": "Chart des Alertes",
-"Statut inconnu": "Statut inconnu",
-"Tous les Utilisateurs": "Tous les Utilisateurs",
-"Nom de l'utilisateur": "Nom de l'utilisateur",
-"Nombre d'appareil": "Nombre d'appareil",
-"Nombre de Groupe": "Nombre de Groupe",
-"Tous les Groupes": "Tous les Groupes",
-
-
-
-
-
+  "Quantité": "Quantité",
+  "Description": "Description",
+  "Graphe des Comptes": "Graphique des compte(s)",
+  "Tableau des Comptes": "Tableau des compte(s)",
+  "Liste des utilisateurs": "Liste des utilisateur(s)",
+  "Liste des Groupes": "Liste des groupe(s)",
+  "Liste des Alertes": "Liste des alerte(s)",
+  "Sélectionner un Groupe": "Sélectionner un groupe",
+  "Déplacés": "Déplacé(s)",
+  "Position des appareils": "Position des appareil(s)",
+  "Full Screen": "Plein écran",
+  "Nombre d'appareils": "Nombre d'appareil(s)",
+  "Nombre de comptes": "Nombre de compte(s)",
+  "Tous les appareils": "Tous les appareil(s)",
+  "Tableau des comptes": "Tableau des compte(s)",
+  "Liste des Appareils": "Liste des Appareils",  
+  "Voir tous": "Voir tout",
+  "Tous les Alertes": "Toutes les alerte(s)",
+  "Pas d'adresse disponible": "Aucune adresse disponible",
+  "Adresse": "Adresse",
+  "Alerte": "Alerte",
+  "Chart des Alertes": "Graphique des alerte(s)",
+  "Statut inconnu": "Statut inconnu",
+  "Tous les Utilisateurs": "Tous les utilisateur(s)",
+  "Nom de l'utilisateur": "Nom de l'utilisateur",
+  "Nombre d'appareil": "Nombre d'appareil(s)",
+  "Nombre de Groupe": "Nombre de groupe(s)",
+  "Tous les Groupes": "Tous les groupe(s)",
   "Code de statut non spécifié": "Code de statut non spécifié",
   "Localisation - En mouvement": "Localisation - En mouvement",
   "Localisation - Arrêté": "Localisation - Arrêté",
-  "Localisation - Parking": "Localisation - Parking",
+  "Localisation - Parking": "Localisation - Stationnement",
   "Localisation - Odomètre": "Localisation - Odomètre",
   "Localisation - Heures moteur": "Localisation - Heures moteur",
   "Localisation - Niveau de carburant": "Localisation - Niveau de carburant",
@@ -126,157 +96,156 @@
 
 
 
+
+
+
+  
   "Liste des Comptes": "Liste des Comptes",
   "Veuillez choisir un compte pour continuer": "Veuillez choisir un compte pour continuer",
-  "Tous les Comptes": "Tous les Comptes",
+  "Tous les Comptes": "Tous les compte(s)",
   "Nom du compte": "Nom du compte",
-  "Nombre d'utilisateur": "Nombre d'utilisateur",
-  "Nombre de geozones": "Nombre de geozones",
-  "Gestion Des Comptes": "Gestion Des Comptes",
-  "Ajouter un nouveau Compte": "Ajouter un nouveau Compte",
-  "Nom du Compte": "Nom du Compte",
-  "ID du Compte": "ID du Compte",
-  "Nombre d'utilisateurs": "Nombre d'utilisateurs",
-  "Nombre de Geofences": "Nombre de Geofences",
-  "Date de creation": "Date de creation",
+  "Nombre d'utilisateur": "Nombre d'utilisateur(s)",
+  "Nombre de geozones": "Nombre de zone(s) géographique(s)",
+  "Gestion Des Comptes": "Gestion des compte(s)",
+  "Ajouter un nouveau Compte": "Ajouter un nouveau compte",
+  "Nom du Compte": "Nom du compte",
+  "ID du Compte": "ID du compte",
+  "Nombre d'utilisateurs": "Nombre d'utilisateur(s)",
+  "Nombre de Geofences": "Nombre de zone(s) géographique(s)",
+  "Date de creation": "Date de création",
   "Options": "Options",
-  "Liste des Utilisateur": "Liste des Utilisateur",
+  "Liste des Utilisateur": "Liste des utilisateur(s)",
   "Ajouter": "Ajouter",
-  "nouveau utilisateur": "nouveau utilisateur",
+  "nouveau utilisateur": "Nouvel utilisateur",
   "Choisissez un compte": "Choisissez un compte",
-  "Recherche un utilisateur": "Recherche un utilisateur",
-  "Nom Utilisateur": "Nom Utilisateur",
-  "UserID": "UserID",
-  "Groupes affectés": "Groupes affectés",
-  "Nombre d'Appareils": "Nombre d'Appareils",
+  "Recherche un utilisateur": "Rechercher un utilisateur",
+  "Nom Utilisateur": "Nom de l'utilisateur",
+  "Groupes affectés": "Groupe(s) affecté(s)",
+  "Nombre d'Appareils": "Nombre d'appareil(s)",
   "Dernière connexion": "Dernière connexion",
   "Mot de passe incorrect. Veuillez réessayer": "Mot de passe incorrect. Veuillez réessayer.",
-  "Voulez-vous changer de Compte ?": "Voulez-vous changer de Compte ?",
+  "Voulez-vous changer de Compte ?": "Voulez-vous changer de compte ?",
   "Veuillez entrer votre mot de passe": "Veuillez entrer votre mot de passe",
   "Mot de passe": "Mot de passe",
   "Confirmer": "Confirmer",
   "Annuler": "Annuler",
   "Mot de passe incorrect": "Mot de passe incorrect",
-  "Liste des Utilisateurs": "Liste des Utilisateurs",
+  "Liste des Utilisateurs": "Liste des utilisateur(s)",
   "Rechercher un utilisateur": "Rechercher un utilisateur",
-  "Nombre de Groupes affectés": "Nombre de Groupes affectés",
-  "Voulez-vous Supprimer le groupe ?": "Voulez-vous Supprimer le groupe ?",
-  "Liste des groupes": "Liste des groupes",
-  "Nouveau Groupe": "Nouveau Groupe",
-  "ID du Groupe": "ID du Groupe",
-  "Nombre Utilisateurs affectés": "Nombre Utilisateurs affectés",
-  "Voulez-vous Supprimer l'Appareil ?": "Voulez-vous Supprimer l'Appareil ?",
-  "Nombre Appareils": "Nombre Appareil",
-  "Nouveau Appareil": "Nouveau Appareil",
-  "Tous les Appareils": "Tous les Appareils",
-  "Recherche un appareil": "Recherche un appareil",
-  "statut inconnu": "statut inconnu",
-  "Pas de nom disponible": "Pas de nom disponible",
-  "Dernière mise a jour": "Dernière mise a jour",
-  "Code Alerte": "Code Alerte",
+  "Nombre de Groupes affectés": "Nombre de groupe(s) affecté(s)",
+  "Voulez-vous Supprimer le groupe ?": "Voulez-vous supprimer le groupe ?",
+  "Liste des groupes": "Liste des groupe(s)",
+  "Nouveau Groupe": "Nouveau groupe",
+  "ID du Groupe": "ID du groupe",
+  "Nombre Utilisateurs affectés": "Nombre d'utilisateur(s) affecté(s)",
+  "Voulez-vous Supprimer l'Appareil ?": "Voulez-vous supprimer l'appareil ?",
+  "Nombre Appareils": "Nombre d'appareil(s)",
+  "Nouveau Appareil": "Nouvel appareil",
+  "Tous les Appareils": "Tous les appareil(s)",
+  "Recherche un appareil": "Rechercher un appareil",
+  "statut inconnu": "Statut inconnu",
+  "Pas de nom disponible": "Aucun nom disponible",
+  "Dernière mise a jour": "Dernière mise à jour",
+  "Code Alerte": "Code d'alerte",
   "Plaque du véhicule": "Plaque du véhicule",
-  "Telephone": "Telephone",
+  "Telephone": "Téléphone",
   "Type d'appareil": "Type d'appareil",
-  "ImeiNumber": "ImeiNumber",
   "Distance totale parcourue": "Distance totale parcourue",
   "km": "km",
   "Non disponible": "Non disponible",
   "Numéro de la carte SIM": "Numéro de la carte SIM",
-  "Date Creation": "Date Creation",
+  "Date Creation": "Date de création",
   "Voir moins": "Voir moins",
   "Voir plus": "Voir plus",
   "Modifier": "Modifier",
   "Supprimer": "Supprimer",
-  "Nombre d'Alerte": "Nombre d'Alerte",
-  "Ajouter un Nouveau Geofence": "Ajouter un Nouveau Geofence",
-  "Nouveau Geofence": "Nouveau Geofence",
-  "Tous les geofences": "Tous les geofences",
-  "Recherche un Groupe": "Recherche un Groupe",
-  "Nom du Geozone": "Nom du Geozone",
-  "Id du geozone": "Id du geozone",
+  "Nombre d'Alerte": "Nombre d'alerte(s)",
+  "Ajouter un Nouveau Geofence": "Ajouter une nouvelle zone géographique",
+  "Nouveau Geofence": "Nouvelle zone géographique",
+  "Tous les geofences": "Toutes les zones géographiques",
+  "Recherche un Groupe": "Rechercher un groupe",
+  "Nom du Geozone": "Nom de la zone géographique",
+  "Id du geozone": "ID de la zone géographique",
   "ID du compte": "ID du compte",
   "Désactiver": "Désactiver",
-  "le geozone": "le geozone",
+  "le geozone": "la zone géographique",
   "Êtes-vous sûr de": "Êtes-vous sûr de",
   "Choisissez un véhicule": "Choisissez un véhicule",
   "Véhicule non disponible": "Véhicule non disponible",
   "Choisir un véhicule": "Choisir un véhicule",
   "Changer le type de vue sur la carte": "Changer le type de vue sur la carte",
   "Type de vue": "Type de vue",
-  "Voir la position géographique de tous les véhicules": "Voir la position géographique de tous les véhicules",
-  "Tous les véhicules": "Tous les véhicules",
-
-
-"Choisissez une langue": "Choisissez une langue",
-"Français": "Français",
-"Espagnol": "Espagnol",
-"Anglais": "Anglais",
-"Rechercher un compte": "Rechercher un compte",
-"Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre",
-"L'IMEI doit être un nombre": "L'IMEI doit être un nombre",
-"Le numéro de la carte SIM doit être un nombre": "Le numéro de la carte SIM doit être un nombre",
-"Liste Des Groupe": "Liste Des Groupe",
-"Choisis un ou plusieurs Groupe pour intégrer l'appareil": "Choisis un ou plusieurs Groupe pour intégrer l'appareil",
-"Enregistrer un nouveau Appareil": "Enregistrer un nouveau Appareil",
-"Choisissez un Groupe": "Choisissez un Groupe",
-"Défaut": "Défaut",
-"Numéro IMEI": "Numéro IMEI",
-"IMEI": "IMEI",
-"Description du véhicule": "Description du véhicule",
-"Nom du véhicule": "Nom du véhicule",
-"Numéro SIM": "Numéro du SIM",
-"Enregistrer": "Enregistrer",
-"Modifier un Appareil": "Modifier un Appareil",
-"Le téléphone n'est pas valide": "Le téléphone n'est pas valide",
-"L'email de contact n'est pas valide": "L'email de contact n'est pas valide",
-"L'email de notification n'est pas valide": "L'email de notification n'est pas valide",
-"Le mot de passe doit contenir au moins 6 caractères": "Le mot de passe doit contenir au moins 6 caractères",
-"Les mots de passe ne correspondent pas": "Les mots de passe ne correspondent pas",
-"Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre",
-"Activation du compte": "Activation du compte",
-"Droit de manager": "Droit de manager",
-"Choisir un TimeZone": "Choisir un TimeZone",
-"DisplayName": "DisplayName",
-"contactName": "contactName",
-"contactEmail": "contactEmail",
-"addressCity": "addressCity",
-"addressCountry": "addressCountry",
-"isActive": "isActive",
-"Confirmer le mot de passe": "confirmer le mot de passe",
-"Ajouter un mot de passe": "Ajouter un mot de passe",
-"Modifier le Compte": "Modifier le Compte",
-"Voulez-vous Supprimer le compte": "Voulez-vous Supprimer le compte",
-"Options du compte": "Options du compte",
-"Gestion des utilisateurs": "Gestion des utilisateurs",
-"Tous les groupes": "Tous les groupes",
-"Gestion des Groupes": "Gestion des Groupes",
-"Modifier le compte": "Modifier le compte",
-"Supprimer le compte": "Supprimer le compte",
-"Le numéro de téléphone est invalide": "Le numéro de téléphone est invalide",
-"Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre",
-"Choisir un max access level": "Choisir un max access level",
-"New/Delete": "New/Delete",
-"Read/View": "Read/View",
-"Write/Edit": "Write/Edit",
-"Accès complet": "Accès complet",
-"Activation de l'utilisateur": "Activation de l'utilisateur",
-"Type de l'utilisateur": "Type de l'utilisateur",
-"Utilisateur standard / limité": "Utilisateur standard / limité",
-"Utilisateur Administrateur / Superviseur": "Utilisateur Administrateur / Superviseur",
-"choisissez un role": "choisissez un role",
-"Choisis un Groupe pour intégrer l'appareil": "Choisis un Groupe pour intégrer l'appareil",
-"Ajouter un nouveau Utilisateur": "Ajouter un nouveau Utilisateur",
-"Choisissez un groupe pour affecter l'utilisateur": "Choisissez un groupe pour affecter l'utilisateur",
-"Pas de groupe sélectionner": "Pas de groupe sélectionner",
-"ID de l'utilisateur": "ID de l'utilisateur",
-"notifyEmail": "notifyEmail",
-"TimeZone": "timeZone",
-"roleID": "roleID",
-"Modifier l'utilisateur": "Modifier l'utilisateur",
+  "Voir la position géographique de tous les véhicules": "Voir la position géographique de tous les véhicule(s)",
+  "Tous les véhicules": "Tous les véhicule(s)",
 
 
 
 
+
+
+
+
+
+  
+  "Choisissez une langue": "Choisissez une langue",
+  "Français": "Français",
+  "Espagnol": "Espagnol",
+  "Anglais": "Anglais",
+  "Rechercher un compte": "Rechercher un compte",
+  "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre.",
+  "L'IMEI doit être un nombre": "L'IMEI doit être un nombre.",
+  "Le numéro de la carte SIM doit être un nombre": "Le numéro de la carte SIM doit être un nombre.",
+  "Liste Des Groupe": "Liste des groupes",
+  "Choisis un ou plusieurs Groupe pour intégrer l'appareil": "Choisissez un ou plusieurs groupes pour intégrer l'appareil",
+  "Enregistrer un nouveau Appareil": "Enregistrer un nouvel appareil",
+  "Choisissez un Groupe": "Choisissez un groupe",
+  "Défaut": "Défaut",
+  "Numéro IMEI": "Numéro IMEI",
+  "IMEI": "IMEI",
+  "Description du véhicule": "Description du véhicule",
+  "Nom du véhicule": "Nom du véhicule",
+  "Numéro SIM": "Numéro de la carte SIM",
+  "Enregistrer": "Enregistrer",
+  "Modifier un Appareil": "Modifier un appareil",
+  "Le téléphone n'est pas valide": "Le numéro de téléphone n'est pas valide.",
+  "L'email de contact n'est pas valide": "L'e-mail de contact n'est pas valide.",
+  "L'email de notification n'est pas valide": "L'e-mail de notification n'est pas valide.",
+  "Le mot de passe doit contenir au moins 6 caractères": "Le mot de passe doit contenir au moins 6 caractères.",
+  "Les mots de passe ne correspondent pas": "Les mots de passe ne correspondent pas.",
+
+  "Activation du compte": "Activation du compte",
+  "Droit de manager": "Droit de manager",
+  "Choisir un TimeZone": "Choisir un fuseau horaire",
+
+  "Confirmer le mot de passe": "Confirmer le mot de passe",
+  "Ajouter un mot de passe": "Ajouter un mot de passe",
+  "Modifier le Compte": "Modifier le compte",
+  "Voulez-vous Supprimer le compte": "Voulez-vous supprimer le compte ?",
+  "Options du compte": "Options du compte",
+  "Gestion des utilisateurs": "Gestion des utilisateurs",
+  "Tous les groupes": "Tous les groupes",
+  "Gestion des Groupes": "Gestion des groupes",
+  "Modifier le compte": "Modifier le compte",
+  "Supprimer le compte": "Supprimer le compte",
+  "Le numéro de téléphone est invalide": "Le numéro de téléphone est invalide.",
+
+  "Choisir un max access level": "Choisir un niveau d'accès maximal",
+  "New/Delete": "Créer/Supprimer",
+  "Read/View": "Lire/Voir",
+  "Write/Edit": "Écrire/Modifier",
+  "Accès complet": "Accès complet",
+  "Activation de l'utilisateur": "Activation de l'utilisateur",
+  "Type de l'utilisateur": "Type d'utilisateur",
+  "Utilisateur standard / limité": "Utilisateur standard / limité",
+  "Utilisateur Administrateur / Superviseur": "Utilisateur administrateur / superviseur",
+  "choisissez un role": "Choisissez un rôle",
+  "Choisis un Groupe pour intégrer l'appareil": "Choisissez un groupe pour intégrer l'appareil",
+  "Ajouter un nouveau Utilisateur": "Ajouter un nouvel utilisateur",
+  "Choisissez un groupe pour affecter l'utilisateur": "Choisissez un groupe pour affecter l'utilisateur",
+  "Pas de groupe sélectionner": "Aucun groupe sélectionné",
+  "ID de l'utilisateur": "ID de l'utilisateur",
+
+  "Modifier l'utilisateur": "Modifier l'utilisateur",
 
 
 
@@ -288,32 +257,36 @@
 
 
 
-"Liste Des Appareils": "Liste Des Appareils",
-"Ajouter un nouveau Groupe": "Ajouter un nouveau Groupe",
-"Choisissez des Appareils pour intégrer dans le groupe": "Choisissez des Appareils pour intégrer dans le groupe",
-"Appareil": "Appareil",
-"sélectionner": "sélectionner",
-"Pas d'appareil sélectionner": "Pas d'appareil sélectionner",
-"Description de l'appareil": "Description de l'appareil",
-"Notes": "Notes",
-"Ajouter une petite note": "Ajouter une petite note",
-"Nom de l'appareil": "Nom de l'appareil",
-"Modifier le Groupe": "Modifier le Groupe",
-"Nouvelle position": "Nouvelle position",
-"Recommencer": "Recommencer",
-"Continuer": "Continuer",
-"Afficher les geofences dans la carte": "Afficher les geofences dans la carte",
-"Oui": "Oui",
-"Non": "Non",
-"Ajouter un Geofence": "Ajouter un Geofence",
-"Description de la zone": "Description de la zone",
-"Couleur": "Couleur",
-"Coordonnée": "Coordonnée",
-"positions": "positions",
-"Ajouter des position": "Ajouter des position",
-"Vous devez ajouter au 3 positions": "Vous devez ajouter au 3 positions",
-"Choisissez une couleur": "Choisissez une couleur",
 
+
+
+
+  
+  "Liste Des Appareils": "Liste des appareil(s)",
+  "Ajouter un nouveau Groupe": "Ajouter un nouveau groupe",
+  "Choisissez des Appareils pour intégrer dans le groupe": "Choisissez des appareil(s) pour intégrer dans le groupe",
+  "Appareil": "Appareil",
+  "sélectionner": "Sélectionner",
+  "Pas d'appareil sélectionner": "Pas d'appareil sélectionné",
+  "Description de l'appareil": "Description de l'appareil",
+  "Notes": "Notes",
+  "Ajouter une petite note": "Ajouter une petite note",
+  "Nom de l'appareil": "Nom de l'appareil",
+  "Modifier le Groupe": "Modifier le groupe",
+  "Nouvelle position": "Nouvelle position",
+  "Recommencer": "Recommencer",
+  "Continuer": "Continuer",
+  "Afficher les geofences dans la carte": "Afficher les geofence(s) sur la carte",
+  "Oui": "Oui",
+  "Non": "Non",
+  "Ajouter un Geofence": "Ajouter un geofence",
+  "Description de la zone": "Description de la zone",
+  "Couleur": "Couleur",
+  "Coordonnée": "Coordonnée",
+  "positions": "position(s)",
+  "Ajouter des position": "Ajouter des position(s)",
+  "Vous devez ajouter au 3 positions": "Vous devez ajouter au moins 3 position(s)",
+  "Choisissez une couleur": "Choisissez une couleur",
   "Bleu foncé": "Bleu foncé",
   "Rouge vif": "Rouge vif",
   "Vert émeraude": "Vert émeraude",
@@ -324,633 +297,595 @@
   "Gris anthracite": "Gris anthracite",
   "Rose fuchsia": "Rose fuchsia",
   "Noir": "Noir",
-
-
-"accountID": "accountID",
-"Vitesse": "Vitesse",
-"Statut": "Statut",
-"En stationnement": "En stationnement",
-"En mouvement rapide": "En mouvement rapide",
-"En mouvement lent": "En mouvement lent",
-"Chargement...": "Chargement...",
-"Plaque d'immatriculation": "Plaque d'immatriculation",
-"Pas de date disponible": "Pas de date disponible",
-"Voir sur Google Maps": "Voir sur Google Maps",
-"cliquez pour filtrer": "cliquez pour filtrer",
-"Véhicules déplacés": "Véhicules déplacés",
-"Véhicules non déplacés": "Véhicules non déplacés",
-"Véhicules hors service": "Véhicules hors service",
-"Rechercher": "Rechercher",
-"Réinitialiser le filtrer par catégorie": "Réinitialiser le filtrer par catégorie",
-"Reset": "Reset",
-"Pas de resultat": "Pas de resultat",
-"Choisissez un type de vue": "Choisissez un type de vue",
-"Vue Normale": "Vue Normale",
-"Vue Satelite": "Vue Satelite",
-"Vue terrain": "Vue terrain",
-"Vue Humanitaire": "Vue Humanitaire",
-"Vue Claire": "Vue Claire",
-"Close": "Close",
-"Se Déconnecter": "Se Déconnecter",
-"Êtes vous sur de te déconnecter": "Êtes vous sur de te déconnecter",
-"Cancel": "Cancel",
-"Déconnecter": "Déconnecter",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"Nom absent": "Nom absent",
-"Page d'accueil": "Page d'accueil",
-"Accueil": "Accueil",
-"Enregistrer un nouveau véhicule": "",
-"Modifier ou Supprimer un Véhicule": "Modifier ou Supprimer un Véhicule",
-"Modifier/Supprimer": "Modifier/Supprimer",
-"Voir la position géographique des véhicules": "Voir la position géographique des véhicules",
-"Localisation": "Localisation",
-"Voir tous les détails sur le déplacement d'un véhicule": "Voir tous les détails sur le déplacement d'un véhicule",
-"Rapport": "Rapport",
-"Changer en mode sombre ou clair": "Changer en mode sombre ou clair",
-"Mon Profil": "Mon Profil",
-"Menu": "Menu",
-"Nombre total de véhicules": "Nombre total de véhicules",
-"Véhicules actuellement en service": "Véhicules actuellement en service",
-"Véhicules actuellement stationnés": "Véhicules actuellement stationnés",
-"Véhicules actuellement hors service ou en panne": "Véhicules actuellement hors service ou en panne",
-"Hors Service": "Hors Service",
-"Dernière mise à jour": "Dernière mise à jour",
-"Auto": "Auto",
-"Actualisation auto": "Actualisation auto",
-"Actualisation automatique": "Actualisation automatique",
-"Vous êtes hors ligne. Veuillez vérifier votre connexion internet": "Vous êtes hors ligne. Veuillez vérifier votre connexion internet",
-"Se déconnecter": "Se déconnecter",
-"Mise a jour automatique": "Mise a jour automatique",
-"Êtes-vous sur d'activer la mise a jour automatique": "Êtes-vous sur d'activer la mise a jour automatique",
-"Êtes-vous sur de désactiver la mise a jour automatique": "Êtes-vous sur de désactiver la mise a jour automatique",
-"Chargement des données": "Chargement des données",
-"Adresse non disponible": "Adresse non disponible",
-"Aucun véhicule trouvé": "Aucun véhicule trouvé",
-"En Stationnement": "En Stationnement",
-"Bloquer le véhicule": "Bloquer le véhicule",
-"Débloquer le véhicule": "Débloquer le véhicule",
-"Écouter": "Écouter",
-"Attention": "Attention",
-"Vous devez disposer soit de crédits, soit de minutes et SMS disponibles sur votre téléphone pour cette fonctionnalité": "Vous devez disposer soit de crédits, soit de minutes et SMS disponibles sur votre téléphone pour cette fonctionnalité",
-"Ok": "Ok",
-"Veuillez entrer votre code d'accès": "Veuillez entrer votre code d'accès",
-"code d'accès": "code d'accès",
-"Voir la position géographique du véhicule": "Voir la position géographique du véhicule",
-"Voir le trajet du véhicule sur la carte": "Voir le trajet du véhicule sur la carte",
-"Trajet": "Trajet",
-"Voir un historique sur l'état du véhicule": "Voir un historique sur l'état du véhicule",
-"Historique": "Historique",
-"Bloquer ou débloquer le véhicule": "Bloquer ou débloquer le véhicule",
-"Contrôle": "Contrôle",
-"Voir les informations personnelles du véhicule": "Voir les informations personnelles du véhicule",
-"Informations": "Informations",
-"Modifier des informations ou supprimer le véhicule": "Modifier des informations ou supprimer le véhicule",
-"Modifier ou supprimer l'appareil": "Modifier ou supprimer l'appareil",
-"Mon profil": "Mon profil",
-"Ajouter un véhicule": "Ajouter un véhicule",
-"Modifier ou supprimer un véhicule": "Modifier ou supprimer un véhicule",
-"Localisation des véhicules": "Localisation des véhicules",
-"Rapport des véhicules": "Rapport des véhicules",
-"Gestion des Geozones": "Gestion des Geozones",
-"Gestion des Comptes": "Gestion des Comptes",
-"Manuel d'utilisation": "Manuel d'utilisation",
-"Profil": "Profil",
-"Arrêtez l'animation": "Arrêtez l'animation",
-"Retracer le trajet": "Retracer le trajet",
-"Arrêter": "Arrêter",
-"Masquer": "Masquer",
-"Afficher": "Afficher",
-"les options": "les options",
-"Masquer les options": "Masquer les options",
-"Afficher les options": "Afficher les options",
-"Play": "Play",
-"Pause": "Pause",
-"Activer le centrage automatique de la carte": "Activer le centrage automatique de la carte",
-"Désactiver le centrage automatique de la carte": "Désactiver le centrage automatique de la carte",
-"Recommencer le trajet": "Recommencer le trajet",
-"Ajuster la vitesse du trajet": "Ajuster la vitesse du trajet",
-"Ajuster le niveau de zoom": "Ajuster le niveau de zoom",
-"Voir des details sur le trajet": "Voir des details sur le trajet",
-"Voir les séparations de la carte": "Voir les séparations de la carte",
-"Vitesse de l'animation": "Vitesse de l'animation",
-"Tres lent": "Tres lent",
-"Lent": "Lent",
-"Normal": "Normal",
-"Rapide": "Rapide",
-"Tres rapide": "Tres rapide",
-"Super rapide": "Super rapide",
-"Niveau de Zoom lors de l'animation": "Niveau de Zoom lors de l'animation",
-"Centrer automatique la carte lors de l'animation": "Centrer automatique la carte lors de l'animation",
-"Activer": "Activer",
-"Voir les séparations et le nom des différentes parties de la carte": "Voir les séparations et le nom des différentes parties de la carte",
-"Date": "Date",
-"Heure": "Heure",
-"Plaque d’immatriculation": "",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"Filtrer par Date": "Filtrer par Date",
-"Filtrer par statut": "Filtrer par statut",
-"Date et heure de Depart": "Date et heure de Depart",
-"Date et heure de d'arrivée": "Date et heure de d'arrivée",
-"Veuillez sélectionner un véhicule": "Veuillez sélectionner un véhicule",
-"Appliquer": "Appliquer",
-"Voir l'historique du véhicule": "Voir l'historique du véhicule",
-"Voir le trajet du véhicule": "Voir le trajet du véhicule",
-"Pas de véhicule sélectionné": "Pas de véhicule sélectionné",
-"Voir cette position sur la carte": "Voir cette position sur la carte",
-"Recherche un Geozone": "Recherche un Geozone",
-"janvier": "janvier",
-"février": "février",
-"mars": "mars",
-"avril": "avril",
-"mai": "mai",
-"juin": "juin",
-"juillet": "juillet",
-"août": "août",
-"septembre": "septembre",
-"octobre": "octobre",
-"novembre": "novembre",
-"décembre": "décembre",
-
-"Rapport des vehicules": "Rapport des vehicules",
-"All": "All",
-"aujourd'hui": "aujourd'hui",
-"Véhicules en stationnement": "Véhicules en stationnement",
-"actuellement": "actuellement",
-"Véhicules en mouvement": "Véhicules en mouvement",
-"Du": "Du",
-"au": "au",
-"De": "De",
-"à": "à",
-"Durée": "Durée",
-"Arrivé": "Arrivé",
-"Distance": "Distance",
-"Trajet du véhicule": "Trajet du véhicule",
-"Trajet du véhicule ici": "Trajet du véhicule ici",
-"Tableau des deplacements": "Tableau des deplacements",
-"Véhicule": "Véhicule",
-"Date et Heure de départ": "Date et Heure de départ",
-"Date et Heure d'arrivée": "Date et Heure d'arrivée",
-"Adresse de départ": "Adresse de départ",
-"Adresse d'arrivée": "Adresse d'arrivée",
-"Pas de dépacement": "Pas de dépacement",
-"Tableau des Distances": "Tableau des Distances",
-"Tableau des activites": "Tableau des activites",
-"Duree du trajet": "Duree du trajet",
-"Tableau des vitesse": "Tableau des vitesse",
-"Vitesse maximale": "Vitesse maximale",
-"Vitesse minimale": "Vitesse minimale",
-"Vitesse moyenne": "Vitesse moyenne",
-"Tableau du trajet": "Tableau du trajet",
-"Temps d'activité": "Temps d'activité",
-"Temps d'inactivité": "Temps d'inactivité",
-"Distance parcourue": "Distance parcourue",
-"Nombre d'arrêt": "Nombre d'arrêt",
-"arrêt": "arrêt",
-"Rapport détaillé en groupe": "Rapport détaillé en groupe",
-"Informations sur les véhicules": "Informations sur les véhicules",
-"Date de recherche trouvée": "Date de recherche trouvée",
-"à": "à",
-"Informations Actuellement": "Informations Actuellement",
-"voir": "voir",
-"Véhicule en mouvement": "Véhicule en mouvement",
-"Véhicule en stationnement": "Véhicule en stationnement",
-"Véhicule hors service": "Véhicule hors service",
-"Pour la journée d'aujourd'hui": "Pour la journée d'aujourd'hui",
-"Véhicule en mouvement en 1er": "Véhicule en mouvement en 1er",
-"Le": "Le",
-"Pas de véhicule en mouvement": "Pas de véhicule en mouvement",
-"Voir sur la carte": "Voir sur la carte",
-"Plus d'info": "Plus d'info",
-"Véhicule ayant parcouru la plus grande distance": "Véhicule ayant parcouru la plus grande distance",
-"environ": "environ",
-"Véhicule en mouvement plus longtemps": "Véhicule en mouvement plus longtemps",
-"Véhicule avec la vitesse maximale": "Véhicule avec la vitesse maximale",
-"voir moins": "voir moins",
-"Informations sur le trajet des véhicules": "Informations sur le trajet des véhicules",
-"Temps d'activité total": "Temps d'activité total",
-"Nombre total d’arrêts": "Nombre total d’arrêts",
-"arrêts": "arrêts",
-"Position des véhicules": "Position des véhicules",
-"Tableau récapitulatif": "Tableau récapitulatif",
-"Filtrer": "Filtrer",
-"Filtrer par": "Filtrer par",
-"Croissant": "Croissant",
-"Décroissant": "Décroissant",
-"Heure de départ": "Heure de départ",
-"Distance parcouru": "Distance parcouru",
-"Temps en mouvement": "Temps en mouvement",
-"Télécharger": "Télécharger",
-"Nombre d'arrêts": "Nombre d'arrêts",
-"Distance totale": "Distance totale",
-"Date du résultat": "Date du résultat",
-"Heure du résultat": "Heure du résultat",
-"Voir cette adresse sur la carte": "Voir cette adresse sur la carte",
-"Rapport détaillé du véhicule": "Rapport détaillé du véhicule",
-"Informations sur le véhicule": "Informations sur le véhicule",
-"Heure de recherche trouvée": "Heure de recherche trouvée",
-"Pas d'heure disponible": "Pas d'heure disponible",
-"Heure d'arrivée": "Heure d'arrivée",
-"Pas de mouvement": "Pas de mouvement",
-"Durée total en mouvement": "Durée total en mouvement",
-"Durée des arrêts lors du déplacement": "Durée des arrêts lors du déplacement",
-"Duree de l’arrêts le plus long": "Duree de l’arrêts le plus long",
-"Graphe des vitesses": "Graphe des vitesses",
-"Recherche": "Recherche",
-"Voir l’historique": "Voir l’historique",
-"Tous les lieux fréquentés": "Tous les lieux fréquentés",
-"Tous les lieux Stationnés": "Tous les lieux Stationnés",
-"Filtre en ordre croissant": "Filtre en ordre croissant",
-"Filtre en ordre décroissant": "Filtre en ordre décroissant",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"Tables des véhicules": "Tables des véhicules",
-"Rapport personnel": "Rapport personnel",
-"Rapport en Groupe": "Rapport en Groupe",
-"Rapport Tableau Récapitulatif en Groupe": "Rapport Tableau Récapitulatif en Groupe",
-"Rapport en groupe": "Rapport en groupe",
-"Télécharger en PDF": "Télécharger en PDF",
-"Unite": "Unite",
-"Le téléchargement peut prendre jusqu'a 1 minute": "Le téléchargement peut prendre jusqu'a 1 minute",
-"Télécharger le rapport en PDF": "Télécharger le rapport en PDF",
-"Télécharger le tableau récapitulatif en PDF": "Télécharger le tableau récapitulatif en PDF",
-"Télécharger le tableau récapitulatif en Exel": "Télécharger le tableau récapitulatif en Exel",
-"Recherche par date": "Recherche par date",
-"Recherche par intervalle de date": "Recherche par intervalle de date",
-"Sélectionner une intervalle de date": "Sélectionner une intervalle de date",
-"Recherche pour une journée": "Recherche pour une journée",
-"Sélectionner une date": "Sélectionner une date",
-"Le mot de passe est incorrect. Veuillez réessayer": "Le mot de passe est incorrect. Veuillez réessayer",
-"Nom d'utilisateur": "Nom d'utilisateur",
-"Fuseau horaire": "Fuseau horaire",
-"Version de l'application": "Version de l'application",
-"Redémarrer l'application": "Redémarrer l'application",
-"Cliquez ici": "Cliquez ici",
-"Êtes vous sur de redémarrer l'application": "Êtes vous sur de redémarrer l'application",
-
-
-
-
-
-
-
-
-
-
-
-
-"Voir un rapport pour un seul véhicule": "Voir un rapport pour un seul véhicule",
-"Unité": "Unité",
-"Voir un rapport pour tous les véhicules": "Voir un rapport pour tous les véhicules",
-"Gestion des Roles": "Gestion des Roles",
-"Language": "Langue",
-"Bienvenue à Octagono Plus": "Bienvenue à Octagono Plus",
-"Pays": "Pays",
-"Sélectionner un pays": "Sélectionner un pays",
-"Haïti": "Haïti",
-"République Dominicaine": "République Dominicaine",
-"Se souvenir de moi": "Se souvenir de moi",
-"Chargement": "Chargement",
-"Se connecter": "Se connecter",
-"Compte Demo": "Compte Demo",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"Sélectionner une langue": "Sélectionner une langue",
-"Creation du nouveau groupe avec succès": "Creation du nouveau groupe avec  succès",
-"Échec de la Creation du groupe": "Échec de la Creation du  groupe",
-"Modification du groupe avec succès": "Modification du groupe avec  succès",
-"Échec de la Modification du groupe": "Échec de la Modification du groupe",
-"Suppression du groupe avec succès": "Suppression du groupe avec succès",
-"Échec de la Suppression du groupe": "Échec de la Suppression du groupe",
-"Creation du nouveau utilisateur avec succès": "Creation du nouveau utilisateur avec succès",
-"Échec de la Creation du l'utilisateur": "Échec de la Creation du l'utilisateur",
-"Modification de l'utilisateur avec succès": "Modification de l'utilisateur avec succès",
-"Échec de la Modification de l'utilisateur": "Échec de la Modification de l'utilisateur",
-"Suppression de l'utilisateur avec succès": "Suppression de l'utilisateur avec succès",
-"Échec de Suppression de l'utilisateur": "Échec de Suppression de l'utilisateur",
-"Creation du nouveau compte avec succès": "Creation du nouveau compte avec succès",
-"Échec de la Creation du compte": "Échec de la Creation du compte",
-"Compte modifié avec succès": "Compte modifié avec succès",
-"Échec de la  Modification du compte": "Échec de la  Modification du compte",
-"Compte supprimer avec succès": "Compte supprimer avec succès",
-"Échec de Suppression du compte": "Échec de Suppression du compte",
-"Creation du nouveau appareil avec succès": "Creation du nouveau appareil avec succès",
-"Échec de la Creation de l'appareil": "Échec de la Creation de l'appareil",
-"Modification de l'appareil avec succès": "Modification de l'appareil avec succès",
-"Échec de la modification de l'appareil": "Échec de la modification de l'appareil",
-"Suppression de l'appareil avec succès": "Suppression de l'appareil avec succès",
-"Échec de Suppression de l'appareil": "Échec de Suppression de l'appareil",
-"Vous avez ajoutee le geofence avec succès": "Vous avez ajoutee le geofence avec succès",
-"Échec de l'ajout du Geofence": "Échec de l'ajout du Geofence",
-"Modification du geofence avec succès": "Modification du geofence avec succès",
-"Échec de la modification du geofence": "Échec de la modification du geofence",
-"Suppression du geofence avec succès": "Suppression du geofence avec succès",
-"Échec de la Suppression du geofence": "Échec de la Suppression du geofence",
-"Échec de la Modification du geofence": "Échec de la Modification du geofence",
-"Vous avez ajouté l'appareil avec succès": "Vous avez ajouté l'appareil avec succès",
-"Échec de l'ajout du véhicule": "Échec de l'ajout du véhicule",
-"Vous avez modifié le véhicule avec succès": "Vous avez modifié le véhicule avec succès",
-"Échec de la modification du véhicule": "Échec de la modification du véhicule",
-"Vous avez supprimé le véhicule avec succès": "Vous avez supprimé le véhicule avec succès",
-"Échec de la suppression du véhicule": "Échec de la suppression du véhicule",
-
-
-
-
-
-
-
-"Low Battery": "Low Battery",
-"In motion": "In motion",
-"Panic": "Panic",
-"Ignition OFF": "Ignition OFF",
-"Ignition ON": "Ignition ON",
-"Arrived at Geozone": "Arrived at Geozone",
-"Aucun": "Aucun",
-"Ajouter un nouveau Role": "Ajouter un nouveau Role",
-"Rechercher un Role": "Rechercher un Role",
-"Gestion Des Role": "Gestion Des Roles",
-"Pas de compte sélectionner": "Pas de compte sélectionner",
-"deviceID": "deviceID",
-"Tous": "Tous",
-"Choisissez un Appareil": "Choisissez un Appareil",
-"imeiNumber": "imeiNumber",
-"groupID": "groupID",
-"ruleID": "ruleID",
-"selector": "selector",
-"emailSubject": "emailSubject",
-"emailText": "emailText",
-"Activation": "Activation",
-"Veuillez choisir un compte": "Veuillez choisir un compte",
-"Le champ selector est vide": "Le champ selector est vide",
-"Historique d'un Appareils": "Historique d'un Appareils",
-"Trajet d'un Appareils": "Trajet d'un Appareils",
-"Informations sur un Appareils" : "Informations sur un Appareils",
-"Admin Dashboard": "Admin Dashboard",
-"Mode Utilisateur": "Mode Utilisateur",
-"Rapport Groupe": "Rapport Groupe",
-"Rapport Unite": "Rapport Unite",
-"Options de l'appareil": "Options de l'appareil",
-"Localisation de l'appareil": "Localisation de l'appareil",
-"Trajet de l'appareil": "Trajet de l'appareil",
-"Historique de l'appareil": "Historique de l'appareil",
-"Rapport de l'appareil": "Rapport de l'appareil",
-"Contrôle de l'appareil": "Contrôle de l'appareil",
-"Informations sur l'appareil": "Informations sur l'appareil",
-"Modifier l'appareil": "Modifier l'appareil",
-"Supprimer l'appareil": "Supprimer l'appareil",
-"Mettre a jour les donnees": "Mettre a jour les donnees",
-"Informations Generale": "Informations Generale",
-"Information sur les déplacements": "Information sur les déplacements",
-"Comptes": "Comptes",
-"Utilisateurs": "Utilisateurs",
-"Appareils": "Appareils",
-"sysadmin Dashboard": "sysadmin Dashboard",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"Session inactive": "Session inactive",
-"Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer": "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer",
-"Confirmer ton Mot de passe": "Confirmer ton Mot de passe",
-"Application déjà installée": "Application déjà installée",
-"Installation non supportée": "Installation non supportée",
-"Installation non disponible": "Installation non disponible",
-"Installer l'application": "Installer l'application",
-"Installation en cours": "Installation en cours",
-"Appareils Actifs": "Appareils Actifs",
-"Appareils Inactifs": "Appareils Inactifs",
-"Appareils En déplacement": "Appareils En déplacement",
-"Appareils Déplacer": "Appareils Déplacer",
-"Voulez-vous Supprimer l'utilisateur": "Voulez-vous Supprimer l'utilisateur",
-"Options de l'utilisateur": "Options de l'utilisateur",
-"Groupe affecté": "Groupe affecté",
-"Supprimer l'utilisateur": "Supprimer l'utilisateur",
-"Login": "Login",
-"Nombre Appareil": "Nombre Appareil",
-"Adresse du véhicule": "Adresse du véhicule",
-"Statut du véhicule": "Statut du véhicule",
-"Veuillez choisir un véhicule": "Veuillez choisir un véhicule",
-"Choisir": "Choisir",
-"En Déplacement": "En Déplacement",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"Véhicules En déplacement": "Véhicules En déplacement",
-"Il n’est pas possible de fournir un rapport global pour tous": "Il n’est pas possible de fournir un rapport global pour tous.",
-"Ce compte comprend plus de 50 appareils": "Ce compte comprend plus de 50 appareils",
-"Documentation": "Documentation",
-"ID du geofence": "ID du geofence",
-"Nombre de coordonnées": "Nombre de coordonnées",
-"Choisissez une date et une heure": "Choisissez une date et une heure",
-"Une recherche portant sur plus de 3 jours ralentira un peu la carte": "Une recherche portant sur plus de 3 jours ralentira un peu la carte",
-"Date de Début": "Date de Début",
-"Choisissez une date": "Choisissez une date",
-"Heure de Début": "Heure de Début",
-"Date de Fin": "Date de Fin",
-"Heure de fin": "Heure de fin",
-"Page non trouvée": "Page non trouvée",
-"Oups ! La page que vous recherchez n'existe pas": "Oups ! La page que vous recherchez n'existe pas",
-"Retour à l'accueil": "Retour à l'accueil",
-"Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support": "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support",
-
-
-
-
-
-
-
-
-
-
-
-"Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.": "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.",
-"Notez bien": "Notez bien",
-"Voir plus de Résultat": "Voir plus de Résultat",
-
-"Résultat": "Résultat",
-"Recherche une alerte": "Recherche une alerte",
-"Appareils non déplacés": "Appareils non déplacés",
-"Appareils en Stationnement": "Appareils en Stationnement",
-"Non Déplacer": "Non Déplacés",
-"Appareils Déplacés": "Appareils Déplacés",
-"Statistiques par compte": "Statistiques par compte",
-"Nombre appareils": "Nombre appareils",
-
-
-
-
-
-
-
-"Options du groupe": "Options du groupe",
-"Afficher Les Appareils": "Afficher Les Appareils",
-"Liste des utilisateurs affectés": "Liste des utilisateurs affectés",
-"Liste Les Appareils": "Liste Les Appareils",
-"Modifier le groupe": "Modifier le groupe",
-"Supprimer le groupe": "Supprimer le groupe",
-"Rechercher une option": "Rechercher une option",
-"Veuillez cliquer sur l'option de l'utilisateur a modifier, puis sur 'Modifier l'utilisateur'": "Veuillez cliquer sur l'option de l'utilisateur a modifier, puis sur 'Modifier l'utilisateur'",
-"Veuillez cliquer sur l'option du groupe a modifier, puis sur 'Modifier le groupe'": "Veuillez cliquer sur l'option du groupe a modifier, puis sur 'Modifier le groupe'",
-"Veuillez cliquer sur l'option de l'appareil a modifier, puis sur 'Modifier l'appareil'": "Veuillez cliquer sur l'option de l'appareil a modifier, puis sur 'Modifier l'appareil'",
-"Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité modifier": "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité modifier",
+  "Vitesse": "Vitesse",
+  "Statut": "Statut",
+  "En stationnement": "En stationnement",
+  "En mouvement rapide": "En mouvement rapide",
+  "En mouvement lent": "En mouvement lent",
+  "Chargement...": "Chargement...",
+  "Plaque d'immatriculation": "Plaque d'immatriculation",
+  "Pas de date disponible": "Pas de date disponible",
+  "Voir sur Google Maps": "Voir sur Google Maps",
+  "cliquez pour filtrer": "Cliquez pour filtrer",
+  "Véhicules déplacés": "Véhicule(s) déplacé(s)",
+  "Véhicules non déplacés": "Véhicule(s) non déplacé(s)",
+  "Véhicules hors service": "Véhicule(s) hors service",
+  "Rechercher": "Rechercher",
+  "Réinitialiser le filtrer par catégorie": "Réinitialiser le filtre par catégorie",
+  "Reset": "Réinitialiser",
+  "Pas de resultat": "Pas de résultat",
+  "Choisissez un type de vue": "Choisissez un type de vue",
+  "Vue Normale": "Vue normale",
+  "Vue Satelite": "Vue satellite",
+  "Vue terrain": "Vue terrain",
+  "Vue Humanitaire": "Vue humanitaire",
+  "Vue Claire": "Vue claire",
+  "Close": "Fermer",
+  "Se Déconnecter": "Se déconnecter",
+  "Êtes vous sur de te déconnecter": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "Cancel": "Annuler",
+  "Déconnecter": "Déconnecter",
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  "Nom absent": "Nom absent",
+  "Page d'accueil": "Page d'accueil",
+  "Accueil": "Accueil",
+  "Enregistrer un nouveau véhicule": "Enregistrer un nouveau véhicule",
+  "Modifier ou Supprimer un Véhicule": "Modifier ou supprimer un véhicule",
+  "Modifier/Supprimer": "Modifier/Supprimer",
+  "Voir la position géographique des véhicules": "Voir la position géographique des véhicule(s)",
+  "Localisation": "Localisation",
+  "Voir tous les détails sur le déplacement d'un véhicule": "Voir tous les détails sur le déplacement d'un véhicule",
+  "Rapport": "Rapport",
+  "Changer en mode sombre ou clair": "Changer en mode sombre ou clair",
+  "Mon Profil": "Mon profil",
+  "Menu": "Menu",
+  "Nombre total de véhicules": "Nombre total de véhicule(s)",
+  "Véhicules actuellement en service": "Véhicule(s) actuellement en service",
+  "Véhicules actuellement stationnés": "Véhicule(s) actuellement stationné(s)",
+  "Véhicules actuellement hors service ou en panne": "Véhicule(s) actuellement hors service ou en panne",
+  "Hors Service": "Hors service",
+  "Dernière mise à jour": "Dernière mise à jour",
+  "Auto": "Auto",
+  "Actualisation auto": "Actualisation auto",
+  "Actualisation automatique": "Actualisation automatique",
+  "Vous êtes hors ligne. Veuillez vérifier votre connexion internet": "Vous êtes hors ligne. Veuillez vérifier votre connexion internet",
+  "Se déconnecter": "Se déconnecter",
+  "Mise a jour automatique": "Mise à jour automatique",
+  "Êtes-vous sur d'activer la mise a jour automatique": "Êtes-vous sûr d'activer la mise à jour automatique ?",
+  "Êtes-vous sur de désactiver la mise a jour automatique": "Êtes-vous sûr de désactiver la mise à jour automatique ?",
+  "Chargement des données": "Chargement des données",
+  "Adresse non disponible": "Adresse non disponible",
+  "Aucun véhicule trouvé": "Aucun véhicule trouvé",
+  "En Stationnement": "En stationnement",
+  "Bloquer le véhicule": "Bloquer le véhicule",
+  "Débloquer le véhicule": "Débloquer le véhicule",
+  "Écouter": "Écouter",
+  "Attention": "Attention",
+  "Vous devez disposer soit de crédits, soit de minutes et SMS disponibles sur votre téléphone pour cette fonctionnalité": "Vous devez disposer soit de crédit(s), soit de minute(s) et SMS disponibles sur votre téléphone pour cette fonctionnalité",
+  "Ok": "Ok",
+  "Veuillez entrer votre code d'accès": "Veuillez entrer votre code d'accès",
+  "code d'accès": "code d'accès",
+  "Voir la position géographique du véhicule": "Voir la position géographique du véhicule",
+  "Voir le trajet du véhicule sur la carte": "Voir le trajet du véhicule sur la carte",
+  "Trajet": "Trajet",
+  "Voir un historique sur l'état du véhicule": "Voir un historique sur l'état du véhicule",
+  "Historique": "Historique",
+  "Bloquer ou débloquer le véhicule": "Bloquer ou débloquer le véhicule",
+  "Contrôle": "Contrôle",
+  "Voir les informations personnelles du véhicule": "Voir les informations personnelles du véhicule",
+  "Informations": "Informations",
+  "Modifier des informations ou supprimer le véhicule": "Modifier des informations ou supprimer le véhicule",
+  "Modifier ou supprimer l'appareil": "Modifier ou supprimer l'appareil",
+  "Mon profil": "Mon profil",
+  "Ajouter un véhicule": "Ajouter un véhicule",
+  "Modifier ou supprimer un véhicule": "Modifier ou supprimer un véhicule",
+  "Localisation des véhicules": "Localisation des véhicule(s)",
+  "Rapport des véhicules": "Rapport des véhicule(s)",
+  "Gestion des Geozones": "Gestion des géozone(s)",
+  "Gestion des Comptes": "Gestion des compte(s)",
+  "Manuel d'utilisation": "Manuel d'utilisation",
+  "Profil": "Profil",
+  "Arrêtez l'animation": "Arrêtez l'animation",
+  "Retracer le trajet": "Retracer le trajet",
+  "Arrêter": "Arrêter",
+  "Masquer": "Masquer",
+  "Afficher": "Afficher",
+  "les options": "les options",
+  "Masquer les options": "Masquer les options",
+  "Afficher les options": "Afficher les options",
+  "Play": "Play",
+  "Pause": "Pause",
+  "Activer le centrage automatique de la carte": "Activer le centrage automatique de la carte",
+  "Désactiver le centrage automatique de la carte": "Désactiver le centrage automatique de la carte",
+  "Recommencer le trajet": "Recommencer le trajet",
+  "Ajuster la vitesse du trajet": "Ajuster la vitesse du trajet",
+  "Ajuster le niveau de zoom": "Ajuster le niveau de zoom",
+  "Voir des details sur le trajet": "Voir des détails sur le trajet",
+  "Voir les séparations de la carte": "Voir les séparations de la carte",
+  "Vitesse de l'animation": "Vitesse de l'animation",
+  "Tres lent": "Très lent",
+  "Lent": "Lent",
+  "Normal": "Normal",
+  "Rapide": "Rapide",
+  "Tres rapide": "Très rapide",
+  "Super rapide": "Super rapide",
+  "Niveau de Zoom lors de l'animation": "Niveau de zoom lors de l'animation",
+  "Centrer automatique la carte lors de l'animation": "Centrer automatiquement la carte lors de l'animation",
+  "Activer": "Activer",
+  "Voir les séparations et le nom des différentes parties de la carte": "Voir les séparations et le nom des différentes parties de la carte",
+  "Date": "Date",
+  "Heure": "Heure",
+  "Plaque d’immatriculation": "Plaque d’immatriculation",
+
+
+
+
+
+
+
+
+  
+  "Filtrer par Date": "Filtrer par date",
+  "Filtrer par statut": "Filtrer par statut",
+  "Date et heure de Depart": "Date et heure de départ",
+  "Date et heure de d'arrivée": "Date et heure d'arrivée",
+  "Veuillez sélectionner un véhicule": "Veuillez sélectionner un véhicule",
+  "Appliquer": "Appliquer",
+  "Voir l'historique du véhicule": "Voir l'historique du véhicule",
+  "Voir le trajet du véhicule": "Voir le trajet du véhicule",
+  "Pas de véhicule sélectionné": "Pas de véhicule sélectionné",
+  "Voir cette position sur la carte": "Voir cette position sur la carte",
+  "Recherche un Geozone": "Recherche un géozone",
+  "janvier": "janvier",
+  "février": "février",
+  "mars": "mars",
+  "avril": "avril",
+  "mai": "mai",
+  "juin": "juin",
+  "juillet": "juillet",
+  "août": "août",
+  "septembre": "septembre",
+  "octobre": "octobre",
+  "novembre": "novembre",
+  "décembre": "décembre",
+
+  "Rapport des vehicules": "Rapport des véhicules",
+  "All": "Tout",
+  "aujourd'hui": "aujourd'hui",
+  "Véhicules en stationnement": "Véhicules en stationnement",
+  "actuellement": "actuellement",
+  "Véhicules en mouvement": "Véhicules en mouvement",
+  "Du": "Du",
+  "au": "au",
+  "De": "De",
+  "Durée": "Durée",
+  "Arrivé": "Arrivé",
+  "Distance": "Distance",
+  "Trajet du véhicule": "Trajet du véhicule",
+  "Trajet du véhicule ici": "Trajet du véhicule ici",
+  "Tableau des deplacements": "Tableau des déplacements",
+  "Véhicule": "Véhicule",
+  "Date et Heure de départ": "Date et heure de départ",
+  "Date et Heure d'arrivée": "Date et heure d'arrivée",
+  "Adresse de départ": "Adresse de départ",
+  "Adresse d'arrivée": "Adresse d'arrivée",
+  "Pas de dépacement": "Pas de déplacement",
+  "Tableau des Distances": "Tableau des distances",
+  "Tableau des activites": "Tableau des activités",
+  "Duree du trajet": "Durée du trajet",
+  "Tableau des vitesse": "Tableau des vitesses",
+  "Vitesse maximale": "Vitesse maximale",
+  "Vitesse minimale": "Vitesse minimale",
+  "Vitesse moyenne": "Vitesse moyenne",
+  "Tableau du trajet": "Tableau du trajet",
+  "Temps d'activité": "Temps d'activité",
+  "Temps d'inactivité": "Temps d'inactivité",
+  "Distance parcourue": "Distance parcourue",
+  "Nombre d'arrêt": "Nombre d'arrêt",
+  "arrêt": "arrêt",
+  "Rapport détaillé en groupe": "Rapport détaillé en groupe",
+  "Informations sur les véhicules": "Informations sur les véhicules",
+  "Date de recherche trouvée": "Date de recherche trouvée",
+  "à": "à",
+  "Informations Actuellement": "Informations actuellement",
+  "voir": "voir",
+  "Véhicule en mouvement": "Véhicule en mouvement",
+  "Véhicule en stationnement": "Véhicule en stationnement",
+  "Véhicule hors service": "Véhicule hors service",
+  "Pour la journée d'aujourd'hui": "Pour la journée d'aujourd'hui",
+  "Véhicule en mouvement en 1er": "Véhicule en mouvement en 1er",
+  "Le": "Le",
+  "Pas de véhicule en mouvement": "Pas de véhicule en mouvement",
+  "Voir sur la carte": "Voir sur la carte",
+  "Plus d'info": "Plus d'info",
+  "Véhicule ayant parcouru la plus grande distance": "Véhicule ayant parcouru la plus grande distance",
+  "environ": "environ",
+  "Véhicule en mouvement plus longtemps": "Véhicule en mouvement plus longtemps",
+  "Véhicule avec la vitesse maximale": "Véhicule avec la vitesse maximale",
+  "voir moins": "voir moins",
+  "Informations sur le trajet des véhicules": "Informations sur le trajet des véhicules",
+  "Temps d'activité total": "Temps d'activité total",
+  "Nombre total d’arrêts": "Nombre total d’arrêts",
+  "arrêts": "arrêts",
+  "Position des véhicules": "Position des véhicules",
+  "Tableau récapitulatif": "Tableau récapitulatif",
+  "Filtrer": "Filtrer",
+  "Filtrer par": "Filtrer par",
+  "Croissant": "Croissant",
+  "Décroissant": "Décroissant",
+  "Heure de départ": "Heure de départ",
+  "Distance parcouru": "Distance parcourue",
+  "Temps en mouvement": "Temps en mouvement",
+  "Télécharger": "Télécharger",
+  "Nombre d'arrêts": "Nombre d'arrêts",
+  "Distance totale": "Distance totale",
+  "Date du résultat": "Date du résultat",
+  "Heure du résultat": "Heure du résultat",
+  "Voir cette adresse sur la carte": "Voir cette adresse sur la carte",
+  "Rapport détaillé du véhicule": "Rapport détaillé du véhicule",
+  "Informations sur le véhicule": "Informations sur le véhicule",
+  "Heure de recherche trouvée": "Heure de recherche trouvée",
+  "Pas d'heure disponible": "Pas d'heure disponible",
+  "Heure d'arrivée": "Heure d'arrivée",
+  "Pas de mouvement": "Pas de mouvement",
+  "Durée total en mouvement": "Durée totale en mouvement",
+  "Durée des arrêts lors du déplacement": "Durée des arrêts lors du déplacement",
+  "Duree de l’arrêts le plus long": "Durée de l’arrêt le plus long",
+  "Graphe des vitesses": "Graphe des vitesses",
+  "Recherche": "Recherche",
+  "Voir l’historique": "Voir l’historique",
+  "Tous les lieux fréquentés": "Tous les lieux fréquentés",
+  "Tous les lieux Stationnés": "Tous les lieux stationnés",
+  "Filtre en ordre croissant": "Filtre en ordre croissant",
+  "Filtre en ordre décroissant": "Filtre en ordre décroissant",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  "Tables des véhicules": "Tables des véhicules",
+  "Rapport personnel": "Rapport personnel",
+  "Rapport en Groupe": "Rapport en groupe",
+  "Rapport Tableau Récapitulatif en Groupe": "Rapport tableau récapitulatif en groupe",
+  "Rapport en groupe": "Rapport en groupe",
+  "Télécharger en PDF": "Télécharger en PDF",
+  "Unite": "Unité",
+  "Le téléchargement peut prendre jusqu'a 1 minute": "Le téléchargement peut prendre jusqu'à 1 minute",
+  "Télécharger le rapport en PDF": "Télécharger le rapport en PDF",
+  "Télécharger le tableau récapitulatif en PDF": "Télécharger le tableau récapitulatif en PDF",
+  "Télécharger le tableau récapitulatif en Exel": "Télécharger le tableau récapitulatif en Excel",
+  "Recherche par date": "Recherche par date",
+  "Recherche par intervalle de date": "Recherche par intervalle de date",
+  "Sélectionner une intervalle de date": "Sélectionner un intervalle de date",
+  "Recherche pour une journée": "Recherche pour une journée",
+  "Sélectionner une date": "Sélectionner une date",
+  "Le mot de passe est incorrect. Veuillez réessayer": "Le mot de passe est incorrect. Veuillez réessayer",
+  "Nom d'utilisateur": "Nom d'utilisateur",
+  "Fuseau horaire": "Fuseau horaire",
+  "Version de l'application": "Version de l'application",
+  "Redémarrer l'application": "Redémarrer l'application",
+  "Cliquez ici": "Cliquez ici",
+  "Êtes vous sur de redémarrer l'application": "Êtes-vous sûr de redémarrer l'application",
+
+  "Voir un rapport pour un seul véhicule": "Voir un rapport pour un seul véhicule",
+  "Unité": "Unité",
+  "Voir un rapport pour tous les véhicules": "Voir un rapport pour tous les véhicules",
+  "Gestion des Roles": "Gestion des rôles",
+  "Language": "Langue",
+  "Bienvenue à Octagono Plus": "Bienvenue à Octagono Plus",
+  "Pays": "Pays",
+  "Sélectionner un pays": "Sélectionner un pays",
+  "Haïti": "Haïti",
+  "République Dominicaine": "République Dominicaine",
+  "Se souvenir de moi": "Se souvenir de moi",
+  "Chargement": "Chargement",
+  "Se connecter": "Se connecter",
+  "Compte Demo": "Compte Démo",
+
+  "Sélectionner une langue": "Sélectionner une langue",
+  "Creation du nouveau groupe avec succès": "Création du nouveau groupe avec succès",
+  "Échec de la Creation du groupe": "Échec de la création du groupe",
+  "Modification du groupe avec succès": "Modification du groupe avec succès",
+  "Échec de la Modification du groupe": "Échec de la modification du groupe",
+  "Suppression du groupe avec succès": "Suppression du groupe avec succès",
+  "Échec de la Suppression du groupe": "Échec de la suppression du groupe",
+  "Creation du nouveau utilisateur avec succès": "Création du nouvel utilisateur avec succès",
+  "Échec de la Creation du l'utilisateur": "Échec de la création de l'utilisateur",
+  "Modification de l'utilisateur avec succès": "Modification de l'utilisateur avec succès",
+  "Échec de la Modification de l'utilisateur": "Échec de la modification de l'utilisateur",
+  "Suppression de l'utilisateur avec succès": "Suppression de l'utilisateur avec succès",
+  "Échec de Suppression de l'utilisateur": "Échec de la suppression de l'utilisateur",
+  "Creation du nouveau compte avec succès": "Création du nouveau compte avec succès",
+  "Échec de la Creation du compte": "Échec de la création du compte",
+  "Compte modifié avec succès": "Compte modifié avec succès",
+  "Échec de la  Modification du compte": "Échec de la modification du compte",
+  "Compte supprimer avec succès": "Compte supprimé avec succès",
+  "Échec de Suppression du compte": "Échec de la suppression du compte",
+  "Creation du nouveau appareil avec succès": "Création du nouvel appareil avec succès",
+  "Échec de la Creation de l'appareil": "Échec de la création de l'appareil",
+  "Modification de l'appareil avec succès": "Modification de l'appareil avec succès",
+  "Échec de la modification de l'appareil": "Échec de la modification de l'appareil",
+  "Suppression de l'appareil avec succès": "Suppression de l'appareil avec succès",
+  "Échec de Suppression de l'appareil": "Échec de la suppression de l'appareil",
+  "Vous avez ajoutee le geofence avec succès": "Vous avez ajouté le geofence avec succès",
+  "Échec de l'ajout du Geofence": "Échec de l'ajout du geofence",
+  "Modification du geofence avec succès": "Modification du geofence avec succès",
+  "Échec de la modification du geofence": "Échec de la modification du geofence",
+  "Suppression du geofence avec succès": "Suppression du geofence avec succès",
+  "Échec de la Suppression du geofence": "Échec de la suppression du geofence",
+  "Échec de la Modification du geofence": "Échec de la modification du geofence",
+  "Vous avez ajouté l'appareil avec succès": "Vous avez ajouté l'appareil avec succès",
+  "Échec de l'ajout du véhicule": "Échec de l'ajout du véhicule",
+  "Vous avez modifié le véhicule avec succès": "Vous avez modifié le véhicule avec succès",
+  "Échec de la modification du véhicule": "Échec de la modification du véhicule",
+  "Vous avez supprimé le véhicule avec succès": "Vous avez supprimé le véhicule avec succès",
+  "Échec de la suppression du véhicule": "Échec de la suppression du véhicule",
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  "Low Battery": "Batterie faible",
+  "In motion": "En mouvement",
+  "Panic": "Panique",
+  "Ignition OFF": "Allumage OFF",
+  "Ignition ON": "Allumage ON",
+  "Arrived at Geozone": "Arrivé dans la géozone",
+  "Aucun": "Aucun",
+  "Ajouter un nouveau Role": "Ajouter un nouveau rôle",
+  "Rechercher un Role": "Rechercher un rôle",
+  "Gestion Des Role": "Gestion des rôles",
+  "Pas de compte sélectionner": "Pas de compte sélectionné",
+  "Tous": "Tous",
+  "Choisissez un Appareil": "Choisissez un appareil",
+
+  "Activation": "Activation",
+  "Veuillez choisir un compte": "Veuillez choisir un compte",
+  "Le champ selector est vide": "Le champ sélecteur est vide",
+  "Historique d'un Appareils": "Historique d'un appareil",
+  "Trajet d'un Appareils": "Trajet d'un appareil",
+  "Informations sur un Appareils": "Informations sur un appareil",
+  "Admin Dashboard": "Tableau de bord admin",
+  "Mode Utilisateur": "Mode utilisateur",
+  "Rapport Groupe": "Rapport de groupe",
+  "Rapport Unite": "Rapport d'unité",
+  "Options de l'appareil": "Options de l'appareil",
+  "Localisation de l'appareil": "Localisation de l'appareil",
+  "Trajet de l'appareil": "Trajet de l'appareil",
+  "Historique de l'appareil": "Historique de l'appareil",
+  "Rapport de l'appareil": "Rapport de l'appareil",
+  "Contrôle de l'appareil": "Contrôle de l'appareil",
+  "Informations sur l'appareil": "Informations sur l'appareil",
+  "Modifier l'appareil": "Modifier l'appareil",
+  "Supprimer l'appareil": "Supprimer l'appareil",
+  "Mettre a jour les donnees": "Mettre à jour les données",
+  "Informations Generale": "Informations générales",
+  "Information sur les déplacements": "Informations sur les déplacements",
+  "Comptes": "Comptes",
+  "Utilisateurs": "Utilisateurs",
+  "Appareils": "Appareils",
+  "sysadmin Dashboard": "Tableau de bord sysadmin",
+
+  "Session inactive": "Session inactive",
+  "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer": "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer",
+  "Confirmer ton Mot de passe": "Confirmer votre mot de passe",
+  "Application déjà installée": "Application déjà installée",
+  "Installation non supportée": "Installation non supportée",
+  "Installation non disponible": "Installation non disponible",
+  "Installer l'application": "Installer l'application",
+  "Installation en cours": "Installation en cours",
+  "Appareils Actifs": "Appareils actifs",
+  "Appareils Inactifs": "Appareils inactifs",
+  "Appareils En déplacement": "Appareils en déplacement",
+  "Appareils Déplacer": "Appareils déplacés",
+  "Voulez-vous Supprimer l'utilisateur": "Voulez-vous supprimer l'utilisateur ?",
+  "Options de l'utilisateur": "Options de l'utilisateur",
+  "Groupe affecté": "Groupe affecté",
+  "Supprimer l'utilisateur": "Supprimer l'utilisateur",
+  "Login": "Connexion",
+  "Nombre Appareil": "Nombre d'appareils",
+  "Adresse du véhicule": "Adresse du véhicule",
+  "Statut du véhicule": "Statut du véhicule",
+  "Veuillez choisir un véhicule": "Veuillez choisir un véhicule",
+  "Choisir": "Choisir",
+  "En Déplacement": "En déplacement",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  "Véhicules En déplacement": "Véhicules en déplacement",
+  "Il n’est pas possible de fournir un rapport global pour tous": "Il n’est pas possible de fournir un rapport global pour tous.",
+  "Ce compte comprend plus de 50 appareils": "Ce compte comprend plus de 50 appareils",
+  "Documentation": "Documentation",
+  "ID du geofence": "ID du geofence",
+  "Nombre de coordonnées": "Nombre de coordonnées",
+  "Choisissez une date et une heure": "Choisissez une date et une heure",
+  "Une recherche portant sur plus de 3 jours ralentira un peu la carte": "Une recherche portant sur plus de 3 jours ralentira un peu la carte",
+  "Date de Début": "Date de début",
+  "Choisissez une date": "Choisissez une date",
+  "Heure de Début": "Heure de début",
+  "Date de Fin": "Date de fin",
+  "Heure de fin": "Heure de fin",
+  "Page non trouvée": "Page non trouvée",
+  "Oups ! La page que vous recherchez n'existe pas": "Oups ! La page que vous recherchez n'existe pas",
+  "Retour à l'accueil": "Retour à l'accueil",
+  "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support": "Si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support",
+  
+  "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.": "Le processus peut prendre un peu de temps selon le nombre de véhicules, mais reste rapide.",
+  "Notez bien": "Notez bien",
+  "Voir plus de Résultat": "Voir plus de résultats",
+  
+  "Résultat": "Résultat",
+  "Recherche une alerte": "Recherche d'une alerte",
+  "Appareils non déplacés": "Appareils non déplacé(s)",
+  "Appareils en Stationnement": "Appareils en stationnement",
+  "Non Déplacer": "Non déplacé(s)",
+  "Appareils Déplacés": "Appareils déplacés",
+  "Statistiques par compte": "Statistiques par compte",
+  "Nombre appareils": "Nombre d'appareil(s)",
+  
+  "Options du groupe": "Options du groupe",
+  "Afficher Les Appareils": "Afficher les appareils",
+  "Liste des utilisateurs affectés": "Liste des utilisateurs affectés",
+  "Liste Les Appareils": "Liste des appareils",
+  "Modifier le groupe": "Modifier le groupe",
+  "Supprimer le groupe": "Supprimer le groupe",
+  "Rechercher une option": "Rechercher une option",
+  "Veuillez cliquer sur l'option de l'utilisateur a modifier, puis sur 'Modifier l'utilisateur'": "Veuillez cliquer sur l'option de l'utilisateur à modifier, puis sur 'Modifier l'utilisateur'",
+  "Veuillez cliquer sur l'option du groupe a modifier, puis sur 'Modifier le groupe'": "Veuillez cliquer sur l'option du groupe à modifier, puis sur 'Modifier le groupe'",
+  "Veuillez cliquer sur l'option de l'appareil a modifier, puis sur 'Modifier l'appareil'": "Veuillez cliquer sur l'option de l'appareil à modifier, puis sur 'Modifier l'appareil'",
+  "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité modifier": "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité à modifier",
+  
   "Informations utilisateur": "Informations utilisateur",
-
+  
   "Ajouter un nouveau compte": "Ajouter un nouveau compte",
   "Modifier un compte": "Modifier un compte",
   "Supprimer un compte": "Supprimer un compte",
-
+  
   "Ajouter un nouveau utilisateur": "Ajouter un nouvel utilisateur",
   "Modifier un utilisateur": "Modifier un utilisateur",
   "Supprimer un utilisateur": "Supprimer un utilisateur",
-
+  
   "Gestion des groupes": "Gestion des groupes",
   "Ajouter un nouveau groupe": "Ajouter un nouveau groupe",
   "Modifier un groupe": "Modifier un groupe",
   "Supprimer un groupe": "Supprimer un groupe",
-
+  
   "Gestion des appareils": "Gestion des appareils",
   "Ajouter un nouveau appareil": "Ajouter un nouvel appareil",
   "Modifier un appareil": "Modifier un appareil",
   "Supprimer un appareil": "Supprimer un appareil",
-
+  
   "Gestion des geofences": "Gestion des géozones",
   "Ajouter une nouvelle geozone": "Ajouter une nouvelle géozone",
   "Modifier une geozone": "Modifier une géozone",
   "Supprimer une geozone": "Supprimer une géozone",
+  
+  "Veuillez ajouter au moins 3 positions": "Veuillez ajouter au moins 3 positions",
+  "Veuillez ajouter une description": "Veuillez ajouter une description",
+  "Choisir une couleur": "Choisir une couleur",
+  "Modifier Geofence": "Modifier Geofence",
+  "Créer Geofence": "Créer Geofence",
+  "Marqueur": "Marqueur",
+  "Coordonnées": "Coordonnées",
+  
+  "succès": "Succès",
+  "échec": "Échec",
+  "Échec": "Échec",
+  
+  "Ce nom de Geozone existe deja": "Ce nom de géozone existe déjà",
+  "Liste des appareils de": "Liste des appareils de",
 
 
 
-"Veuillez ajouter au moins 3 positions": "Veuillez ajouter au moins 3 positions",
-"Veuillez ajouter une description": "Veuillez ajouter une description",
-"Choisir une couleur": "Choisir une couleur",
-"Modifier Geofence": "Modifier Geofence",
-"Créer Geofence": "Créer Geofence",
-"Marqueur": "Marqueur",
-"Coordonnées": "Coordonnées",
-
-"succès": "succès",
-"échec": "échec",
-"Échec": "Échec",
 
 
 
-"Ce nom de Geozone existe deja": "Ce nom de Geozone existe deja",
-"Liste des appareils de": "Liste des appareils de",
-"": "",
-"": "",
-"": "",
-"": "",
-"": "",
-"": "",
-"": "",
-"": "",
-"": "",
-"": "",
-"": ""
+
+
+
+
+
+
+
+
+
+  
+
+  "AccountID": "ID du compte",
+"Last Update": "Dernière mise à jour",
+"Last update": "Dernière mise à jour",
+"Account ID": "ID du compte",
+"UserID": "ID de l'utilisateur",
+"ImeiNumber": "Numéro IMEI",
+"Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (ID de compte) est déjà utilisé. Veuillez en choisir un autre",
+"DisplayName": "Nom affiché",
+"contactName": "Nom du contact",
+"contactEmail": "Email du contact",
+"addressCity": "Ville",
+"addressCountry": "Pays",
+"isActive": "Actif",
+"Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (ID utilisateur) est déjà utilisé. Veuillez en choisir un autre",
+"roleID": "ID du rôle",
+"notifyEmail": "Email de notification",
+"TimeZone": "Fuseau horaire",
+"accountID": "ID du compte",
+"deviceID": "ID de l'appareil",
+"imeiNumber": "Numéro IMEI",
+"groupID": "ID du groupe",
+"ruleID": "ID de la règle",
+"selector": "Sélecteur",
+"emailSubject": "Sujet de l'e-mail",
+"emailText": "Texte de l'e-mail",
+"version": "Version"
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

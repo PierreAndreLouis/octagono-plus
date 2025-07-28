@@ -75,6 +75,7 @@ function DashboardContaintMaintComponant({
     vehicleDetails,
     ListeDesAlertes,
     testAlertListe,
+    versionApplication,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -2110,6 +2111,12 @@ function DashboardContaintMaintComponant({
             </div>
           </div>
         )}
+
+        <div className="flex justify-end pr-2">
+          <p className="ml-4 mt-6 font-semibold">
+            {t("version")} : {versionApplication}
+          </p>
+        </div>
       </div>
     </div>
   );
