@@ -144,7 +144,6 @@ function RapportGroupe({
   // Fonction pour obtenir le timestamp actuel en millisecondes
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   //
   //
@@ -819,7 +818,6 @@ function RapportGroupe({
       : false;
 
     const updatedToday = lastUpdateMs >= todayTimestamp;
-    const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
 
     const movedToday = matchedVehicle?.véhiculeDetails?.some(
       (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH >= 1
@@ -857,13 +855,7 @@ function RapportGroupe({
     }
 
     if (filter === "isMovingRightNowToday") {
-      if (
-        hasDetails &&
-        isActive &&
-        speed >= 1 &&
-        updatedRecently &&
-        updatedToday
-      ) {
+      if (hasDetails && isActive && speed >= 1 && updatedToday) {
         main_text_color = "text-green-700 dark:text-green-400";
         statut = `${t("En mouvement rapide")}`;
         lite_bg_color =
@@ -882,12 +874,7 @@ function RapportGroupe({
     }
 
     if (filter === "ispParkingRightNowToday") {
-      if (
-        hasDetails &&
-        isActive &&
-        updatedToday &&
-        (speed <= 0 || (speed >= 1 && !updatedRecently))
-      ) {
+      if (hasDetails && isActive && updatedToday && speed <= 0) {
         main_text_color = "text-red-900 dark:text-red-300";
         statut = `${t("En Stationnement")}`;
         lite_bg_color =
@@ -1023,7 +1010,6 @@ function RapportGroupe({
           twentyFourHoursInMs
         : false;
       const updatedToday = lastUpdateMs >= todayTimestamp;
-      const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
       const movedToday = matchedVehicle?.véhiculeDetails?.some(
         (d) => d.timestamp * 1000 >= todayTimestamp && d.speedKPH >= 1
       );
@@ -1033,21 +1019,10 @@ function RapportGroupe({
 
       switch (filter) {
         case "isMovingRightNowToday":
-          return (
-            hasDetails &&
-            isActive &&
-            speed >= 1 &&
-            updatedRecently &&
-            updatedToday
-          );
+          return hasDetails && isActive && speed >= 1 && updatedToday;
 
         case "ispParkingRightNowToday":
-          return (
-            hasDetails &&
-            isActive &&
-            updatedToday &&
-            (speed <= 0 || (speed >= 1 && !updatedRecently))
-          );
+          return hasDetails && isActive && updatedToday && speed <= 0;
 
         case "isNotActiveRithtNowToday":
           return (
@@ -1135,13 +1110,8 @@ function RapportGroupe({
   //     matchedVehicle.véhiculeDetails[0] &&
   //     matchedVehicle.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-  //   const isNotStillSpeedActive =
-  //     lastUpdateTimestampMs &&
-  //     currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
-
   //   ////////////////////////////x////////////////////////////////////////
 
-  //   if (hasDetails && isSpeedActive && !isNotStillSpeedActive) {
   //     main_text_color = "text-green-700 dark:text-green-400";
   //     statut = `${t("En mouvement rapide")}`;
   //     lite_bg_color =
@@ -1157,7 +1127,6 @@ function RapportGroupe({
   //   } else if (
   //     hasDetails &&
   //     isActive &&
-  //     (!isSpeedActive || (isSpeedActive && isNotStillSpeedActive))
   //   ) {
   //     main_text_color = "text-red-900 dark:text-red-300";
   //     statut = `${t("En Stationnement")}`;
@@ -1229,7 +1198,6 @@ function RapportGroupe({
   //   }
   //   //
 
-  //   if (filter === "isMoving") return hasDetails && isSpeedActive && !isNotStillSpeedActive;
   //   if (filter === "parking") return hasDetails && noSpeed;
   //   if (filter === "inactive") return !hasDetails;
 
@@ -1271,11 +1239,7 @@ function RapportGroupe({
       véhicule?.véhiculeDetails[0] &&
       véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-    // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
     // Vérifie si la mise à jour est récente (moins de 30 minutes)
-    const isStillSpeedActive =
-      lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
 
     // Vérifie si le véhicule a été mis à jour dans les 20 dernières heures
     const lastUpdateTimeMs = véhicule?.lastUpdateTime
@@ -1284,7 +1248,7 @@ function RapportGroupe({
     const isRecentlyUpdated = currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
     // Le véhicule doit être actif selon la vitesse et la mise à jour
-    return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
+    return isSpeedActive && isRecentlyUpdated;
   });
 
   const activeVehicleCount2 =
@@ -1308,14 +1272,8 @@ function RapportGroupe({
         véhicule?.véhiculeDetails[0] &&
         véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-      // const isStillSpeedActive = todayTimestamp - lastTimeStamp < trentMinute;
-      // Vérifie si la mise à jour est récente (moins de 30 minutes)
-      const isStillSpeedActive =
-        lastUpdateTimestampMs &&
-        currentTimeMs - lastUpdateTimestampMs <= tenMinutesInMs;
-
       // Le véhicule doit être actif selon la vitesse et la mise à jour
-      return isSpeedActive && isRecentlyUpdated && isStillSpeedActive;
+      return isSpeedActive && isRecentlyUpdated;
     });
 
   //
@@ -1363,20 +1321,11 @@ function RapportGroupe({
       véhicule?.véhiculeDetails[0] &&
       véhicule?.véhiculeDetails[0].speedKPH > 0;
 
-    const isNotStillSpeedActive =
-      lastUpdateTimestampMs &&
-      currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
-
     // Inclure seulement les véhicules qui ont des détails, qui sont actifs, et qui ont noSpeed
     // return hasDetails && noSpeed && isActive;
     // Inclure les véhicules :
     // - Soit ils ont noSpeed et sont actifs
-    // - Soit ils sont isSpeedActive mais isNotStillSpeedActive
-    return (
-      hasDetails &&
-      isActive &&
-      (noSpeed || (isSpeedActive && isNotStillSpeedActive))
-    );
+    return hasDetails && isActive && noSpeed;
   });
 
   const notActiveVehicleCount2 =
@@ -1409,20 +1358,13 @@ function RapportGroupe({
         véhicule?.véhiculeDetails[0] &&
         véhicule?.véhiculeDetails[0].timestamp * 1000; // Convertir en millisecondes
 
-      const isNotStillSpeedActive =
-        lastUpdateTimestampMs &&
-        currentTimeMs - lastUpdateTimestampMs > tenMinutesInMs;
-
       const hasBeenMoving =
         véhicule?.véhiculeDetails &&
         véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
 
       // Le véhicule doit être actif selon la vitesse et la mise à jour
       // return noSpeed && isRecentlyUpdated;
-      return (
-        isRecentlyUpdated &&
-        (isNotSpeedActive || (isSpeedActive && isNotStillSpeedActive))
-      );
+      return isRecentlyUpdated && isNotSpeedActive;
     });
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -4135,7 +4077,7 @@ function RapportGroupe({
                 {t("Nombre total d’arrêts")} :
                 <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                   {nombreTotaleArret > 0
-                    ? nombreTotaleArret + "" + `${t("arrêts")}`
+                    ? nombreTotaleArret + " " + ` ${t("arrêts")}`
                     : " 0 " + ` ${t("arrêts")}`}
                 </span>
               </p>

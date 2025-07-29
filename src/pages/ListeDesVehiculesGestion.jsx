@@ -95,7 +95,6 @@ function ListeDesVehiculesGestion({
   // Fonction pour obtenir le timestamp actuel en millisecondes
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
 
   //
@@ -560,8 +559,6 @@ function ListeDesVehiculesGestion({
                           : false;
 
                         const updatedToday = lastUpdateMs >= todayTimestamp;
-                        const updatedRecently =
-                          currentTimeMs - lastUpdateMs <= tenMinutesInMs;
 
                         let border_color = "bg-gray-50";
                         let text_color = "text-orange-500/80";
@@ -584,11 +581,7 @@ function ListeDesVehiculesGestion({
 
                         if (
                           device?.lastStopTime > todayTimestamp ||
-                          (hasDetails &&
-                            isActive &&
-                            speed >= 1 &&
-                            updatedRecently &&
-                            updatedToday)
+                          (hasDetails && isActive && speed >= 1 && updatedToday)
                         ) {
                           border_color = "border-l-[.4rem] border-green-300";
                           text_color = "text-green-500/80";
@@ -623,11 +616,9 @@ function ListeDesVehiculesGestion({
                                 <h3
                                   className={`${text_color} font-bold text-2xl`}
                                 >
-                                  {updatedRecently
-                                    ? parseFloat(
-                                        device?.véhiculeDetails[0]?.speedKPH
-                                      ).toFixed(0)
-                                    : "0"}{" "}
+                                  {parseFloat(
+                                    device?.véhiculeDetails[0]?.speedKPH
+                                  ).toFixed(0)}{" "}
                                 </h3>
                                 <h3
                                   className={`${text_color} font-bold text-lg`}
@@ -644,11 +635,9 @@ function ListeDesVehiculesGestion({
                                     <h3
                                       className={`${text_color} font-bold text-lg md:text-2xl`}
                                     >
-                                      {updatedRecently
-                                        ? parseFloat(
-                                            device?.véhiculeDetails[0]?.speedKPH
-                                          ).toFixed(0)
-                                        : "0"}{" "}
+                                      {parseFloat(
+                                        device?.véhiculeDetails[0]?.speedKPH
+                                      ).toFixed(0)}{" "}
                                       Km/h
                                     </h3>
                                   </div>

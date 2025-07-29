@@ -153,21 +153,12 @@ function HistoriqueMainComponent({
           </div>
         )}
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
-          <div className="flex gap-3 justify-center items-center md:mb-4 mt-8">
-            <h2 className="text-xl md:text-4xl  text-orange-600 ">
-              {t("Historique")}{" "}
-            </h2>
-            {filteredVehiclesPagination?.length > 0 && (
-              <p
-                onClick={() => {
-                  setIsReverseListe(!isReverseListe);
-                }}
-                className="text-lg  cursor-pointer"
-              >
-                <LuArrowDownUp className="text-[1.8rem]  mt-2" />
-              </p>
-            )}
-          </div>
+          {/* <div className="flex gap-3 justify-center items-center"> */}
+          <h2 className="text-xl md:text-4xl  text-orange-600   md:mb-4 mt-8">
+            {t("Historique")}{" "}
+          </h2>
+
+          {/* </div> */}
           <h2 className="text-gray-800 notranslate mb-10 dark:text-gray-50 font-semibold text-lg md:text-xl mb-2-- ">
             {currentVéhicule?.description ||
               `${t("Pas de véhicule sélectionné")}`}
@@ -176,57 +167,73 @@ function HistoriqueMainComponent({
 
         <div className="flex flex-col gap-4">
           {/* -{filterByColor}- */}
-          <div className="mt-4 grid grid-cols-2  md:flex items-center gap-2 flex-wrap">
-            <p
-              onClick={() => {
-                setFilterByColor("mouvement rapide");
-              }}
-              className={`${
-                filterByColor === "mouvement rapide"
-                  ? "bg-green-100 "
-                  : "bg-green-50/60"
-              } px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold  hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
-                `}
-            >
-              {t("En mouvement rapide")}
-            </p>
-            <p
-              onClick={() => {
-                setFilterByColor("mouvement lent");
-              }}
-              className={` ${
-                filterByColor === "mouvement lent"
-                  ? "bg-yellow-100 "
-                  : "bg-yellow-50/60"
-              } px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-yellow-600 font-semibold  hover:bg-yellow-100 dark:text-yellow-200 dark:bg-gray-700 border-l-yellow-600 `}
-            >
-              {t("En mouvement lent")}
-            </p>
 
-            <p
-              onClick={() => {
-                setFilterByColor("en stationnement");
-              }}
-              className={`${
-                filterByColor === "en stationnement"
-                  ? "bg-red-100 "
-                  : "bg-red-50/60"
-              } px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold  hover:bg-red-100 dark:text-red-200 dark:bg-gray-700 border-l-red-600 `}
-            >
-              {t("En stationnement")}
-            </p>
-            <p
-              onClick={() => {
-                setFilterByColor("all");
-                // handleCheckboxChange("en_marche");
-                // handleCheckboxChange("en_ralenti");
-                // handleCheckboxChange("en_arret");
-              }}
-              className="px-6 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100  dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
-            >
-              {t("All")}
-            </p>
+          <div className="flex items-end justify-center">
+            <div className="mt-4 grid grid-cols-2  md:flex items-center gap-2 flex-wrap w-full">
+              <p
+                onClick={() => {
+                  setFilterByColor("mouvement rapide");
+                }}
+                className={`${
+                  filterByColor === "mouvement rapide"
+                    ? "bg-green-100 "
+                    : "bg-green-50/60"
+                } px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold  hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                `}
+              >
+                {t("En mouvement rapide")}
+              </p>
+              <p
+                onClick={() => {
+                  setFilterByColor("mouvement lent");
+                }}
+                className={` ${
+                  filterByColor === "mouvement lent"
+                    ? "bg-yellow-100 "
+                    : "bg-yellow-50/60"
+                } px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-yellow-600 font-semibold  hover:bg-yellow-100 dark:text-yellow-200 dark:bg-gray-700 border-l-yellow-600 `}
+              >
+                {t("En mouvement lent")}
+              </p>
+
+              <p
+                onClick={() => {
+                  setFilterByColor("en stationnement");
+                }}
+                className={`${
+                  filterByColor === "en stationnement"
+                    ? "bg-red-100 "
+                    : "bg-red-50/60"
+                } px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold  hover:bg-red-100 dark:text-red-200 dark:bg-gray-700 border-l-red-600 `}
+              >
+                {t("En stationnement")}
+              </p>
+              <p
+                onClick={() => {
+                  setFilterByColor("all");
+                  // handleCheckboxChange("en_marche");
+                  // handleCheckboxChange("en_ralenti");
+                  // handleCheckboxChange("en_arret");
+                }}
+                className="px-6 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100  dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+              >
+                {t("All")}
+              </p>
+            </div>
+            <div className="w-[3rem] flex justify-end">
+              {filteredVehiclesPagination?.length > 0 && (
+                <p
+                  onClick={() => {
+                    setIsReverseListe(!isReverseListe);
+                  }}
+                  className="text-md bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                >
+                  <LuArrowDownUp className="text-[1.3rem]" />
+                </p>
+              )}
+            </div>{" "}
           </div>
+
           {loadingHistoriqueFilter ? (
             <p className="text-center">{t("Chargement des données")}...</p>
           ) : véhiculeHistoriqueDetails.length > 0 ? (

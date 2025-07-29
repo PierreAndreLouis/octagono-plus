@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.2";
+  let versionApplication = "2.1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -37,7 +37,6 @@ const DataContextProvider = ({ children }) => {
 
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   //
 
@@ -788,6 +787,82 @@ const DataContextProvider = ({ children }) => {
     mergedDataHome,
   ]);
 
+  // const {
+  //   DeviceDéplacer,
+  //   EnDéplacement,
+  //   DeviceEnStationnement,
+  //   DeviceInactifs,
+  //   DeviceListeActif,
+  // } = useMemo(() => {
+  //   const d = {
+  //     DeviceDéplacer: [],
+  //     EnDéplacement: [],
+  //     DeviceEnStationnement: [],
+  //     DeviceInactifs: [],
+  //     DeviceListeActif: [],
+  //   };
+
+  //   const idsÀExclure = new Set();
+
+  //   addVehiculeDetailsFonction(allDevices, véhiculeDetails).forEach(
+  //     (device) => {
+  //       const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+  //       const lastStopTime = device?.lastStopTime ?? 0;
+
+  //       if (lastStopTime > todayTimestamp) {
+  //         d.DeviceDéplacer.push(device);
+  //         idsÀExclure.add(device.deviceID);
+  //       }
+
+  //       const details = device?.véhiculeDetails?.[0];
+  //       const hasDetails = device?.véhiculeDetails?.length > 0;
+  //       const speed = details?.speedKPH ?? 0;
+  //       const lastUpdateMs = details?.timestamp * 1000;
+
+  //       const updatedToday = lastUpdateMs >= todayTimestamp;
+
+  //       const isActive =
+  //         currentTimeMs - device?.lastUpdateTime * 1000 < twentyFourHoursInSec;
+
+  //       // device?.lastUpdateTime
+  //       // ?
+  //       // : false;
+
+  //       if (speed >= 1) {
+  //         d.EnDéplacement.push(device);
+  //         idsÀExclure.add(device.deviceID);
+  //       }
+
+  //       if (currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) {
+  //         d.DeviceListeActif.push(device);
+  //       } else {
+  //         d.DeviceInactifs.push(device);
+  //       }
+  //     }
+  //   );
+
+  //   // Maintenant, filtrer les appareils stationnés
+  //   addVehiculeDetailsFonction(allDevices, véhiculeDetails).forEach(
+  //     (device) => {
+  //       const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+  //       if (
+  //         currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
+  //         !idsÀExclure.has(device.deviceID)
+  //       ) {
+  //         d.DeviceEnStationnement.push(device);
+  //       }
+  //     }
+  //   );
+
+  //   return d;
+  // }, [allDevices, todayTimestamp]);
+
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  //   //
+
+  // Ouvrir la base de données
+
   const {
     DeviceDéplacer,
     EnDéplacement,
@@ -810,10 +885,15 @@ const DataContextProvider = ({ children }) => {
         const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
         const lastStopTime = device?.lastStopTime ?? 0;
 
-        if (lastStopTime > todayTimestamp) {
+        if (
+          lastStopTime > todayTimestamp &&
+          currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
+        ) {
           d.DeviceDéplacer.push(device);
           idsÀExclure.add(device.deviceID);
         }
+
+        const tenMinutesInMs = 24 * 60 * 1000;
 
         const details = device?.véhiculeDetails?.[0];
         const hasDetails = device?.véhiculeDetails?.length > 0;
@@ -829,7 +909,10 @@ const DataContextProvider = ({ children }) => {
         // ?
         // : false;
 
-        if (speed >= 1 && updatedRecently) {
+        if (
+          speed >= 1 &&
+          currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
+        ) {
           d.EnDéplacement.push(device);
           idsÀExclure.add(device.deviceID);
         }
@@ -857,12 +940,6 @@ const DataContextProvider = ({ children }) => {
 
     return d;
   }, [allDevices, todayTimestamp]);
-
-  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-  //   //
-
-  // Ouvrir la base de données
 
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
@@ -1186,11 +1263,9 @@ const DataContextProvider = ({ children }) => {
           obj.véhiculeDetails?.map((detail) => {
             const speed = parseFloat(detail.speedKPH);
             const lastUpdateMs = parseInt(detail.timestamp) * 1000;
-            const updatedRecently =
-              currentTimeMs - lastUpdateMs <= tenMinutesInMs;
 
             if (detail.statusCode === "0xF112") {
-              if (!(speed >= 1 && updatedRecently)) {
+              if (!(speed >= 1)) {
                 detail.statusCode = "0xF020";
               }
             }
@@ -6368,9 +6443,9 @@ const DataContextProvider = ({ children }) => {
         } else {
           setRunningAnimationProgressDuration(150);
         }
+        setProgress(2);
         setProgressAnimationStart(0);
         setRunningAnimationProgressLoading(true);
-
         processAllVehicles(véhiculeData);
       } else {
         setFetchVehicleDataFromRapportGroupe(true);
@@ -6391,9 +6466,10 @@ const DataContextProvider = ({ children }) => {
         } else {
           setRunningAnimationProgressDuration(700);
         }
+
+        setProgress(2);
         setProgressAnimationStart(0);
         setRunningAnimationProgressLoading(true);
-
         processAllVehiclesDetails(véhiculeData, timeFrom, timeTo);
       }
 

@@ -191,7 +191,6 @@ function MapComponent({
     const timestamp = véhicule?.timestamp * 1000; // En millisecondes
     const lastUpdateTime = véhicule?.timestamp;
 
-    const tenMinutesInMs = 10 * 60 * 1000;
     const currentTimeMs = Date.now();
     const currentTimeSec = Math.floor(currentTimeMs / 1000);
     const twentyFourHoursInSec = 24 * 60 * 60;
@@ -200,20 +199,22 @@ function MapComponent({
       currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
     const isNotRecentlyUpdate =
       currentTimeSec - lastUpdateTime > twentyFourHoursInSec;
-    const isStillSpeedActive =
-      timestamp && currentTimeMs - timestamp <= tenMinutesInMs;
 
     if (!getColor) {
       if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
 
       if (
         speed > 0 &&
-        speed <= 20 &&
-        (isStillSpeedActive || historiqueSelectedLocationIndex)
+        speed <= 20
+        // &&
+        // (isStillSpeedActive || historiqueSelectedLocationIndex)
       )
         return `/pin/ping_yellow_h${direction}.png`;
 
-      if (speed > 20 && (isStillSpeedActive || historiqueSelectedLocationIndex))
+      if (
+        speed > 20
+        //  && (isStillSpeedActive || historiqueSelectedLocationIndex)
+      )
         return `/pin/ping_green_h${direction}.png`;
 
       return "/pin/ping_red.png";
@@ -222,12 +223,16 @@ function MapComponent({
 
       if (
         speed > 0 &&
-        speed <= 20 &&
-        (isStillSpeedActive || historiqueSelectedLocationIndex)
+        speed <= 20
+        // &&
+        // (isStillSpeedActive || historiqueSelectedLocationIndex)
       )
         return "bg-yellow-600";
 
-      if (speed > 20 && (isStillSpeedActive || historiqueSelectedLocationIndex))
+      if (
+        speed > 20
+        // && (isStillSpeedActive || historiqueSelectedLocationIndex)
+      )
         return "bg-green-600";
 
       return "bg-red-500";

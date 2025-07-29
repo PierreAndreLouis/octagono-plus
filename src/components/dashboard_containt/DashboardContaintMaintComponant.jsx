@@ -81,6 +81,8 @@ function DashboardContaintMaintComponant({
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
+  let ListeOfDevice = isDashboardHomePage ? accountDevices : dataFusionné;
+
   const [expandSection, setExpandSection] = useState("");
   const [expandSectionTable, setExpandSectionTable] = useState("");
 
@@ -101,7 +103,6 @@ function DashboardContaintMaintComponant({
 
   const getCurrentTimestampMs = () => Date.now(); // Temps actuel en millisecondes
 
-  const tenMinutesInMs = 10 * 60 * 1000; // 30 minutes en millisecondes
   const currentTimeMs = getCurrentTimestampMs(); // Temps actuel
   //
 
@@ -1752,8 +1753,10 @@ function DashboardContaintMaintComponant({
                   const codeDescription =
                     statusDescriptions[code] || "Statut inconnu";
                   const bgColor = getBackgroundColor(code);
-                  const currentDevice = accountDevices?.find(
-                    (d) => d.deviceID === details.deviceID
+                  const currentDevice = ListeOfDevice?.find(
+                    (device) =>
+                      device?.deviceID === details?.deviceID &&
+                      device?.accountID === details?.accountID
                   );
                   return (
                     <div

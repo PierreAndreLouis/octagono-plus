@@ -174,7 +174,7 @@ function TableauRecapitulatifComptes({
           <thead className="bg-orange-50 h-[2.8rem] text-gray-700 dark:bg-gray-900 dark:text-gray-100 sticky top-0 z-0-- ">
             <tr>
               <th>#</th>
-              <th className="text-center">{t("Compte")}</th>
+              <th className="text-center">{t("Comptes")}</th>
               <th className="text-center">{t("Nombre appareils")}</th>
               <th className="text-center">{t("Déplacés")}</th>
               <th className="text-center">{t("Actifs")}</th>
