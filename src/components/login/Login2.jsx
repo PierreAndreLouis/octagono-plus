@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { FaAddressBook, FaBook } from "react-icons/fa";
 import { MdGTranslate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 function Login2() {
   const {
@@ -92,9 +93,11 @@ function Login2() {
   //
   x;
 
+  const [isShowPassword, setIsShowPassword] = useState(false);
+
   return (
     <div>
-      <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-12   lg:px-8 ">
+      <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-32   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <div className=" flex  gap-5 justify-center items-center">
             <div className=" flex  gap-5 justify-center items-center scale-75 md:scale-100">
@@ -192,7 +195,7 @@ function Login2() {
               >
                 {t("Compte")}
               </label>
-              <div className="mt-2">
+              <div className="mt-2 ">
                 <input
                   id="account"
                   name="account"
@@ -234,11 +237,28 @@ function Login2() {
               >
                 {t("Mot de passe")}
               </label>
-              <div className="mt-2">
+              <div className="mt-2  relative">
+                {isShowPassword ? (
+                  <IoMdEye
+                    onClick={() => {
+                      setIsShowPassword(!isShowPassword);
+                    }}
+                    className="absolute right-2 text-lg top-2 cursor-pointer min-w-[2rem]"
+                  />
+                ) : (
+                  <IoMdEyeOff
+                    onClick={() => {
+                      setIsShowPassword(!isShowPassword);
+                    }}
+                    className="absolute right-2 text-lg top-2 cursor-pointer min-w-[2rem]"
+                  />
+                )}
+                {/* <IoMdEyeOff className="absolute right-2 text-lg top-2 cursor-pointer min-w-[2rem]" /> */}
+
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={`${isShowPassword ? "text" : "password"}`}
                   value={formData.password}
                   onChange={handleChange}
                   placeholder={`${t("Mot de passe")}`}
@@ -313,11 +333,11 @@ function Login2() {
           </form>
         </div>
       </div>
-      <div className="flex justify-end pb-4">
+      {/* <div className="flex justify-end pb-4">
         <p className="mr-6 mt-6 font-semibold ">
           {t("version")} : {versionApplication}
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

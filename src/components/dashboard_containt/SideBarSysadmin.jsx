@@ -530,6 +530,12 @@ function SideBarSysadmin({
       link: "",
       setVariable: () => setChooseOtherLanguagePopup(true),
     },
+    {
+      name: t("Manuel d'utilisation"),
+      isSysadmin: false,
+      link: "",
+      setVariable: () => ouvrirPDF(),
+    },
   ];
 
   const filteredOptionListe = useMemo(() => {

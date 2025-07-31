@@ -28,8 +28,6 @@ import GoogleTranslate from "./components/home/GoogleTranslate";
 
 import { IoLogInOutline } from "react-icons/io5";
 
-import { useTranslation } from "react-i18next";
-
 const DashboardContaintMaintComponant = React.lazy(() =>
   import("./components/dashboard_containt/DashboardContaintMaintComponant")
 );
@@ -124,6 +122,7 @@ const DocModifierVehicule = React.lazy(() =>
 const DocLocationVehicule = React.lazy(() =>
   import("./components/documentation/DocLocationVehicule")
 );
+import { useTranslation } from "react-i18next";
 
 import ChooseOtherAccountDashboard from "./components/dashboard_containt/ChooseOtherAccountDashboard";
 import Logout from "./components/login/Logout";
@@ -586,7 +585,7 @@ function App() {
 
   return (
     <div className="dark:bg-gray-700 md:p-4 bg-gray-100">
-      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800">
+      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0">
         <ScrollToTop />
         <GoogleTranslate />
         {/* {!readDocumentation && ( */}
@@ -1440,6 +1439,27 @@ function App() {
 
           <Route path="*" element={<Page_404 />} />
         </Routes>
+        <div
+          className={` absolute  ${
+            !isAuthenticated
+              ? "bottom-6"
+              : "bottom-20 md:bottom-12 lg:-bottom-14"
+          }  right-4 z-[9999999999999999999999999999999]`}
+        >
+          <div className="flex gap-3 font-semibold">
+            <p
+              onClick={() => {
+                window.open("/Guide d'utilisation Octagono.pdf", "_blank");
+              }}
+              className="cursor-pointer text-orange-500 underline"
+            >
+              {t("Guide d'utilisation")}
+            </p>
+            <p>
+              {t("version")}: {versionApplication}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

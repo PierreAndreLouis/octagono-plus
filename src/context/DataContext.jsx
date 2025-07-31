@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "2.1";
+  let versionApplication = "3.1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1255,6 +1255,9 @@ const DataContextProvider = ({ children }) => {
   // ]);
 
   const sourceListe = isDashboardHomePage ? véhiculeDetails : vehicleDetails;
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  const sourceListeDevice = isDashboardHomePage ? accountDevices : dataFusionné;
 
   const ListeDesAlertes = useMemo(() => {
     return sourceListe
@@ -1262,12 +1265,9 @@ const DataContextProvider = ({ children }) => {
         (obj) =>
           obj.véhiculeDetails?.map((detail) => {
             const speed = parseFloat(detail.speedKPH);
-            const lastUpdateMs = parseInt(detail.timestamp) * 1000;
 
-            if (detail.statusCode === "0xF112") {
-              if (!(speed >= 1)) {
-                detail.statusCode = "0xF020";
-              }
+            if (detail.statusCode === "0xF112" && speed <= 0) {
+              detail.statusCode = "0xF020";
             }
 
             return {
