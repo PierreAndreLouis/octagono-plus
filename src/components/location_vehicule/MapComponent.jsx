@@ -13,6 +13,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import customMarkerIcon from "/pin/ping_red.png";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import Tooltip from "@mui/material/Tooltip";
 
 import { DataContext } from "../../context/DataContext";
 import { Polygon } from "react-leaflet";
@@ -530,36 +531,82 @@ function MapComponent({
         </div>
       )}
 
-      <div
-        onClick={() => {
-          setShowGeofenceInCarte(!showGeofenceInCarte);
+      <Tooltip
+        PopperProps={{
+          modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [0, -10], // Décalage horizontal et vertical
+              },
+            },
+            {
+              name: "zIndex",
+              enabled: true,
+              phase: "write",
+              fn: ({ state }) => {
+                state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+              },
+            },
+          ],
         }}
-        className="border overflow-hidden absolute right-[1rem] top-[14rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+        title={`${t("Afficher les zones géographiques")}`}
       >
-        <div className="relative">
-          <IoEarth
-            className={`${
-              showGeofenceInCarte ? "text-green-500" : "text-orange-500"
-            } text-2xl `}
-          />
-        </div>
-      </div>
-
-      {!selectedVehicleToShowInMap && (
         <div
           onClick={() => {
-            setisMarkerClusterGroupMode(!isMarkerClusterGroupMode);
+            setShowGeofenceInCarte(!showGeofenceInCarte);
           }}
-          className="border overflow-hidden absolute right-[1rem] top-[19rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+          className="border overflow-hidden absolute right-[1rem] top-[14rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
         >
           <div className="relative">
-            <TbMapPinPin
+            <IoEarth
               className={`${
-                isMarkerClusterGroupMode ? "text-green-500" : "text-orange-500"
+                showGeofenceInCarte ? "text-green-500" : "text-orange-500"
               } text-2xl `}
             />
           </div>
         </div>
+      </Tooltip>
+
+      {!selectedVehicleToShowInMap && (
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -10], // Décalage horizontal et vertical
+                },
+              },
+              {
+                name: "zIndex",
+                enabled: true,
+                phase: "write",
+                fn: ({ state }) => {
+                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                },
+              },
+            ],
+          }}
+          title={`${t("Activer/Désactiver le regroupement des marqueurs")}`}
+        >
+          <div
+            onClick={() => {
+              setisMarkerClusterGroupMode(!isMarkerClusterGroupMode);
+            }}
+            className="border overflow-hidden absolute right-[1rem] top-[19rem] z-[999] cursor-pointer px-2  py-2 border-gray-300 rounded-full shadow-lg shadow-black/20 bg-gray-100"
+          >
+            <div className="relative">
+              <TbMapPinPin
+                className={`${
+                  isMarkerClusterGroupMode
+                    ? "text-green-500"
+                    : "text-orange-500"
+                } text-2xl `}
+              />
+            </div>
+          </div>
+        </Tooltip>
       )}
 
       {showGeofenceInCartePopup && (

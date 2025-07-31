@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FaChevronDown } from "react-icons/fa";
 import { MdUpdate } from "react-icons/md";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
+import Tooltip from "@mui/material/Tooltip";
 
 function StatisticDashboard({
   setChosseOtherGroupeDashboard,
@@ -88,16 +89,38 @@ function StatisticDashboard({
                 {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
               </p>
             )}
-            <div
-              onClick={() => {
-                fetchNewDataDevices();
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
               }}
-              className={`${
-                isLoading2 ? "animate-spin" : ""
-              }  text-orange-500 min-w-2  translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
+              title={`${t("Mettre a jour les donnes")}`}
             >
-              <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
-            </div>
+              <div
+                onClick={() => {
+                  fetchNewDataDevices();
+                }}
+                className={`${
+                  isLoading2 ? "animate-spin" : ""
+                }  text-orange-500 min-w-2  translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
+              >
+                <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
+              </div>
+            </Tooltip>
           </div>
         </div>
 

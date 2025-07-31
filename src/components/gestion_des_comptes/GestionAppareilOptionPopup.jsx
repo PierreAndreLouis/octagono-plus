@@ -3,7 +3,13 @@ import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 
-import { FaEdit, FaInfoCircle, FaMicrophone, FaTrashAlt } from "react-icons/fa";
+import {
+  FaEdit,
+  FaInfoCircle,
+  FaListUl,
+  FaMicrophone,
+  FaTrashAlt,
+} from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { FaLocationDot } from "react-icons/fa6";
 import { GiPathDistance } from "react-icons/gi";
@@ -483,7 +489,7 @@ function GestionAppareilOptionPopup({
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
-                <IoStatsChartSharp className="text-[1.5rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <FaListUl className="text-[1.5rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   {t("Historique de l'appareil")}
                 </h2>

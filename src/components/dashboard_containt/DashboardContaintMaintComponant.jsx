@@ -11,6 +11,7 @@ import { FaAngleDoubleRight, FaUnlockAlt, FaUserCircle } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useTranslation } from "react-i18next";
+import Tooltip2 from "@mui/material/Tooltip";
 
 import LocationPage from "../../pages/LocationPage";
 import ListeDesVehiculesGestion from "../../pages/ListeDesVehiculesGestion";
@@ -1673,17 +1674,39 @@ function DashboardContaintMaintComponant({
 
             {!unlockCarteScroll && (
               <div className="absolute flex justify-center items-center inset-0 bg-black/20 z-[8]">
-                <div
-                  onClick={() => {
-                    // setUnlockCarteScroll(true);
-                    setExpandSection("carte");
-                    setSelectedVehicleToShowInMap(null);
-                    updateAppareilsEtGeofencesPourCarte();
+                <Tooltip2
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -10], // Décalage horizontal et vertical
+                        },
+                      },
+                      {
+                        name: "zIndex",
+                        enabled: true,
+                        phase: "write",
+                        fn: ({ state }) => {
+                          state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                        },
+                      },
+                    ],
                   }}
-                  className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
+                  title={`${t("Élargir la carte")}`}
                 >
-                  <ImEnlarge className="text-[1.3rem]" />
-                </div>
+                  <div
+                    onClick={() => {
+                      // setUnlockCarteScroll(true);
+                      setExpandSection("carte");
+                      setSelectedVehicleToShowInMap(null);
+                      updateAppareilsEtGeofencesPourCarte();
+                    }}
+                    className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
+                  >
+                    <ImEnlarge className="text-[1.3rem]" />
+                  </div>
+                </Tooltip2>
               </div>
             )}
           </div>

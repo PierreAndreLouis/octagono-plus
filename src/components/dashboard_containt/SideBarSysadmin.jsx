@@ -1,11 +1,14 @@
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Tooltip from "@mui/material/Tooltip";
+
 import {
   FaArrowLeft,
   FaBook,
   FaCar,
   FaChevronDown,
   FaInfoCircle,
+  FaListUl,
   FaUser,
   FaUserCircle,
   FaUsers,
@@ -544,6 +547,10 @@ function SideBarSysadmin({
 
   const [showSideBar2, setShowSideBar2] = useState(false);
 
+  const ouvrirPDF = () => {
+    window.open("/Guide d'utilisation Octagono.pdf", "_blank");
+  };
+
   return (
     <div
       className={`${
@@ -633,15 +640,37 @@ function SideBarSysadmin({
           <div
             className={`$ flex items-center   justify-between  gap-2   py-4  cursor-pointer px-3`}
           >
-            <FaUserCircle
-              onClick={() => {
-                setDocumentationPage("userInfo");
-                navigate("/userInfo");
-                closeSideBar();
-                setShowSideBar2(false);
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
               }}
-              className="text-[3rem] min-w-[1.5rem] text-gray-500"
-            />
+              title={`${t("Voir les infos sur le compte")}`}
+            >
+              <FaUserCircle
+                onClick={() => {
+                  setDocumentationPage("userInfo");
+                  navigate("/userInfo");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                }}
+                className="text-[3rem] min-w-[1.5rem] text-gray-500"
+              />
+            </Tooltip>
             <div
               onClick={() => {
                 if (isDashboardHomePage) {
@@ -666,12 +695,34 @@ function SideBarSysadmin({
               </p>
             </div>
             {isDashboardHomePage && (
-              <FaChevronDown
-                onClick={() => {
-                  setChooseOtherAccountGestion(true);
+              <Tooltip
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10], // Décalage horizontal et vertical
+                      },
+                    },
+                    {
+                      name: "zIndex",
+                      enabled: true,
+                      phase: "write",
+                      fn: ({ state }) => {
+                        state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                      },
+                    },
+                  ],
                 }}
-                className="text-lg"
-              />
+                title={`${t("Choisir un autre compte")}`}
+              >
+                <FaChevronDown
+                  onClick={() => {
+                    setChooseOtherAccountGestion(true);
+                  }}
+                  className="text-lg"
+                />
+              </Tooltip>
             )}
           </div>
         </div>
@@ -1073,7 +1124,7 @@ function SideBarSysadmin({
                   : ""
               } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
             >
-              <IoStatsChartSharp className="text-xl min-w-[1.5rem] text-orange-600" />
+              <FaListUl className="text-xl min-w-[1.5rem] text-orange-600" />
               <div className="flex w-full justify-between">
                 <p className="text-gray-600 font-semibold">
                   {t("Historique d'un Appareils")}
@@ -1311,6 +1362,27 @@ function SideBarSysadmin({
           </div>
 
           <InstallationPWA />
+
+          <div className="ajouter-appareil-container transition-all hover:border-b  ">
+            <div
+              onClick={() => {
+                ouvrirPDF();
+                // closeSideBar();
+                // setShowSideBar2(false);
+                // setChooseOtherLanguagePopup(true);
+              }}
+              className={`${
+                documentationPage === "installation" ? "bg-orange-50" : ""
+              } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <FaBook className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 text-[1rem] font-semibold">
+                  {t("Guide d'utilisation")}
+                </p>
+              </div>
+            </div>
+          </div>
 
           <div className="ajouter-appareil-container transition-all hover:border-b  ">
             <div

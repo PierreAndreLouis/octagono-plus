@@ -3,10 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../context/DataContext";
 
-
 import VehiculeDetailInformationComponent from "../components/vehicule_details/VehiculeDetailInformationComponent";
 import SearchVehiculePupup from "../components/rapport_page_details/SearchVehiculePupup";
 import { useTranslation } from "react-i18next";
+import { FaCar, FaInfo, FaInfoCircle } from "react-icons/fa";
 
 function DetailsVehiculePage() {
   const {
@@ -126,10 +126,13 @@ function DetailsVehiculePage() {
         )}
 
         <div className="flex justify-center items-center">
-          <img
+          <div className="flex justify-center items-center w-[6rem] text-[4rem] text-orange-600 h-[6rem] rounded-full bg-gray-100">
+            <FaInfoCircle />
+          </div>
+          {/* <img
             src="/img/cars/voitrue_details.png"
             alt="Image de détails du véhicule"
-          />
+          /> */}
         </div>
         <h1 className="text-center notranslate dark:text-gray-200 font-bold text-xl mt-8 text-gray-600">
           {currentVéhicule?.description || ""}

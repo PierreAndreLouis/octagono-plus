@@ -858,7 +858,36 @@
 "selector": "Sélecteur",
 "emailSubject": "Sujet de l'e-mail",
 "emailText": "Texte de l'e-mail",
-"version": "Version"
+"version": "Version",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Voir les infos sur le compte": "Voir les infos sur le compte",
+"Téléphone" : "Téléphone",
+"Email de contact" : "Email de contact",
+"Élargir la carte" : "Élargir la carte",
+"Mettre a jour les donnes" : "Mettre a jour les donnes",
+"Choisir un autre compte" : "Choisir un autre compte",
+"Activer/Désactiver le regroupement des marqueurs" : "Activer/Désactiver le regroupement des marqueurs",
+"Afficher les zones géographiques" : "Afficher les zones géographiques",
+"Recentrer sur le trajet" : "Recentrer sur le trajet",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : ""
 
 
 

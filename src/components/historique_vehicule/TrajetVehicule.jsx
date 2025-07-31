@@ -17,7 +17,7 @@ import { IoEarth } from "react-icons/io5";
 import { FaRegCirclePlay } from "react-icons/fa6";
 
 import { IoClose } from "react-icons/io5";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip2 from "@mui/material/Tooltip";
 
 import {
   MapContainer,
@@ -31,6 +31,8 @@ import { DataContext } from "../../context/DataContext";
 import L from "leaflet";
 import { Polygon } from "react-leaflet";
 import { useTranslation } from "react-i18next";
+
+import Tooltip from "@mui/material/Tooltip";
 
 // Exemple de fonction de sélection d'icône pour un véhicule donné
 // (déjà utilisée dans d'autres parties du composant)
@@ -461,26 +463,45 @@ function TrajetVehicule({
   return (
     <div>
       <div className="relative">
-        <button
-          className="absolute z-[999] top-[8.5rem] right-[1rem]"
-          // onClick={centerOnFirstMarkerAnimation}
-          // !isAnimating ? centerOnFirstMarker : centerOnFirstMarkerAnimation;
-          onClick={() => {
-            if (mapRef.current && vehicles.length > 0) {
-              const { lastValidLatitude, lastValidLongitude } = vehicles[0];
-              mapRef.current.setView(
-                [lastValidLatitude, lastValidLongitude],
-                // 13
-                13
-              );
-            }
+        <Tooltip2
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -10], // Décalage horizontal et vertical
+                },
+              },
+              {
+                name: "zIndex",
+                enabled: true,
+                phase: "write",
+                fn: ({ state }) => {
+                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                },
+              },
+            ],
           }}
+          title={`${t("Recentrer sur le trajet")}`}
         >
-          <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-            <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
-          </div>
-        </button>
-
+          <button
+            className="absolute z-[999] top-[8.5rem] right-[1rem]"
+            onClick={() => {
+              if (mapRef.current && vehicles.length > 0) {
+                const { lastValidLatitude, lastValidLongitude } = vehicles[0];
+                mapRef.current.setView(
+                  [lastValidLatitude, lastValidLongitude],
+                  // 13
+                  13
+                );
+              }
+            }}
+          >
+            <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
+              <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
+            </div>
+          </button>
+        </Tooltip2>
         <div
           className={`${
             voirAnimationTrajetPopup ? " pl-0.5" : ""

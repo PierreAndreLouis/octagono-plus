@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 function InfoUserComponent({
   account,
   username,
-  userData,
   setLogOutPopup,
 
   adminUserData,
@@ -20,9 +19,42 @@ function InfoUserComponent({
     versionApplication,
     isDashboardHomePage,
     sendGMailConfirmation,
+    userData,
+    currentAccountSelected,
+    comptes,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
+
+  let timezone;
+  let contactEmail;
+  let contactPhone;
+  let addressCity;
+  let addressCountry;
+  if (!isDashboardHomePage) {
+    timezone = userData?.timeZone;
+    contactEmail = userData?.contactEmail;
+    addressCity = userData?.addressCity;
+    addressCountry = userData?.addressCountry;
+  } else if (isDashboardHomePage && currentAccountSelected) {
+    timezone = currentAccountSelected?.timeZone;
+    contactPhone = currentAccountSelected?.contactPhone;
+    addressCity = currentAccountSelected?.addressCity;
+    addressCountry = currentAccountSelected?.addressCountry;
+  } else if (isDashboardHomePage && !currentAccountSelected) {
+    timezone = comptes?.find(
+      (acct) => acct?.accountID === "sysadmin"
+    )?.timeZone;
+    contactPhone = comptes?.find(
+      (acct) => acct?.accountID === "sysadmin"
+    )?.contactPhone;
+    addressCity = comptes?.find(
+      (acct) => acct?.accountID === "sysadmin"
+    )?.addressCity;
+    addressCountry = comptes?.find(
+      (acct) => acct?.accountID === "sysadmin"
+    )?.addressCountry;
+  }
 
   const [redemarerApplication, setRedemarerApplication] = useState(false);
 
@@ -83,6 +115,17 @@ function InfoUserComponent({
           </p>
         </div>
 
+        <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
+            {t("Ville")} :
+          </h3>
+          <div className="flex justify-between items-center w-full">
+            <p className="pl-3 text-gray-500 dark:text-gray-300">
+              {addressCity || "---"}
+            </p>
+          </div>
+        </div>
+
         {/* Mot de passe */}
 
         {/* Fuseau horaire */}
@@ -92,49 +135,53 @@ function InfoUserComponent({
           </h3>
           <div className="flex justify-between items-center w-full">
             <p className="pl-3 text-gray-500 dark:text-gray-300">
-              {/* {userData?.timeZone || "-----"} */}
-              {adminUsername && adminUserData?.timeZone}{" "}
-              {adminUsername && username && " / "}{" "}
-              {username && userData?.timeZone}
+              {timezone || "---"}
             </p>
           </div>
         </div>
 
-        {/* Adresse */}
         <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
+            {t("Email de contact")} :
+          </h3>
+          <div className="flex justify-between items-center w-full">
+            <p className="pl-3 text-gray-500 dark:text-gray-300">
+              {contactEmail || "---"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
+            {t("Téléphone")} :
+          </h3>
+          <div className="flex justify-between items-center w-full">
+            <p className="pl-3 text-gray-500 dark:text-gray-300">
+              {contactPhone || "---"}
+            </p>
+          </div>
+        </div>
+
+        {/* 
+          <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
+            {t("Adresse")} :
+          </h3>
+          <div className="flex justify-between items-center w-full">
+            <p className="pl-3 text-gray-500 dark:text-gray-300">
+              {addressCity || "---"}
+            </p>
+          </div>
+        </div> */}
+
+        {/* Adresse */}
+        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
             {t("Adresse")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
             {userData?.addressCity || "-----"}
             {"/ " + adminUserData?.addressCity && adminUserData?.addressCity}
-          </p>
-        </div>
-        {/* Adresse */}
-
-        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
-          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            {t("Version de l'application")} :
-          </h3>
-          <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {versionApplication}
-          </p>
-        </div> */}
-
-        {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 dark:border-gray-600 pb-2">
-          <h3 className="font-bold text-gray-600 dark:text-gray-100 min-w-[11.8rem] lg:min-w-[16rem]">
-            {t("Redémarrer l'application")} :
-          </h3>
-          <p
-            onClick={() => {
-              setRedemarerApplication(true);
-              // resetIndexedDB(); // Vide le localStorage
-              // localStorage.clear(); // Vide le localStorage
-              // window.location.reload(); // Rafraîchit la page
-            }}
-            className="pl-3 text-orange-500 font-semibold cursor-pointer dark:text-gray-300"
-          >
-            {t("Cliquez ici")}
           </p>
         </div> */}
       </div>

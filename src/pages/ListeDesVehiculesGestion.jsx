@@ -378,14 +378,14 @@ function ListeDesVehiculesGestion({
                 >
                   <IoSearchOutline className="text-xl " />
                 </div>
-                <div
+                {/* <div
                   onClick={() => {
                     deviceUpdateFonction();
                   }}
                   className="border cursor-pointer px-3   py-2 border-gray-300 rounded-md bg-orange-100"
                 >
                   <MdUpdate className="text-xl " />
-                </div>
+                </div> */}
               </div>
             )}
 

@@ -4,6 +4,7 @@ import { IoMenu } from "react-icons/io5";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 
 function HeaderDashboardSysadmin({
   setDocumentationPage,
@@ -50,14 +51,36 @@ function HeaderDashboardSysadmin({
         </div>
         <div className="flex gap-4 items-center">
           <div className="flex cursor-pointer gap-2 items-center">
-            <Link to="/userInfo">
-              <FaUserCircle
-                onClick={() => {
-                  setDocumentationPage("userInfo");
-                }}
-                className="text-[1.4rem] mr-2 text-gray-600"
-              />
-            </Link>
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title={`${t("Voir les infos sur le compte")}`}
+            >
+              <Link to="/userInfo">
+                <FaUserCircle
+                  onClick={() => {
+                    setDocumentationPage("userInfo");
+                  }}
+                  className="text-[1.4rem] mr-2 text-gray-600"
+                />
+              </Link>
+            </Tooltip>
 
             <div
               onClick={() => {
@@ -88,14 +111,36 @@ function HeaderDashboardSysadmin({
               />
             )}
           </div>
-          <div
-            onClick={() => {
-              setReadDocumentationSideBar(true);
+          <Tooltip
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, -10], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
             }}
-            className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
+            title={`${t("Menu")}`}
           >
-            <IoMenu className="text-[1.6rem] min-w-[1.5rem] text-orange-600" />
-          </div>
+            <div
+              onClick={() => {
+                setReadDocumentationSideBar(true);
+              }}
+              className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
+            >
+              <IoMenu className="text-[1.6rem] min-w-[1.5rem] text-orange-600" />
+            </div>
+          </Tooltip>
         </div>
       </div>
     </header>
