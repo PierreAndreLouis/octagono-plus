@@ -53,6 +53,8 @@ export default defineConfig({
         'favicon.ico',
         'robots.txt',
         'apple-touch-icon.png', 
+        "Guide-utilisation-Octagono.pdf",
+        "/Guide-utilisation-Octagono.pdf",
       
   'img/screenshot/*.png',
   'img/screenshot/ajouter_nouveau_appareil/*.png',

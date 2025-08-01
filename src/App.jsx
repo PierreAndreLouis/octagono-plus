@@ -326,6 +326,12 @@ function App() {
   }, [documentationPage]);
 
   useEffect(() => {
+    if (documentationPage === "Guide-utilisation-Octagono.pdf") {
+      setReadDocumentationSideBar(false);
+    }
+  }, [documentationPage]);
+
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1025) {
         setReadDocumentationSideBar(true);
@@ -1437,6 +1443,28 @@ function App() {
             }
           />
 
+          <Route
+            path="/Guide-utilisation-Octagono.pdf"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <iframe
+                          src="/Guide-utilisation-Octagono.pdf"
+                          width="100%"
+                          className="h-[100vh]"
+                        ></iframe>{" "}
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+
           <Route path="*" element={<Page_404 />} />
         </Routes>
         <div
@@ -1449,12 +1477,21 @@ function App() {
           <div className="flex gap-3 font-semibold">
             <p
               onClick={() => {
-                window.open("/Guide d'utilisation Octagono.pdf", "_blank");
+                setDocumentationPage("Guide-utilisation-Octagono.pdf");
+                navigate("/Guide-utilisation-Octagono.pdf");
+                // window.open("/Guide-utilisation-Octagono.pdf", "_blank");
               }}
               className="cursor-pointer text-orange-500 underline"
             >
               {t("Guide d'utilisation")}
             </p>
+            {/* <a
+              href="/Guide-utilisation-Octagono.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ouvrir le guide
+            </a> */}
             <p>
               {t("version")}: {versionApplication}
             </p>

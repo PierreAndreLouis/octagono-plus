@@ -531,7 +531,7 @@ function SideBarSysadmin({
       setVariable: () => setChooseOtherLanguagePopup(true),
     },
     {
-      name: t("Manuel d'utilisation"),
+      name: t("Guide d'utilisation"),
       isSysadmin: false,
       link: "",
       setVariable: () => ouvrirPDF(),
@@ -554,7 +554,7 @@ function SideBarSysadmin({
   const [showSideBar2, setShowSideBar2] = useState(false);
 
   const ouvrirPDF = () => {
-    window.open("/Guide d'utilisation Octagono.pdf", "_blank");
+    window.open("/Guide-utilisation-Octagono.pdf", "_blank");
   };
 
   return (
@@ -1372,13 +1372,14 @@ function SideBarSysadmin({
           <div className="ajouter-appareil-container transition-all hover:border-b  ">
             <div
               onClick={() => {
-                ouvrirPDF();
-                // closeSideBar();
-                // setShowSideBar2(false);
-                // setChooseOtherLanguagePopup(true);
+                navigate("/Guide-utilisation-Octagono.pdf");
+                setDocumentationPage("Guide-utilisation-Octagono.pdf");
+                // ouvrirPDF();
               }}
               className={`${
-                documentationPage === "installation" ? "bg-orange-50" : ""
+                documentationPage === "Guide-utilisation-Octagono.pdf"
+                  ? "bg-orange-50"
+                  : ""
               } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
             >
               <FaBook className="text-xl min-w-[1.5rem] text-orange-600" />

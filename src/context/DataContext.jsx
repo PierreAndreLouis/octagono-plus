@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "3.1";
+  let versionApplication = "3.4";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -8915,3 +8915,7 @@ const DataContextProvider = ({ children }) => {
 };
 
 export default DataContextProvider;
+
+// git pull origin main
+// npm run build
+// sudo systemctl restart nginx

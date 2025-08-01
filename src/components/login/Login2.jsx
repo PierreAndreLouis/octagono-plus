@@ -333,6 +333,7 @@ function Login2() {
           </form>
         </div>
       </div>
+
       {/* <div className="flex justify-end pb-4">
         <p className="mr-6 mt-6 font-semibold ">
           {t("version")} : {versionApplication}

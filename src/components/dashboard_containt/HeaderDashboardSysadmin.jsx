@@ -134,7 +134,7 @@ function HeaderDashboardSysadmin({
           >
             <div
               onClick={() => {
-                setReadDocumentationSideBar(true);
+                setReadDocumentationSideBar(!readDocumentationSideBar);
               }}
               className="flex lg:hidden-- cursor-pointer text-gray-700 items-center gap-3 text-xl"
             >
