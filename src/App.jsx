@@ -1444,7 +1444,7 @@ function App() {
             !isAuthenticated
               ? "bottom-6"
               : "bottom-20 md:bottom-12 lg:-bottom-14"
-          }  right-4 z-[9999999999999999999999999999999]`}
+          }  right-4 z-[1]`}
         >
           <div className="flex gap-3 font-semibold">
             <p
