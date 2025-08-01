@@ -1372,9 +1372,9 @@ function SideBarSysadmin({
           <div className="ajouter-appareil-container transition-all hover:border-b  ">
             <div
               onClick={() => {
-                navigate("/Guide-utilisation-Octagono.pdf");
-                setDocumentationPage("Guide-utilisation-Octagono.pdf");
-                // ouvrirPDF();
+                // navigate("/Guide-utilisation-Octagono.pdf");
+                // setDocumentationPage("Guide-utilisation-Octagono.pdf");
+                ouvrirPDF();
               }}
               className={`${
                 documentationPage === "Guide-utilisation-Octagono.pdf"
