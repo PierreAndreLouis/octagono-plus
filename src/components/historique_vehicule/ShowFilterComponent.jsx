@@ -98,8 +98,8 @@ function ShowFilterComponent({
 
             {/* /////////////////////////////////////////////////////////// */}
 
-            <form action="" className="p-2">
-              <div className="flex gap-3 items-center">
+            <form action="" className="p-2-">
+              <div className="flex flex-wrap gap-3 items-center mb-10">
                 {/* {isFilterByVitesse ? ( */}
                 <div
                   onClick={() => {
@@ -107,7 +107,7 @@ function ShowFilterComponent({
                   }}
                   className={`${
                     isFilterByVitesse ? "bg-orange-100" : ""
-                  } flex cursor-pointer px-4 py-2 mb-4 hover:bg-orange-100 items-center gap-3  rounded-lg font-semibold `}
+                  } flex cursor-pointer w-full px-2 mt-2 py-2 mb-4- hover:bg-orange-100 items-center gap-3  rounded-lg font-semibold `}
                 >
                   <BsSpeedometer className="text-xl text-orange-600/90 dark:text-orange-400" />
                   <h3 className="text-white-800 dark:text-gray-200">
@@ -121,7 +121,7 @@ function ShowFilterComponent({
                   }}
                   className={`${
                     !isFilterByVitesse ? "bg-orange-100" : ""
-                  } flex cursor-pointer px-4 py-2 mb-4 hover:bg-orange-100 items-center gap-3  rounded-lg font-semibold `}
+                  } flex cursor-pointer w-full px-2 py-2 mb-4- hover:bg-orange-100 items-center gap-3  rounded-lg font-semibold `}
                 >
                   {" "}
                   <FaCarRear className="text-xl text-orange-600/90 dark:text-orange-400" />

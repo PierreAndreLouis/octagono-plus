@@ -324,10 +324,10 @@ function StatisticDashboard({
           {/*  */}
         </div>
       </div>{" "}
-      <div className="flex gap-2 justify-between px-4 pr-1.5 rounded-lg bg-orange-100 border border-orange-600/20 shadow-lg shadow-black/5 mt-3">
+      <div className="flex mx-2 md:mx-0 gap-2 justify-between px-2 pl-4  rounded-lg bg-orange-100 border border-orange-600/20 shadow-lg shadow-black/5 mt-3">
         {/* <div className="  flex gap-1 sm:gap-3 items-center absolute-- right-0 py-2  rounded-lg bottom-4 "> */}
         {lastUpdate?.mostRecentTimestamp && (
-          <p className="font-bold  flex flex-wrap items-center text-[.9rem] text-orange-700">
+          <p className="font-bold  flex flex-wrap items-center text-[.9rem]  text-orange-700">
             <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
             <span>
               {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
@@ -362,8 +362,10 @@ function StatisticDashboard({
               fetchNewDataDevices();
             }}
             className={`${
-              isLoading2 ? "animate-spin" : ""
-            } p-2 my-1 min-w-[2.3rem] flex justify-center items-center rounded-lg bg-orange-500  text-white    translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
+              isLoading2
+                ? "animate-spin rounded-full min-w-[2.3rem]"
+                : "rounded-lg min-w-[3.5rem]"
+            } p-2 my-1  flex justify-center items-center  bg-orange-500  text-white    translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
           >
             <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
           </div>
