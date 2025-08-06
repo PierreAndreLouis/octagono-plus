@@ -1,4 +1,6 @@
 // DataContextProvider.js
+// Q5w4i4w9M8V2P9P
+
 import React, {
   createContext,
   useState,
@@ -14,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "3.7";
+  let versionApplication = "3.8";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -8932,6 +8934,8 @@ const DataContextProvider = ({ children }) => {
 };
 
 export default DataContextProvider;
+
+// cd /var/octagono_folder/octagono-plus
 
 // git pull origin main
 // npm run build

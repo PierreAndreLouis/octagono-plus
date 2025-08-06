@@ -335,16 +335,37 @@ function RapportPageDetails() {
     tooltip: {
       trigger: "axis",
       formatter: function (params) {
-        // La première entrée contient les informations de l'axe X (temps)
+        const index = params[0].dataIndex;
+        const véhicule = data[index];
         const time = params[0].axisValue;
+
         const details = params
           .map((item) => {
-            return `${item.marker} ${item.seriesName}: ${item.value} km/h`;
+            return ` ${item.seriesName}: ${item.value} km/h`;
           })
           .join("<br />");
-        return `Heure: ${time}<br />${details}`;
+
+        const address = véhicule?.address || "Adresse inconnue";
+
+        return `Heure: ${time}<br />${details}<br /> 
+          <p style="max-width: 400px; white-space: normal; margin-top: 10px;"><strong> Adresse: </strong>  ${address}</p>
+ 
+       `;
       },
     },
+    // tooltip: {
+    //   trigger: "axis",
+    //   formatter: function (params) {
+    //     // La première entrée contient les informations de l'axe X (temps)
+    //     const time = params[0].axisValue;
+    //     const details = params
+    //       .map((item) => {
+    //         return `${item.marker} ${item.seriesName}: ${item.value} km/h`;
+    //       })
+    //       .join("<br />");
+    //     return `Heure: ${time}<br />${details}`;
+    //   },
+    // },
 
     xAxis: {
       type: "category",

@@ -4136,7 +4136,7 @@ function RapportGroupe({
           <div>
             {zoomPosition ? (
               <div className="fixed inset-0 z-[9999999999999999999999] bg-black/50">
-                <div className="relative  h-[100vh]  rounded-lg mt-3-- overflow-hidden">
+                <div className="relative  h-[100vh]  rounded-lg mt-3-- overflow-hidden--">
                   <button
                     className="absolute z-[999] top-[1rem] right-[1rem]"
                     onClick={() => {
