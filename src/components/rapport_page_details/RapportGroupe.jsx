@@ -2831,7 +2831,7 @@ function RapportGroupe({
             onClick={() => {
               rapportFetchFonction();
               setIsSearchingFromRapportGroupePage(false);
-              if (dataFusionneeHome?.length > 50) {
+              if (dataFusionneeHome?.length > 100) {
                 setPlusDe50DevicePopupMessage(true);
               }
             }}
@@ -2862,7 +2862,7 @@ function RapportGroupe({
               />
               <div className="flex gap-3 flex-col w-full">
                 <h2 className="font-bold mx-4 text-center  text-lg">
-                  {t("Ce compte comprend plus de 50 appareils")}...
+                  {t("Ce compte comprend plus de 100 appareils")}...
                 </h2>
                 <p className="text-orange-700-- text-center text-lg md:max-w-[30rem] mx-auto">
                   <span className="text-orange-600 ">
@@ -2901,7 +2901,7 @@ function RapportGroupe({
             >
               <div
                 style={{
-                  width: `${progressAnimationStart}%`,
+                  width: `${progressBarForLoadingData}%`,
                   background: "#4caf50",
                   color: "#fff",
                   padding: "4px",
@@ -2910,7 +2910,7 @@ function RapportGroupe({
                 }}
               >
                 <p className="font-semibold drop-shadow-2xl">
-                  {Math.floor(progressAnimationStart)}%
+                  {Math.floor(progressBarForLoadingData)}%
                 </p>
               </div>
             </div>

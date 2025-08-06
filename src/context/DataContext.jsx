@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "3.8";
+  let versionApplication = "3.9";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -2075,7 +2075,7 @@ const DataContextProvider = ({ children }) => {
   // };
 
   const failedAccounts = [];
-  const limit = pLimit(100); // limite à 15 requêtes en parallèle
+  const limit = pLimit(100);
 
   const processCompte = async (acct) => {
     const id = acct?.accountID;
@@ -6276,78 +6276,38 @@ const DataContextProvider = ({ children }) => {
   // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const [progressBarForLoadingDataUser, setProgressDataUser] = useState(0);
 
-  const processVehicle = async (vehicle, isLastBatch = false) => {
-    try {
-      fetchVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
-    } catch (error) {
-      console.error("Erreur pour le véhicule", vehicle?.deviceID, ":", error);
-    }
-  };
+  const doneRef = { current: 0 }; // ou useRef(0) si tu es dans un composant React
+  const limit2 = pLimit(30);
 
-  const processVehicleDetails = async (
-    vehicle,
-    isLastBatch = false,
-    timeFrom,
-    timeTo
-  ) => {
+  const processVehicleDetails = async (vehicle, timeFrom, timeTo) => {
     try {
-      if (isLastBatch) {
-        await fetchRapportVehicleDetails(
-          vehicle?.deviceID,
-          timeFrom || TimeFrom,
-          timeTo || TimeTo
-        );
-      } else {
-        fetchRapportVehicleDetails(
-          vehicle?.deviceID,
-          timeFrom || TimeFrom,
-          timeTo || TimeTo
-        );
-      }
+      await fetchRapportVehicleDetails(
+        vehicle?.deviceID,
+        timeFrom || TimeFrom,
+        timeTo || TimeTo
+      );
       await delay(500);
     } catch (error) {
       console.error("Erreur pour le véhicule", vehicle?.deviceID, ":", error);
     }
   };
 
-  const processAllVehicles = async (vehicles, batchSize = 10) => {
-    const total = vehicles?.length;
-    let done = 0;
+  const processAllVehiclesDetails = async (vehicles, timeFrom, timeTo) => {
+    const total = vehicles?.length ?? 0;
+    doneRef.current = 0;
 
-    for (let i = 0; i < total; i += batchSize) {
-      const batch = vehicles.slice(i, i + batchSize);
-      const isLastBatch = i + batchSize >= total;
+    const promises = vehicles.map((vehicle) =>
+      limit2(async () => {
+        await processVehicleDetails(vehicle, timeFrom, timeTo);
 
-      for (const vehicle of batch) {
-        await processVehicle(vehicle, isLastBatch);
-        done += 1;
-        setProgress(Math.round((done / total) * 100));
-        setProgressDataUser(Math.round((done / total) * 100));
-      }
+        doneRef.current += 1;
+        const progress = Math.round((doneRef.current / total) * 100);
+        setProgress(progress);
+        setProgressDataUser(progress);
+      })
+    );
 
-      if (!isLastBatch) await delay(1500);
-    }
-  };
-
-  const processAllVehiclesDetails = async (
-    vehicles,
-    timeFrom,
-    timeTo,
-    batchSize = 5
-  ) => {
-    const total = vehicles?.length;
-    let done = 0;
-    for (let i = 0; i < total; i += batchSize) {
-      const batch = vehicles.slice(i, i + batchSize);
-      const isLastBatch = i + batchSize >= total;
-      for (const vehicle of batch) {
-        await processVehicleDetails(vehicle, isLastBatch, timeFrom, timeTo);
-        done += 1;
-        setProgress(Math.round((done / total) * 100));
-        setProgressDataUser(Math.round((done / total) * 100));
-      }
-      if (!isLastBatch) await delay(1500);
-    }
+    await Promise.all(promises);
   };
 
   const [
