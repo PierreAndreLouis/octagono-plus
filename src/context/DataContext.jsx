@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "4.1";
+  let versionApplication = "4.2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -2220,22 +2220,8 @@ const DataContextProvider = ({ children }) => {
 
     if (fetchAllOtherData) {
       loadForManySecond();
-      if (newData?.length < 20) {
-        setRunningAnimationProgressDuration(100);
-      } else if (newData?.length < 40) {
-        setRunningAnimationProgressDuration(200);
-      } else if (newData?.length < 60) {
-        setRunningAnimationProgressDuration(300);
-      } else if (newData?.length < 70) {
-        setRunningAnimationProgressDuration(400);
-      } else if (newData?.length < 80) {
-        setRunningAnimationProgressDuration(500);
-      } else {
-        setRunningAnimationProgressDuration(600);
-      }
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
-      setProgressDataUser(10);
       setProgress(2);
       processAllComptes(newData, 10); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
@@ -6051,24 +6037,6 @@ const DataContextProvider = ({ children }) => {
   </RecordKey>
 </GTSRequest>`;
 
-    // const requestBody = `<GTSRequest command="dbdel">
-    // <Authorization account="${accountIDProp ? accountIDProp : account}" user="${
-    //   userProp ? userProp : username
-    // }" password="${passwordProp ? passwordProp : password}" />
-
-    // <Record table="Geozone" partial="false">
-    // <Field name="accountID">${accountIDProp ? accountIDProp : account}</Field>
-
-    // <Field name="geozoneID">${geozoneID}</Field>
-    // <Field name="sortID">${geozoneID}</Field>
-    //   </Record>
-    //    <RecordKey table="Geozone" partial="false">
-    // <Field name="accountID">${account}</Field>
-    // <Field name="geozoneID">${geozoneID}</Field>
-    // <Field name="sortID">${geozoneID}</Field>
-    //   </RecordKey>
-    // </GTSRequest>`;
-
     console.log("requestBody", requestBody);
 
     try {
@@ -6303,7 +6271,38 @@ const DataContextProvider = ({ children }) => {
         doneRef.current += 1;
         const progress = Math.round((doneRef.current / total) * 100);
         setProgress(progress);
-        setProgressDataUser(progress);
+        // setProgressDataUser(progress);
+      })
+    );
+
+    await Promise.all(promises);
+  };
+
+  ///////////////////////////////////
+
+  const limit3 = pLimit(50); // utilise la même limite que pour les détails
+  const doneRef3 = { current: 0 };
+
+  const processVehicle = async (vehicle) => {
+    try {
+      await fetchVehicleDetails(vehicle?.deviceID, TimeFrom, TimeTo);
+      await delay(500);
+    } catch (error) {
+      console.error("Erreur pour le véhicule", vehicle?.deviceID, ":", error);
+    }
+  };
+
+  const processAllVehicles = async (vehicles) => {
+    const total = vehicles?.length ?? 0;
+    doneRef3.current = 0;
+
+    const promises = vehicles.map((vehicle) =>
+      limit3(async () => {
+        await processVehicle(vehicle);
+        doneRef3.current += 1;
+        const progress = Math.round((doneRef3.current / total) * 100);
+        setProgress(progress);
+        // setProgressDataUser(progress);
       })
     );
 
@@ -6408,43 +6407,12 @@ const DataContextProvider = ({ children }) => {
       setVehicleData(véhiculeData);
       if (onlyLastResult) {
         setFetchVehicleDataFromRapportGroupe(false);
-        // await delay(1000);
-        if (véhiculeData?.length < 50) {
-          setRunningAnimationProgressDuration(10);
-        } else if (véhiculeData?.length < 100) {
-          setRunningAnimationProgressDuration(20);
-        } else if (véhiculeData?.length < 200) {
-          setRunningAnimationProgressDuration(40);
-        } else if (véhiculeData?.length < 300) {
-          setRunningAnimationProgressDuration(60);
-        } else if (véhiculeData?.length < 400) {
-          setRunningAnimationProgressDuration(80);
-        } else {
-          setRunningAnimationProgressDuration(150);
-        }
         setProgress(2);
         setProgressAnimationStart(0);
         setRunningAnimationProgressLoading(true);
         processAllVehicles(véhiculeData);
       } else {
         setFetchVehicleDataFromRapportGroupe(true);
-
-        // await delay(1000);
-        if (véhiculeData?.length < 20) {
-          setRunningAnimationProgressDuration(100);
-        } else if (véhiculeData?.length < 50) {
-          setRunningAnimationProgressDuration(200);
-        } else if (véhiculeData?.length < 100) {
-          setRunningAnimationProgressDuration(300);
-        } else if (véhiculeData?.length < 200) {
-          setRunningAnimationProgressDuration(400);
-        } else if (véhiculeData?.length < 300) {
-          setRunningAnimationProgressDuration(500);
-        } else if (véhiculeData?.length < 500) {
-          setRunningAnimationProgressDuration(600);
-        } else {
-          setRunningAnimationProgressDuration(700);
-        }
 
         setProgress(2);
         setProgressAnimationStart(0);

@@ -1015,26 +1015,6 @@ function DashboardContaintMaintComponant({
 
   const intervalRef = useRef(null);
 
-  useEffect(() => {
-    if (runningAnimationProgressLoading) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-
-      intervalRef.current = setInterval(() => {
-        setProgressAnimationStart((prev) => {
-          if (prev >= 98) {
-            clearInterval(intervalRef.current);
-            setRunningAnimationProgressLoading(false);
-
-            return 99;
-          }
-          return prev + 1;
-        });
-      }, runningAnimationProgressDuration);
-    }
-
-    return () => clearInterval(intervalRef.current);
-  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
-
   const [searchTermInput, setSearchTermInput] = useState("");
   //////////////////////////////////////////////////////
   const [
@@ -1337,7 +1317,7 @@ function DashboardContaintMaintComponant({
       {/*  */}
       {/* {progressBarForLoadingData}-{progressAnimationStart} */}
       <div className="md:px-4-- pt-4 mx-2 md:mx-0">
-        {progressAnimationStart > 0 &&
+        {progressBarForLoadingData > 0 &&
           progressBarForLoadingData < 100 &&
           !fetchVehicleDataFromRapportGroupe &&
           showAnnimationProgresseBarDashboard && (
@@ -1351,11 +1331,7 @@ function DashboardContaintMaintComponant({
             >
               <div
                 style={{
-                  width: `${
-                    isDashboardHomePage
-                      ? progressBarForLoadingData
-                      : progressAnimationStart
-                  }%`,
+                  width: `${progressBarForLoadingData}%`,
                   background: "#4caf50",
                   color: "#fff",
                   padding: "4px",
@@ -1364,12 +1340,7 @@ function DashboardContaintMaintComponant({
                 }}
               >
                 <p className="font-semibold drop-shadow-2xl">
-                  {Math.floor(
-                    isDashboardHomePage
-                      ? progressBarForLoadingData
-                      : progressAnimationStart
-                  )}
-                  %
+                  {Math.floor(progressBarForLoadingData)}%
                 </p>
               </div>
             </div>

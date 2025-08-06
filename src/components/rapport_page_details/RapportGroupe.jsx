@@ -1592,27 +1592,27 @@ function RapportGroupe({
   //
   //
 
-  const intervalRef = useRef(null);
+  // const intervalRef = useRef(null);
 
-  useEffect(() => {
-    if (runningAnimationProgressLoading) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+  // useEffect(() => {
+  //   if (runningAnimationProgressLoading) {
+  //     if (intervalRef.current) clearInterval(intervalRef.current);
 
-      intervalRef.current = setInterval(() => {
-        setProgressAnimationStart((prev) => {
-          if (prev >= 98) {
-            clearInterval(intervalRef.current);
-            setRunningAnimationProgressLoading(false);
+  //     intervalRef.current = setInterval(() => {
+  //       setProgressAnimationStart((prev) => {
+  //         if (prev >= 98) {
+  //           clearInterval(intervalRef.current);
+  //           setRunningAnimationProgressLoading(false);
 
-            return 99;
-          }
-          return prev + 1;
-        });
-      }, runningAnimationProgressDuration);
-    }
+  //           return 99;
+  //         }
+  //         return prev + 1;
+  //       });
+  //     }, runningAnimationProgressDuration);
+  //   }
 
-    return () => clearInterval(intervalRef.current);
-  }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
+  //   return () => clearInterval(intervalRef.current);
+  // }, [runningAnimationProgressLoading, runningAnimationProgressDuration]);
 
   // useEffect(() => {
   //   if (runningAnimationProgressLoading && progressAnimationStart < 99) {
