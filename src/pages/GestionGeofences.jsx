@@ -69,7 +69,7 @@ function GestionGeofences({
     `${currentGeozone?.description?.toLowerCase().replace(/\s+/g, "_")}`;
 
   const supprimerOuModifierGeozone = () => {
-    const foundAccount = gestionAccountData.find(
+    const foundAccount = gestionAccountData?.find(
       (account) => account.accountID === currentGeozone?.accountID
     );
 
@@ -308,6 +308,9 @@ function GestionGeofences({
 
                   return (
                     <div
+                      onClick={() => {
+                        console.log(geozone);
+                      }}
                       className="shadow-inner bg-gray-50 shadow-black/10 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                       key={index}
                     >

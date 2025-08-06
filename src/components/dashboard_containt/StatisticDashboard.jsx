@@ -80,7 +80,7 @@ function StatisticDashboard({
             </div>
           )}
 
-          <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
+          {/* <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
             {lastUpdate?.mostRecentTimestamp && (
               <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
                 <span className="hidden md:block mr-2">{t("Last Update")}</span>
@@ -121,7 +121,7 @@ function StatisticDashboard({
                 <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
               </div>
             </Tooltip>
-          </div>
+          </div> */}
         </div>
 
         {/* Liste des statistics */}
@@ -302,7 +302,10 @@ function StatisticDashboard({
               <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                    {t("Inactifs")}
+                    {t("Inactifs")}{" "}
+                    <span className="text-sm text-black">
+                      ( {`${"> 24h"}`})
+                    </span>
                   </h3>
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
@@ -321,6 +324,52 @@ function StatisticDashboard({
           {/*  */}
         </div>
       </div>{" "}
+      <div className="flex gap-2 justify-between px-4 pr-1.5 rounded-lg bg-orange-100 border border-orange-600/20 shadow-lg shadow-black/5 mt-3">
+        {/* <div className="  flex gap-1 sm:gap-3 items-center absolute-- right-0 py-2  rounded-lg bottom-4 "> */}
+        {lastUpdate?.mostRecentTimestamp && (
+          <p className="font-bold  flex flex-wrap items-center text-[.9rem] text-orange-700">
+            <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
+            <span>
+              {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
+              {" / "}
+              {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
+            </span>
+          </p>
+        )}
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -10], // Décalage horizontal et vertical
+                },
+              },
+              {
+                name: "zIndex",
+                enabled: true,
+                phase: "write",
+                fn: ({ state }) => {
+                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                },
+              },
+            ],
+          }}
+          title={`${t("Mettre a jour les donnes")}`}
+        >
+          <div
+            onClick={() => {
+              fetchNewDataDevices();
+            }}
+            className={`${
+              isLoading2 ? "animate-spin" : ""
+            } p-2 my-1 min-w-[2.3rem] flex justify-center items-center rounded-lg bg-orange-500  text-white    translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
+          >
+            <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
+          </div>
+        </Tooltip>
+        {/* </div>{" "} */}
+      </div>
     </div>
   );
 }

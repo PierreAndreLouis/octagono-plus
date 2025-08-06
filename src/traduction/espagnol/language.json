@@ -16,7 +16,7 @@
   "Arrivée": "Llegada",
   "Durée trajet": "Duración del viaje",
   "Total": "Total",
-  "Inactifs": "Inactivo(s)",
+  "Inactifs": "Inactivo",
   "Actifs": "Activo(s)",
   "Compte": "Cuenta(s)",
   "Déplacé": "Movido(s)",
@@ -857,6 +857,12 @@
 
 
 
+
+
+
+
+
+
   
   "AccountID": "ID de cuenta",
   "Last Update": "Última actualización",
@@ -883,7 +889,27 @@
   "selector": "Selector",
   "emailSubject": "Asunto del correo",
   "emailText": "Texto del correo",
-  "version": "Versión"
+  "version": "Versión",
+
+
+
+
+
+
+  
+  "Filtrer par Vitesse" : "Filtrar por Velocidad",
+"Inverser l'ordre de la liste" : "Invertir el orden de la lista",
+
+
+  "Voir les infos sur le compte": "Ver información de la cuenta",
+  "Téléphone": "Teléfono",
+  "Email de contact": "Correo de contacto",
+  "Élargir la carte": "Ampliar el mapa",
+  "Mettre à jour les données": "Actualizar los datos",
+  "Choisir un autre compte": "Elegir otra cuenta",
+  "Activer/Désactiver le regroupement des marqueurs": "Activar/Desactivar agrupación de marcadores",
+  "Afficher les zones géographiques": "Mostrar zonas geográficas",
+  "Recentrer sur le trajet": "Recentrar en la ruta"
 
 
 

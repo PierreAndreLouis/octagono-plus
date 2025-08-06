@@ -18,6 +18,9 @@ function HistoriqueMainComponent({
   appliedCheckboxes,
   setCheckboxes,
   handleCheckboxChange,
+  vitesseMin,
+  vitesseMax,
+  isFilterByVitesse,
 }) {
   const {
     FormatDateHeure,
@@ -54,21 +57,20 @@ function HistoriqueMainComponent({
     if (!véhiculeHistoriqueDetails) return [];
 
     const filtrés = véhiculeHistoriqueDetails.filter((véhicule) => {
-      const estValideParCheckbox =
-        (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
-        (appliedCheckboxes.en_ralenti &&
-          véhicule.speedKPH >= 1 &&
-          véhicule.speedKPH <= 20) ||
-        (appliedCheckboxes.en_arret && véhicule.speedKPH < 1);
+      const speed = Number(véhicule.speedKPH); // on sécurise ici
+
+      const estValideParCheckbox = isFilterByVitesse
+        ? speed >= Number(vitesseMin) && speed <= Number(vitesseMax)
+        : (appliedCheckboxes.en_marche && speed > 20) ||
+          (appliedCheckboxes.en_ralenti && speed >= 1 && speed <= 20) ||
+          (appliedCheckboxes.en_arret && speed < 1);
 
       const estValideParCouleur =
         !filterByColor ||
-        (filterByColor === "mouvement lent" &&
-          véhicule.speedKPH > 0 &&
-          véhicule.speedKPH < 20) ||
-        (filterByColor === "mouvement rapide" && véhicule.speedKPH > 20) ||
-        (filterByColor === "en stationnement" && véhicule.speedKPH <= 0) ||
-        (filterByColor === "all" && véhicule.speedKPH >= -1);
+        (filterByColor === "mouvement lent" && speed > 0 && speed < 20) ||
+        (filterByColor === "mouvement rapide" && speed > 20) ||
+        (filterByColor === "en stationnement" && speed <= 0) ||
+        (filterByColor === "all" && speed >= -1);
 
       return filterByColor === null
         ? estValideParCheckbox
@@ -81,7 +83,43 @@ function HistoriqueMainComponent({
     appliedCheckboxes,
     filterByColor,
     isReverseListe,
+    vitesseMin,
+    vitesseMax,
+    isFilterByVitesse,
   ]);
+
+  // const filteredVehicles = useMemo(() => {
+  //   if (!véhiculeHistoriqueDetails) return [];
+
+  //   const filtrés = véhiculeHistoriqueDetails.filter((véhicule) => {
+  //     const estValideParCheckbox =
+  //       (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
+  //       (appliedCheckboxes.en_ralenti &&
+  //         véhicule.speedKPH >= 1 &&
+  //         véhicule.speedKPH <= 20) ||
+  //       (appliedCheckboxes.en_arret && véhicule.speedKPH < 1);
+
+  //     const estValideParCouleur =
+  //       !filterByColor ||
+  //       (filterByColor === "mouvement lent" &&
+  //         véhicule.speedKPH > 0 &&
+  //         véhicule.speedKPH < 20) ||
+  //       (filterByColor === "mouvement rapide" && véhicule.speedKPH > 20) ||
+  //       (filterByColor === "en stationnement" && véhicule.speedKPH <= 0) ||
+  //       (filterByColor === "all" && véhicule.speedKPH >= -1);
+
+  //     return filterByColor === null
+  //       ? estValideParCheckbox
+  //       : estValideParCouleur;
+  //   });
+
+  //   return isReverseListe ? filtrés.reverse() : filtrés;
+  // }, [
+  //   véhiculeHistoriqueDetails,
+  //   appliedCheckboxes,
+  //   filterByColor,
+  //   isReverseListe,
+  // ]);
 
   // const filteredVehicles = useMemo(() => {
   //   if (!véhiculeHistoriqueDetails) return [];
@@ -154,7 +192,7 @@ function HistoriqueMainComponent({
         )}
         <div className="pb-7 md:pb-0 md:pt-7 md:w-full text-center">
           {/* <div className="flex gap-3 justify-center items-center"> */}
-          <h2 className="text-xl md:text-4xl  text-orange-600   md:mb-4 mt-8">
+          <h2 className="text-xl md:text-4xl  text-orange-600   md:mb-4 mt-[7rem]">
             {t("Historique")}{" "}
           </h2>
 
@@ -222,14 +260,28 @@ function HistoriqueMainComponent({
             </div>
             <div className="w-[3rem] flex justify-end">
               {filteredVehiclesPagination?.length > 0 && (
-                <p
-                  onClick={() => {
-                    setIsReverseListe(!isReverseListe);
+                <Tooltip
+                  title={`${t("Inverser l'ordre de la liste")}`}
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -10], // Décalage horizontal et vertical
+                        },
+                      },
+                    ],
                   }}
-                  className="text-md bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
                 >
-                  <LuArrowDownUp className="text-[1.3rem]" />
-                </p>
+                  <p
+                    onClick={() => {
+                      setIsReverseListe(!isReverseListe);
+                    }}
+                    className="text-md bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                  >
+                    <LuArrowDownUp className="text-[1.3rem]" />
+                  </p>
+                </Tooltip>
               )}
             </div>{" "}
           </div>

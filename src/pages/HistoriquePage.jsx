@@ -113,21 +113,52 @@ function HistoriquePage() {
         const timestamp = parseInt(details.timestamp);
         const speedKPH = parseFloat(details.speedKPH);
 
+        const cleanedDetails = {
+          ...details,
+          speedKPH: speedKPH, // ici on force en number
+        };
+
         if (speedKPH <= 0) {
           if (
             lastZeroSpeedTimestamp === null ||
             lastZeroSpeedTimestamp - timestamp >= 60 * 10
           ) {
-            filtered.push(details);
+            filtered.push(cleanedDetails);
             lastZeroSpeedTimestamp = timestamp;
           }
         } else {
-          filtered.push(details);
+          filtered.push(cleanedDetails);
         }
       });
 
     return filtered;
   }, [véhiculeHistoriqueDetails]);
+
+  // const ecar10minuteArret = useMemo(() => {
+  //   const filtered = [];
+  //   let lastZeroSpeedTimestamp = null;
+
+  //   véhiculeHistoriqueDetails
+  //     ?.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
+  //     .forEach((details) => {
+  //       const timestamp = parseInt(details.timestamp);
+  //       const speedKPH = parseFloat(details.speedKPH);
+
+  //       if (speedKPH <= 0) {
+  //         if (
+  //           lastZeroSpeedTimestamp === null ||
+  //           lastZeroSpeedTimestamp - timestamp >= 60 * 10
+  //         ) {
+  //           filtered.push(details);
+  //           lastZeroSpeedTimestamp = timestamp;
+  //         }
+  //       } else {
+  //         filtered.push(details);
+  //       }
+  //     });
+
+  //   return filtered;
+  // }, [véhiculeHistoriqueDetails]);
 
   // // Filtrage pour supprimer les doublons et respecter l'intervalle de 10 minutes
   // const ecar10minuteArret = [];
@@ -152,15 +183,67 @@ function HistoriquePage() {
   //     }
   //   });
 
+  const [vitesseMin, setVitesseMin] = useState("0");
+  const [vitesseMax, setVitesseMax] = useState("150");
+  const [isFilterByVitesse, setIsFilterByVitesse] = useState(true);
+
+  const filteredVehicles = useMemo(() => {
+    if (!ecar10minuteArret) return [];
+
+    return ecar10minuteArret.filter((véhicule) => {
+      const speed = véhicule.speedKPH; // c’est déjà un number maintenant
+
+      if (isFilterByVitesse) {
+        return speed >= Number(vitesseMin) && speed <= Number(vitesseMax);
+      } else {
+        return (
+          (appliedCheckboxes.en_marche && speed > 20) ||
+          (appliedCheckboxes.en_ralenti && speed >= 1 && speed <= 20) ||
+          (appliedCheckboxes.en_arret && speed < 1)
+        );
+      }
+    });
+  }, [
+    ecar10minuteArret,
+    isFilterByVitesse,
+    vitesseMin,
+    vitesseMax,
+    appliedCheckboxes,
+  ]);
+
+  // const filteredVehicles = useMemo(() => {
+  //   if (!ecar10minuteArret) return [];
+
+  //   return ecar10minuteArret.filter((véhicule) => {
+  //     const speed = Number(véhicule.speedKPH);
+
+  //     if (isFilterByVitesse) {
+  //       return speed >= Number(vitesseMin) && speed <= Number(vitesseMax);
+  //     } else {
+  //       return (
+  //         (appliedCheckboxes.en_marche && speed > 20) ||
+  //         (appliedCheckboxes.en_ralenti && speed >= 1 && speed <= 20) ||
+  //         (appliedCheckboxes.en_arret && speed < 1)
+  //       );
+  //     }
+  //   });
+  // }, [
+  //   ecar10minuteArret,
+  //   isFilterByVitesse,
+  //   vitesseMin,
+  //   vitesseMax,
+  //   appliedCheckboxes,
+  // ]);
+
   // filtrer en fonction des statut choisis.
-  const filteredVehicles = ecar10minuteArret?.filter(
-    (véhicule) =>
-      (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
-      (appliedCheckboxes.en_ralenti &&
-        véhicule.speedKPH >= 1 &&
-        véhicule.speedKPH <= 20) ||
-      (appliedCheckboxes.en_arret && véhicule.speedKPH < 1)
-  );
+  // const filteredVehicles = ecar10minuteArret?.filter(
+  //   (véhicule) =>
+  //     (appliedCheckboxes.en_marche && véhicule.speedKPH > 20) ||
+  //     (appliedCheckboxes.en_ralenti &&
+  //       véhicule.speedKPH >= 1 &&
+  //       véhicule.speedKPH <= 20) ||
+  //     (appliedCheckboxes.en_arret && véhicule.speedKPH < 1)
+  // );
 
   // les donnees utiliser dans la carte
   const historiqueInMap = filteredVehicles
@@ -182,22 +265,6 @@ function HistoriquePage() {
       heading: véhicule?.heading || "",
     }));
   }, [historiqueInMap, currentVéhicule]);
-
-  // const véhiculeData = historiqueInMap?.map((véhicule) => ({
-  //   description:
-  //     // currentVéhicule?.displayName ||
-  //     currentVéhicule?.description || "Véhicule",
-  //   lastValidLatitude: véhicule?.latitude || "",
-  //   lastValidLongitude: véhicule?.longitude || "",
-  //   address: véhicule?.backupAddress || véhicule?.address || "",
-  //   imeiNumber: currentVéhicule?.imeiNumber || "",
-  //   isActive: currentVéhicule?.isActive || "",
-  //   licensePlate: currentVéhicule?.licensePlate || "",
-  //   simPhoneNumber: currentVéhicule?.simPhoneNumber || "",
-  //   speedKPH: véhicule?.speedKPH || 0, // Ajout de la vitesse
-  //   timestamp: véhicule?.timestamp || 0, // Ajout de la vitesse
-  //   heading: véhicule?.heading || "",
-  // }));
 
   // les donnees pret a être utiliser apres formatage
   const [vehicles, setvehicles] = useState(véhiculeData);
@@ -680,6 +747,12 @@ function HistoriquePage() {
             showVehiculeListe={showVehiculeListe}
             setShowVehiculeListe={setShowVehiculeListe}
             handleApply={handleApply}
+            vitesseMin={vitesseMin}
+            setVitesseMin={setVitesseMin}
+            vitesseMax={vitesseMax}
+            setVitesseMax={setVitesseMax}
+            isFilterByVitesse={isFilterByVitesse}
+            setIsFilterByVitesse={setIsFilterByVitesse}
           />
         </div>
       </div>
@@ -696,6 +769,9 @@ function HistoriquePage() {
             selectUTC={selectUTC}
             setCheckboxes={setCheckboxes}
             handleCheckboxChange={handleCheckboxChange}
+            vitesseMin={vitesseMin}
+            vitesseMax={vitesseMax}
+            isFilterByVitesse={isFilterByVitesse}
           />
         </div>
       ) : (

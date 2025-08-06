@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
@@ -12,8 +12,47 @@ function HeaderLocation({
   showAllVehicles,
   isDashBoardComptnent = false,
 }) {
-  const {} = useContext(DataContext);
+  const {
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    mergedDataHome,
+    listeGestionDesVehicules,
+    FormatDateHeure,
+  } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  function getMostRecentTimestamp(data) {
+    if (data) {
+      // console.log("data...............", data);
+      const validTimestamps = data
+        .map((véhicule) => parseInt(véhicule?.lastUpdateTime))
+        .filter((timestamp) => !isNaN(timestamp));
+
+      const mostRecentTimestamp =
+        validTimestamps.length > 0 ? Math.max(...validTimestamps) : null; // ou une autre valeur par défaut
+
+      return { mostRecentTimestamp };
+    } else {
+      console.log("Pas de donnees");
+    }
+  }
+
+  // Pour stocker le timestamp le plus récent lorsque "data" change
+
+  const [lastUpdate, setLastUpdate] = useState();
+  const data = isDashboardHomePage
+    ? currentAccountSelected?.accountDevices || accountDevices
+    : dataFusionné;
+
+  // Mettre à jour le timestamp le plus récent lorsque "data" change
+  useEffect(() => {
+    const result = getMostRecentTimestamp(data);
+    if (result) {
+      setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
+    }
+  }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
   return (
     <>
@@ -134,6 +173,16 @@ function HeaderLocation({
             </h3>
           </Tooltip>
         </div>
+        {lastUpdate?.mostRecentTimestamp && (
+          <p className="font-bold  flex flex-wrap items-center text-[.9rem] text-orange-700 bg-white  rounded-lg px-3 py-1.5 mx-auto">
+            <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
+            <span>
+              {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
+              {" / "}
+              {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
+            </span>
+          </p>
+        )}
       </div>
     </>
   );

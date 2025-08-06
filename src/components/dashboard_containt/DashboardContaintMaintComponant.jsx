@@ -744,7 +744,6 @@ function DashboardContaintMaintComponant({
     if (result) {
       setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
     }
-    // console.log("result", result);
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
   const getBackgroundColor = (code) => {

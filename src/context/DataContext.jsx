@@ -14,7 +14,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "3.6";
+  let versionApplication = "3.7";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5718,6 +5718,13 @@ const DataContextProvider = ({ children }) => {
         <Field name="description">${description}</Field>
         <Field name="geozoneID">${geozoneID}</Field>
         <Field name="sortID">${sortID}</Field>
+ <Field name="zoneType">3</Field>
+        <Field name="radius">50</Field>
+        
+        <Field name="reverseGeocode">1</Field>
+        <Field name="arrivalZone">1</Field>
+        <Field name="departureZone">1</Field>
+        <Field name="autoNotify">1</Field>
         
   
         <Field name="shapeColor">${color}</Field>
@@ -5767,7 +5774,7 @@ const DataContextProvider = ({ children }) => {
         if (isDashboardHomePage) {
           console.log("1111111111111111111111111111111111111111111111");
           fetchAccountGeofences(accountIDProp, passwordProp);
-          setCreateGeofenceLoading(false);
+          // setCreateGeofenceLoading(false);
         } else {
           console.log("2222222222222222222222222222222222222222222222");
           setGeofenceData((prevGeofences) => [
@@ -5797,7 +5804,7 @@ const DataContextProvider = ({ children }) => {
             },
           ]);
 
-          setCreateGeofenceLoading(false);
+          // setCreateGeofenceLoading(false);
           GeofenceDataFonction(account, username, password);
         }
 
@@ -5810,7 +5817,7 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(description);
       } else {
         console.log("Error occurred while creating Geofence...");
-        setCreateGeofenceLoading(false);
+        // setCreateGeofenceLoading(false);
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
@@ -5826,7 +5833,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setError("Échec de la création du Geofence.");
       console.error("Échec de la création du Geofence", error);
-      setCreateGeofenceLoading(false);
+      // setCreateGeofenceLoading(false);
 
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(`${t("Échec de l'ajout du Geofence")}`);
@@ -5873,6 +5880,16 @@ const DataContextProvider = ({ children }) => {
       <Field name="accountID">${accountIDProp || account}</Field>
       <Field name="geozoneID">${geozoneID}</Field>
       <Field name="sortID">${geozoneID}</Field>
+        <Field name="zoneType">3</Field>
+        <Field name="radius">50</Field>
+
+
+          <Field name="reverseGeocode">1</Field>
+        <Field name="arrivalZone">1</Field>
+        <Field name="departureZone">1</Field>
+        <Field name="autoNotify">1</Field>
+
+
       <Field name="description">${description}</Field>
       <Field name="shapeColor">${color}</Field>
       <Field name="latitude1">${lat1}</Field>

@@ -16,7 +16,7 @@
   "Arrivée": "Arrivée",
   "Durée trajet": "Durée du trajet",
   "Total": "Total",
-  "Inactifs": "Inactif(s)",
+  "Inactifs": "Inactif",
   "Actifs": "Actif(s)",
   "Compte": "Compte",
   "Comptes": "Comptes",
@@ -873,17 +873,23 @@
 
 
 
-"Voir les infos sur le compte": "Voir les infos sur le compte",
-"Téléphone" : "Téléphone",
-"Email de contact" : "Email de contact",
-"Élargir la carte" : "Élargir la carte",
-"Mettre a jour les donnes" : "Mettre a jour les donnes",
-"Choisir un autre compte" : "Choisir un autre compte",
-"Activer/Désactiver le regroupement des marqueurs" : "Activer/Désactiver le regroupement des marqueurs",
-"Afficher les zones géographiques" : "Afficher les zones géographiques",
-"Recentrer sur le trajet" : "Recentrer sur le trajet",
-"" : "",
-"" : "",
+
+  "Voir les infos sur le compte": "Voir les infos sur le compte",
+  "Téléphone": "Téléphone",
+  "Email de contact": "Email de contact",
+  "Élargir la carte": "Élargir la carte",
+  "Mettre à jour les données": "Mettre à jour les données",
+  "Choisir un autre compte": "Choisir un autre compte",
+  "Activer/Désactiver le regroupement des marqueurs": "Activer/Désactiver le regroupement des marqueurs",
+  "Afficher les zones géographiques": "Afficher les zones géographiques",
+  "Recentrer sur le trajet": "Recentrer sur le trajet",
+
+
+
+
+
+"Filtrer par Vitesse" : "Filtrer par Vitesse",
+"Inverser l'ordre de la liste" : "Inverser l'ordre de la liste",
 "" : "",
 "" : "",
 "" : "",

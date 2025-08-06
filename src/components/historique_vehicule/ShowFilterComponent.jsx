@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { MdDateRange } from "react-icons/md";
 import { FaCarRear } from "react-icons/fa6";
 import { FaCar } from "react-icons/fa";
@@ -6,6 +6,8 @@ import { IoMdClose } from "react-icons/io";
 import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
+import { IoSpeedometerOutline } from "react-icons/io5";
+import { BsSpeedometer } from "react-icons/bs";
 
 function ShowFilterComponent({
   showFilter,
@@ -16,13 +18,19 @@ function ShowFilterComponent({
   handleCheckboxChange,
   applyFilter,
   setTypeDeVue,
- 
+
   startDate,
   startTime,
   endDate,
   endTime,
-   setShowVehiculeListe,
+  setShowVehiculeListe,
   handleApply,
+  vitesseMin,
+  setVitesseMin,
+  vitesseMax,
+  setVitesseMax,
+  isFilterByVitesse,
+  setIsFilterByVitesse,
 }) {
   const { currentVéhicule, setVéhiculeHistoriqueDetails } =
     useContext(DataContext);
@@ -91,62 +99,118 @@ function ShowFilterComponent({
             {/* /////////////////////////////////////////////////////////// */}
 
             <form action="" className="p-2">
-              <div className="flex pt-4 mb-4 items-center gap-3">
-                <FaCarRear className="text-xl text-orange-600/90 dark:text-orange-400" />
-                <h3 className="text-gray-800 dark:text-gray-200">
-                  {t("Filtrer par statut")}
-                </h3>
+              <div className="flex gap-3 items-center">
+                {/* {isFilterByVitesse ? ( */}
+                <div
+                  onClick={() => {
+                    setIsFilterByVitesse(true);
+                  }}
+                  className={`${
+                    isFilterByVitesse ? "bg-orange-100" : ""
+                  } flex cursor-pointer px-4 py-2 mb-4 hover:bg-orange-100 items-center gap-3  rounded-lg font-semibold `}
+                >
+                  <BsSpeedometer className="text-xl text-orange-600/90 dark:text-orange-400" />
+                  <h3 className="text-white-800 dark:text-gray-200">
+                    {t("Filtrer par Vitesse")}
+                  </h3>
+                </div>
+                {/* ) : ( */}
+                <div
+                  onClick={() => {
+                    setIsFilterByVitesse(false);
+                  }}
+                  className={`${
+                    !isFilterByVitesse ? "bg-orange-100" : ""
+                  } flex cursor-pointer px-4 py-2 mb-4 hover:bg-orange-100 items-center gap-3  rounded-lg font-semibold `}
+                >
+                  {" "}
+                  <FaCarRear className="text-xl text-orange-600/90 dark:text-orange-400" />
+                  <h3 className="text-gray-800 dark:text-gray-200">
+                    {t("Filtrer par statut")}
+                  </h3>
+                </div>
+                {/* )} */}
               </div>
-              <div>
-                <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
-                  <input
-                    id="en_marche"
-                    type="checkbox"
-                    checked={checkboxes.en_marche}
-                    onChange={() => handleCheckboxChange("en_marche")}
-                    className="dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label
-                    htmlFor="en_marche"
-                    className="text-gray-800 dark:text-gray-200"
-                  >
-                    {t("En mouvement rapide")}
-                  </label>
+
+              {isFilterByVitesse ? (
+                <div className=" bg-white">
+                  <div className="space-y-2">
+                    <div className="flex gap-4 items-center border-b pb-2">
+                      <label className="block text-sm font-medium w-full">
+                        Vitesse minimale ({vitesseMin} km/h)
+                      </label>
+                      <input
+                        type="number"
+                        value={vitesseMin}
+                        onChange={(e) => setVitesseMin(e.target.value)}
+                        className="w-[4rem] border border-gray-500 rounded p-2"
+                      />
+                    </div>
+                    <div className="flex gap-4 items-center ">
+                      <label className="block text-sm font-medium w-full">
+                        Vitesse maximale ({vitesseMax} km/h)
+                      </label>
+                      <input
+                        type="number"
+                        value={vitesseMax}
+                        onChange={(e) => setVitesseMax(e.target.value)}
+                        className="w-[4rem] border border-gray-500 rounded p-2"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
-                  <input
-                    id="en_ralenti"
-                    type="checkbox"
-                    checked={checkboxes.en_ralenti}
-                    onChange={() => handleCheckboxChange("en_ralenti")}
-                    className="dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label
-                    htmlFor="en_ralenti"
-                    className="text-gray-800 dark:text-gray-200"
-                  >
-                    {t("En mouvement lent")}
-                  </label>
+              ) : (
+                <div>
+                  <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
+                    <input
+                      id="en_marche"
+                      type="checkbox"
+                      checked={checkboxes.en_marche}
+                      onChange={() => handleCheckboxChange("en_marche")}
+                      className="dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                      htmlFor="en_marche"
+                      className="text-gray-800 dark:text-gray-200"
+                    >
+                      {t("En mouvement rapide")}
+                    </label>
+                  </div>
+                  <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
+                    <input
+                      id="en_ralenti"
+                      type="checkbox"
+                      checked={checkboxes.en_ralenti}
+                      onChange={() => handleCheckboxChange("en_ralenti")}
+                      className="dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                      htmlFor="en_ralenti"
+                      className="text-gray-800 dark:text-gray-200"
+                    >
+                      {t("En mouvement lent")}
+                    </label>
+                  </div>
+                  <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
+                    <input
+                      id="en_arret"
+                      type="checkbox"
+                      checked={checkboxes.en_arret}
+                      onChange={() => handleCheckboxChange("en_arret")}
+                      className="dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                      htmlFor="en_arret"
+                      className="text-gray-800 dark:text-gray-200"
+                    >
+                      {t("En stationnement")}
+                    </label>
+                  </div>
                 </div>
-                <div className="flex flex-row mb-1.5 gap-4 ml-0.5">
-                  <input
-                    id="en_arret"
-                    type="checkbox"
-                    checked={checkboxes.en_arret}
-                    onChange={() => handleCheckboxChange("en_arret")}
-                    className="dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label
-                    htmlFor="en_arret"
-                    className="text-gray-800 dark:text-gray-200"
-                  >
-                    {t("En stationnement")}
-                  </label>
-                </div>
-              </div>
+              )}
             </form>
 
-            <hr className="dark:border-gray-600" />
+            <hr className="dark:border-gray-600 mb-8" />
 
             <div className="py-3 pl-2">
               <div className="font-semibold flex flex-wrap dark:text-gray-50 ">

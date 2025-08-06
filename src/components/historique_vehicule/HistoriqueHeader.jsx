@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
- 
+
 import { MdLocationPin, MdDateRange } from "react-icons/md";
 import { FaCar } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
@@ -18,6 +18,7 @@ import { IoStatsChart } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import { MdCenterFocusStrong } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import { DataContext } from "../../context/DataContext";
 
 function HistoriqueHeader({
   setShowHistoriqueInMap,
@@ -28,7 +29,18 @@ function HistoriqueHeader({
   setshowFilter,
   showFilter,
 }) {
+  const {
+    isDashboardHomePage,
+    currentAccountSelected,
+    accountDevices,
+    mergedDataHome,
+    listeGestionDesVehicules,
+    FormatDateHeure,
+    véhiculeHistoriqueDetails,
+  } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+
+  // Pour stocker le timestamp le plus récent lorsque "data" change
 
   return (
     <>
@@ -179,11 +191,27 @@ function HistoriqueHeader({
           {" "}
           La maison de Monsieur Pedro
         </div> */}
-        <div className="px-4 flex justify-center items-center py-1 ">
+        <div className="px-4 flex justify-center items-center py-1-- flex-col">
           <p className="font-semibold notranslate bg-white px-3 text-orange-600 rounded-lg text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
             {" "}
             {(showHistoriqueInMap && currentVéhicule?.description) || ""}
           </p>
+          {véhiculeHistoriqueDetails?.length > 0 && (
+            <p className="font-bold  flex flex-wrap items-center text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3 py-1 mt-0.5 mx-auto">
+              <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
+              <span>
+                {
+                  FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)
+                    ?.date
+                }
+                {" / "}
+                {
+                  FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)
+                    ?.time
+                }{" "}
+              </span>
+            </p>
+          )}
         </div>
       </div>
     </>

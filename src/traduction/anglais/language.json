@@ -860,7 +860,25 @@
   "selector": "Selector",
   "emailSubject": "Email subject",
   "emailText": "Email text",
-  "version": "Version"
+  "version": "Version",
+
+
+  "Voir les infos sur le compte": "View account information",
+  "Téléphone": "Phone",
+  "Email de contact": "Contact email",
+  "Élargir la carte": "Expand the map",
+  "Mettre à jour les données": "Update data",
+  "Choisir un autre compte": "Select another account",
+  "Activer/Désactiver le regroupement des marqueurs": "Enable/Disable marker clustering",
+  "Afficher les zones géographiques": "Show geographic zones",
+  "Recentrer sur le trajet": "Recenter on route",
+
+
+
+
+
+  "Filtrer par Vitesse" : "Filter by Speed",
+"Inverser l'ordre de la liste" : "Reverse List Order"
 
 
 

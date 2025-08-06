@@ -31,7 +31,12 @@ function SuccèsÉchecMessagePopup({
   let text_color;
 
   if (
-    confirmationMessagePopupTexte?.includes(`${t("succès")}`) ||
+    confirmationMessagePopupTexte?.includes("éxito") ||
+    confirmationMessagePopupTexte?.includes("Success") ||
+    confirmationMessagePopupTexte?.includes("success") ||
+    confirmationMessagePopupTexte?.includes("successfully") ||
+    confirmationMessagePopupTexte?.includes("error") ||
+    confirmationMessagePopupTexte?.includes("succès") ||
     confirmationMessagePopupTexte?.includes("Successfully")
   ) {
     body_bg = "bg-green-50";
@@ -39,8 +44,14 @@ function SuccèsÉchecMessagePopup({
     button_bg = "bg-green-500";
     text_color = "text-green-600";
   } else if (
-    confirmationMessagePopupTexte?.includes(`${t("échec")}`) ||
-    confirmationMessagePopupTexte?.includes(`${t("Échec")}`)
+    confirmationMessagePopupTexte?.includes("Fallo") ||
+    confirmationMessagePopupTexte?.includes("fallo") ||
+    confirmationMessagePopupTexte?.includes("Error") ||
+    confirmationMessagePopupTexte?.includes("Error") ||
+    confirmationMessagePopupTexte?.includes("Error") ||
+    confirmationMessagePopupTexte?.includes("error") ||
+    confirmationMessagePopupTexte?.includes("échec") ||
+    confirmationMessagePopupTexte?.includes("Échec")
   ) {
     body_bg = "bg-red-50";
     header_bg = "bg-red-600";
@@ -64,7 +75,13 @@ function SuccèsÉchecMessagePopup({
               className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}
             >
               <h2 className="font-bold text-white text-xl">
-                {confirmationMessagePopupTexte?.includes(`${t("succès")}`)
+                {confirmationMessagePopupTexte?.includes("éxito") ||
+                confirmationMessagePopupTexte?.includes("Success") ||
+                confirmationMessagePopupTexte?.includes("success") ||
+                confirmationMessagePopupTexte?.includes("successfully") ||
+                confirmationMessagePopupTexte?.includes("error") ||
+                confirmationMessagePopupTexte?.includes("succès") ||
+                confirmationMessagePopupTexte?.includes("Successfully")
                   ? `${t("Succès")}`
                   : `${t("Échec")}`}
 
