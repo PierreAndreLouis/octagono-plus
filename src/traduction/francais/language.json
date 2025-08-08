@@ -888,12 +888,100 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 "Filtrer par Vitesse" : "Filtrer par Vitesse",
 "Inverser l'ordre de la liste" : "Inverser l'ordre de la liste",
-"" : "",
-"" : "",
-"" : "",
-"" : ""
+"Nombre de Roles" : "Nombre de Roles",
+"Règles actives" : "Règles actives",
+"Liste des règles" : "Liste des règles",
+"l'email de notification n'est pas valide" : "l'email de notification n'est pas valide",
+"Gestion des Roles Actives": "Gestion des Roles Actives",
+
+
+
+
+  "Voulez-vous Supprimer le role": "Voulez-vous Supprimer le role",
+  "Créer un nouveau Role": "Créer un nouveau Role",
+  "ID du Role": "ID du Role",
+
+
+
+
+
+  "deleteRoleConfirm": "Voulez-vous supprimer le rôle",
+  "enterPassword": "Veuillez entrer votre mot de passe",
+  "incorrectPassword": "Mot de passe incorrect",
+  "password": "Mot de passe",
+  "confirm": "Confirmer",
+  "cancel": "Annuler",
+  "roleManagement": "Gestion des rôles",
+  "roleCount": "Nombre de rôles",
+  "createRole": "Créer un nouveau rôle",
+  "searchRole": "Rechercher un rôle",
+  "accountId": "ID du compte",
+  "roleId": "ID du rôle",
+  "description": "Description",
+
+  "creationDate": "Date de création",
+  "lastUpdate": "Dernière mise à jour",
+  "edit": "Modifier",
+  "delete": "Supprimer",
+  "noResult": "Pas de résultat",
+
+
+
+    "chooseAccount": "Veuillez choisir un compte",
+  "emptyRuleId": "Le champ ruleID est vide",
+  "roleAlreadyExists": "Ce rôle est déjà créé. Veuillez modifier l'un des champs",
+  "incorrectPasswordRetry": "Mot de passe incorrect. Veuillez réessayer",
+
+
+
+  "Cet identifiant (ruleID) est déjà utilisé. Veuillez en choisir un autre": "Cet identifiant (ruleID) est déjà utilisé. Veuillez en choisir un autre",
+  "smsText": "SMS Text",
+
+
+
+
+
+
+  
+
+  "Gestion Des Role Actives": "Gestion Des Roles Actives",
+  "Nombre de Roles Active": "Nombre de Role Active",
+  "Activer un nouveau Role": "Activer un nouveau Role",
+  "Statut Code": "Statut Code"
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
 
 
 

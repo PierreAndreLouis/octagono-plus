@@ -878,7 +878,63 @@
 
 
   "Filtrer par Vitesse" : "Filter by Speed",
-"Inverser l'ordre de la liste" : "Reverse List Order"
+"Inverser l'ordre de la liste" : "Reverse List Order",
+
+
+
+
+  "Nombre de Roles": "Number of Roles",
+  "Règles actives": "Active Rules",
+  "Liste des règles": "Rules List",
+  "l'email de notification n'est pas valide": "Notification email is invalid",
+  "Gestion des Roles Actives": "Active Roles Management",
+
+  "Voulez-vous Supprimer le role": "Do you want to delete the role",
+  "Créer un nouveau Role": "Create a new Role",
+  "ID du Role": "Role ID",
+
+  "deleteRoleConfirm": "Do you want to delete the role",
+  "enterPassword": "Please enter your password",
+  "incorrectPassword": "Incorrect password",
+  "password": "Password",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "roleManagement": "Role Management",
+  "roleCount": "Number of Roles",
+  "createRole": "Create a new role",
+  "searchRole": "Search a role",
+  "accountId": "Account ID",
+  "roleId": "Role ID",
+  "description": "Description",
+
+  "creationDate": "Creation Date",
+  "lastUpdate": "Last Update",
+  "edit": "Edit",
+  "delete": "Delete",
+  "noResult": "No result",
+
+  "chooseAccount": "Please choose an account",
+  "emptyRuleId": "The ruleID field is empty",
+  "roleAlreadyExists": "This role already exists. Please modify one of the fields",
+  "incorrectPasswordRetry": "Incorrect password. Please try again",
+
+  "Cet identifiant (ruleID) est déjà utilisé. Veuillez en choisir un autre": "This identifier (ruleID) is already used. Please choose another",
+
+  "smsText": "SMS Text",
+
+
+
+
+
+
+
+
+
+    "Gestion Des Role Actives": "Active Role Management",
+  "Nombre de Roles Active": "Number of Active Roles",
+  "Activer un nouveau Role": "Activate a New Role",
+  "Statut Code": "Status Code"
+
 
 
 

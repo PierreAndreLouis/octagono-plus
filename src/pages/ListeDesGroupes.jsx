@@ -438,17 +438,6 @@ function ListeDesGroupes({
               ?.slice()
               .sort((a, b) => b?.creationTime - a?.creationTime)
               ?.map((groupe, index) => {
-                // const userListeAffected = (
-                //   currentAccountSelected ||
-                //   gestionAccountData.find(
-                //     (account) => account.accountID === groupe?.accountID
-                //   )
-                // )?.accountUsers?.filter((user) => {
-                //   const groupes = user?.userGroupes || [];
-                //   return groupes?.some(
-                //     (group) => group?.groupID === groupe?.groupID
-                //   );
-                // });
                 const userListeAffected =
                   groupUsersMap.get(groupe.groupID) || [];
 

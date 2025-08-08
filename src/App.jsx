@@ -130,6 +130,9 @@ import ChooseOtherGroupeDashboard from "./components/dashboard_containt/ChooseOt
 import HeaderDashboardSysadmin from "./components/dashboard_containt/HeaderDashboardSysadmin";
 import SideBarSysadmin from "./components/dashboard_containt/SideBarSysadmin";
 import AjouterGeofence from "./components/location_vehicule/AjouterGeofence";
+import ModifyRole from "./components/gestion_des_comptes/ModifyRole";
+import GestionDesRolesActive from "./pages/GestionDesRolesActive";
+import CreateNewRoleActive from "./components/gestion_des_comptes/CreateNewRoleActive";
 
 function App() {
   const {
@@ -582,6 +585,10 @@ function App() {
       return () => clearTimeout(timer);
     }
   }, [showChooseItemToModifyMessage]);
+
+  const [currentSelectedRole, setCurrentSelectedRole] = useState(null);
+  const [currentSelectedRoleActive, setCurrentSelectedRoleActive] =
+    useState(null);
 
   return (
     <div className="dark:bg-gray-700 md:p-4 bg-gray-100">
@@ -1117,6 +1124,38 @@ function App() {
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
                           }
+                          setCurrentSelectedRole={setCurrentSelectedRole}
+                          currentSelectedRole={currentSelectedRole}
+                        />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+
+          <Route
+            path="/Gestion_des_roles_actives"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <GestionDesRolesActive
+                          setDocumentationPage={setDocumentationPage}
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          setCurrentSelectedRoleActive={
+                            setCurrentSelectedRoleActive
+                          }
+                          currentSelectedRoleActive={currentSelectedRoleActive}
                         />
                       </Suspense>
                     </div>
@@ -1145,6 +1184,8 @@ function App() {
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
                           }
+                          currentSelectedRole={currentSelectedRole}
+                          setCurrentSelectedRole={setCurrentSelectedRole}
                         />
                       </Suspense>
                     </div>
@@ -1153,6 +1194,126 @@ function App() {
               />
             }
           />
+          <Route
+            path="/Ajouter_nouveau_role_active"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <CreateNewRoleActive
+                          accountIdFromRole={accountIdFromRole}
+                          documentationPage={documentationPage}
+                          setDocumentationPage={setDocumentationPage}
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          currentSelectedRoleActive={currentSelectedRoleActive}
+                          setCurrentSelectedRoleActive={
+                            setCurrentSelectedRoleActive
+                          }
+                        />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+          <Route
+            path="/Modifier_role_active"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <CreateNewRoleActive
+                          accountIdFromRole={accountIdFromRole}
+                          documentationPage={documentationPage}
+                          setDocumentationPage={setDocumentationPage}
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          currentSelectedRoleActive={currentSelectedRoleActive}
+                          setCurrentSelectedRoleActive={
+                            setCurrentSelectedRoleActive
+                          }
+                        />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+
+          <Route
+            path="/Modifier_role"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <CreateNewRole
+                          accountIdFromRole={accountIdFromRole}
+                          documentationPage={documentationPage}
+                          setDocumentationPage={setDocumentationPage}
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          currentSelectedRole={currentSelectedRole}
+                          setCurrentSelectedRole={setCurrentSelectedRole}
+                        />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          />
+
+          {/* <Route
+            path="/Modifier_role"
+            element={
+              <PrivateRoute
+                element={
+                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                    <SideBarSpaceLeft />
+                    <div className="w-full">
+                      <Suspense fallback={<LoadingLazyAnimation />}>
+                        <ModifyRole
+                          accountIdFromRole={accountIdFromRole}
+                          documentationPage={documentationPage}
+                          setDocumentationPage={setDocumentationPage}
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                        />
+                      </Suspense>
+                    </div>
+                  </div>
+                }
+              />
+            }
+          /> */}
 
           <Route
             path="/Localisation_devices"

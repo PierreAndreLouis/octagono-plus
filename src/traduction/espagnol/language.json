@@ -896,10 +896,6 @@
 
 
 
-  
-  "Filtrer par Vitesse" : "Filtrar por Velocidad",
-"Inverser l'ordre de la liste" : "Invertir el orden de la lista",
-
 
   "Voir les infos sur le compte": "Ver información de la cuenta",
   "Téléphone": "Teléfono",
@@ -909,7 +905,69 @@
   "Choisir un autre compte": "Elegir otra cuenta",
   "Activer/Désactiver le regroupement des marqueurs": "Activar/Desactivar agrupación de marcadores",
   "Afficher les zones géographiques": "Mostrar zonas geográficas",
-  "Recentrer sur le trajet": "Recentrar en la ruta"
+  "Recentrer sur le trajet": "Recentrar en la ruta",
+
+
+
+
+
+
+
+
+  
+  "Filtrer par Vitesse": "Filtrar por velocidad",
+  "Inverser l'ordre de la liste": "Invertir el orden de la lista",
+  "Nombre de Roles": "Número de roles",
+  "Règles actives": "Reglas activas",
+  "Liste des règles": "Lista de reglas",
+  "l'email de notification n'est pas valide": "El correo de notificación no es válido",
+  "Gestion des Roles Actives": "Gestión de roles activos",
+
+  "Voulez-vous Supprimer le role": "¿Desea eliminar el rol?",
+  "Créer un nouveau Role": "Crear un nuevo rol",
+  "ID du Role": "ID del rol",
+
+  "deleteRoleConfirm": "¿Desea eliminar el rol?",
+  "enterPassword": "Por favor, ingrese su contraseña",
+  "incorrectPassword": "Contraseña incorrecta",
+  "password": "Contraseña",
+  "confirm": "Confirmar",
+  "cancel": "Cancelar",
+  "roleManagement": "Gestión de roles",
+  "roleCount": "Número de roles",
+  "createRole": "Crear un nuevo rol",
+  "searchRole": "Buscar un rol",
+  "accountId": "ID de cuenta",
+  "roleId": "ID del rol",
+  "description": "Descripción",
+
+  "creationDate": "Fecha de creación",
+  "lastUpdate": "Última actualización",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "noResult": "Sin resultados",
+
+  "chooseAccount": "Por favor, elija una cuenta",
+  "emptyRuleId": "El campo ruleID está vacío",
+  "roleAlreadyExists": "Este rol ya existe. Por favor, modifique uno de los campos",
+  "incorrectPasswordRetry": "Contraseña incorrecta. Por favor, inténtelo de nuevo",
+
+  "Cet identifiant (ruleID) est déjà utilisé. Veuillez en choisir un autre": "Este identificador (ruleID) ya está en uso. Por favor, elija otro",
+
+  "smsText": "Texto SMS",
+
+
+
+
+
+
+
+
+    "Gestion Des Role Actives": "Gestión de Roles Activos",
+  "Nombre de Roles Active": "Número de Roles Activos",
+  "Activer un nouveau Role": "Activar un Nuevo Rol",
+  "Statut Code": "Código de Estado"
+
 
 
 

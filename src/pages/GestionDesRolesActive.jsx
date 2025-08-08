@@ -16,10 +16,10 @@ import { BiUniversalAccess } from "react-icons/bi";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-function GestionDesRoles({
+function GestionDesRolesActive({
   setDocumentationPage,
-  setCurrentSelectedRole,
-  currentSelectedRole,
+  currentSelectedRoleActive,
+  setCurrentSelectedRoleActive,
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
 }) {
@@ -36,24 +36,29 @@ function GestionDesRoles({
     fetchAccountRules,
     fetchRulesEnGestionAccount,
     adminPassword,
-    DeleteRoleEnGestionAccount,
+    DeleteRoleActiveEnGestionAccount,
+    fetchAccountRulesActive,
+    listeGestionDesRulesActive,
+    mergedDataHome,
+    accountDevices,
+    isDashboardHomePage,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+  const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
+
+  let ListeOfDevice = isDashboardHomePage ? accountDevices : dataFusionné;
 
   const navigate = useNavigate();
 
   const [inputSearchItem, setInputSearchItem] = useState("");
 
   const filterListeGestionDesRules = inputSearchItem
-    ? listeGestionDesRules.filter(
+    ? listeGestionDesRulesActive.filter(
         (item) =>
-          item?.description
-            .toLowerCase()
-            .includes(inputSearchItem.toLowerCase()) ||
           item?.ruleID.toLowerCase().includes(inputSearchItem.toLowerCase()) ||
           item?.accountID.toLowerCase().includes(inputSearchItem.toLowerCase())
       )
-    : listeGestionDesRules;
+    : listeGestionDesRulesActive;
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -66,21 +71,24 @@ function GestionDesRoles({
     if (inputPassword === adminPassword) {
       setDeleRolePopup(false);
 
-      DeleteRoleEnGestionAccount(
+      //   console.log(
+      DeleteRoleActiveEnGestionAccount(
         currentAccountSelected?.accountID ||
           gestionAccountData.find(
-            (account) => account.accountID === currentSelectedRole?.accountID
+            (account) =>
+              account.accountID === currentSelectedRoleActive?.accountID
           )?.accountID,
         "admin",
         currentAccountSelected?.password ||
           gestionAccountData.find(
-            (account) => account.accountID === currentSelectedRole?.accountID
+            (account) =>
+              account.accountID === currentSelectedRoleActive?.accountID
           )?.password,
 
-        currentSelectedRole?.ruleID,
-        currentSelectedRole?.isCronRule,
-        currentSelectedRole?.selector,
-        currentSelectedRole?.actionMask
+        currentSelectedRoleActive?.ruleID,
+        currentSelectedRoleActive?.deviceID,
+        currentSelectedRoleActive?.groupID,
+        currentSelectedRoleActive?.statusCode
       );
     } else {
       setErrorIncorrectPassword(`${t("Mot de passe incorrect")}`);
@@ -102,12 +110,17 @@ function GestionDesRoles({
               onSubmit={deleteRoleFonction}
               className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
             >
-              <div className="bg-red-500 px-3 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
+              <div
+                onClick={() => {
+                  console.log(currentSelectedRoleActive);
+                }}
+                className="bg-red-500 px-3 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0"
+              >
                 {t("Voulez-vous Supprimer le role")}
                 {" : "}
                 <br />
                 <span className="text-black">
-                  {currentSelectedRole?.description} ?
+                  {currentSelectedRoleActive?.ruleID} ?
                 </span>
               </div>
               <div>
@@ -157,55 +170,38 @@ function GestionDesRoles({
         <div className="px-4 pt-10 mt-4-- pb-40 bg-white rounded-lg">
           <h2
             onClick={() => {
-              fonctionTest();
+              //   fonctionTest();
+              fetchAccountRulesActive("foodforthepoor", "Octa@112233");
             }}
             className="mt-[10rem]-- text-lg text-center font-bold "
           >
-            {t("Gestion Des Role")}
+            {t("Gestion Des Role Actives")}
             {/* ({filterListeDesCompte?.length}) */}
           </h2>
           <p className="text-center mx-auto font-semibold text-gray-500">
-            {t("Nombre de Roles")}:{" "}
+            {t("Nombre de Roles Active")}:{" "}
             <span className="text-orange-500">
               {" "}
-              {listeGestionDesRules?.length}
+              {listeGestionDesRulesActive?.length}
             </span>
           </p>
           <div className="flex  justify-center mt-4">
             <button
               onClick={() => {
-                setDocumentationPage("Ajouter_nouveau_role");
-                navigate("/Ajouter_nouveau_role");
-                setCurrentSelectedRole(null);
-
+                setDocumentationPage("Ajouter_nouveau_role_active");
+                navigate("/Ajouter_nouveau_role_active");
+                setCurrentSelectedRoleActive(null);
                 if (!currentAccountSelected) {
                   setChooseOneAccountToContinue(true);
                   setChooseOtherAccountGestion(true);
                 }
-                //
-                //
-                //
-                // creer une nouvelle regle
-                // createNewRuleEnGestionAccount("demo", "admin", "112233");
-                //
-                // pour voir tous les regles creer a affecter
-                // fetchRulesEnGestionAccount("demo", "admin", "112233");
-                //
-                //
-                // affichage des regles affecter a des appareils ou groupe
-                // fetchAccountRules("foodforthepoor", "Octa@112233");
-                //
-                //
-                //
-                //
-                // fetchAccountRules("demo", "112233");
               }}
               className="bg-orange-500 w-full max-w-[30rem] shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
             >
               <div className="flex justify-center items-center gap-3">
                 <FaPlusCircle className="text-2xl" />
                 <p className="text-[1rem] text-center">
-                  {t("Créer un nouveau Role")}
+                  {t("Activer un nouveau Role")}
                 </p>
               </div>
             </button>{" "}
@@ -230,6 +226,9 @@ function GestionDesRoles({
           <div className="hidden-- flex mt-[5rem] min-h-[50vh] flex-col gap-6 max-w-[50rem] mx-auto">
             {filterListeGestionDesRules?.length > 0 ? (
               filterListeGestionDesRules?.map((rule, index) => {
+                const foundDevice = ListeOfDevice?.find(
+                  (d) => d?.deviceID === rule?.deviceID
+                );
                 return (
                   <div
                     key={index}
@@ -259,51 +258,47 @@ function GestionDesRoles({
                               {rule?.ruleID}{" "}
                             </span>
                           </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
+                          {/* <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
                               {t("Description")} :
                             </p>
                             <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                               {rule?.description}{" "}
                             </span>
-                          </div>{" "}
+                          </div>{" "} */}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              {t("emailSubject")} :
+                              {t("Appareil")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {rule?.emailSubject}{" "}
+                              {rule?.deviceID === "*"
+                                ? `${t("Tous les appareils")}`
+                                : foundDevice?.description}{" "}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              {t("emailText")} :
+                              {t("Groupe")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {rule?.emailText}{" "}
+                              {rule?.groupID === "-"
+                                ? `${t("Tous les groupes")}`
+                                : rule?.groupID}{" "}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
-                              {t("notifyEmail")} :
+                              {t("Statut Code")} :
                             </p>
                             <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {rule?.notifyEmail}{" "}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold- text-gray-700">
-                              {t("selector")} :
-                            </p>
-                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {rule?.selector}{" "}
+                              {rule?.statusCode}{" "}
                             </span>
                           </div>{" "}
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
                               {t("Date de creation")} :
                             </p>
-                            <span className=" dark:text-orange-500 font-bold text-gray-600">
+                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-2">
                               {FormatDateHeure(rule?.creationTime).date}
                               <span className="px-2">/</span>{" "}
                               {FormatDateHeure(rule?.creationTime).time}
@@ -313,7 +308,7 @@ function GestionDesRoles({
                             <p className="font-bold- text-gray-700">
                               {t("Last Update")} :
                             </p>
-                            <span className=" dark:text-orange-500 font-bold text-gray-600">
+                            <span className=" dark:text-orange-500 font-bold text-gray-600 pl-2">
                               {FormatDateHeure(rule?.lastUpdateTime).date}
                               <span className="px-2">/</span>{" "}
                               {FormatDateHeure(rule?.lastUpdateTime).time}
@@ -323,25 +318,27 @@ function GestionDesRoles({
                       </div>
                     </div>
                     <div className="flex justify-end md:flex-col  sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
-                      <button
+                      {/* <button
                         onClick={() => {
                           console.log(rule);
-                          setCurrentSelectedRole(rule);
-                          setDocumentationPage("Ajouter_nouveau_role");
-                          navigate("/Modifier_role");
+                          setCurrentSelectedRoleActive(rule);
+                          setDocumentationPage("Modifier_role_active");
+                          navigate("/Modifier_role_active");
+
+                          //   setCurrentSelectedRole(rule);
                         }}
                         className={` bg-gray-200 text-gray-800 text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                       >
                         <FaEdit className="text-xl" />
                         <p>{t("Modifier")}</p>
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => {
                           console.log(rule);
-                          setCurrentSelectedRole(rule);
+                          setCurrentSelectedRoleActive(rule);
                           setDeleRolePopup(true);
-                          // setDocumentationPage("Ajouter_nouveau_role");
-                          // navigate("/Modifier_role");
+
+                          //   setCurrentSelectedRole(rule);
                         }}
                         className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                       >
@@ -368,4 +365,4 @@ function GestionDesRoles({
   );
 }
 
-export default GestionDesRoles;
+export default GestionDesRolesActive;

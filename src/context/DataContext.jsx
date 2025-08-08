@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "4.2";
+  let versionApplication = "4.3";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -169,6 +169,8 @@ const DataContextProvider = ({ children }) => {
   const [accountGeofences, setAccountGeofences] = useState([]);
   const [accountGroupes, setAccountGroupes] = useState([]);
   const [accountUsers, setAccountUsers] = useState([]);
+  const [accountRules, setAccountRules] = useState([]);
+  const [accountRulesActive, setAccountRulesActive] = useState([]);
   const [userDevices, setUserDevices] = useState([]);
   const [userGroupes, setUserGroupes] = useState([]);
   const [véhiculeDetails, setVehiculeDetails] = useState([]);
@@ -193,6 +195,41 @@ const DataContextProvider = ({ children }) => {
   const [listeGestionDesGroupeTitre, setListeGestionDesGroupeTitre] =
     useState("");
   const [listeGestionDesUsers, setListeGestionDesUsers] = useState([]);
+  const [listeGestionDesRules, setListeGestionDesRules] = useState([]);
+  const [listeGestionDesRulesActive, setListeGestionDesRulesActive] = useState(
+    []
+  );
+
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setListeGestionDesRules(currentAccountSelected?.accountRules);
+    } else {
+      setListeGestionDesRules(accountRules);
+    }
+  }, [currentAccountSelected]);
+
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setListeGestionDesRulesActive(currentAccountSelected?.accountRulesActive);
+    } else {
+      setListeGestionDesRulesActive(accountRulesActive);
+    }
+  }, [currentAccountSelected]);
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setListeGestionDesRulesActive(currentAccountSelected?.accountRulesActive);
+    } else {
+      setListeGestionDesRulesActive(accountRulesActive);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentAccountSelected) {
+      setListeGestionDesRules(currentAccountSelected?.accountRules);
+    } else {
+      setListeGestionDesRules(accountRules);
+    }
+  }, []);
 
   useEffect(() => {
     console.log("🟢 currentAccountSelected CHANGÉ :", currentAccountSelected);
@@ -227,6 +264,8 @@ const DataContextProvider = ({ children }) => {
       );
       setCurrentAccountSelected(compteMisAJour);
       setListeGestionDesUsers(compteMisAJour?.accountUsers);
+      setListeGestionDesRules(compteMisAJour?.accountRules);
+      setListeGestionDesRulesActive(compteMisAJour?.accountRulesActive);
       setListeGestionDesGroupe(compteMisAJour?.accountGroupes);
       setListeGestionDesVehicules(compteMisAJour?.accountDevices);
       setListeGestionDesGeofences(compteMisAJour?.accountGeofences);
@@ -239,6 +278,8 @@ const DataContextProvider = ({ children }) => {
     accountGeofences,
     accountGroupes,
     accountUsers,
+    accountRules,
+    accountRulesActive,
     groupeDevices,
     userGroupes,
     véhiculeDetails,
@@ -289,6 +330,8 @@ const DataContextProvider = ({ children }) => {
       setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
       setListeGestionDesGroupe(currentAccountSelected?.accountGroupes);
       setListeGestionDesUsers(currentAccountSelected?.accountUsers);
+      setListeGestionDesRules(currentAccountSelected?.accountRules);
+      setListeGestionDesRulesActive(currentAccountSelected?.accountRulesActive);
     } else {
       setListeGestionDesVehicules(accountDevices);
       setListeGestionDesGeofences(accountGeofences);
@@ -296,6 +339,8 @@ const DataContextProvider = ({ children }) => {
       setListeGestionDesGroupe(accountGroupes);
 
       setListeGestionDesUsers(accountUsers);
+      setListeGestionDesRules(accountRules);
+      setListeGestionDesRulesActive(accountRulesActive);
     }
   }, [currentAccountSelected]);
 
@@ -945,7 +990,7 @@ const DataContextProvider = ({ children }) => {
 
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MyDatabase", 10);
+      const request = indexedDB.open("MyDatabase", 12);
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -1000,6 +1045,15 @@ const DataContextProvider = ({ children }) => {
         if (!db.objectStoreNames.contains("accountUsers")) {
           // Auto-incrémente sans keyPath pour stocker uniquement les données
           db.createObjectStore("accountUsers", { autoIncrement: true });
+        }
+
+        if (!db.objectStoreNames.contains("accountRules")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("accountRules", { autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains("accountRulesActive")) {
+          // Auto-incrémente sans keyPath pour stocker uniquement les données
+          db.createObjectStore("accountRulesActive", { autoIncrement: true });
         }
       };
 
@@ -1114,6 +1168,18 @@ const DataContextProvider = ({ children }) => {
     });
   }, []);
 
+  useEffect(() => {
+    getDataFromIndexedDB("accountRules").then((data) => {
+      setAccountRules(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getDataFromIndexedDB("accountRulesActive").then((data) => {
+      setAccountRulesActive(data);
+    });
+  }, []);
+
   // Sauvegarder les données lorsqu'elles changent
   useEffect(() => {
     if (mergedDataHome) {
@@ -1179,6 +1245,17 @@ const DataContextProvider = ({ children }) => {
       saveDataToIndexedDB("accountUsers", accountUsers);
     }
   }, [accountUsers]);
+
+  useEffect(() => {
+    if (accountRules) {
+      saveDataToIndexedDB("accountRules", accountRules);
+    }
+  }, [accountRulesActive]);
+  useEffect(() => {
+    if (accountRulesActive) {
+      saveDataToIndexedDB("accountRulesActive", accountRulesActive);
+    }
+  }, [accountRulesActive]);
 
   // Réinitialiser IndexedDB
   const resetIndexedDB = () => {
@@ -2101,6 +2178,8 @@ const DataContextProvider = ({ children }) => {
         }
       });
 
+      const accountRulesPromise = fetchAccountRules(id, pwd);
+      const accountRulesActivePromise = fetchAccountRulesActive(id, pwd);
       const geofencesPromise = fetchAccountGeofences(id, pwd);
 
       const devicesPromise = fetchAccountDevices(id, pwd).then(
@@ -2118,6 +2197,8 @@ const DataContextProvider = ({ children }) => {
       const results = await Promise.allSettled([
         groupesPromise,
         usersPromise,
+        accountRulesPromise,
+        accountRulesActivePromise,
         geofencesPromise,
         devicesPromise,
       ]);
@@ -2419,6 +2500,110 @@ const DataContextProvider = ({ children }) => {
     console.log("fetchAccountUsers: résultats =", data);
 
     setAccountUsers((prev) => {
+      // Supprimer tous les users de ce compte
+      const filtered = prev?.filter((u) => u.accountID !== accountID);
+      // Ajouter les nouveaux users
+      return [...filtered, ...data];
+    });
+
+    return data;
+  };
+
+  // 4) Récupérer accountRules
+  const fetchAccountRules = async (accountID, password) => {
+    console.log(
+      "fetchAccountRules: lancement de la requête XML pour",
+      accountID
+    );
+
+    const xml = `<GTSRequest command="dbget">
+      <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+      <Record table="Rule" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        </Record>
+    </GTSRequest>`;
+
+    console.log(xml);
+
+    const res = await fetch(currentAPI, {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xml,
+    });
+    const text = await res.text();
+    // console.log(text)
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    const result = doc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    const records = Array.from(doc.getElementsByTagName("Record"));
+
+    const data =
+      result === "success"
+        ? records.map((rec) =>
+            Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+              obj[fld.getAttribute("name")] = fld.textContent;
+              return obj;
+            }, {})
+          )
+        : [];
+
+    console.log("fetchAccountRules: résultats =", data);
+
+    setAccountRules((prev) => {
+      // Supprimer tous les users de ce compte
+      const filtered = prev?.filter((u) => u.accountID !== accountID);
+      // Ajouter les nouveaux users
+      return [...filtered, ...data];
+    });
+
+    return data;
+  };
+
+  // 4) Récupérer accountRules
+  const fetchAccountRulesActive = async (accountID, password) => {
+    console.log(
+      "fetchAccountRulesActive: lancement de la requête XML pour",
+      accountID
+    );
+
+    const xml = `<GTSRequest command="dbget">
+      <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+      <Record table="RuleList" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        </Record>
+    </GTSRequest>`;
+
+    console.log(xml);
+
+    const res = await fetch(currentAPI, {
+      method: "POST",
+      headers: { "Content-Type": "application/xml" },
+      body: xml,
+    });
+    const text = await res.text();
+    // console.log(text)
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    const result = doc
+      .getElementsByTagName("GTSResponse")[0]
+      ?.getAttribute("result");
+    const records = Array.from(doc.getElementsByTagName("Record"));
+
+    const data =
+      result === "success"
+        ? records.map((rec) =>
+            Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
+              obj[fld.getAttribute("name")] = fld.textContent;
+              return obj;
+            }, {})
+          )
+        : [];
+
+    console.log("fetchAccountRulesActive: résultats =", data);
+
+    setAccountRulesActive((prev) => {
       // Supprimer tous les users de ce compte
       const filtered = prev?.filter((u) => u.accountID !== accountID);
       // Ajouter les nouveaux users
@@ -2879,6 +3064,10 @@ const DataContextProvider = ({ children }) => {
 
     const merged = comptes?.map((acct) => {
       const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
+      const rules = accountRules?.filter((u) => u.accountID === acct.accountID);
+      const rulesActive = accountRulesActive?.filter(
+        (u) => u.accountID === acct.accountID
+      );
 
       const devices = accountDevices?.filter(
         (d) => d.accountID === acct.accountID
@@ -2944,6 +3133,8 @@ const DataContextProvider = ({ children }) => {
       return {
         ...acct,
         accountUsers: updatedUsers,
+        accountRules: rules,
+        accountRulesActive: rulesActive,
         accountDevices: devices,
         accountGeofences: geofences,
         accountGroupes: updatedGroupes,
@@ -2959,6 +3150,8 @@ const DataContextProvider = ({ children }) => {
     accountGroupes,
     groupeDevices,
     accountUsers,
+    accountRules,
+    accountRulesActive,
     // userDevices,
     userGroupes,
     véhiculeDetails,
@@ -3347,6 +3540,753 @@ const DataContextProvider = ({ children }) => {
       setConfirmationMessagePopupName("");
     }
   };
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //   pour creer une nouvelle regle pret a etre assigner a un device ou groupe // table Rule
+  const createNewRuleEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+    // imeiNumber,
+    // groupID,
+    ruleID,
+    isCronRule,
+    ruleTag,
+    selector,
+    actionMask,
+    cannedActions,
+    priority,
+    notifyEmail,
+    emailSubject,
+    emailText,
+    smsText,
+    useEmailWrapper,
+    ruleDisable,
+    ruleEnable,
+    sendCommand,
+    isActive,
+    description
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    // <Field name="groupID">${groupID}</Field>
+    // <Field name="deviceID">${imeiNumber}</Field>
+    const xmlData = `
+    <GTSRequest command="dbcreate">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="Rule">
+        <Field name="accountID">${accountID}</Field>
+        <Field name="ruleID">${ruleID}</Field>
+        <Field name="isCronRule">${isCronRule}</Field>
+        <Field name="ruleTag">${ruleTag}</Field>
+        <Field name="selector">${selector}</Field>
+        <Field name="actionMask">${actionMask}</Field>
+        <Field name="cannedActions">${cannedActions}</Field>
+        <Field name="priority">${priority}</Field>
+        <Field name="notifyEmail">${notifyEmail}</Field>
+        <Field name="emailSubject">${emailSubject}</Field>
+        <Field name="emailText">${emailText}</Field>
+        <Field name="smsText">${smsText}</Field>
+        <Field name="useEmailWrapper">${useEmailWrapper}</Field>
+        <Field name="ruleDisable">${ruleDisable}</Field>
+        <Field name="ruleEnable">${ruleEnable}</Field>
+        <Field name="sendCommand">${sendCommand}</Field>
+        <Field name="isActive">${isActive}</Field>
+        <Field name="description">${description}</Field>
+      </Record>
+    </GTSRequest>
+  `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau role", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        fetchAccountRules(accountID, password);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Creation du nouveau Role avec succès")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+
+        setError("");
+        console.log("role ajouter avec success");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
+          "Erreur lors de la création du role.";
+        setError(errorMessage);
+
+        handleUserError(xmlDoc);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Creation du role")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la création du role.");
+      console.error("Erreur lors de la création du véhicule", error);
+
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte(`${t("Échec de la Creation du role")}`);
+      setConfirmationMessagePopupName(ruleID);
+    }
+  };
+
+  //   pour creer une nouvelle regle pret a etre assigner a un device ou groupe // table Rule
+  const ModifyRuleEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+    // imeiNumber,
+    // groupID,
+    ruleID,
+    isCronRule,
+    ruleTag,
+    selector,
+    actionMask,
+    cannedActions,
+    priority,
+    notifyEmail,
+    emailSubject,
+    emailText,
+    smsText,
+    useEmailWrapper,
+    ruleDisable,
+    ruleEnable,
+    sendCommand,
+    isActive,
+    description
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    // <Field name="groupID">${groupID}</Field>
+    // <Field name="deviceID">${imeiNumber}</Field>
+    const xmlData = `
+    <GTSRequest command="dbput">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="Rule">
+        <Field name="accountID">${accountID}</Field>
+        <Field name="ruleID">${ruleID}</Field>
+
+        <Field name="isCronRule">${isCronRule}</Field>
+        <Field name="ruleTag">${ruleTag}</Field>
+        <Field name="selector">${selector}</Field>
+        <Field name="actionMask">${actionMask}</Field>
+        <Field name="cannedActions">${cannedActions}</Field>
+        <Field name="priority">${priority}</Field>
+        <Field name="notifyEmail">${notifyEmail}</Field>
+        <Field name="emailSubject">${emailSubject}</Field>
+        <Field name="emailText">${emailText}</Field>
+        <Field name="smsText">${smsText}</Field>
+        <Field name="useEmailWrapper">${useEmailWrapper}</Field>
+        <Field name="ruleDisable">${ruleDisable}</Field>
+        <Field name="ruleEnable">${ruleEnable}</Field>
+        <Field name="sendCommand">${sendCommand}</Field>
+        <Field name="isActive">${isActive}</Field>
+        <Field name="description">${description}</Field>
+      </Record>
+    </GTSRequest>
+  `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau role", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // fetchAccountRules(accountID, password);
+
+        setAccountRules((prevRules) =>
+          prevRules.map((rule) =>
+            rule.ruleID === ruleID
+              ? {
+                  ...rule,
+
+                  ruleID,
+                  isCronRule,
+                  ruleTag,
+                  selector,
+                  actionMask,
+                  cannedActions,
+                  priority,
+                  notifyEmail,
+                  emailSubject,
+                  emailText,
+                  smsText,
+                  useEmailWrapper,
+                  ruleDisable,
+                  ruleEnable,
+                  sendCommand,
+                  isActive,
+                  description,
+                }
+              : rule
+          )
+        );
+
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Modification du Role avec succès")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+
+        setError("");
+        console.log("role ajouter avec success");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
+          "Erreur lors de la modification du role.";
+        setError(errorMessage);
+
+        handleUserError(xmlDoc);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la modification du role")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la modification du role.");
+      console.error("Erreur lors de la modification du véhicule", error);
+
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte(`${t("Échec de la Creation du role")}`);
+      setConfirmationMessagePopupName(ruleID);
+    }
+  };
+
+  const DeleteRoleEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+    ruleID
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    const xmlData = `
+   <GTSRequest command="dbdel">
+  <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  <RecordKey table="Rule" partial="true">
+    <Field name="accountID">${accountID}</Field>
+    <Field name="ruleID">${ruleID}</Field>
+    </RecordKey>
+    </GTSRequest>
+    `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau role", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        setAccountRules((rules) =>
+          rules.filter((rule) => rule?.ruleID !== ruleID)
+        );
+
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Suppression du Role avec succès")}`
+        );
+        setConfirmationMessagePopupName("");
+
+        setError("");
+        console.log("role supprimer avec success");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
+          "Erreur lors de la suppression du role.";
+        setError(errorMessage);
+
+        handleUserError(xmlDoc);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la suppression du role")}`
+        );
+        setConfirmationMessagePopupName("");
+
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la suppression du role.");
+      console.error("Erreur lors de la suppression du véhicule", error);
+
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte(`${t("Échec de la Creation du role")}`);
+      setConfirmationMessagePopupName("");
+    }
+  };
+
+  const DeleteRoleActiveEnGestionAccount = async (
+    accountID,
+    userID,
+    password,
+    ruleID,
+    deviceID,
+    groupID,
+    statusCode
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    const xmlData = `
+    <GTSRequest command="dbdel">
+    <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    <RecordKey table="RuleList" partial="false">
+    <Field name="accountID">${accountID}</Field>
+    <Field name="ruleID">${ruleID}</Field>
+    <Field name="statusCode">${statusCode}</Field>
+    <Field name="deviceID">${deviceID}</Field>
+    <Field name="groupID">${groupID}</Field>
+    </RecordKey>
+    </GTSRequest>
+    `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau role", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        setAccountRulesActive((rules) =>
+          rules.filter(
+            (rule) =>
+              !(
+                rule?.ruleID === ruleID &&
+                rule?.deviceID === deviceID &&
+                rule?.statusCode === statusCode &&
+                rule?.groupID === groupID
+              )
+          )
+        );
+
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Suppression du Role avec succès")}`
+        );
+        setConfirmationMessagePopupName("");
+
+        setError("");
+        console.log("role supprimer avec success");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
+          "Erreur lors de la suppression du role.";
+        setError(errorMessage);
+
+        handleUserError(xmlDoc);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la suppression du role")}`
+        );
+        setConfirmationMessagePopupName("");
+
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la suppression du role.");
+      console.error("Erreur lors de la suppression du véhicule", error);
+
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte(`${t("Échec de la Creation du role")}`);
+      setConfirmationMessagePopupName("");
+    }
+  };
+
+  //  pour voir la liste des regles creer pret a etre assigner a un device ou groupe  // talbe Rule
+  const fetchRulesEnGestionAccount = async (accountID, userID, password) => {
+    setError("");
+    const xmlData = `<GTSRequest command="dbget">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="Rule" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        </Record>
+    </GTSRequest> `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Récupération des règles :", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        setError("");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la récupération des règles.");
+
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la récupération des règles.");
+      console.error("Erreur lors de la récupération des règles", error);
+    }
+  };
+
+  // pour assigner à un device ou groupe // table Rule
+  const assignRulesToDeviceOrGroupe = async (
+    accountID,
+    userID,
+    password,
+    deviceID,
+    groupID,
+    statusCode,
+    ruleID
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    const xmlData = `
+    <GTSRequest command="dbcreate">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="RuleList">
+        <Field name="accountID">${accountID}</Field>
+        <Field name="deviceID">${deviceID}</Field>
+        <Field name="groupID">${groupID}</Field>
+        <Field name="ruleID">${ruleID}</Field>
+        <Field name="statusCode">${statusCode}</Field>
+      </Record>
+    </GTSRequest>
+  `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajout d'une nouvelle affectation", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        fetchAccountRulesActive(accountID, password);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Affectation du nouveau rôle avec succès")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+
+        setError("");
+        console.log("Rôle affecté avec succès");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de l'affectation du rôle.");
+
+        handleUserError(xmlDoc);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de l'affectation du rôle")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+      }
+    } catch (error) {
+      setError("Erreur lors de l'affectation du rôle.");
+      console.error("Erreur lors de l'affectation du rôle", error);
+
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de l'affectation du rôle")}`
+      );
+      setConfirmationMessagePopupName(ruleID);
+    } finally {
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const ModifierassignRulesToDeviceOrGroupe = async (
+    accountID,
+    userID,
+    password,
+    deviceID,
+    groupID,
+    statusCode,
+    ruleID
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    const xmlData = `
+    <GTSRequest command="dbput">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="RuleList">
+        <Field name="accountID">${accountID}</Field>
+        <Field name="deviceID">${deviceID}</Field>
+        <Field name="groupID">${groupID}</Field>
+        <Field name="ruleID">${ruleID}</Field>
+        <Field name="statusCode">${statusCode}</Field>
+      </Record>
+    </GTSRequest>
+  `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajout d'une nouvelle affectation", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        fetchAccountRulesActive(accountID, password);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Affectation du nouveau rôle avec succès")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+
+        setError("");
+        console.log("Rôle affecté avec succès");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de l'affectation du rôle.");
+
+        handleUserError(xmlDoc);
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de l'affectation du rôle")}`
+        );
+        setConfirmationMessagePopupName(ruleID);
+      }
+    } catch (error) {
+      setError("Erreur lors de l'affectation du rôle.");
+      console.error("Erreur lors de l'affectation du rôle", error);
+
+      setShowConfirmationMessagePopup(true);
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de l'affectation du rôle")}`
+      );
+      setConfirmationMessagePopupName(ruleID);
+    } finally {
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
+  const fetchRulesEnGestionAccount2 = async (
+    accountID,
+    userID,
+    password,
+
+    groupID,
+    description,
+    displayName,
+    notes,
+    workOrderID,
+    deviceSelectionnes,
+    usersSelectionnes
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    const xmlData2 = `
+    <GTSRequest command="dbget">
+  <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  <Record table="Rule">
+    <Field name="accountID">${accountID}</Field>
+       <Field name="ruleID">*</Field>
+   
+  </Record>
+</GTSRequest>
+    `;
+
+    const xmlData = `<GTSRequest command="dbget">
+      <Authorization account="${accountID}" user="${userID}" password="${password}" />
+      <Record table="Rule" partial="true">
+        <Field name="accountID">${accountID}</Field>
+
+        </Record>
+    </GTSRequest> `;
+
+    //     const xmlData = `;
+    // <GTSRequest command="dbcreate">
+    //   <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
+    //   <Record table="RuleList">
+    //     <Field name="accountID">${accountID}</Field>
+    //     <Field name="deviceID">43354523545</Field>
+    //     <Field name="groupID">groupe10</Field>
+    //     <Field name="ruleID">test_rule_004</Field>
+    //     <Field name="statusCode">0</Field>
+    //   </Record>
+    // </GTSRequest>
+    // `;
+
+    console.log(xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("Ajoute d'un nouveau role", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      setError("");
+      console.log(result);
+      if (result === "success") {
+        // fetchAccountRules(accountID, password);
+        // setShowConfirmationMessagePopup(true); // succès  Échec
+        // setConfirmationMessagePopupTexte(
+        //   `${t("Creation du nouveau Role avec succès")}`
+        // );
+        // setConfirmationMessagePopupName(description);
+
+        setError("");
+        console.log("role ajouter avec success");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du role.");
+
+        handleUserError(xmlDoc);
+        // setShowConfirmationMessagePopup(true); // succès  Échec
+        // setConfirmationMessagePopupTexte(
+        //   `${t("Échec de la Creation du role")}`
+        // );
+        // setConfirmationMessagePopupName(description);
+
+        // setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la création du role.");
+      console.error("Erreur lors de la création du véhicule", error);
+
+      // setShowConfirmationMessagePopup(true); // succès  Échec
+      // setConfirmationMessagePopupTexte(`${t("Échec de la Creation du role")}`);
+      // setConfirmationMessagePopupName(description);
+      // setCreateVéhiculeLoading(false);
+    }
+  };
+  //
+  //
+  //
+  //
+  //
   //
   //
   //
@@ -4098,75 +5038,7 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName(description);
 
-        // fetchAccountUsers(id, pwd)
-        //   .then((users) => {
-        //     fetchUserDevices(id, users);
-        //     fetchUserGroupes(id, users);
-        //   })
-        //   .catch((err) => {
-        //     console.error(
-        //       "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-        //       err
-        //     );
-        //     setError("Erreur lors de la mise à jour des utilisateurs.");
-        //   });
-
         setCreateVéhiculeLoading(false);
-
-        // Ajouter l’utilisateur aux groupes sélectionnés
-
-        // setTimeout(() => {
-        //   if (groupesSelectionnes) {
-        //     groupesSelectionnes?.map((groupID) =>
-        //       assignUserToGroup(accountID, user, password, groupID, userIDField)
-        //     );
-        //   }
-        // }, 4000);
-
-        // setTimeout(() => {
-        //   fetchAccountUsers(id, pwd)
-        //     .then((users) => {
-        //       fetchUserDevices(id, users);
-        //       fetchUserGroupes(id, users);
-        //     })
-        //     .catch((err) => {
-        //       console.error(
-        //         "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-        //         err
-        //       );
-        //       setError("Erreur lors de la mise à jour des utilisateurs.");
-        //     });
-        // }, 8000);
-
-        // setTimeout(() => {
-
-        //   groupesNonSelectionnes.map((groupID) =>
-        //       removeUserFromGroup(accountID, user, password, groupID, userIDField)
-        //     )
-        // }, 6000);
-
-        // Retirer l’utilisateur des groupes non sélectionnés
-
-        // setTimeout(() => {
-        //   if (deviceSelectionnes) {
-        //     assignMultipleDevicesToGroup(
-        //       accountID,
-        //       userID,
-        //       password,
-        //       groupID,
-        //       deviceSelectionnes
-        //     );
-        //   }
-        //   if (usersSelectionnes) {
-        //     assignMultipleUsersToGroup(
-        //       accountID,
-        //       userID, // utilisateur qui fait la requête
-        //       password,
-        //       groupID,
-        //       usersSelectionnes
-        //     );
-        //   }
-        // }, 4000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -4378,72 +5250,6 @@ const DataContextProvider = ({ children }) => {
           setComptes((prev) =>
             prev?.filter((v) => v.accountID !== accountIDField)
           );
-
-          // setUserDevices((prev) => prev?.filter((v) => v.deviceID !== deviceID));
-          // setUserDevices((prev) =>
-          //   prev.map((user) => ({
-          //     ...user,
-          //     userDevices: user.userDevices.filter(
-          //       (device) => device.deviceID !== deviceID
-          //     ),
-          //   }))
-          // );
-
-          // 🧠 Mise à jour d'IndexedDB
-          // const db = await openDatabase();
-          // const tx = db.transaction(
-          //   ["accountDevices", "userDevices"],
-          //   "readwrite"
-          // );
-
-          // const removeFromStore = async (storeName) => {
-          //   const store = tx.objectStore(storeName);
-          //   const getAllReq = store.getAll();
-          //   getAllReq.onsuccess = () => {
-          //     let updated;
-
-          //     if (storeName === "userDevices") {
-          //       // Suppression imbriquée dans chaque user
-          //       updated = (getAllReq.result || []).map((user) => ({
-          //         ...user,
-          //         userDevices: (user.userDevices || []).filter(
-          //           (device) => device.deviceID !== deviceID
-          //         ),
-          //       }));
-          //     } else {
-          //       // Suppression simple
-          //       updated = (getAllReq.result || []).filter(
-          //         (v) => v.deviceID !== deviceID
-          //       );
-          //     }
-
-          //     store.clear();
-          //     updated.forEach((v) => store.put(v));
-          //   };
-          // };
-
-          // removeFromStore("accountDevices");
-          // removeFromStore("userDevices");
-
-          //
-          // Supprimer le véhicule de IndexedDB
-          // openDatabase().then((db) => {
-          //   const transaction = db.transaction(["mergedDataHome"], "readwrite");
-          //   const store = transaction.objectStore("mergedDataHome");
-
-          //   // Récupérer toutes les données actuelles
-          //   const getRequest = store.getAll();
-
-          //   getRequest.onsuccess = () => {
-          //     const existingData = getRequest.result || [];
-          //     const updatedData = existingData.filter(
-          //       (vehicle) => vehicle.deviceID !== deviceID
-          //     );
-
-          //     store.clear(); // Supprime les anciennes données
-          //     updatedData.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-          //   };
-          // });
 
           setCreateVéhiculeLoading(false);
           // navigate("/home");
@@ -7703,8 +8509,59 @@ const DataContextProvider = ({ children }) => {
   //
   //
   x;
-  const fonctionTest = () => {};
+  // const fonctionTest = () => {};
   const fonctionTest2 = () => {};
+
+  const fonctionTest = async () => {
+    const account = "foodforthepoor";
+    const username = "admin";
+    const password = "Octa@112233";
+    const xmlData = `<GTSRequest command="dbget">
+      <Authorization account="${account}" user="${username}" password="${password}" />
+      <Record table="RuleList" partial="true">
+        <Field name="accountID">${account}</Field>
+
+        </Record>
+    </GTSRequest>`;
+    const api = "/octagono-plus-api/track/Service";
+
+    console.log("xmlData", xmlData);
+
+    try {
+      const response = await fetch(api, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const xmlText = await response.text();
+      console.log("Received XML Data:", xmlText);
+
+      // Convert XML to JSON
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+      // Extract records from the XML response
+      const records = Array.from(xmlDoc.getElementsByTagName("Record")).map(
+        (record) => {
+          const fields = Array.from(
+            record.getElementsByTagName("Field")
+          ).reduce((acc, field) => {
+            const name = field.getAttribute("name");
+            const value =
+              field.textContent || field.firstChild?.nodeValue || null;
+            acc[name] = value;
+            return acc;
+          }, {});
+          return fields;
+        }
+      );
+
+      console.log("Resultat Data:", records);
+    } catch (error) {
+      console.error("Error fetching or parsing geofence data:", error);
+    }
+  };
 
   ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
@@ -8474,6 +9331,8 @@ const DataContextProvider = ({ children }) => {
     accountGeofences,
     accountGroupes,
     accountUsers,
+    accountRules,
+    accountRulesActive,
     groupeDevices,
     userGroupes,
     véhiculeDetails,
@@ -8775,6 +9634,10 @@ const DataContextProvider = ({ children }) => {
         accountDevices,
         accountGroupes,
         accountUsers,
+        accountRules,
+        accountRulesActive,
+        listeGestionDesRulesActive,
+        setListeGestionDesRulesActive,
         createAccountEnGestionAccountFonction,
         modifyAccountEnGestionAccountFonction,
         deleteAccountEnGestionAccountFonction,
@@ -8853,6 +9716,17 @@ const DataContextProvider = ({ children }) => {
         testAlertListe,
         setProgressDataUser,
         sendGMailConfirmation,
+        listeGestionDesRules,
+        setListeGestionDesRules,
+        createNewRuleEnGestionAccount,
+        fetchAccountRules,
+        fetchRulesEnGestionAccount,
+        ModifyRuleEnGestionAccount,
+        DeleteRoleEnGestionAccount,
+        fetchAccountRulesActive,
+        assignRulesToDeviceOrGroupe,
+        ModifierassignRulesToDeviceOrGroupe,
+        DeleteRoleActiveEnGestionAccount,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

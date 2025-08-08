@@ -134,15 +134,11 @@ function ChooseOtherAccountDashboard({
                   <div
                     key={index}
                     onClick={() => {
-                      if (documentationPage === "Ajouter_nouveau_role") {
-                        setAccountIdFromRole(account?.accountID);
-                      } else {
-                        setCurrentAccountSelected(account);
-                        setListeGestionDesVehicules(account?.accountDevices);
-                        setListeGestionDesGeofences(account?.accountGeofences);
-                        setVoir10DePlus(1);
-                        // setAllDevices(account?.accountDevices);
-                      }
+                      setCurrentAccountSelected(account);
+                      setListeGestionDesVehicules(account?.accountDevices);
+                      setListeGestionDesGeofences(account?.accountGeofences);
+                      setVoir10DePlus(1);
+                      // setAllDevices(account?.accountDevices);
 
                       setChooseOtherAccountGestion(false);
                       scrollToTop();

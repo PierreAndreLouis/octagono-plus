@@ -93,36 +93,9 @@ function SideBarSysadmin({
     documentationPage,
     setDocumentationPage,
     setSelectedVehicleToShowInMap,
+    accountRules,
+    setListeGestionDesRules,
 
-    installation_sur_application_ref,
-    installation_sur_chrome_ref,
-
-    ajouter_nouveau_appareil_section_ref,
-    modidier_appareil_section_ref,
-    supprimer_appareil_section_ref,
-    //
-    voir_position_appareil_ref,
-    position_choisir_autre_appareil_ref,
-    position_voir_tous_appareil_ref,
-    position_type_de_vue_ref,
-    voir_trajet_ref,
-    trajet_recentrer_ref,
-    trajet_choix_autre_appareil_ref,
-    trajet_type_de_vue_ref,
-    trajet_recherche_ref,
-    trajet_retracer_trajet_ref,
-    voir_historique_appareil_ref,
-    voir_position_historiquer_sur_carte_ref,
-    historique_choix_autre_appareil_ref,
-    historique_recherche_ref,
-    aller_page_rapport_unite_ref,
-    rapport_unite_recherche_ref,
-    rapport_unite_telecherche_pdf_ref,
-    voir_rapport_groupe_ref,
-    rapport_groupe_recherche_ref,
-    rapport_groupe_telecharger_pdf_ref,
-    creer_geozone_ref,
-    modifier_geozone_ref,
     updateAppareilsEtGeofencesPourCarte,
     setChooseOtherLanguagePopup,
     setFilteredColorCategorieListe,
@@ -130,6 +103,8 @@ function SideBarSysadmin({
     setIsEditingGeofence,
     setCurrentGeozone,
     versionApplication,
+    setListeGestionDesRulesActive,
+    accountRulesActive,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -517,6 +492,12 @@ function SideBarSysadmin({
       isSysadmin: true,
       link: "/Gestion_des_roles",
       setVariable: () => setDocumentationPage("Gestion_des_roles"),
+    },
+    {
+      name: t("Gestion des Roles Actives"),
+      isSysadmin: true,
+      link: "/Gestion_des_roles_actives",
+      setVariable: () => setDocumentationPage("Gestion_des_roles_actives"),
     },
     {
       name: t("Informations utilisateur"),
@@ -1075,36 +1056,6 @@ function SideBarSysadmin({
           {/*  */}
           {/*  */}
 
-          {/* Gestion_des_roles */}
-
-          {isDashboardHomePage && (
-            <Link
-              to="/Gestion_des_roles"
-              className="ajouter-appareil-container transition-all hover:border-b  "
-            >
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("Gestion_des_roles");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                }}
-                className={`${
-                  documentationPage === "Gestion_des_roles"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {t("Gestion des Roles")}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          )}
-
           {/*  */}
           {/*  */}
           {/*  */}
@@ -1295,6 +1246,86 @@ function SideBarSysadmin({
             </div>
           </Link>
           {/*  */}
+
+          {/* Gestion_des_roles */}
+
+          {isDashboardHomePage && (
+            <Link
+              to="/Gestion_des_roles"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
+              <div
+                onClick={() => {
+                  scrollToTop();
+                  setDocumentationPage("Gestion_des_roles");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                  if (currentAccountSelected) {
+                    setListeGestionDesRules(
+                      currentAccountSelected?.accountRules
+                    );
+                  } else {
+                    setListeGestionDesRules(accountRules);
+                  }
+                }}
+                className={`${
+                  documentationPage === "Gestion_des_roles"
+                    ? "bg-orange-50"
+                    : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    {t("Liste des règles")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountRules?.length
+                      : accountRules?.length}{" "}
+                    )
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {isDashboardHomePage && (
+            <Link
+              to="/Gestion_des_roles_actives"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
+              <div
+                onClick={() => {
+                  scrollToTop();
+                  setDocumentationPage("Gestion_des_roles_actives");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                  if (currentAccountSelected) {
+                    setListeGestionDesRulesActive(
+                      currentAccountSelected?.accountRulesActive
+                    );
+                  } else {
+                    setListeGestionDesRulesActive(accountRulesActive);
+                  }
+                }}
+                className={`${
+                  documentationPage === "Gestion_des_roles_actives"
+                    ? "bg-orange-50"
+                    : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    {t("Règles actives")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountRulesActive?.length
+                      : accountRulesActive?.length}{" "}
+                    )
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
 
           {/*  */}
           {/* Info_appareil */}

@@ -278,6 +278,14 @@ function GestionDesCompts({
                             {account?.accountGeofences?.length}
                           </span>
                         </div>{" "}
+                        <div className="flex flex-wrap mt-1">
+                          <p className="font-bold- text-gray-700">
+                            {t("Nombre de Roles")} :
+                          </p>
+                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                            {account?.accountRules?.length}
+                          </span>
+                        </div>{" "}
                         {/*  */}
                         <div className="flex flex-wrap mt-1">
                           <p className="font-bold- text-gray-700">

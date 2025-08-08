@@ -12,11 +12,8 @@ import { useNavigate } from "react-router-dom";
 function CreateNewRole({
   setDocumentationPage,
   documentationPage,
-  accountIdFromRole,
   setChooseOtherAccountGestion,
-  setChooseOneAccountToContinue,
-  currentSelectedRole,
-  setCurrentSelectedRole,
+  accountIdFromRole,
 }) {
   const {
     currentAccountSelected,
@@ -26,12 +23,11 @@ function CreateNewRole({
     accountDevices,
     accountGroupes,
     gestionAccountData,
-    createNewRuleEnGestionAccount,
-    ModifyRuleEnGestionAccount,
   } = useContext(DataContext);
 
-  const navigate = useNavigate();
 
+    const navigate = useNavigate();
+  
   const [t, i18n] = useTranslation();
 
   // Pour afficher le popup de confirmation de password
@@ -97,9 +93,13 @@ function CreateNewRole({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const errors = [];
 
-    // if (!emailRegex.test(addNewRoleData.notifyEmail)) {
-    //   errors.push(`${t("l'email de notification n'est pas valide")}`);
-    // }
+    if (!emailRegex.test(addNewRoleData.emailSubject)) {
+      errors.push(`${t("emailSubject n'est pas valide")}`);
+    }
+
+    if (!emailRegex.test(addNewRoleData.emailText)) {
+      errors.push(`${t("emailText n'est pas valide")}`);
+    }
 
     return errors;
   };
@@ -115,10 +115,8 @@ function CreateNewRole({
       return;
     }
 
-    if (!currentAccountSelected) {
-      // setErrorID(`${t("Veuillez choisir un compte")}`);
-      setChooseOneAccountToContinue(true);
-      setChooseOtherAccountGestion(true);
+    if (!accountIdFromRole) {
+      setErrorID(`${t("Veuillez choisir un compte")}`);
       return;
     }
 
@@ -127,20 +125,20 @@ function CreateNewRole({
       return;
     }
 
-    const ruleID = addNewRoleData.ruleID;
+    const userID = addNewRoleData.ruleID;
 
-    const ruleExists = currentAccountSelected?.accountRules?.some(
-      (rule) => rule?.ruleID === ruleID
-    );
+    // const userExists = currentAccountSelected?.accountUsers?.some(
+    //   (user) => user?.userID === userID
+    // );
 
-    if (!currentSelectedRole && ruleExists) {
-      setErrorID(
-        `${t(
-          "Cet identifiant (ruleID) est déjà utilisé. Veuillez en choisir un autre"
-        )}`
-      );
-      return;
-    }
+    // if (userExists) {
+    // setErrorID(
+    //   `${t(
+    //     "Cet identifiant (ruleID) est déjà utilisé. Veuillez en choisir un autre"
+    //   )}`
+    // );
+    // return;
+    // }
 
     // if (!currentAccountSelected) {
     //   setChooseOneAccountToContinue(true);
@@ -159,12 +157,6 @@ function CreateNewRole({
 
   const [showdeviceSelectionnePopup, setShowdeviceSelectionnePopup] =
     useState(false);
-
-  useEffect(() => {
-    if (currentAccountSelected) {
-      setErrorID("");
-    }
-  }, [currentAccountSelected]);
 
   useEffect(() => {
     // console.log("deviceSelectionne", deviceSelectionne);
@@ -229,75 +221,54 @@ function CreateNewRole({
         currentAccountSelected?.password
       ) {
         console.log(
-          currentAccountSelected?.accountID,
-          "admin",
-          currentAccountSelected?.password,
-
+          accountID,
+          imeiNumber,
+          groupID,
           ruleID,
-
+          isCronRule,
+          ruleTag,
+          selector,
+          actionMask,
+          cannedActions,
+          priority,
+          notifyEmail,
           emailSubject,
           emailText,
-          selector,
-          isActive
+          smsText,
+          useEmailWrapper,
+          ruleDisable,
+          ruleEnable,
+          sendCommand,
+          isActive,
+          description
         );
+        // console.log(
+        // createNewUserEnGestionAccount(
+        //   currentAccountSelected?.accountID,
+        //   "admin",
+        //   currentAccountSelected?.password,
 
-        if (currentSelectedRole) {
-          console.log("xxxxxxxx");
+        //   userID,
+        //   description,
+        //   displayName,
+        //   password2,
+        //   contactEmail,
+        //   notifyEmail,
+        //   isActive,
+        //   contactPhone,
+        //   contactName,
+        //   timeZone,
+        //   maxAccessLevel,
+        //   roleID,
+        //   //
+        //   addressCity,
+        //   addressCountry,
+        //   userType,
+        //   //
+        //   deviceSelectionne
+        // );
 
-          ModifyRuleEnGestionAccount(
-            currentAccountSelected?.accountID,
-            "admin",
-            currentAccountSelected?.password,
-
-            // imeiNumber,
-            // groupID,
-            ruleID,
-            isCronRule,
-            ruleTag,
-            selector,
-            actionMask,
-            cannedActions,
-            priority,
-            notifyEmail,
-            emailSubject,
-            emailText,
-            smsText,
-            useEmailWrapper,
-            ruleDisable,
-            ruleEnable,
-            sendCommand,
-            isActive,
-            description
-          );
-        } else {
-          createNewRuleEnGestionAccount(
-            currentAccountSelected?.accountID,
-            "admin",
-            currentAccountSelected?.password,
-
-            // imeiNumber,
-            // groupID,
-            ruleID,
-            isCronRule,
-            ruleTag,
-            selector,
-            actionMask,
-            cannedActions,
-            priority,
-            notifyEmail,
-            emailSubject,
-            emailText,
-            smsText,
-            useEmailWrapper,
-            ruleDisable,
-            ruleEnable,
-            sendCommand,
-            isActive,
-            description
-          );
-        }
-
-        navigate("/Gestion_des_roles");
+        navigate("/Gestion_des_roles")
 
         setDocumentationPage("Gestion_des_roles");
       }
@@ -341,32 +312,6 @@ function CreateNewRole({
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
 
-  useEffect(() => {
-    if (currentSelectedRole) {
-      setAddNewRoleData({
-        imeiNumber: currentSelectedRole.imeiNumber || "",
-        groupID: currentSelectedRole.groupID || "",
-        ruleID: currentSelectedRole.ruleID || "",
-        isCronRule: currentSelectedRole.isCronRule || "",
-        ruleTag: currentSelectedRole.ruleTag || "",
-        selector: currentSelectedRole.selector || "",
-        actionMask: currentSelectedRole.actionMask || "",
-        cannedActions: currentSelectedRole.cannedActions || "",
-        priority: currentSelectedRole.priority || "",
-        notifyEmail: currentSelectedRole.notifyEmail || "",
-        emailSubject: currentSelectedRole.emailSubject || "",
-        emailText: currentSelectedRole.emailText || "",
-        smsText: currentSelectedRole.smsText || "",
-        useEmailWrapper: currentSelectedRole.useEmailWrapper || "",
-        ruleDisable: currentSelectedRole.ruleDisable || "",
-        ruleEnable: currentSelectedRole.ruleEnable || "",
-        sendCommand: currentSelectedRole.sendCommand || "",
-        isActive: currentSelectedRole.isActive === "true" ? "1" : "0" || "",
-        description: currentSelectedRole.description || "",
-      });
-    }
-  }, [currentSelectedRole]);
-
   return (
     <div className="px-3 rounded-lg  bg-white">
       {showIsUserActivePopup && (
@@ -393,7 +338,7 @@ function CreateNewRole({
                   : ""
               }`}
               onClick={() => {
-                // setShowIsUserActivePopupText("true");
+                setShowIsUserActivePopupText("true");
                 setAddNewRoleData((prev) => ({
                   ...prev,
                   isActive: "1",
@@ -411,7 +356,7 @@ function CreateNewRole({
                   : ""
               }`}
               onClick={() => {
-                // setShowIsUserActivePopupText("false");
+                setShowIsUserActivePopupText("false");
                 setAddNewRoleData((prev) => ({
                   ...prev,
                   isActive: "0",
@@ -702,7 +647,8 @@ function CreateNewRole({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_roles");
-                  navigate("/Gestion_des_roles");
+        navigate("/Gestion_des_roles")
+
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -715,21 +661,21 @@ function CreateNewRole({
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
                 {/* Champs du formulaire */}
                 {[
-                  // {
-                  //   id: "accountID",
-                  //   label: `${t("accountID")}`,
-                  //   placeholder: `${t("accountID")}`,
-                  // },
-                  // {
-                  //   id: "deviceID",
-                  //   label: `${t("deviceID")}`,
-                  //   placeholder: "deviceID",
-                  // },
-                  // {
-                  //   id: "groupID",
-                  //   label: `${t("groupID")}`,
-                  //   placeholder: "groupID",
-                  // },
+                  {
+                    id: "accountID",
+                    label: `${t("accountID")}`,
+                    placeholder: `${t("accountID")}`,
+                  },
+                  {
+                    id: "deviceID",
+                    label: `${t("deviceID")}`,
+                    placeholder: "deviceID",
+                  },
+                  {
+                    id: "groupID",
+                    label: `${t("groupID")}`,
+                    placeholder: "groupID",
+                  },
                   {
                     id: "ruleID",
                     label: `${t("ruleID")}`,
@@ -746,11 +692,16 @@ function CreateNewRole({
                     label: `${t("notifyEmail")}`,
                     placeholder: `${t("notifyEmail")}`,
                   },
-                  //
+                  // //
                   {
                     id: "emailSubject",
                     label: `${t("emailSubject")}`,
                     placeholder: `${t("emailSubject")}`,
+                  },
+                  {
+                    id: "emailText",
+                    label: `${t("emailText")}`,
+                    placeholder: `${t("emailText")}`,
                   },
 
                   {
@@ -768,11 +719,6 @@ function CreateNewRole({
                     id: "selector",
                     label: `${t("selector")}`,
                     placeholder: `${t("selector")}`,
-                  },
-                  {
-                    id: "emailText",
-                    label: `${t("emailText")}`,
-                    placeholder: `${t("emailText")}`,
                   },
                 ].map((field) => {
                   const requiredFields = [
@@ -810,22 +756,21 @@ function CreateNewRole({
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
-                      ) : // : field.id === "deviceID" ? (
-                      //   <div
-                      //     onClick={() => {
-                      //       setShowdeviceSelectionnePopup(true);
-                      //     }}
-                      //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      //   >
-                      //     <p>
-                      //       {addNewRoleData?.imeiNumber === "*"
-                      //         ? `${t("Tous")}`
-                      //         : addNewRoleData?.imeiNumber}
-                      //     </p>
-                      //     <FaChevronDown className="text-gray-700 mr-4" />
-                      //   </div>
-                      // )
-                      field.id === "isActive" ? (
+                      ) : field.id === "deviceID" ? (
+                        <div
+                          onClick={() => {
+                            setShowdeviceSelectionnePopup(true);
+                          }}
+                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        >
+                          <p>
+                            {addNewRoleData?.imeiNumber === "*"
+                              ? `${t("Tous")}`
+                              : addNewRoleData?.imeiNumber}
+                          </p>
+                          <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : field.id === "isActive" ? (
                         <div
                           onClick={() => {
                             setShowIsUserActivePopup(true);
@@ -839,7 +784,7 @@ function CreateNewRole({
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
-                      ) : field.id === "emailText" ? (
+                      ) : field.id === "selector" ? (
                         <textarea
                           id={field.id}
                           name={field.id}
@@ -872,9 +817,6 @@ function CreateNewRole({
                           placeholder={field.placeholder}
                           value={addNewRoleData[field.id]}
                           onChange={handleChange}
-                          disabled={
-                            currentSelectedRole && field.id === "ruleID"
-                          }
                           // { field.id === "groupID" && disable}
                           // disabled={field.id === "userID"}
                           required={requiredFields.includes(field.id)}
@@ -905,7 +847,8 @@ function CreateNewRole({
                     onClick={() => {
                       setDocumentationPage("Gestion_des_roles");
                       scrollToTop();
-                      navigate("/Gestion_des_roles");
+        navigate("/Gestion_des_roles")
+
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >

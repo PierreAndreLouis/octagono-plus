@@ -1365,7 +1365,7 @@ function DashboardContaintMaintComponant({
               currentAccountSelected || !isDashboardHomePage
                 ? "order-2 md:order-1"
                 : ""
-            } bg-white shadow-lg shadow-black/5 relative md:col-span-2- justify-between flex flex-col   p-3 h-full rounded-lg`}
+            } bg-white shadow-lg shadow-black/5 relative md:col-span-2-  justify-between flex flex-col   p-3 h-full rounded-lg`}
           >
             {/* title section */}
             <div className="flex relative   mb-4 justify-between items-end- ">
@@ -1436,7 +1436,7 @@ function DashboardContaintMaintComponant({
                   </div>
                 )}
             </div>
-            <div className=" max-h-[20rem] flex flex-col justify-between items-start overflow-x-auto overflow-y-hidden">
+            <div className=" max-h-[20rem]-- flex-1 rounded-md  flex flex-col justify-between items-start overflow-x-auto overflow-y-hidden">
               {!currentAccountSelected && isDashboardHomePage && (
                 <div>
                   <div>
@@ -1456,11 +1456,10 @@ function DashboardContaintMaintComponant({
                 </div>
               )}
               {(currentAccountSelected || !isDashboardHomePage) && (
-                <div className="w-full h-[15rem]-- relative overflow-hidden rounded-md">
-                  {/* <LocationPage fromDashboard="true" /> */}
+                <div className="w-full h-full mt-4 relative overflow-hidden rounded-md">
                   <img
                     src="/img/cartegeographie.png"
-                    className="w-full min-h-[20rem] object-cover "
+                    className="w-full  h-full object-cover "
                     alt=""
                   />
                   {!unlockCarteScroll && (
@@ -1566,7 +1565,6 @@ function DashboardContaintMaintComponant({
                   </p>
                 </div>
               )}
-              {/* {!currentAccountSelected && ( */}
             </div>
             <div className="  rounded-md overflow-hidden ">
               {!currentAccountSelected && isDashboardHomePage && (
@@ -1591,8 +1589,6 @@ function DashboardContaintMaintComponant({
               {(currentAccountSelected || !isDashboardHomePage) && (
                 <DeviceListeDashboard />
               )}
-
-              {/* {showFistGrapheOption2 && <GrapheCirculaireDevices />} */}
             </div>
             {/*  */}
             {/*  */}
