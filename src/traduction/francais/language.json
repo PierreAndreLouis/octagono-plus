@@ -854,7 +854,7 @@
 "deviceID": "ID de l'appareil",
 "imeiNumber": "Numéro IMEI",
 "groupID": "ID du groupe",
-"ruleID": "ID de la règle",
+"ruleID": "ID de du rôle",
 "selector": "Sélecteur",
 "emailSubject": "Sujet de l'e-mail",
 "emailText": "Texte de l'e-mail",
@@ -900,18 +900,18 @@
 
 "Filtrer par Vitesse" : "Filtrer par Vitesse",
 "Inverser l'ordre de la liste" : "Inverser l'ordre de la liste",
-"Nombre de Roles" : "Nombre de Roles",
-"Règles actives" : "Règles actives",
-"Liste des règles" : "Liste des règles",
+"Nombre de Roles" : "Nombre de rôles",
+"Règles actives" : "Rôles actives",
+"Liste des règles" : "Liste des rôles",
 "l'email de notification n'est pas valide" : "l'email de notification n'est pas valide",
-"Gestion des Roles Actives": "Gestion des Roles Actives",
+"Gestion des Roles Actives": "Gestion des rôles Actives",
 
 
 
 
-  "Voulez-vous Supprimer le role": "Voulez-vous Supprimer le role",
-  "Créer un nouveau Role": "Créer un nouveau Role",
-  "ID du Role": "ID du Role",
+  "Voulez-vous Supprimer le role": "Voulez-vous Supprimer le rôle",
+  "Créer un nouveau Role": "Créer un nouveau rôle",
+  "ID du Role": "ID du rôle",
 
 
 
@@ -956,9 +956,9 @@
 
   
 
-  "Gestion Des Role Actives": "Gestion Des Roles Actives",
-  "Nombre de Roles Active": "Nombre de Role Active",
-  "Activer un nouveau Role": "Activer un nouveau Role",
+  "Gestion Des Role Actives": "Gestion Des rôles Actives",
+  "Nombre de Roles Active": "Nombre de rôle Active",
+  "Activer un nouveau Role": "Activer un nouveau rôle",
   "Statut Code": "Statut Code"
 
 
