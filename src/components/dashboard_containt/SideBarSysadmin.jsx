@@ -36,7 +36,7 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 import { BiUniversalAccess } from "react-icons/bi";
 import { GiPathDistance } from "react-icons/gi";
 import InstallationPWA from "../../pages/InstallationPWA";
-import { TbPointFilled } from "react-icons/tb";
+import { TbPointFilled, TbSettings, TbSettingsShare } from "react-icons/tb";
 import { IoMdLogIn, IoMdStats } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
@@ -1274,7 +1274,7 @@ function SideBarSysadmin({
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
+                <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     {t("Liste des règles")} (
@@ -1313,7 +1313,7 @@ function SideBarSysadmin({
                     : ""
                 } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <BiUniversalAccess className="text-xl min-w-[1.5rem] text-orange-600" />
+                <TbSettingsShare className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
                     {t("Règles actives")} (

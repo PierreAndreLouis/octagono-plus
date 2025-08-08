@@ -187,6 +187,12 @@ function ChooseOtherAccountDashboard({
                           {account?.accountGeofences?.length}
                         </span>{" "}
                       </p>
+                      <p className="text-gray-600">
+                        {t("Nombre de Roles")} :{" "}
+                        <span className="font-bold">
+                          {account?.accountRules?.length}
+                        </span>{" "}
+                      </p>
                     </div>
                   </div>
                 );

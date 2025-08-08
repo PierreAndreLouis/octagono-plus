@@ -7,6 +7,7 @@ import { IoEarth } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BiUniversalAccess } from "react-icons/bi";
+import { TbSettings, TbSettingsShare } from "react-icons/tb";
 
 function GestionAccountOptionPopup({ setDocumentationPage }) {
   const {
@@ -22,6 +23,10 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
     setListeGestionDesGeofences,
     deleteAccountEnGestionAccountFonction,
     adminPassword,
+    accountRulesActive,
+    accountRules,
+    setListeGestionDesRulesActive,
+    setListeGestionDesRules,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -96,7 +101,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
       )}
 
       {showAccountOptionsPopup && (
-        <div className="fixed flex justify-center items-center z-[9999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
+        <div className="fixed  flex justify-center items-center z-[9999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
           <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowAccountOptionsPopup(false)}
@@ -121,7 +126,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
 
                 scrollToTop();
               }}
-              className="p-4 flex flex-col gap-4 py-6 pb-10--"
+              className="p-4 overflow-auto max-h-[80vh] flex flex-col gap-4 py-6 pb-10--"
             >
               <button
                 onClick={() => {
@@ -132,9 +137,11 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               >
                 <FaUsers className="text-[1.62rem] text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {t("Gestion des utilisateurs")}
+                  {t("Gestion des utilisateurs")} (
+                  {currentAccountSelected?.accountUsers?.length})
                 </h2>
               </button>
+
               {/*  */}
               {/*  */}
               {/*  */}
@@ -154,7 +161,8 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               >
                 <FaCar className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {t("Gestion des Appareils")}
+                  {t("Gestion des Appareils")} (
+                  {currentAccountSelected?.accountDevices?.length})
                 </h2>
               </button>
               {/*  */}
@@ -173,7 +181,8 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               >
                 <PiIntersectThreeBold className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {t("Gestion des Groupes")}
+                  {t("Gestion des Groupes")} (
+                  {currentAccountSelected?.accountGroupes?.length})
                 </h2>
               </button>
               <button
@@ -189,7 +198,8 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               >
                 <IoEarth className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {t("Gestion des Geofences")}
+                  {t("Gestion des Geofences")} (
+                  {currentAccountSelected?.accountGeofences?.length})
                 </h2>
               </button>
 
@@ -197,12 +207,41 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
                 onClick={() => {
                   setDocumentationPage("Gestion_des_roles");
                   navigate("/Gestion_des_roles");
+                  if (currentAccountSelected) {
+                    setListeGestionDesRules(
+                      currentAccountSelected?.accountRules
+                    );
+                  } else {
+                    setListeGestionDesRules(accountRules);
+                  }
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
-                <BiUniversalAccess className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <TbSettings className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                  {t("Gestion des Roles")}
+                  {t("Gestion des Roles")} (
+                  {currentAccountSelected?.accountRules?.length})
+                </h2>
+              </button>
+              <button
+                onClick={() => {
+                  setDocumentationPage("Gestion_des_roles_actives");
+                  navigate("/Gestion_des_roles_actives");
+
+                  if (currentAccountSelected) {
+                    setListeGestionDesRulesActive(
+                      currentAccountSelected?.accountRulesActive
+                    );
+                  } else {
+                    setListeGestionDesRulesActive(accountRulesActive);
+                  }
+                }}
+                className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+              >
+                <TbSettingsShare className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                  {t("Gestion des Roles Actives")} (
+                  {currentAccountSelected?.accountRulesActive?.length})
                 </h2>
               </button>
               {/*  */}
