@@ -86,42 +86,6 @@ const RapportPageDetails = React.lazy(() =>
   import("./pages/RapportPageDetails")
 );
 
-const DocInstallation = React.lazy(() =>
-  import("./components/documentation/DocInstallation")
-);
-const SeConnecter = React.lazy(() =>
-  import("./components/documentation/SeConnecter")
-);
-const DocGestionAppareil = React.lazy(() =>
-  import("./components/documentation/DocGestionAppareil")
-);
-const DocPositionAppareil = React.lazy(() =>
-  import("./components/documentation/DocPositionAppareil")
-);
-const DocTrajetVehicule = React.lazy(() =>
-  import("./components/documentation/DocTrajetVehicule")
-);
-const DocHistorique = React.lazy(() =>
-  import("./components/documentation/DocHistorique")
-);
-const DocGestionGeozone = React.lazy(() =>
-  import("./components/documentation/DocGestionGeozone")
-);
-const DocRapportUnite = React.lazy(() =>
-  import("./components/documentation/DocRapportUnite")
-);
-const DocRapportGroupe = React.lazy(() =>
-  import("./components/documentation/DocRapportGroupe")
-);
-const DocAddVehicule = React.lazy(() =>
-  import("./components/documentation/DocAddVehicule")
-);
-const DocModifierVehicule = React.lazy(() =>
-  import("./components/documentation/DocModifierVehicule")
-);
-const DocLocationVehicule = React.lazy(() =>
-  import("./components/documentation/DocLocationVehicule")
-);
 import { useTranslation } from "react-i18next";
 
 import ChooseOtherAccountDashboard from "./components/dashboard_containt/ChooseOtherAccountDashboard";
@@ -172,6 +136,7 @@ function App() {
     clearCacheFonction,
     allDevices,
     setAllDevices,
+    currentCountry,
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -1579,25 +1544,6 @@ function App() {
             }
           />
 
-          {/*  */}
-          <Route
-            path="/installation_application"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <DocInstallation />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
-
           <Route path="*" element={<Page_404 />} />
         </Routes>
         <div
@@ -1610,7 +1556,12 @@ function App() {
           <div className="flex gap-3 font-semibold">
             <p
               onClick={() => {
-                window.open("/Guide-utilisation-Octagono.pdf", "_blank");
+                if (localStorage.getItem("lang") === "es") {
+                  window.open("/Guide-utilisation-Octagono-es.pdf", "_blank");
+                } else {
+                  window.open("/Guide-utilisation-Octagono.pdf", "_blank");
+                }
+                // window.open("/Guide-utilisation-Octagono.pdf", "_blank");
               }}
               className="cursor-pointer text-orange-500 underline"
             >

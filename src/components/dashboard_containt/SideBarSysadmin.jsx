@@ -53,16 +53,7 @@ function SideBarSysadmin({
   setAjouterGeofencePopup,
   setLogOutPopup,
   //
-  showChooseUserToModifyMessage,
-  setShowChooseUserToModifyMessage,
-  showChooseGroupeToModifyMessage,
-  setShowChooseGroupeToModifyMessage,
-  showChooseAppareilToModifyMessage,
-  setShowChooseAppareilToModifyMessage,
-  showChooseGeofencesToModifyMessage,
-  setShowChooseGeofencesToModifyMessage,
-  showChooseCompteToModifyMessage,
-  setShowChooseCompteToModifyMessage,
+
   ///////////////////////
   showChooseItemToModifyMessage,
   setshowChooseItemToModifyMessage,
@@ -105,6 +96,7 @@ function SideBarSysadmin({
     versionApplication,
     setListeGestionDesRulesActive,
     accountRulesActive,
+    currentCountry,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -535,7 +527,11 @@ function SideBarSysadmin({
   const [showSideBar2, setShowSideBar2] = useState(false);
 
   const ouvrirPDF = () => {
-    window.open("/Guide-utilisation-Octagono.pdf", "_blank");
+    if (localStorage.getItem("lang") === "es") {
+      window.open("/Guide-utilisation-Octagono-es.pdf", "_blank");
+    } else {
+      window.open("/Guide-utilisation-Octagono.pdf", "_blank");
+    }
   };
 
   return (

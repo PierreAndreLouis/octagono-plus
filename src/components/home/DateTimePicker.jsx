@@ -33,7 +33,7 @@ const DateTimePicker = ({
   }, [startDate, endDate, startTime, endTime]);
 
   return (
-    <div className="fixed inset-0 z-10 flex justify-center items-center bg-black/50-- dark:bg-black/80">
+    <div className="fixed inset-0 z-10 flex justify-center items-center bg-black/50 dark:bg-black/80">
       <form className="w-full flex justify-center" onSubmit={handleApply}>
         <div className="flex  relative w-full md:max-w-[30rem] md:px-8 flex-col p-4 py-8 space-y-4 mx-4 bg-gray-100 rounded-lg shadow-lg dark:bg-gray-800">
           <IoClose
@@ -58,7 +58,7 @@ const DateTimePicker = ({
           <div className="flex gap-4 justify-center items-center">
             <div className="w-full">
               <label className="block text-gray-500 dark:text-gray-300">
-                {t("Date de Début")}:
+                {t("Date de début")}:
               </label>
 
               <DatePicker
@@ -80,7 +80,7 @@ const DateTimePicker = ({
             </div>
             <div className="w-full">
               <label className="block text-gray-500 dark:text-gray-300">
-                {t("Heure de Début")}:
+                {t("Heure de début")}:
               </label>
               <input
                 type="time"
@@ -96,7 +96,7 @@ const DateTimePicker = ({
           <div className="flex gap-4 justify-center items-center">
             <div className="w-full">
               <label className="block text-gray-500 dark:text-gray-300">
-                {t("Date de Fin")}:
+                {t("Date de fin")}:
               </label>
 
               <DatePicker
