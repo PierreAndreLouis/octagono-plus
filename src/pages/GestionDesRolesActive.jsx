@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { BiUniversalAccess } from "react-icons/bi";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { TbSettingsShare } from "react-icons/tb";
+import { TbSettingsCheck } from "react-icons/tb";
 
 function GestionDesRolesActive({
   setDocumentationPage,
@@ -239,10 +239,10 @@ function GestionDesRolesActive({
                       {index + 1}
                     </div>
                     <div className="flex  gap-3  w-full ">
-                      <TbSettingsShare className="text-[3rem] hidden sm:block text-orange-500 md:mr-4" />
+                      <TbSettingsCheck className="text-[3rem] hidden sm:block text-orange-500 md:mr-4" />
                       <div className=" w-full flex flex-wrap justify-between gap-x-4">
                         <div className="w-full">
-                          <TbSettingsShare className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
+                          <TbSettingsCheck className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
                           <div className="flex flex-wrap border-b py-1">
                             <p className="font-bold- text-gray-700">
                               {t("ID du Compte")} :

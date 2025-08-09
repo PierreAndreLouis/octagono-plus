@@ -7,7 +7,7 @@ import { IoEarth } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BiUniversalAccess } from "react-icons/bi";
-import { TbSettings, TbSettingsShare } from "react-icons/tb";
+import { TbSettings, TbSettingsCheck } from "react-icons/tb";
 
 function GestionAccountOptionPopup({ setDocumentationPage }) {
   const {
@@ -238,7 +238,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
-                <TbSettingsShare className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
+                <TbSettingsCheck className="text-[1.6rem] min-w-8 text-orange-400 dark:text-orange-50" />
                 <h2 className="font-semibold text-orange-900 dark:text-orange-50">
                   {t("Gestion des Roles Actives")} (
                   {currentAccountSelected?.accountRulesActive?.length})
