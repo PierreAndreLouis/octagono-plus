@@ -25,6 +25,8 @@ function ChooseOtherAccountDashboard({
     accountGeofences,
     updateAppareilsEtGeofencesPourCarte,
     gestionAccountData,
+    chooseAccountID,
+    setChooseAccountID,
   } = useContext(DataContext);
 
   const [searchInputTerm, setSearchInputTerm] = useState("");
@@ -95,7 +97,7 @@ function ChooseOtherAccountDashboard({
                 <IoSearchOutline className="text-xl " />
               </div>
             </div>
-            {chooseOneAccountToContinue && !currentAccountSelected && (
+            {chooseOneAccountToContinue && (
               <div className="mx-4 flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
                 <p className="w-full">
                   {t("Veuillez choisir un compte pour continuer")}
@@ -134,6 +136,7 @@ function ChooseOtherAccountDashboard({
                   <div
                     key={index}
                     onClick={() => {
+                      setChooseAccountID(account?.accountID);
                       setCurrentAccountSelected(account);
                       setListeGestionDesVehicules(account?.accountDevices);
                       setListeGestionDesGeofences(account?.accountGeofences);

@@ -1,6 +1,6 @@
 {
-  "name": "Octagono Plus",
-  "short_name": "Octagono PLus",
+  "name": "GPS Plus",
+  "short_name": "GPS PLus",
   "start_url": "/login",
   "display": "standalone",
   "background_color": "#FFE9D2",

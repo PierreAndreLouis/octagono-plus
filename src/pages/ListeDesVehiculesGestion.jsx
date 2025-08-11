@@ -18,6 +18,7 @@ function ListeDesVehiculesGestion({
   setDocumentationPage,
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
+  chooseOtherAccountGestion,
   fromDashboard = false,
   statisticFilteredDeviceListe,
   statisticFilteredDeviceListeText,
@@ -69,6 +70,10 @@ function ListeDesVehiculesGestion({
     addVehiculeDetailsFonction,
     documentationPage,
     accountDevices,
+    chooseAccountID,
+    setChooseAccountID,
+    modifyVehicleEnGestionAccount,
+    createVehicleEnGestionAccount,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -320,6 +325,83 @@ function ListeDesVehiculesGestion({
     }
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
+  const [moveDeviceToOtherCompte, setMoveDeviceToOtherCompte] = useState(false);
+
+  const [deleteAppareilPopup, setDeleteAppareilPopup] = useState(false);
+
+  // const [inputPassword, setInputPassword] = useState("");
+  // const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const moveDeviceToOtherCompteFonction = (e) => {
+    e.preventDefault();
+
+    if (inputPassword === adminPassword) {
+      console.log("currentSelectedDeviceGestion", currentSelectedDeviceGestion);
+      console.log(
+        "currentSelectedDeviceGestion.accountID",
+        currentSelectedDeviceGestion.accountID
+      );
+      console.log(
+        "currentSelectedDeviceGestion.password",
+        currentSelectedDeviceGestion.password
+      );
+      console.log(
+        "FoundAccount--------",
+        gestionAccountData.find(
+          (account) =>
+            account.accountID === currentSelectedDeviceGestion?.accountID
+        )
+      );
+
+      createVehicleEnGestionAccount(
+        gestionAccountData.find(
+          (account) => account.accountID === chooseAccountID
+        )?.accountID,
+        "admin",
+
+        gestionAccountData.find(
+          (account) => account.accountID === chooseAccountID
+        )?.password,
+
+        currentSelectedDeviceGestion?.deviceID,
+        currentSelectedDeviceGestion?.imeiNumber,
+        currentSelectedDeviceGestion?.uniqueIdentifier,
+        currentSelectedDeviceGestion?.description,
+        currentSelectedDeviceGestion?.displayName,
+        currentSelectedDeviceGestion?.licensePlate,
+        currentSelectedDeviceGestion?.equipmentType,
+        currentSelectedDeviceGestion?.simPhoneNumber
+      );
+      const showMessage = false;
+
+      // console.log(
+      deleteVehicleEnGestionAccount(
+        currentSelectedDeviceGestion?.deviceID,
+
+        gestionAccountData.find(
+          (account) =>
+            account.accountID === currentSelectedDeviceGestion?.accountID
+        )?.accountID,
+        "admin",
+
+        gestionAccountData.find(
+          (account) =>
+            account.accountID === currentSelectedDeviceGestion?.accountID
+        )?.password,
+        showMessage
+      );
+
+      setMoveDeviceToOtherCompte(false);
+    } else {
+      console.log("Mot de passe incorrect");
+      setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
+    }
+  };
+
+  // const foundAccount = comptes?.find((acct) => acct?.accountID === chooseAccountID)
+
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
@@ -327,6 +409,9 @@ function ListeDesVehiculesGestion({
         setShowOptionAppareilOptionPopup={setShowOptionAppareilOptionPopup}
         showOptionAppareilOptionPopup={showOptionAppareilOptionPopup}
         setDocumentationPage={setDocumentationPage}
+        setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+        setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+        setMoveDeviceToOtherCompte={setMoveDeviceToOtherCompte}
       />
 
       <div className="px-2 pb-40 bg-white pt-10 rounded-lg">
@@ -350,6 +435,68 @@ function ListeDesVehiculesGestion({
                 <span className="text-gray-700">{t("Nombre Appareil")} :</span>{" "}
                 {filteredListeGestionDesVehicules?.length}
               </h3>
+            </div>
+          )}
+
+          {moveDeviceToOtherCompte && !chooseOtherAccountGestion && (
+            <div className="fixed  z-[2] flex justify-center items-center inset-0 bg-black/50">
+              <form
+                onSubmit={moveDeviceToOtherCompteFonction}
+                className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+              >
+                <div className="bg-red-200 font-bold text-red-900 text-[1.1rem] px-3 text-center py-3 absolute top-0 left-0 right-0">
+                  {t("Voulez-vous déplacer l'Appareil du compte")}{" "}
+                  <span className="">
+                    ({currentSelectedDeviceGestion?.accountID}){" "}
+                  </span>
+                  {t("vers le compte")}
+                  <span className=" ml-1">
+                    ({chooseAccountID}){""} ?
+                  </span>
+                </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3 mt-6"
+                  >
+                    {t("Veuillez entrer votre mot de passe")}
+                  </label>
+                  {errorMessage && (
+                    <p className="text-red-500 text-sm mt-2 text-center">
+                      {errorMessage}
+                    </p>
+                  )}
+                  <div className="mt-2">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder={`${t("Mot de passe")}`}
+                      required
+                      value={inputPassword}
+                      onChange={(e) => setInputPassword(e.target.value)}
+                      className=" px-3 w-full dark:text-white rounded-md dark:bg-gray-800 py-1.5 text-gray-900 shadow-sm  placeholder:text-gray-400 border border-gray-400  sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 justify-start mt-5">
+                  <button
+                    type="submit"
+                    className="py-1 px-5 bg-red-500 rounded-lg text-white"
+                  >
+                    {t("Confirmer")}
+                  </button>
+
+                  <h3
+                    onClick={() => {
+                      setMoveDeviceToOtherCompte(false);
+                    }}
+                    className="py-1 px-5 cursor-pointer text-center text-red-500 rounded-lg font-semibold border border-red-500"
+                  >
+                    {t("Annuler")}
+                  </h3>
+                </div>
+              </form>
             </div>
           )}
 
@@ -661,9 +808,11 @@ function ListeDesVehiculesGestion({
                                 <h3
                                   className={`${text_color} font-bold text-2xl`}
                                 >
-                                  {parseFloat(
-                                    device?.véhiculeDetails[0]?.speedKPH
-                                  ).toFixed(0)}{" "}
+                                  {device?.véhiculeDetails.length > 0
+                                    ? parseFloat(
+                                        device?.véhiculeDetails[0]?.speedKPH
+                                      ).toFixed(0)
+                                    : 0}{" "}
                                 </h3>
                                 <h3
                                   className={`${text_color} font-bold text-lg`}

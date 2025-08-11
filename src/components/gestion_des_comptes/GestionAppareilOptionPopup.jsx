@@ -1,4 +1,7 @@
 import React, { useContext, useState } from "react";
+import { LuArrowUpRight } from "react-icons/lu";
+import { TiExportOutline } from "react-icons/ti";
+
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +25,9 @@ function GestionAppareilOptionPopup({
   setDocumentationPage,
   showOptionAppareilOptionPopup,
   setShowOptionAppareilOptionPopup,
+  setChooseOneAccountToContinue,
+  setChooseOtherAccountGestion,
+  setMoveDeviceToOtherCompte,
 }) {
   const {
     currentSelectedUserToConnect,
@@ -537,6 +543,25 @@ function GestionAppareilOptionPopup({
                   {t("Informations sur l'appareil")}
                 </h2>
               </div>
+
+              {adminAccount && (
+                <div
+                  onClick={() => {
+                    // setDocumentationPage("Modifier_appareil");
+                    // navigate("/Modifier_appareil");
+                    setChooseOneAccountToContinue(true);
+                    setChooseOtherAccountGestion(true);
+                    setMoveDeviceToOtherCompte(true);
+                    setShowOptionAppareilOptionPopup(false);
+                  }}
+                  className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+                >
+                  <TiExportOutline className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
+                  <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                    {t("Changer l'appareil de Compte")}
+                  </h2>
+                </div>
+              )}
               {adminAccount && (
                 <div
                   onClick={() => {

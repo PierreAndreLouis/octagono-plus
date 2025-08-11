@@ -1016,6 +1016,7 @@ function App() {
                           showChooseItemToModifyPage={
                             showChooseItemToModifyPage
                           }
+                          chooseOtherAccountGestion={chooseOtherAccountGestion}
                         />
                       </Suspense>
                     </div>

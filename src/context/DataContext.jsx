@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "4.8";
+  let versionApplication = "4.9";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -66,6 +66,7 @@ const DataContextProvider = ({ children }) => {
   const [documentationPage, setDocumentationPage] = useState("Dashboard");
 
   const [progressAnimationStart, setProgressAnimationStart] = useState(0);
+  const [chooseAccountID, setChooseAccountID] = useState("");
   const [runningAnimationProgressLoading, setRunningAnimationProgressLoading] =
     useState(false);
   const [
@@ -5304,7 +5305,6 @@ const DataContextProvider = ({ children }) => {
     licensePlate,
     equipmentType,
     simPhoneNumber,
-    vehicleID,
     groupesSelectionnes
   ) => {
     console.log(
@@ -5320,6 +5320,7 @@ const DataContextProvider = ({ children }) => {
     setCreateVéhiculeLoading(true);
     //  <Field name="GroupList">${userAccount}</Field>
     // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    // <Field name="uniqueID">${uniqueIdentifier}</Field>
     const xmlData = `<GTSRequest command="dbcreate">
       <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
       <Record table="Device" partial="true">
@@ -5328,9 +5329,7 @@ const DataContextProvider = ({ children }) => {
         <Field name="deviceID">${deviceID}</Field>
         <Field name="description">${description}</Field>
         <Field name="equipmentType">${equipmentType}</Field>
-        <Field name="uniqueID">${uniqueIdentifier}</Field>
         <Field name="imeiNumber">${imeiNumber}</Field>
-        <Field name="vehicleID">${vehicleID}</Field>
         <Field name="licensePlate">${licensePlate}</Field>
         <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
         <Field name="displayName">${displayName}</Field>
@@ -5455,8 +5454,8 @@ const DataContextProvider = ({ children }) => {
     licensePlate,
     equipmentType,
     simPhoneNumber,
-    vehicleID,
-    groupesSelectionnes
+    groupesSelectionnes,
+    chooseAccountID
   ) => {
     console.log(
       userAccount,
@@ -5471,17 +5470,18 @@ const DataContextProvider = ({ children }) => {
     setCreateVéhiculeLoading(true);
     //  <Field name="GroupList">${userAccount}</Field>
     // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    // <Field name="uniqueID">${uniqueIdentifier}</Field>
     const xmlData = `<GTSRequest command="dbput">
       <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
       <Record table="Device" partial="true">
-        <Field name="accountID">${userAccount}</Field>
+        <Field name="accountID">${
+          chooseAccountID ? chooseAccountID : userAccount
+        }</Field>
 
         <Field name="deviceID">${deviceID}</Field>
         <Field name="description">${description}</Field>
         <Field name="equipmentType">${equipmentType}</Field>
-        <Field name="uniqueID">${uniqueIdentifier}</Field>
         <Field name="imeiNumber">${imeiNumber}</Field>
-        <Field name="vehicleID">${vehicleID}</Field>
         <Field name="licensePlate">${licensePlate}</Field>
         <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
         <Field name="displayName">${displayName}</Field>
@@ -5499,7 +5499,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("data from add véhicule", data);
+      console.log("data from add véhicule", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -5528,7 +5528,6 @@ const DataContextProvider = ({ children }) => {
                   equipmentType,
                   uniqueIdentifier,
                   imeiNumber,
-                  vehicleID,
                   licensePlate,
                   simPhoneNumber,
                 }
@@ -5546,7 +5545,6 @@ const DataContextProvider = ({ children }) => {
                   equipmentType,
                   uniqueIdentifier,
                   imeiNumber,
-                  vehicleID,
                   licensePlate,
                   simPhoneNumber,
                 }
@@ -5608,7 +5606,8 @@ const DataContextProvider = ({ children }) => {
     deviceID,
     userAccount,
     userUsername,
-    userPassword
+    userPassword,
+    showMessage = true
   ) => {
     console.log("++++++++++++++++ Requête effectué: deleteVehicle");
 
@@ -5641,11 +5640,13 @@ const DataContextProvider = ({ children }) => {
           //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
           console.log("Delete successsssssssss...............");
-          setShowConfirmationMessagePopup(true); // succès  Échec
-          setConfirmationMessagePopupTexte(
-            `${t("Suppression de l'appareil avec succès")}`
-          );
-          setConfirmationMessagePopupName("");
+          if (showMessage) {
+            setShowConfirmationMessagePopup(true); // succès  Échec
+            setConfirmationMessagePopupTexte(
+              `${t("Suppression de l'appareil avec succès")}`
+            );
+            setConfirmationMessagePopupName("");
+          }
 
           setAccountDevices((prev) =>
             prev?.filter((v) => v.deviceID !== deviceID)
@@ -5734,11 +5735,14 @@ const DataContextProvider = ({ children }) => {
           "Erreur lors de la suppression du véhicule:",
           response.statusText
         );
-        setShowConfirmationMessagePopup(true); // succès  Échec
-        setConfirmationMessagePopupTexte(
-          `${t("Échec de Suppression de l'appareil")}`
-        );
-        setConfirmationMessagePopupName("");
+        if (showMessage) {
+          setShowConfirmationMessagePopup(true); // succès  Échec
+          setConfirmationMessagePopupTexte(
+            `${t("Échec de Suppression de l'appareil")}`
+          );
+          setConfirmationMessagePopupName("");
+        }
+
         setCreateVéhiculeLoading(false);
       }
 
@@ -5748,11 +5752,14 @@ const DataContextProvider = ({ children }) => {
         "Erreur de connexion lors de la suppression du véhicule:",
         error
       );
-      setShowConfirmationMessagePopup(true); // succès  Échec
-      setConfirmationMessagePopupTexte(
-        `${t("Échec de Suppression de l'appareil")}`
-      );
-      setConfirmationMessagePopupName("");
+      if (showMessage) {
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de Suppression de l'appareil")}`
+        );
+        setConfirmationMessagePopupName("");
+      }
+
       setCreateVéhiculeLoading(false);
     }
   };
@@ -9727,6 +9734,8 @@ const DataContextProvider = ({ children }) => {
         assignRulesToDeviceOrGroupe,
         ModifierassignRulesToDeviceOrGroupe,
         DeleteRoleActiveEnGestionAccount,
+        chooseAccountID,
+        setChooseAccountID,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >
