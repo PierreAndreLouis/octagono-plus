@@ -234,7 +234,7 @@ function GestionDesRoles({
                 return (
                   <div
                     key={index}
-                    className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                    className="shadow-lg- overflow-hidden shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                   >
                     <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                       {index + 1}
