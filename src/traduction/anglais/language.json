@@ -933,7 +933,18 @@
     "Gestion Des Role Actives": "Active Role Management",
   "Nombre de Roles Active": "Number of Active Roles",
   "Activer un nouveau Role": "Activate a New Role",
-  "Statut Code": "Status Code"
+  "Statut Code": "Status Code",
+
+
+
+  "Informations sur le trajet du véhicule" : "Vehicle trip information",
+"Changer l'appareil de Compte": "Change device account",
+"Voulez-vous déplacer l'Appareil du compte": "Do you want to move the device from the account",
+"vers le compte": "to the account",
+"Statistiques": "Statistics",
+"Groupes": "Groups",
+"Alertes": "Alerts"
+
 
 
 

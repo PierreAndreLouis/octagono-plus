@@ -1398,7 +1398,7 @@ function DashboardContaintMaintComponant({
                   <div>
                     <div className="  min-w-[14rem]">
                       <div className="font-semibold flex items-center text-lg mb-4-- text-gray-700">
-                        <h2>{t("Graphe des Comptes")} </h2>
+                        <h2 className="">{t("Graphe des Comptes")} </h2>
                         <p
                           onClick={() => {
                             setExpandSection("graphe");
@@ -1456,7 +1456,7 @@ function DashboardContaintMaintComponant({
                 </div>
               )}
               {(currentAccountSelected || !isDashboardHomePage) && (
-                <div className="w-full h-full mt-4 relative overflow-hidden rounded-md">
+                <div className="w-full h-full min-h-[25rem] md:min-h-0 mt-4 relative overflow-hidden rounded-md">
                   <img
                     src="/img/cartegeographie.png"
                     className="w-full  h-full object-cover "
@@ -1517,10 +1517,18 @@ function DashboardContaintMaintComponant({
               {!showFistGrapheOption2 &&
                 !currentAccountSelected &&
                 isDashboardHomePage && (
-                  <div className="flex w-full justify-between items-center">
-                    <h2 className="font-semibold text-lg text-gray-700">
-                      {t("Statistiques par compte")} ({comptes?.length})
-                    </h2>
+                  <div className="flex w-full justify-between items-start">
+                    <div>
+                      <h2 className="font-semibold text-[1.07rem] md:text-lg text-gray-700 ">
+                        {t("Statistiques par compte")}
+                      </h2>
+                      <p className="text-gray-500">
+                        {t("Nombre de comptes")} ({comptes?.length})
+                      </p>
+                    </div>
+                    {/* <h2 className="font-semibold text-lg text-gray-700 md:hidden">
+                      {t("Statistiques")} ({comptes?.length})
+                    </h2> */}
                     <p
                       onClick={() => {
                         setExpandSectionTable("tableau");
@@ -1689,32 +1697,12 @@ function DashboardContaintMaintComponant({
         <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
           <div className="bg-orange-100 shadow-inner md:col-span-2 shadow-black/10 -300/80 mt-6 p-3 rounded-lg">
             <div className="flex mb-4 justify-between items-center ">
-              <h2
-                onClick={() => {
-                  console.log("ListeDesAlertes", ListeDesAlertes);
-                  console.log("testAlertListe", testAlertListe);
-
-                  console.log(
-                    "véhiculeDetails",
-                    véhiculeDetails
-                      ?.flatMap(
-                        (obj) =>
-                          obj.véhiculeDetails?.map((detail) => ({
-                            deviceID: obj.deviceID,
-                            ...detail,
-                          })) ?? [] // important pour éviter undefined
-                      )
-                      ?.filter((item) =>
-                        currentAccountSelected
-                          ? item?.accountID ===
-                            currentAccountSelected?.accountID
-                          : true
-                      )
-                  );
-                }}
-                className="font-semibold text-lg mb-4-- text-gray-700"
-              >
+              <h2 className="font-semibold text-lg mb-4-- text-gray-700 hidden md:block">
                 {t("Tous les Alertes")} ({ListeDesAlertes?.length})
+              </h2>
+
+              <h2 className="font-semibold text-lg mb-4-- text-gray-700 md:hidden">
+                {t("Alertes")} ({ListeDesAlertes?.length})
               </h2>
               <button
                 onClick={() => {
@@ -1995,8 +1983,11 @@ function DashboardContaintMaintComponant({
             <div className="bg-white shadow-lg shadow-black/5 p-3 h-full rounded-lg">
               <div className="flex mb-4 justify-between items-end">
                 <div className="flex w-full justify-between items-center">
-                  <h2 className="font-semibold text-lg text-gray-700">
+                  <h2 className="font-semibold  text-lg text-gray-700 hidden md:block">
                     {t("Tous les Utilisateurs")} ({totalUsers})
+                  </h2>
+                  <h2 className="font-semibold  text-lg text-gray-700 md:hidden">
+                    {t("Utilisateurs")} ({totalUsers})
                   </h2>
                   <button
                     onClick={handleVoirTousLesUsers}
@@ -2053,8 +2044,11 @@ function DashboardContaintMaintComponant({
 
             <div className="bg-white shadow-lg shadow-black/5 flex flex-col justify-between p-3 rounded-lg">
               <div className="flex pb-4 justify-between items-center">
-                <h2 className="font-semibold text-lg text-gray-700">
+                <h2 className="font-semibold text-lg text-gray-700 hidden md:block">
                   {t("Tous les Groupes")} ({groupesAffichés.length})
+                </h2>
+                <h2 className="font-semibold text-lg text-gray-700 md:hidden">
+                  {t("Groupes")} ({groupesAffichés.length})
                 </h2>
                 <button
                   onClick={handleVoirTousLesGroupe}

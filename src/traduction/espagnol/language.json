@@ -43,7 +43,7 @@
   "Sélectionner un Groupe": "Seleccionar un grupo",
   "Déplacés": "Movido(s)",
   "Position des appareils": "Posición de dispositivo(s)",
-  "Full Screen": "Pantalla completa",
+  "Full Screen": "Maximizar",
   "Nombre d'appareils": "Cantidad de dispositivo(s)",
   "Nombre de comptes": "Cantidad de cuenta(s)",
   "Tous les appareils": "Todos los dispositivo(s)",
@@ -966,7 +966,20 @@
     "Gestion Des Role Actives": "Gestión de Roles Activos",
   "Nombre de Roles Active": "Número de Roles Activos",
   "Activer un nouveau Role": "Activar un Nuevo Rol",
-  "Statut Code": "Código de Estado"
+  "Statut Code": "Código de Estado",
+
+
+
+
+
+  "Informations sur le trajet du véhicule" : "Información sobre el trayecto del vehículo",
+"Changer l'appareil de Compte": "Cambiar la cuenta del dispositivo",
+"Voulez-vous déplacer l'Appareil du compte": "¿Desea mover el dispositivo de la cuenta",
+"vers le compte": "a la cuenta",
+"Statistiques": "Estadísticas",
+"Groupes": "Grupos",
+"Alertes": "Alertas"
+
 
 
 

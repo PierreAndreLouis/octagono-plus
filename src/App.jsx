@@ -515,7 +515,7 @@ function App() {
           readDocumentationSideBar ? "translate-x-0" : "-translate-x-[100%]"
         } ${
           !readDocumentationSideBar ? "hidden" : "lg:flex"
-        } transition-all lg:translate-x-0--  --  lg:relative left-0 top-[5rem] lg:p-4 z-[0] min-w-0   lg:min-w-[21rem]   min-h-[100vh]`}
+        } transition-all   --  lg:relative left-0 top-[5rem] lg:p-4 z-[0] min-w-0   lg:min-w-[21rem]   min-h-[100vh]`}
       ></div>
     );
   };
@@ -556,8 +556,8 @@ function App() {
     useState(null);
 
   return (
-    <div className="dark:bg-gray-700 md:p-4 bg-gray-100">
-      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0">
+    <div className="dark:bg-gray-700 md:p-4 bg-gray-100 min-h-[100vh]">
+      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-screen">
         <ScrollToTop />
         <GoogleTranslate />
         {/* {!readDocumentation && ( */}

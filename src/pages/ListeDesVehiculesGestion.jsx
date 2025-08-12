@@ -775,9 +775,9 @@ function ListeDesVehiculesGestion({
                           device?.lastStopTime > todayTimestamp ||
                           (hasDetails && isActive && speed >= 1 && updatedToday)
                         ) {
-                          border_color = "border-l-[.4rem] border-green-300";
-                          text_color = "text-green-500/80";
-                          bg_color = "bg-green-500";
+                          border_color = "border-l-[.4rem] border-green-500";
+                          text_color = "text-green-600/80";
+                          bg_color = "bg-green-600/90";
                         }
                         //
                         //

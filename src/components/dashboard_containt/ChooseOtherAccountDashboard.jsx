@@ -68,7 +68,7 @@ function ChooseOtherAccountDashboard({
     <>
       {chooseOtherAccountGestion && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999999999999999999999999999999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-0 max-w-[40rem] min-h-[83vh] rounded-lg">
+          <div className="bg-white overflow-hidden w-full mx-0 max-w-[40rem] min-h-[70vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-3">
                 {t("Liste des Comptes")}
@@ -109,7 +109,7 @@ function ChooseOtherAccountDashboard({
                 />
               </div>
             )}
-            <div className="flex overflow-auto h-[60vh] pb-20 flex-col gap-4 mx-3">
+            <div className="flex overflow-auto h-[55vh] md:h-[60vh] pb-20 flex-col gap-4 mx-3">
               {documentationPage !== "Ajouter_nouveau_role" && (
                 <button
                   onClick={() => {

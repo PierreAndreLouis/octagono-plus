@@ -17,10 +17,10 @@ function ChooseOtherGroupeDashboard({
   const [t, i18n] = useTranslation();
 
   return (
-    <>
+    <div>
       {chooseOtherAccountGestion && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[9999999999999999999999999999999]">
-          <div className="bg-white overflow-hidden w-full mx-4 max-w-[40rem] min-h-[90vh] rounded-lg">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999999999999999999999999999999999999999999999999999999999999999999]">
+          <div className="bg-white overflow-hidden w-full max-w-[40rem] min-h-[70vh] rounded-lg">
             <div className="relative">
               <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
                 {t("Liste des Groupes")}
@@ -48,7 +48,7 @@ function ChooseOtherGroupeDashboard({
                 <IoSearchOutline className="text-xl " />
               </div>
             </div>
-            <div className="flex overflow-auto h-[66vh] pb-20 flex-col gap-4 mx-3">
+            <div className="flex overflow-auto h-[55vh] md:h-[60vh] pb-20 flex-col gap-4 mx-3">
               <button
                 onClick={() => {
                   {
@@ -110,7 +110,7 @@ function ChooseOtherGroupeDashboard({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

@@ -4154,20 +4154,26 @@ function RapportGroupe({
                 </div>
               </div>
             ) : (
-              <div className="relative h-[40vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
+              <div className="relative h-[60vh] md:h-[60vh] rounded-lg mt-3 overflow-hidden">
                 <button
-                  className="absolute shadow-lg shadow-white rounded-full z-[99] top-[45%] right-[50%] translate-x-[50%]"
+                  className="absolute shadow-lg shadow-black/20  rounded-full z-[99] top-[45%] right-[50%] translate-x-[50%]"
                   onClick={() => {
                     setzoomPosition(true);
                     setSelectedVehicleToShowInMap(null);
                   }}
                 >
-                  <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-orange-600 shadow-xl">
-                    <MdOutlineFullscreen className="text-white -500 text-[2rem]" />
+                  <div className="flex justify-center items-center min-w-14 min-h-14 rounded-full bg-white  shadow-xl">
+                    <MdOutlineFullscreen className="text-orange-500 text-[2.3rem]" />
                   </div>
                 </button>
-                <div className=" -translate-y-[10rem]">
-                  <MapComponent fromRapportGroupe="true" mapType={mapType} />
+                <div className=" -translate-y-[10rem]-- overflow-hidden relative h-full">
+                  <div className="absolute inset-0 bg-black/20 z-2"></div>
+                  <img
+                    src="/img/cartegeographie.png"
+                    className="w-full  h-full object-cover border"
+                    alt=""
+                  />
+                  {/* <MapComponent fromRapportGroupe="true" mapType={mapType} /> */}
                 </div>
               </div>
             )}

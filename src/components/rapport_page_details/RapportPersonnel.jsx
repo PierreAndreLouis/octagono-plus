@@ -648,7 +648,7 @@ function RapportPersonnel({
                 <div className="flex justify-between w-full items-center">
                   <p>
                     {t("Heure d'arrivée")}:{" "}
-                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
                       {heureActiveFin
                         ? FormatDateHeure(heureActiveFin.timestamp)?.time
                         : `${t("Pas de mouvement")}`}{" "}
@@ -669,10 +669,10 @@ function RapportPersonnel({
                   </p>
                 </div>
                 <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
-                <div className="flex justify-between w-full items-center">
+                <div className="flex justify-between w-full items-center gap-3">
                   <p>
                     {t("Adresse de départ")}:{" "}
-                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
+                    <span className="font-bold  dark:text-orange-500 text-gray-700 pl-1 ">
                       {summarize(data)["Adresse de départ"]}
                     </span>
                   </p>
@@ -688,10 +688,10 @@ function RapportPersonnel({
                     {t("voir")}
                   </p>
                 </div>
-                <div className="flex justify-between w-full items-center">
+                <div className="flex justify-between w-full items-center gap-3">
                   <p>
                     {t("Adresse d'arrivée")}:{" "}
-                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                    <span className="font-bold  dark:text-orange-500 text-gray-700 pl-1 ">
                       {summarize(data)["Adresse d'arrivée"]}
                     </span>
                   </p>
@@ -714,7 +714,7 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <div className="flex justify-between w-full items-center">
+                <div className="flex justify-between w-full items-center gap-3">
                   <p>
                     {t("Durée total en mouvement")} :{" "}
                     <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
@@ -732,7 +732,7 @@ function RapportPersonnel({
                     {t("voir")}
                   </p>
                 </div>
-                <div className="flex justify-between w-full items-center">
+                <div className="flex justify-between w-full items-center gap-3">
                   <p>
                     {t("Durée des arrêts lors du déplacement")} :
                     <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
@@ -752,7 +752,7 @@ function RapportPersonnel({
                   </p>
                 </div>
 
-                <div className="flex justify-between w-full items-center">
+                <div className="flex justify-between w-full items-center gap-3">
                   <p>
                     {t("Duree de l’arrêts le plus long")} :
                     <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
@@ -929,16 +929,16 @@ function RapportPersonnel({
                   </div>
                 </div>
               ) : (
-                <div className="relative  rounded-lg  mt-3 h-[40vh] md:h-[60vh] overflow-hidden w-full">
+                <div className="relative  rounded-lg  mt-3 h-[60vh] md:h-[60vh] overflow-hidden w-full">
                   <button
-                    className="absolute z-[999] top-[1rem] right-[1rem]"
+                    className="absolute z-[999] top-[45%] right-[50%] translate-x-[50%]"
                     // onClick={centerOnFirstMarker}
                     onClick={() => {
                       setzoomCart(true);
                     }}
                   >
-                    <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-white shadow-xl">
-                      <MdOutlineFullscreen className="text-orange-500 text-[2rem]" />
+                    <div className="flex justify-center items-center min-w-14 min-h-14 rounded-full bg-white shadow-xl">
+                      <MdOutlineFullscreen className="text-orange-500 text-[2.3rem]" />
                     </div>
                   </button>
                   <button
@@ -949,7 +949,7 @@ function RapportPersonnel({
                       <MdCenterFocusStrong className="text-orange-500 text-[1.52rem]" />
                     </div>
                   </button>
-                  <div className="absolute -top-[11rem] rounded-lg  w-full ">
+                  <div className="absolute -top-[11rem] rounded-lg  w-full  z-[2]">
                     <div>
                       <TrajetVehicule
                         typeDeVue={typeDeVue}
@@ -968,6 +968,9 @@ function RapportPersonnel({
                         openGoogleMaps={openGoogleMaps}
                       />
                     </div>
+                  </div>
+                  <div className="absolute inset-0 bg-black/20 z-[3]">
+                    {/* filter */}x
                   </div>
                 </div>
               )}{" "}

@@ -174,20 +174,20 @@ function TableauRecapitulatifComptes({
           <thead className="bg-orange-50 h-[2.8rem] text-gray-700 dark:bg-gray-900 dark:text-gray-100 sticky top-0 z-0-- ">
             <tr>
               <th>#</th>
-              <th className="text-center">{t("Comptes")}</th>
-              <th className="text-center">{t("Nombre appareils")}</th>
-              <th className="text-center">{t("Déplacés")}</th>
-              <th className="text-center">{t("Actifs")}</th>
-              <th className="text-center">{t("Inactifs")}</th>
+              <th className="px-3 text-center">{t("Comptes")}</th>
+              <th className="px-3 text-center">{t("Nombre appareils")}</th>
+              <th className="px-3 text-center">{t("Déplacés")}</th>
+              <th className="px-3 text-center">{t("Actifs")}</th>
+              <th className="px-3 text-center">{t("Inactifs")}</th>
               {/*  */}
               {voirPlusDeColonneDansTableauCompte && (
                 <>
-                  <th className="text-center">{t("Utilisateur")}</th>
-                  <th className="text-center">{t("Groupe")}</th>
-                  <th className="text-center">{t("Geofence")}</th>
-                  {/* <th className="text-center">{t("Type")}</th> */}
-                  {/* <th className="text-center">{t("Manager")}</th> */}
-                  <th className="text-center">{t("Actif")}</th>
+                  <th className="px-3 text-center">{t("Utilisateur")}</th>
+                  <th className="px-3 text-center">{t("Groupe")}</th>
+                  <th className="px-3 text-center">{t("Geofence")}</th>
+                  {/* <th className="px-3 text-center">{t("Type")}</th> */}
+                  {/* <th className="px-3 text-center">{t("Manager")}</th> */}
+                  <th className="px-3 text-center">{t("Actif")}</th>
                 </>
               )}
             </tr>
@@ -293,8 +293,10 @@ function TableauRecapitulatifComptes({
         {comptesAnalysés.length > comptesVisibles.length ? (
           <div
             className={`${
-              isLongueur === "true" ? "justify-center" : "justify-between"
-            } flex  items-center mt-4`}
+              isLongueur === "true"
+                ? "justify-start md:justify-center"
+                : "justify-between"
+            } flex  items-center ml-4 mt-6`}
           >
             <button
               onClick={() => setPage(page + 1)}
