@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "4.9";
+  let versionApplication = "5.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -876,7 +876,7 @@ const DataContextProvider = ({ children }) => {
   //       // ?
   //       // : false;
 
-  //       if (speed >= 1) {
+  //       if (speed > 0) {
   //         d.EnDéplacement.push(device);
   //         idsÀExclure.add(device.deviceID);
   //       }
@@ -958,7 +958,7 @@ const DataContextProvider = ({ children }) => {
         // : false;
 
         if (
-          speed >= 1 &&
+          speed > 0 &&
           currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
         ) {
           d.EnDéplacement.push(device);
@@ -7139,7 +7139,6 @@ const DataContextProvider = ({ children }) => {
     // const accountID = account || localStorage.getItem("account") || "";
     // const userID = username || localStorage.getItem("username") || "";
     // const password = localStorage.getItem("password") || "";
-    setDashboardLoadingEffect(true);
 
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -7219,22 +7218,29 @@ const DataContextProvider = ({ children }) => {
       console.log("onlyLastResult", onlyLastResult);
       setVehicleData(véhiculeData);
       if (onlyLastResult) {
+        if (véhiculeData?.length <= 0) return;
+        setDashboardLoadingEffect(true);
+
         setFetchVehicleDataFromRapportGroupe(false);
         setProgress(2);
         setProgressAnimationStart(0);
         setRunningAnimationProgressLoading(true);
         processAllVehicles(véhiculeData);
       } else {
+        if (véhiculeData?.length <= 0) return;
         setFetchVehicleDataFromRapportGroupe(true);
-
         setProgress(2);
         setProgressAnimationStart(0);
         setRunningAnimationProgressLoading(true);
         processAllVehiclesDetails(véhiculeData, timeFrom, timeTo);
+        setDashboardLoadingEffect(true);
       }
+      setDashboardLoadingEffect(false);
 
       handleUserError(xmlDoc);
     } catch (error) {
+      setDashboardLoadingEffect(false);
+
       console.error(
         "Erreur lors de la récupération des données des véhicules",
         error
@@ -7928,7 +7934,7 @@ const DataContextProvider = ({ children }) => {
       const véhiculeActiveToday = currentDataFusionné?.filter((véhicule) => {
         const hasBeenMoving =
           véhicule?.véhiculeDetails &&
-          véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+          véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH > 0);
 
         const lastUpdateTimestampMs =
           véhicule?.véhiculeDetails &&
@@ -7967,7 +7973,7 @@ const DataContextProvider = ({ children }) => {
 
         const hasBeenMoving =
           véhicule?.véhiculeDetails &&
-          véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH >= 1);
+          véhicule?.véhiculeDetails?.some((detail) => detail.speedKPH > 0);
 
         // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
         const lastUpdateTimeMs = véhicule?.lastUpdateTime
@@ -8002,12 +8008,12 @@ const DataContextProvider = ({ children }) => {
       //
       //
 
-      // 4. Met à jour l'état avec tous les véhicules dont `véhiculeDetails[0].speedKPH >= 1`
+      // 4. Met à jour l'état avec tous les véhicules dont `véhiculeDetails[0].speedKPH > 0`
       const véhiculeEnMouvementMaintenant = currentDataFusionné?.filter(
         (véhicule) =>
           véhicule?.véhiculeDetails &&
           véhicule?.véhiculeDetails?.length &&
-          véhicule?.véhiculeDetails[0]?.speedKPH >= 1
+          véhicule?.véhiculeDetails[0]?.speedKPH > 0
       );
 
       setVéhiculeEnMouvementMaintenant(véhiculeEnMouvementMaintenant);
@@ -8036,7 +8042,7 @@ const DataContextProvider = ({ children }) => {
 
         // Vérifier si le véhicule est actif
         const isActif = véhicule?.véhiculeDetails?.some(
-          (detail) => detail.speedKPH >= 1
+          (detail) => detail.speedKPH > 0
         );
 
         // Retourner true pour les véhicules sans détails ou inactifs, mais pas actifs
@@ -8720,13 +8726,13 @@ const DataContextProvider = ({ children }) => {
     return `${hrs}h ${mins}m ${secs}s`;
   };
 
-  const processVehicleData = (currentData) => {
+  const processVehicleData2 = (currentData) => {
     return currentData?.map((item) => {
       const véhiculeDetails = item.véhiculeDetails;
 
-      // Trouver le premier et le dernier index où speedKPH >= 1
+      // Trouver le premier et le dernier index où speedKPH > 0
       const firstValidIndex = véhiculeDetails.findIndex(
-        (detail) => parseFloat(detail.speedKPH) >= 1
+        (detail) => parseFloat(detail.speedKPH) > 0
       );
 
       const lastValidIndex =
@@ -8735,7 +8741,7 @@ const DataContextProvider = ({ children }) => {
         véhiculeDetails
           .slice()
           .reverse()
-          .findIndex((detail) => parseFloat(detail.speedKPH) >= 1) +
+          .findIndex((detail) => parseFloat(detail.speedKPH) > 0) +
         1;
 
       if (
@@ -8867,6 +8873,160 @@ const DataContextProvider = ({ children }) => {
     });
   };
 
+  const processVehicleData = (currentData) => {
+    return currentData?.map((item) => {
+      const véhiculeDetails = item.véhiculeDetails;
+
+      const firstValidIndex = véhiculeDetails.findIndex(
+        (detail) => parseFloat(detail.speedKPH) > 0
+      );
+      const lastValidIndex =
+        véhiculeDetails.length -
+        1 -
+        véhiculeDetails
+          .slice()
+          .reverse()
+          .findIndex((detail) => parseFloat(detail.speedKPH) > 0);
+
+      if (
+        firstValidIndex === -1 ||
+        lastValidIndex === -1 ||
+        firstValidIndex > lastValidIndex
+      ) {
+        return {
+          ...item,
+          véhiculeDetails: [],
+          totalDistance: 0,
+          totalDuration: "0h 0m 0s",
+          totalPauseDuration: "0h 0m 0s",
+          totalMovingDuration: "0h 0m 0s",
+          minSpeed: 0,
+          maxSpeed: 0,
+          avgSpeed: 0,
+          stopCount: 0,
+          stopsPositions: [],
+          longestStopObject: null,
+          totalStopDuration: "0h 0m 0s",
+        };
+      }
+
+      const filteredVehiculeDetails = véhiculeDetails.slice(
+        firstValidIndex,
+        lastValidIndex + 1
+      );
+
+      let totalDistance = 0;
+      let totalDuration = 0;
+      let totalPauseDuration = 0;
+      let totalMovingDuration = 0;
+      let stopCount = 0;
+      let totalStopDuration = 0;
+      let longestStop = 0;
+      let longestStopObject = null;
+      let currentStop = 0;
+      let currentStopStartIndex = null;
+      let speeds = [];
+      let stopsPositions = [];
+
+      for (let i = 1; i < filteredVehiculeDetails.length; i++) {
+        const prev = filteredVehiculeDetails[i - 1];
+        const curr = filteredVehiculeDetails[i];
+
+        const lat1 = parseFloat(prev.latitude);
+        const lon1 = parseFloat(prev.longitude);
+        const lat2 = parseFloat(curr.latitude);
+        const lon2 = parseFloat(curr.longitude);
+
+        const time1 = prev.timestamp;
+        const time2 = curr.timestamp;
+
+        const speed1 = parseFloat(prev.speedKPH);
+
+        totalDistance += calculateDistance(lat1, lon1, lat2, lon2);
+        const delta = calculateDuration(time1, time2);
+        totalDuration += delta;
+
+        speeds.push(speed1);
+
+        if (speed1 > 0) {
+          totalMovingDuration += delta;
+          if (currentStop > longestStop) {
+            longestStop = currentStop;
+            longestStopObject = filteredVehiculeDetails[currentStopStartIndex];
+          }
+          currentStop = 0;
+          currentStopStartIndex = null;
+        } else {
+          totalPauseDuration += delta;
+          if (currentStopStartIndex === null) currentStopStartIndex = i - 1;
+          currentStop += delta;
+        }
+
+        if (speed1 > 0 && parseFloat(curr.speedKPH) <= 0) {
+          stopCount++;
+          stopsPositions.push(filteredVehiculeDetails[i]);
+        }
+      }
+
+      // Dernier arrêt en cours ?
+      if (currentStop > 0) {
+        totalStopDuration += currentStop;
+        if (currentStop > longestStop) {
+          longestStop = currentStop;
+          longestStopObject = filteredVehiculeDetails[currentStopStartIndex];
+        }
+        stopCount++;
+        stopsPositions.push(
+          filteredVehiculeDetails[filteredVehiculeDetails.length - 1]
+        );
+      }
+
+      totalStopDuration = totalPauseDuration;
+
+      speeds = speeds.filter((s) => s > 0);
+
+      if (speeds.length === 0) {
+        return {
+          ...item,
+          véhiculeDetails: [],
+          totalDistance: 0,
+          totalDuration: "0h 0m 0s",
+          totalPauseDuration: "0h 0m 0s",
+          totalMovingDuration: "0h 0m 0s",
+          minSpeed: 0,
+          maxSpeed: 0,
+          avgSpeed: 0,
+          stopCount: 0,
+          stopsPositions: [],
+          longestStopObject: null,
+          totalStopDuration: "0h 0m 0s",
+        };
+      }
+
+      const minSpeed = Math.min(...speeds);
+      const maxSpeed = Math.max(...speeds);
+      const avgSpeed = (
+        speeds.reduce((a, b) => a + b, 0) / speeds.length
+      ).toFixed(0);
+
+      return {
+        ...item,
+        véhiculeDetails: filteredVehiculeDetails,
+        totalDistance,
+        totalDuration: formatDuration(totalDuration),
+        totalPauseDuration: formatDuration(totalPauseDuration),
+        totalMovingDuration: formatDuration(totalMovingDuration),
+        minSpeed,
+        maxSpeed,
+        avgSpeed,
+        stopCount,
+        stopsPositions,
+        longestStopObject,
+        totalStopDuration: formatDuration(totalStopDuration),
+      };
+    });
+  };
+
   const sortVehiclesBySpeed = (filteredData) => {
     return filteredData
       ?.map((item) => {
@@ -8976,9 +9136,9 @@ const DataContextProvider = ({ children }) => {
       ?.map((item) => {
         const véhiculeDetails = item.véhiculeDetails;
 
-        // Trouver le dernier index où speedKPH >= 1
+        // Trouver le dernier index où speedKPH > 0
         const lastValidIndex = véhiculeDetails.findLastIndex(
-          (detail) => parseFloat(detail.speedKPH) >= 1
+          (detail) => parseFloat(detail.speedKPH) > 0
         );
 
         // Si aucun mouvement n'est trouvé, retourner un timestamp par défaut très élevé

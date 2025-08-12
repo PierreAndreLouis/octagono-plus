@@ -134,27 +134,27 @@ function ShowFilterComponent({
 
               {isFilterByVitesse ? (
                 <div className=" bg-white">
-                  <div className="space-y-2">
-                    <div className="flex gap-4 items-center border-b pb-2">
+                  <div className="space-y-2 pl-2">
+                    <div className="flex gap-4 items-center ">
                       <label className="block text-sm font-medium w-full">
-                        Vitesse minimale ({vitesseMin} km/h)
+                        {t("Vitesse minimale")} ({vitesseMin} km/h)
                       </label>
                       <input
                         type="number"
                         value={vitesseMin}
                         onChange={(e) => setVitesseMin(e.target.value)}
-                        className="w-[4rem] border border-gray-500 rounded p-2"
+                        className="w-[4rem] border border-gray-500 rounded px-2 py-1"
                       />
                     </div>
-                    <div className="flex gap-4 items-center ">
+                    <div className="flex gap-4 items-center pb-2">
                       <label className="block text-sm font-medium w-full">
-                        Vitesse maximale ({vitesseMax} km/h)
+                        {t("Vitesse maximale")} ({vitesseMax} km/h)
                       </label>
                       <input
                         type="number"
                         value={vitesseMax}
                         onChange={(e) => setVitesseMax(e.target.value)}
-                        className="w-[4rem] border border-gray-500 rounded p-2"
+                        className="w-[4rem] border border-gray-500 rounded px-2 py-1"
                       />
                     </div>
                   </div>
@@ -210,7 +210,7 @@ function ShowFilterComponent({
               )}
             </form>
 
-            <hr className="dark:border-gray-600 mb-8" />
+            <hr className="dark:border-gray-600 mb-4" />
 
             <div className="py-3 pl-2">
               <div className="font-semibold flex flex-wrap dark:text-gray-50 ">

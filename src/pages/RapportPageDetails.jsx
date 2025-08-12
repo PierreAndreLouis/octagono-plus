@@ -59,6 +59,7 @@ function RapportPageDetails() {
     setDonneeFusionnéForRapport,
     setRapportVehicleDetails,
     setIsSearchingFromRapportGroupePage,
+    rapportPersonelleData,
   } = useContext(DataContext);
 
   let x;
@@ -195,14 +196,27 @@ function RapportPageDetails() {
   const [mapType, setMapType] = useState("streets");
   const [currentLocation, setCurrentLocation] = useState(null);
   const [personnelDetails, setPersonnelDetails] = useState(true);
+  const [stopsPositionsListe, setStopsPositionsListe] = useState(false);
 
   // // Filtrage pour supprimer les doublons et respecter l'intervalle de 10 minutes
   const filteredVehicles = [];
+
+  useEffect(() => {
+    console.log("stopsPositionsListe", stopsPositionsListe);
+    console.log("filteredVehicles", filteredVehicles);
+  }, [stopsPositionsListe]);
+
   let lastZeroSpeedTimestamp = null;
 
-  currentVéhicule?.véhiculeDetails
-    .sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
-    .forEach((details) => {
+  let detailsListe = stopsPositionsListe
+    ? rapportPersonelleData?.stopsPositions
+      ? rapportPersonelleData?.stopsPositions
+      : []
+    : currentVéhicule?.véhiculeDetails;
+
+  detailsListe
+    ?.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp))
+    ?.forEach((details) => {
       const timestamp = parseInt(details.timestamp);
       const speedKPH = parseFloat(details.speedKPH);
 
@@ -222,6 +236,7 @@ function RapportPageDetails() {
   const historiqueInMap = filteredVehicles
     ? Object.values(filteredVehicles)
     : [];
+
   const véhiculeData = historiqueInMap?.map((véhicule) => ({
     description: currentVéhicule?.description || "Véhicule",
     lastValidLatitude: véhicule?.latitude || "",
@@ -404,23 +419,42 @@ function RapportPageDetails() {
   //
   x;
   // section pour trouver l'heure du debut et l'heure de la fin dur parcoure du véhicule
+  // /////////////////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////////////////
 
-  const filteredList = currentVéhicule?.véhiculeDetails?.filter(
-    (item) => parseFloat(item.speedKPH) > 0
-  );
+  // const filteredList = currentVéhicule?.véhiculeDetails?.filter(
+  //   (item) => parseFloat(item.speedKPH) > 0
+  // );
+  const details = currentVéhicule?.véhiculeDetails || [];
+
+  const firstIndex =
+    details.findIndex((item) => parseFloat(item.speedKPH) > 0) - 1;
+  const lastIndex =
+    details.length -
+    1 -
+    [...details].reverse().findIndex((item) => parseFloat(item.speedKPH) > 0) +
+    1;
+
+  let filteredList = details.filter((item) => parseFloat(item.speedKPH) > 0);
+
+  // Ajouter l'objet avant le premier si possible
+  if (firstIndex > 0) {
+    filteredList.unshift(details[firstIndex - 1]);
+  }
+
+  // Ajouter l'objet après le dernier si possible
+  if (lastIndex < details.length - 1) {
+    filteredList.push(details[lastIndex + 1]);
+  }
+  // /////////////////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////////////////
 
   // heure de fin
-  const heureActiveDebut = filteredList?.reduce((minItem, currentItem) => {
-    return parseInt(currentItem.timestamp) < parseInt(minItem.timestamp)
-      ? currentItem
-      : minItem;
-  }, filteredList[0]);
+  const heureActiveDebut = currentVéhicule?.véhiculeDetails?.[lastIndex];
   // Heure d'arrive
-  const heureActiveFin = filteredList?.reduce((maxItem, currentItem) => {
-    return parseInt(currentItem.timestamp) > parseInt(maxItem.timestamp)
-      ? currentItem
-      : maxItem;
-  }, filteredList[0]);
+  const heureActiveFin = currentVéhicule?.véhiculeDetails?.[firstIndex];
 
   //
   //
@@ -1433,6 +1467,9 @@ function RapportPageDetails() {
           endTime={endTimeToDisplay}
           downloadExelPDF={downloadExelPDF}
           longestDuration={longestDuration}
+          firstIndex={firstIndex}
+          lastIndex={lastIndex}
+          setStopsPositionsListe={setStopsPositionsListe}
         />
       )}
 

@@ -369,6 +369,7 @@ function HistoriqueMainComponent({
                     >
                       <div
                         onClick={() => {
+                          
                           setSelectedVehicleToShowInMap(
                             currentVéhicule?.deviceID
                           );
@@ -376,7 +377,6 @@ function HistoriqueMainComponent({
                             indexDansHistorique
                           );
                           setSelectedVehicleHistoriqueToShowInMap(true);
-
                           setvoirPositionSurCarte(true);
                         }}
                         key={index}

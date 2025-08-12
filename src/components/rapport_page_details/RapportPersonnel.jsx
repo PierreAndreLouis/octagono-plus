@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { MdCenterFocusStrong } from "react-icons/md";
 import { TfiMapAlt } from "react-icons/tfi";
 import { FaCar } from "react-icons/fa";
@@ -65,6 +65,9 @@ function RapportPersonnel({
   uniqueAddressesZerroSpeed,
   setShowOptions,
   downloadExelPDF,
+  lastIndex,
+  firstIndex,
+  setStopsPositionsListe,
 }) {
   const {
     loadingHistoriqueFilter,
@@ -79,6 +82,7 @@ function RapportPersonnel({
     currentVéhicule,
     currentPersonelVéhicule,
     rapportPersonelleData,
+    setSelectedVehicleHistoriqueToShowInMap,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -252,6 +256,182 @@ function RapportPersonnel({
 
   // const isSearching = searchDonneeFusionnéForRapport?.length > 0;
 
+  const firstIndexFilter = vehicles?.findIndex(
+    (item) => parseFloat(item.speedKPH) > 0
+  );
+
+  const lastIndexFilter =
+    vehicles?.length -
+    1 -
+    [...vehicles].reverse().findIndex((item) => parseFloat(item.speedKPH) > 0);
+
+  const filteredListDevicesNoSpeed = vehicles?.filter((item, index) => {
+    const speed = parseFloat(item.speedKPH);
+    return speed <= 0 && index > firstIndexFilter && index < lastIndexFilter;
+  });
+  // const filteredListDevicesNoSpeed = vehicles?.filter(
+  //   (item) => parseFloat(item.speedKPH) <= 0
+  // );
+
+  // Exemple de données
+  const data = currentVéhicule?.véhiculeDetails;
+
+  function formatTime2(ts) {
+    const date = new Date(parseInt(ts) * 1000);
+    return date.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+
+  function secondsToHMS(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${h}h ${m}m ${s}s`;
+  }
+
+  function summarize(data) {
+    const sortedData = [...data].sort(
+      (a, b) => parseInt(a.timestamp) - parseInt(b.timestamp)
+    );
+
+    const firstMoveIndex = sortedData.findIndex(
+      (d) => parseFloat(d.speedKPH) > 0
+    );
+    const lastMoveIndex = sortedData
+      .map((d) => parseFloat(d.speedKPH) > 0)
+      .lastIndexOf(true);
+
+    if (firstMoveIndex === -1 || lastMoveIndex === -1) {
+      return { message: "Aucun déplacement détecté" };
+    }
+
+    const movingData = sortedData
+      .slice(firstMoveIndex, lastMoveIndex + 1)
+      .filter((d) => parseFloat(d.speedKPH) > 0);
+
+    const startTime =
+      sortedData[firstMoveIndex - 1]?.timestamp ||
+      sortedData[firstMoveIndex]?.timestamp;
+    const endTime =
+      sortedData[lastMoveIndex + 1]?.timestamp ||
+      sortedData[lastMoveIndex]?.timestamp;
+
+    const startAddress =
+      sortedData[firstMoveIndex - 1]?.address ||
+      sortedData[firstMoveIndex]?.address;
+    const endAddress =
+      sortedData[lastMoveIndex + 1]?.address ||
+      sortedData[lastMoveIndex]?.address;
+
+    let movingSeconds = 0;
+    let stopSeconds = 0;
+    let longestStop = 0;
+    let currentStop = 0;
+    let stopsCount = 0;
+    let totalDistance = 0;
+
+    // Fonction pour calculer la distance entre deux coordonnées
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Rayon Terre en km
+      const toRad = (x) => (x * Math.PI) / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // en km
+    }
+
+    for (let i = firstMoveIndex + 1; i <= lastMoveIndex; i++) {
+      const prev = sortedData[i - 1];
+      const curr = sortedData[i];
+      const delta = parseInt(curr.timestamp) - parseInt(prev.timestamp);
+      if (delta < 0) continue;
+
+      // Ajout distance calculée entre points
+      if (prev.latitude && prev.longitude && curr.latitude && curr.longitude) {
+        totalDistance += haversine(
+          parseFloat(prev.latitude),
+          parseFloat(prev.longitude),
+          parseFloat(curr.latitude),
+          parseFloat(curr.longitude)
+        );
+      }
+
+      if (parseFloat(prev.speedKPH) > 0) {
+        movingSeconds += delta;
+        currentStop = 0;
+      } else {
+        stopSeconds += delta;
+        currentStop += delta;
+        if (currentStop > longestStop) longestStop = currentStop;
+      }
+
+      if (parseFloat(prev.speedKPH) > 0 && parseFloat(curr.speedKPH) === 0) {
+        stopsCount++;
+      }
+    }
+
+    const speeds = movingData.map((d) => parseFloat(d.speedKPH));
+
+    return {
+      "Heure de départ": FormatDateHeure(startTime)?.time,
+      "Heure d'arrivée": FormatDateHeure(endTime)?.time,
+
+      "Adresse de départ": startAddress,
+      "Adresse d'arrivée": endAddress,
+
+      "Durée totale en mouvement": secondsToHMS(movingSeconds),
+      "Durée des arrêts lors du déplacement": secondsToHMS(stopSeconds),
+      "Durée de l'arrêt le plus long": secondsToHMS(longestStop),
+      "Distance totale parcourue": `${totalDistance.toFixed(1)} Km`,
+      "Nombre total d'arrêts": stopsCount,
+
+      "Vitesse minimale": `${Math.min(...speeds).toFixed(0)} Km`,
+      "Vitesse maximale": `${Math.max(...speeds).toFixed(0)} Km`,
+      "Vitesse moyenne": `${(
+        speeds.reduce((a, b) => a + b, 0) / speeds.length
+      ).toFixed(0)} Km`,
+    };
+  }
+
+  // Filtrer seulement les vitesses > 0
+  const filteredSpeeds =
+    vehicles?.length > 0 &&
+    vehicles
+      ?.map((item, index) => ({ ...item, index }))
+      .filter((item) => parseFloat(item.speedKPH) > 0);
+
+  // if (filteredSpeeds.length > 0) {
+  // Trouver l'objet avec la plus petite vitesse
+  const minSpeedVehicle =
+    filteredSpeeds.length > 0 &&
+    filteredSpeeds?.reduce((min, item) =>
+      parseFloat(item.speedKPH) < parseFloat(min.speedKPH) ? item : min
+    );
+
+  const maxSpeedVehicle =
+    vehicles.length > 0 &&
+    vehicles?.reduce((max, item) =>
+      parseFloat(item.speedKPH) > parseFloat(max.speedKPH) ? item : max
+    );
+
+  const maxSpeedIndex = currentVéhicule?.véhiculeDetails?.findIndex(
+    (item) => parseFloat(item.speedKPH) === parseFloat(maxSpeedVehicle.speedKPH)
+  );
+
+  const minSpeedIndex = currentVéhicule?.véhiculeDetails?.findIndex(
+    (item) => parseFloat(item.speedKPH) === parseFloat(minSpeedVehicle.speedKPH)
+  );
+
+  const longestStopIndex = currentVéhicule?.véhiculeDetails?.findIndex(
+    (item) => item === rapportPersonelleData?.longestStopObject
+  );
+
   return (
     <>
       {/* <div ref={rapportPersonnelPDFtRef}>
@@ -263,7 +443,29 @@ function RapportPersonnel({
           ref={rapportPersonnelPDFtRef}
           className=" px-4 min-h-screen-- pb-20 md:max-w-[80vw] w-full"
         >
-          <h1 className="text-center mb-2 mt-[2rem] md:mt-0 font-semibold text-xl mt-16-- dark:text-gray-300">
+          <h1
+            onClick={() => {
+              console.log(
+                "rapportPersonelleData?.stopsPositions",
+                rapportPersonelleData
+              );
+              console.log("longestStopIndex", longestStopIndex);
+
+              // console.log(
+              //   "rapportPersonelleData?.stopsPositions",
+              //   rapportPersonelleData?.stopsPositions[0]
+              // );
+              // console.log(
+              //   "currentVéhicule?.véhiculeDetails",
+              //   currentVéhicule?.véhiculeDetails[0]
+              // );
+              // console.log("Début des arrêts:", stops);
+              // console.log("vehicles", vehicles);
+
+              rapportPersonelleData?.stopsPositions;
+            }}
+            className="text-center mb-2 mt-[2rem] md:mt-0 font-semibold text-xl mt-16-- dark:text-gray-300"
+          >
             {t("Rapport détaillé du véhicule")}
           </h1>
           <h1 className="text-center notranslate mb-16 text-orange-600  text-md font-bold my-2 dark:text-gray-300">
@@ -420,34 +622,91 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <p>
-                  {t("Heure de départ")}:{" "}
-                  <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {heureActiveDebut &&
-                      isSearching &&
-                      FormatDateHeure(heureActiveDebut.timestamp)?.date}{" "} */}
-                  </span>
-                  {/* {isSearching && <span className="mx-1"> /</span>} */}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
-                    {heureActiveDebut
-                      ? FormatDateHeure(heureActiveDebut.timestamp)?.time
-                      : `${t("Pas de mouvement")}`}{" "}
-                  </span>
-                </p>
-                <p>
-                  {t("Heure d'arrivée")}:{" "}
-                  <span className=" whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {/* {heureActiveFin &&
-                      isSearching &&
-                      FormatDateHeure(heureActiveFin.timestamp)?.date}{" "} */}
-                  </span>
-                  {/* {isSearching && <span className="mx-1"> /</span>} */}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {heureActiveFin
-                      ? FormatDateHeure(heureActiveFin.timestamp)?.time
-                      : `${t("Pas de mouvement")}`}{" "}
-                  </span>
-                </p>
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Heure de départ")}:{" "}
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
+                      {heureActiveDebut
+                        ? FormatDateHeure(heureActiveDebut.timestamp)?.time
+                        : `${t("Pas de mouvement")}`}{" "}
+                      {/* ----
+                      {summarize(data)["Heure de départ"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(lastIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Heure d'arrivée")}:{" "}
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                      {heureActiveFin
+                        ? FormatDateHeure(heureActiveFin.timestamp)?.time
+                        : `${t("Pas de mouvement")}`}{" "}
+                      {/* ----
+                      {summarize(data)["Heure d'arrivée"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(firstIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+                <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Adresse de départ")}:{" "}
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-1">
+                      {summarize(data)["Adresse de départ"]}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(lastIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Adresse d'arrivée")}:{" "}
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                      {summarize(data)["Adresse d'arrivée"]}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(firstIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
                 {/*  */}
                 {/*  */}
                 {/*  */}
@@ -455,100 +714,166 @@ function RapportPersonnel({
                 {/*  */}
                 {/*  */}
                 {/*  */}
-                <p
-                  onClick={() => {
-                    console.log(currentPersonelVéhicule);
-                  }}
-                >
-                  {t("Durée total en mouvement")} :{" "}
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {
-                      rapportPersonelleData?.totalMovingDuration
-                      //  ||
-                      //   formatTime(
-                      //     totalMovingHours,
-                      //     totalMovingMinutes,
-                      //     totalMovingSeconds
-                      //   )
-                    }
-                    {/* {currentPersonelVéhicule?.totalMovingDuration || ""}
-                    {longestDuration} */}
-                  </span>
-                </p>
-                <p>
-                  {t("Durée des arrêts lors du déplacement")} :
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {rapportPersonelleData?.totalStopDuration}
-                    {/* {formatTime(
-                      totalStopHours,
-                      totalStopMinutes,
-                      totalStopSeconds
-                    )} */}
-                    {/* {currentPersonelVéhicule?.totalPauseDuration || ""} */}
-                  </span>
-                </p>
-                <p>
-                  {t("Duree de l’arrêts le plus long")} :
-                  <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
-                    {formatTime(longestHours, longestMinutes, longestSeconds)}
-                  </span>
-                </p>
-                {/*  */}
-                {/*  */}
-                {/*  */}
-                <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
-                {/*  */}
-                {/*  */}
-                {/*  */}
-                <p>
-                  {t("Distance totale parcourue")}:
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {rapportPersonelleData?.totalDistance?.toFixed(0) + " Km"}
-                    {/* {calculateTotalDistance(
-                      currentVéhicule?.véhiculeDetails
-                    ).toFixed(0)}{" "} */}
-                    {/* ------- */}
-                    {/* {currentPersonelVéhicule?.totalDistance?.toFixed() || ""} */}
-                    {/* Km{" "} */}
-                  </span>
-                </p>
-                <p>
-                  {t("Nombre total d’arrêts")} :
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {rapportPersonelleData?.stopCount}
-                    {/* {nombreArret || "0"} */}
-                    {/* {currentPersonelVéhicule?.stopCount || ""} */}
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Durée total en mouvement")} :{" "}
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                      {rapportPersonelleData?.totalMovingDuration}
+                      {/* ----
+                      {summarize(data)["Durée totale en mouvement"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setzoomCart(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Durée des arrêts lors du déplacement")} :
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                      {rapportPersonelleData?.totalStopDuration}
+                      {/* ----
+                      {summarize(data)["Durée des arrêts lors du déplacement"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setzoomCart(true);
+                      setStopsPositionsListe(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
 
-                    {/* {stopSequences?.length || "---"} */}
-                  </span>
-                </p>
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Duree de l’arrêts le plus long")} :
+                    <span className="font-bold whitespace-nowrap dark:text-orange-500 text-gray-700 pl-3">
+                      {formatTime(longestHours, longestMinutes, longestSeconds)}
+                      {/* ----
+                    {summarize(data)["Durée de l'arrêt le plus long"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(longestStopIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+
+                {/*  */}
                 {/*  */}
                 {/*  */}
                 <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
                 {/*  */}
                 {/*  */}
-                <p>
-                  {t("Vitesse minimale")}:
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {rapportPersonelleData?.minSpeed?.toFixed(0) + " Km"}
-                    {/* {(minSpeed && minSpeed.toFixed(0)) || "0"} Km/h */}
-                    {/* {currentPersonelVéhicule?.minSpeed?.toFixed() || "0"} Km/h */}
-                  </span>
-                </p>{" "}
-                <p>
-                  {t("Vitesse maximale")}:
-                  <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
-                    {rapportPersonelleData?.maxSpeed?.toFixed(0) + " Km"}
-                    {/* {(maxSpeed && maxSpeed.toFixed(0)) || "0"} Km/h */}
-                    {/* {currentPersonelVéhicule?.maxSpeed?.toFixed() || "0"} Km/h */}
-                  </span>
-                </p>
+                {/*  */}
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Distance totale parcourue")}:
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                      {rapportPersonelleData?.totalDistance?.toFixed(0) + " Km"}
+                      {/* ----
+                    {summarize(data)["Distance totale parcourue"]} // */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setzoomCart(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Nombre total d’arrêts")} :
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                      {rapportPersonelleData?.stopCount}
+                      {/* ----
+                    {summarize(data)["Nombre total d'arrêts"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setzoomCart(true);
+                      setStopsPositionsListe(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+                {/*  */}
+                {/*  */}
+                <div className="border-b my-2 border-orange-400/50 dark:border-gray-700" />
+                {/*  */}
+                {/*  */}
+
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Vitesse minimale")}:
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                      {rapportPersonelleData?.minSpeed?.toFixed(0) + " Km"}
+                      {/* ----
+                    {summarize(data)["Vitesse minimale"]} */}
+                    </span>
+                  </p>{" "}
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(minSpeedIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+
+                <div className="flex justify-between w-full items-center">
+                  <p>
+                    {t("Vitesse maximale")}:
+                    <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
+                      {rapportPersonelleData?.maxSpeed?.toFixed(0) + " Km"}
+                      {/* ----
+                    {summarize(data)["Vitesse maximale"]} */}
+                    </span>
+                  </p>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(currentVéhicule?.deviceID);
+                      setHistoriqueSelectedLocationIndex(maxSpeedIndex);
+                      setSelectedVehicleHistoriqueToShowInMap(true);
+                      setvoirPositionSurCarte(true);
+                    }}
+                    className="underline whitespace-nowrap text-orange-500 pr-4 cursor-pointer font-semibold"
+                  >
+                    {t("voir")}
+                  </p>
+                </div>
+
                 <p>
                   {t("Vitesse moyenne")}:
                   <span className="font-bold dark:text-orange-500 text-gray-700 pl-3">
                     {rapportPersonelleData?.avgSpeed} Km
-                    {/* {(averageSpeed && averageSpeed.toFixed(2)) || "0"} Km/h/ */}
-                    {/* {currentPersonelVéhicule?.avgSpeed || 0} Km/h */}
+                    {/* ----
+                    {summarize(data)["Vitesse moyenne"]} */}
                   </span>
                 </p>
               </div>
@@ -574,6 +899,7 @@ function RapportPersonnel({
                       // onClick={centerOnFirstMarker}
                       onClick={() => {
                         setzoomCart(false);
+                        setStopsPositionsListe(false);
                       }}
                     >
                       <div className="flex justify-center items-center min-w-10 min-h-10 rounded-full bg-red-600 shadow-xl">
@@ -736,10 +1062,10 @@ function RapportPersonnel({
           {/*  */}
           {/*  */}
           {voirPositionSurCarte && (
-            <div className="z-[9999999999999999999999999999999999999999999999999999999999999] fixed bg-black/50 inset-0 pt-20 px-4">
-              <div className="relative    h-[80vh] min-w-[90vw] my-20 rounded-lg mt-3 overflow-hidden">
+            <div className="z-[999999999999999999999999999999999] fixed bg-black/50 inset-0 pt-20-- ">
+              <div className="relative  h-[100vh]  min-w-[100vw]  rounded-lg">
                 <button
-                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
+                  className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[2rem] right-[2rem]"
                   // onClick={centerOnFirstMarker}
                   onClick={() => {
                     setvoirPositionSurCarte(false);
@@ -750,7 +1076,7 @@ function RapportPersonnel({
                   </div>
                 </button>
 
-                <div className=" -translate-y-[10rem]">
+                <div className=" -translate-y-[10rem]--">
                   <MapComponent mapType={mapType} />
                 </div>
               </div>
