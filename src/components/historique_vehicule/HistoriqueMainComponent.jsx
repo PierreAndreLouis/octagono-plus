@@ -171,8 +171,8 @@ function HistoriqueMainComponent({
     <>
       <div className=" w-full max-w-[60rem] mx-auto pb-40">
         {voirPositionSurCarte && (
-          <div className="z-20 fixed bg-black/50 inset-0 pt-20 px-4">
-            <div className="relative    h-[80vh] min-w-[90vw] my-20 rounded-lg mt-3 overflow-hidden">
+          <div className="z-20 fixed bg-black/50 inset-0 pt-20 ">
+            <div className="relative    h-[80vh] min-w-[90vw] w-full max-w-[40rem] my-20 rounded-lg mt-3 overflow-hidden">
               <button
                 className="absolute shadow-lg shadow-gray-400 rounded-full z-[999] top-[1rem] right-[1rem]"
                 onClick={() => {

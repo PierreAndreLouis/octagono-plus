@@ -29,7 +29,7 @@ function DatePupup({
           onSubmit={handleApply}
           className="fixed z-[9999999999999999999] inset-0 flex justify-center items-center bg-black/50"
         >
-          <div className="border relative flex-col pt-6 bg-gray-50 dark:bg-gray-800 w-full max-w-[25rem] mx-4 rounded-lg px-4 pl-2 py-1 flex gap-4-- shadow-lg">
+          <div className="border relative flex-col pt-6 bg-gray-50 dark:bg-gray-800 w-full max-w-[30rem] mx-2-- rounded-lg px-4 pl-2 py-1 flex gap-4-- shadow-lg">
             <IoClose
               onClick={() => {
                 setShowChooseDate(false);

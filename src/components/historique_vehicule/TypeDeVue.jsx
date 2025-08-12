@@ -8,9 +8,9 @@ function TypeDeVue({ typeDeVue, setTypeDeVue, mapType, handleMapTypeChange }) {
   return (
     <>
       {typeDeVue && (
-        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+        <div className="fixed z-[999999909999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[40rem] relative flex flex-col gap-2 w-full mx-2 p-6  border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[40rem] relative flex flex-col gap-2 w-full mx-2-- p-6 px-4  border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose

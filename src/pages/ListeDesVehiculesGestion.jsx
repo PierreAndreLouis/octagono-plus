@@ -442,7 +442,7 @@ function ListeDesVehiculesGestion({
             <div className="fixed  z-[2] flex justify-center items-center inset-0 bg-black/50">
               <form
                 onSubmit={moveDeviceToOtherCompteFonction}
-                className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+                className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
               >
                 <div className="bg-red-200 font-bold text-red-900 text-[1.1rem] px-3 text-center py-3 absolute top-0 left-0 right-0">
                   {t("Voulez-vous déplacer l'Appareil du compte")}{" "}
@@ -1005,7 +1005,7 @@ function ListeDesVehiculesGestion({
                             </div>
                             {/* {isDashboardHomePage && ( */}
                             <div
-                              className="flex justify-between md:mr-10-- md:flex-col mt-6 sm:max-w-[25rem] gap-3 md:mt-3 justify-between-- 
+                              className="flex justify-between md:mr-10-- md:flex-col mt-6 sm:max-w-[30rem] gap-3 md:mt-3 justify-between-- 
                       items-center "
                             >
                               <div

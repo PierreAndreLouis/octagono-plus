@@ -58,7 +58,7 @@ function GestionGroupeOptionPopup({
     <div>
       {showSelectedGroupeOptionsPopup && (
         <div className="fixed flex justify-center items-center z-[199999999999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
-          <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+          <div className="relative w-[100vw]  max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowSelectedGroupeOptionsPopup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"

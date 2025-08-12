@@ -149,7 +149,7 @@ function GestionAppareilOptionPopup({
         <div className="fixed  z-[9999999999999999999999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={deleteVehicleFonction}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
               {t("Voulez-vous Supprimer l'Appareil ?")}
@@ -209,7 +209,7 @@ function GestionAppareilOptionPopup({
       {/* La liste des fonctionnalités pour le control du véhicules */}
       {showControlPopup && (
         <div className="fixed flex justify-center items-center z-[199999999999999999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
-          <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+          <div className="relative w-[100vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowControlPopup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
@@ -282,7 +282,7 @@ function GestionAppareilOptionPopup({
       {/* Message de notez bien  */}
       {showNotezBienPopup && (
         <div className="fixed flex justify-center items-center z-[109999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50-- dark:bg-black/70">
-          <div className="relative w-[90vw]  shadow-black/50 border-red-500 border sm:w-[75vw] max-w-[35rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+          <div className="relative w-[100vw]  shadow-black/50 border-red-500 border max-w-[35rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowNotezBienPopup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-red-500 dark:text-red-600"
@@ -321,7 +321,7 @@ function GestionAppareilOptionPopup({
       {/* Affichage du popup pour entrer le code d’accès */}
       {showAccessCode && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
-          <div className="bg-white max-w-[25rem] p-6 rounded-xl w-[80vw] dark:bg-gray-700">
+          <div className="bg-white max-w-[30rem] p-6 px-4 rounded-xl w-[100vw] dark:bg-gray-700">
             <div>
               <label
                 htmlFor="username"
@@ -369,7 +369,7 @@ function GestionAppareilOptionPopup({
         <div className="fixed  z-10 flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
-            className="bg-white dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+            className="bg-white dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px4 rounded-xl w-[100vw]"
           >
             <div>
               <label
@@ -419,7 +419,7 @@ function GestionAppareilOptionPopup({
 
       {showOptionAppareilOptionPopup && (
         <div className="fixed flex justify-center items-center z-[999999999999999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
-          <div className="relative w-[90vw] sm:w-[80vw] max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
+          <div className="relative w-[100vw]  max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
               onClick={() => setShowOptionAppareilOptionPopup(false)}
               className="absolute cursor-pointer top-3 right-3 text-2xl text-orange-500 dark:text-orange-600"

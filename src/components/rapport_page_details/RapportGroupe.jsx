@@ -1655,8 +1655,8 @@ function RapportGroupe({
         {/*  */}
         {/* La liste des vehicule filtrer */}
         {voirVehiculeListePupup && (
-          <div className="fixed z-[9999999999] inset-0 px-2 flex justify-center items-center bg-black/50">
-            <div className="bg-white  dark:bg-gray-800 rounded-lg pt-3 w-[97vw]  px-2">
+          <div className="fixed z-[9999999999] inset-0 px-0 flex justify-center items-center bg-black/50">
+            <div className="bg-white  dark:bg-gray-800 rounded-lg pt-3 w-[100vw]  px-2">
               <div className="flex justify-between items-center py-2">
                 <p></p>
                 <h3 className="font-bold text-gray-600 text-lg dark:text-gray-50">
@@ -2029,7 +2029,7 @@ function RapportGroupe({
         {/*  */}
         {/* Voir le trajet d'un vehicule sur la carte */}
         {voirTrajetDansLaCarte && (
-          <div className=" fixed inset-0 z-[999999999999999999] p-2 md:p-4 lg:px-10 bg-black/50">
+          <div className=" fixed inset-0 z-[999999999999999999] p-2 px-0 md:p-4 lg:px-10 bg-black/50">
             <div className="relative  rounded-lg  mt-3-- h-[100vh]  overflow-hidden w-full">
               <button
                 className="absolute z-[9999999999999999999999999] top-[1rem] right-[1rem]"
@@ -2835,7 +2835,7 @@ function RapportGroupe({
                 setPlusDe50DevicePopupMessage(true);
               }
             }}
-            className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[25rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
+            className="text-center bg-orange-500 text-white  rounded-lg py-1.5 max-w-[30rem] cursor-pointer mx-auto mb-10 font-semibold text-[1.1rem] flex gap-4 justify-center items-center dark:text-gray-300"
           >
             <h3>{t("Mettre a jour les donnees")}</h3>
             <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />

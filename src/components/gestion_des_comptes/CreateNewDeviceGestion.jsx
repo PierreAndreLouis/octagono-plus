@@ -192,7 +192,7 @@ function CreateNewDeviceGestion({
           vehicleID,
           groupesSelectionnes
         );
-                navigate("/Gestion_des_appareils")
+        navigate("/Gestion_des_appareils");
 
         setDocumentationPage("Gestion_des_appareils");
       }
@@ -209,7 +209,7 @@ function CreateNewDeviceGestion({
     <div className="px-3  rounded-lg bg-white">
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
+          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative  bg-white rounded-lg">
             <h2
               // onClick={() => {
               //   console.log("tous les Groupes: ", allGroupIDs);
@@ -329,8 +329,7 @@ function CreateNewDeviceGestion({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_appareils");
-                navigate("/Gestion_des_appareils")
-
+                  navigate("/Gestion_des_appareils");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -444,8 +443,7 @@ function CreateNewDeviceGestion({
                     onClick={() => {
                       setDocumentationPage("Gestion_des_appareils");
                       scrollToTop();
-                navigate("/Gestion_des_appareils")
-
+                      navigate("/Gestion_des_appareils");
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >

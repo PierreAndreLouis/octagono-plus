@@ -209,7 +209,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       {isActivePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -262,7 +262,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       {isAccountManager && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -316,7 +316,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       {showTimeZonePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose

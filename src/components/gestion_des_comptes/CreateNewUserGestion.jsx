@@ -25,7 +25,7 @@ function CreateNewUserGestion({
     userRole,
     adminPassword,
   } = useContext(DataContext);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [t, i18n] = useTranslation();
 
@@ -239,7 +239,7 @@ function CreateNewUserGestion({
         );
 
         setDocumentationPage("Gestion_des_utilisateurs");
-        navigate("/Gestion_des_utilisateurs")
+        navigate("/Gestion_des_utilisateurs");
       }
 
       setShowConfirmAddGroupeGestionPopup(false);
@@ -255,7 +255,7 @@ function CreateNewUserGestion({
       {showMaxAccessLevelPopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -349,7 +349,7 @@ function CreateNewUserGestion({
       {showIsUserActivePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -404,7 +404,7 @@ function CreateNewUserGestion({
       {showUserTypePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -461,7 +461,7 @@ function CreateNewUserGestion({
       {showTimeZonePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -503,7 +503,7 @@ function CreateNewUserGestion({
       {showUserRolePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -545,7 +545,7 @@ function CreateNewUserGestion({
       )}
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
+          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh]  relative  bg-white rounded-lg">
             <h2
               // onClick={() => {
               //   console.log("tous les Groupes: ", allGroupIDs);
@@ -658,8 +658,7 @@ function CreateNewUserGestion({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_utilisateurs");
-        navigate("/Gestion_des_utilisateurs")
-
+                  navigate("/Gestion_des_utilisateurs");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -871,7 +870,7 @@ function CreateNewUserGestion({
                   <button
                     onClick={() => {
                       setDocumentationPage("Gestion_des_utilisateurs");
-        navigate("/Gestion_des_utilisateurs")
+                      navigate("/Gestion_des_utilisateurs");
 
                       scrollToTop();
                     }}

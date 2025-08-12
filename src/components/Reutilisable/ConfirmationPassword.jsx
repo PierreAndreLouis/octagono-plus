@@ -16,7 +16,7 @@ function ConfirmationPassword({
         <div className="fixed  z-[999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
-            className="bg-white dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+            className="bg-white dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div>
               <label

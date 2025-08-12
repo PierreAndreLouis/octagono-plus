@@ -61,7 +61,7 @@ function ShowFilterComponent({
     <>
       {showFilter && (
         <div className="fixed inset-0 z-20 w-full flex justify-center items-center p-2 bg-black/50">
-          <div className="relative max-w-[30rem] bg-white w-[90vw] rounded-md p-4 dark:bg-gray-800">
+          <div className="relative max-w-[30rem] bg-white w-[100vw] rounded-md p-4 dark:bg-gray-800">
             <IoMdClose
               onClick={() => {
                 setshowFilter(false);

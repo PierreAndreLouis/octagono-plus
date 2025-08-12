@@ -285,7 +285,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
     <div className="px-3 rounded-lg  bg-white">
       {showMaxAccessLevelPopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] px-4 p-6 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowMaxAccessLevelPopup(false);
@@ -378,7 +378,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
       {showUserTypePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md"
+            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
             id="mapType"
           >
             <IoClose
@@ -436,7 +436,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
 
       {showIsUserActivePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowIsUserActivePopup(false);
@@ -491,7 +491,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
 
       {showTimeZonePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowTimeZonePopup(false);
@@ -530,7 +530,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
       )}
       {showUserRolePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[80vw] p-6 border border-gray-600 mt-2 rounded-md">
+          <div className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md">
             <IoClose
               onClick={() => {
                 setShowUserRolePopup(false);
@@ -570,7 +570,7 @@ function ModifyUserGroupeGestion({ setDocumentationPage }) {
       )}
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
+          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] relative max-h-[75vh]-- bg-white rounded-lg">
             <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
               {t("Liste Des Groupe")}
             </h2>

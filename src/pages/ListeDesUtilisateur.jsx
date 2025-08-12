@@ -119,7 +119,7 @@ function ListeDesUtilisateur({
         <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[25rem] p-6 rounded-xl w-[80vw]"
+            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div className="bg-orange-600 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
               {t("Voulez-vous changer de Compte ?")}
@@ -385,7 +385,7 @@ function ListeDesUtilisateur({
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-center ">
+                  <div className="flex justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
                     {" "}
                     <button
                       onClick={() => {

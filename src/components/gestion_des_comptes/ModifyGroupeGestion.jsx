@@ -189,7 +189,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
     <div className="px-3 rounded-lg bg-white">
       {showDeviceSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
-          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative max-h-[75vh]-- bg-white rounded-lg">
+          <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh]  relative max-h-[75vh]-- bg-white rounded-lg">
             <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
               {t("Liste Des Appareils")}
             </h2>

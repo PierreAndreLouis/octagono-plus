@@ -357,7 +357,7 @@ function GestionGeofences({
                           </div>
                         </div>
                       </div>
-                      <div className="flex  justify-end md:mr-10 sm:max-w-[25rem] gap-3 mt-3 justify-between-- items-end ">
+                      <div className="flex  justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-end ">
                         {(isDashboardHomePage ||
                           localStorage.getItem("password")) && (
                           <button

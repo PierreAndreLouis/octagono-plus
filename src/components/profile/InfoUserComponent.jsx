@@ -201,7 +201,7 @@ function InfoUserComponent({
       {redemarerApplication && (
         <div className="fixed z-10 flex justify-center items-center inset-0 bg-black/50">
           <div
-            className={` ${body_bg} max-w-[25rem] pb-6 overflow-hidden  rounded-xl w-[80vw] `}
+            className={` ${body_bg} max-w-[30rem] pb-6 overflow-hidden  rounded-xl w-[100vw] `}
           >
             <div
               className={` ${header_bg} flex justify-center items-center py-4 px-4  mb-8 `}

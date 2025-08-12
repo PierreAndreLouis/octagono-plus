@@ -138,7 +138,7 @@ function SearchVehiculePupup({
   };
   return (
     <div className="fixed min-h-[100vh]   z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
-      <div className=" sm:mx-auto   w-full  md:min-w-[60vw] relative border md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
+      <div className=" sm:mx-auto   w-full  md:min-w-[60vw] relative border mx-0 md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
         <div className="absolute  top-[1rem] left-2 right-2 md:left-4  md:right-4 py-2">
           <div className="mt-4 mb-4   flex items-center gap-2">
             <Tooltip

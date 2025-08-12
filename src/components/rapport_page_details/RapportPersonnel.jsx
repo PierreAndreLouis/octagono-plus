@@ -1033,7 +1033,7 @@ function RapportPersonnel({
           {/* xxxxxxxxx */}
           {showHistoriquePupup && (
             <div className="fixed hidden- z-[10000000000] inset-0 bg-black/50 flex justify-center items-center">
-              <div className="relative min-w-[80vw] mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+              <div className="relative min-w-[100vw] mx-2 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
                 <div className="absolute z-[11] bg-white dark:bg-gray-900 p-4 py-6 top-0 left-0 right-0 flex flex-col justify-center items-center">
                   <IoClose
                     onClick={() => {
