@@ -50,15 +50,7 @@ function MapComponent({
     FormatDateHeure,
     historiqueSelectedLocationIndex,
     username,
-    geofenceData,
-    createNewGeofence,
-    ajouterGeofencePopup,
-    setAjouterGeofencePopup,
-    createGeofenceLoading,
-    currentGeozone,
-    isEditingGeofence,
-    ModifierGeofence,
-    accountDevices,
+
     currentAccountSelected,
     updateAppareilsEtGeofencesPourCarte,
     isDashboardHomePage,
@@ -451,24 +443,6 @@ function MapComponent({
     useState(true);
 
   let getColor = true;
-
-  // useEffect(() => {
-  //   if (mapRef.current) {
-  //     const coordinates = [
-  //       { lat: 17.79297219635383, lng: -74.46607937065865 },
-  //       { lat: 19.81964982383767, lng: -74.57589816742004 },
-  //       { lat: 20.180774787037656, lng: -70.42474764983946 },
-  //       { lat: 17.83656772376724, lng: -70.14165652823564 },
-  //     ];
-
-  //     const avgLat =
-  //       coordinates.reduce((sum, c) => sum + c.lat, 0) / coordinates.length;
-  //     const avgLng =
-  //       coordinates.reduce((sum, c) => sum + c.lng, 0) / coordinates.length;
-
-  //     mapRef.current.setView([avgLat, avgLng], 7);
-  //   }
-  // }, []);
 
   const countLimit = 30;
   const [count, setCount] = useState(countLimit);
@@ -896,43 +870,7 @@ function MapComponent({
             {markers}
           </MarkerClusterGroup>
         ) : (
-          // <MarkerClusterGroup
-          //   chunkedLoading
-          //   spiderfyOnMaxZoom={false}
-          //   showCoverageOnHover={false}
-          //   maxClusterRadius={50}
-          // >
-          //   {vehicles?.map((véhicule, index) => {
-          //     const FormatDateHeureTimestamp = FormatDateHeure(
-          //       véhicule.timestamp
-          //     );
-
-          //     return (
-          //       <Marker
-          //         key={index}
-          //         position={[
-          //           véhicule.lastValidLatitude || 0,
-          //           véhicule.lastValidLongitude || 0,
-          //         ]}
-          //         icon={L.icon({
-          //           iconUrl: getMarkerIcon(véhicule),
-          //           iconSize: [25, 35],
-          //           iconAnchor: [12, 35],
-          //           popupAnchor: [1, -33],
-          //           shadowUrl:
-          //             "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-          //           shadowSize: [1, 1],
-          //         })}
-          //         eventHandlers={{ click: () => onClickVehicle(véhicule) }}
-          //       ></Marker>
-          //     );
-          //   })}
-          // </MarkerClusterGroup>
           vehicles?.map((véhicule, index) => {
-            const FormatDateHeureTimestamp = FormatDateHeure(
-              véhicule.timestamp
-            );
-
             return (
               <Marker
                 key={index}
