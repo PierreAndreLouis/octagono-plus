@@ -11,6 +11,8 @@ function GestionGroupeOptionPopup({
   setShowSelectedGroupeOptionsPopup,
   setDeleteGroupeAccountPopup,
   setDocumentationPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     setListeGestionDesVehicules,
@@ -123,6 +125,8 @@ function GestionGroupeOptionPopup({
 
                   setDocumentationPage("Modifier_groupe");
                   navigate("/Modifier_groupe");
+                  setIsCreatingNewElement(false);
+
                   // setCurrentSelectedGroupeGestion(groupe);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"

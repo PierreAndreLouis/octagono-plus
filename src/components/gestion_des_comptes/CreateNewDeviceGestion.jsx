@@ -15,6 +15,8 @@ function CreateNewDeviceGestion({
   documentationPage,
   setChooseOtherAccountGestion,
   setChooseOneAccountToContinue,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     setCurrentAccountSelected,
@@ -24,6 +26,8 @@ function CreateNewDeviceGestion({
     scrollToTop,
     currentSelectedDeviceGestion,
     adminPassword,
+    modifyVehicleEnGestionAccount,
+    gestionAccountData,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -45,6 +49,7 @@ function CreateNewDeviceGestion({
 
   // État pour chaque champ du formulaire
   const [addVéhiculeData, setAddVehicleData] = useState({
+    accountID: "",
     deviceID: "",
     description: "",
     equipmentType: "",
@@ -78,7 +83,7 @@ function CreateNewDeviceGestion({
       (véhicule) => véhicule?.deviceID === deviceID
     );
 
-    if (deviceExists) {
+    if (deviceExists && isCreatingNewElement) {
       setErrorID(
         `${t(
           "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre"
@@ -134,12 +139,38 @@ function CreateNewDeviceGestion({
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
 
+  // const selectedDeviceID = currentSelectedDeviceGestion?.deviceID;
+
+  // const groupeDuSelectedDevice = currentAccountSelected?.accountGroupes
+  //   ?.filter((groupe) =>
+  //     groupe?.groupeDevices?.some(
+  //       (device) => device?.deviceID === selectedDeviceID
+  //     )
+  //   )
+  //   .map((groupe) => groupe?.groupID);
+
+  // const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
+  //   (groupe) => groupe?.groupID
+  // );
+  // const [groupesSelectionnes, setGroupesSelectionnes] = useState(
+  //   groupeDuSelectedDevice || []
+  // );
+  // //
+  // const groupesNonSelectionnes = allGroupIDs?.filter(
+  //   (groupID) => !groupesSelectionnes.includes(groupID)
+  // );
+
+  // const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
+  //   useState(false);
+
   useEffect(() => {
     // console.log("groupesSelectionnes", groupesSelectionnes);
   }, [groupesSelectionnes]);
   useEffect(() => {
-    setGroupesSelectionnes([]);
-  }, [documentationPage]);
+    if (isCreatingNewElement) {
+      setGroupesSelectionnes([]);
+    }
+  }, [documentationPage, isCreatingNewElement]);
 
   ////////////////////////////////////
 
@@ -148,11 +179,13 @@ function CreateNewDeviceGestion({
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === adminPassword) {
+      const accountID = addVéhiculeData.accountID;
+
       const deviceID = addVéhiculeData.deviceID;
       const imeiNumber = addVéhiculeData.imeiNumber;
       const uniqueIdentifier = addVéhiculeData.uniqueIdentifier;
       const description = addVéhiculeData.description;
-      const displayName = addVéhiculeData.displayName;
+      const displayName = addVéhiculeData.description;
       const licensePlate = addVéhiculeData.licensePlate;
       const equipmentType = addVéhiculeData.equipmentType;
       const simPhoneNumber = addVéhiculeData.simPhoneNumber;
@@ -177,21 +210,46 @@ function CreateNewDeviceGestion({
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
       ) {
-        createVehicleEnGestionAccount(
-          currentAccountSelected?.accountID,
-          "admin",
-          currentAccountSelected?.password,
-          deviceID,
-          imeiNumber,
-          uniqueIdentifier,
-          description,
-          displayName,
-          licensePlate,
-          equipmentType,
-          simPhoneNumber,
-          vehicleID,
-          groupesSelectionnes
-        );
+        if (isCreatingNewElement) {
+          createVehicleEnGestionAccount(
+            currentAccountSelected?.accountID,
+            "admin",
+            currentAccountSelected?.password,
+            deviceID,
+            imeiNumber,
+            uniqueIdentifier,
+            description,
+            displayName,
+            licensePlate,
+            equipmentType,
+            simPhoneNumber,
+            vehicleID,
+            groupesSelectionnes
+          );
+        } else {
+          modifyVehicleEnGestionAccount(
+            currentAccountSelected?.accountID ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.accountID,
+            "admin",
+            currentAccountSelected?.password ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.password,
+            deviceID,
+            imeiNumber,
+            uniqueIdentifier,
+            description,
+            displayName,
+            licensePlate,
+            equipmentType,
+            simPhoneNumber,
+            vehicleID,
+            groupesSelectionnes
+          );
+        }
+
         navigate("/Gestion_des_appareils");
 
         setDocumentationPage("Gestion_des_appareils");
@@ -205,17 +263,29 @@ function CreateNewDeviceGestion({
     }
   };
 
+  // Pour mettre a jour les nouvelle donnee du véhicule a modifier
+  useEffect(() => {
+    if (currentSelectedDeviceGestion && !isCreatingNewElement) {
+      setAddVehicleData({
+        accountID: currentSelectedDeviceGestion.accountID || "",
+        deviceID: currentSelectedDeviceGestion.deviceID || "",
+        description: currentSelectedDeviceGestion.description || "",
+        equipmentType: currentSelectedDeviceGestion.equipmentType || "",
+        uniqueIdentifier: currentSelectedDeviceGestion.uniqueID || "---",
+        imeiNumber: currentSelectedDeviceGestion.imeiNumber || "",
+        licensePlate: currentSelectedDeviceGestion.licensePlate || "",
+        simPhoneNumber: currentSelectedDeviceGestion.simPhoneNumber || "",
+        displayName: currentSelectedDeviceGestion.displayName || "",
+      });
+    }
+  }, [currentSelectedDeviceGestion, isCreatingNewElement]);
+
   return (
     <div className="px-3  rounded-lg bg-white">
       {showGroupesSelectionnesPopup && (
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] mx-3 relative  bg-white rounded-lg">
-            <h2
-              // onClick={() => {
-              //   console.log("tous les Groupes: ", allGroupIDs);
-              // }}
-              className="text-center py-4 bg-orange-300 font-bold text-lg"
-            >
+            <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
               {t("Liste Des Groupe")}
             </h2>
             <IoClose
@@ -283,22 +353,14 @@ function CreateNewDeviceGestion({
               })}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
+            <div className="flex justify-center px-4 mb-4 mt-2">
               <button
                 onClick={() => {
                   setShowGroupesSelectionnesPopup(false);
                 }}
-                className="py-2 text-white rounded-md bg-orange-600 font-bold"
+                className="py-2 px-4 w-full text-white rounded-md bg-orange-600 font-bold"
               >
                 {t("Confirmer")}
-              </button>
-              <button
-                onClick={() => {
-                  setShowGroupesSelectionnesPopup(false);
-                }}
-                className="py-2  rounded-md bg-gray-200 font-bold"
-              >
-                {t("Annuler")}
               </button>
             </div>
           </div>
@@ -322,7 +384,9 @@ function CreateNewDeviceGestion({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                {t("Enregistrer un nouveau Appareil")}
+                {isCreatingNewElement
+                  ? t("Enregistrer un nouveau Appareil")
+                  : t("Modifier un Appareil")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -338,7 +402,11 @@ function CreateNewDeviceGestion({
               </button>
             </div>
 
-            <p className="mb-2">{t("Choisissez un Groupe")}</p>
+            <p className="mb-2 font-semibold text-gray-700">
+              {t("Choisissez un Groupe")}{" "}
+              {groupesSelectionnes?.length > 0 &&
+                "(" + groupesSelectionnes?.length + ")"}
+            </p>
             <div
               onClick={() => {
                 setShowGroupesSelectionnesPopup(true);
@@ -374,11 +442,7 @@ function CreateNewDeviceGestion({
                     label: `${t("Description du véhicule")}`,
                     placeholder: `${t("Description du véhicule")}`,
                   },
-                  {
-                    id: "displayName",
-                    label: `${t("Nom du véhicule")}`,
-                    placeholder: `${t("Nom du véhicule")}`,
-                  },
+
                   {
                     id: "licensePlate",
                     label: `${t("Plaque du véhicule")}`,
@@ -412,6 +476,9 @@ function CreateNewDeviceGestion({
                       placeholder={field.placeholder}
                       value={addVéhiculeData[field.id]}
                       onChange={handleChange}
+                      disabled={
+                        !isCreatingNewElement && field.id === "deviceID"
+                      }
                       required
                       className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                     />

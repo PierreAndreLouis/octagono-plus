@@ -144,7 +144,7 @@ function DashboardContaintMaintComponant({
   };
 
   useEffect(() => {
-    animateValue(animatedTotal, allDevices.length, 1000, setAnimatedTotal);
+    animateValue(animatedTotal, allDevices?.length, 1000, setAnimatedTotal);
     animateValue(
       animatedDeplaces,
       DeviceDéplacer?.length,
@@ -1035,7 +1035,7 @@ function DashboardContaintMaintComponant({
 
     const uniqueUsersMap = new Map(usersFromAccounts.map((u) => [u.userID, u]));
 
-    accountUsers.forEach((user) => {
+    accountUsers?.forEach((user) => {
       if (!uniqueUsersMap.has(user.userID)) {
         uniqueUsersMap.set(user.userID, user);
       }
@@ -1166,8 +1166,13 @@ function DashboardContaintMaintComponant({
               </div>
               {expandSectionTable === "tableau" && (
                 <div className="h-full flex justify-between flex-col">
-                  <div className="w-full flex justify-center items-center py-3 font-bold text-xl">
-                    <h2 className="mb-10">{t("Statistiques par compte")}</h2>
+                  <div className="w-full  flex flex-col justify-center items-center py-3 font-bold  ">
+                    <h2 className="text-xl">{t("Statistiques par compte")}</h2>
+                    <p className="mb-4 font-normal border border-yellow-600 bg-yellow-100 rounded-md px-4 py-1 mt-3">
+                      {t(
+                        "Vous pouvez cliquer sur chaque case du tableau pour en savoir plus"
+                      )}
+                    </p>
                   </div>
                   <TableauRecapitulatifComptes
                     isLongueur="true"
@@ -2000,7 +2005,7 @@ function DashboardContaintMaintComponant({
 
               <div className="flex flex-col gap-4 max-h-[25rem] overflow-y-auto">
                 {previewUsers.length > 0 ? (
-                  previewUsers.map((user, index) => (
+                  previewUsers?.map((user, index) => (
                     <div
                       key={index}
                       className="bg-gray-50/50 shadow-inner shadow-black/10 flex gap-3 rounded-lg py-3 px-2"

@@ -9,7 +9,11 @@ import { useNavigate } from "react-router-dom";
 import { BiUniversalAccess } from "react-icons/bi";
 import { TbSettings, TbSettingsCheck } from "react-icons/tb";
 
-function GestionAccountOptionPopup({ setDocumentationPage }) {
+function GestionAccountOptionPopup({
+  setDocumentationPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
+}) {
   const {
     showAccountOptionsPopup,
     setShowAccountOptionsPopup,
@@ -250,6 +254,7 @@ function GestionAccountOptionPopup({ setDocumentationPage }) {
               {/*  */}
               <div
                 onClick={() => {
+                  setIsCreatingNewElement(false);
                   setDocumentationPage("Modifier_compte");
                   navigate("/Modifier_compte");
                 }}

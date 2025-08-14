@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next";
 function GestionUserOptionsPopup({
   setShowModifyUserPage,
   setDocumentationPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     currentSelectedUserToConnect,
@@ -29,8 +31,6 @@ function GestionUserOptionsPopup({
   const [t, i18n] = useTranslation();
 
   const [deleteAccountPopup, setDeleteAccountPopup] = useState(false);
-
-
 
   const [inputPassword, setInputPassword] = useState("");
   const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
@@ -58,8 +58,6 @@ function GestionUserOptionsPopup({
       setErrorIncorrectPassword(`${t("Mot de passe incorrect")}`);
     }
   };
-
- 
 
   return (
     <div>
@@ -150,7 +148,7 @@ function GestionUserOptionsPopup({
                     );
                     setShowSelectedUserOptionsPopup(false);
                     setDocumentationPage("Gestion_des_appareils");
-                    navigate("/Gestion_des_appareils")
+                    navigate("/Gestion_des_appareils");
                   }, 1000);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -186,8 +184,7 @@ function GestionUserOptionsPopup({
 
                     setShowSelectedUserOptionsPopup(false);
                     setDocumentationPage("Gestion_des_groupes");
-                    navigate("/Gestion_des_groupes")
-
+                    navigate("/Gestion_des_groupes");
                   }, 100);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -203,10 +200,10 @@ function GestionUserOptionsPopup({
               {/*  */}
               <div
                 onClick={() => {
-                  //  setShowModifyUserPage(true);
+                  setIsCreatingNewElement(false);
                   setShowSelectedUserOptionsPopup(false);
                   setDocumentationPage("Modifier_utilisateur");
-                  navigate("/Modifier_utilisateur")
+                  navigate("/Modifier_utilisateur");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >

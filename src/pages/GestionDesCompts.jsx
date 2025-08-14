@@ -19,6 +19,8 @@ function GestionDesCompts({
   showChooseItemToModifyMessage,
   setshowChooseItemToModifyMessage,
   showChooseItemToModifyPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     FormatDateHeure,
@@ -166,6 +168,7 @@ function GestionDesCompts({
           <div className="flex  justify-center mt-4">
             <button
               onClick={() => {
+                setIsCreatingNewElement(true);
                 setDocumentationPage("Ajouter_nouveau_compte");
                 navigate("/Ajouter_nouveau_compte");
               }}
@@ -345,6 +348,8 @@ function GestionDesCompts({
           {/*  */}
           <GestionAccountOptionPopup
             setDocumentationPage={setDocumentationPage}
+            isCreatingNewElement={isCreatingNewElement}
+            setIsCreatingNewElement={setIsCreatingNewElement}
           />
         </div>
       </div>

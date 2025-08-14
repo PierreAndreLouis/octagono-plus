@@ -7,7 +7,11 @@ import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-function CreateNewAccountPage({ setDocumentationPage }) {
+function CreateNewAccountPage({
+  setDocumentationPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
+}) {
   const {
     setError,
     scrollToTop,
@@ -15,6 +19,8 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     createAccountEnGestionAccountFonction,
     timeZoneData,
     adminPassword,
+    modifyAccountEnGestionAccountFonction,
+    currentAccountSelected,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -117,7 +123,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       (account) => account?.accountID === addNewAccountData.accountID
     );
 
-    if (accountExists) {
+    if (isCreatingNewElement && accountExists) {
       setErrorID(
         `${t(
           "Cet identifiant (accountID) est déjà utilisé. Veuillez en choisir un autre"
@@ -136,7 +142,7 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     if (inputPassword === adminPassword) {
       const accountID = addNewAccountData.accountID;
       const description = addNewAccountData.description;
-      const displayName = addNewAccountData.displayName;
+      const displayName = addNewAccountData.description;
       const contactPhone = addNewAccountData.contactPhone;
       const contactName = addNewAccountData.contactName;
       const contactEmail = addNewAccountData.contactEmail;
@@ -150,21 +156,40 @@ function CreateNewAccountPage({ setDocumentationPage }) {
       const password2 = addNewAccountData.password2;
 
       // console.log(
-      createAccountEnGestionAccountFonction(
-        accountID,
-        description,
-        displayName,
-        contactPhone,
-        notifyEmail,
-        password2,
-        isActive,
-        isAccountManager,
-        contactName,
-        contactEmail,
-        addressCity,
-        addressCountry,
-        timeZone
-      );
+
+      if (isCreatingNewElement) {
+        createAccountEnGestionAccountFonction(
+          accountID,
+          description,
+          displayName,
+          contactPhone,
+          notifyEmail,
+          password2,
+          isActive,
+          isAccountManager,
+          contactName,
+          contactEmail,
+          addressCity,
+          addressCountry,
+          timeZone
+        );
+      } else {
+        modifyAccountEnGestionAccountFonction(
+          accountID,
+          description,
+          displayName,
+          contactPhone,
+          notifyEmail,
+          password2,
+          isActive,
+          isAccountManager,
+          contactName,
+          contactEmail,
+          addressCity,
+          addressCountry,
+          timeZone
+        );
+      }
 
       navigate("/Gestion_des_comptes");
       setDocumentationPage("Gestion_des_comptes");
@@ -192,6 +217,28 @@ function CreateNewAccountPage({ setDocumentationPage }) {
     "password2",
   ];
 
+  // Pour mettre a jour les nouvelle donnee du véhicule a modifier
+  useEffect(() => {
+    if (currentAccountSelected && !isCreatingNewElement) {
+      setAddNewAccountData({
+        accountID: currentAccountSelected.accountID || "",
+        description: currentAccountSelected.description || "",
+        displayName: currentAccountSelected.displayName || "",
+        contactPhone: currentAccountSelected.contactPhone || "",
+        contactName: currentAccountSelected.contactName || "",
+        contactEmail: currentAccountSelected.contactEmail || "",
+        addressCity: currentAccountSelected.addressCity || "",
+        addressCountry: currentAccountSelected.addressCountry || "",
+        notifyEmail: currentAccountSelected.notifyEmail || "",
+        isActive: currentAccountSelected.isActive || "",
+        isAccountManager: currentAccountSelected.isAccountManager || "",
+        timeZone: currentAccountSelected.timeZone || "",
+        password: currentAccountSelected.password || "",
+        password2: currentAccountSelected.password || "",
+      });
+    }
+  }, [currentAccountSelected, isCreatingNewElement]);
+
   return (
     <div className="px-3 rounded-lg  bg-white">
       {/* Popup pour la confirmation du mot de passe */}
@@ -205,113 +252,6 @@ function CreateNewAccountPage({ setDocumentationPage }) {
         handlePasswordCheck={handlePasswordCheck}
         setIsPasswordConfirmed={setShowConfirmAddGroupeGestionPopup}
       />
-
-      {isActivePopup && (
-        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
-            id="mapType"
-          >
-            <IoClose
-              onClick={() => {
-                setIsActivePopup(false);
-              }}
-              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
-            />
-
-            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              {t("Activation du compte")}:
-            </h2>
-
-            <div
-              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewAccountData?.isActive === "true"
-                  ? "bg-gray-100 dark:bg-gray-800/70"
-                  : ""
-              }`}
-              onClick={() => {
-                setAddNewAccountData((prev) => ({
-                  ...prev,
-                  isActive: "true",
-                }));
-                setIsActivePopup(false);
-              }}
-            >
-              <p>true</p>
-            </div>
-
-            <div
-              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewAccountData?.isActive === "false"
-                  ? "bg-gray-100 dark:bg-gray-800/70"
-                  : ""
-              }`}
-              onClick={() => {
-                setAddNewAccountData((prev) => ({
-                  ...prev,
-                  isActive: "false",
-                }));
-                setIsActivePopup(false);
-              }}
-            >
-              <p>false</p>
-            </div>
-          </div>
-        </div>
-      )}
-      {isAccountManager && (
-        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
-            id="mapType"
-          >
-            <IoClose
-              onClick={() => {
-                setIsAccountManager(false);
-              }}
-              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
-            />
-
-            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              {t("Droit de manager")}:
-            </h2>
-
-            <div
-              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewAccountData?.isAccountManager === "true"
-                  ? "bg-gray-100 dark:bg-gray-800/70"
-                  : ""
-              }`}
-              onClick={() => {
-                setAddNewAccountData((prev) => ({
-                  ...prev,
-                  isAccountManager: "true",
-                }));
-                setIsAccountManager(false);
-              }}
-            >
-              <p>true</p>
-            </div>
-
-            <div
-              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewAccountData?.isAccountManager === "false"
-                  ? "bg-gray-100 dark:bg-gray-800/70"
-                  : ""
-              }`}
-              onClick={() => {
-                setAddNewAccountData((prev) => ({
-                  ...prev,
-                  isAccountManager: "false",
-                }));
-                setIsAccountManager(false);
-              }}
-            >
-              <p>false</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {showTimeZonePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
@@ -361,7 +301,9 @@ function CreateNewAccountPage({ setDocumentationPage }) {
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                {t("Ajouter un nouveau Compte")}
+                {isCreatingNewElement
+                  ? t("Ajouter un nouveau Compte")
+                  : t("Modifier le Compte")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -390,11 +332,11 @@ function CreateNewAccountPage({ setDocumentationPage }) {
                     label: `${t("Description")}`,
                     placeholder: `${t("Description")}`,
                   },
-                  {
-                    id: "displayName",
-                    label: `${t("DisplayName")}`,
-                    placeholder: `${t("DisplayName")}`,
-                  },
+                  // {
+                  //   id: "displayName",
+                  //   label: `${t("DisplayName")}`,
+                  //   placeholder: `${t("DisplayName")}`,
+                  // },
                   {
                     id: "contactPhone",
                     label: `${t("Telephone")}`,
@@ -407,19 +349,14 @@ function CreateNewAccountPage({ setDocumentationPage }) {
                   },
 
                   {
-                    id: "contactEmail",
-                    label: `${t("contactEmail")}`,
-                    placeholder: `${t("contactEmail")}`,
-                  },
-                  {
                     id: "addressCity",
                     label: `${t("addressCity")}`,
                     placeholder: `${t("addressCity")}`,
                   },
                   {
-                    id: "addressCountry",
-                    label: `${t("addressCountry")}`,
-                    placeholder: `${t("addressCountry")}`,
+                    id: "contactEmail",
+                    label: `${t("contactEmail")}`,
+                    placeholder: `${t("contactEmail")}`,
                   },
 
                   {
@@ -428,18 +365,23 @@ function CreateNewAccountPage({ setDocumentationPage }) {
                     placeholder: `${t("Email")}`,
                   },
                   {
+                    id: "addressCountry",
+                    label: `${t("addressCountry")}`,
+                    placeholder: `${t("addressCountry")}`,
+                  },
+                  {
                     id: "isActive",
                     label: `${t("isActive")}`,
                     placeholder: `${t("isActive")}`,
                   },
                   {
                     id: "isAccountManager",
-                    label: `${t("isAccountManager")}`,
+                    label: `${t("Droit de manager")}`,
                     placeholder: `${t("isAccountManager")}`,
                   },
                   {
                     id: "timeZone",
-                    label: `${t("timeZone")}`,
+                    label: `${t("Fuseau horaire")}`,
                     placeholder: "",
                   },
 
@@ -466,48 +408,87 @@ function CreateNewAccountPage({ setDocumentationPage }) {
                         )}
                     </label>
 
-                    {field.id === "isAccountManager" ? (
-                      <div
-                        onClick={() => {
-                          setIsAccountManager(true);
-                        }}
-                        className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>{addNewAccountData?.isAccountManager}</p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : field.id === "isActive" ? (
-                      <div
-                        onClick={() => {
-                          setIsActivePopup(true);
-                        }}
-                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>{addNewAccountData?.isActive}</p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : field.id === "timeZone" ? (
-                      <div
-                        onClick={() => {
-                          setShowTimeZonePopup(true);
-                        }}
-                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>{addNewAccountData?.timeZone}</p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : (
-                      <input
-                        id={field.id}
-                        name={field.id}
-                        type="text"
-                        placeholder={field.placeholder}
-                        value={addNewAccountData[field.id]}
-                        onChange={handleChange}
-                        required={requiredFields.includes(field.id)}
-                        className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                      />
-                    )}
+                    {
+                      // field.id === "isAccountManager" ? (
+                      //   <div
+                      //     onClick={() => {
+                      //       setIsAccountManager(true);
+                      //     }}
+                      //     className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      //   >
+                      //     <p>{addNewAccountData?.isAccountManager}</p>
+                      //     <FaChevronDown className="text-gray-700 mr-4" />
+                      //   </div>
+                      // ) :
+                      field.id === "isAccountManager" ? (
+                        <select
+                          id="isAccountManager"
+                          name="isAccountManager"
+                          value={addNewAccountData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className="  w-full   border-0 py-1.5 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">{t("Droit de manager")}</option>
+                          <option value="true">{t("oui")}</option>
+                          <option className="border" value="false">
+                            {t("non")}
+                          </option>
+                        </select>
+                      ) : field.id === "addressCountry" ? (
+                        <select
+                          id="addressCountry"
+                          name="addressCountry"
+                          value={addNewAccountData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">{t("Sélectionner une Pays")}</option>
+                          <option value="República Dominicana">
+                            {t("República Dominicana")}
+                          </option>
+                          <option value="Haïti">{t("Haïti")}</option>
+                        </select>
+                      ) : field.id === "isActive" ? (
+                        <select
+                          id="isActive"
+                          name="isActive"
+                          value={addNewAccountData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">{t("Activer le compte")} ?</option>
+                          <option value="true">{t("oui")}</option>
+                          <option value="false">{t("non")}</option>
+                        </select>
+                      ) : field.id === "timeZone" ? (
+                        <div
+                          onClick={() => {
+                            setShowTimeZonePopup(true);
+                          }}
+                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        >
+                          <p>{addNewAccountData?.timeZone}</p>
+                          <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : (
+                        <input
+                          id={field.id}
+                          name={field.id}
+                          type="text"
+                          placeholder={field.placeholder}
+                          value={addNewAccountData[field.id]}
+                          onChange={handleChange}
+                          disabled={
+                            !isCreatingNewElement && field.id === "accountID"
+                          }
+                          required={requiredFields.includes(field.id)}
+                          className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                        />
+                      )
+                    }
                   </div>
                 ))}
                 {errorID && (

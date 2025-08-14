@@ -13,6 +13,8 @@ function CreateNewGroupeGestion({
   documentationPage,
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     currentAccountSelected,
@@ -22,6 +24,8 @@ function CreateNewGroupeGestion({
     currentSelectedGroupeGestion,
     createNewGroupeEnGestionAccount,
     adminPassword,
+    gestionAccountData,
+    modifyGroupeEnGestionAccount,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -73,7 +77,7 @@ function CreateNewGroupeGestion({
       (groupe) => groupe?.groupID === groupID
     );
 
-    if (deviceExists) {
+    if (isCreatingNewElement && deviceExists) {
       setErrorID(
         `${t(
           "Cet identifiant (ID) est déjà utilisé. Veuillez en choisir un autre"
@@ -120,29 +124,19 @@ function CreateNewGroupeGestion({
   //
 
   useEffect(() => {
-    setDeviceSelectionnes([]);
-    setUsersSelectionnes([]);
-  }, [documentationPage]);
+    if (isCreatingNewElement) {
+      setDeviceSelectionnes([]);
+    }
+  }, [documentationPage, isCreatingNewElement]);
   //
   const deviceNonSelectionnes = allDevicesIDs?.filter(
     (deviceID) => !deviceSelectionnes.includes(deviceID)
-  );
-  const userNonSelectionnes = allUsersIDs?.filter(
-    (userID) => !usersSelectionnes.includes(userID)
   );
 
   ////////////////////////////////////////////////
 
   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
     useState(false);
-
-  // const [showUserSelectionnesPopup, setShowUSerSelectionnesPopup] =
-  //   useState(false);
-  //
-
-  useEffect(() => {
-    // console.log("deviceSelectionnes", deviceSelectionnes);
-  }, [deviceSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
@@ -151,7 +145,7 @@ function CreateNewGroupeGestion({
     if (inputPassword === adminPassword) {
       const groupID = addNewGroupeData.groupID;
       const description = addNewGroupeData.description;
-      const displayName = addNewGroupeData.displayName;
+      const displayName = addNewGroupeData.description;
       const notes = addNewGroupeData.notes;
       const workOrderID = addNewGroupeData.workOrderID;
 
@@ -159,19 +153,42 @@ function CreateNewGroupeGestion({
         currentAccountSelected?.accountID &&
         currentAccountSelected?.password
       ) {
-        createNewGroupeEnGestionAccount(
-          currentAccountSelected?.accountID,
-          "admin",
-          currentAccountSelected?.password,
+        if (isCreatingNewElement) {
+          createNewGroupeEnGestionAccount(
+            currentAccountSelected?.accountID,
+            "admin",
+            currentAccountSelected?.password,
 
-          groupID,
-          description,
-          displayName,
-          notes,
-          workOrderID,
-          deviceSelectionnes,
-          usersSelectionnes
-        );
+            groupID,
+            description,
+            displayName,
+            notes,
+            workOrderID,
+            deviceSelectionnes,
+            usersSelectionnes
+          );
+        } else {
+          modifyGroupeEnGestionAccount(
+            currentAccountSelected?.accountID ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.accountID,
+            "admin",
+            currentAccountSelected?.password ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.password,
+
+            groupID,
+            description,
+            displayName,
+            notes,
+            workOrderID,
+            //
+            deviceSelectionnes,
+            deviceNonSelectionnes
+          );
+        }
 
         navigate("/Gestion_des_groupes");
         setDocumentationPage("Gestion_des_groupes");
@@ -184,6 +201,20 @@ function CreateNewGroupeGestion({
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
+
+  // Pour mettre a jour les nouvelle donnee du véhicule a modifier
+  useEffect(() => {
+    if (currentSelectedGroupeGestion && !isCreatingNewElement) {
+      setAddNewGroupeData({
+        accountID: currentSelectedGroupeGestion.accountID || "",
+        groupID: currentSelectedGroupeGestion.groupID || "",
+        description: currentSelectedGroupeGestion.description || "",
+        displayName: currentSelectedGroupeGestion.displayName || "",
+        notes: currentSelectedGroupeGestion.notes || "",
+        workOrderID: currentSelectedGroupeGestion.workOrderID || "",
+      });
+    }
+  }, [currentSelectedGroupeGestion, isCreatingNewElement]);
 
   return (
     <div className="px-3 rounded-lg  bg-white">
@@ -199,13 +230,10 @@ function CreateNewGroupeGestion({
               }}
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
-            <p
-              // onClick={() => {
-              //   console.log("deviceNonSelectionnes", deviceNonSelectionnes);
-              // }}
-              className="mx-2 mb-3 text-center mt-4 text-lg"
-            >
-              {t("Choisis un ou plusieurs Groupe pour intégrer l'appareil")}
+            <p className="mx-2 mb-3 text-center mt-4 text-lg">
+              {t(
+                "Choisissez un ou plusieurs appareils pour affecter le groupe"
+              )}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -272,22 +300,14 @@ function CreateNewGroupeGestion({
               })}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
+            <div className="flex justify-center px-4 mb-4 mt-2">
               <button
                 onClick={() => {
                   setShowDeviceSelectionnesPopup(false);
                 }}
-                className="py-2 text-white rounded-md bg-orange-600 font-bold"
+                className="py-2 px-4 w-full text-white rounded-md bg-orange-600 font-bold"
               >
                 {t("Confirmer")}
-              </button>
-              <button
-                onClick={() => {
-                  setShowDeviceSelectionnesPopup(false);
-                }}
-                className="py-2  rounded-md bg-gray-200 font-bold"
-              >
-                {t("Annuler")}
               </button>
             </div>
           </div>
@@ -311,7 +331,9 @@ function CreateNewGroupeGestion({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6  shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                {t("Ajouter un nouveau Groupe")}
+                {isCreatingNewElement
+                  ? t("Ajouter un nouveau Groupe")
+                  : t("Modifier le Groupe")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -327,8 +349,10 @@ function CreateNewGroupeGestion({
               </button>
             </div>
 
-            <p className="mb-2">
-              {t("Choisissez des Appareils pour intégrer dans le groupe")}
+            <p className="mb-2 font-semibold text-gray-700">
+              {t(
+                "Choisissez un ou plusieurs appareils pour affecter le groupe"
+              )}
             </p>
             <div
               onClick={() => {
@@ -339,34 +363,17 @@ function CreateNewGroupeGestion({
               <h3 className="w-full text-center-- font-semibold">
                 <span>
                   {deviceSelectionnes?.length +
+                    " " +
                     `${t("Appareil")}` +
                     (deviceSelectionnes?.length > 1 ? "s " : "") +
                     " " +
-                    `${t("sélectionner")}` ||
-                    `${t("Pas d'appareil sélectionner")}`}
+                    `${t("sélectionné")}` +
+                    (deviceSelectionnes?.length > 1 ? "s " : "") ||
+                    `${t("Pas d'appareil sélectionné")}`}
                 </span>
               </h3>
               <FaChevronDown />
             </div>
-            {/* <p className="mb-2">
-              Choisissez des Utilisateurs pour avoir accès a ce groupe
-            </p> */}
-            {/* <div
-              onClick={() => {
-                setShowUSerSelectionnesPopup(true);
-              }}
-              className="w-full mb-10 cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-            >
-              <h3 className="w-full text-center-- font-semibold">
-                <span>
-                  {usersSelectionnes?.length +
-                    " Utilisateur" +
-                    (usersSelectionnes?.length > 1 ? "s " : "") +
-                    " sélectionner" || "Pas Utilisateur sélectionner"}
-                </span>
-              </h3>
-              <FaChevronDown />
-            </div> */}
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
@@ -382,11 +389,7 @@ function CreateNewGroupeGestion({
                     label: `${t("Description")}`,
                     placeholder: `${t("Description de l'appareil")}`,
                   },
-                  {
-                    id: "displayName",
-                    label: `${t("DisplayName")}`,
-                    placeholder: `${t("DisplayName")}`,
-                  },
+
                   {
                     id: "notes",
                     label: `${t("Notes")}`,
@@ -410,6 +413,7 @@ function CreateNewGroupeGestion({
                       placeholder={field.placeholder}
                       value={addNewGroupeData[field.id]}
                       onChange={handleChange}
+                      disabled={!isCreatingNewElement && field.id === "groupID"}
                       required
                       className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                     />

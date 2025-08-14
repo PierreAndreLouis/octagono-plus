@@ -345,7 +345,7 @@ function HistoriquePage() {
   }, [vehicles]);
 
   const centerOnFirstMarker = () => {
-    if (mapRef.current && vehicles.length > 0) {
+    if (mapRef.current && véhiculeHistoriqueDetails.length > 0) {
       const { lastValidLatitude, lastValidLongitude } = vehiclesRef.current[0];
       mapRef.current.setView([lastValidLatitude, lastValidLongitude], 13);
       console.log("centrer la carte 33333333333333333333333333333333333333333");
@@ -586,11 +586,15 @@ function HistoriquePage() {
   //
   //
 
+  const [isFetchFromUpdateAuro, setIsFetchFromUpdateAuro] = useState(false);
+  const [currentDeviceToAutoUpdate, setCurrentDeviceToAutoUpdate] = useState();
+
   // Recherche du véhicule correspondant dans la liste
-  const handleVehicleClick = (véhicule) => {
+  const handleVehicleClick = (véhicule, fromUpdateAuto = false) => {
     const deviceID = véhicule?.deviceID;
     console.log("véhicule", véhicule);
 
+    setCurrentDeviceToAutoUpdate(véhicule); // Définit le véhicule actuel
     setCurrentVéhicule(véhicule); // Définit le véhicule actuel
 
     if (isDashboardHomePage) {
@@ -605,10 +609,13 @@ function HistoriquePage() {
               (account) => account.accountID === véhicule?.accountID
             )?.accountID,
           "admin",
+
           currentAccountSelected?.password ||
             gestionAccountData.find(
               (account) => account.accountID === véhicule?.accountID
-            )?.password
+            )?.password,
+
+          fromUpdateAuto
         );
         setAppliedCheckboxes(checkboxes);
       } else {
@@ -621,38 +628,69 @@ function HistoriquePage() {
             gestionAccountData.find(
               (account) => account.accountID === véhicule?.accountID
             )?.accountID,
+
           "admin",
+
           currentAccountSelected?.password ||
             gestionAccountData.find(
               (account) => account.accountID === véhicule?.accountID
-            )?.password
+            )?.password,
+
+          fromUpdateAuto
         );
         setAppliedCheckboxes(checkboxes);
       }
     } else {
       if (timeFrom && timeTo) {
-        fetchHistoriqueVehicleDetails(deviceID, timeFrom, timeTo);
+        fetchHistoriqueVehicleDetails(
+          deviceID,
+          timeFrom,
+          timeTo,
+          undefined,
+          undefined,
+          undefined,
+          fromUpdateAuto
+        );
         setAppliedCheckboxes(checkboxes);
       } else {
-        fetchHistoriqueVehicleDetails(deviceID, timeFromFetch, timeToFetch);
+        fetchHistoriqueVehicleDetails(
+          deviceID,
+          timeFromFetch,
+          timeToFetch,
+          undefined,
+          undefined,
+          undefined,
+          fromUpdateAuto
+        );
         setAppliedCheckboxes(checkboxes);
       }
     }
 
     // }
-    setShowVehiculeListe(!showVehiculeListe);
-    centerOnFirstMarker();
+    setShowVehiculeListe(false);
 
-    setTimeout(() => {
-      centerOnFirstMarker();
-    }, 500);
+    if (fromUpdateAuto) {
+      setIsFetchFromUpdateAuro(true);
+    } else {
+      setIsFetchFromUpdateAuro(false);
+    }
+    // centerOnFirstMarker();
+
+    // setTimeout(() => {
+    //   centerOnFirstMarker();
+    //   console.log("centrage auto......................")
+
+    // }, 500);
   };
 
   useEffect(() => {
+    if (isFetchFromUpdateAuro) return;
     setTimeout(() => {
       centerOnFirstMarker();
-    }, 1000);
-  }, [véhiculeHistoriqueDetails]);
+      console.log("centrage auto......................");
+    }, 500);
+  }, [véhiculeHistoriqueDetails, isFetchFromUpdateAuro]);
+
   //
   //
   //
@@ -668,7 +706,7 @@ function HistoriquePage() {
   }, [currentVéhicule]);
 
   return (
-    <div className="p-4 min-h-screen relative   bg-white flex flex-col gap-4  rounded-lg px-4 ">
+    <div className="p-4 min-h-screen relative   bg-white flex flex-col gap-4  rounded-lg px-2 ">
       <div className="z-50"></div>
 
       {/* Pour choisir une date */}
@@ -700,8 +738,8 @@ function HistoriquePage() {
       )}
 
       {/* entête de page pour l'historique */}
-      <div className="mb-6- mt-4- relative">
-        <div className={`absolute z-[1] left-0 right-0 `}>
+      <div className=" relative">
+        <div className={`absolute z-[1] left-0 right-0 -top-[1rem]`}>
           <HistoriqueHeader
             setShowHistoriqueInMap={setShowHistoriqueInMap}
             showHistoriqueInMap={showHistoriqueInMap}
@@ -793,6 +831,8 @@ function HistoriquePage() {
               showHistoriqueInMap={showHistoriqueInMap}
               openGoogleMaps={openGoogleMaps}
               composantLocationPage={"historique"}
+              handleVehicleClick={handleVehicleClick}
+              currentDeviceToAutoUpdate={currentDeviceToAutoUpdate}
             />
           </div>
         </div>

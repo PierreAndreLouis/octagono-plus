@@ -799,7 +799,7 @@ function SideBarSysadmin({
         {/* 
         
         */}
-        {isDashboardHomePage && !readDocumentation && (
+        {isDashboardHomePage && !currentAccountSelected && (
           // {!currentAccountSelected && isDashboardHomePage && (
           <Link
             to="/Gestion_des_comptes"
@@ -841,38 +841,43 @@ function SideBarSysadmin({
           {/*  */}
           {/*  */}
           {/*admi_ Dashboard */}
-          {account && username && adminAccount === "sysadmin" && (
-            <Link
-              to="/Dashboard"
-              className="ajouter-appareil-container transition-all hover:border-b  "
-            >
-              <div
-                onClick={() => {
-                  setIsDashboardHomePage(!isDashboardHomePage);
-                  scrollToTop();
-                  setDocumentationPage("Dashboard");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                }}
-                className={`${
-                  documentationPage === "Admin_Dashboard" ? "bg-orange-50" : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+          {account &&
+            username &&
+            adminAccount === "sysadmin" &&
+            !currentAccountSelected && (
+              <Link
+                to="/Dashboard"
+                className="ajouter-appareil-container transition-all hover:border-b  "
               >
-                {isDashboardHomePage ? (
-                  <FaUserCircle className="text-xl min-w-[1.5rem] text-orange-600" />
-                ) : (
-                  <MdOutlineSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
-                )}
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {isDashboardHomePage
-                      ? t("Mode Utilisateur")
-                      : t("sysadmin Dashboard")}
-                  </p>
+                <div
+                  onClick={() => {
+                    setIsDashboardHomePage(!isDashboardHomePage);
+                    scrollToTop();
+                    setDocumentationPage("Dashboard");
+                    closeSideBar();
+                    setShowSideBar2(false);
+                  }}
+                  className={`${
+                    documentationPage === "Admin_Dashboard"
+                      ? "bg-orange-50"
+                      : ""
+                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                >
+                  {isDashboardHomePage ? (
+                    <FaUserCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+                  ) : (
+                    <MdOutlineSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
+                  )}
+                  <div className="flex w-full justify-between">
+                    <p className="text-gray-600 font-semibold">
+                      {isDashboardHomePage
+                        ? t("Mode Utilisateur")
+                        : t("sysadmin Dashboard")}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          )}
+              </Link>
+            )}
 
           {/*  */}
           {/*  */}
@@ -949,100 +954,7 @@ function SideBarSysadmin({
           {/*  */}
           {/*  */}
           {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/* Gestion_des_utilisateurs */}
-          {isDashboardHomePage && (
-            <Link
-              to="/Gestion_des_utilisateurs"
-              className="ajouter-appareil-container transition-all hover:border-b  "
-            >
-              <div
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesUsers(
-                      currentAccountSelected?.accountUsers
-                    );
-                  } else {
-                    setListeGestionDesUsers(accountUsers);
-                  }
-                  scrollToTop();
-                  setDocumentationPage("Gestion_des_utilisateurs");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                }}
-                className={`${
-                  documentationPage === "Gestion_des_utilisateurs"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {t("Gestion des Utilisateurs")} (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountUsers?.length
-                      : accountUsers?.length}
-                    )
-                  </p>
-                </div>
-              </div>
-            </Link>
-          )}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/* Gestion_des_groupes */}
-          {isDashboardHomePage && (
-            <Link
-              to="/Gestion_des_groupes"
-              className="ajouter-appareil-container transition-all hover:border-b  "
-            >
-              <div
-                onClick={() => {
-                  if (currentAccountSelected) {
-                    setListeGestionDesGroupe(
-                      currentAccountSelected?.accountGroupes
-                    );
 
-                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                  } else {
-                    setListeGestionDesGroupe(accountGroupes);
-
-                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
-                  }
-                  scrollToTop();
-                  setDocumentationPage("Gestion_des_groupes");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                }}
-                className={`${
-                  documentationPage === "Gestion_des_groupes"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {t("Gestion des Groupe")} (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountGroupes?.length
-                      : accountGroupes?.length}
-                    )
-                  </p>
-                </div>
-              </div>
-            </Link>
-          )}
           {/*  */}
           {/*  */}
           {/*  */}
@@ -1143,6 +1055,105 @@ function SideBarSysadmin({
                 <MdOutlineStickyNote2 className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">{t("Rapport")}</p>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Gestion_des_utilisateurs */}
+          {isDashboardHomePage && (
+            <Link
+              to="/Gestion_des_utilisateurs"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
+              <div
+                onClick={() => {
+                  if (currentAccountSelected) {
+                    setListeGestionDesUsers(
+                      currentAccountSelected?.accountUsers
+                    );
+                  } else {
+                    setListeGestionDesUsers(accountUsers);
+                  }
+                  scrollToTop();
+                  setDocumentationPage("Gestion_des_utilisateurs");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                }}
+                className={`${
+                  documentationPage === "Gestion_des_utilisateurs"
+                    ? "bg-orange-50"
+                    : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <FaUsers className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    {t("Gestion des Utilisateurs")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountUsers?.length
+                      : accountUsers?.length}
+                    )
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* Gestion_des_groupes */}
+          {isDashboardHomePage && (
+            <Link
+              to="/Gestion_des_groupes"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
+              <div
+                onClick={() => {
+                  if (currentAccountSelected) {
+                    setListeGestionDesGroupe(
+                      currentAccountSelected?.accountGroupes
+                    );
+
+                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+                  } else {
+                    setListeGestionDesGroupe(accountGroupes);
+
+                    setListeGestionDesGroupeTitre(`${t("Tous les Groupes")}`);
+                  }
+                  scrollToTop();
+                  setDocumentationPage("Gestion_des_groupes");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                }}
+                className={`${
+                  documentationPage === "Gestion_des_groupes"
+                    ? "bg-orange-50"
+                    : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+              >
+                <PiIntersectThreeBold className="text-xl min-w-[1.5rem] text-orange-600" />
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    {t("Gestion des Groupe")} (
+                    {currentAccountSelected
+                      ? currentAccountSelected?.accountGroupes?.length
+                      : accountGroupes?.length}
+                    )
+                  </p>
                 </div>
               </div>
             </Link>

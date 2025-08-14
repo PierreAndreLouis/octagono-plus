@@ -695,7 +695,9 @@ function CreateNewRole({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                {t("Créer un nouveau Role")}
+                {currentSelectedRole
+                  ? t("Modifier un nouveau Role")
+                  : t("Créer un nouveau Role")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -810,35 +812,6 @@ function CreateNewRole({
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
-                      ) : // : field.id === "deviceID" ? (
-                      //   <div
-                      //     onClick={() => {
-                      //       setShowdeviceSelectionnePopup(true);
-                      //     }}
-                      //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      //   >
-                      //     <p>
-                      //       {addNewRoleData?.imeiNumber === "*"
-                      //         ? `${t("Tous")}`
-                      //         : addNewRoleData?.imeiNumber}
-                      //     </p>
-                      //     <FaChevronDown className="text-gray-700 mr-4" />
-                      //   </div>
-                      // )
-                      field.id === "isActive" ? (
-                        <div
-                          onClick={() => {
-                            setShowIsUserActivePopup(true);
-                          }}
-                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                        >
-                          <p>
-                            {addNewRoleData?.isActive === "1"
-                              ? "true"
-                              : "false"}
-                          </p>
-                          <FaChevronDown className="text-gray-700 mr-4" />
-                        </div>
                       ) : field.id === "emailText" ? (
                         <textarea
                           id={field.id}
@@ -850,6 +823,19 @@ function CreateNewRole({
                           required
                           className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
+                      ) : field.id === "isActive" ? (
+                        <select
+                          id="isActive"
+                          name="isActive"
+                          value={addNewRoleData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">{t("Activer le Role")} ?</option>
+                          <option value="1">{t("oui")}</option>
+                          <option value="0">{t("non")}</option>
+                        </select>
                       ) : field.id === "groupID" ? (
                         <div
                           onClick={() => {

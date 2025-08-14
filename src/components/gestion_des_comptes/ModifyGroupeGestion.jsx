@@ -1,13 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
- 
+
 import { DataContext } from "../../context/DataContext";
 import ConfirmationPassword from "../Reutilisable/ConfirmationPassword";
- import { MdErrorOutline } from "react-icons/md";
-import {
-  FaArrowLeft,
-  FaCar,
-  FaChevronDown,
- } from "react-icons/fa";
+import { MdErrorOutline } from "react-icons/md";
+import { FaArrowLeft, FaCar, FaChevronDown } from "react-icons/fa";
 import { IoMdCheckboxOutline, IoMdSquareOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
@@ -17,7 +13,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
   const {
     currentAccountSelected,
     setError,
-     scrollToTop,
+    scrollToTop,
     FormatDateHeure,
     currentSelectedGroupeGestion,
     modifyGroupeEnGestionAccount,
@@ -76,48 +72,22 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
       (device) => device?.deviceID
     );
 
-  const userDuSelectedGroupe = currentAccountSelected?.accountUsers
-    ?.filter((user) => {
-      const groupes = user?.userGroupes || [];
-      return groupes?.some(
-        (group) => group?.groupID === currentSelectedGroupeGestion?.groupID
-      );
-    })
-    ?.map((user) => user?.userID);
-  //
-
   const allDevicesIDs = currentAccountSelected?.accountDevices?.map(
     (device) => device?.deviceID
   );
 
-  const allUsersIDs = currentAccountSelected?.accountUsers?.map(
-    (user) => user?.userID
-  );
-  //
   const [deviceSelectionnes, setDeviceSelectionnes] = useState(
     deviceDuSelectedGroupe || []
-  );
-
-  const [usersSelectionnes, setUsersSelectionnes] = useState(
-    userDuSelectedGroupe || []
   );
 
   const deviceNonSelectionnes = allDevicesIDs?.filter(
     (deviceID) => !deviceSelectionnes.includes(deviceID)
   );
- 
+
   //
 
   const [showDeviceSelectionnesPopup, setShowDeviceSelectionnesPopup] =
     useState(false);
-
-  // const [showUserSelectionnesPopup, setShowUSerSelectionnesPopup] =
-  //   useState(false);
-  //
-
-  useEffect(() => {
-  
-  }, [deviceSelectionnes, usersSelectionnes]);
 
   // fonction pour lancer la requête d'ajout de vehicle
   const handlePasswordCheck = (event) => {
@@ -160,7 +130,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
           deviceNonSelectionnes
         );
         setDocumentationPage("Gestion_des_groupes");
-        navigate("/Gestion_des_groupes")
+        navigate("/Gestion_des_groupes");
       }
 
       setShowConfirmModifyGroupeGestionPopup(false);
@@ -320,8 +290,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_groupes");
-        navigate("/Gestion_des_groupes")
-
+                  navigate("/Gestion_des_groupes");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -437,7 +406,7 @@ function ModifyGroupeGestion({ setDocumentationPage }) {
                   <button
                     onClick={() => {
                       setDocumentationPage("Gestion_des_groupes");
-        navigate("/Gestion_des_groupes")
+                      navigate("/Gestion_des_groupes");
 
                       scrollToTop();
                     }}

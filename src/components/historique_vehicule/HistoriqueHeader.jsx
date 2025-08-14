@@ -44,9 +44,21 @@ function HistoriqueHeader({
 
   return (
     <>
+      {véhiculeHistoriqueDetails?.length > 0 && (
+        <p className="font-bold mb-1 max-w-[45rem] flex flex-wrap items-center text-[.75rem] sm:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3  py-1 mt-0.5 mx-auto">
+          <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
+          <span>
+            {FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)?.date}
+            {" / "}
+            {
+              FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)?.time
+            }{" "}
+          </span>
+        </p>
+      )}
       <div className="flex   flex-col w-full">
         <div className="w-full ">
-          <div className="flex  mx-auto relative justify-between px-0 max-w-[45rem] w-[100vw]-- w-full items-center-- gap-3 w-full--">
+          <div className="flex  mx-auto relative justify-between px-0  md:max-w-[45rem]  w-full items-center-- gap-1 w-full--">
             <div
               onClick={() => {
                 setShowHistoriqueInMap(!showHistoriqueInMap);
@@ -60,7 +72,7 @@ function HistoriqueHeader({
                       {
                         name: "offset",
                         options: {
-                          offset: [0, -10], // Décalage horizontal et vertical
+                          offset: [0, 10], // Décalage horizontal et vertical
                         },
                       },
                       {
@@ -75,8 +87,8 @@ function HistoriqueHeader({
                   }}
                   title={`${t("Voir l'historique du véhicule")}`}
                 >
-                  <div className="cursor-pointer">
-                    <IoStatsChart className="text-xl text-orange-600 " />
+                  <div className="cursor-pointer flex-shrink-0">
+                    <IoStatsChart className="text-xl text-orange-600  cursor-pointer" />
                   </div>
                 </Tooltip>
               ) : (
@@ -86,7 +98,7 @@ function HistoriqueHeader({
                       {
                         name: "offset",
                         options: {
-                          offset: [0, -10], // Décalage horizontal et vertical
+                          offset: [0, 10], // Décalage horizontal et vertical
                         },
                       },
                       {
@@ -102,23 +114,21 @@ function HistoriqueHeader({
                   title={`${t("Voir le trajet du véhicule")}`}
                 >
                   <img
-                    className="w-[1.7rem]"
+                    className="w-[1.7rem] flex-shrink-0 cursor-pointer"
                     src="/img/cars/parcoure.png"
                     alt=""
                   />
                 </Tooltip>
               )}
-              {/* <div className="absolute z-10 top-[3em] left-0 w-[20rem] p-2 border text-gray-6 bg-orange-50 rounded-lg">
-            hover to display me !{" "}
-          </div> */}
             </div>
+
             <Tooltip
               PopperProps={{
                 modifiers: [
                   {
                     name: "offset",
                     options: {
-                      offset: [0, -10], // Décalage horizontal et vertical
+                      offset: [0, 10], // Décalage horizontal et vertical
                     },
                   },
                   {
@@ -137,19 +147,13 @@ function HistoriqueHeader({
                 onClick={() => {
                   setShowVehiculeListe(!showVehiculeListe);
                 }}
-                className="relative w-full "
+                className="relative flex-1 min-w-0 "
               >
                 <div
                   className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
                  px-3 py-2 bg-orange-50 shadow-xl text-center"
                 >
-                  <p
-                    // className="text-start w-[50%] overflow-hidden whitespace-nowrap text-ellipsis"
-                    className="md:hidden"
-                  >
-                    {t("Choisissez un véhicule")}
-                  </p>
-                  <p className="hidden md:block notranslate">
+                  <p className="hidden-- md:block truncate">
                     {currentVéhicule?.description ||
                       `${t("Choisissez un véhicule")}`}
                   </p>
@@ -163,7 +167,7 @@ function HistoriqueHeader({
                   {
                     name: "offset",
                     options: {
-                      offset: [0, -10], // Décalage horizontal et vertical
+                      offset: [0, 10], // Décalage horizontal et vertical
                     },
                   },
                   {
@@ -180,9 +184,9 @@ function HistoriqueHeader({
             >
               <div
                 onClick={() => setshowFilter(!showFilter)}
-                className="min-w-10 cursor-pointer border rounded-md shadow-xl md:border-orange-200 flex justify-center items-center py-2 bg-orange-50  dark:bg-gray-900/50 dark:border-gray-300/30"
+                className="min-w-10  flex-shrink-0 cursor-pointer border rounded-md shadow-xl md:border-orange-200 flex justify-center items-center py-2 bg-orange-50  dark:bg-gray-900/50 dark:border-gray-300/30"
               >
-                <BsFilterRight className="text-2xl text-orange-600 " />
+                <BsFilterRight className="text-2xl text-orange-600  cursor-pointer" />
               </div>
             </Tooltip>
           </div>
@@ -191,28 +195,12 @@ function HistoriqueHeader({
           {" "}
           La maison de Monsieur Pedro
         </div> */}
-        <div className="px-2 flex justify-center items-center py-1-- flex-col">
-          <p className="font-semibold notranslate bg-white px-3 text-orange-600 rounded-lg text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
+        {/* <div className="px-2 flex justify-center items-center py-1-- flex-col">
+          <p className="font-semibold max-w-[95vw] notranslate bg-white px-3 text-orange-600 rounded-lg text-center md:hidden mt-1 dark:text-orange-500 overflow-hidden whitespace-nowrap text-ellipsis">
             {" "}
             {(showHistoriqueInMap && currentVéhicule?.description) || ""}
           </p>
-          {véhiculeHistoriqueDetails?.length > 0 && (
-            <p className="font-bold  flex flex-wrap items-center text-[.75rem] sm:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3 py-1 mt-0.5 mx-auto">
-              <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
-              <span>
-                {
-                  FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)
-                    ?.date
-                }
-                {" / "}
-                {
-                  FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)
-                    ?.time
-                }{" "}
-              </span>
-            </p>
-          )}
-        </div>
+        </div> */}
       </div>
     </>
   );

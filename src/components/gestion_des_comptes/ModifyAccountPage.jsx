@@ -12,7 +12,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
     currentAccountSelected,
     setError,
     scrollToTop,
-  
+
     timeZoneData,
     modifyAccountEnGestionAccountFonction,
     adminPassword,
@@ -114,9 +114,6 @@ function ModifyAccountPage({ setDocumentationPage }) {
       return;
     }
 
- 
-    
-
     setShowConfirmAddGroupeGestionPopup(true);
   };
 
@@ -127,7 +124,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
     if (inputPassword === adminPassword) {
       const accountID = addNewAccountData.accountID;
       const description = addNewAccountData.description;
-      const displayName = addNewAccountData.displayName;
+      const displayName = addNewAccountData.description;
       const contactPhone = addNewAccountData.contactPhone;
       const contactName = addNewAccountData.contactName;
       const contactEmail = addNewAccountData.contactEmail;
@@ -158,7 +155,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
       );
 
       setDocumentationPage("Gestion_des_comptes");
-      navigate("/Gestion_des_comptes")
+      navigate("/Gestion_des_comptes");
       // }
       setShowConfirmAddGroupeGestionPopup(false);
       setErrorMessage("");
@@ -382,8 +379,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_comptes");
-      navigate("/Gestion_des_comptes")
-
+                  navigate("/Gestion_des_comptes");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -405,11 +401,11 @@ function ModifyAccountPage({ setDocumentationPage }) {
                     label: `${t("Description")}`,
                     placeholder: `${t("Description")}`,
                   },
-                  {
-                    id: "displayName",
-                    label: `${t("DisplayName")}`,
-                    placeholder: `${t("DisplayName")}`,
-                  },
+                  // {
+                  //   id: "displayName",
+                  //   label: `${t("DisplayName")}`,
+                  //   placeholder: `${t("DisplayName")}`,
+                  // },
                   {
                     id: "contactPhone",
                     label: `${t("Telephone")}`,
@@ -544,7 +540,7 @@ function ModifyAccountPage({ setDocumentationPage }) {
                   <button
                     onClick={() => {
                       setDocumentationPage("Gestion_des_comptes");
-      navigate("/Gestion_des_comptes")
+                      navigate("/Gestion_des_comptes");
 
                       scrollToTop();
                     }}

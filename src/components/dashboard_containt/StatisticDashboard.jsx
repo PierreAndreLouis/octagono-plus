@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
 import { FaChevronDown } from "react-icons/fa";
@@ -35,12 +35,17 @@ function StatisticDashboard({
     allDevices,
     addVehiculeDetailsFonction,
     véhiculeDetails,
+    timeLeftBeforeAutoUpdate,
+    resetTimerForAutoUpdate,
+    updaterInterval,
+    setTimeLeftBeforeAutoUpdate,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
   const [isDeviceEnDeplacement, setIsDeviceEnDeplacement] = useState(false);
   const [isDeviceEnStationnement, setIsDeviceEnStationnement] = useState(true);
   //
+
   return (
     <div className="">
       <div className="w-full h-full shadow-lg shadow-black/5 bg-white md:rounded-lg p-4 ">
@@ -336,40 +341,59 @@ function StatisticDashboard({
             </span>
           </p>
         )}
-        <Tooltip
-          PopperProps={{
-            modifiers: [
-              {
-                name: "offset",
-                options: {
-                  offset: [0, -10], // Décalage horizontal et vertical
-                },
-              },
-              {
-                name: "zIndex",
-                enabled: true,
-                phase: "write",
-                fn: ({ state }) => {
-                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                },
-              },
-            ],
-          }}
-          title={`${t("Mettre a jour les donnes")}`}
-        >
-          <div
-            onClick={() => {
-              fetchNewDataDevices();
-            }}
-            className={`${
-              isLoading2
-                ? "animate-spin rounded-full min-w-[2.3rem]"
-                : "rounded-lg min-w-[3.5rem]"
-            } p-2 my-0.5 mr-1.5  flex justify-center items-center  bg-orange-500  text-white    translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
+
+        <div className="min-w-[4.9rem]">
+          {/* <p
+            className="font-semibold"
+            onClick={() => resetTimerForAutoUpdate(30 * 60 * 1000)}
           >
-            <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
-          </div>
-        </Tooltip>
+            {Math.floor(timeLeftBeforeAutoUpdate / 60)}:
+            {timeLeftBeforeAutoUpdate % 60}
+          </p> */}
+
+          <Tooltip
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, -10], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
+            title={`${t("Mettre a jour les donnes")}`}
+          >
+            <div
+              onClick={() => {
+                resetTimerForAutoUpdate();
+                fetchNewDataDevices();
+              }}
+              className={`rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
+            >
+              <p
+                className="font-bold"
+                // onClick={() => resetTimerForAutoUpdate(30 * 60 * 1000)}
+              >
+                {Math.floor(timeLeftBeforeAutoUpdate / 60)}:
+                {timeLeftBeforeAutoUpdate % 60}
+              </p>
+              <MdUpdate
+                className={`${
+                  isLoading2 ? "animate-spin " : ""
+                }  sm:text-[1.35rem]  text-[1.2rem]  `}
+              />
+            </div>
+          </Tooltip>
+        </div>
         {/* </div>{" "} */}
       </div>
     </div>

@@ -26,6 +26,8 @@ function ListeDesVehiculesGestion({
   setStatisticFilteredDeviceListeText,
   showChooseAppareilToModifyMessage,
   setShowChooseAppareilToModifyMessage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 
   /////////////////////
   showChooseItemToModifyMessage,
@@ -236,6 +238,11 @@ function ListeDesVehiculesGestion({
   };
 
   ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
 
   const [openGroups, setOpenGroups] = useState({});
   const [visibleCounts, setVisibleCounts] = useState({});
@@ -280,19 +287,11 @@ function ListeDesVehiculesGestion({
     }
   }, [currentAccountSelected, documentationPage, listeGestionDesVehicules]);
 
-  // useEffect(() => {
-  //   if (sortedGroups.length > 0) {
-  //     const firstAccountID = sortedGroups[0][0];
-  //     setOpenGroups((prev) => ({
-  //       ...prev,
-  //       [firstAccountID]: true,
-  //     }));
-  //     setVisibleCounts((prev) => ({
-  //       ...prev,
-  //       [firstAccountID]: 1,
-  //     }));
-  //   }
-  // }, [currentAccountSelected]);
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
   function getMostRecentTimestamp(data) {
     if (data) {
@@ -327,11 +326,7 @@ function ListeDesVehiculesGestion({
 
   const [moveDeviceToOtherCompte, setMoveDeviceToOtherCompte] = useState(false);
 
-  const [deleteAppareilPopup, setDeleteAppareilPopup] = useState(false);
-
-  // const [inputPassword, setInputPassword] = useState("");
-  // const [errorIncorrectPassword, setErrorIncorrectPassword] = useState("");
-
+ 
   const [errorMessage, setErrorMessage] = useState("");
 
   const moveDeviceToOtherCompteFonction = (e) => {
@@ -412,6 +407,8 @@ function ListeDesVehiculesGestion({
         setChooseOneAccountToContinue={setChooseOneAccountToContinue}
         setChooseOtherAccountGestion={setChooseOtherAccountGestion}
         setMoveDeviceToOtherCompte={setMoveDeviceToOtherCompte}
+        isCreatingNewElement={isCreatingNewElement}
+        setIsCreatingNewElement={setIsCreatingNewElement}
       />
 
       <div className="px-2 pb-40 bg-white pt-10 rounded-lg">
@@ -512,12 +509,11 @@ function ListeDesVehiculesGestion({
                     if (!currentAccountSelected) {
                       setChooseOneAccountToContinue(true);
                       setChooseOtherAccountGestion(true);
-                      setDocumentationPage("Ajouter_nouveau_appareil");
-                      navigate("/Ajouter_nouveau_appareil");
-                    } else {
-                      setDocumentationPage("Ajouter_nouveau_appareil");
-                      navigate("/Ajouter_nouveau_appareil");
                     }
+                    setDocumentationPage("Ajouter_nouveau_appareil");
+                    navigate("/Ajouter_nouveau_appareil");
+
+                    setIsCreatingNewElement(true);
                   }}
                   className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
                 >
@@ -574,7 +570,9 @@ function ListeDesVehiculesGestion({
                   id="search"
                   name="search"
                   type="search"
-                  placeholder={`${t("Recherche un appareil")}`}
+                  placeholder={`${t(
+                    "Recherche un appareil par description, compte, IMEI, telephone"
+                  )}`}
                   required
                   value={searchTermInput}
                   onChange={(e) => {
@@ -738,6 +736,11 @@ function ListeDesVehiculesGestion({
                     {devices
                       ?.slice(0, (visibleCounts[accountID] || 1) * itemsPerPage)
                       ?.map((device, index) => {
+
+                        // 
+                        // 
+                        // 
+                        // 
                         const hasDetails = device?.véhiculeDetails?.length > 0;
                         const lastDetail = device?.véhiculeDetails?.[0];
                         const speed = lastDetail?.speedKPH ?? 0;
@@ -924,7 +927,7 @@ function ListeDesVehiculesGestion({
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
-                                        {t("Telephone")} :
+                                        {t("Numéro de la carte SIM")} :
                                       </p>
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                         {device?.simPhoneNumber}
@@ -958,15 +961,6 @@ function ListeDesVehiculesGestion({
                                               device?.lastOdometerKM
                                             ).toFixed(0) + `${t("km")}`
                                           : `${t("Non disponible")}`}{" "}
-                                      </span>
-                                    </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
-                                      <p className="font-bold">
-                                        {t("Numéro de la carte SIM")} :
-                                      </p>
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {/* 50941070132 */}
-                                        {/* {FormatDateHeure(geozone?.lastUpdateTime).time} */}
                                       </span>
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">

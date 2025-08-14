@@ -28,6 +28,8 @@ function GestionAppareilOptionPopup({
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
   setMoveDeviceToOtherCompte,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     currentSelectedUserToConnect,
@@ -47,6 +49,8 @@ function GestionAppareilOptionPopup({
     currentVéhicule,
     deleteVehicleEnGestionAccount,
     adminAccount,
+    fetchVehicleDetails,
+    updateAppareilsEtGeofencesPourCarte,
 
     envoyerSMS,
     smsError,
@@ -142,6 +146,8 @@ function GestionAppareilOptionPopup({
       );
     }
   };
+
+  const fromSelectOnPosition = true;
 
   return (
     <div>
@@ -452,6 +458,13 @@ function GestionAppareilOptionPopup({
                   setSelectedVehicleToShowInMap(
                     currentSelectedDeviceGestion?.deviceID
                   );
+
+                  fetchVehicleDetails(
+                    currentSelectedDeviceGestion,
+                    fromSelectOnPosition
+                  );
+                  updateAppareilsEtGeofencesPourCarte();
+                  setCurrentVéhicule(currentSelectedDeviceGestion);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -567,7 +580,7 @@ function GestionAppareilOptionPopup({
                   onClick={() => {
                     setDocumentationPage("Modifier_appareil");
                     navigate("/Modifier_appareil");
-
+                    setIsCreatingNewElement(false);
                     setShowOptionAppareilOptionPopup(false);
                   }}
                   className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"

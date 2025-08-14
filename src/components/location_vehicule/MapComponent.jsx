@@ -39,9 +39,11 @@ L.Icon.Default.mergeOptions({
 
 function MapComponent({
   mapType,
-  fromHistorique,
+  fromHistorique = "false",
   fromRapportGroupe,
   setDocumentationPage,
+  handleVehicleClick,
+  isFetchFromUpdateAuro,
 }) {
   const {
     selectedVehicleToShowInMap,
@@ -70,6 +72,9 @@ function MapComponent({
     addVehiculeDetailsFonction,
     véhiculeHistoriqueDetails,
     selectedVehicleHistoriqueToShowInMap,
+    fromSelectOnPositionValue,
+    setFromSelectOnPositionValue,
+    currentVéhicule,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
@@ -143,25 +148,71 @@ function MapComponent({
     historiqueSelectedLocationIndex,
   ]);
 
+  const [selectDeviceInSearch, setSelectDeviceInSearch] = useState();
+
+  useEffect(() => {
+    if (!fromSelectOnPositionValue?.length) return;
+
+    const filtered = véhiculeData?.filter(
+      (v) => v.deviceID === selectedVehicleToShowInMap
+    );
+
+    if (filtered.length === 0) return;
+
+    const updatedDevice = {
+      ...filtered[0],
+      lastValidLatitude: fromSelectOnPositionValue[0].latitude,
+      lastValidLongitude: fromSelectOnPositionValue[0].longitude,
+      speedKPH: fromSelectOnPositionValue[0].speedKPH,
+      timestamp: fromSelectOnPositionValue[0].timestamp,
+      heading: fromSelectOnPositionValue[0].heading,
+      address: fromSelectOnPositionValue[0].address,
+    };
+
+    console.log(
+      "update 1111111111",
+      FormatDateHeure(fromSelectOnPositionValue?.[0]?.timestamp)?.time
+    );
+    console.log(
+      "old 22222222",
+      FormatDateHeure(selectDeviceInSearch?.[0]?.timestamp)?.time
+    );
+
+    setSelectDeviceInSearch([updatedDevice]);
+
+    console.log("updatedDevice ------------------", updatedDevice);
+    // onClickVehicle([updatedDevice]);
+  }, [fromSelectOnPositionValue, selectedVehicleToShowInMap, véhiculeData]);
+
+  useEffect(() => {
+    console.log("77777777777777", selectDeviceInSearch);
+    console.log("4444444444444444", selectDeviceInSearch?.[0]);
+    onClickVehicle(selectDeviceInSearch?.[0]);
+  }, [selectDeviceInSearch]);
+
   let vehicles;
 
   if (historiqueSelectedLocationIndex != null && véhiculeHistoriqueUnique) {
     vehicles = [véhiculeHistoriqueUnique];
   } else if (selectedVehicleToShowInMap) {
-    vehicles = véhiculeData.filter(
-      (v) => v.deviceID === selectedVehicleToShowInMap
-    );
+    vehicles = selectDeviceInSearch;
+
+    // véhiculeData.filter(
+    //   (v) => v.deviceID === selectedVehicleToShowInMap
+    // );
   } else {
     vehicles = véhiculeData;
   }
 
   // pour centrer la carter sur la position sélectionner
   useEffect(() => {
+    if (isFetchFromUpdateAuro) return;
     const timeoutId = setTimeout(() => {
+      // if (mapRef.current) {
       if (mapRef.current && vehicles?.length) {
         if (selectedVehicleToShowInMap) {
           // Si un véhicule est sélectionné, centrer sur lui
-          const selectedVehicleData = vehicles.find(
+          const selectedVehicleData = vehicles?.find(
             (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap
           );
 
@@ -184,7 +235,7 @@ function MapComponent({
     }, 500);
 
     return () => clearTimeout(timeoutId); // Nettoyer le timeout au démontage du composant
-  }, [selectedVehicleToShowInMap]);
+  }, [selectedVehicleToShowInMap, vehicles]);
 
   const getMarkerIcon = (véhicule, getColor = false) => {
     const speed = parseFloat(véhicule?.speedKPH);
@@ -384,6 +435,7 @@ function MapComponent({
   };
 
   const onClickVehicle = (véhicule) => {
+    console.log(véhicule);
     if (historiqueSelectedLocationIndex && véhiculeHistoriqueUnique) {
       setSelectedVehicle(véhiculeHistoriqueUnique);
     } else {
@@ -417,6 +469,36 @@ function MapComponent({
   //     mapRef.current.setView([avgLat, avgLng], 7);
   //   }
   // }, []);
+
+  const countLimit = 30;
+  const [count, setCount] = useState(countLimit);
+
+  const [IsUpdateAuto, setIsUpdateAuto] = useState(false);
+  const fromUpdateAuto = true;
+  // const foundDevice = accountDevices?.find((d) => d?.deviceID === selectedVehicleToShowInMap)
+
+  useEffect(() => {
+    if (!selectedVehicleToShowInMap) return;
+    if (!IsUpdateAuto) return;
+    if (count === 0) {
+      console.log("Countdown à 0");
+
+      handleVehicleClick(currentVéhicule, fromUpdateAuto);
+    }
+    // console.log(count);
+
+    const timer = setTimeout(() => {
+      setCount(count === 0 ? countLimit : count - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [count, IsUpdateAuto, currentVéhicule]);
+
+  useEffect(() => {
+    if (!IsUpdateAuto) {
+      setCount(countLimit);
+    }
+  }, [IsUpdateAuto]);
+
   return (
     <div
       onClick={() => {
@@ -428,7 +510,7 @@ function MapComponent({
       {selectedVehicle && (
         <div
           className={`bottom-[4rem] lg:bottom-4  ${
-            fromHistorique === "true" ? "bottom-[6rem] lg:bottom-[6rem]" : ""
+            fromHistorique === "true" ? "bottom-[1rem] " : ""
           } ${
             fromRapportGroupe === "true"
               ? "bottom-[7rem] lg:bottom-[6.2rem]"
@@ -567,6 +649,51 @@ function MapComponent({
           </div>
         </div>
       </Tooltip>
+
+      {selectedVehicleToShowInMap && fromHistorique === "false" && (
+        <Tooltip
+          PopperProps={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -10], // Décalage horizontal et vertical
+                },
+              },
+              {
+                name: "zIndex",
+                enabled: true,
+                phase: "write",
+                fn: ({ state }) => {
+                  state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                },
+              },
+            ],
+          }}
+          title={`${
+            IsUpdateAuto
+              ? t("Désactiver la mise a jour automatique")
+              : t("Activer la mise a jour automatique")
+          }`}
+        >
+          <button
+            className="absolute z-[999] top-[8rem] right-[1rem]"
+            onClick={() => {
+              setIsUpdateAuto(!IsUpdateAuto);
+            }}
+          >
+            <div
+              className={`${
+                IsUpdateAuto
+                  ? "text-green-700 bg-green-100 border border-green-500"
+                  : "text-orange-700 bg-orange-100 border border-orange-500"
+              } flex justify-center items-center min-w-10 min-h-10 rounded-full   shadow-xl `}
+            >
+              <p className=" text-[1.2rem] font-bold">{count}</p>
+            </div>
+          </button>
+        </Tooltip>
+      )}
 
       {!selectedVehicleToShowInMap && (
         <Tooltip

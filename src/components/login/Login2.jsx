@@ -10,16 +10,7 @@ import { useTranslation } from "react-i18next";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 function Login2() {
-  const {
-    handleLogin,
-    error,
-    adminAccount,
-    isHomePageLoading,
-    setReadDocumentation,
-    setChooseOtherLanguagePopup,
-    chooseOtherLanguagePopup,
-    versionApplication,
-  } = useContext(DataContext);
+  const { handleLogin, error, isHomePageLoading } = useContext(DataContext);
   let x;
 
   const [t, i18n] = useTranslation();
@@ -51,11 +42,14 @@ function Login2() {
     localStorage.getItem("userCredentials") ? true : false
   );
 
+  const defaultCountry = "ht";
+  const defaultLang = "fr";
+
   const [formData, setFormData] = useState(() => {
     const savedData = localStorage.getItem("userCredentials");
     return savedData
       ? JSON.parse(savedData)
-      : { account: "", username: "", password: "", country: "" };
+      : { account: "", username: "", password: "", country: defaultCountry };
   });
 
   // Sauvegarde ou suppression instantanée des données dès qu'il y a un changement
@@ -69,13 +63,14 @@ function Login2() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setCountryAndLanguage(); // 2e vérification avant login
     const { account, username, password, country } = formData;
     handleLogin(account, username, password, country);
   };
 
   const demoAccountLogin = () => {
     const { account, username, password, country } = formData;
-
+    setCountryAndLanguage(); // 2e vérification aussi
     handleLogin("demo", "admin", "112233", country);
   };
 
@@ -94,6 +89,29 @@ function Login2() {
   x;
 
   const [isShowPassword, setIsShowPassword] = useState(false);
+
+  const setCountryAndLanguage = () => {
+    const host = window.location.hostname.replace(/^www\./, "");
+
+    let country = "ht";
+    let lang = "fr";
+
+    if (host === "octagonogps.com.do" || host === "app.octagonogps.com.do") {
+      country = "rd";
+      lang = "es";
+    } else if (host === "octagonoplus.com") {
+      country = "ht";
+      lang = "fr";
+    }
+
+    setFormData((prev) => ({ ...prev, country }));
+    i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
+  };
+
+  useEffect(() => {
+    setCountryAndLanguage();
+  }, []);
 
   return (
     <div>
@@ -143,7 +161,7 @@ function Login2() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <div className="grid grid-cols-2 justify-center items-center gap-2">
-                <div className="mb-4 ">
+                {/* <div className="mb-4 ">
                   <label
                     htmlFor="country"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
@@ -164,8 +182,8 @@ function Login2() {
                       <option value="rd">República Dominicana</option>
                     </select>
                   </div>
-                </div>{" "}
-                <div className="mb-4 ">
+                </div>{" "} */}
+                {/* <div className="mb-4 ">
                   <label
                     htmlFor="country"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
@@ -187,7 +205,7 @@ function Login2() {
                       <option value="en">{t("Anglais")}</option>
                     </select>
                   </div>
-                </div>
+                </div> */}
               </div>
               <label
                 htmlFor="account"

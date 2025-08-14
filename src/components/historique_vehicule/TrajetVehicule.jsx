@@ -57,12 +57,14 @@ function TrajetVehicule({
   positions,
   openGoogleMaps,
   composantLocationPage,
+  handleVehicleClick,
+  currentDeviceToAutoUpdate,
 }) {
   const {
     FormatDateHeure,
     username,
     currentVéhicule,
-
+    véhiculeHistoriqueDetails,
     geofenceData,
   } = useContext(DataContext);
 
@@ -442,27 +444,62 @@ function TrajetVehicule({
     return null;
   };
 
+  // const countLimit = 30;
+  // const [count, setCount] = useState(countLimit);
+
+  // const [IsUpdateAuto, setIsUpdateAuto] = useState(false);
+  // const fromUpdateAuto = true;
+
   // useEffect(() => {
-  //   if (mapRef.current) {
-  //     const coordinates = [
-  //       { lat: 17.79297219635383, lng: -74.46607937065865 },
-  //       { lat: 19.81964982383767, lng: -74.57589816742004 },
-  //       { lat: 20.180774787037656, lng: -70.42474764983946 },
-  //       { lat: 17.83656772376724, lng: -70.14165652823564 },
-  //     ];
+  //   if (!currentDeviceToAutoUpdate) return;
+  //   if (!IsUpdateAuto) return;
+  //   if (count === 0) {
+  //     console.log("Countdown à 0");
 
-  //     const avgLat =
-  //       coordinates.reduce((sum, c) => sum + c.lat, 0) / coordinates.length;
-  //     const avgLng =
-  //       coordinates.reduce((sum, c) => sum + c.lng, 0) / coordinates.length;
-
-  //     mapRef.current.setView([avgLat, avgLng], 7);
+  //     console.log(currentDeviceToAutoUpdate);
+  //     handleVehicleClick(currentDeviceToAutoUpdate, fromUpdateAuto);
   //   }
-  // }, []);
+  //   // console.log(count);
+
+  //   const timer = setTimeout(() => {
+  //     setCount(count === 0 ? countLimit : count - 1);
+  //   }, 1000);
+  //   return () => clearTimeout(timer);
+  // }, [count, IsUpdateAuto, currentVéhicule]);
+
+  const countLimit = 30;
+  const [count, setCount] = useState(countLimit);
+  const [IsUpdateAuto, setIsUpdateAuto] = useState(false);
+  const hasTriggeredRef = useRef(false); // pour éviter de relancer handleVehicleClick plusieurs fois
+
+  useEffect(() => {
+    if (!currentDeviceToAutoUpdate || !IsUpdateAuto) return;
+
+    if (count === 0 && !hasTriggeredRef.current) {
+      console.log("Countdown à 0");
+      console.log(currentDeviceToAutoUpdate);
+      handleVehicleClick(currentDeviceToAutoUpdate, true);
+      hasTriggeredRef.current = true; // on marque que l'action a été déclenchée
+    }
+
+    const timer = setTimeout(() => {
+      setCount((prev) => (prev === 0 ? countLimit : prev - 1));
+      if (count === 0) hasTriggeredRef.current = false; // reset pour le prochain cycle
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [count, IsUpdateAuto, currentDeviceToAutoUpdate]);
+
+  useEffect(() => {
+    if (!IsUpdateAuto) {
+      setCount(countLimit);
+    }
+  }, [IsUpdateAuto]);
 
   return (
     <div>
       <div className="relative">
+        {/* Pour recentrer l'appareil */}
         <Tooltip2
           PopperProps={{
             modifiers: [
@@ -485,7 +522,7 @@ function TrajetVehicule({
           title={`${t("Recentrer sur le trajet")}`}
         >
           <button
-            className="absolute z-[999] top-[8.5rem] right-[1rem]"
+            className="absolute z-[999] top-[11rem] right-[1rem]"
             onClick={() => {
               if (mapRef.current && vehicles.length > 0) {
                 const { lastValidLatitude, lastValidLongitude } = vehicles[0];
@@ -502,14 +539,58 @@ function TrajetVehicule({
             </div>
           </button>
         </Tooltip2>
+
+        {/* Pour la mise a jour auto */}
+        {véhiculeHistoriqueDetails.length > 0 && (
+          <Tooltip2
+            PopperProps={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, -10], // Décalage horizontal et vertical
+                  },
+                },
+                {
+                  name: "zIndex",
+                  enabled: true,
+                  phase: "write",
+                  fn: ({ state }) => {
+                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  },
+                },
+              ],
+            }}
+            title={`${
+              IsUpdateAuto
+                ? t("Désactiver la mise a jour automatique")
+                : t("Activer la mise a jour automatique")
+            }`}
+          >
+            <button
+              className="absolute z-[999] top-[7rem] right-[1rem]"
+              onClick={() => {
+                setIsUpdateAuto(!IsUpdateAuto);
+              }}
+            >
+              <div
+                className={`${
+                  IsUpdateAuto
+                    ? "text-green-700 bg-green-100 border border-green-500"
+                    : "text-orange-700 bg-orange-100 border border-orange-500"
+                } flex justify-center items-center min-w-10 min-h-10 rounded-full   shadow-xl `}
+              >
+                <p className=" text-[1.2rem] font-bold">{count}</p>
+              </div>
+            </button>
+          </Tooltip2>
+        )}
         <div
           className={`${
             voirAnimationTrajetPopup ? " pl-0.5" : ""
           } absolute md:bg-white cursor-pointer flex flex-col md:flex-row md:items-center  justify-start items-start z-[999999999999999999999999999] ${
-            composantLocationPage === "historique"
-              ? "top-[8.5rem]"
-              : "top-[2rem]"
-          }   left-[1rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
+            composantLocationPage === "historique" ? "top-[7rem]" : "top-[2rem]"
+          }   left-[.5rem] overflow-hidden---  font-bold md:shadow-lg shadow-black/20  rounded-lg`}
         >
           <div
             className={`${

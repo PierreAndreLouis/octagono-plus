@@ -38,6 +38,11 @@ const LocationPage = ({
     appareilPourAfficherSurCarte,
     historiqueSelectedLocationIndex,
     véhiculeHistoriqueDetails,
+    fetchVehicleDetails,
+    fromSelectOnPositionValue,
+    setFromSelectOnPositionValue,
+    FormatDateHeure,
+    setCurrentVéhicule,
   } = useContext(DataContext);
   let x;
 
@@ -144,15 +149,53 @@ const LocationPage = ({
       );
   }, [appareilPourAfficherSurCarte, véhiculeDetails]);
 
+  const [selectDeviceInSearch, setSelectDeviceInSearch] = useState();
+
+  useEffect(() => {
+    if (!fromSelectOnPositionValue?.length) return;
+
+    const filtered = véhiculeData?.filter(
+      (v) => v.deviceID === selectedVehicleToShowInMap
+    );
+
+    if (filtered.length === 0) return;
+
+    const updatedDevice = {
+      ...filtered[0],
+      lastValidLatitude: fromSelectOnPositionValue[0].latitude,
+      lastValidLongitude: fromSelectOnPositionValue[0].longitude,
+      speedKPH: fromSelectOnPositionValue[0].speedKPH,
+      timestamp: fromSelectOnPositionValue[0].timestamp,
+      heading: fromSelectOnPositionValue[0].heading,
+      address: fromSelectOnPositionValue[0].address,
+      description: fromSelectOnPositionValue[0].description,
+    };
+
+    setSelectDeviceInSearch([updatedDevice]);
+  }, [fromSelectOnPositionValue, selectedVehicleToShowInMap, véhiculeData]);
+
   const vehicles = selectedVehicleToShowInMap
-    ? véhiculeData.filter((v) => v.deviceID === selectedVehicleToShowInMap)
+    ? selectDeviceInSearch
     : véhiculeData;
 
+  const fromSelectOnPosition = true;
+
+  const [isFetchFromUpdateAuro, setIsFetchFromUpdateAuro] = useState(false);
+  /////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvv/////////////////////////
   // Pour afficher une seule véhicule sur la carte
-  const handleVehicleClick = (véhicule) => {
+  const handleVehicleClick = (véhicule, fromUpdateAuto = false) => {
+    console.log("devrais lancer la requette......", véhicule);
+    fetchVehicleDetails(véhicule, true);
     setSelectedVehicleToShowInMap(véhicule?.deviceID);
-    setShowVehiculeListe(!showVehiculeListe);
+    setShowVehiculeListe(false);
     updateAppareilsEtGeofencesPourCarte();
+    setCurrentVéhicule(véhicule);
+
+    if (fromUpdateAuto) {
+      setIsFetchFromUpdateAuro(true);
+    } else {
+      setIsFetchFromUpdateAuro(false);
+    }
   };
 
   // Pour mettre a jour le véhicules choisis pour afficher sur la carte
@@ -343,6 +386,8 @@ const LocationPage = ({
           setDocumentationPage={setDocumentationPage}
           vehicles={vehicles}
           véhiculeData={véhiculeData}
+          handleVehicleClick={handleVehicleClick}
+          isFetchFromUpdateAuro={isFetchFromUpdateAuro}
         />
       </div>
     </div>

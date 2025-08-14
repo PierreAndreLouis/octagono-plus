@@ -19,6 +19,8 @@ function ListeDesUtilisateur({
   showChooseItemToModifyMessage,
   setshowChooseItemToModifyMessage,
   showChooseItemToModifyPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     FormatDateHeure,
@@ -113,7 +115,11 @@ function ListeDesUtilisateur({
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
 
-      <GestionUserOptionsPopup setDocumentationPage={setDocumentationPage} />
+      <GestionUserOptionsPopup
+        setDocumentationPage={setDocumentationPage}
+        isCreatingNewElement={isCreatingNewElement}
+        setIsCreatingNewElement={setIsCreatingNewElement}
+      />
 
       {seConnecterAutreComptePopup && (
         <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
@@ -196,12 +202,10 @@ function ListeDesUtilisateur({
                     if (!currentAccountSelected) {
                       setChooseOneAccountToContinue(true);
                       setChooseOtherAccountGestion(true);
-                      setDocumentationPage("Ajouter_nouveau_utilisateur");
-                      navigate("/Ajouter_nouveau_utilisateur");
-                    } else {
-                      setDocumentationPage("Ajouter_nouveau_utilisateur");
-                      navigate("/Ajouter_nouveau_utilisateur");
                     }
+                    setDocumentationPage("Ajouter_nouveau_utilisateur");
+                    navigate("/Ajouter_nouveau_utilisateur");
+                    setIsCreatingNewElement(true);
                   }}
                   className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
                 >

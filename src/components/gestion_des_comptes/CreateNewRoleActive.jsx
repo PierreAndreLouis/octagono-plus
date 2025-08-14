@@ -929,6 +929,9 @@ function CreateNewRoleActive({
                             required
                             className="block w-full focus:outline-none  py-1.5 px-3 text-gray-900     "
                           >
+                            <option value="">
+                              {t("Sélectionner un statut de code")}
+                            </option>
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>

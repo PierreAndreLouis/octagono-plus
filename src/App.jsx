@@ -28,63 +28,87 @@ import GoogleTranslate from "./components/home/GoogleTranslate";
 
 import { IoLogInOutline } from "react-icons/io5";
 
-const DashboardContaintMaintComponant = React.lazy(() =>
-  import("./components/dashboard_containt/DashboardContaintMaintComponant")
-);
+import DashboardContaintMaintComponant from "./components/dashboard_containt/DashboardContaintMaintComponant";
 
-const GestionDesCompts = React.lazy(() => import("./pages/GestionDesCompts"));
-const ListeDesUtilisateur = React.lazy(() =>
-  import("./pages/ListeDesUtilisateur")
-);
-const ListeDesVehiculesGestion = React.lazy(() =>
-  import("./pages/ListeDesVehiculesGestion")
-);
-const ListeDesGroupes = React.lazy(() => import("./pages/ListeDesGroupes"));
-const CreateNewAccountPage = React.lazy(() =>
-  import("./components/gestion_des_comptes/CreateNewAccountPage")
-);
-const ModifyAccountPage = React.lazy(() =>
-  import("./components/gestion_des_comptes/ModifyAccountPage")
-);
-const CreateNewUserGestion = React.lazy(() =>
-  import("./components/gestion_des_comptes/CreateNewUserGestion")
-);
-const ModifyUserGroupeGestion = React.lazy(() =>
-  import("./components/gestion_des_comptes/ModifyUserGroupeGestion")
-);
-const CreateNewGroupeGestion = React.lazy(() =>
-  import("./components/gestion_des_comptes/CreateNewGroupeGestion")
-);
-const ModifyGroupeGestion = React.lazy(() =>
-  import("./components/gestion_des_comptes/ModifyGroupeGestion")
-);
-const CreateNewDeviceGestion = React.lazy(() =>
-  import("./components/gestion_des_comptes/CreateNewDeviceGestion")
-);
-const ModifyDeviceGestion = React.lazy(() =>
-  import("./components/gestion_des_comptes/ModifyDeviceGestion")
-);
+import GestionDesCompts from "./pages/GestionDesCompts";
+import ListeDesUtilisateur from "./pages/ListeDesUtilisateur";
+import ListeDesVehiculesGestion from "./pages/ListeDesVehiculesGestion";
+import ListeDesGroupes from "./pages/ListeDesGroupes";
+import CreateNewAccountPage from "./components/gestion_des_comptes/CreateNewAccountPage";
+import ModifyAccountPage from "./components/gestion_des_comptes/ModifyAccountPage";
+import CreateNewUserGestion from "./components/gestion_des_comptes/CreateNewUserGestion";
+import ModifyUserGroupeGestion from "./components/gestion_des_comptes/ModifyUserGroupeGestion";
+import CreateNewGroupeGestion from "./components/gestion_des_comptes/CreateNewGroupeGestion";
+import ModifyGroupeGestion from "./components/gestion_des_comptes/ModifyGroupeGestion";
+import CreateNewDeviceGestion from "./components/gestion_des_comptes/CreateNewDeviceGestion";
+import ModifyDeviceGestion from "./components/gestion_des_comptes/ModifyDeviceGestion";
 
-const LocationPage = React.lazy(() => import("./pages/LocationPage"));
-const GestionGeofences = React.lazy(() => import("./pages/GestionGeofences"));
-const ListeDesAlertsGestion = React.lazy(() =>
-  import("./pages/ListeDesAlertsGestion")
-);
-const InfoUserComponent = React.lazy(() =>
-  import("./components/profile/InfoUserComponent")
-);
-const GestionDesRoles = React.lazy(() => import("./pages/GestionDesRoles"));
-const CreateNewRole = React.lazy(() =>
-  import("./components/gestion_des_comptes/CreateNewRole")
-);
+import LocationPage from "./pages/LocationPage";
+import GestionGeofences from "./pages/GestionGeofences";
 
-const DetailsVehiculePage = React.lazy(() =>
-  import("./pages/DetailsVehiculePage")
-);
-const HistoriquePage = React.lazy(() => import("./pages/HistoriquePage"));
-const RapportPageDetails = React.lazy(() =>
-  import("./pages/RapportPageDetails")
-);
+import InfoUserComponent from "./components/profile/InfoUserComponent";
+import GestionDesRoles from "./pages/GestionDesRoles";
+import CreateNewRole from "./components/gestion_des_comptes/CreateNewRole";
+
+import DetailsVehiculePage from "./pages/DetailsVehiculePage";
+import HistoriquePage from "./pages/HistoriquePage";
+import RapportPageDetails from "./pages/RapportPageDetails";
+
+// const DashboardContaintMaintComponant = React.lazy(() =>
+//   import("./components/dashboard_containt/DashboardContaintMaintComponant")
+// );
+
+// const GestionDesCompts = React.lazy(() => import("./pages/GestionDesCompts"));
+// const ListeDesUtilisateur = React.lazy(() =>
+//   import("./pages/ListeDesUtilisateur")
+// );
+// const ListeDesVehiculesGestion = React.lazy(() =>
+//   import("./pages/ListeDesVehiculesGestion")
+// );
+// const ListeDesGroupes = React.lazy(() => import("./pages/ListeDesGroupes"));
+// const CreateNewAccountPage = React.lazy(() =>
+//   import("./components/gestion_des_comptes/CreateNewAccountPage")
+// );
+// const ModifyAccountPage = React.lazy(() =>
+//   import("./components/gestion_des_comptes/ModifyAccountPage")
+// );
+// const CreateNewUserGestion = React.lazy(() =>
+//   import("./components/gestion_des_comptes/CreateNewUserGestion")
+// );
+// const ModifyUserGroupeGestion = React.lazy(() =>
+//   import("./components/gestion_des_comptes/ModifyUserGroupeGestion")
+// );
+// const CreateNewGroupeGestion = React.lazy(() =>
+//   import("./components/gestion_des_comptes/CreateNewGroupeGestion")
+// );
+// const ModifyGroupeGestion = React.lazy(() =>
+//   import("./components/gestion_des_comptes/ModifyGroupeGestion")
+// );
+// const CreateNewDeviceGestion = React.lazy(() =>
+//   import("./components/gestion_des_comptes/CreateNewDeviceGestion")
+// );
+// const ModifyDeviceGestion = React.lazy(() =>
+//   import("./components/gestion_des_comptes/ModifyDeviceGestion")
+// );
+
+// const LocationPage = React.lazy(() => import("./pages/LocationPage"));
+// const GestionGeofences = React.lazy(() => import("./pages/GestionGeofences"));
+
+// const InfoUserComponent = React.lazy(() =>
+//   import("./components/profile/InfoUserComponent")
+// );
+// const GestionDesRoles = React.lazy(() => import("./pages/GestionDesRoles"));
+// const CreateNewRole = React.lazy(() =>
+//   import("./components/gestion_des_comptes/CreateNewRole")
+// );
+
+// const DetailsVehiculePage = React.lazy(() =>
+//   import("./pages/DetailsVehiculePage")
+// );
+// const HistoriquePage = React.lazy(() => import("./pages/HistoriquePage"));
+// const RapportPageDetails = React.lazy(() =>
+//   import("./pages/RapportPageDetails")
+// );
 
 import { useTranslation } from "react-i18next";
 
@@ -555,6 +579,8 @@ function App() {
   const [currentSelectedRoleActive, setCurrentSelectedRoleActive] =
     useState(null);
 
+  const [isCreatingNewElement, setIsCreatingNewElement] = useState(true);
+
   return (
     <div className="dark:bg-gray-700 md:p-4 bg-gray-100 min-h-[100vh]">
       <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-screen">
@@ -689,7 +715,7 @@ function App() {
         )}
         {/* container */}
         {isUserNotInteractingNow && isAuthenticated && (
-          <div className="fixed inset-0 z-[9999999] backdrop-blur-sm bg-black/50 backdrop-blur-sm-- flex justify-center  items-center">
+          <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] backdrop-blur-sm-- bg-black/50 backdrop-blur-sm-- flex justify-center  items-center">
             <form
               onSubmit={reactiverSessionUser}
               className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
@@ -866,6 +892,8 @@ function App() {
                           showChooseItemToModifyPage={
                             showChooseItemToModifyPage
                           }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -885,6 +913,8 @@ function App() {
                       <Suspense fallback={<LoadingLazyAnimation />}>
                         <CreateNewAccountPage
                           setDocumentationPage={setDocumentationPage}
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -903,8 +933,10 @@ function App() {
                     <SideBarSpaceLeft />
                     <div className="w-full">
                       <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ModifyAccountPage
+                        <CreateNewAccountPage
                           setDocumentationPage={setDocumentationPage}
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -934,6 +966,14 @@ function App() {
                           showChooseItemToModifyPage={
                             showChooseItemToModifyPage
                           }
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -961,6 +1001,8 @@ function App() {
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
                           }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -979,8 +1021,10 @@ function App() {
                     <SideBarSpaceLeft />
                     <div className="w-full">
                       <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ModifyUserGroupeGestion
+                        <CreateNewUserGestion
                           setDocumentationPage={setDocumentationPage}
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1017,6 +1061,8 @@ function App() {
                             showChooseItemToModifyPage
                           }
                           chooseOtherAccountGestion={chooseOtherAccountGestion}
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1044,6 +1090,8 @@ function App() {
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
                           }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1062,8 +1110,17 @@ function App() {
                     <SideBarSpaceLeft />
                     <div className="w-full">
                       <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ModifyDeviceGestion
+                        <CreateNewDeviceGestion
                           setDocumentationPage={setDocumentationPage}
+                          documentationPage={documentationPage}
+                          setChooseOneAccountToContinue={
+                            setChooseOneAccountToContinue
+                          }
+                          setChooseOtherAccountGestion={
+                            setChooseOtherAccountGestion
+                          }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1355,6 +1412,8 @@ function App() {
                           showChooseItemToModifyPage={
                             showChooseItemToModifyPage
                           }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1382,6 +1441,8 @@ function App() {
                           setChooseOtherAccountGestion={
                             setChooseOtherAccountGestion
                           }
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1400,8 +1461,10 @@ function App() {
                     <SideBarSpaceLeft />
                     <div className="w-full">
                       <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ModifyGroupeGestion
+                        <CreateNewGroupeGestion
                           setDocumentationPage={setDocumentationPage}
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>
@@ -1422,6 +1485,8 @@ function App() {
                       <Suspense fallback={<LoadingLazyAnimation />}>
                         <InfoUserComponent
                           setDocumentationPage={setDocumentationPage}
+                          isCreatingNewElement={isCreatingNewElement}
+                          setIsCreatingNewElement={setIsCreatingNewElement}
                         />
                       </Suspense>
                     </div>

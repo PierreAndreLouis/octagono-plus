@@ -45,6 +45,7 @@ const AjouterGeofence = ({
     isDashboardHomePage,
     accountGeofences,
     geofenceData,
+    gestionAccountData,
   } = useContext(DataContext);
   const [markers, setMarkers] = useState([]);
   const [polygonColor, setPolygonColor] = useState("#FF0000");
@@ -147,16 +148,18 @@ const AjouterGeofence = ({
     let username;
     let password;
 
-    if (isDashboardHomePage && !currentAccountSelected) {
-      setChooseOtherAccountGestion(true);
-      setChooseOneAccountToContinue(true);
-      return;
-    }
-
-    if (isDashboardHomePage && currentAccountSelected) {
-      accountID = currentAccountSelected?.accountID || "";
+    if (isDashboardHomePage) {
+      accountID =
+        currentAccountSelected?.accountID ||
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.accountID;
       username = "admin";
-      password = currentAccountSelected?.password || "";
+      password =
+        currentAccountSelected?.password ||
+        gestionAccountData.find(
+          (account) => account.accountID === currentGeozone?.accountID
+        )?.password;
     } else {
       accountID = localStorage.getItem("account") || "";
       username = localStorage.getItem("username") || "";

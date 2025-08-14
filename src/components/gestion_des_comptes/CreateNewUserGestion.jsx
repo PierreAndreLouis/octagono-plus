@@ -14,6 +14,8 @@ function CreateNewUserGestion({
   documentationPage,
   setChooseOneAccountToContinue,
   setChooseOtherAccountGestion,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     currentAccountSelected,
@@ -24,6 +26,8 @@ function CreateNewUserGestion({
     timeZoneData,
     userRole,
     adminPassword,
+    ModifyUserEnGestionAccountFonction,
+    gestionAccountData,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -132,7 +136,7 @@ function CreateNewUserGestion({
       (user) => user?.userID === userID
     );
 
-    if (userExists) {
+    if (isCreatingNewElement && userExists) {
       setErrorID(
         `${t(
           "Cet identifiant (userID) est déjà utilisé. Veuillez en choisir un autre"
@@ -169,18 +173,23 @@ function CreateNewUserGestion({
   const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
     (groupe) => groupe?.groupID
   );
-  const [groupesSelectionnes, setGroupesSelectionnes] = useState("");
+  const [groupesSelectionnes, setGroupesSelectionnes] = useState(
+    groupeDuSelectedUser?.[0] || ""
+  );
+
+  const groupesNonSelectionnes = allGroupIDs?.filter(
+    (userID) => !groupesSelectionnes.includes(userID)
+  );
 
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
+  //////////////////
 
   useEffect(() => {
-    // console.log("groupesSelectionnes", groupesSelectionnes);
-  }, [groupesSelectionnes]);
-
-  useEffect(() => {
-    setGroupesSelectionnes("");
-  }, [documentationPage]);
+    if (isCreatingNewElement) {
+      setGroupesSelectionnes("");
+    }
+  }, [documentationPage, isCreatingNewElement]);
 
   //////////////////////////////////////////////////////////
 
@@ -191,7 +200,7 @@ function CreateNewUserGestion({
     if (inputPassword === adminPassword) {
       const userID = addNewUserData.userID;
       const description = addNewUserData.description;
-      const displayName = addNewUserData.displayName;
+      const displayName = addNewUserData.description;
 
       const contactEmail = addNewUserData.contactEmail;
       const notifyEmail = addNewUserData.notifyEmail;
@@ -213,30 +222,65 @@ function CreateNewUserGestion({
         currentAccountSelected?.password
       ) {
         // console.log(
-        createNewUserEnGestionAccount(
-          currentAccountSelected?.accountID,
-          "admin",
-          currentAccountSelected?.password,
 
-          userID,
-          description,
-          displayName,
-          password2,
-          contactEmail,
-          notifyEmail,
-          isActive,
-          contactPhone,
-          contactName,
-          timeZone,
-          maxAccessLevel,
-          roleID,
-          //
-          addressCity,
-          addressCountry,
-          userType,
-          //
-          groupesSelectionnes
-        );
+        if (isCreatingNewElement) {
+          createNewUserEnGestionAccount(
+            currentAccountSelected?.accountID,
+            "admin",
+            currentAccountSelected?.password,
+
+            userID,
+            description,
+            displayName,
+            password2,
+            contactEmail,
+            notifyEmail,
+            isActive,
+            contactPhone,
+            contactName,
+            timeZone,
+            maxAccessLevel,
+            roleID,
+            //
+            addressCity,
+            addressCountry,
+            userType,
+            //
+            groupesSelectionnes
+          );
+        } else {
+          ModifyUserEnGestionAccountFonction(
+            currentAccountSelected?.accountID ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.accountID,
+            "admin",
+            currentAccountSelected?.password ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.password,
+
+            userID,
+            description,
+            displayName,
+            password2,
+            contactEmail,
+            notifyEmail,
+            isActive,
+            contactPhone,
+            contactName,
+            timeZone,
+            maxAccessLevel,
+            roleID,
+            //
+            userType,
+            addressCity,
+            addressCountry,
+            //
+            groupesSelectionnes,
+            groupesNonSelectionnes
+          );
+        }
 
         setDocumentationPage("Gestion_des_utilisateurs");
         navigate("/Gestion_des_utilisateurs");
@@ -249,6 +293,40 @@ function CreateNewUserGestion({
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
+
+  //   Pour mettre a jour les nouvelle donnee du véhicule a modifier
+  useEffect(() => {
+    if (currentSelectedUserToConnect && !isCreatingNewElement) {
+      setAddNewUserData({
+        userID: currentSelectedUserToConnect.userID || "",
+        description: currentSelectedUserToConnect.description || "",
+        displayName: currentSelectedUserToConnect.displayName || "",
+        contactEmail: currentSelectedUserToConnect.contactEmail || "",
+        notifyEmail: currentSelectedUserToConnect.notifyEmail || "",
+        isActive: currentSelectedUserToConnect.isActive === "true" ? "1" : "0",
+        contactPhone: currentSelectedUserToConnect.contactPhone || "",
+        contactName: currentSelectedUserToConnect.contactName || "",
+        userType: currentSelectedUserToConnect.userType || "",
+        addressCity: currentSelectedUserToConnect.addressCity || "",
+        addressCountry: currentSelectedUserToConnect.addressCountry || "",
+        timeZone: currentSelectedUserToConnect.timeZone || "",
+        maxAccessLevel: currentSelectedUserToConnect.maxAccessLevel || "",
+
+        roleID: currentSelectedUserToConnect.roleID || "",
+        password: currentSelectedUserToConnect.password || "",
+        password2: currentSelectedUserToConnect.password || "",
+      });
+      if (currentSelectedUserToConnect.maxAccessLevel === "0") {
+        setMaxAccessLevelText("New/Delete");
+      } else if (currentSelectedUserToConnect.maxAccessLevel === "1") {
+        setMaxAccessLevelText("Read/View");
+      } else if (currentSelectedUserToConnect.maxAccessLevel === "2") {
+        setMaxAccessLevelText("Write/Edit");
+      } else if (currentSelectedUserToConnect.maxAccessLevel === "3") {
+        setMaxAccessLevelText("Accès complet");
+      }
+    }
+  }, [currentSelectedUserToConnect, isCreatingNewElement]);
 
   return (
     <div className="px-3 rounded-lg  bg-white">
@@ -346,61 +424,7 @@ function CreateNewUserGestion({
           </div>
         </div>
       )}
-      {showIsUserActivePopup && (
-        <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
-          <div
-            className="bg-white dark:bg-gray-700 max-w-[30rem] relative flex flex-col gap-2 w-[100vw] p-6 px-4 border border-gray-600 mt-2 rounded-md"
-            id="mapType"
-          >
-            <IoClose
-              onClick={() => {
-                setShowIsUserActivePopup(false);
-              }}
-              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
-            />
 
-            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
-              {t("Activation de l'utilisateur")}:
-            </h2>
-
-            <div
-              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewUserData?.isActive === "1"
-                  ? "bg-gray-100 dark:bg-gray-800/70"
-                  : ""
-              }`}
-              onClick={() => {
-                setShowIsUserActivePopupText("true");
-                setAddNewUserData((prev) => ({
-                  ...prev,
-                  isActive: "1",
-                }));
-                setShowIsUserActivePopup(false);
-              }}
-            >
-              <p>true</p>
-            </div>
-
-            <div
-              className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewUserData?.isActive === "0"
-                  ? "bg-gray-100 dark:bg-gray-800/70"
-                  : ""
-              }`}
-              onClick={() => {
-                setShowIsUserActivePopupText("false");
-                setAddNewUserData((prev) => ({
-                  ...prev,
-                  isActive: "0",
-                }));
-                setShowIsUserActivePopup(false);
-              }}
-            >
-              <p>false</p>
-            </div>
-          </div>
-        </div>
-      )}
       {showUserTypePopup && (
         <div className="fixed z-[99999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
           <div
@@ -561,7 +585,7 @@ function CreateNewUserGestion({
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
             <p className="mx-2 mb-3 text-center mt-4 text-lg">
-              {t("Choisis un Groupe pour intégrer l'appareil")}
+              {t("Choisissez un Groupe pour affecter l'utilisateur")}
             </p>
 
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
@@ -577,6 +601,7 @@ function CreateNewUserGestion({
                       } else {
                         setGroupesSelectionnes(groupe.groupID);
                       }
+                      setShowGroupesSelectionnesPopup(false);
                     }}
                     className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-center rounded-lg py-2 px-2 ${
                       isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
@@ -612,7 +637,7 @@ function CreateNewUserGestion({
               })}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
+            {/* <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
               <button
                 onClick={() => {
                   setShowGroupesSelectionnesPopup(false);
@@ -629,7 +654,7 @@ function CreateNewUserGestion({
               >
                 {t("Annuler")}
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
@@ -651,7 +676,9 @@ function CreateNewUserGestion({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                {t("Ajouter un nouveau Utilisateur")}
+                {isCreatingNewElement
+                  ? t("Ajouter un nouveau Utilisateur")
+                  : t("Modifier l'utilisateur")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -667,7 +694,7 @@ function CreateNewUserGestion({
               </button>
             </div>
 
-            <p className="mb-2">
+            <p className="mb-2 font-semibold text-gray-700">
               {t("Choisissez un groupe pour affecter l'utilisateur")}
             </p>
             <div
@@ -700,12 +727,7 @@ function CreateNewUserGestion({
                     label: `${t("Description")}`,
                     placeholder: `${t("Nom de l'utilisateur")}`,
                   },
-                  {
-                    id: "displayName",
-                    label: `${t("DisplayName")}`,
-                    placeholder: `${t("DisplayName")}`,
-                  },
-                  //
+
                   {
                     id: "contactEmail",
                     label: `${t("contactEmail")}`,
@@ -788,6 +810,34 @@ function CreateNewUserGestion({
                         <p>{maxAccessLevelText}</p>
                         <FaChevronDown className="text-gray-700 mr-4" />
                       </div>
+                    ) : field.id === "addressCountry" ? (
+                      <select
+                        id="addressCountry"
+                        name="addressCountry"
+                        value={addNewUserData[field.id]}
+                        onChange={handleChange}
+                        required
+                        className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                      >
+                        <option value="">{t("Sélectionner une Pays")}</option>
+                        <option value="República Dominicana">
+                          {t("República Dominicana")}
+                        </option>
+                        <option value="Haïti">{t("Haïti")}</option>
+                      </select>
+                    ) : field.id === "isActive" ? (
+                      <select
+                        id="isActive"
+                        name="isActive"
+                        value={addNewUserData[field.id]}
+                        onChange={handleChange}
+                        required
+                        className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                      >
+                        <option value="">{t("Activer l'utilisateur")} ?</option>
+                        <option value="true">{t("oui")}</option>
+                        <option value="false">{t("non")}</option>
+                      </select>
                     ) : field.id === "timeZone" ? (
                       <div
                         onClick={() => {
@@ -845,6 +895,9 @@ function CreateNewUserGestion({
                         onChange={handleChange}
                         // { field.id === "groupID" && disable}
                         // disabled={field.id === "userID"}
+                        disabled={
+                          !isCreatingNewElement && field.id === "userID"
+                        }
                         required
                         className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                       />

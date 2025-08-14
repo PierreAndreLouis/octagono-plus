@@ -20,6 +20,8 @@ function ListeDesGroupes({
   showChooseItemToModifyMessage,
   setshowChooseItemToModifyMessage,
   showChooseItemToModifyPage,
+  isCreatingNewElement,
+  setIsCreatingNewElement,
 }) {
   const {
     currentAccountSelected,
@@ -144,6 +146,8 @@ function ListeDesGroupes({
         setShowSelectedGroupeOptionsPopup={setShowSelectedGroupeOptionsPopup}
         setDeleteGroupeAccountPopup={setDeleteGroupeAccountPopup}
         setDocumentationPage={setDocumentationPage}
+        isCreatingNewElement={isCreatingNewElement}
+        setIsCreatingNewElement={setIsCreatingNewElement}
       />
       {/* )} */}
 
@@ -336,12 +340,10 @@ function ListeDesGroupes({
                     if (!currentAccountSelected) {
                       setChooseOneAccountToContinue(true);
                       setChooseOtherAccountGestion(true);
-                      setDocumentationPage("Ajouter_nouveau_groupe");
-                      navigate("/Ajouter_nouveau_groupe");
-                    } else {
-                      setDocumentationPage("Ajouter_nouveau_groupe");
-                      navigate("/Ajouter_nouveau_groupe");
                     }
+                    setDocumentationPage("Ajouter_nouveau_groupe");
+                    navigate("/Ajouter_nouveau_groupe");
+                    setIsCreatingNewElement(true);
                   }}
                   className="bg-orange-500 w-full cursor-pointer shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
                 >
