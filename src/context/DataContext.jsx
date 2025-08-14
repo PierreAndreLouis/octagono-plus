@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "5.7";
+  let versionApplication = "5.8";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1240,8 +1240,19 @@ const DataContextProvider = ({ children }) => {
             }
 
             // Inverse : corriger ceux qui sont déjà en F112 mais pas récents
-            if (detail.statusCode === "0xF112" && !updatedRecently) {
-              detail.statusCode = "0xF020";
+            // if (detail.statusCode === "0xF112" && !updatedRecently ) {
+            //   detail.statusCode = "0xF020";
+            // }
+            //             if (detail.statusCode === "0xF112") {
+            //   if (!(speed > 0 && updatedRecently)) {
+            //     detail.statusCode = "0xF020";
+            //   }
+            // }
+
+            if (detail.statusCode === "0xF112") {
+              if (speed <= 0 || !updatedRecently) {
+                detail.statusCode = "0xF020";
+              }
             }
 
             return {
