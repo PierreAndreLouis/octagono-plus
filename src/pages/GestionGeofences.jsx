@@ -1,9 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoClose, IoEarth, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Link, useNavigate } from "react-router-dom";
 
-import { FaChevronDown, FaPlusCircle, FaUserPlus } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronRight,
+  FaPlusCircle,
+  FaUserPlus,
+} from "react-icons/fa";
 import ChooseOtherGeofenceDashboard from "../components/dashboard_containt/ChooseOtherGeofenceDashboard";
 import { useTranslation } from "react-i18next";
 
@@ -35,6 +40,7 @@ function GestionGeofences({
     accountGeofences,
     //
     isDashboardHomePage,
+    documentationPage,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -136,6 +142,58 @@ function GestionGeofences({
   const afficherPlusDeRésultat = () => {
     setVoir10RésultatPlus((prev) => prev + 1);
   };
+
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+
+  const [openGroups, setOpenGroups] = useState({});
+  const [visibleCounts, setVisibleCounts] = useState({});
+
+  const itemsPerPage = 10;
+
+  const grouped = filterGeofencesAccountData?.reduce((acc, item) => {
+    if (!acc[item.accountID]) acc[item.accountID] = [];
+    acc[item.accountID].push(item);
+    return acc;
+  }, {});
+
+  const sortedGroups = Object.entries(grouped).sort(
+    (a, b) => b[1].length - a[1].length
+  );
+
+  const toggleGroup = (accountID) => {
+    setOpenGroups((prev) => ({
+      ...prev,
+      [accountID]: !prev[accountID],
+    }));
+
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: prev[accountID] || 1,
+    }));
+  };
+
+  const showMore = (accountID) => {
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: (prev[accountID] || 1) + 1,
+    }));
+  };
+
+  // Ouvrir automatiquement le premier groupe au rendu initial
+  useEffect(() => {
+    if (sortedGroups.length > 0) {
+      const firstAccountID = sortedGroups[0][0];
+      setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
+      setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
+    }
+  }, [currentAccountSelected, documentationPage, currentGeofenceData]);
+
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className=" bg-white border-white  border rounded-lg">
@@ -290,125 +348,158 @@ function GestionGeofences({
                 />
               </div>
             )}
-          {
-            // ?.filter((item) =>
-            //   item.geozoneID.endsWith(`_${account}`)
-            // )
-            filterGeofencesAccountDataPagination?.length > 0 ? (
-              filterGeofencesAccountDataPagination
-                ?.slice()
-                .sort((a, b) => b?.lastUpdateTime - a?.lastUpdateTime)
-                .map((geozone, index) => {
-                  //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
-                  const lastUpdateTimeMs = geozone?.lastUpdateTime
-                    ? geozone?.lastUpdateTime * 1000
-                    : 0;
-                  const isActive =
-                    currentTime - lastUpdateTimeMs < twentyHoursInMs;
 
-                  return (
-                    <div
-                      onClick={() => {
-                        console.log(geozone);
-                      }}
-                      className="shadow-inner bg-gray-50 shadow-black/10 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
-                      key={index}
-                    >
-                      <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                        {index + 1}
-                      </div>
-                      <div className="flex  gap-3  ">
-                        <IoEarth className="text-[3rem] text-orange-500 hidden md:block" />
-                        <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                          <div>
-                            <IoEarth className="text-[3rem] text-orange-500 md:hidden" />
-                            <div className="flex flex-wrap">
-                              <p className="font-bold">
-                                {t("Nom du Geozone")} :
-                              </p>
-                              <span className="notranslate notranslate dark:text-orange-500 text-gray-600 pl-5">
-                                {geozone?.description}
-                              </span>
-                            </div>{" "}
-                            <div className="flex flex-wrap">
-                              <p className="font-bold">
-                                {t("Id du geozone")} :
-                              </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                                {geozone?.geozoneID}
-                              </span>
-                            </div>{" "}
-                            <div className="flex flex-wrap">
-                              <p className="font-bold">{t("ID du compte")} :</p>
-                              <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
-                                {geozone?.accountID}
-                              </span>
-                            </div>{" "}
-                            <div className="flex flex-wrap">
-                              <p className="font-bold">
-                                {t("Date de creation")} :
-                              </p>
-                              <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                                {FormatDateHeure(geozone?.lastUpdateTime).date}
-                                <span className="px-3">-</span>
-                                {FormatDateHeure(geozone?.lastUpdateTime).time}
-                              </span>
-                            </div>{" "}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex  justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-end ">
-                        {(isDashboardHomePage ||
-                          localStorage.getItem("password")) && (
-                          <button
+          {sortedGroups?.length > 0 ? (
+            sortedGroups?.map(([accountID, geozones]) => (
+              <div key={accountID}>
+                {!currentAccountSelected && isDashboardHomePage && (
+                  <div
+                    className="flex justify-between text-md items-center border-b border-orange-300 cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
+                    onClick={() => toggleGroup(accountID)}
+                  >
+                    <h2>
+                      {t("Liste des geozones de")} :{" "}
+                      <span className="font-semibold">{accountID}</span> (
+                      {geozones?.length})
+                    </h2>
+                    <div></div>
+                    {openGroups[accountID] ? (
+                      <FaChevronRight />
+                    ) : (
+                      <FaChevronDown />
+                    )}
+                  </div>
+                )}
+                {openGroups[accountID] && (
+                  <div className="flex flex-col gap-4 mt-6">
+                    {geozones
+                      ?.slice(0, (visibleCounts[accountID] || 1) * itemsPerPage)
+                      ?.map((geozone, index) => {
+                        //
+                        //
+                        //
+                        //    // Vérifie si le véhicule est actif (mise à jour dans les 20 dernières heures)
+                        const lastUpdateTimeMs = geozone?.lastUpdateTime
+                          ? geozone?.lastUpdateTime * 1000
+                          : 0;
+                        const isActive =
+                          currentTime - lastUpdateTimeMs < twentyHoursInMs;
+
+                        return (
+                          <div
                             onClick={() => {
-                              setCurrentGeozone(geozone);
-                              setSupprimerGeozonePopup(true);
+                              console.log(geozone);
                             }}
-                            className={`${
-                              true
-                                ? " bg-red-500 text-white"
-                                : "text-red-600 border-[0.02rem] border-red-500 "
-                            }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
+                            className="shadow-inner bg-gray-50 shadow-black/10 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                            key={index}
                           >
-                            {t("Supprimer")}
-                          </button>
-                        )}
+                            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                              {index + 1}
+                            </div>
+                            <div className="flex  gap-3  ">
+                              <IoEarth className="text-[3rem] text-orange-500 hidden md:block" />
+                              <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                                <div>
+                                  <IoEarth className="text-[3rem] text-orange-500 md:hidden" />
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold">
+                                      {t("Nom du Geozone")} :
+                                    </p>
+                                    <span className="notranslate notranslate dark:text-orange-500 text-gray-600 pl-5">
+                                      {geozone?.description}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold">
+                                      {t("Id du geozone")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                      {geozone?.geozoneID}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold">
+                                      {t("ID du compte")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 notranslate text-gray-600 pl-5">
+                                      {geozone?.accountID}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold">
+                                      {t("Date de creation")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                      {
+                                        FormatDateHeure(geozone?.lastUpdateTime)
+                                          .date
+                                      }
+                                      <span className="px-3">-</span>
+                                      {
+                                        FormatDateHeure(geozone?.lastUpdateTime)
+                                          .time
+                                      }
+                                    </span>
+                                  </div>{" "}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex  justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-end ">
+                              {(isDashboardHomePage ||
+                                localStorage.getItem("password")) && (
+                                <button
+                                  onClick={() => {
+                                    setCurrentGeozone(geozone);
+                                    setSupprimerGeozonePopup(true);
+                                  }}
+                                  className={`${
+                                    true
+                                      ? " bg-red-500 text-white"
+                                      : "text-red-600 border-[0.02rem] border-red-500 "
+                                  }   text-sm w-[50%] md:w-full font-semibold rounded-lg py-1 px-4`}
+                                >
+                                  {t("Supprimer")}
+                                </button>
+                              )}
+                              <button
+                                onClick={() => {
+                                  setCurrentGeozone(geozone);
+                                  setAjouterGeofencePopup(true);
+                                  setIsEditingGeofence(true);
+                                  setshowChooseItemToModifyMessage("");
+                                  setDocumentationPage(
+                                    "Ajouter_modifier_geofence"
+                                  );
+                                  navigate("/Ajouter_modifier_geofence");
+                                }}
+                                // to="/Groupe_vehicule_location?tab=localisation"
+                                className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"
+                              >
+                                {t("Modifier")}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                    {geozones.length >
+                      (visibleCounts[accountID] || 1) * itemsPerPage && (
+                      <div className="w-full flex justify-center mt-[4rem]">
                         <button
-                          onClick={() => {
-                            setCurrentGeozone(geozone);
-                            setAjouterGeofencePopup(true);
-                            setIsEditingGeofence(true);
-                            setshowChooseItemToModifyMessage("");
-                            setDocumentationPage("Ajouter_modifier_geofence");
-                            navigate("/Ajouter_modifier_geofence");
-                          }}
-                          // to="/Groupe_vehicule_location?tab=localisation"
-                          className="bg-gray-100 border border-gray-400 text-center w-[50%] md:w-full text-sm font-semibold rounded-lg py-1 px-4"
+                          onClick={() => showMore(accountID)}
+                          className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
                         >
-                          {t("Modifier")}
+                          {t("Voir plus de Résultat")}
                         </button>
                       </div>
-                    </div>
-                  );
-                })
-            ) : (
-              <p className="mt-[5rem] text-center mx-4 font-semibold text-gray-600">
-                {t("Pas de résultat")}
-              </p>
-            )
-          }
-          {filterGeofencesAccountData?.length >
-            filterGeofencesAccountDataPagination?.length && (
-            <div className="w-full flex justify-center mt-[4rem]">
-              <button
-                onClick={() => {
-                  afficherPlusDeRésultat();
-                }}
-                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
-              >
-                {t("Voir plus de Résultat")}
-              </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="flex justify-center font-semibold text-lg">
+              {t("Pas de résultat")}
             </div>
           )}
         </div>

@@ -1003,7 +1003,21 @@
 "Choisissez un ou plusieurs appareils pour affecter le groupe": "Elija uno o varios dispositivos para asignar al grupo",
 "Activer le Role": "Activar el rol",
 "Sélectionner un statut de code": "Seleccionar un estado de código",
-"Modifier un nouveau Role": "Modificar un nuevo rol"
+"Modifier un nouveau Role": "Modificar un nuevo rol",
+
+
+
+"Liste des Utilisateurs de" : "Lista de Usuarios de",
+"Liste des groupes de" : "Lista de Grupos de",
+"Liste des geozones de" : "Lista de Geocercas de",
+"Liste des roles actifs de" : "Lista de Roles Activos de",
+"Liste des roles de" : "Lista de Roles de",
+"Liste des alertes de" : "Lista de Alertas de",
+"Voir les appareils de" : "Ver Dispositivos de",
+"Annuler le filtre pour" : "Quitar Filtro para",
+"Filtrer les appareils" : "Filtrar Dispositivos",
+"Trier les appareils par" : "Ordenar Dispositivos por",
+"Dernière mouvement" : "Último Movimiento"
 
 
 

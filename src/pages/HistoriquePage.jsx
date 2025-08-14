@@ -384,6 +384,9 @@ function HistoriquePage() {
         véhicule?.simPhoneNumber
           ?.toLowerCase()
           ?.includes(searchQueryHistoriquePage.toLowerCase()) ||
+        véhicule?.accountID
+          ?.toLowerCase()
+          ?.includes(searchQueryHistoriquePage.toLowerCase()) ||
         véhicule.description
           ?.toLowerCase()
           ?.includes(searchQueryHistoriquePage.toLowerCase())
@@ -748,9 +751,10 @@ function HistoriquePage() {
             currentVéhicule={currentVéhicule}
             setshowFilter={setshowFilter}
             showFilter={showFilter}
+            handleVehicleClick={handleVehicleClick}
           />
         </div>
-        <div className="fixed flex justify-center z-20 top-[3.5rem]-- bg-white-- dark:bg-gray-800 md:bg-white/0  pt-3 left-0 right-0">
+        <div className="fixed-- flex justify-center z-20 top-[3.5rem]-- bg-white-- dark:bg-gray-800 md:bg-white/0  pt-3 left-0 right-0">
           {/* La liste de véhicules a choisir */}
           {showVehiculeListe && (
             <SearchVehiculePupup

@@ -8,7 +8,7 @@
   "Gestion des Groupe": "Gestion des groupe(s)",
   "Gestion des Appareils": "Gestion des appareil(s)",
   "Gestion des Alertes": "Gestion des alerte(s)",
-  "Gestion des Geofences": "Gestion des zones géographiques",
+  "Gestion des Geofences": "Gestion des géozones",
   "Localisation Appareils": "Localisation des appareil(s)",
   "Traduction": "Traduction",
   "Déconnexion": "Déconnexion",
@@ -1004,6 +1004,36 @@
 "Sélectionner un statut de code": "Sélectionner un statut de code",
 "Modifier un nouveau Role": "Modifier un nouveau rôle",
 
+
+
+
+
+
+
+
+
+"Liste des Utilisateurs de" : "Liste des Utilisateurs de",
+"Liste des groupes de" : "Liste des groupes de",
+"Liste des geozones de" : "Liste des geozones de",
+"Liste des roles actifs de" : "Liste des rôles actifs de",
+"Liste des roles de" : "Liste des rôles de",
+"Liste des alertes de" : "Liste des alertes de",
+"Voir les appareils de" : "Voir les appareils de",
+"Annuler le filtre pour" : "Annuler le filtre pour",
+"Filtrer les appareils" : "Filtrer les appareils",
+"Trier les appareils par" : "Trier les appareils par",
+"Dernière mouvement" : "Dernier mouvement",
+
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
 "" : "",
 "" : "",
 "" : "",

@@ -1,8 +1,13 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 
-import { FaChevronDown, FaUserCircle, FaUserPlus } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronRight,
+  FaUserCircle,
+  FaUserPlus,
+} from "react-icons/fa";
 import { IoMdLogIn } from "react-icons/io";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import GestionUserOptionsPopup from "../components/gestion_des_comptes/GestionUserOptionsPopup";
@@ -35,6 +40,8 @@ function ListeDesUtilisateur({
     gestionAccountData,
     adminPassword,
     accountUsers,
+    documentationPage,
+    isDashboardHomePage,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -104,12 +111,62 @@ function ListeDesUtilisateur({
     return map;
   }, [gestionAccountData]);
 
-  //////////////////////////////////////////////////////////////////////
   const [itemsToShow, setItemsToShow] = useState(10);
 
+  //////////////////////////////////////////////////////////////////////
   const usersToDisplay = useMemo(() => {
     return sortedUsers.slice(0, itemsToShow);
   }, [sortedUsers, itemsToShow]);
+
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+
+  const [openGroups, setOpenGroups] = useState({});
+  const [visibleCounts, setVisibleCounts] = useState({});
+
+  const itemsPerPage = 10;
+
+  const grouped = filterUserAccountData?.reduce((acc, item) => {
+    if (!acc[item.accountID]) acc[item.accountID] = [];
+    acc[item.accountID].push(item);
+    return acc;
+  }, {});
+
+  const sortedGroups = Object.entries(grouped).sort(
+    (a, b) => b[1].length - a[1].length
+  );
+
+  const toggleGroup = (accountID) => {
+    setOpenGroups((prev) => ({
+      ...prev,
+      [accountID]: !prev[accountID],
+    }));
+
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: prev[accountID] || 1,
+    }));
+  };
+
+  const showMore = (accountID) => {
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: (prev[accountID] || 1) + 1,
+    }));
+  };
+
+  // Ouvrir automatiquement le premier groupe au rendu initial
+  useEffect(() => {
+    if (sortedGroups.length > 0) {
+      const firstAccountID = sortedGroups[0][0];
+      setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
+      setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
+    }
+  }, [currentAccountSelected, documentationPage, filterUserAccountData]);
+
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
 
   return (
     <div>
@@ -302,136 +359,181 @@ function ListeDesUtilisateur({
                 />
               </div>
             )}
-          {usersToDisplay.length > 0 ? (
-            usersToDisplay?.map((user, index) => {
-              const foundUser = userMap.get(
-                `${user?.userID}_${user?.accountID}`
-              );
 
-              return (
-                <div
-                  onClick={() => {
-                    setCurrentSelectedUserToConnect(foundUser);
-                    setListeGestionDesVehicules(foundUser?.userDevices);
-                  }}
-                  key={index}
-                  className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
-                >
-                  <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                    {index + 1}
+          {/* //////////////////////////////////////// */}
+
+          {sortedGroups?.length > 0 ? (
+            sortedGroups?.map(([accountID, users]) => (
+              <div key={accountID}>
+                {!currentAccountSelected && isDashboardHomePage && (
+                  <div
+                    className="flex justify-between border-orange-300 text-md items-center border-b  cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
+                    onClick={() => toggleGroup(accountID)}
+                  >
+                    <h2>
+                      {t("Liste des Utilisateurs de")} :{" "}
+                      <span className="font-semibold">{accountID}</span> (
+                      {users?.length})
+                    </h2>
+                    <div></div>
+                    {openGroups[accountID] ? (
+                      <FaChevronRight />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </div>
-                  <div className="flex  gap-3  ">
-                    <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
-                    <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                      <div>
-                        <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            {t("Nom Utilisateur")} :
-                          </p>
-                          <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
-                            {user?.description}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            {t("UserID")} :
-                          </p>
-                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
-                            {user?.userID}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            {t("AccountID")} :
-                          </p>
-                          <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
-                            {user?.accountID}
-                          </span>
-                        </div>{" "}
-                        <div
-                          onClick={() => {
-                            console.log(
-                              "foundUser?.userGroupes",
-                              foundUser?.userGroupes
-                            );
-                          }}
-                          className="flex flex-wrap"
+                )}
+                {openGroups[accountID] && (
+                  <div className="flex flex-col gap-4 mt-6">
+                    {users
+                      ?.slice(0, (visibleCounts[accountID] || 1) * itemsPerPage)
+                      ?.map((user, index) => {
+                        const foundUser = userMap.get(
+                          `${user?.userID}_${user?.accountID}`
+                        );
+
+                        return (
+                          <div
+                            onClick={() => {
+                              setCurrentSelectedUserToConnect(foundUser);
+                              setListeGestionDesVehicules(
+                                foundUser?.userDevices
+                              );
+                            }}
+                            key={index}
+                            className="shadow-lg-- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
+                          >
+                            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                              {index + 1}
+                            </div>
+                            <div className="flex  gap-3  ">
+                              <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
+                              <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                                <div>
+                                  <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("Nom Utilisateur")} :
+                                    </p>
+                                    <span className="notranslate dark:text-orange-500 font-bold text-gray-600 pl-5">
+                                      {user?.description}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("UserID")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
+                                      {user?.userID}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("AccountID")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 notranslate font-bold text-gray-600 pl-5">
+                                      {user?.accountID}
+                                    </span>
+                                  </div>{" "}
+                                  <div
+                                    onClick={() => {
+                                      console.log(
+                                        "foundUser?.userGroupes",
+                                        foundUser?.userGroupes
+                                      );
+                                    }}
+                                    className="flex flex-wrap"
+                                  >
+                                    <p className="font-bold- text-gray-700">
+                                      {t("Groupes affectés")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
+                                      {foundUser?.userGroupes?.length > 0
+                                        ? foundUser?.userGroupes?.length
+                                        : `${t("All")}`}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("Nombre d'Appareils")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                                      {foundUser?.userDevices?.length || "0"}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("Dernière connexion")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 text-gray-600 pl-5">
+                                      {
+                                        FormatDateHeure(user?.lastLoginTime)
+                                          .date
+                                      }
+
+                                      <span className="px-3">-</span>
+                                      {
+                                        FormatDateHeure(user?.lastLoginTime)
+                                          .time
+                                      }
+                                    </span>
+                                  </div>{" "}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
+                              {" "}
+                              <button
+                                onClick={() => {
+                                  setSeConnecterAutreComptePopup(true);
+                                }}
+                                className={`${
+                                  true
+                                    ? " bg-gray-200 text-gray-800"
+                                    : "text-gray-800 border-[0.02rem] border-gray-50 "
+                                }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                              >
+                                <p>{t("Login")}</p>{" "}
+                                <IoMdLogIn className="text-xl" />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowSelectedUserOptionsPopup(true);
+                                  setCurrentSelectedUserToConnect(user);
+                                  showChooseItemToModifyMessage("");
+                                }}
+                                className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                              >
+                                <p>{t("Options")}</p>{" "}
+                                <IoOptions className="text-xl" />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                    {users.length >
+                      (visibleCounts[accountID] || 1) * itemsPerPage && (
+                      <div className="w-full flex justify-center mt-[4rem]">
+                        <button
+                          onClick={() => showMore(accountID)}
+                          className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
                         >
-                          <p className="font-bold- text-gray-700">
-                            {t("Groupes affectés")} :
-                          </p>
-                          <span className=" dark:text-orange-500 font-bold text-gray-600 pl-5">
-                            {foundUser?.userGroupes?.length > 0
-                              ? foundUser?.userGroupes?.length
-                              : `${t("All")}`}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            {t("Nombre d'Appareils")} :
-                          </p>
-                          <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                            {foundUser?.userDevices?.length || "0"}
-                          </span>
-                        </div>{" "}
-                        <div className="flex flex-wrap">
-                          <p className="font-bold- text-gray-700">
-                            {t("Dernière connexion")} :
-                          </p>
-                          <span className=" dark:text-orange-500 text-gray-600 pl-5">
-                            {FormatDateHeure(user?.lastLoginTime).date}
-
-                            <span className="px-3">-</span>
-                            {FormatDateHeure(user?.lastLoginTime).time}
-                          </span>
-                        </div>{" "}
+                          {t("Voir plus de Résultat")}
+                        </button>
                       </div>
-                    </div>
+                    )}
                   </div>
-                  <div className="flex justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
-                    {" "}
-                    <button
-                      onClick={() => {
-                        setSeConnecterAutreComptePopup(true);
-                      }}
-                      className={`${
-                        true
-                          ? " bg-gray-200 text-gray-800"
-                          : "text-gray-800 border-[0.02rem] border-gray-50 "
-                      }   text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                    >
-                      <p>{t("Login")}</p> <IoMdLogIn className="text-xl" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowSelectedUserOptionsPopup(true);
-                        setCurrentSelectedUserToConnect(user);
-                        showChooseItemToModifyMessage("");
-                      }}
-                      className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                    >
-                      <p>{t("Options")}</p> <IoOptions className="text-xl" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })
+                )}
+              </div>
+            ))
           ) : (
-            <div className="flex h-full   justify-center items-center font-semibold text-lg">
-              <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
+            <div className="flex justify-center font-semibold text-lg">
+              {t("Pas de résultat")}
             </div>
           )}
-          {itemsToShow < sortedUsers.length && (
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={() => setItemsToShow(itemsToShow + 10)}
-                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
-              >
-                {t("Voir plus de Résultat")}
-              </button>
-            </div>
-          )}
+
+          {/* ////////////////////////////////////////////// */}
         </div>
       </div>
     </div>

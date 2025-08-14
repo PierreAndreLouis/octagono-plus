@@ -977,7 +977,26 @@
 "Choisissez un ou plusieurs appareils pour affecter le groupe": "Choose one or more devices to assign to the group",
 "Activer le Role": "Activate the role",
 "Sélectionner un statut de code": "Select a code status",
-"Modifier un nouveau Role": "Edit a new role"
+"Modifier un nouveau Role": "Edit a new role",
+
+
+
+
+
+
+
+"Liste des Utilisateurs de" : "List of Users of",
+"Liste des groupes de" : "List of Groups of",
+"Liste des geozones de" : "List of Geofences of",
+"Liste des roles actifs de" : "List of Active Roles of",
+"Liste des roles de" : "List of Roles of",
+"Liste des alertes de" : "List of Alerts of",
+"Voir les appareils de" : "View Devices of",
+"Annuler le filtre pour" : "Clear Filter for",
+"Filtrer les appareils" : "Filter Devices",
+"Trier les appareils par" : "Sort Devices by",
+"Dernière mouvement" : "Last Movement"
+
 
 
 

@@ -1,7 +1,8 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { IoAlertCircleOutline, IoSearch } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { useTranslation } from "react-i18next";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 function ListeDesAlertsGestion({
   fromDashboard = false,
@@ -18,6 +19,8 @@ function ListeDesAlertsGestion({
     ListeDesAlertes,
     isDashboardHomePage,
     mergedDataHome,
+    currentAccountSelected,
+    documentationPage,
   } = useContext(DataContext);
 
   const [t] = useTranslation();
@@ -28,7 +31,7 @@ function ListeDesAlertsGestion({
 
   let ListeOfDevice = isDashboardHomePage ? accountDevices : dataFusionné;
 
-  // Filtrage des devices selon la recherche
+  // Filtrage des alerts selon la recherche
   // const filteredListe = useMemo(() => {
   //   if (!searchTermInput) return ListeDesAlertes;
 
@@ -101,6 +104,58 @@ function ListeDesAlertsGestion({
     );
   }, [filteredListe, page]);
 
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+
+  const [openGroups, setOpenGroups] = useState({});
+  const [visibleCounts, setVisibleCounts] = useState({});
+
+  const itemsPerPage = 10;
+
+  const grouped = filteredListe?.reduce((acc, item) => {
+    if (!acc[item.accountID]) acc[item.accountID] = [];
+    acc[item.accountID].push(item);
+    return acc;
+  }, {});
+
+  const sortedGroups = Object.entries(grouped).sort(
+    (a, b) => b[1].length - a[1].length
+  );
+
+  const toggleGroup = (accountID) => {
+    setOpenGroups((prev) => ({
+      ...prev,
+      [accountID]: !prev[accountID],
+    }));
+
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: prev[accountID] || 1,
+    }));
+  };
+
+  const showMore = (accountID) => {
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: (prev[accountID] || 1) + 1,
+    }));
+  };
+
+  // Ouvrir automatiquement le premier groupe au rendu initial
+  useEffect(() => {
+    if (sortedGroups.length > 0) {
+      const firstAccountID = sortedGroups[0][0];
+      setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
+      setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
+    }
+  }, [currentAccountSelected, documentationPage, ListeDesAlertes]);
+
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
   return (
     <div className="px-2 pb-40 bg-white pt-10 rounded-lg">
       <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
@@ -125,90 +180,135 @@ function ListeDesAlertsGestion({
       </div>
 
       <div className="flex flex-col gap-6 max-w-[50rem] mx-auto mt-6">
-        {paginatedAlerts.length > 0 ? (
-          paginatedAlerts.map((alert, index) => {
-            const code = parseInt(alert.statusCode, 16);
-            const codeDescription =
-              statusDescriptions[code] || t("Statut inconnu");
-
-            const currentDevice = ListeOfDevice?.find(
-              (device) =>
-                device?.deviceID === alert?.deviceID &&
-                device?.accountID === alert?.accountID
-            );
-
-            return (
-              <div
-                key={index}
-                className="bg-orange-50/70 shadow-inner relative flex gap-4 justify-between items-end rounded-lg px-4 py-4"
-              >
-                <div className="bg-gray-100 shadow text-sm absolute top-0 right-0 rounded-bl-full font-bold w-8 h-8 flex justify-center items-center">
-                  {index + 1}
+        {sortedGroups?.length > 0 ? (
+          sortedGroups?.map(([accountID, alerts]) => (
+            <div key={accountID}>
+              {!currentAccountSelected && isDashboardHomePage && (
+                <div
+                  className="flex justify-between   text-md items-center border-b border-orange-300   shadow-orange-300/20 cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
+                  onClick={() => toggleGroup(accountID)}
+                >
+                  <h2>
+                    {t("Liste des alertes de")} :{" "}
+                    <span className="font-semibold">{accountID}</span> (
+                    {alerts?.length})
+                  </h2>
+                  <div></div>
+                  {openGroups[accountID] ? (
+                    <FaChevronRight />
+                  ) : (
+                    <FaChevronDown />
+                  )}
                 </div>
-                <div className="flex gap-3 w-full">
-                  <IoAlertCircleOutline className="text-orange-500/80 text-[3rem] hidden sm:block" />
-                  <div className="w-full">
-                    <div className="text-orange-500/80 border-b py-1 font-bold">
-                      {t("Alerte")} :{" "}
-                      <span className="pl-2">{codeDescription}</span>
+              )}
+              {openGroups[accountID] && (
+                <div className="flex flex-col gap-4 mt-6">
+                  {alerts
+                    ?.slice(0, (visibleCounts[accountID] || 1) * itemsPerPage)
+                    ?.map((alert, index) => {
+                      //
+                      //
+                      //
+                      const code = parseInt(alert.statusCode, 16);
+                      const codeDescription =
+                        statusDescriptions[code] || t("Statut inconnu");
+
+                      const currentDevice = ListeOfDevice?.find(
+                        (device) =>
+                          device?.deviceID === alert?.deviceID &&
+                          device?.accountID === alert?.accountID
+                      );
+
+                      return (
+                        <div
+                          key={index}
+                          className="bg-gray-50  shadow-inner shadow-black/20 relative flex gap-4 justify-between items-end rounded-lg px-4 py-4"
+                        >
+                          <div className="bg-gray-100 shadow text-sm absolute top-0 right-0 rounded-bl-full font-bold w-8 h-8 flex justify-center items-center">
+                            {index + 1}
+                          </div>
+                          <div className="flex gap-3 w-full">
+                            <IoAlertCircleOutline className="text-orange-500/80 text-[3rem] hidden sm:block" />
+                            <div className="w-full">
+                              <div className="text-orange-500/80 border-b py-1 font-bold">
+                                {t("Alerte")} :{" "}
+                                <span className="pl-2">{codeDescription}</span>
+                              </div>
+                              <div className="border-b py-1">
+                                <p className="font-bold inline">{t("Code")}:</p>
+                                <span className="text-gray-600 pl-2">
+                                  {alert?.statusCode}
+                                </span>
+                              </div>
+                              <div className="border-b py-1">
+                                <p className="font-bold inline">
+                                  {t("Vitesse")}:
+                                </p>
+                                <span className="text-gray-600 pl-2">
+                                  {/* {alert?.speedKPH}  */}
+                                  {parseFloat(alert?.speedKPH).toFixed(0)} Km/h
+                                </span>
+                              </div>
+                              <div className="border-b py-1">
+                                <p className="font-bold inline">
+                                  {t("Description")}:
+                                </p>
+                                <span className="text-gray-600 pl-2">
+                                  {currentDevice?.description || "---"}
+                                </span>
+                              </div>
+                              <div className="border-b py-1">
+                                <p className="font-bold inline">
+                                  {t("Account ID")}:
+                                </p>
+                                <span className="text-gray-600 pl-2">
+                                  {alert?.accountID}
+                                </span>
+                              </div>
+                              <div className="border-b py-1">
+                                <p className="font-bold inline">
+                                  {t("Adresse")}:
+                                </p>
+                                <span className="text-gray-600 pl-2">
+                                  {alert?.address ||
+                                    t("Pas d'adresse disponible")}
+                                </span>
+                              </div>
+                              <div className="border-b py-1">
+                                <p className="font-bold inline">
+                                  {t("Last update")}:
+                                </p>
+                                <span className="text-gray-600 pl-2">
+                                  {FormatDateHeure(alert?.timestamp).date} /{" "}
+                                  {FormatDateHeure(alert?.timestamp).time}
+                                </span>
+                              </div>
+                              {/* timestamp: {alert?.timestamp} */}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                  {alerts.length >
+                    (visibleCounts[accountID] || 1) * itemsPerPage && (
+                    <div className="w-full flex justify-center mt-[4rem]">
+                      <button
+                        onClick={() => showMore(accountID)}
+                        className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+                      >
+                        {t("Voir plus de Résultat")}
+                      </button>
                     </div>
-                    <div className="border-b py-1">
-                      <p className="font-bold inline">{t("Code")}:</p>
-                      <span className="text-gray-600 pl-2">
-                        {alert?.statusCode}
-                      </span>
-                    </div>
-                    <div className="border-b py-1">
-                      <p className="font-bold inline">{t("Vitesse")}:</p>
-                      <span className="text-gray-600 pl-2">
-                        {/* {alert?.speedKPH}  */}
-                        {parseFloat(alert?.speedKPH).toFixed(0)} Km/h
-                      </span>
-                    </div>
-                    <div className="border-b py-1">
-                      <p className="font-bold inline">{t("Description")}:</p>
-                      <span className="text-gray-600 pl-2">
-                        {currentDevice?.description || "---"}
-                      </span>
-                    </div>
-                    <div className="border-b py-1">
-                      <p className="font-bold inline">{t("Account ID")}:</p>
-                      <span className="text-gray-600 pl-2">
-                        {alert?.accountID}
-                      </span>
-                    </div>
-                    <div className="border-b py-1">
-                      <p className="font-bold inline">{t("Adresse")}:</p>
-                      <span className="text-gray-600 pl-2">
-                        {alert?.address || t("Pas d'adresse disponible")}
-                      </span>
-                    </div>
-                    <div className="border-b py-1">
-                      <p className="font-bold inline">{t("Last update")}:</p>
-                      <span className="text-gray-600 pl-2">
-                        {FormatDateHeure(alert?.timestamp).date} /{" "}
-                        {FormatDateHeure(alert?.timestamp).time}
-                      </span>
-                    </div>
-                    {/* timestamp: {alert?.timestamp} */}
-                  </div>
+                  )}
                 </div>
-              </div>
-            );
-          })
+              )}
+            </div>
+          ))
         ) : (
           <div className="flex justify-center font-semibold text-lg">
             {t("Pas de résultat")}
           </div>
-        )}
-
-        {filteredListe.length > page * pageSize && (
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold max-w-[15rem] mx-auto"
-          >
-            {t("Voir plus de Résultat")}
-          </button>
         )}
       </div>
     </div>

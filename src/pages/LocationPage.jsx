@@ -309,6 +309,9 @@ const LocationPage = ({
         véhicule?.simPhoneNumber
           .toLowerCase()
           .includes(searchQueryLocationPage.toLowerCase()) ||
+        véhicule?.accountID
+          .toLowerCase()
+          .includes(searchQueryLocationPage.toLowerCase()) ||
         véhicule.description
           .toLowerCase()
           .includes(searchQueryLocationPage.toLowerCase())

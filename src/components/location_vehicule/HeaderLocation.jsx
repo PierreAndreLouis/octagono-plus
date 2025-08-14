@@ -3,6 +3,7 @@ import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
 import { useTranslation } from "react-i18next";
+import { MdUpdate } from "react-icons/md";
 
 function HeaderLocation({
   setShowVehiculeListe,
@@ -19,6 +20,9 @@ function HeaderLocation({
     mergedDataHome,
     listeGestionDesVehicules,
     FormatDateHeure,
+    dashboardLoadingEffect,
+    autoUpdateFonction,
+    setDashboardLoadingEffect,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -174,13 +178,24 @@ function HeaderLocation({
           </Tooltip>
         </div>
         {lastUpdate?.mostRecentTimestamp && (
-          <p className="font-bold hidden  md:flex flex-nowrap items-center text-[.8rem] sm:text-[.9rem] text-orange-700 bg-white  rounded-lg px-0 sm:px-3 py-1.5 mx-auto">
+          <p className="font-bold hidden  md:flex flex-nowrap items-center text-[.7rem] sm:text-[.9rem] text-orange-700 bg-white  rounded-lg px-0 sm:px-3 py-0 mx-auto">
             <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
             <span>
               {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
               {" / "}
               {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
             </span>
+            <MdUpdate
+              onClick={() => {
+                setDashboardLoadingEffect(true);
+                autoUpdateFonction();
+              }}
+              className={`${
+                dashboardLoadingEffect
+                  ? "animate-spin rounded-full hover:bg-orange-50"
+                  : " hover:bg-orange-500 hover:text-white rounded-sm"
+              } min-w-[2rem] cursor-pointer min-h-[1.7rem]  `}
+            />
           </p>
         )}
       </div>

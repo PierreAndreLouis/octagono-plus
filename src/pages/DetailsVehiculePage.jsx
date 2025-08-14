@@ -77,6 +77,9 @@ function DetailsVehiculePage() {
       véhicule?.simPhoneNumber
         .toLowerCase()
         .includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
+      véhicule?.accountID
+        .toLowerCase()
+        .includes(searchQueryDetailsVéhiculePage.toLowerCase()) ||
       véhicule.description
         .toLowerCase()
         .includes(searchQueryDetailsVéhiculePage.toLowerCase())

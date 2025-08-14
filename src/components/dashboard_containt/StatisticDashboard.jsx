@@ -376,7 +376,7 @@ function StatisticDashboard({
                 resetTimerForAutoUpdate();
                 fetchNewDataDevices();
               }}
-              className={`rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
+              className={`hover:bg-orange-500 hover:border-orange-500 transition-all hover:text-white rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
             >
               <p
                 className="font-bold"

@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
-import { FaUserPlus, FaChevronDown, FaUserCircle } from "react-icons/fa";
+import {
+  FaUserPlus,
+  FaChevronDown,
+  FaUserCircle,
+  FaChevronRight,
+} from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { PiIntersectThreeBold } from "react-icons/pi";
 import GestionGroupeOptionPopup from "../components/gestion_des_comptes/GestionGroupeOptionPopup";
@@ -41,6 +46,8 @@ function ListeDesGroupes({
     fetchAccountGroupes,
     gestionAccountData,
     accountGroupes,
+    documentationPage,
+    isDashboardHomePage,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -135,6 +142,56 @@ function ListeDesGroupes({
   const groupesToDisplay = useMemo(() => {
     return sortedGroupes.slice(0, itemsToShow);
   }, [sortedGroupes, itemsToShow]);
+
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////
+
+  const [openGroups, setOpenGroups] = useState({});
+  const [visibleCounts, setVisibleCounts] = useState({});
+
+  const itemsPerPage = 10;
+
+  const grouped = filterGroupeAccountData?.reduce((acc, item) => {
+    if (!acc[item.accountID]) acc[item.accountID] = [];
+    acc[item.accountID].push(item);
+    return acc;
+  }, {});
+
+  const sortedGroups = Object.entries(grouped).sort(
+    (a, b) => b[1].length - a[1].length
+  );
+
+  const toggleGroup = (accountID) => {
+    setOpenGroups((prev) => ({
+      ...prev,
+      [accountID]: !prev[accountID],
+    }));
+
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: prev[accountID] || 1,
+    }));
+  };
+
+  const showMore = (accountID) => {
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [accountID]: (prev[accountID] || 1) + 1,
+    }));
+  };
+
+  // Ouvrir automatiquement le premier groupe au rendu initial
+  useEffect(() => {
+    if (sortedGroups.length > 0) {
+      const firstAccountID = sortedGroups[0][0];
+      setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
+      setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
+    }
+  }, [currentAccountSelected, documentationPage, listeGestionDesGroupe]);
+
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
 
   return (
     <div>
@@ -435,109 +492,141 @@ function ListeDesGroupes({
           {/*  */}
           {/*  */}
 
-          {groupesToDisplay?.length > 0 ? (
-            groupesToDisplay
-              ?.slice()
-              .sort((a, b) => b?.creationTime - a?.creationTime)
-              ?.map((groupe, index) => {
-                const userListeAffected =
-                  groupUsersMap.get(groupe.groupID) || [];
-
-                const foundGroupe = gestionAccountData
-                  ?.flatMap((account) => account.accountGroupes)
-                  ?.find((u) => u.groupID === groupe?.groupID);
-
-                return (
+          {sortedGroups?.length > 0 ? (
+            sortedGroups?.map(([accountID, groupes]) => (
+              <div key={accountID}>
+                {!currentAccountSelected && isDashboardHomePage && (
                   <div
-                    onClick={() => {
-                      setCurrentSelectedGroupeGestion(foundGroupe);
-                      console.log("foundGroupe----------", foundGroupe);
-                    }}
-                    key={index}
-                    className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                    className="flex justify-between text-md items-center border-b border-orange-300 cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
+                    onClick={() => toggleGroup(accountID)}
                   >
-                    <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
-                      {index + 1}
-                    </div>
-                    <div className="flex  gap-3  ">
-                      <PiIntersectThreeBold className="text-[3rem] hidden sm:block text-orange-500 md:mr-4" />
-                      <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                        <div>
-                          <PiIntersectThreeBold className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold- text-gray-700">
-                              {t("ID du Groupe")} :
-                            </p>
-                            <span className=" dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
-                              {groupe?.groupID}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold- text-gray-700">
-                              {t("Nom du Groupe")} :
-                            </p>
-                            <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
-                              {groupe?.description || "---"}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p className="font-bold- text-gray-700">
-                              {t("Nombre d'appareils")} :
-                            </p>
-                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {foundGroupe?.groupeDevices?.length}
-                            </span>
-                          </div>{" "}
-                          <div className="flex flex-wrap border-b py-1">
-                            <p
-                              onClick={() => {
-                                console.log(userListeAffected);
-                              }}
-                              className="font-bold- text-gray-700"
-                            >
-                              {t("Nombre Utilisateurs affectés")} :
-                            </p>
-                            <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
-                              {userListeAffected?.length}
-                            </span>
-                          </div>{" "}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-end md:mr-10-- sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
-                      <button
-                        onClick={() => {
-                          setTimeout(() => {
-                            setCurrentSelectedGroupeGestion(groupe);
-                          }, 500);
-                          setListeGestionDesUsers(userListeAffected);
-                          console.log(groupe);
-                          setShowSelectedGroupeOptionsPopup(true);
-                          setshowChooseItemToModifyMessage("");
-                        }}
-                        className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                      >
-                        <p>{t("Options")}</p> <IoOptions className="text-xl" />
-                      </button>
-                    </div>
+                    <h2>
+                      {t("Liste des groupes de")} :{" "}
+                      <span className="font-semibold">{accountID}</span> (
+                      {groupes?.length})
+                    </h2>
+                    <div></div>
+                    {openGroups[accountID] ? (
+                      <FaChevronRight />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </div>
-                );
-              })
+                )}
+                {openGroups[accountID] && (
+                  <div className="flex flex-col gap-4 mt-6">
+                    {groupes
+                      ?.slice(0, (visibleCounts[accountID] || 1) * itemsPerPage)
+                      ?.map((groupe, index) => {
+                        //
+                        //
+                        //
+                        const userListeAffected =
+                          groupUsersMap.get(groupe.groupID) || [];
+
+                        const foundGroupe = gestionAccountData
+                          ?.flatMap((account) => account.accountGroupes)
+                          ?.find((u) => u.groupID === groupe?.groupID);
+
+                        return (
+                          <div
+                            onClick={() => {
+                              setCurrentSelectedGroupeGestion(foundGroupe);
+                              console.log("foundGroupe----------", foundGroupe);
+                            }}
+                            key={index}
+                            className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                          >
+                            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                              {index + 1}
+                            </div>
+                            <div className="flex  gap-3  ">
+                              <PiIntersectThreeBold className="text-[3rem] hidden sm:block text-orange-500 md:mr-4" />
+                              <div className=" w-full flex flex-wrap justify-between gap-x-4">
+                                <div>
+                                  <PiIntersectThreeBold className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
+                                  <div className="flex flex-wrap border-b py-1">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("ID du Groupe")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
+                                      {groupe?.groupID}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap border-b py-1">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("Nom du Groupe")} :
+                                    </p>
+                                    <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
+                                      {groupe?.description || "---"}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap border-b py-1">
+                                    <p className="font-bold- text-gray-700">
+                                      {t("Nombre d'appareils")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                                      {foundGroupe?.groupeDevices?.length}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap border-b py-1">
+                                    <p
+                                      onClick={() => {
+                                        console.log(userListeAffected);
+                                      }}
+                                      className="font-bold- text-gray-700"
+                                    >
+                                      {t("Nombre Utilisateurs affectés")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                                      {userListeAffected?.length}
+                                    </span>
+                                  </div>{" "}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex justify-end md:mr-10-- sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
+                              <button
+                                onClick={() => {
+                                  setTimeout(() => {
+                                    setCurrentSelectedGroupeGestion(groupe);
+                                  }, 500);
+                                  setListeGestionDesUsers(userListeAffected);
+                                  console.log(groupe);
+                                  setShowSelectedGroupeOptionsPopup(true);
+                                  setshowChooseItemToModifyMessage("");
+                                }}
+                                className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                              >
+                                <p>{t("Options")}</p>{" "}
+                                <IoOptions className="text-xl" />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                    {groupes.length >
+                      (visibleCounts[accountID] || 1) * itemsPerPage && (
+                      <div className="w-full flex justify-center mt-[4rem]">
+                        <button
+                          onClick={() => showMore(accountID)}
+                          className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
+                        >
+                          {t("Voir plus de Résultat")}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
           ) : (
             <div className="flex justify-center font-semibold text-lg">
               {t("Pas de résultat")}
             </div>
           )}
-          {itemsToShow < sortedGroupes.length && (
-            <div className="flex justify-center w-full">
-              <button
-                onClick={() => setItemsToShow(itemsToShow + 10)}
-                className="bg-orange-600 text-white rounded-lg px-8 py-2 font-bold"
-              >
-                {t("Voir plus de Résultat")}
-              </button>
-            </div>
-          )}
+
           {/*  */}
           {/*  */}
         </div>

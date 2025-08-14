@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 
-import { MdLocationPin, MdDateRange } from "react-icons/md";
+import { MdLocationPin, MdDateRange, MdUpdate } from "react-icons/md";
 import { FaCar } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -19,17 +19,22 @@ import { IoClose } from "react-icons/io5";
 import { MdCenterFocusStrong } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { DataContext } from "../../context/DataContext";
+import { useNavigate } from "react-router-dom";
 
 function HistoriqueHeader({
   setShowHistoriqueInMap,
   showHistoriqueInMap,
   setShowVehiculeListe,
   showVehiculeListe,
-  currentVéhicule,
   setshowFilter,
   showFilter,
+  handleVehicleClick,
 }) {
   const {
+    currentVéhicule,
+    dashboardLoadingEffect,
+    setDashboardLoadingEffect,
+
     isDashboardHomePage,
     currentAccountSelected,
     accountDevices,
@@ -37,15 +42,17 @@ function HistoriqueHeader({
     listeGestionDesVehicules,
     FormatDateHeure,
     véhiculeHistoriqueDetails,
+    setDocumentationPage,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
+  const navigate = useNavigate();
 
   // Pour stocker le timestamp le plus récent lorsque "data" change
 
   return (
     <>
       {véhiculeHistoriqueDetails?.length > 0 && (
-        <p className="font-bold mb-1 max-w-[45rem] flex flex-wrap items-center text-[.75rem] sm:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3  py-1 mt-0.5 mx-auto">
+        <p className="font-bold text-center  justify-center  mb-1 max-w-[45rem] flex flex-wrap items-center text-[.75rem] sm:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3  py-1 mt-0.5 mx-auto">
           <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
           <span>
             {FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)?.date}
@@ -54,6 +61,17 @@ function HistoriqueHeader({
               FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)?.time
             }{" "}
           </span>
+          <MdUpdate
+            onClick={() => {
+              setDashboardLoadingEffect(true);
+              handleVehicleClick(currentVéhicule, true);
+            }}
+            className={`${
+              dashboardLoadingEffect
+                ? "animate-spin rounded-full hover:bg-orange-50"
+                : " hover:bg-orange-500 hover:text-white rounded-sm"
+            } min-w-[2rem] cursor-pointer min-h-[1.7rem]  `}
+          />
         </p>
       )}
       <div className="flex   flex-col w-full">
@@ -61,6 +79,13 @@ function HistoriqueHeader({
           <div className="flex  mx-auto relative justify-between px-0  md:max-w-[45rem]  w-full items-center-- gap-1 w-full--">
             <div
               onClick={() => {
+                if (showHistoriqueInMap) {
+                  navigate("/Historique_appareil");
+                  setDocumentationPage("Historique_appareil");
+                } else {
+                  setDocumentationPage("Trajet_appareil");
+                  navigate("/Trajet_appareil");
+                }
                 setShowHistoriqueInMap(!showHistoriqueInMap);
               }}
               className="cursor-pointer relative shadow-xl border md:border-orange-200 min-w-10 rounded-md flex justify-center items-center py-2 bg-orange-50 dark:bg-gray-900/50 dark:border-gray-300/30"
@@ -153,10 +178,12 @@ function HistoriqueHeader({
                   className="flex gap-2 dark:bg-gray-900/50 dark:text-gray-50 dark:border-gray-300/30 justify-between  cursor-pointer border md:border-orange-200  rounded-md
                  px-3 py-2 bg-orange-50 shadow-xl text-center"
                 >
-                  <p className="hidden-- md:block truncate">
-                    {currentVéhicule?.description ||
-                      `${t("Choisissez un véhicule")}`}
-                  </p>
+                  <div className="w-full flex justify-center font-semibold">
+                    <p className="hidden-- md:block truncate text-center">
+                      {currentVéhicule?.description ||
+                        `${t("Choisissez un véhicule")}`}
+                    </p>
+                  </div>
                   <FaChevronDown className="mt-1" />
                 </div>
               </div>

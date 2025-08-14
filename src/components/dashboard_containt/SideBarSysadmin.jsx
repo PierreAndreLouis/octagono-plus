@@ -483,7 +483,18 @@ function SideBarSysadmin({
       name: t("Gestion des Roles"),
       isSysadmin: true,
       link: "/Gestion_des_roles",
-      setVariable: () => setDocumentationPage("Gestion_des_roles"),
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_roles");
+
+        scrollToTop();
+        setDocumentationPage("Gestion_des_roles");
+        closeSideBar();
+        if (currentAccountSelected) {
+          setListeGestionDesRules(currentAccountSelected?.accountRules);
+        } else {
+          setListeGestionDesRules(accountRules);
+        }
+      },
     },
     {
       name: t("Gestion des Roles Actives"),

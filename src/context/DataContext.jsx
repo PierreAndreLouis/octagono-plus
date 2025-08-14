@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "6.1";
+  let versionApplication = "6.2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1206,23 +1206,6 @@ const DataContextProvider = ({ children }) => {
           obj.véhiculeDetails?.map((detail) => {
             const speed = parseFloat(detail.speedKPH);
 
-            // if (detail.statusCode === "0xF112" && speed <= 0) {
-            //   detail.statusCode = "0xF020";
-
-            // }
-            ///////////////////////////////
-            //           const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-
-            // const lastUpdateMs = parseInt(detail.timestamp) * 1000;
-            // const updatedRecently = (currentTimeMs - lastUpdateMs) <= twentyFourHoursInMs;
-
-            // if (detail.statusCode === "0xF952") {
-            //   if (speed > 0 && updatedRecently) {
-            //     detail.statusCode = "0xF112";
-            //   } else {
-            //     detail.statusCode = "0xF020";
-            //   }
-            // }
             ///////////////////////////////
             const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 24h
 
@@ -1230,28 +1213,32 @@ const DataContextProvider = ({ children }) => {
             const updatedRecently =
               Number.isFinite(lastUpdateMs) &&
               currentTimeMs - lastUpdateMs <= twentyFourHoursInMs;
-
+            //  inconue
             if (detail.statusCode === "0xF952") {
               if (speed > 0 && updatedRecently) {
+                // moving
                 detail.statusCode = "0xF112";
               } else {
+                // location
                 detail.statusCode = "0xF020";
               }
             }
 
-            // Inverse : corriger ceux qui sont déjà en F112 mais pas récents
-            // if (detail.statusCode === "0xF112" && !updatedRecently ) {
-            //   detail.statusCode = "0xF020";
-            // }
-            //             if (detail.statusCode === "0xF112") {
-            //   if (!(speed > 0 && updatedRecently)) {
-            //     detail.statusCode = "0xF020";
-            //   }
-            // }
-
+            // moving
             if (detail.statusCode === "0xF112") {
               if (speed <= 0 || !updatedRecently) {
+                // location
                 detail.statusCode = "0xF020";
+              }
+            }
+
+            // Vérifier tous les autres codes
+            if (
+              detail.statusCode !== "0xF952" &&
+              detail.statusCode !== "0xF112"
+            ) {
+              if (speed > 0 && updatedRecently) {
+                detail.statusCode = "0xF112";
               }
             }
 
@@ -1401,6 +1388,7 @@ const DataContextProvider = ({ children }) => {
     sendConnectionMail = true
   ) => {
     setDashboardLoadingEffect(true);
+
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${account}" user="${username}" password="${password}" />
         <Record table="Account" partial="true">
@@ -8643,7 +8631,11 @@ const DataContextProvider = ({ children }) => {
   const [timeLeftBeforeAutoUpdate, setTimeLeftBeforeAutoUpdate] = useState(0);
   const lastExecutionRef = useRef(Date.now()); // <-- stockage persistant
 
-  const maFonction = () => {
+  // mafonction
+  // ma fonction
+  const autoUpdateFonction = () => {
+    setDashboardLoadingEffect(true);
+    resetTimerForAutoUpdate();
     const accountUser = account || localStorage.getItem("account") || "";
     const usernameUser = username || localStorage.getItem("username") || "";
     const passwordUser = password || localStorage.getItem("password") || "";
@@ -8682,7 +8674,7 @@ const DataContextProvider = ({ children }) => {
           isUserNotInteractingNow,
           isAuthenticated
         );
-        maFonction();
+        autoUpdateFonction();
         storedLastExecution = Date.now();
         localStorage.setItem("lastExecution", storedLastExecution);
       }
@@ -8711,7 +8703,7 @@ const DataContextProvider = ({ children }) => {
             isAuthenticated
           );
 
-          maFonction();
+          autoUpdateFonction();
           lastExecutionRef.current = Date.now();
           localStorage.setItem("lastExecution", lastExecutionRef.current);
         }
@@ -9033,6 +9025,7 @@ const DataContextProvider = ({ children }) => {
         timeLeftBeforeAutoUpdate,
         setTimeLeftBeforeAutoUpdate,
         resetTimerForAutoUpdate,
+        autoUpdateFonction,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

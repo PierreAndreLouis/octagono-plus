@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
+import { Tooltip } from "@mui/material";
+import { BsSortDown } from "react-icons/bs";
+
 import {
   FaCar,
   FaUserPlus,
@@ -13,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import GestionAppareilOptionPopup from "../components/gestion_des_comptes/GestionAppareilOptionPopup";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
+import { LuArrowDownUp } from "react-icons/lu";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
@@ -53,6 +57,8 @@ function ListeDesVehiculesGestion({
     fetchAccountGroupes,
     fetchGroupeDevices,
     setDashboardLoadingEffect,
+    dashboardLoadingEffect,
+    autoUpdateFonction,
     gestionAccountData,
     adminPassword,
     statusDescriptions,
@@ -210,29 +216,65 @@ function ListeDesVehiculesGestion({
 
   const [voir10RésultatPlus, setVoir10RésultatPlus] = useState(1);
 
+  const [showSortDeviceByPopup, setShowSortDeviceByPopup] = useState(false);
+
+  const [sortDeviceBy, setSortDeviceBy] = useState("Dernière mouvement");
+  const [isMoreRecentFirst, setIsMoreRecentFirst] = useState(true);
+
   const filteredAndCutListeGestionDesVehicules =
     filteredListeGestionDesVehicules &&
-    filteredListeGestionDesVehicules
-      .sort((a, b) => {
-        const lenA = a.véhiculeDetails?.length || 0;
-        const lenB = b.véhiculeDetails?.length || 0;
+    filteredListeGestionDesVehicules.sort((a, b) => {
+      const today = todayTimestamp;
 
-        const aIsFuture = a.lastStopTime > todayTimestamp;
-        const bIsFuture = b.lastStopTime > todayTimestamp;
+      const lenA = Number(a?.véhiculeDetails?.length || 0);
+      const lenB = Number(b?.véhiculeDetails?.length || 0);
 
-        if (aIsFuture !== bIsFuture) {
-          return bIsFuture ? 1 : -1; // true (1) avant false (0)
-        }
+      const aIsFuture = Number(a?.lastStopTime) > today;
+      const bIsFuture = Number(b?.lastStopTime) > today;
 
-        if (lenB !== lenA) return lenB - lenA;
+      const speedA = parseFloat(a?.véhiculeDetails?.[0]?.speedKPH) || 0;
+      const speedB = parseFloat(b?.véhiculeDetails?.[0]?.speedKPH) || 0;
 
-        if (b.lastUpdateTime !== a.lastUpdateTime) {
-          return b.lastUpdateTime - a.lastUpdateTime;
-        }
+      const dateCreationA = Number(a?.creationTime) || 0;
+      const dateCreationB = Number(b?.creationTime) || 0;
 
-        return b.lastStopTime - a.lastStopTime;
-      })
-      ?.slice(0, voir10RésultatPlus * nombreDeRésultatParClique);
+      const distanceTotalA = parseFloat(a?.lastOdometerKM) || 0;
+      const distanceTotalB = parseFloat(b?.lastOdometerKM) || 0;
+
+      const lastUpdateA =
+        Number(a?.véhiculeDetails?.[0]?.timestamp) ||
+        Number(a?.lastUpdateTime) ||
+        0;
+      const lastUpdateB =
+        Number(b?.véhiculeDetails?.[0]?.timestamp) ||
+        Number(b?.lastUpdateTime) ||
+        0;
+
+      // --- Tri dynamique ---
+      let result = 0;
+      switch (sortDeviceBy) {
+        case "Vitesse":
+          result = speedA - speedB;
+          break;
+        case "Dernière mouvement":
+          result = Number(a?.lastStopTime) - Number(b?.lastStopTime);
+          break;
+        case "Date de creation":
+          result = dateCreationA - dateCreationB;
+          break;
+        case "Distance parcourue":
+          result = distanceTotalA - distanceTotalB;
+          break;
+        case "Dernière mise a jour":
+          result = lastUpdateA - lastUpdateB;
+          break;
+        default:
+          result = aIsFuture - bIsFuture;
+          break;
+      }
+
+      return isMoreRecentFirst ? -result : result;
+    });
 
   const afficherPlusDeRésultat = () => {
     setVoir10RésultatPlus((prev) => prev + 1);
@@ -250,11 +292,14 @@ function ListeDesVehiculesGestion({
 
   const itemsPerPage = 10;
 
-  const grouped = filteredListeGestionDesVehicules?.reduce((acc, item) => {
-    if (!acc[item.accountID]) acc[item.accountID] = [];
-    acc[item.accountID].push(item);
-    return acc;
-  }, {});
+  const grouped = filteredAndCutListeGestionDesVehicules?.reduce(
+    (acc, item) => {
+      if (!acc[item.accountID]) acc[item.accountID] = [];
+      acc[item.accountID].push(item);
+      return acc;
+    },
+    {}
+  );
 
   const sortedGroups = Object.entries(grouped).sort(
     (a, b) => b[1].length - a[1].length
@@ -497,6 +542,114 @@ function ListeDesVehiculesGestion({
             </div>
           )}
 
+          {showSortDeviceByPopup && (
+            <div className="fixed z-[999999909999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+              <div
+                className="bg-white dark:bg-gray-700 max-w-[40rem] relative flex flex-col gap-1 w-full mx-2-- p-6 px-4  border border-gray-600 mt-2 rounded-md"
+                id="mapType"
+              >
+                <IoClose
+                  onClick={() => {
+                    setShowSortDeviceByPopup(false);
+                  }}
+                  className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+                />
+                <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+                  {t("Trier les appareils par")}:
+                </h2>
+                <div className="flex gap-2 mb-4 p-[.2rem] border  shadow-md shadow-orange-100 border-orange-100 rounded-lg justify-between">
+                  <p
+                    onClick={() => {
+                      setIsMoreRecentFirst(true);
+                    }}
+                    className={` w-full py-1 font-semibold text-center ${
+                      isMoreRecentFirst ? "bg-orange-100 " : ""
+                    } rounded-lg border cursor-pointer border-white/0  hover:border hover:bg-orange-200`}
+                  >
+                    {t("Décroissant")}
+                  </p>
+                  <p
+                    onClick={() => {
+                      setIsMoreRecentFirst(false);
+                    }}
+                    className={`w-full py-1 font-semibold text-center  ${
+                      !isMoreRecentFirst ? "bg-orange-100 " : ""
+                    } rounded-lg  border cursor-pointer border-white/0 hover:border hover:bg-orange-200`}
+                  >
+                    {t("Croissant")}
+                  </p>
+                </div>
+
+                <p
+                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                    sortDeviceBy === "Dernière mouvement"
+                      ? "bg-orange-100 dark:bg-gray-800/70"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSortDeviceBy("Dernière mouvement");
+                    setShowSortDeviceByPopup(false);
+                  }}
+                >
+                  {t("Dernière mouvement")}
+                </p>
+                <p
+                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                    sortDeviceBy === "Date de creation"
+                      ? "bg-orange-100 dark:bg-gray-800/70"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSortDeviceBy("Date de creation");
+                    setShowSortDeviceByPopup(false);
+                  }}
+                >
+                  {t("Date de creation")}
+                </p>
+
+                <p
+                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                    sortDeviceBy === "Dernière mise a jour"
+                      ? "bg-orange-100 dark:bg-gray-800/70"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSortDeviceBy("Dernière mise a jour");
+                    setShowSortDeviceByPopup(false);
+                  }}
+                >
+                  {t("Dernière mise a jour")}
+                </p>
+                <p
+                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                    sortDeviceBy === "Vitesse"
+                      ? "bg-orange-100 dark:bg-gray-800/70"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSortDeviceBy("Vitesse");
+                    setShowSortDeviceByPopup(false);
+                  }}
+                >
+                  {t("Vitesse")}
+                </p>
+                <p
+                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                    sortDeviceBy === "Distance parcourue"
+                      ? "bg-orange-100 dark:bg-gray-800/70"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSortDeviceBy("Distance parcourue");
+                    setShowSortDeviceByPopup(false);
+                  }}
+                >
+                  {t("Distance parcourue")}
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
             {/*  */}
             {isDashboardHomePage && !fromDashboard && (
@@ -597,7 +750,7 @@ function ListeDesVehiculesGestion({
             )}
 
             {lastUpdate?.mostRecentTimestamp && (
-              <p className="font-bold  flex flex-wrap items-center text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
+              <p className="font-bold  flex flex-wrap items-center text-[.7rem] md:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
                 <span className="text-gray-700  mr-2">
                   {t("Last Update")} :
                 </span>
@@ -606,6 +759,17 @@ function ListeDesVehiculesGestion({
                   {" / "}
                   {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
                 </span>
+                <MdUpdate
+                  onClick={() => {
+                    setDashboardLoadingEffect(true);
+                    autoUpdateFonction();
+                  }}
+                  className={`${
+                    dashboardLoadingEffect
+                      ? "animate-spin rounded-full hover:bg-orange-50"
+                      : " hover:bg-orange-500 hover:text-white rounded-sm"
+                  } min-w-[2rem] cursor-pointer min-h-[1.7rem]  `}
+                />
               </p>
             )}
             {fromDashboard && searchTermInput && (
@@ -622,81 +786,108 @@ function ListeDesVehiculesGestion({
         </div>
         {/* )} */}
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
-          <div className="mt-4  grid grid-cols-2 md:flex items-center gap-2 flex-wrap">
-            <p
-              onClick={() => {
-                if (
-                  statisticFilteredDeviceListeText ===
+          <div className="flex justify-between mt-4 items-center">
+            <div className="w-full grid grid-cols-2 md:flex items-center gap-2 flex-wrap">
+              <p
+                onClick={() => {
+                  if (
+                    statisticFilteredDeviceListeText ===
+                    `${t("Appareils En déplacement")}`
+                  ) {
+                    if (fromDashboard) {
+                      setStatisticFilteredDeviceListeText(
+                        `${t("Appareils En déplacement")}`
+                      );
+                    }
+                    setFilteredColorCategorieListe(EnDéplacement);
+                  } else {
+                    if (fromDashboard) {
+                      setStatisticFilteredDeviceListeText(
+                        `${t("Appareils Déplacer")}`
+                      );
+                    }
+                    setFilteredColorCategorieListe(DeviceDéplacer);
+                  }
+                }}
+                className={
+                  "px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                }
+              >
+                {fromDashboard &&
+                statisticFilteredDeviceListeText ===
                   `${t("Appareils En déplacement")}`
-                ) {
+                  ? `${t("Véhicules En déplacement")}`
+                  : t("Véhicules déplacés")}
+              </p>
+              <p
+                onClick={() => {
                   if (fromDashboard) {
                     setStatisticFilteredDeviceListeText(
-                      `${t("Appareils En déplacement")}`
+                      `${t("Appareils non déplacés")}`
                     );
                   }
-                  setFilteredColorCategorieListe(EnDéplacement);
-                } else {
-                  if (fromDashboard) {
-                    setStatisticFilteredDeviceListeText(
-                      `${t("Appareils Déplacer")}`
-                    );
-                  }
-                  setFilteredColorCategorieListe(DeviceDéplacer);
-                }
-              }}
-              className={
-                "px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
-              }
-            >
-              {fromDashboard &&
-              statisticFilteredDeviceListeText ===
-                `${t("Appareils En déplacement")}`
-                ? `${t("Véhicules En déplacement")}`
-                : t("Véhicules déplacés")}
-            </p>
-            <p
-              onClick={() => {
-                if (fromDashboard) {
-                  setStatisticFilteredDeviceListeText(
-                    `${t("Appareils non déplacés")}`
-                  );
-                }
-                setFilteredColorCategorieListe(DeviceEnStationnement);
-              }}
-              className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
-            >
-              {t("Appareils non déplacés")}
-            </p>
+                  setFilteredColorCategorieListe(DeviceEnStationnement);
+                }}
+                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+              >
+                {t("Appareils non déplacés")}
+              </p>
 
-            <p
-              onClick={() => {
-                if (fromDashboard) {
-                  setStatisticFilteredDeviceListeText(
-                    `${t("Appareils Inactifs")}`
+              <p
+                onClick={() => {
+                  if (fromDashboard) {
+                    setStatisticFilteredDeviceListeText(
+                      `${t("Appareils Inactifs")}`
+                    );
+                  }
+                  setFilteredColorCategorieListe(DeviceInactifs);
+                }}
+                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+              >
+                {t("Appareils Inactifs")}
+              </p>
+              <p
+                onClick={() => {
+                  if (fromDashboard) {
+                    setStatisticFilteredDeviceListeText(
+                      `${t("Tous les Appareils")}`
+                    );
+                  }
+                  setFilteredColorCategorieListe(
+                    addVehiculeDetailsFonction(allDevices, véhiculeDetails)
                   );
-                }
-                setFilteredColorCategorieListe(DeviceInactifs);
+                }}
+                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+              >
+                {t("Tous")}
+              </p>
+            </div>
+
+            <Tooltip
+              title={`${t("Filtrer les appareils")}`}
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                ],
               }}
-              className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
             >
-              {t("Appareils Inactifs")}
-            </p>
-            <p
-              onClick={() => {
-                if (fromDashboard) {
-                  setStatisticFilteredDeviceListeText(
-                    `${t("Tous les Appareils")}`
-                  );
-                }
-                setFilteredColorCategorieListe(
-                  addVehiculeDetailsFonction(allDevices, véhiculeDetails)
-                );
-              }}
-              className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
-            >
-              {t("Tous")}
-            </p>
+              <p
+                onClick={() => {
+                  setShowSortDeviceByPopup(true);
+                  // setIsReverseListe(!isReverseListe);
+                }}
+                className="text-md py-4 md:py-1.5 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+              >
+                <BsSortDown className="text-[1.3rem]" />
+              </p>
+            </Tooltip>
           </div>
+
           {/*  */}
           {showChooseItemToModifyMessage &&
             showChooseItemToModifyPage === "Gestion_des_appareils" && (
@@ -883,13 +1074,17 @@ function ListeDesVehiculesGestion({
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
                                         {
                                           FormatDateHeure(
-                                            device?.lastUpdateTime
+                                            device?.véhiculeDetails[0]
+                                              ?.timestamp ||
+                                              device?.lastUpdateTime
                                           ).date
                                         }
                                         <span className="px-2">/</span>{" "}
                                         {
                                           FormatDateHeure(
-                                            device?.lastUpdateTime
+                                            device?.véhiculeDetails[0]
+                                              ?.timestamp ||
+                                              device?.lastUpdateTime
                                           ).time
                                         }
                                       </span>

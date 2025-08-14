@@ -172,6 +172,9 @@ function RapportPageDetailsHeader({
       véhicule?.simPhoneNumber
         .toLowerCase()
         .includes(searchQueryRapportPageDetailHeader.toLowerCase()) ||
+      véhicule?.accountID
+        .toLowerCase()
+        .includes(searchQueryRapportPageDetailHeader.toLowerCase()) ||
       véhicule.description
         .toLowerCase()
         .includes(searchQueryRapportPageDetailHeader.toLowerCase())

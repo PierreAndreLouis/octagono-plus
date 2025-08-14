@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { FaCar } from "react-icons/fa";
+import { FaCar, FaSearch } from "react-icons/fa";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
 import { useTranslation } from "react-i18next";
+import { IoClose } from "react-icons/io5";
 
 function SearchVehiculePupup({
   searchQueryListPopup,
@@ -23,6 +24,7 @@ function SearchVehiculePupup({
     isDashboardHomePage,
     accountDevices,
     mergedDataHome,
+    currentAccountSelected,
   } = useContext(DataContext);
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
@@ -136,10 +138,22 @@ function SearchVehiculePupup({
   const afficherPlusDeRésultat = () => {
     setVoir10RésultatPlus((prev) => prev + 1);
   };
+
+  const data = isDashboardHomePage
+    ? currentAccountSelected?.accountDevices || accountDevices
+    : dataFusionné;
+
+  const AllDeviceAccountID = [
+    ...new Set(
+      data?.map((item) => item.accountID)?.filter(Boolean) // retire undefined, null, vide
+    ),
+  ];
+
+  const [isSearchingNow, setIsSearchingNow] = useState(false);
   return (
     <div className="fixed min-h-[100vh]   z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
       <div className=" sm:mx-auto   w-full  md:min-w-[60vw] relative border mx-0 md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
-        <div className="absolute  top-[1rem] left-2 right-2 md:left-4  md:right-4 py-2">
+        <div className="absolute  -top-[0.5rem] left-2 right-2 md:left-4  md:right-4 py-2">
           <div className="mt-4 mb-4   flex items-center gap-2">
             <Tooltip
               title={`${t("cliquez pour filtrer")}`}
@@ -158,7 +172,7 @@ function SearchVehiculePupup({
                 onClick={() => {
                   setTilterSearchVehiculePopupByCategorie("deplace");
                 }}
-                className="px-2 cursor-pointer  sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                className="px-2 cursor-pointer  sm:px-4 py-1 text-xs sm:text-sm border-l-4 hover:bg-green-100 text-green-600 font-semibold bg-green-50/60 dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
               >
                 {t("Véhicules déplacés")}
               </p>
@@ -181,7 +195,7 @@ function SearchVehiculePupup({
                 onClick={() => {
                   setTilterSearchVehiculePopupByCategorie("non deplace");
                 }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-red-600 font-semibold bg-red-50/60 dark:text-red-200 dark:bg-gray-700 border-l-red-600 "
+                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm hover:bg-orange-100 border-l-4 text-orange-600 font-semibold bg-orange-50/60 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
               >
                 {t("Appareils non déplacés")}
               </p>
@@ -204,46 +218,127 @@ function SearchVehiculePupup({
                 onClick={() => {
                   setTilterSearchVehiculePopupByCategorie("hors service");
                 }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+                className="px-2  cursor-pointer sm:px-4 py-1 text-xs hover:bg-purple-100 sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
               >
                 {t("Véhicules hors service")}
               </p>
             </Tooltip>
           </div>
-          <div className="flex gap-2 justify-between items-center">
-            <input
-              className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-lg  dark:border-gray-600 dark:text-gray-200"
-              type="text"
-              placeholder={`${t("Rechercher")}`}
-              value={searchQueryListPopup}
-              onChange={handleSearchChange}
-            />
-            <Tooltip
-              title={`${t("Réinitialiser le filtrer par catégorie")}`}
-              PopperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, 0], // Décalage horizontal et vertical
+          {isSearchingNow || AllDeviceAccountID?.length <= 1 ? (
+            <div className="flex gap-2 justify-between items-center">
+              <input
+                className="w-full dark:bg-gray-800 border p-4 py-1.5 rounded-md  dark:border-gray-600 dark:text-gray-200"
+                type="text"
+                placeholder={`${t("Rechercher")}`}
+                value={searchQueryListPopup}
+                onChange={handleSearchChange}
+              />
+              <Tooltip
+                title={`${t("Réinitialiser le filtrer par catégorie")}`}
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, 0], // Décalage horizontal et vertical
+                      },
                     },
-                  },
-                ],
-              }}
-            >
+                  ],
+                }}
+              >
+                <p
+                  onClick={() => {
+                    setTilterSearchVehiculePopupByCategorie("all");
+                    setSearchQueryListPopup("");
+                  }}
+                  className="border border-orange-500 text-orange-500  cursor-pointer bg-orange-50  font-semibold  rounded-md px-2 py-1.5"
+                >
+                  {t("Reset")}
+                </p>
+              </Tooltip>
+              {AllDeviceAccountID?.length > 1 && (
+                <p
+                  onClick={() => {
+                    setIsSearchingNow(!isSearchingNow);
+                  }}
+                  className="border text-[1.3rem] border-red-500 text-red-500  cursor-pointer bg-red-50  font-semibold  rounded-md px-2 py-[.4rem]"
+                >
+                  <IoClose />
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div
+                onClick={() => {
+                  console.log("xxxx", AllDeviceAccountID);
+                }}
+                className="flex gap-1 w-full overflow-auto py-1 pt-3--"
+              >
+                {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+
+                {AllDeviceAccountID?.map((acct, index) => {
+                  return (
+                    <Tooltip
+                      title={`${
+                        searchQueryListPopup === acct
+                          ? t("Annuler le filtre pour")
+                          : t("Voir les appareils de")
+                      } : ${acct}`}
+                      PopperProps={{
+                        modifiers: [
+                          {
+                            name: "offset",
+                            options: {
+                              offset: [0, -10], // Décalage horizontal et vertical
+                            },
+                          },
+                          {
+                            name: "zIndex",
+                            enabled: true,
+                            phase: "write",
+                            fn: ({ state }) => {
+                              state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                            },
+                          },
+                        ],
+                      }}
+                    >
+                      <div
+                        onClick={() => {
+                          if (searchQueryListPopup === acct) {
+                            setSearchQueryListPopup("");
+                          } else {
+                            setSearchQueryListPopup(acct);
+                          }
+                        }}
+                        key={index}
+                        className={`${
+                          searchQueryListPopup === acct
+                            ? "bg-orange-500 text-white  border-orange-500"
+                            : "bg-orange-50 text-gray-700 border-gray-200 hover:bg-orange-100"
+                        } border  rounded-md  px-3 cursor-pointer  font-semibold`}
+                      >
+                        <p className="">{acct}</p>
+                      </div>
+                    </Tooltip>
+                  );
+                })}
+                {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+              </div>
               <p
                 onClick={() => {
-                  setTilterSearchVehiculePopupByCategorie("all");
-                  setSearchQueryListPopup("");
+                  setIsSearchingNow(!isSearchingNow);
                 }}
-                className="border cursor-pointer bg-gray-50 font-semibold  rounded-lg px-2 py-1.5"
+                className="border mb-3 flex gap-2 items-center  border-orange-500 text-orange-500  cursor-pointer bg-orange-50  font-semibold  rounded-lg px-2 py-[.3rem]"
               >
-                {t("Reset")}
-              </p>
-            </Tooltip>
-          </div>
+                <FaSearch className="text-orange-500 mt-[.1rem]" />
+                {t("Rechercher")}
+              </p>{" "}
+            </div>
+          )}
         </div>
-        <div className="flex justify-end absolute top-4 left-0 right-4">
+        <div className="flex justify-end absolute top-4  right-4">
           <IoMdClose
             onClick={() => {
               setShowOptions(false);
@@ -251,7 +346,7 @@ function SearchVehiculePupup({
             className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]"
           />
         </div>
-        <div className="overflow-auto  mt-14 h-[62vh] md:h-[55vh] ">
+        <div className="overflow-auto  mt-[1.8rem] h-[65vh] md:h-[60vh] pb-10 ">
           {filteredVehiclesPupupByCategoriePagination?.length > 0 ? (
             filteredVehiclesPupupByCategoriePagination?.map(
               (véhicule, index) => {

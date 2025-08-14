@@ -4222,9 +4222,6 @@ function RapportGroupe({
                       <p
                         onClick={() => {
                           setTableSortCroissant(true);
-                          // settableSortBy(vehiclesByDepartureTime);
-                          // settableSortByColorBg("vehiclesByDepartureTime");
-                          // settableSortBy(tableSortBy);
                         }}
                         className={` w-full py-1 font-semibold text-center ${
                           tableSortCroissant ? "bg-orange-100 " : ""
@@ -4234,10 +4231,7 @@ function RapportGroupe({
                       </p>
                       <p
                         onClick={() => {
-                          // settableSortBy(tableSortBy);
                           setTableSortCroissant(false);
-                          // settableSortBy(vehiclesByDepartureTime);
-                          // settableSortByColorBg("vehiclesByDepartureTime");
                         }}
                         className={`w-full py-1 font-semibold text-center  ${
                           !tableSortCroissant ? "bg-orange-100 " : ""
