@@ -107,6 +107,7 @@ function Login2() {
     setFormData((prev) => ({ ...prev, country }));
     i18n.changeLanguage(lang);
     localStorage.setItem("lang", lang);
+    localStorage.setItem("currentCountry", country);
   };
 
   useEffect(() => {
@@ -161,7 +162,7 @@ function Login2() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <div className="grid grid-cols-2 justify-center items-center gap-2">
-                {/* <div className="mb-4 ">
+                <div className="mb-4 ">
                   <label
                     htmlFor="country"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
@@ -182,8 +183,8 @@ function Login2() {
                       <option value="rd">República Dominicana</option>
                     </select>
                   </div>
-                </div>{" "} */}
-                {/* <div className="mb-4 ">
+                </div>{" "}
+                <div className="mb-4 ">
                   <label
                     htmlFor="country"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
@@ -205,7 +206,7 @@ function Login2() {
                       <option value="en">{t("Anglais")}</option>
                     </select>
                   </div>
-                </div> */}
+                </div>
               </div>
               <label
                 htmlFor="account"
