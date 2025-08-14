@@ -617,7 +617,6 @@ function App() {
           filterGestionGroupData={filterGestionGroupData}
           setAllDevices={setAllDevices}
         />
-        {logOutPopup && <Logout setLogOutPopup={setLogOutPopup} />} {/*  */}
         {isAuthenticated && (
           <HeaderDashboardSysadmin
             readDocumentationSideBar={readDocumentationSideBar}
@@ -714,8 +713,8 @@ function App() {
           </div>
         )}
         {/* container */}
-        {isUserNotInteractingNow && isAuthenticated && (
-          <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] backdrop-blur-sm-- bg-black/50 backdrop-blur-sm-- flex justify-center  items-center">
+        {isUserNotInteractingNow && isAuthenticated && !logOutPopup && (
+          <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] backdrop-blur-sm-- bg-black/50 backdrop-blur-sm flex justify-center  items-center">
             <form
               onSubmit={reactiverSessionUser}
               className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
@@ -774,6 +773,12 @@ function App() {
             </form>
           </div>
         )}
+        {logOutPopup && (
+          <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999]">
+            <Logout setLogOutPopup={setLogOutPopup} />
+          </div>
+        )}{" "}
+        {/*  */}
         <SuccèsÉchecMessagePopup />
         <Routes>
           <Route

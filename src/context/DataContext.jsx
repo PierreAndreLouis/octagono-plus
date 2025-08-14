@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "5.8";
+  let versionApplication = "5.9";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -8399,7 +8399,7 @@ const DataContextProvider = ({ children }) => {
     0xf230: `${t("Departed at Geozone")}`,
   };
 
-  const [isUserNotInteractingNow, setIsUserNotInteractingNow] = useState(false);
+  const [isUserNotInteractingNow, setIsUserNotInteractingNow] = useState(true);
   const [timeSinceLastInteraction, setTimeSinceLastInteraction] = useState(0);
   const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes en millisecondes pour tester
 
@@ -8651,15 +8651,20 @@ const DataContextProvider = ({ children }) => {
     );
     const now = Date.now();
 
-    // if (isUserNotInteractingNow) return;
-
-    if (
-      !storedLastExecution ||
-      now - storedLastExecution >= timeBeforAUtoUpdate
-    ) {
-      if (!isUserNotInteractingNow && isAuthenticated) {
+    // Première exécution au montage (uniquement si actif et délai écoulé)
+    if (!isUserNotInteractingNow && isAuthenticated) {
+      if (
+        !storedLastExecution ||
+        now - storedLastExecution >= timeBeforAUtoUpdate
+      ) {
+        console.log(
+          "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$,",
+          isUserNotInteractingNow,
+          isAuthenticated
+        );
         maFonction();
         storedLastExecution = Date.now();
+        localStorage.setItem("lastExecution", storedLastExecution);
       }
     }
 
@@ -8673,15 +8678,22 @@ const DataContextProvider = ({ children }) => {
 
     updateCountdown();
 
+    // Timer affichage compte à rebours
     const countdownId = setInterval(updateCountdown, 1000);
+
+    // Timer vérification exécution
     const checkId = setInterval(() => {
       if (Date.now() - lastExecutionRef.current >= timeBeforAUtoUpdate) {
-        // if (!isUserNotInteractingNow && isAuthenticated) {
-        //   maFonction();
-        // }
         if (!isUserNotInteractingNow && isAuthenticated) {
+          console.log(
+            "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$,",
+            isUserNotInteractingNow,
+            isAuthenticated
+          );
+
           maFonction();
-          storedLastExecution = Date.now();
+          lastExecutionRef.current = Date.now();
+          localStorage.setItem("lastExecution", lastExecutionRef.current);
         }
       }
     }, CHECK_INTERVAL);
