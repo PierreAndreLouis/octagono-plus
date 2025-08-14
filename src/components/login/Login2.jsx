@@ -162,7 +162,7 @@ function Login2() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <div className="grid grid-cols-2 justify-center items-center gap-2">
-                <div className="mb-4 ">
+                {/* <div className="mb-4 ">
                   <label
                     htmlFor="country"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
@@ -206,7 +206,7 @@ function Login2() {
                       <option value="en">{t("Anglais")}</option>
                     </select>
                   </div>
-                </div>
+                </div> */}
               </div>
               <label
                 htmlFor="account"
