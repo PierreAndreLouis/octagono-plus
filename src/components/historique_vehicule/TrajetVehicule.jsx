@@ -473,12 +473,12 @@ function TrajetVehicule({
   const hasTriggeredRef = useRef(false); // pour éviter de relancer handleVehicleClick plusieurs fois
 
   useEffect(() => {
-    if (!currentDeviceToAutoUpdate || !IsUpdateAuto) return;
+    if (!currentVéhicule || !IsUpdateAuto) return;
 
     if (count === 0 && !hasTriggeredRef.current) {
       console.log("Countdown à 0");
-      console.log(currentDeviceToAutoUpdate);
-      handleVehicleClick(currentDeviceToAutoUpdate, true);
+      console.log(currentVéhicule);
+      handleVehicleClick(currentVéhicule, true);
       hasTriggeredRef.current = true; // on marque que l'action a été déclenchée
     }
 
@@ -488,7 +488,7 @@ function TrajetVehicule({
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [count, IsUpdateAuto, currentDeviceToAutoUpdate]);
+  }, [count, IsUpdateAuto, currentVéhicule]);
 
   useEffect(() => {
     if (!IsUpdateAuto) {

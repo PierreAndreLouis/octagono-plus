@@ -725,10 +725,19 @@ function App() {
                 onClick={() => {
                   // clearCacheFonction();
                 }}
-                className="text-2xl font-bold text-gray-800 mb-3 text-center"
+                className="text-2xl font-bold text-gray-800 mb-0 text-center"
               >
                 {t("Session inactive")}
               </h2>
+              <p className="text-orange-600 text-md mb-4  font-semibold text-center">
+                {isDashboardHomePage
+                  ? localStorage.getItem("adminAccount")
+                  : localStorage.getItem("account")}{" "}
+                {" / "}
+                {isDashboardHomePage
+                  ? localStorage.getItem("adminUsername")
+                  : localStorage.getItem("username")}
+              </p>
               <p className="text-gray-600 text-sm mb-6 text-center">
                 {t(
                   "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer"
