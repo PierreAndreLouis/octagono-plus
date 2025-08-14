@@ -499,6 +499,31 @@ function MapComponent({
     }
   }, [IsUpdateAuto]);
 
+  const markers = useMemo(() => {
+    return vehicles?.map((véhicule, index) => (
+      <Marker
+        key={véhicule.deviceID} // éviter index si possible
+        position={[
+          véhicule.lastValidLatitude || 0,
+          véhicule.lastValidLongitude || 0,
+        ]}
+        icon={L.icon({
+          iconUrl: getMarkerIcon(véhicule),
+          iconSize: [25, 35],
+          iconAnchor: [12, 35],
+          popupAnchor: [1, -33],
+          shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+          shadowSize: [1, 1],
+        })}
+        eventHandlers={{ click: () => onClickVehicle(véhicule) }}
+      >
+        {/* <Popup closeButton={true} closeOnClick={false}>
+          <div style={{ minWidth: 120 }}>xxxxxxxx</div>
+        </Popup> */}
+      </Marker>
+    ));
+  }, [vehicles]);
+
   return (
     <div
       onClick={() => {
@@ -868,33 +893,41 @@ function MapComponent({
             showCoverageOnHover={false}
             maxClusterRadius={50}
           >
-            {vehicles?.map((véhicule, index) => {
-              const FormatDateHeureTimestamp = FormatDateHeure(
-                véhicule.timestamp
-              );
-
-              return (
-                <Marker
-                  key={index}
-                  position={[
-                    véhicule.lastValidLatitude || 0,
-                    véhicule.lastValidLongitude || 0,
-                  ]}
-                  icon={L.icon({
-                    iconUrl: getMarkerIcon(véhicule),
-                    iconSize: [25, 35],
-                    iconAnchor: [12, 35],
-                    popupAnchor: [1, -33],
-                    shadowUrl:
-                      "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-                    shadowSize: [1, 1],
-                  })}
-                  eventHandlers={{ click: () => onClickVehicle(véhicule) }}
-                ></Marker>
-              );
-            })}
+            {markers}
           </MarkerClusterGroup>
         ) : (
+          // <MarkerClusterGroup
+          //   chunkedLoading
+          //   spiderfyOnMaxZoom={false}
+          //   showCoverageOnHover={false}
+          //   maxClusterRadius={50}
+          // >
+          //   {vehicles?.map((véhicule, index) => {
+          //     const FormatDateHeureTimestamp = FormatDateHeure(
+          //       véhicule.timestamp
+          //     );
+
+          //     return (
+          //       <Marker
+          //         key={index}
+          //         position={[
+          //           véhicule.lastValidLatitude || 0,
+          //           véhicule.lastValidLongitude || 0,
+          //         ]}
+          //         icon={L.icon({
+          //           iconUrl: getMarkerIcon(véhicule),
+          //           iconSize: [25, 35],
+          //           iconAnchor: [12, 35],
+          //           popupAnchor: [1, -33],
+          //           shadowUrl:
+          //             "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+          //           shadowSize: [1, 1],
+          //         })}
+          //         eventHandlers={{ click: () => onClickVehicle(véhicule) }}
+          //       ></Marker>
+          //     );
+          //   })}
+          // </MarkerClusterGroup>
           vehicles?.map((véhicule, index) => {
             const FormatDateHeureTimestamp = FormatDateHeure(
               véhicule.timestamp

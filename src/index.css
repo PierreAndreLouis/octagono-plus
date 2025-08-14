@@ -5,6 +5,7 @@
 
 body {
   font-size: 90%;
+  transition: all;
 }
 
  #goog-gt-tt , #goog-gt-tt:hover{

@@ -584,7 +584,7 @@ function App() {
   const [isCreatingNewElement, setIsCreatingNewElement] = useState(true);
 
   return (
-    <div className="dark:bg-gray-700 md:p-4 bg-gray-100 min-h-[100vh]">
+    <div className="dark:bg-gray-700 md:p-4 bg-gray-100 min-h-[100vh] transition-all">
       <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-screen">
         <ScrollToTop />
         <GoogleTranslate />
