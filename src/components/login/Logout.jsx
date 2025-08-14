@@ -7,7 +7,7 @@ function Logout({ setLogOutPopup }) {
   const [t, i18n] = useTranslation();
 
   return (
-    <div className="fixed inset-0 z-[999999]">
+    <div className="fixed inset-0 z-[999999] backdrop-blur-sm">
       <div className="fixed inset-0 z-40 min-h-full overflow-y-auto overflow-x-hidden transition flex items-center">
         {/* <!-- overlay --> */}
         <div className="fixed inset-0 w-full h-full bg-black/50 cursor-pointer"></div>

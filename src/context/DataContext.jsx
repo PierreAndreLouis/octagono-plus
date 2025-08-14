@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "5.9";
+  let versionApplication = "6.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1885,8 +1885,13 @@ const DataContextProvider = ({ children }) => {
       };
     });
 
+    // setAccountDevices((prev) => {
+    //   const filtered = prev?.filter((d) => d.accountID !== accountID);
+    //   return [...filtered, ...enrichedData];
+    // });
+
     setAccountDevices((prev) => {
-      const filtered = prev?.filter((d) => d.accountID !== accountID);
+      const filtered = (prev || []).filter((d) => d.accountID !== accountID);
       return [...filtered, ...enrichedData];
     });
 
@@ -1937,10 +1942,14 @@ const DataContextProvider = ({ children }) => {
 
     console.log("fetchAccountGroupes: résultats =", data);
 
+    // setAccountGroupes((prev) => {
+    //   // Supprimer tous les groupes de ce compte
+    //   const filtered = prev?.filter((g) => g.accountID !== accountID);
+    //   // Ajouter les nouveaux groupes
+    //   return [...filtered, ...data];
+    // });
     setAccountGroupes((prev) => {
-      // Supprimer tous les groupes de ce compte
-      const filtered = prev?.filter((g) => g.accountID !== accountID);
-      // Ajouter les nouveaux groupes
+      const filtered = (prev || []).filter((g) => g.accountID !== accountID);
       return [...filtered, ...data];
     });
 
@@ -1989,10 +1998,14 @@ const DataContextProvider = ({ children }) => {
 
     console.log("fetchAccountUsers: résultats =", data);
 
+    // setAccountUsers((prev) => {
+    //   // Supprimer tous les users de ce compte
+    //   const filtered = prev?.filter((u) => u.accountID !== accountID);
+    //   // Ajouter les nouveaux users
+    //   return [...filtered, ...data];
+    // });
     setAccountUsers((prev) => {
-      // Supprimer tous les users de ce compte
-      const filtered = prev?.filter((u) => u.accountID !== accountID);
-      // Ajouter les nouveaux users
+      const filtered = (prev || []).filter((u) => u.accountID !== accountID);
       return [...filtered, ...data];
     });
 
@@ -2093,10 +2106,14 @@ const DataContextProvider = ({ children }) => {
 
     console.log("fetchAccountRulesActive: résultats =", data);
 
+    // setAccountRulesActive((prev) => {
+    //   // Supprimer tous les users de ce compte
+    //   const filtered = prev?.filter((u) => u.accountID !== accountID);
+    //   // Ajouter les nouveaux users
+    //   return [...filtered, ...data];
+    // });
     setAccountRulesActive((prev) => {
-      // Supprimer tous les users de ce compte
-      const filtered = prev?.filter((u) => u.accountID !== accountID);
-      // Ajouter les nouveaux users
+      const filtered = (prev || []).filter((u) => u.accountID !== accountID);
       return [...filtered, ...data];
     });
 
@@ -2389,12 +2406,15 @@ const DataContextProvider = ({ children }) => {
 
       console.log("Mapped Geofence Data:", geofences);
 
-      setAccountGeofences((prev) => {
-        // Supprimer tous les groupes de ce compte
-        const filtered = prev?.filter((g) => g.accountID !== accountID);
-        // Ajouter les nouveaux groupes
+      // setAccountGeofences((prev) => {
+      //   // Supprimer tous les groupes de ce compte
+      //   const filtered = prev?.filter((g) => g.accountID !== accountID);
+      //   // Ajouter les nouveaux groupes
 
-        console.log("[...filtered, ...geofences]", [...filtered, ...geofences]);
+      //   return [...filtered, ...geofences];
+      // });
+      setAccountGeofences((prev) => {
+        const filtered = (prev || []).filter((g) => g.accountID !== accountID);
         return [...filtered, ...geofences];
       });
 
@@ -2527,11 +2547,11 @@ const DataContextProvider = ({ children }) => {
       );
 
       const userGrp = userGroupes?.filter((ug) =>
-        users.some((u) => u.userID === ug.userID)
+        users?.some((u) => u.userID === ug.userID)
       );
 
       const grpDevs = groupeDevices?.filter((gd) =>
-        groupes.some((g) => g.groupID === gd.groupID)
+        groupes?.some((g) => g.groupID === gd.groupID)
       );
 
       // Création d’une map des devices de groupes
@@ -2569,7 +2589,7 @@ const DataContextProvider = ({ children }) => {
         };
       });
 
-      const updatedGroupes = groupes.map((g) => ({
+      const updatedGroupes = groupes?.map((g) => ({
         ...g,
         groupeDevices:
           grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
@@ -6534,7 +6554,7 @@ const DataContextProvider = ({ children }) => {
           return detail;
         });
 
-        if (!updatedDetails.some((detail) => detail.Device === Device)) {
+        if (!updatedDetails?.some((detail) => detail.Device === Device)) {
           updatedDetails.push({
             Device,
             véhiculeDetails: [...newVehicleDetails],
@@ -6603,7 +6623,7 @@ const DataContextProvider = ({ children }) => {
       }
     });
 
-    const hasDeviceID = Object.values(dataFusionne).some(
+    const hasDeviceID = Object.values(dataFusionne)?.some(
       (item) => !!item.deviceID
     );
     if (hasDeviceID) {
@@ -7017,7 +7037,7 @@ const DataContextProvider = ({ children }) => {
       };
     });
 
-    const oneVehicleProcessed = dataFusionné.some(
+    const oneVehicleProcessed = dataFusionné?.some(
       (véhicule) =>
         véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
     );

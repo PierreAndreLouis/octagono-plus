@@ -356,13 +356,15 @@ function App() {
         new Map(
           gestionAccountData
             ?.flatMap((account) => account.accountGroupes)
-            ?.map((group) => [group.groupID, group])
+            ?.map((group) => [group?.groupID, group])
         ).values()
       );
 
   const filterGestionGroupData = searchInputTerm
     ? noFilterGestionGroupData?.filter((item) =>
-        item?.description.toLowerCase().includes(searchInputTerm.toLowerCase())
+        item?.description
+          ?.toLowerCase()
+          ?.includes(searchInputTerm.toLowerCase())
       )
     : noFilterGestionGroupData;
 

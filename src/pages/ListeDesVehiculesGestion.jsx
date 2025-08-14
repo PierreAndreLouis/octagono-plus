@@ -76,6 +76,7 @@ function ListeDesVehiculesGestion({
     setChooseAccountID,
     modifyVehicleEnGestionAccount,
     createVehicleEnGestionAccount,
+    vehicleDetails,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -287,11 +288,11 @@ function ListeDesVehiculesGestion({
     }
   }, [currentAccountSelected, documentationPage, listeGestionDesVehicules]);
 
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
 
   function getMostRecentTimestamp(data) {
     if (data) {
@@ -326,7 +327,6 @@ function ListeDesVehiculesGestion({
 
   const [moveDeviceToOtherCompte, setMoveDeviceToOtherCompte] = useState(false);
 
- 
   const [errorMessage, setErrorMessage] = useState("");
 
   const moveDeviceToOtherCompteFonction = (e) => {
@@ -736,11 +736,10 @@ function ListeDesVehiculesGestion({
                     {devices
                       ?.slice(0, (visibleCounts[accountID] || 1) * itemsPerPage)
                       ?.map((device, index) => {
-
-                        // 
-                        // 
-                        // 
-                        // 
+                        //
+                        //
+                        //
+                        //
                         const hasDetails = device?.véhiculeDetails?.length > 0;
                         const lastDetail = device?.véhiculeDetails?.[0];
                         const speed = lastDetail?.speedKPH ?? 0;
@@ -794,12 +793,29 @@ function ListeDesVehiculesGestion({
                         const codeDescription =
                           statusDescriptions[code] || `${t("statut inconnu")}`;
 
+                        const detailsList = isDashboardHomePage
+                          ? véhiculeDetails
+                          : vehicleDetails;
+
+                        const foundDetails = detailsList?.find((item) =>
+                          item?.véhiculeDetails?.some(
+                            (detail) =>
+                              detail.accountID === device?.accountID &&
+                              detail.deviceID === device?.deviceID
+                          )
+                        )?.véhiculeDetails?.[0];
+
                         return (
                           <div
                             key={index}
                             className={`${border_color} bg-gray-50 shadow-inner  shadow-black/10 relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4`}
                           >
-                            <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
+                            <div
+                              onClick={() => {
+                                console.log(foundDetails);
+                              }}
+                              className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center"
+                            >
                               {index + 1}
                             </div>
                             <div className="absolute bottom-3 right-3 "></div>
@@ -811,9 +827,10 @@ function ListeDesVehiculesGestion({
                                 <h3
                                   className={`${text_color} font-bold text-2xl`}
                                 >
-                                  {device?.véhiculeDetails.length > 0
+                                  {foundDetails?.speedKPH
                                     ? parseFloat(
-                                        device?.véhiculeDetails[0]?.speedKPH
+                                        device?.véhiculeDetails[0]?.speedKPH ||
+                                          foundDetails?.speedKPH
                                       ).toFixed(0)
                                     : 0}{" "}
                                 </h3>
@@ -833,7 +850,8 @@ function ListeDesVehiculesGestion({
                                       className={`${text_color} font-bold text-lg md:text-2xl`}
                                     >
                                       {parseFloat(
-                                        device?.véhiculeDetails[0]?.speedKPH
+                                        device?.véhiculeDetails[0]?.speedKPH ||
+                                          foundDetails?.speedKPH
                                       ).toFixed(0)}{" "}
                                       Km/h
                                     </h3>
@@ -852,8 +870,9 @@ function ListeDesVehiculesGestion({
                                     <p className="font-bold">
                                       {t("Adresse")} :
                                       <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-2">
-                                        {device?.véhiculeDetails?.length >= 0
-                                          ? device?.véhiculeDetails[0]?.address
+                                        {foundDetails?.address
+                                          ? device?.véhiculeDetails[0]
+                                              ?.address || foundDetails?.address
                                           : `${t("Pas de nom disponible")}`}
                                       </span>
                                     </p>
@@ -912,9 +931,10 @@ function ListeDesVehiculesGestion({
                                         {t("Code Alerte")} :
                                       </p>
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {device?.véhiculeDetails?.length > 0 &&
+                                        {(foundDetails?.statusCode &&
                                           device?.véhiculeDetails[0]
-                                            ?.statusCode}
+                                            ?.statusCode) ||
+                                          foundDetails?.statusCode}
                                       </span>
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">

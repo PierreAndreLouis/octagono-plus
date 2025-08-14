@@ -150,7 +150,7 @@ function StatisticDashboard({
                   </h3>
                 </div>
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                  {animatedTotal}
+                  {animatedTotal || allDevices?.length}
                 </h2>
               </div>
               <div className="absolute mt-1.5 right-4 bottom-4 ">
@@ -345,10 +345,9 @@ function StatisticDashboard({
         <div className="min-w-[4.9rem]">
           {/* <p
             className="font-semibold"
-            onClick={() => resetTimerForAutoUpdate(30 * 60 * 1000)}
+            onClick={() => resetTimerForAutoUpdate()}
           >
-            {Math.floor(timeLeftBeforeAutoUpdate / 60)}:
-            {timeLeftBeforeAutoUpdate % 60}
+            xxxxxxx
           </p> */}
 
           <Tooltip
