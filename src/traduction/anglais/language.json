@@ -943,7 +943,43 @@
 "vers le compte": "to the account",
 "Statistiques": "Statistics",
 "Groupes": "Groups",
-"Alertes": "Alerts"
+"Alertes": "Alerts",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Guide d'utilisation": "User Guide",
+"Activer la mise a jour automatique": "Enable automatic update",
+"Désactiver la mise a jour automatique": "Disable automatic update",
+"Recherche un appareil par description, compte, IMEI, telephone": "Search a device by description, account, IMEI, phone",
+"Vous pouvez cliquer sur chaque case du tableau pour en savoir plus": "You can click on each cell of the table to learn more",
+"Sélectionner une Pays": "Select a country",
+"oui": "yes",
+"non": "no",
+"Activer le compte": "Activate the account",
+"Choisissez un Groupe pour affecter l'utilisateur": "Choose a group to assign the user",
+"Activer l'utilisateur": "Activate the user",
+"Choisissez un ou plusieurs appareils pour intégrer dans le groupe": "Choose one or more devices to add to the group",
+"sélectionnés": "selected",
+"Pas d'appareil sélectionné": "No device selected",
+"sélectionné": "selected",
+"Choisissez un ou plusieurs appareils pour affecter le groupe": "Choose one or more devices to assign to the group",
+"Activer le Role": "Activate the role",
+"Sélectionner un statut de code": "Select a code status",
+"Modifier un nouveau Role": "Edit a new role"
+
+
 
 
 

@@ -18,7 +18,7 @@
   "Total": "Total",
   "Inactifs": "Inactivo",
   "Actifs": "Activo(s)",
-  "Compte": "Cuenta(s)",
+  "Compte": "Cuenta",
   "Déplacé": "Movido(s)",
   "Hors service": "Fuera de servicio",
   "Utilisateur": "Usuario(s)",
@@ -978,7 +978,33 @@
 "vers le compte": "a la cuenta",
 "Statistiques": "Estadísticas",
 "Groupes": "Grupos",
-"Alertes": "Alertas"
+"Alertes": "Alertas",
+
+
+
+
+
+
+"Guide d'utilisation": "Guía de uso",
+"Activer la mise a jour automatique": "Activar la actualización automática",
+"Désactiver la mise a jour automatique": "Desactivar la actualización automática",
+"Recherche un appareil par description, compte, IMEI, telephone": "Buscar un dispositivo por descripción, cuenta, IMEI, teléfono",
+"Vous pouvez cliquer sur chaque case du tableau pour en savoir plus": "Puede hacer clic en cada casilla de la tabla para saber más",
+"Sélectionner une Pays": "Seleccionar un país",
+"oui": "sí",
+"non": "no",
+"Activer le compte": "Activar la cuenta",
+"Choisissez un Groupe pour affecter l'utilisateur": "Elija un grupo para asignar al usuario",
+"Activer l'utilisateur": "Activar al usuario",
+"Choisissez un ou plusieurs appareils pour intégrer dans le groupe": "Elija uno o varios dispositivos para integrar en el grupo",
+"sélectionnés": "seleccionados",
+"Pas d'appareil sélectionné": "Ningún dispositivo seleccionado",
+"sélectionné": "seleccionado",
+"Choisissez un ou plusieurs appareils pour affecter le groupe": "Elija uno o varios dispositivos para asignar al grupo",
+"Activer le Role": "Activar el rol",
+"Sélectionner un statut de code": "Seleccionar un estado de código",
+"Modifier un nouveau Role": "Modificar un nuevo rol"
+
 
 
 
