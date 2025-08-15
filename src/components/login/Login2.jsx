@@ -8,6 +8,10 @@ import { FaAddressBook, FaBook } from "react-icons/fa";
 import { MdGTranslate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import {
+  IoChevronDownCircleOutline,
+  IoChevronDownCircleSharp,
+} from "react-icons/io5";
 
 function Login2() {
   const { handleLogin, error, isHomePageLoading } = useContext(DataContext);
@@ -114,9 +118,11 @@ function Login2() {
     setCountryAndLanguage();
   }, []);
 
+  const [showLangueAndCountryOption, setShowLangueAndCountryOption] =
+    useState(false);
   return (
     <div>
-      <div className="flex min-h-[90vh]  pt-32 flex-1 flex-col justify-center px-6 pb-32   lg:px-8 ">
+      <div className="flex min-h-[90vh]  pt-14 md:pt-8 flex-1 flex-col justify-center px-6 pb-32   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <div className=" flex  gap-5 justify-center items-center">
             <div className=" flex  gap-5 justify-center items-center scale-75 md:scale-100">
@@ -156,58 +162,68 @@ function Login2() {
               <InstallationPWA />
             </p>
           </div>
+          <IoChevronDownCircleSharp
+            onClick={() => {
+              setShowLangueAndCountryOption(!showLangueAndCountryOption);
+            }}
+            className={` ${
+              showLangueAndCountryOption ? "rotate-180" : ""
+            }  mx-auto text-[1.7rem] text-gray-400  transition-all cursor-pointer hover:text-orange-400 min-h-[3rem] px-[.78rem]  -translate-y-[.61rem] min-w-[3rem]`}
+          />
         </div>
 
-        <div className="mt-10   sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-2   sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <div className="grid grid-cols-2 justify-center items-center gap-2">
-                {/* <div className="mb-4 ">
-                  <label
-                    htmlFor="country"
-                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
-                  >
-                    {t("Pays")}
-                  </label>
-                  <div className="mt-2 ">
-                    <select
-                      id="country"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+              {showLangueAndCountryOption && (
+                <div className="grid grid-cols-2 justify-center items-center gap-2">
+                  <div className="mb-4 ">
+                    <label
+                      htmlFor="country"
+                      className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                     >
-                      <option value="">{t("Sélectionner un pays")}</option>
-                      <option value="ht">{t("Haïti")}</option>
-                      <option value="rd">República Dominicana</option>
-                    </select>
-                  </div>
-                </div>{" "}
-                <div className="mb-4 ">
-                  <label
-                    htmlFor="country"
-                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
-                  >
-                    {t("Language")}
-                  </label>
-                  <div className="mt-2 ">
-                    <select
-                      id="country"
-                      name="country"
-                      value={savedLang}
-                      onChange={changeLang}
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+                      {t("Pays")}
+                    </label>
+                    <div className="mt-2 ">
+                      <select
+                        id="country"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        required
+                        className="block w-full bg-white rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+                      >
+                        <option value="">{t("Sélectionner un pays")}</option>
+                        <option value="ht">{t("Haïti")}</option>
+                        <option value="rd">República Dominicana</option>
+                      </select>
+                    </div>
+                  </div>{" "}
+                  <div className="mb-4 ">
+                    <label
+                      htmlFor="country"
+                      className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                     >
-                      <option value="">{t("Sélectionner une langue")}</option>
-                      <option value="fr">{t("Français")}</option>
-                      <option value="es">{t("Espagnol")}</option>
-                      <option value="en">{t("Anglais")}</option>
-                    </select>
+                      {t("Language")}
+                    </label>
+                    <div className="mt-2 ">
+                      <select
+                        id="country"
+                        name="country"
+                        value={savedLang}
+                        onChange={changeLang}
+                        required
+                        className="block bg-white w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:focus:ring-indigo-500"
+                      >
+                        <option value="">{t("Sélectionner une langue")}</option>
+                        <option value="fr">{t("Français")}</option>
+                        <option value="es">{t("Espagnol")}</option>
+                        <option value="en">{t("Anglais")}</option>
+                      </select>
+                    </div>
                   </div>
-                </div> */}
-              </div>
+                </div>
+              )}
               <label
                 htmlFor="account"
                 className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
@@ -223,7 +239,7 @@ function Login2() {
                   onChange={handleChange}
                   placeholder={`${t("Nom du compte")}`}
                   required
-                  className="block px-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-400 dark:focus:ring-indigo-500"
+                  className="block bg-white px-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-400 dark:focus:ring-indigo-500"
                 />
               </div>
             </div>
