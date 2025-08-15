@@ -973,7 +973,7 @@
 
 
   "Informations sur le trajet du véhicule" : "Información sobre el trayecto del vehículo",
-"Changer l'appareil de Compte": "Cambiar la cuenta del dispositivo",
+"Changer l'appareil de Compte": "Asignar a una nueva cuenta",
 "Voulez-vous déplacer l'Appareil du compte": "¿Desea mover el dispositivo de la cuenta",
 "vers le compte": "a la cuenta",
 "Statistiques": "Estadísticas",
@@ -1017,7 +1017,12 @@
 "Annuler le filtre pour" : "Quitar Filtro para",
 "Filtrer les appareils" : "Filtrar Dispositivos",
 "Trier les appareils par" : "Ordenar Dispositivos por",
-"Dernière mouvement" : "Último Movimiento"
+"Dernière mouvement" : "Último Movimiento",
+
+
+"Mettre à jour les données maintenant" : "Actualizar los datos ahora",
+"Désactiver la mise à jour automatique" : "Desactivar la actualización automática",
+"Activer la mise à jour automatique" : "Activar la actualización automática"
 
 
 

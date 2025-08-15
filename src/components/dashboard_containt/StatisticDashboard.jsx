@@ -361,7 +361,7 @@ function StatisticDashboard({
                     className="absolute top-2 right-2 text-lg  text-red-500 cursor-pointer"
                   />
                   <p className="font-bold  border-b py-2   px-2 cursor-pointer text-orange-500">
-                    Options
+                    {t("Options")}
                   </p>
                   <p
                     onClick={() => {
@@ -371,7 +371,7 @@ function StatisticDashboard({
                     }}
                     className="font-semibold text-gray-700 border-b py-2 hover:bg-orange-100  px-2 cursor-pointer"
                   >
-                    Mettre a jour les donnees maintenant
+                    {t("Mettre à jour les données maintenant")}
                   </p>
                   <div
                     onClick={() => {
@@ -381,9 +381,9 @@ function StatisticDashboard({
                     className="font-semibold text-gray-700 border-b py-2 hover:bg-orange-100  px-2 cursor-pointer flex justify-between items-center"
                   >
                     {updateAutoSetting ? (
-                      <p>Désactiver la mise a jour automatique</p>
+                      <p>{t("Désactiver la mise à jour automatique")}</p>
                     ) : (
-                      <p>Activer la mise a jour automatique</p>
+                      <p>{t("Activer la mise à jour automatique")}</p>
                     )}
 
                     {updateAutoSetting ? (

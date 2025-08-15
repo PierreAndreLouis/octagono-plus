@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "6.8";
+  let versionApplication = "6.9";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -791,15 +791,21 @@ const DataContextProvider = ({ children }) => {
 
   useEffect(() => {
     const initialList = isDashboardHomePage
-      ? currentAccountSelected?.accountDevices || accountDevices
-      : mergedDataHome
+      ? addVehiculeDetailsFonction(
+          currentAccountSelected?.accountDevices,
+          véhiculeDetails
+        ) || addVehiculeDetailsFonction(accountDevices, véhiculeDetails)
+      : // ? currentAccountSelected?.accountDevices || accountDevices
+      mergedDataHome
       ? Object.values(mergedDataHome)
       : [];
 
     setAllDevices(initialList);
-    setListeGestionDesVehicules(
-      addVehiculeDetailsFonction(initialList, véhiculeDetails)
-    );
+    setListeGestionDesVehicules(initialList);
+
+    // setListeGestionDesVehicules(
+    //   addVehiculeDetailsFonction(initialList, véhiculeDetails)
+    // );
   }, [
     isDashboardHomePage,
     currentAccountSelected,

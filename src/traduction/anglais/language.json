@@ -995,7 +995,17 @@
 "Annuler le filtre pour" : "Clear Filter for",
 "Filtrer les appareils" : "Filter Devices",
 "Trier les appareils par" : "Sort Devices by",
-"Dernière mouvement" : "Last Movement"
+"Dernière mouvement" : "Last Movement",
+
+
+
+
+
+
+"Mettre à jour les données maintenant" : "Update data now",
+"Désactiver la mise à jour automatique" : "Disable automatic update",
+"Activer la mise à jour automatique" : "Enable automatic update"
+
 
 
 

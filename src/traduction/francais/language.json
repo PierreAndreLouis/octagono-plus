@@ -969,7 +969,7 @@
 
 
   "Informations sur le trajet du véhicule" : "Informations sur le trajet du véhicule",
-  "Changer l'appareil de Compte": "Changer l'appareil de Compte",
+  "Changer l'appareil de Compte": "Affecter à un nouveau compte",
   "Voulez-vous déplacer l'Appareil du compte": "Voulez-vous déplacer l'Appareil du compte",
   "vers le compte": "vers le compte",
   "Statistiques": "Statistiques",
@@ -1024,9 +1024,9 @@
 "Trier les appareils par" : "Trier les appareils par",
 "Dernière mouvement" : "Dernier mouvement",
 
-"" : "",
-"" : "",
-"" : "",
+"Mettre à jour les données maintenant" : "Mettre à jour les données maintenant",
+"Désactiver la mise à jour automatique" : "Désactiver la mise à jour automatique",
+"Activer la mise à jour automatique" : "Activer la mise à jour automatique",
 "" : "",
 "" : "",
 "" : "",
