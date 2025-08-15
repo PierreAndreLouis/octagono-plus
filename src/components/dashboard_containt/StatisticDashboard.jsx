@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
 import { FaChevronDown } from "react-icons/fa";
-import { MdUpdate } from "react-icons/md";
+import { MdOutlineCheckBoxOutlineBlank, MdUpdate } from "react-icons/md";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import Tooltip from "@mui/material/Tooltip";
+import { IoMdCheckboxOutline } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
 function StatisticDashboard({
   setChosseOtherGroupeDashboard,
@@ -39,11 +41,15 @@ function StatisticDashboard({
     resetTimerForAutoUpdate,
     updaterInterval,
     setTimeLeftBeforeAutoUpdate,
+    updateAutoSetting,
+    setUpdateAutoSetting,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
   const [isDeviceEnDeplacement, setIsDeviceEnDeplacement] = useState(false);
   const [isDeviceEnStationnement, setIsDeviceEnStationnement] = useState(true);
+  const [showUpdateAutoSettingPopup, setShowUpdateAutoSettingPopup] =
+    useState(false);
   //
 
   return (
@@ -341,57 +347,100 @@ function StatisticDashboard({
             </span>
           </p>
         )}
+        <p className="text-orange-50">.</p>
 
         <div className="min-w-[4.9rem]">
-          {/* <p
-            className="font-semibold"
-            onClick={() => resetTimerForAutoUpdate()}
-          >
-            xxxxxxx
-          </p> */}
+          <div className="relative ">
+            {showUpdateAutoSettingPopup && (
+              <div className="absolute top-[3rem] z-[2] border bg-white shadow-lg shadow-black/20 rounded-lg min-w-[20rem] right-0 p-2">
+                <div className="relative">
+                  <IoClose
+                    onClick={() => {
+                      setShowUpdateAutoSettingPopup(false);
+                    }}
+                    className="absolute top-2 right-2 text-lg  text-red-500 cursor-pointer"
+                  />
+                  <p className="font-bold  border-b py-2   px-2 cursor-pointer text-orange-500">
+                    Options
+                  </p>
+                  <p
+                    onClick={() => {
+                      resetTimerForAutoUpdate();
+                      fetchNewDataDevices();
+                      setShowUpdateAutoSettingPopup(false);
+                    }}
+                    className="font-semibold text-gray-700 border-b py-2 hover:bg-orange-100  px-2 cursor-pointer"
+                  >
+                    Mettre a jour les donnees maintenant
+                  </p>
+                  <div
+                    onClick={() => {
+                      setUpdateAutoSetting(!updateAutoSetting);
+                      setShowUpdateAutoSettingPopup(false);
+                    }}
+                    className="font-semibold text-gray-700 border-b py-2 hover:bg-orange-100  px-2 cursor-pointer flex justify-between items-center"
+                  >
+                    {updateAutoSetting ? (
+                      <p>Désactiver la mise a jour automatique</p>
+                    ) : (
+                      <p>Activer la mise a jour automatique</p>
+                    )}
 
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
+                    {updateAutoSetting ? (
+                      <IoMdCheckboxOutline className="text-[1.42rem] text-orange-500" />
+                    ) : (
+                      <MdOutlineCheckBoxOutlineBlank
+                        IoMdCheckboxOutline
+                        className="text-[1.42rem] text-orange-500"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
                   },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
                   },
-                },
-              ],
-            }}
-            title={`${t("Mettre a jour les donnes")}`}
-          >
-            <div
-              onClick={() => {
-                resetTimerForAutoUpdate();
-                fetchNewDataDevices();
+                ],
               }}
-              className={`hover:bg-orange-500 hover:border-orange-500 transition-all hover:text-white rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
+              title={`${t("Mettre a jour les donnes")}`}
             >
-              <p
-                className="font-bold"
-                // onClick={() => resetTimerForAutoUpdate(30 * 60 * 1000)}
+              <div
+                onClick={() => {
+                  setShowUpdateAutoSettingPopup(true);
+                }}
+                className={`hover:bg-orange-500 hover:border-orange-500 transition-all hover:text-white rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
               >
-                {Math.floor(timeLeftBeforeAutoUpdate / 60)}:
-                {timeLeftBeforeAutoUpdate % 60}
-              </p>
-              <MdUpdate
-                className={`${
-                  isLoading2 ? "animate-spin " : ""
-                }  sm:text-[1.35rem]  text-[1.2rem]  `}
-              />
-            </div>
-          </Tooltip>
+                <p
+                  className="font-bold"
+                  // onClick={() => resetTimerForAutoUpdate(30 * 60 * 1000)}
+                >
+                  {Math.floor(timeLeftBeforeAutoUpdate / 60)}:
+                  {timeLeftBeforeAutoUpdate % 60}
+                </p>
+                <MdUpdate
+                  className={`${
+                    isLoading2 ? "animate-spin " : ""
+                  }  sm:text-[1.35rem]  text-[1.2rem]  `}
+                />
+              </div>
+            </Tooltip>
+          </div>
         </div>
         {/* </div>{" "} */}
       </div>

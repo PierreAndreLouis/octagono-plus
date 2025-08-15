@@ -16,7 +16,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "6.7";
+  let versionApplication = "6.8";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -829,6 +829,8 @@ const DataContextProvider = ({ children }) => {
     addVehiculeDetailsFonction(allDevices, véhiculeDetails)?.forEach(
       (device) => {
         const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+        const lastTimestampTimeSec =
+          device?.véhiculeDetails?.[0]?.timestamp ?? 0;
         const lastStopTime = device?.lastStopTime ?? 0;
 
         if (
@@ -857,10 +859,10 @@ const DataContextProvider = ({ children }) => {
 
         if (
           speed > 0 &&
-          currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
+          currentTimeSec - lastTimestampTimeSec < twentyFourHoursInSec
         ) {
           d.EnDéplacement.push(device);
-          idsÀExclure.add(device.deviceID);
+          // idsÀExclure.add(device.deviceID);
         }
 
         if (currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) {
@@ -1212,7 +1214,7 @@ const DataContextProvider = ({ children }) => {
             const lastUpdateMs = Number(detail.timestamp) * 1000;
             const updatedRecently =
               Number.isFinite(lastUpdateMs) &&
-              currentTimeMs - lastUpdateMs <= twentyFourHoursInMs;
+              currentTimeMs - lastUpdateMs < twentyFourHoursInMs;
             //  inconue
             if (detail.statusCode === "0xF952") {
               if (speed > 0 && updatedRecently) {
@@ -8631,6 +8633,21 @@ const DataContextProvider = ({ children }) => {
   const [timeLeftBeforeAutoUpdate, setTimeLeftBeforeAutoUpdate] = useState(0);
   const lastExecutionRef = useRef(Date.now()); // <-- stockage persistant
 
+  // const [updateAutoSetting, setUpdateAutoSetting] = useState(false);
+  const [updateAutoSetting, setUpdateAutoSetting] = useState(() => {
+    // Charger depuis localStorage au démarrage
+    const saved = localStorage.getItem("updateAutoSetting");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    // Sauvegarder automatiquement à chaque changement
+    localStorage.setItem(
+      "updateAutoSetting",
+      JSON.stringify(updateAutoSetting)
+    );
+  }, [updateAutoSetting]);
+
   // mafonction
   // ma fonction
   const autoUpdateFonction = () => {
@@ -8657,6 +8674,10 @@ const DataContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!updateAutoSetting) {
+      resetTimerForAutoUpdate();
+      return;
+    }
     let storedLastExecution = parseInt(
       localStorage.getItem("lastExecution") || "0",
       10
@@ -8714,7 +8735,12 @@ const DataContextProvider = ({ children }) => {
       clearInterval(checkId);
       clearInterval(countdownId);
     };
-  }, [timeBeforAUtoUpdate, isUserNotInteractingNow, isAuthenticated]);
+  }, [
+    timeBeforAUtoUpdate,
+    isUserNotInteractingNow,
+    isAuthenticated,
+    updateAutoSetting,
+  ]);
 
   const resetTimerForAutoUpdate = (time) => {
     const newInterval = time || updaterInterval;
@@ -9026,6 +9052,8 @@ const DataContextProvider = ({ children }) => {
         setTimeLeftBeforeAutoUpdate,
         resetTimerForAutoUpdate,
         autoUpdateFonction,
+        updateAutoSetting,
+        setUpdateAutoSetting,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

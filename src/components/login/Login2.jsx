@@ -67,14 +67,14 @@ function Login2() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setCountryAndLanguage(); // 2e vérification avant login
+    // setCountryAndLanguage(); // 2e vérification avant login
     const { account, username, password, country } = formData;
     handleLogin(account, username, password, country);
   };
 
   const demoAccountLogin = () => {
     const { account, username, password, country } = formData;
-    setCountryAndLanguage(); // 2e vérification aussi
+    // setCountryAndLanguage(); // 2e vérification aussi
     handleLogin("demo", "admin", "112233", country);
   };
 
@@ -122,7 +122,7 @@ function Login2() {
     useState(false);
   return (
     <div>
-      <div className="flex min-h-[90vh]  pt-14 md:pt-8 flex-1 flex-col justify-center px-6 pb-32   lg:px-8 ">
+      <div className="flex min-h-[90vh]  pt-[7rem] md:pt-14 flex-1 flex-col justify-center px-6 pb-32   lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm  ">
           <div className=" flex  gap-5 justify-center items-center">
             <div className=" flex  gap-5 justify-center items-center scale-75 md:scale-100">
