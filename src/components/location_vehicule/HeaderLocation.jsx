@@ -178,7 +178,7 @@ function HeaderLocation({
           </Tooltip>
         </div>
         {lastUpdate?.mostRecentTimestamp && (
-          <p className="font-bold hidden  md:flex flex-nowrap items-center text-[.7rem] sm:text-[.9rem] text-orange-700 bg-white  rounded-lg px-0 sm:px-3 py-0 mx-auto">
+          <p className="font-bold hidden  md:flex flex-nowrap items-center text-[.8rem] sm:text-[.9rem] text-orange-700 bg-white  rounded-lg px-0 sm:px-3 py-0 mx-auto">
             <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
             <span>
               {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}

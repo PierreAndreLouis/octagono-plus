@@ -52,7 +52,7 @@ function HistoriqueHeader({
   return (
     <>
       {véhiculeHistoriqueDetails?.length > 0 && (
-        <p className="font-bold text-center  justify-center  mb-1 max-w-[45rem] flex flex-wrap items-center text-[.75rem] sm:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3  py-1 mt-0.5 mx-auto">
+        <p className="font-bold text-center  justify-center  mb-1 max-w-[45rem] flex flex-wrap items-center text-[.8rem] sm:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-700/30 z-10 rounded-lg px-3  py-1 mt-0.5 mx-auto">
           <span className="text-gray-700  mr-2">{t("Last Update")} :</span>
           <span>
             {FormatDateHeure(véhiculeHistoriqueDetails?.[0]?.timestamp)?.date}

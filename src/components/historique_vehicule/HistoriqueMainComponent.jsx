@@ -382,7 +382,7 @@ function HistoriqueMainComponent({
                         className={`${lite_bg_color} shadow-md relative rounded-lg p-3 w-full`}
                       >
                         <div
-                          className={`${active_bg_color}  ${activeTextColor} z-10 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
+                          className={`${active_bg_color}  ${activeTextColor} z-1 rounded-bl-full absolute top-0 right-0  p-2 pl-3 pb-3 font-bold text-md `}
                         >
                           {isReverseListe ? numero2 : numero}
                         </div>

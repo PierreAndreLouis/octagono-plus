@@ -152,8 +152,8 @@ function SearchVehiculePupup({
   const [isSearchingNow, setIsSearchingNow] = useState(false);
   return (
     <div className="fixed min-h-[100vh]   z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50  flex justify-center ">
-      <div className=" sm:mx-auto   w-full  md:min-w-[60vw] relative border mx-0 md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-20 rounded-lg bg-white right-2 left-0 min-h-20 h-[82vh]   shadow-lg shadow-gray-600/80 ">
-        <div className="absolute  -top-[0.5rem] left-2 right-2 md:left-4  md:right-4 py-2">
+      <div className=" sm:mx-auto   w-full  md:min-w-[60vw] relative border mx-0 md:mx-2  md:max-w-[50rem]  pt-[5.5rem]  dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-lg dark:shadow-gray-950 text-gray-500 top-10 rounded-lg bg-white right-2 left-0 min-h-20 h-[92vh]   shadow-lg shadow-gray-600/80 ">
+        <div className="absolute  top-[1.4rem] left-2 right-2 md:left-4  md:right-4 py-2">
           <div className="mt-4 mb-4   flex items-center gap-2">
             <Tooltip
               title={`${t("cliquez pour filtrer")}`}
@@ -330,10 +330,10 @@ function SearchVehiculePupup({
                 onClick={() => {
                   setIsSearchingNow(!isSearchingNow);
                 }}
-                className="border mb-3 flex gap-2 items-center  border-orange-500 text-orange-500  cursor-pointer bg-orange-50  font-semibold  rounded-lg px-2 py-[.3rem]"
+                className="border sm:mb-3 flex gap-2 items-center  border-orange-500 text-orange-500  cursor-pointer bg-orange-50  font-semibold  rounded-lg px-4 md:px-2 py-[0.5rem] md:py-[.3rem]"
               >
                 <FaSearch className="text-orange-500 mt-[.1rem]" />
-                {t("Rechercher")}
+                <span className="hidden md:block">{t("Rechercher")}</span>
               </p>{" "}
             </div>
           )}
@@ -346,7 +346,7 @@ function SearchVehiculePupup({
             className="mt-1 text-2xl cursor-pointer text-end text-red-500 -translate-y-[.2rem] -translate-x-[.1rem]"
           />
         </div>
-        <div className="overflow-auto  mt-[1.8rem] h-[65vh] md:h-[60vh] pb-10 ">
+        <div className="overflow-auto  mt-[4rem] h-[70vh] md:h-[60vh] pb-10 ">
           {filteredVehiclesPupupByCategoriePagination?.length > 0 ? (
             filteredVehiclesPupupByCategoriePagination?.map(
               (véhicule, index) => {

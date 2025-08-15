@@ -9,6 +9,7 @@ import {
   FaUserPlus,
   FaChevronDown,
   FaChevronRight,
+  FaSortAmountDownAlt,
 } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
 import { MdUpdate } from "react-icons/md";
@@ -750,7 +751,7 @@ function ListeDesVehiculesGestion({
             )}
 
             {lastUpdate?.mostRecentTimestamp && (
-              <p className="font-bold  flex flex-wrap items-center text-[.7rem] md:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
+              <p className="font-bold  flex flex-wrap items-center text-[.8rem] md:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
                 <span className="text-gray-700  mr-2">
                   {t("Last Update")} :
                 </span>
@@ -786,7 +787,7 @@ function ListeDesVehiculesGestion({
         </div>
         {/* )} */}
         <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
-          <div className="flex justify-between mt-4 items-center">
+          <div className="flex justify-between mt-4 items-end gap-3">
             <div className="w-full grid grid-cols-2 md:flex items-center gap-2 flex-wrap">
               <p
                 onClick={() => {
@@ -810,14 +811,24 @@ function ListeDesVehiculesGestion({
                   }
                 }}
                 className={
-                  "px-2 cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                  "px-2 cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
                 }
               >
-                {fromDashboard &&
-                statisticFilteredDeviceListeText ===
-                  `${t("Appareils En déplacement")}`
-                  ? `${t("Véhicules En déplacement")}`
-                  : t("Véhicules déplacés")}
+                <span className="hidden sm:block">
+                  {fromDashboard &&
+                  statisticFilteredDeviceListeText ===
+                    `${t("Appareils En déplacement")}`
+                    ? `${t("Véhicules En déplacement")}`
+                    : t("Véhicules déplacés")}
+                </span>
+
+                <span className="sm:hidden">
+                  {fromDashboard &&
+                  statisticFilteredDeviceListeText ===
+                    `${t("Appareils En déplacement")}`
+                    ? `${t("En déplacement")}`
+                    : t("Déplacés")}
+                </span>
               </p>
               <p
                 onClick={() => {
@@ -828,9 +839,12 @@ function ListeDesVehiculesGestion({
                   }
                   setFilteredColorCategorieListe(DeviceEnStationnement);
                 }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                className="px-2  cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
               >
-                {t("Appareils non déplacés")}
+                <span className="hidden sm:block">
+                  {t("Appareils non déplacés")}
+                </span>
+                <span className="sm:hidden ">{t("Non Déplacés")}</span>
               </p>
 
               <p
@@ -842,9 +856,12 @@ function ListeDesVehiculesGestion({
                   }
                   setFilteredColorCategorieListe(DeviceInactifs);
                 }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+                className="px-2  cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
               >
-                {t("Appareils Inactifs")}
+                <span className="hidden sm:block">
+                  {t("Appareils Inactifs")}
+                </span>
+                <span className="sm:hidden ">{t("Inactifs")}</span>
               </p>
               <p
                 onClick={() => {
@@ -857,7 +874,7 @@ function ListeDesVehiculesGestion({
                     addVehiculeDetailsFonction(allDevices, véhiculeDetails)
                   );
                 }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-xs sm:text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+                className="px-2  cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
               >
                 {t("Tous")}
               </p>
@@ -881,9 +898,9 @@ function ListeDesVehiculesGestion({
                   setShowSortDeviceByPopup(true);
                   // setIsReverseListe(!isReverseListe);
                 }}
-                className="text-md py-4 md:py-1.5 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                className="text-md py-2 md:py-1.5 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
               >
-                <BsSortDown className="text-[1.3rem]" />
+                <FaSortAmountDownAlt className="text-[1.3rem]" />
               </p>
             </Tooltip>
           </div>
