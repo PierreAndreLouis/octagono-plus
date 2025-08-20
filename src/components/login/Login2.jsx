@@ -54,7 +54,7 @@ function Login2() {
     const savedData = localStorage.getItem("userCredentials");
     return savedData
       ? JSON.parse(savedData)
-      : { account: "", username: "", password: "", country: defaultCountry };
+      : { account: "", username: "", password: "", country: "" };
   });
 
   // Sauvegarde ou suppression instantanée des données dès qu'il y a un changement
@@ -69,12 +69,17 @@ function Login2() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // setCountryAndLanguage(); // 2e vérification avant login
+
     const { account, username, password, country } = formData;
+    localStorage.setItem("currentCountry", country);
+
     handleLogin(account, username, password, country);
   };
 
   const demoAccountLogin = () => {
     const { account, username, password, country } = formData;
+    localStorage.setItem("currentCountry", country);
+
     // setCountryAndLanguage(); // 2e vérification aussi
     handleLogin("demo", "admin", "112233", country);
   };
@@ -124,23 +129,23 @@ function Login2() {
   const [showLangueAndCountryOption, setShowLangueAndCountryOption] =
     useState(false);
   return (
-    <div className="grid md:pb-12  relative md:grid-cols-2 items-center min-h-[100vh] bg-sky-700  md:mx-auto md:px-[5vw]  lg:gap-20 m-0  text-white">
+    <div className="grid md:pb-12  relative md:grid-cols-2 items-center min-h-[100vh] bg-gray-100 md:bg-sky-700  md:mx-auto md:px-[5vw]  lg:gap-20 m-0  text-white">
       <img
-        className="fixed z-1 h-[115%] -bottom-[2rem] right-[0rem] object-cover"
+        className="fixed hidden md:block z-1 h-[115%] -bottom-[2rem] right-[0rem] object-cover"
         loading="lazy"
         src="/img/login_bg4.png"
         alt=""
       />
       <img
-        className="fixed z-2 h-[115%] -bottom-[2rem] left-[0rem] object-cover"
+        className="fixed hidden md:block z-2 h-[115%] -bottom-[2rem] left-[0rem] object-cover"
         loading="lazy"
         src="/img/login_bg4.png"
         alt=""
       />
       <div></div>
-      <div className="flex md:scale-90 hover:scale-100 transition-all bg-white/60 relative  z-10 flex-1 flex-col justify-center pt-4 py-10  border-2--- border-blue-900 px-4 pb-20 md:pb-8 md:rounded-lg backdrop-blur-lg  bg-blue-800/30--">
+      <div className="flex md:scale-90 hover:scale-100 transition-all bg-gray-100 md:bg-white/60 relative  z-10 flex-1 flex-col justify-center pt-4 py-10  border-2--- border-blue-900 px-4 pb-20 md:pb-8 md:rounded-lg backdrop-blur-lg  bg-blue-800/30--">
         <div className=" flex bg-white--- rounded-lg py-6 pb-0 gap-5 justify-center items-center">
-          <div className=" flex  gap-5 justify-center items-center scale-75 md:scale-100">
+          <div className=" flex  gap-5 justify-center items-center scale-75 lg:scale-100">
             <div className="order flex flex-col justify-center items-center">
               <img
                 loading="lazy"
@@ -271,7 +276,7 @@ function Login2() {
               >
                 {t("Mot de passe")}
               </label>
-              <div className="mt-2  relative">
+              <div className="mt-2  relative text-black">
                 {isShowPassword ? (
                   <IoMdEye
                     onClick={() => {
