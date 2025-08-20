@@ -463,7 +463,7 @@ function ListeDesVehiculesGestion({
             </div>
             <div className="relative ">
               <div className="w-full h-[15rem]-- overflow-hidden--- rounded-md ">
-                <LocationPage fromDashboard="carteFiltered" />
+                <LocationPage fromDashboard="true" />
               </div>
             </div>
           </div>
@@ -722,7 +722,7 @@ function ListeDesVehiculesGestion({
                         setFilteredColorCategorieListe(DeviceDéplacer);
                       }}
                       className={
-                        " flex justify-between items-center  w-full sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                        "px-2 cursor-pointer w-full flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
                       }
                     >
                       {t("Appareils déplacés")}
@@ -994,7 +994,7 @@ function ListeDesVehiculesGestion({
                     setShowCarte(true);
                     setIsFilteredCartePositionByCategorie(true);
                   }}
-                  className="text-md py-2 md:py-1 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                  className="text-md  bg-orange-50 hover:bg-orange-100 h-[2.5rem] border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
                 >
                   <MdLocationPin className="text-[1.5rem]" />
                 </p>
@@ -1025,7 +1025,7 @@ function ListeDesVehiculesGestion({
                   onClick={() => {
                     setShowSortDeviceByPopup(true);
                   }}
-                  className="text-md py-2 md:py-1.5 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                  className="text-md h-[2.5rem] bg-orange-50 hover:bg-orange-100  border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
                 >
                   <FaSortAmountDownAlt className="text-[1.3rem]" />
                 </p>

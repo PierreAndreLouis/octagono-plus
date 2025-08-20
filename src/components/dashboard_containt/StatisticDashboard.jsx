@@ -212,7 +212,7 @@ function StatisticDashboard({
                     <span className="font-bold text-sm mb-">
                       {enDeplacementCount}/2
                     </span>
-                    <FaChevronCircleRight className="text-[2rem]- ml-1 border min-w-[1rem]" />{" "}
+                    <FaChevronCircleRight className="text-[2rem]- ml-1  min-w-[1rem]" />{" "}
                   </div>
                 </div>
                 <h2
@@ -288,7 +288,7 @@ function StatisticDashboard({
                     <span className="font-bold text-sm mb-">
                       {enStationnementCount}/3
                     </span>
-                    <FaChevronCircleRight className="text-[2rem]- ml-1 border  min-w-[1rem]" />{" "}
+                    <FaChevronCircleRight className="text-[2rem]- ml-1   min-w-[1rem]" />{" "}
                   </div>
                 </div>
 
@@ -381,7 +381,7 @@ function StatisticDashboard({
                     <span className="font-bold text-sm mb-">
                       {inactifsCount}/3
                     </span>
-                    <FaChevronCircleRight className="text-[2rem]- ml-1 border  min-w-[1rem]" />{" "}
+                    <FaChevronCircleRight className="text-[2rem]- ml-1   min-w-[1rem]" />{" "}
                   </div>
                 </div>
 

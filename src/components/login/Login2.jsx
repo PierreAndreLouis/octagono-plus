@@ -1,17 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 import { DataContext } from "../../context/DataContext.jsx";
 import InstallationPWA from "../../pages/InstallationPWA.jsx";
-import GoogleTranslate from "../home/GoogleTranslate.jsx";
-import { Link } from "react-router-dom";
-import { FaAddressBook, FaBook } from "react-icons/fa";
-import { MdGTranslate } from "react-icons/md";
+
 import { useTranslation } from "react-i18next";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import {
-  IoChevronDownCircleOutline,
-  IoChevronDownCircleSharp,
-} from "react-icons/io5";
+import { IoChevronDownCircleSharp } from "react-icons/io5";
 
 function Login2() {
   const {
@@ -140,17 +133,17 @@ function Login2() {
       <img
         className="fixed hidden md:block z-1 h-[115%] -bottom-[2rem] right-[0rem] object-cover"
         loading="lazy"
-        src="/img/login_bg4.png"
+        src="/img/login_bg4.webp"
         alt=""
       />
       <img
         className="fixed hidden md:block z-2 h-[115%] -bottom-[2rem] left-[0rem] object-cover"
         loading="lazy"
-        src="/img/login_bg4.png"
+        src="/img/login_bg4.webp"
         alt=""
       />
       <div></div>
-      <div className="flex md:scale-90 hover:scale-100 transition-all bg-gray-100 md:bg-white/60 relative  z-10 flex-1 flex-col justify-center pt-4 py-10  border-2--- border-blue-900 px-4 pb-20 md:pb-8 md:rounded-lg backdrop-blur-lg  bg-blue-800/30--">
+      <div className="flex min-h-[70vh]  transition-all bg-gray-100 md:bg-white/60 relative  z-10 flex-1 flex-col justify-center pt-4 py-10  border-2--- border-blue-900 px-4 pb-20 md:pb-8 md:rounded-lg backdrop-blur-lg  bg-blue-800/30--">
         <div className=" flex bg-white--- rounded-lg py-6 pb-0 gap-5 justify-center items-center">
           <div className=" flex  gap-5 justify-center items-center scale-75 lg:scale-100">
             <div className="order flex flex-col justify-center items-center">
@@ -172,6 +165,12 @@ function Login2() {
             />
           </div>
         </div>
+        <div className="flex justify-center items-center gap-2">
+          <p className="text-center cursor-pointer">
+            {/* Installer l'application */}
+            <InstallationPWA />
+          </p>
+        </div>
         <div className=" w-full  flex justify-end">
           <IoChevronDownCircleSharp
             onClick={() => {
@@ -179,11 +178,11 @@ function Login2() {
             }}
             className={` ${
               showLangueAndCountryOption ? "rotate-180" : ""
-            }  text-end translate-y-[1.5rem] translate-x-[.8rem]  text-[1.7rem] text-orange-500  transition-all cursor-pointer hover:text-orange-400  px-[.78rem]   min-w-[3rem]`}
+            }  text-end translate-y-[.5rem] max-h- translate-x-[.8rem]  text-[1.7rem] text-orange-500  transition-all cursor-pointer hover:text-orange-400  px-[.78rem]   min-w-[3rem]`}
           />
         </div>
 
-        <div className="mt-2">
+        <div className="mt-2 -translate-y-[1.5rem]">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               {showLangueAndCountryOption && (
