@@ -17,7 +17,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "7.5";
+  let versionApplication = "7.6";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();

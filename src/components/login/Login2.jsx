@@ -132,13 +132,13 @@ function Login2() {
     <div className="grid md:pb-12  relative md:grid-cols-2 items-center min-h-[100vh] bg-gray-100 md:bg-sky-700  md:mx-auto md:px-[5vw]  lg:gap-20 m-0  text-white">
       <img
         className="fixed hidden md:block z-1 h-[115%] -bottom-[2rem] right-[0rem] object-cover"
-        loading="lazy"
+        // loading="lazy"
         src="/img/login_bg4.webp"
         alt=""
       />
       <img
         className="fixed hidden md:block z-2 h-[115%] -bottom-[2rem] left-[0rem] object-cover"
-        loading="lazy"
+        // loading="lazy"
         src="/img/login_bg4.webp"
         alt=""
       />
@@ -148,7 +148,7 @@ function Login2() {
           <div className=" flex  gap-5 justify-center items-center scale-75 lg:scale-100">
             <div className="order flex flex-col justify-center items-center">
               <img
-                loading="lazy"
+                // loading="lazy"
                 alt="Your Company"
                 src="/img/cars/logo.png"
                 className="mx-auto-- translate-y-0 w-[4.4rem] w-auto-- "
@@ -159,7 +159,7 @@ function Login2() {
             </div>
             <img
               alt="Your Company"
-              loading="lazy"
+              // loading="lazy"
               src="/img/logo/OctagonoGPS.png"
               className="mx-auto-- w-[10rem]  w-auto--"
             />
@@ -171,7 +171,7 @@ function Login2() {
             <InstallationPWA />
           </p>
         </div>
-        <div className=" w-full  flex justify-end">
+        <div className=" w-full  flex justify-end z-10">
           <IoChevronDownCircleSharp
             onClick={() => {
               setShowLangueAndCountryOption(!showLangueAndCountryOption);
