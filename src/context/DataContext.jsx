@@ -8,6 +8,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { useTranslation } from "react-i18next";
@@ -16,7 +17,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "6.9";
+  let versionApplication = "7.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
