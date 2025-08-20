@@ -15,7 +15,6 @@ function InfoUserComponent({
     adminAccount,
     adminUsername,
     resetIndexedDB,
-    currentCountry,
     versionApplication,
     isDashboardHomePage,
     sendGMailConfirmation,
@@ -111,7 +110,7 @@ function InfoUserComponent({
             {t("Pays")} :
           </h3>
           <p className="pl-3 text-gray-500 dark:text-gray-300">
-            {currentCountry === "rd" ? "República Dominicana" : "Haïti"}{" "}
+            {localStorage.getItem("currentCountry") === "rd" ? "República Dominicana" : "Haïti"}{" "}
           </p>
         </div>
 

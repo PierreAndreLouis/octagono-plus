@@ -32,7 +32,6 @@ function GestionDesCompts({
     setShowAccountOptionsPopup,
 
     adminPassword,
-    currentCountry,
     handleLogin,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
@@ -74,7 +73,7 @@ function GestionDesCompts({
         currentAccountSelected?.accountID,
         "admin",
         currentAccountSelected?.password,
-        localStorageCurrentCountry || currentCountry,
+        localStorageCurrentCountry,
         sendConnectionMail
       );
 

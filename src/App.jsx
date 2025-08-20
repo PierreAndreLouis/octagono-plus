@@ -147,7 +147,6 @@ function App() {
     clearCacheFonction,
     allDevices,
     setAllDevices,
-    currentCountry,
   } = useContext(DataContext);
 
   const location = useLocation();

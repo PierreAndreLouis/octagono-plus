@@ -17,7 +17,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "7.1";
+  let versionApplication = "7.2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -356,8 +356,8 @@ const DataContextProvider = ({ children }) => {
   let currentAPI = "/octagono-plus-api/track/Service";
 
   if (
-    currentCountry === "rd" ||
-    localStorage.getItem("currentCountry") === "rd"
+    localStorage.getItem("currentCountry") === "rd" ||
+    currentCountry === "rd"
   ) {
     currentAPI = "/octagono-gps-api/track/Service";
   } else {
@@ -371,10 +371,7 @@ const DataContextProvider = ({ children }) => {
     if (adminUsername) {
       localStorage.setItem("adminUsername", adminUsername);
     }
-    if (currentCountry) {
-      localStorage.setItem("currentCountry", currentCountry);
-    }
-  }, [username, adminUsername, currentCountry]);
+  }, [username, adminUsername]);
 
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
 
@@ -1506,8 +1503,6 @@ const DataContextProvider = ({ children }) => {
           localStorage.setItem("adminUsername", username);
           localStorage.setItem("adminPassword", password);
 
-          localStorage.setItem("currentCountry", country);
-
           setAdminAccount(account);
           setAdminUsername(username);
           setAdminPassword(password);
@@ -1528,7 +1523,6 @@ const DataContextProvider = ({ children }) => {
           localStorage.setItem("account", account);
           localStorage.setItem("username", username);
           localStorage.setItem("password", password);
-          localStorage.setItem("currentCountry", country);
 
           setAccount(account);
           setUsername(username);
@@ -6416,11 +6410,7 @@ const DataContextProvider = ({ children }) => {
       </GTSRequest>`;
 
     console.log("currentAPI", currentAPI);
-    console.log("currentcountry", currentCountry);
-    console.log(
-      "localStorage.getItem()",
-      localStorage.getItem("currentCountry")
-    );
+
     console.log("xmlData : ===>", xmlData);
 
     try {
@@ -8874,6 +8864,7 @@ const DataContextProvider = ({ children }) => {
         setCurrentVéhicule,
         account,
         currentCountry,
+        setCurrentCountry,
         username,
         password,
         adminAccount,

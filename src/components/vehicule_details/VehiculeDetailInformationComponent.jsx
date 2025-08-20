@@ -8,16 +8,19 @@ function VehiculeDetailInformationComponent({
 }) {
   const [t, i18n] = useTranslation();
 
-  const { FormatDateHeure, username, currentCountry } = useContext(DataContext);
+  const { FormatDateHeure, username } = useContext(DataContext);
 
-  const country = currentCountry || localStorage.getItem("currentCountry");
+  const country = localStorage.getItem("currentCountry");
   let locale = "fr-FR";
 
-  useEffect(() => {
-    if (country === "ht") locale = "fr-FR";
-    else if (country === "rd") locale = "es-ES";
-    else if (country === "en") locale = "en-US";
-  }, [currentCountry]);
+  // useEffect(() => {
+  if (country === "ht") {
+    locale = "fr-FR";
+  } else if (country === "rd") {
+    locale = "es-ES";
+  } else if (country === "en") {
+    locale = "en-US";
+  }
 
   const creationDateTime = (creationTime) => {
     const date = new Date(creationTime * 1000);

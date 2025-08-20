@@ -96,7 +96,6 @@ function SideBarSysadmin({
     versionApplication,
     setListeGestionDesRulesActive,
     accountRulesActive,
-    currentCountry,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -1375,7 +1374,7 @@ function SideBarSysadmin({
           {/* )} */}
           {/* setReadDocumentation(false); */}
           {/*  */}
-   
+
           {/*  */}
           <div className="ajouter-appareil-container transition-all hover:border-b  ">
             <div

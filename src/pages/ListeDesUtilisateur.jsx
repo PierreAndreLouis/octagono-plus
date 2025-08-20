@@ -34,7 +34,6 @@ function ListeDesUtilisateur({
     currentSelectedUserToConnect,
     setCurrentSelectedUserToConnect,
     handleLogin,
-    currentCountry,
     setShowSelectedUserOptionsPopup,
     setListeGestionDesVehicules,
     gestionAccountData,
@@ -68,7 +67,7 @@ function ListeDesUtilisateur({
           currentSelectedUserToConnect?.accountID,
           currentSelectedUserToConnect?.userID,
           currentSelectedUserToConnect?.password,
-          currentCountry,
+          localStorage.getItem("currentCountry"),
           sendConnectionMail
         );
       }, 200);

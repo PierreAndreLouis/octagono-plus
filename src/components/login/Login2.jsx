@@ -14,8 +14,13 @@ import {
 } from "react-icons/io5";
 
 function Login2() {
-  const { handleLogin, error, isHomePageLoading, isAuthenticated } =
-    useContext(DataContext);
+  const {
+    handleLogin,
+    error,
+    isHomePageLoading,
+    isAuthenticated,
+    setCurrentCountry,
+  } = useContext(DataContext);
   let x;
 
   const [t, i18n] = useTranslation();
@@ -71,6 +76,7 @@ function Login2() {
     // setCountryAndLanguage(); // 2e vérification avant login
 
     const { account, username, password, country } = formData;
+    setCurrentCountry(country);
     localStorage.setItem("currentCountry", country);
 
     handleLogin(account, username, password, country);
@@ -78,6 +84,7 @@ function Login2() {
 
   const demoAccountLogin = () => {
     const { account, username, password, country } = formData;
+    setCurrentCountry(country);
     localStorage.setItem("currentCountry", country);
 
     // setCountryAndLanguage(); // 2e vérification aussi
