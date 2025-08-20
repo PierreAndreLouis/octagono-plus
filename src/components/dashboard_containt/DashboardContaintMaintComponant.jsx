@@ -77,6 +77,7 @@ function DashboardContaintMaintComponant({
     ListeDesAlertes,
     testAlertListe,
     versionApplication,
+    setIsFilteredCartePositionByCategorie,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -1244,13 +1245,6 @@ function DashboardContaintMaintComponant({
                 </div>
               </div>
             )}
-            {/* {expandSection === "carteFiltered" && (
-              <div className="relative ">
-                <div className="w-full h-[15rem]-- overflow-hidden--- rounded-md ">
-                  <LocationPage fromDashboard="carteFiltered" />
-                </div>
-              </div>
-            )} */}
 
             {/* filteredColorCategorieListe */}
             {expandSection === "graphe" && (
@@ -1421,6 +1415,7 @@ function DashboardContaintMaintComponant({
                       onClick={() => {
                         setExpandSection("carte");
                         setSelectedVehicleToShowInMap(null);
+                        setIsFilteredCartePositionByCategorie(false);
                       }}
                       className="font-semibold absolute top-1 right-0 text-sm underline cursor-pointer text-orange-500"
                     >
@@ -1511,6 +1506,7 @@ function DashboardContaintMaintComponant({
                           setExpandSection("carte");
                           setSelectedVehicleToShowInMap(null);
                           updateAppareilsEtGeofencesPourCarte();
+                          setIsFilteredCartePositionByCategorie(false);
                         }}
                         className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
                       >
@@ -1715,6 +1711,7 @@ function DashboardContaintMaintComponant({
                       setExpandSection("carte");
                       setSelectedVehicleToShowInMap(null);
                       updateAppareilsEtGeofencesPourCarte();
+                      setIsFilteredCartePositionByCategorie(false);
                     }}
                     className="w-[2.5rem] h-[2.5rem] flex justify-center items-center  rounded-full bg-white shadow-lg shadow-black/20 text-orange-500  cursor-pointer"
                   >

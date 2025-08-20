@@ -76,6 +76,7 @@ function RapportGroupe({
     isSearchingFromRapportGroupePage,
     setIsSearchingFromRapportGroupePage,
     password,
+    setIsFilteredCartePositionByCategorie,
   } = useContext(DataContext); // const { currentVéhicule } = useContext(DataContext);
   let x;
 
@@ -4158,6 +4159,7 @@ function RapportGroupe({
                   onClick={() => {
                     setzoomPosition(true);
                     setSelectedVehicleToShowInMap(null);
+                    setIsFilteredCartePositionByCategorie(false);
                   }}
                 >
                   <div className="flex justify-center items-center min-w-14 min-h-14 rounded-full bg-white  shadow-xl">
