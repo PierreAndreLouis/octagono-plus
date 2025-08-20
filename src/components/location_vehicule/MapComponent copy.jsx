@@ -77,53 +77,6 @@ function MapComponent({
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
 
-  // Pré-calcul des icônes pour éviter de recréer L.icon à chaque render
-  const precomputedIcons = useMemo(() => {
-    const scale = 0.8; // facteur de réduction (50%)
-    const directions = Array.from({ length: 8 }, (_, i) => i);
-
-    const baseSize = [25, 35]; // largeur, hauteur originale
-    const anchor = [12, 35]; // anchor originale
-
-    const icons = {
-      red: L.icon({
-        iconUrl: "/pin/ping_red.png",
-        iconSize: [baseSize[0] * scale, baseSize[1] * scale],
-        iconAnchor: [anchor[0] * scale, anchor[1] * scale],
-        shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-        shadowSize: [1, 1],
-      }),
-      purple: L.icon({
-        iconUrl: "/pin/ping_purple.png",
-        iconSize: [baseSize[0] * scale, baseSize[1] * scale],
-        iconAnchor: [anchor[0] * scale, anchor[1] * scale],
-        shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-        shadowSize: [1, 1],
-      }),
-      yellow: {},
-      green: {},
-    };
-
-    directions.forEach((dir) => {
-      icons.yellow[dir] = L.icon({
-        iconUrl: `/pin/ping_yellow_h${dir}.png`,
-        iconSize: [baseSize[0] * scale, baseSize[1] * scale],
-        iconAnchor: [anchor[0] * scale, anchor[1] * scale],
-        shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-        shadowSize: [1, 1],
-      });
-      icons.green[dir] = L.icon({
-        iconUrl: `/pin/ping_green_h${dir}.png`,
-        iconSize: [baseSize[0] * scale, baseSize[1] * scale],
-        iconAnchor: [anchor[0] * scale, anchor[1] * scale],
-        shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
-        shadowSize: [1, 1],
-      });
-    });
-
-    return icons;
-  }, []);
-
   let ListeAppareilFinalAAfficher = appareilPourAfficherSurCarte;
 
   if (isFilteredCartePositionByCategorie) {
@@ -281,24 +234,48 @@ function MapComponent({
   const getMarkerIcon = (véhicule, getColor = false) => {
     const speed = parseFloat(véhicule?.speedKPH);
     const direction = Math.round(véhicule?.heading / 45.0) % 8;
+    const timestamp = véhicule?.timestamp * 1000; // En millisecondes
     const lastUpdateTime = véhicule?.timestamp;
 
-    const currentTimeSec = Math.floor(Date.now() / 1000);
+    const currentTimeMs = Date.now();
+    const currentTimeSec = Math.floor(currentTimeMs / 1000);
     const twentyFourHoursInSec = 24 * 60 * 60;
+
+    const isRecentlyUpdate =
+      currentTimeSec - lastUpdateTime <= twentyFourHoursInSec;
     const isNotRecentlyUpdate =
       currentTimeSec - lastUpdateTime > twentyFourHoursInSec;
 
     if (!getColor) {
-      if (isNotRecentlyUpdate) return precomputedIcons.purple;
-      if (speed > 20) return precomputedIcons.green[direction];
-      if (speed > 0) return precomputedIcons.yellow[direction];
-      return precomputedIcons.red;
+      if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
+
+      if (
+        speed > 0 &&
+        speed <= 20
+      )
+        return `/pin/ping_yellow_h${direction}.png`;
+
+      if (
+        speed > 20
+      )
+        return `/pin/ping_green_h${direction}.png`;
+
+      return "/pin/ping_red.png";
     } else {
-      if (isNotRecentlyUpdate) return "bg-purple-600 text-white";
-      if (speed > 20) return "bg-green-600 text-white";
-      if (speed > 0)
-        return "bg-yellow-300 border text-black font-bold border-b border-b-black";
-      return "bg-red-500 text-white";
+      if (isNotRecentlyUpdate) return "bg-purple-600 text-white ";
+
+      if (
+        speed > 0 &&
+        speed <= 20
+      )
+        return "bg-yellow-300 border text-black   font-bold border-b border-b-black";
+
+      if (
+        speed > 20
+      )
+        return "bg-green-600 text-white ";
+
+      return "bg-red-500 text-white ";
     }
   };
 
@@ -464,21 +441,27 @@ function MapComponent({
   let getColor = true;
 
   const countLimit = 30;
-  const [IsUpdateAuto, setIsUpdateAuto] = useState(false);
-
-  const countRef = useRef(countLimit);
   const [count, setCount] = useState(countLimit);
 
+  const [IsUpdateAuto, setIsUpdateAuto] = useState(false);
+  const fromUpdateAuto = true;
+  // const foundDevice = accountDevices?.find((d) => d?.deviceID === selectedVehicleToShowInMap)
+
   useEffect(() => {
+    if (!selectedVehicleToShowInMap) return;
     if (!IsUpdateAuto) return;
-    const timer = setInterval(() => {
-      countRef.current =
-        countRef.current === 0 ? countLimit : countRef.current - 1;
-      setCount(countRef.current);
-      if (countRef.current === 0) handleVehicleClick(currentVéhicule, true);
+    if (count === 0) {
+      console.log("Countdown à 0");
+
+      handleVehicleClick(currentVéhicule, fromUpdateAuto);
+    }
+    // console.log(count);
+
+    const timer = setTimeout(() => {
+      setCount(count === 0 ? countLimit : count - 1);
     }, 1000);
-    return () => clearInterval(timer);
-  }, [IsUpdateAuto, currentVéhicule]);
+    return () => clearTimeout(timer);
+  }, [count, IsUpdateAuto, currentVéhicule]);
 
   useEffect(() => {
     if (!IsUpdateAuto) {
@@ -487,69 +470,39 @@ function MapComponent({
   }, [IsUpdateAuto]);
 
   const markers = useMemo(() => {
-    if (!vehicles) return [];
-
-    return vehicles.map((véhicule) => (
+    return vehicles?.map((véhicule, index) => (
       <Marker
-        key={véhicule.deviceID}
+        key={véhicule.deviceID} // éviter index si possible
         position={[
           véhicule.lastValidLatitude || 0,
           véhicule.lastValidLongitude || 0,
         ]}
-        icon={getMarkerIcon(véhicule)}
+        icon={L.icon({
+          iconUrl: getMarkerIcon(véhicule),
+          iconSize: [25, 35],
+          iconAnchor: [12, 35],
+          popupAnchor: [1, -33],
+          shadowUrl: "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+          shadowSize: [1, 1],
+        })}
         eventHandlers={{ click: () => onClickVehicle(véhicule) }}
-      />
+      >
+        {/* <Popup closeButton={true} closeOnClick={false}>
+          <div style={{ minWidth: 120 }}>xxxxxxxx</div>
+        </Popup> */}
+      </Marker>
     ));
-  }, [vehicles, precomputedIcons]);
+  }, [vehicles]);
 
-  const geofenceMarkers = useMemo(() => {
-    if (!showGeofenceInCarte || !geofencePourAfficherSurCarte) return [];
-
-    return geofencePourAfficherSurCarte
-      .filter((g) => g.isActive === 1)
-      .map((geofence, index) => {
-        const validCoordinates = geofence?.coordinates?.filter(
-          (point) => point.lat && point.lng
-        );
-        if (!validCoordinates.length) return null;
-
-        const latitudes = validCoordinates.map((p) => p.lat);
-        const longitudes = validCoordinates.map((p) => p.lng);
-        const center = [
-          (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
-          (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-        ];
-
-        return (
-          <React.Fragment key={index}>
-            <Polygon
-              positions={validCoordinates.map((p) => [p.lat, p.lng])}
-              pathOptions={{
-                color: geofence.color || "#067510",
-                fillColor: geofence.color || "#11cc22",
-                fillOpacity: 0.1,
-                weight: 1,
-              }}
-            />
-            <Marker
-              position={center}
-              icon={L.divIcon({
-                className: "geofence-label",
-                html: `<div class="bg-gray-100 px-2 shadow-lg rounded-md text-black font-bold text-center"
-                         style="font-size:${textSize}; width:${widthSize};">
-                      ${geofence.description}
-                     </div>`,
-              })}
-            />
-          </React.Fragment>
-        );
-      });
-  }, [showGeofenceInCarte, geofencePourAfficherSurCarte, textSize, widthSize]);
-
-  const VehiclePopup = React.memo(
-    ({ véhicule, getMarkerIcon, t, openGoogleMaps }) => {
-      if (!véhicule) return null;
-      return (
+  return (
+    <div
+      onClick={() => {
+        // updateAccountDevicesWidthvéhiculeDetailsFonction();
+      }}
+      ref={ref1}
+      className="relative overflow-hidden"
+    >
+      {selectedVehicle && (
         <div
           className={`bottom-[4rem] lg:bottom-4  ${
             fromHistorique === "true" ? "bottom-[1rem] " : ""
@@ -653,25 +606,6 @@ function MapComponent({
             </button>
           </div>
         </div>
-      );
-    }
-  );
-
-  return (
-    <div
-      onClick={() => {
-        // updateAccountDevicesWidthvéhiculeDetailsFonction();
-      }}
-      ref={ref1}
-      className="relative overflow-hidden"
-    >
-      {selectedVehicle && (
-        <VehiclePopup
-          véhicule={selectedVehicle}
-          getMarkerIcon={getMarkerIcon}
-          t={t}
-          openGoogleMaps={openGoogleMaps}
-        />
       )}
 
       <Tooltip
@@ -863,11 +797,68 @@ function MapComponent({
           onMapClick={() => setSelectedVehicle(null)}
         />
 
-        {geofenceMarkers}
+        {showGeofenceInCarte &&
+          geofencePourAfficherSurCarte
+            ?.filter((isActiveGeofence) => {
+              const activeGeofence = isActiveGeofence?.isActive === 1;
+              return activeGeofence;
+            })
+            ?.map((geofence, index) => {
+              // Filtrer les coordonnées valides
+              const validCoordinates = geofence?.coordinates?.filter(
+                (point) =>
+                  point.lat !== null &&
+                  point.lng !== null &&
+                  point.lat !== "" &&
+                  point.lng !== "" &&
+                  point.lat !== 0 &&
+                  point.lng !== 0
+              );
+
+              if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide
+
+              // Calculer le centre du geofence
+              const latitudes = validCoordinates?.map((point) => point.lat);
+              const longitudes = validCoordinates?.map((point) => point.lng);
+              const center = [
+                (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+                (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+              ];
+
+              return (
+                <React.Fragment key={index}>
+                  <Polygon
+                    positions={validCoordinates?.map((point) => [
+                      point.lat,
+                      point.lng,
+                    ])}
+                    pathOptions={{
+                      color: geofence?.color || "#067510", // Couleur de la bordure
+                      fillColor: geofence?.color || "#11cc22", // Couleur du fond
+                      fillOpacity: 0.1, // Opacité du fond
+                      weight: 1, // Épaisseur des lignes
+                    }}
+                  />
+
+                  <Marker
+                    position={center}
+                    icon={L.divIcon({
+                      className: "geofence-label",
+                      html: `<div 
+                           class="bg-gray-100 notranslate px-2 shadow-lg shadow-black/20 rounded-md  flex justify-center items-center  -translate-x-[50%] text-black font-bold text-center whitespace-nowrap- overflow-hidden-" 
+                           
+                           style="font-size: ${textSize}; width: ${widthSize}; color: #706f6f; {geofence.color}; textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'">
+                           ${geofence?.description}
+                           </div>`,
+                    })}
+                  />
+                </React.Fragment>
+              );
+            })}
 
         {isMarkerClusterGroupMode ? (
           <MarkerClusterGroup
-            chunkedLoading={true} // rend le clustering progressif
+            chunkedLoading
             spiderfyOnMaxZoom={false}
             showCoverageOnHover={false}
             maxClusterRadius={50}
@@ -875,7 +866,27 @@ function MapComponent({
             {markers}
           </MarkerClusterGroup>
         ) : (
-          markers
+          vehicles?.map((véhicule, index) => {
+            return (
+              <Marker
+                key={index}
+                position={[
+                  véhicule.lastValidLatitude || 0,
+                  véhicule.lastValidLongitude || 0,
+                ]}
+                icon={L.icon({
+                  iconUrl: getMarkerIcon(véhicule),
+                  iconSize: [20, 30],
+                  iconAnchor: [12, 35],
+                  popupAnchor: [1, -33],
+                  shadowUrl:
+                    "https://unpkg.com/leaflet/dist/images/marker-shadow.png",
+                  shadowSize: [1, 1],
+                })}
+                eventHandlers={{ click: () => onClickVehicle(véhicule) }}
+              ></Marker>
+            );
+          })
         )}
       </MapContainer>
     </div>

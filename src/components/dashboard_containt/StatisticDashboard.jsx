@@ -241,7 +241,7 @@ function StatisticDashboard({
                 onClick={() => {
                   increaseCountFonction("green");
                 }}
-                className="absolute top-0 bottom-0 right-0 min-w-[35%] z-30 md:hover:border  md:hover:border-l-green-400"
+                className="absolute top-0 bottom-0 right-0 min-w-[35%] z-30 md:hover:shadow-2xl shadow-black"
               >
                 {" "}
               </div>
@@ -316,7 +316,7 @@ function StatisticDashboard({
                 onClick={() => {
                   increaseCountFonction("orange");
                 }}
-                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 md:hover:border  md:hover:border-l-orange-400"
+                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 md:hover:shadow-2xl shadow-black   "
               >
                 {" "}
               </div>
@@ -411,7 +411,7 @@ function StatisticDashboard({
                 onClick={() => {
                   increaseCountFonction("purple");
                 }}
-                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 md:hover:border  md:hover:border-l-purple-400"
+                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 md:hover:shadow-2xl shadow-black"
               >
                 {" "}
               </div>
