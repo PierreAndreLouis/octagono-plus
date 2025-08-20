@@ -392,6 +392,7 @@ const LocationPage = ({
           véhiculeData={véhiculeData}
           handleVehicleClick={handleVehicleClick}
           isFetchFromUpdateAuro={isFetchFromUpdateAuro}
+          fromDashboard={fromDashboard}
         />
       </div>
     </div>

@@ -1523,29 +1523,32 @@ function TrajetVehicule({
                         icon={markerIcon}
                       >
                         <Popup>
-                          <div>
-                            <p className="font-bold text-[1rem]">
+                          <div className=" flex flex-col gap-1 py-4  max-w-[12rem] md:max-w-[20rem] scale-110">
+                            <p
+                              style={{ margin: 0 }}
+                              className="font-bold text-[1rem] m-0"
+                            >
                               <span>{t("Description")} :</span>{" "}
                               {description || "----"}
                             </p>
-                            <p>
+                            <p style={{ margin: 0 }} className="m-0">
                               <strong>{t("Adresse")} :</strong>{" "}
                               {address || "----"}
                             </p>
                             {username === "admin" && (
-                              <p>
+                              <p style={{ margin: 0 }}>
                                 <strong>{t("IMEI")} :</strong>{" "}
                                 {imeiNumber || "----"}
                               </p>
                             )}
-                            <p>
+                            <p style={{ margin: 0 }}>
                               <strong>{t("Vitesse")} :</strong>{" "}
                               {speedKPH && !isNaN(Number(speedKPH))
                                 ? Number(speedKPH).toFixed(0)
                                 : "0"}{" "}
                               Km/h
                             </p>
-                            <p>
+                            <p style={{ margin: 0 }}>
                               <strong>{t("Date")} :</strong>{" "}
                               {timestamp
                                 ? FormatDateHeureTimestamp?.date
@@ -1553,7 +1556,7 @@ function TrajetVehicule({
                               <span className="px-3">/</span>
                               {FormatDateHeureTimestamp?.time}
                             </p>
-                            <p>
+                            <p style={{ margin: 0 }}>
                               <strong>{t("Statut")} : </strong>
                               {speedKPH < 1 && `${t("En stationnement")}`}
                               {speedKPH > 20 && `${t("En mouvement rapide")}`}
@@ -1561,11 +1564,11 @@ function TrajetVehicule({
                                 speedKPH <= 20 &&
                                 `${t("En mouvement lent")}`}
                             </p>
-                            <p>
+                            <p style={{ margin: 0 }}>
                               <strong>{t("Plaque d’immatriculation")} :</strong>{" "}
                               {licensePlate || "----"}
                             </p>
-                            <p>
+                            <p style={{ margin: 0 }}>
                               <strong>{t("Numéro SIM")} :</strong>{" "}
                               {simPhoneNumber || "----"}
                             </p>

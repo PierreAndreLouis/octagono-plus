@@ -241,7 +241,7 @@ function StatisticDashboard({
                 onClick={() => {
                   increaseCountFonction("green");
                 }}
-                className="absolute top-0 bottom-0 right-0 min-w-[35%] z-30 hover:border  hover:border-l-green-400"
+                className="absolute top-0 bottom-0 right-0 min-w-[35%] z-30 md:hover:border  md:hover:border-l-green-400"
               >
                 {" "}
               </div>
@@ -316,7 +316,7 @@ function StatisticDashboard({
                 onClick={() => {
                   increaseCountFonction("orange");
                 }}
-                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 hover:border  hover:border-l-orange-400"
+                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 md:hover:border  md:hover:border-l-orange-400"
               >
                 {" "}
               </div>
@@ -370,9 +370,9 @@ function StatisticDashboard({
                     }}
                     className="text-gray-500 max-w-[70%]-- w-full  whitespace-nowrap text-ellipsis overflow-hidden  dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- "
                   >
-                    {inactifsCount === 1 ? "Inactifs" : ""}
-                    {inactifsCount === 2 ? "Actualisés" : ""}
-                    {inactifsCount === 3 ? "Non Actualisés" : ""}
+                    {inactifsCount === 1 ? `${t("Inactifs")}` : ""}
+                    {inactifsCount === 2 ? `${t("Actualisés")}` : ""}
+                    {inactifsCount === 3 ? `${t("Non Actualisés")}` : ""}
 
                     {/* {isDeviceEnStationnement ? t("Non Déplacer") : t("Actifs")} */}
                   </h3>
@@ -411,7 +411,7 @@ function StatisticDashboard({
                 onClick={() => {
                   increaseCountFonction("purple");
                 }}
-                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 hover:border  hover:border-l-purple-400"
+                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 md:hover:border  md:hover:border-l-purple-400"
               >
                 {" "}
               </div>
@@ -509,7 +509,7 @@ function StatisticDashboard({
                 onClick={() => {
                   setShowUpdateAutoSettingPopup(true);
                 }}
-                className={`hover:bg-orange-500 hover:border-orange-500 transition-all hover:text-white rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
+                className={`hover:bg-orange-500 md:hover:border-orange-500 transition-all hover:text-white rounded-lg min-w-[3.5rem] p-2 my-0.5 mr-1.5 w-full  justify-between items-center  bg-orange-100  text-orange-700 border border-orange-700    translate-y-1-- md:translate-y-0 cursor-pointer flex gap-2--   `}
               >
                 <p
                   className="font-bold"

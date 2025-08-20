@@ -16,7 +16,7 @@
   "Arrivée": "Llegada",
   "Durée trajet": "Duración del viaje",
   "Total": "Total",
-  "Inactifs": "Inactivo",
+  "Inactifs": "Inactivo(s)",
   "Actifs": "Activo(s)",
   "Compte": "Cuenta",
   "Déplacé": "Movido(s)",
@@ -1022,7 +1022,34 @@
 
 "Mettre à jour les données maintenant" : "Actualizar los datos ahora",
 "Désactiver la mise à jour automatique" : "Desactivar la actualización automática",
-"Activer la mise à jour automatique" : "Activar la actualización automática"
+"Activer la mise à jour automatique" : "Activar la actualización automática",
+
+
+
+
+
+
+
+
+
+"Type d'installation": "Tipo de instalación",
+
+"Appareils non déplacer" : "Dispositivos no movidos",
+"Appareils En Stationnement" : "Dispositivos estacionados",
+"Appareils Inactifs Configurer" : "Dispositivos inactivos configurados",
+"Appareils Inactifs non Configurer" : "Dispositivos inactivos no configurados",
+"Configurés" : "Configurados",
+"Non Configurés" : "No configurados",
+"Email de notification" : "Correo de notificación",
+"Rôle" : "Rol",
+"Appareils Inactifs Actualisés" : "Dispositivos inactivos actualizados",
+"Appareils Inactifs non Actualisés" : "Dispositivos inactivos no actualizados",
+"Actualisés" : "Actualizado(s)",
+"Non Actualisés": "No actualizado(s)",
+"Voir cette liste sur la carte": "Ver esta lista en el mapa",
+"Filtrer les positions": "Filtrar las posiciones",
+"Trier les appareils par statut": "Ordenar los dispositivos por estado",
+"Ordre de déplacement": "Orden de movimiento"
 
 
 

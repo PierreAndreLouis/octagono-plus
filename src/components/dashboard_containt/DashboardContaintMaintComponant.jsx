@@ -1163,6 +1163,8 @@ function DashboardContaintMaintComponant({
                   DeviceDéplacer={DeviceDéplacer}
                   EnDéplacement={EnDéplacement}
                   allDevices={allDevices}
+                  setExpandSection={setExpandSection}
+                  setSelectedVehicleToShowInMap={setSelectedVehicleToShowInMap}
                 />
               </div>
             </div>
@@ -1220,7 +1222,9 @@ function DashboardContaintMaintComponant({
         <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
           <div
             className={` ${
-              expandSection === "carte" ? "" : "md:max-w-[90vw] max-h-[90vh]"
+              expandSection === "carte" || expandSection === "carteFiltered"
+                ? ""
+                : "md:max-w-[90vw] max-h-[90vh]"
             } w-full  mx-auto md:mx-auto overflow-hidden- flex-  items-end-     bg-white rounded-lg`}
           >
             <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[5vw] text-[2rem] text-red-500">
@@ -1240,6 +1244,15 @@ function DashboardContaintMaintComponant({
                 </div>
               </div>
             )}
+            {/* {expandSection === "carteFiltered" && (
+              <div className="relative ">
+                <div className="w-full h-[15rem]-- overflow-hidden--- rounded-md ">
+                  <LocationPage fromDashboard="carteFiltered" />
+                </div>
+              </div>
+            )} */}
+
+            {/* filteredColorCategorieListe */}
             {expandSection === "graphe" && (
               <div className="h-full flex justify-between flex-col">
                 <div className="w-full flex justify-center items-center py-3 font-bold text-xl">

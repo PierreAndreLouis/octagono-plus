@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IoClose, IoOptions, IoSearchOutline } from "react-icons/io5";
+import { IoClose, IoEarth, IoOptions, IoSearchOutline } from "react-icons/io5";
 import { DataContext } from "../context/DataContext";
 import { Tooltip } from "@mui/material";
 import { BsSortDown } from "react-icons/bs";
@@ -12,12 +12,14 @@ import {
   FaSortAmountDownAlt,
 } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
-import { MdUpdate } from "react-icons/md";
+import { MdLocationPin, MdUpdate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import GestionAppareilOptionPopup from "../components/gestion_des_comptes/GestionAppareilOptionPopup";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import { LuArrowDownUp } from "react-icons/lu";
+import { FaLocationPin } from "react-icons/fa6";
+import LocationPage from "./LocationPage";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
@@ -38,6 +40,7 @@ function ListeDesVehiculesGestion({
   showChooseItemToModifyMessage,
   setshowChooseItemToModifyMessage,
   showChooseItemToModifyPage,
+  setExpandSection,
 }) {
   const {
     FormatDateHeure,
@@ -84,6 +87,12 @@ function ListeDesVehiculesGestion({
     modifyVehicleEnGestionAccount,
     createVehicleEnGestionAccount,
     vehicleDetails,
+    setSelectedVehicleToShowInMap,
+    DeviceEnStationnement,
+    DeviceInactifsWidthDetails,
+    DeviceInactifsWidthNoDetails,
+    isFilteredCartePositionByCategorie,
+    setIsFilteredCartePositionByCategorie,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -345,7 +354,6 @@ function ListeDesVehiculesGestion({
 
       return { mostRecentTimestamp };
     } else {
-      // console.log("Pas de donnees");
     }
   }
 
@@ -420,6 +428,8 @@ function ListeDesVehiculesGestion({
 
   // const foundAccount = comptes?.find((acct) => acct?.accountID === chooseAccountID)
 
+  const [showCarte, setShowCarte] = useState(false);
+
   return (
     <div>
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
@@ -433,6 +443,32 @@ function ListeDesVehiculesGestion({
         isCreatingNewElement={isCreatingNewElement}
         setIsCreatingNewElement={setIsCreatingNewElement}
       />
+
+      {showCarte && (
+        <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
+          <div
+            className={` 
+            w-full  mx-auto md:mx-auto overflow-hidden- flex-  items-end-     bg-white rounded-lg`}
+          >
+            <div className="fixed rounded-full shadow-lg shadow-black/20 bg-white py-2 px-2 z-[9999999999999999999999] cursor-pointer top-10 right-[1rem] text-[2rem] text-red-500">
+              <IoClose
+                onClick={() => {
+                  if (filteredColorCategorieListe) {
+                    setShowCarte(false);
+                  } else {
+                    setFilteredColorCategorieListe(currentListe);
+                  }
+                }}
+              />
+            </div>
+            <div className="relative ">
+              <div className="w-full h-[15rem]-- overflow-hidden--- rounded-md ">
+                <LocationPage fromDashboard="carteFiltered" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="px-2 pb-40 bg-white pt-10 rounded-lg">
         {/* {!fromDashboard && ( */}
@@ -558,72 +594,237 @@ function ListeDesVehiculesGestion({
                   </p>
                 </div>
 
-                <p
-                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                    sortDeviceBy === "Dernière mouvement"
-                      ? "bg-orange-100 dark:bg-gray-800/70"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSortDeviceBy("Dernière mouvement");
-                    setShowSortDeviceByPopup(false);
-                  }}
-                >
-                  {t("Dernière mouvement")}
-                </p>
-                <p
-                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                    sortDeviceBy === "Date de creation"
-                      ? "bg-orange-100 dark:bg-gray-800/70"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSortDeviceBy("Date de creation");
-                    setShowSortDeviceByPopup(false);
-                  }}
-                >
-                  {t("Date de creation")}
-                </p>
+                <div className="max-h-[60vh] overflow-auto">
+                  <p
+                    className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      sortDeviceBy === "Dernière mouvement"
+                        ? "bg-orange-50 border-b border-b-orange-300 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSortDeviceBy("Dernière mouvement");
+                      setShowSortDeviceByPopup(false);
+                    }}
+                  >
+                    {t("Ordre de déplacement")}
+                  </p>
+                  <p
+                    className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      sortDeviceBy === "Date de creation"
+                        ? "bg-orange-50 border-b border-b-orange-300 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSortDeviceBy("Date de creation");
+                      setShowSortDeviceByPopup(false);
+                    }}
+                  >
+                    {t("Date de creation")}
+                  </p>
 
-                <p
-                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                    sortDeviceBy === "Dernière mise a jour"
-                      ? "bg-orange-100 dark:bg-gray-800/70"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSortDeviceBy("Dernière mise a jour");
-                    setShowSortDeviceByPopup(false);
-                  }}
-                >
-                  {t("Dernière mise a jour")}
-                </p>
-                <p
-                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                    sortDeviceBy === "Vitesse"
-                      ? "bg-orange-100 dark:bg-gray-800/70"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSortDeviceBy("Vitesse");
-                    setShowSortDeviceByPopup(false);
-                  }}
-                >
-                  {t("Vitesse")}
-                </p>
-                <p
-                  className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                    sortDeviceBy === "Distance parcourue"
-                      ? "bg-orange-100 dark:bg-gray-800/70"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSortDeviceBy("Distance parcourue");
-                    setShowSortDeviceByPopup(false);
-                  }}
-                >
-                  {t("Distance parcourue")}
-                </p>
+                  <p
+                    className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      sortDeviceBy === "Dernière mise a jour"
+                        ? "bg-orange-50 border-b border-b-orange-300 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSortDeviceBy("Dernière mise a jour");
+                      setShowSortDeviceByPopup(false);
+                    }}
+                  >
+                    {t("Dernière mise a jour")}
+                  </p>
+                  <p
+                    className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      sortDeviceBy === "Vitesse"
+                        ? "bg-orange-50 border-b border-b-orange-300 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSortDeviceBy("Vitesse");
+                      setShowSortDeviceByPopup(false);
+                    }}
+                  >
+                    {t("Vitesse")}
+                  </p>
+                  <p
+                    className={`cursor-pointer py-2 dark:text-gray-50 font-semibold hover:bg-orange-100 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                      sortDeviceBy === "Distance parcourue"
+                        ? "bg-orange-50 border-b border-b-orange-300 dark:bg-gray-800/70"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSortDeviceBy("Distance parcourue");
+                      setShowSortDeviceByPopup(false);
+                    }}
+                  >
+                    {t("Distance parcourue")}
+                  </p>
+
+                  {/* //////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////// */}
+
+                  <div
+                    onClick={() => {
+                      setShowSortDeviceByPopup(false);
+                    }}
+                    className="w-full flex flex-col items-center gap-3 flex-wrap mt-8"
+                  >
+                    <h2 className="border-b w-full text-start border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+                      {t("Trier les appareils par statut")}:
+                    </h2>
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Tous les Appareils")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(
+                          addVehiculeDetailsFonction(
+                            allDevices,
+                            véhiculeDetails
+                          )
+                        );
+                      }}
+                      className="px-2  flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50 w-full hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+                    >
+                      {t("Tous")}
+                      <span>({allDevices?.length})</span>
+                    </p>
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils En déplacement")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(EnDéplacement);
+                      }}
+                      className={
+                        "px-2 cursor-pointer w-full flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                      }
+                    >
+                      {t("Appareils En déplacement")}
+                      <span>({EnDéplacement?.length})</span>
+                    </p>
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils déplacés")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(DeviceDéplacer);
+                      }}
+                      className={
+                        " flex justify-between items-center  w-full sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                      }
+                    >
+                      {t("Appareils déplacés")}
+                      <span>({DeviceDéplacer?.length})</span>
+                    </p>
+
+                    {/* ///////////////////////////////////////////////////////////////////////////////// */}
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils non déplacés")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(DeviceNonDeplacer);
+                      }}
+                      className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                    >
+                      {t("Appareils non déplacés")}
+                      <span>({DeviceNonDeplacer?.length})</span>
+                    </p>
+
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils Actifs")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(DeviceListeActif);
+                      }}
+                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                    >
+                      {t("Appareils Actifs")}
+                      <span>({DeviceListeActif?.length})</span>
+                    </p>
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils En Stationnement")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(DeviceEnStationnement);
+                      }}
+                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                    >
+                      {t("Appareils En Stationnement")}
+                      <span>({DeviceEnStationnement?.length})</span>
+                    </p>
+                    {/* ///////////////////////////////////////////////////////////////////////////////// */}
+
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils Inactifs")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(DeviceInactifs);
+                      }}
+                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+                    >
+                      {t("Appareils Inactifs")}
+                      <span>({DeviceInactifs?.length})</span>
+                    </p>
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils Inactifs Actualisés")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(
+                          DeviceInactifsWidthDetails
+                        );
+                      }}
+                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+                    >
+                      {t("Appareils Inactifs Actualisés")}
+                      <span>({DeviceInactifsWidthDetails?.length})</span>
+                    </p>
+                    <p
+                      onClick={() => {
+                        if (fromDashboard) {
+                          setStatisticFilteredDeviceListeText(
+                            `${t("Appareils Inactifs non Actualisés")}`
+                          );
+                        }
+                        setFilteredColorCategorieListe(
+                          DeviceInactifsWidthNoDetails
+                        );
+                      }}
+                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+                    >
+                      {t("Appareils Inactifs non Actualisés")}
+                      <span>({DeviceInactifsWidthNoDetails?.length})</span>
+                    </p>
+
+                    {/* ///////////////////////////////////////////////////////////////////////////////// */}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -763,123 +964,73 @@ function ListeDesVehiculesGestion({
           </div>
         </div>
         {/* )} */}
-        <div className="hidden-- flex mt-[5rem] relative flex-col gap-6 max-w-[50rem] mx-auto">
-          <div className="flex justify-between mt-4 items-end gap-3">
-            <div className="w-full grid grid-cols-2 md:flex items-center gap-2 flex-wrap">
-              <p
-                onClick={() => {
-                  if (
-                    statisticFilteredDeviceListeText ===
-                    `${t("Appareils En déplacement")}`
-                  ) {
-                    if (fromDashboard) {
-                      setStatisticFilteredDeviceListeText(
-                        `${t("Appareils En déplacement")}`
-                      );
-                    }
-                    setFilteredColorCategorieListe(EnDéplacement);
-                  } else {
-                    if (fromDashboard) {
-                      setStatisticFilteredDeviceListeText(
-                        `${t("Appareils Déplacer")}`
-                      );
-                    }
-                    setFilteredColorCategorieListe(DeviceDéplacer);
-                  }
-                }}
-                className={
-                  "px-2 cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50/60 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
-                }
-              >
-                <span className="hidden sm:block">
-                  {fromDashboard &&
-                  statisticFilteredDeviceListeText ===
-                    `${t("Appareils En déplacement")}`
-                    ? `${t("Véhicules En déplacement")}`
-                    : t("Véhicules déplacés")}
-                </span>
-
-                <span className="sm:hidden">
-                  {fromDashboard &&
-                  statisticFilteredDeviceListeText ===
-                    `${t("Appareils En déplacement")}`
-                    ? `${t("En déplacement")}`
-                    : t("Déplacés")}
-                </span>
-              </p>
-              <p
-                onClick={() => {
-                  if (fromDashboard) {
-                    setStatisticFilteredDeviceListeText(
-                      `${t("Appareils non déplacés")}`
-                    );
-                  }
-                  setFilteredColorCategorieListe(DeviceNonDeplacer);
-                }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
-              >
-                <span className="hidden sm:block">
-                  {t("Appareils non déplacés")}
-                </span>
-                <span className="sm:hidden ">{t("Non Déplacés")}</span>
-              </p>
-
-              <p
-                onClick={() => {
-                  if (fromDashboard) {
-                    setStatisticFilteredDeviceListeText(
-                      `${t("Appareils Inactifs")}`
-                    );
-                  }
-                  setFilteredColorCategorieListe(DeviceInactifs);
-                }}
-                className="px-2  cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50/60 hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
-              >
-                <span className="hidden sm:block">
-                  {t("Appareils Inactifs")}
-                </span>
-                <span className="sm:hidden ">{t("Inactifs")}</span>
-              </p>
-              <p
-                onClick={() => {
-                  if (fromDashboard) {
-                    setStatisticFilteredDeviceListeText(
-                      `${t("Tous les Appareils")}`
-                    );
-                  }
-                  setFilteredColorCategorieListe(
-                    addVehiculeDetailsFonction(allDevices, véhiculeDetails)
-                  );
-                }}
-                className="px-2  cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50/60 hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
-              >
-                {t("Tous")}
-              </p>
-            </div>
-
-            <Tooltip
-              title={`${t("Filtrer les appareils")}`}
-              PopperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10], // Décalage horizontal et vertical
+        <div className="hidden-- flex mt-[5rem] relative flex-col max-w-[50rem] mx-auto gap-4">
+          <div className="flex justify-end mt-4 items-end gap-3">
+            <div className="flex  gap-2">
+              <Tooltip
+                title={`${t("Voir cette liste sur la carte")}`}
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10], // Décalage horizontal et vertical
+                      },
                     },
-                  },
-                ],
-              }}
-            >
-              <p
-                onClick={() => {
-                  setShowSortDeviceByPopup(true);
-                  // setIsReverseListe(!isReverseListe);
+                    {
+                      name: "zIndex",
+                      enabled: true,
+                      phase: "write",
+                      fn: ({ state }) => {
+                        state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                      },
+                    },
+                  ],
                 }}
-                className="text-md py-2 md:py-1.5 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
               >
-                <FaSortAmountDownAlt className="text-[1.3rem]" />
-              </p>
-            </Tooltip>
+                <p
+                  onClick={() => {
+                    setSelectedVehicleToShowInMap(null);
+                    setShowCarte(true);
+                    setIsFilteredCartePositionByCategorie(true);
+                  }}
+                  className="text-md py-2 md:py-1 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                >
+                  <MdLocationPin className="text-[1.5rem]" />
+                </p>
+              </Tooltip>
+
+              <Tooltip
+                title={`${t("Filtrer les appareils")}`}
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -10], // Décalage horizontal et vertical
+                      },
+                    },
+                    {
+                      name: "zIndex",
+                      enabled: true,
+                      phase: "write",
+                      fn: ({ state }) => {
+                        state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                      },
+                    },
+                  ],
+                }}
+              >
+                <p
+                  onClick={() => {
+                    setShowSortDeviceByPopup(true);
+                  }}
+                  className="text-md py-2 md:py-1.5 bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                >
+                  <FaSortAmountDownAlt className="text-[1.3rem]" />
+                </p>
+              </Tooltip>
+            </div>
           </div>
 
           {/*  */}
@@ -1013,7 +1164,7 @@ function ListeDesVehiculesGestion({
                                 <h3
                                   className={`${text_color} font-bold text-2xl`}
                                 >
-                                  {foundDetails?.speedKPH
+                                  {foundDetails?.speedKPH > 0
                                     ? parseFloat(
                                         device?.véhiculeDetails[0]?.speedKPH ||
                                           foundDetails?.speedKPH

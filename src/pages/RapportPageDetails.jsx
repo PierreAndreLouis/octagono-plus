@@ -132,7 +132,6 @@ function RapportPageDetails() {
       // behavior: "smooth", // Défilement fluide
     });
     const forCurrentDevice = true;
-    // console.log("xxxxxxxxxxxxxx", deviceID, TimeFrom, TimeTo);
 
     if (isDashboardHomePage) {
       fetchHistoriqueVehicleDetails(
@@ -903,12 +902,7 @@ function RapportPageDetails() {
   const [endDateToDisplay, setEndDateToDisplay] = useState(endDate);
   const [endTimeToDisplay, setEndTimeToDisplay] = useState(endTime);
 
-  useEffect(() => {
-    // console.log(startDateToDisplay);
-    // console.log(startTimeToDisplay);
-    // console.log(endTimeToDisplay);
-    // console.log(endTimeToDisplay);
-  }, [
+  useEffect(() => {}, [
     startTimeToDisplay,
     startDateToDisplay,
     endDateToDisplay,
@@ -1083,13 +1077,6 @@ function RapportPageDetails() {
     //
     //
     //
-    //
-    //
-
-    // setRapportDataLoading(true);
-
-    // console.log("TimeFrom---------", timeFrom);
-    // console.log("TimeTo------", timeTo);
 
     setStartDateToDisplay(selectedDate);
     setStartTimeToDisplay(startTime);

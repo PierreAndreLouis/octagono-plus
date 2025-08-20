@@ -50,13 +50,10 @@ function DetailsVehiculePage() {
   const handleVehicleClick = (véhicule) => {
     setCurrentVéhicule(véhicule);
     setShowVehiculeListe(!showVehiculeListe);
-    // console.log("véhicule", véhicule);
   };
 
   // Pour mettre a jour le véhicules actuel
-  useEffect(() => {
-    // console.log("Véhicule mis à jour", currentVéhicule);
-  }, [currentVéhicule]);
+  useEffect(() => {}, [currentVéhicule]);
 
   // Pour la recherche d'autre véhicules
   const [searchQueryDetailsVéhiculePage, setSearchQueryDetailsVéhiculePage] =

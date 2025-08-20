@@ -44,6 +44,7 @@ function MapComponent({
   setDocumentationPage,
   handleVehicleClick,
   isFetchFromUpdateAuro,
+  fromDashboard = "",
 }) {
   const {
     selectedVehicleToShowInMap,
@@ -67,44 +68,63 @@ function MapComponent({
     fromSelectOnPositionValue,
     setFromSelectOnPositionValue,
     currentVéhicule,
+    filteredColorCategorieListe,
+    isFilteredCartePositionByCategorie,
+    setIsFilteredCartePositionByCategorie,
     // updateAccountDevicesWidthvéhiculeDetailsFonction,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
 
-  const véhiculeData = useMemo(() => {
-    return appareilPourAfficherSurCarte
-      ?.map((véhicule) => {
-        const details = véhicule?.véhiculeDetails?.[0] || {};
+  let ListeAppareilFinalAAfficher = appareilPourAfficherSurCarte;
 
-        return {
-          deviceID: véhicule?.deviceID || "",
-          accountID: véhicule?.accountID || "",
-          description: véhicule.description || "Véhicule",
-          lastValidLatitude:
-            details.latitude || véhicule?.lastValidLatitude || "",
-          lastValidLongitude:
-            details.longitude || véhicule?.lastValidLongitude || "",
-          address: details.backupAddress || details.address || "",
-          imeiNumber: véhicule?.imeiNumber || "",
-          isActive: véhicule?.isActive || "",
-          licensePlate: véhicule?.licensePlate || "",
-          simPhoneNumber: véhicule?.simPhoneNumber || "",
-          timestamp: details.timestamp || "",
-          // timestamp: details.timestamp || véhicule?.lastUpdateTime || "",
-          speedKPH: details.speedKPH,
-          heading: details.heading || 0,
-        };
-      })
-      ?.filter(
-        (v) =>
-          v.lastValidLatitude !== "0.0" &&
-          v.lastValidLongitude !== "0.0" &&
-          v.lastValidLatitude !== "" &&
-          v.lastValidLongitude !== ""
-      );
-  }, [appareilPourAfficherSurCarte]);
+  if (isFilteredCartePositionByCategorie) {
+    ListeAppareilFinalAAfficher = filteredColorCategorieListe;
+  } else {
+    ListeAppareilFinalAAfficher = appareilPourAfficherSurCarte;
+  }
+  // useEffect(() => {
+  // }, [
+  //   isFilteredCartePositionByCategorie,
+  //   filteredColorCategorieListe,
+  //   appareilPourAfficherSurCarte,
+  // ]);
+
+  const véhiculeData = useMemo(() => {
+    return ListeAppareilFinalAAfficher?.map((véhicule) => {
+      const details = véhicule?.véhiculeDetails?.[0] || {};
+
+      return {
+        deviceID: véhicule?.deviceID || "",
+        accountID: véhicule?.accountID || "",
+        description: véhicule.description || "Véhicule",
+        lastValidLatitude:
+          details.latitude || véhicule?.lastValidLatitude || "",
+        lastValidLongitude:
+          details.longitude || véhicule?.lastValidLongitude || "",
+        address: details.backupAddress || details.address || "",
+        imeiNumber: véhicule?.imeiNumber || "",
+        isActive: véhicule?.isActive || "",
+        licensePlate: véhicule?.licensePlate || "",
+        simPhoneNumber: véhicule?.simPhoneNumber || "",
+        timestamp: details.timestamp || "",
+        // timestamp: details.timestamp || véhicule?.lastUpdateTime || "",
+        speedKPH: details.speedKPH,
+        heading: details.heading || 0,
+      };
+    })?.filter(
+      (v) =>
+        v.lastValidLatitude !== "0.0" &&
+        v.lastValidLongitude !== "0.0" &&
+        v.lastValidLatitude !== "" &&
+        v.lastValidLongitude !== ""
+    );
+  }, [
+    appareilPourAfficherSurCarte,
+    isFilteredCartePositionByCategorie,
+    filteredColorCategorieListe,
+  ]);
 
   const mapRef = useRef(null);
 
@@ -162,12 +182,9 @@ function MapComponent({
     };
 
     setSelectDeviceInSearch([updatedDevice]);
-
-
   }, [fromSelectOnPositionValue, selectedVehicleToShowInMap, véhiculeData]);
 
   useEffect(() => {
-
     onClickVehicle(selectDeviceInSearch?.[0]);
   }, [selectDeviceInSearch]);
 
@@ -177,10 +194,6 @@ function MapComponent({
     vehicles = [véhiculeHistoriqueUnique];
   } else if (selectedVehicleToShowInMap) {
     vehicles = selectDeviceInSearch;
-
-    // véhiculeData.filter(
-    //   (v) => v.deviceID === selectedVehicleToShowInMap
-    // );
   } else {
     vehicles = véhiculeData;
   }

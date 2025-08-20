@@ -17,7 +17,7 @@ import pLimit from "p-limit";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "7.2";
+  let versionApplication = "7.3";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -101,17 +101,12 @@ const DataContextProvider = ({ children }) => {
   const [estLancerUpdateAuto, setEstLancerUpdateAuto] = useState(false);
 
   useEffect(() => {
-    // console.log("estLancerUpdateAuto ", estLancerUpdateAuto);
     if (estLancerUpdateAuto) {
       setTimeout(() => {
         setEstLancerUpdateAuto(false);
       }, 3000);
     }
   }, [estLancerUpdateAuto]);
-
-  useEffect(() => {
-    console.log("updateAuto", updateAuto);
-  }, [updateAuto]);
 
   //
   //
@@ -229,24 +224,6 @@ const DataContextProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("🟢 currentAccountSelected CHANGÉ :", currentAccountSelected);
-  }, [currentAccountSelected]);
-
-  useEffect(() => {
-    console.log(
-      "🔵 currentSelectedUserToConnect CHANGÉ :",
-      currentSelectedUserToConnect
-    );
-  }, [currentSelectedUserToConnect]);
-
-  useEffect(() => {
-    console.log(
-      "🟣 listeGestionDesVehicules CHANGÉ :",
-      listeGestionDesVehicules
-    );
-  }, [listeGestionDesVehicules]);
-
   // Effet principal : met à jour currentAccountSelected quand les données changent
   useEffect(() => {
     if (!currentAccountSelected) return;
@@ -256,10 +233,6 @@ const DataContextProvider = ({ children }) => {
     );
 
     if (compteMisAJour) {
-      console.log(
-        "📥 Mise à jour de currentAccountSelected avec :",
-        compteMisAJour
-      );
       setCurrentAccountSelected(compteMisAJour);
       setListeGestionDesUsers(compteMisAJour?.accountUsers);
       setListeGestionDesRules(compteMisAJour?.accountRules);
@@ -293,10 +266,6 @@ const DataContextProvider = ({ children }) => {
     );
 
     if (utilisateurActuel) {
-      console.log(
-        "📥 Mise à jour de currentSelectedUserToConnect avec :",
-        utilisateurActuel
-      );
       setCurrentSelectedUserToConnect(utilisateurActuel);
     } else {
       console.warn("❌ Utilisateur non trouvé dans le compte sélectionné.");
@@ -730,7 +699,6 @@ const DataContextProvider = ({ children }) => {
 
   const updateAppareilsEtGeofencesPourCarte = () => {
     // setHistoriqueSelectedLocationIndex(null);
-    console.log("xxxxxxxxxxxxxxxxxxxxxxx");
     const dataFusionnéHome = mergedDataHome
       ? Object.values(mergedDataHome)
       : [];
@@ -786,6 +754,10 @@ const DataContextProvider = ({ children }) => {
   const [allDevices, setAllDevices] = useState([]);
   const [filteredColorCategorieListe, setFilteredColorCategorieListe] =
     useState(null);
+  const [
+    isFilteredCartePositionByCategorie,
+    setIsFilteredCartePositionByCategorie,
+  ] = useState(false);
 
   useEffect(() => {
     const initialList = isDashboardHomePage
@@ -800,6 +772,7 @@ const DataContextProvider = ({ children }) => {
 
     setAllDevices(initialList);
     setListeGestionDesVehicules(initialList);
+    setFilteredColorCategorieListe(initialList);
 
     // setListeGestionDesVehicules(
     //   addVehiculeDetailsFonction(initialList, véhiculeDetails)
@@ -1206,7 +1179,6 @@ const DataContextProvider = ({ children }) => {
   // Réinitialiser IndexedDB
   const resetIndexedDB = () => {
     indexedDB.deleteDatabase("MyDatabase");
-    console.log("IndexedDB a été réinitialisé.");
   };
 
   const clearDataIndexedbStore = async (storeName) => {
@@ -1221,8 +1193,6 @@ const DataContextProvider = ({ children }) => {
       setTimeout(() => {
         //
         if (storeName === "mergedDataHome") {
-          console.log("setMergedDataHome5555555555555");
-
           setMergedDataHome([]);
         }
         if (storeName === "vehicleDetails") {
@@ -1445,22 +1415,11 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
-    console.log("xmlData ===>", xmlData);
-    console.log(
-      "xxxx------------------xxxx",
-      account,
-      username,
-      password,
-      country
-    );
-
     if (country === "rd") {
       currentAPI = "/octagono-gps-api/track/Service";
     } else {
       currentAPI = "/octagono-plus-api/track/Service";
     }
-
-    console.log("currentAPI", currentAPI);
 
     try {
       const response = await fetch(currentAPI, {
@@ -1470,8 +1429,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Login data message: ", data);
-      console.log("Requête envoyer :", xmlData);
+
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
@@ -1531,7 +1489,6 @@ const DataContextProvider = ({ children }) => {
           GeofenceDataFonction(account, username, password);
 
           setTimeout(() => {
-            console.log("aaaaaaaaaaaaaaaaaa");
             fetchVehicleData(account, username, password);
           }, 2000);
         }
@@ -1552,9 +1509,7 @@ const DataContextProvider = ({ children }) => {
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la connexion.");
         //
-        console.log("errorMessage inactive", errorMessage);
         if (errorMessage === "User inactive") {
-          console.log("Logout the user, and navigate to /login");
           handleLogout();
           navigate("/login");
         }
@@ -1563,13 +1518,6 @@ const DataContextProvider = ({ children }) => {
       setDashboardLoadingEffect(false);
 
       setError("Erreur lors de la connexion à l'API .");
-      console.log(
-        "account, user, password, country",
-        account,
-        username,
-        password,
-        country
-      );
       console.error("Erreur lors de la connexion à l'API from Login", error);
       setIsHomePageLoading(false);
     } finally {
@@ -1591,8 +1539,6 @@ const DataContextProvider = ({ children }) => {
   </GTSRequest>
       `;
 
-    console.log("Requête envoyer :", xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -1601,7 +1547,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("message Retour message: ", data);
       if (!response.ok) {
         console.error("Réponse erreur serveur :", response.status, data);
         throw new Error(`Erreur serveur : ${response.status}`);
@@ -1613,8 +1558,6 @@ const DataContextProvider = ({ children }) => {
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-
-      console.log("result", result);
 
       if (result === "success") {
         const records = xmlDoc.getElementsByTagName("Record");
@@ -1634,7 +1577,6 @@ const DataContextProvider = ({ children }) => {
         }
 
         try {
-          console.log("Data", allUserData);
           setUserRole(allUserData);
           localStorage.setItem("userRole", JSON.stringify(allUserData));
         } catch (error) {
@@ -1644,16 +1586,12 @@ const DataContextProvider = ({ children }) => {
             console.error("Erreur de stockage : ", error);
           }
         }
-
-        console.log("Données JSON de tous les comptes : ", allUserData);
       } else if (result === "error") {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(errorMessage || "Erreur lors de la recuperation des roles.");
         //
-        console.log("errorMessage inactive", errorMessage);
         if (errorMessage === "User inactive") {
-          console.log("Logout the user, and navigate to /login");
           handleLogout();
           navigate("/login");
         }
@@ -1756,7 +1694,6 @@ const DataContextProvider = ({ children }) => {
     if (failedAccounts.length > 0) {
       console.log("Comptes échoués :", failedAccounts.join(", "));
     } else {
-      console.log("Aucun compte n'a échoué.");
     }
   };
 
@@ -1785,7 +1722,6 @@ const DataContextProvider = ({ children }) => {
     password,
     fetchAllOtherData = true
   ) => {
-    console.log("fetchComptes: lancement de la requête XML");
     const xml = `
 <GTSRequest command="dbget">
   <Authorization account="${account}" user="${user}" password="${password}" />
@@ -1825,8 +1761,6 @@ const DataContextProvider = ({ children }) => {
       newData = data?.filter((account) => account?.notes === "rd");
     }
 
-    console.log("fetchComptes: résultats------- =", user, newData);
-
     setComptes(newData);
 
     if (fetchAllOtherData) {
@@ -1846,10 +1780,6 @@ const DataContextProvider = ({ children }) => {
   };
 
   const fetchAccountDevices = async (accountID, password) => {
-    console.log(
-      "fetchAccountDevices: lancement de la requête XML pour",
-      accountID
-    );
     const xml = `
 <GTSRequest command="dbget">
   <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
@@ -1939,10 +1869,6 @@ const DataContextProvider = ({ children }) => {
 
   // 3) Récupérer accountGroupes
   const fetchAccountGroupes = async (accountID, password) => {
-    console.log(
-      "fetchAccountGroupes: lancement de la requête XML pour",
-      accountID
-    );
     const xml = `
 <GTSRequest command="dbget">
   <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
@@ -1952,15 +1878,12 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
-    console.log("xml", xml);
-
     const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
     const text = await res.text();
-    console.log("result..........", text);
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -1976,8 +1899,6 @@ const DataContextProvider = ({ children }) => {
             }, {})
           )
         : [];
-
-    console.log("fetchAccountGroupes: résultats =", data);
 
     // setAccountGroupes((prev) => {
     //   // Supprimer tous les groupes de ce compte
@@ -1995,10 +1916,6 @@ const DataContextProvider = ({ children }) => {
 
   // 4) Récupérer accountUsers
   const fetchAccountUsers = async (accountID, password) => {
-    console.log(
-      "fetchAccountUsers: lancement de la requête XML pour",
-      accountID
-    );
     const xml = `
 <GTSRequest command="dbget">
   <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
@@ -2008,15 +1925,12 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
-    console.log(xml);
-
     const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
     const text = await res.text();
-    // console.log(text)
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -2032,8 +1946,6 @@ const DataContextProvider = ({ children }) => {
             }, {})
           )
         : [];
-
-    console.log("fetchAccountUsers: résultats =", data);
 
     // setAccountUsers((prev) => {
     //   // Supprimer tous les users de ce compte
@@ -2051,11 +1963,6 @@ const DataContextProvider = ({ children }) => {
 
   // 4) Récupérer accountRules
   const fetchAccountRules = async (accountID, password) => {
-    console.log(
-      "fetchAccountRules: lancement de la requête XML pour",
-      accountID
-    );
-
     const xml = `<GTSRequest command="dbget">
       <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
       <Record table="Rule" partial="true">
@@ -2064,15 +1971,12 @@ const DataContextProvider = ({ children }) => {
         </Record>
     </GTSRequest>`;
 
-    console.log(xml);
-
     const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
     const text = await res.text();
-    // console.log(text)
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -2088,8 +1992,6 @@ const DataContextProvider = ({ children }) => {
             }, {})
           )
         : [];
-
-    console.log("fetchAccountRules: résultats =", data);
 
     setAccountRules((prev) => {
       // Supprimer tous les users de ce compte
@@ -2103,11 +2005,6 @@ const DataContextProvider = ({ children }) => {
 
   // 4) Récupérer accountRules
   const fetchAccountRulesActive = async (accountID, password) => {
-    console.log(
-      "fetchAccountRulesActive: lancement de la requête XML pour",
-      accountID
-    );
-
     const xml = `<GTSRequest command="dbget">
       <Authorization account="${accountID}" user="${systemUser}" password="${password}" />
       <Record table="RuleList" partial="true">
@@ -2116,15 +2013,12 @@ const DataContextProvider = ({ children }) => {
         </Record>
     </GTSRequest>`;
 
-    console.log(xml);
-
     const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
       body: xml,
     });
     const text = await res.text();
-    // console.log(text)
     const doc = new DOMParser().parseFromString(text, "application/xml");
     const result = doc
       .getElementsByTagName("GTSResponse")[0]
@@ -2140,8 +2034,6 @@ const DataContextProvider = ({ children }) => {
             }, {})
           )
         : [];
-
-    console.log("fetchAccountRulesActive: résultats =", data);
 
     // setAccountRulesActive((prev) => {
     //   // Supprimer tous les users de ce compte
@@ -2162,7 +2054,6 @@ const DataContextProvider = ({ children }) => {
 
   // 6) Récupérer groupeDevices pour chaque groupe
   const fetchGroupeDevices = async (accountID, groupes, accountPassword) => {
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     if (!Array.isArray(groupes)) {
       console.warn(
         "fetchGroupeDevices: 'groupes' est invalide ou vide :",
@@ -2170,11 +2061,6 @@ const DataContextProvider = ({ children }) => {
       );
       return [];
     }
-
-    console.log(
-      "fetchGroupeDevices: lancement des requêtes pour chaque groupe de",
-      accountID
-    );
 
     const promises = groupes.map(async (grp) => {
       if (!grp?.groupID) {
@@ -2192,8 +2078,6 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
     `;
 
-      console.log(xml);
-
       const res = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
@@ -2201,7 +2085,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const text = await res.text();
-      console.log("text........", text);
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
@@ -2221,25 +2104,13 @@ const DataContextProvider = ({ children }) => {
             )
           : [];
 
-      console.log(`fetchGroupeDevices: groupe ${grp.groupID}, devices =`, data);
       return { groupID: grp.groupID, groupeDevices: data };
     });
 
     const results = await Promise.all(promises);
 
     // Mise à jour sans doublon par groupID
-    console.log("Resultat Groupe Devices", (prev) => {
-      const updated = [...prev];
-      results?.forEach((newEntry) => {
-        const index = updated.findIndex((e) => e.groupID === newEntry.groupID);
-        if (index !== -1) {
-          updated[index] = newEntry;
-        } else {
-          updated.push(newEntry);
-        }
-      });
-      return updated;
-    });
+
     //
     //
     //
@@ -2268,11 +2139,6 @@ const DataContextProvider = ({ children }) => {
       console.warn("fetchUserGroupes: 'users' est invalide ou vide :", users);
       return [];
     }
-
-    console.log(
-      "fetchUserGroupes: lancement des requêtes pour chaque utilisateur de",
-      accountID
-    );
 
     const promises = users.map(async (usr) => {
       if (!usr?.userID || !usr?.password) {
@@ -2316,7 +2182,6 @@ const DataContextProvider = ({ children }) => {
             )
           : [];
 
-      console.log(`fetchUserGroupes: user ${usr.userID}, groupes =`, data);
       return { userID: usr.userID, userGroupes: data };
     });
 
@@ -2348,7 +2213,7 @@ const DataContextProvider = ({ children }) => {
   // 8)
   const fetchAccountGeofences = async (accountID, password) => {
     // /////////
-    console.log("Startttttt geofence");
+
     const username = "admin";
 
     const xmlData = `<GTSRequest command="dbget">
@@ -2359,8 +2224,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log("xmlData", xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -2369,7 +2232,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const xmlText = await response.text();
-      console.log("Received XML Data:", xmlText);
 
       // Convert XML to JSON
       const parser = new DOMParser();
@@ -2390,8 +2252,6 @@ const DataContextProvider = ({ children }) => {
           return fields;
         }
       );
-
-      console.log("Geofence Data:", records);
 
       // Map records to geofence structure
       const geofences = records.map((record, index) => ({
@@ -2441,8 +2301,6 @@ const DataContextProvider = ({ children }) => {
         ].filter((point) => !isNaN(point.lat) && !isNaN(point.lng)), // Filter invalid points
       }));
 
-      console.log("Mapped Geofence Data:", geofences);
-
       // setAccountGeofences((prev) => {
       //   // Supprimer tous les groupes de ce compte
       //   const filtered = prev?.filter((g) => g.accountID !== accountID);
@@ -2480,8 +2338,6 @@ const DataContextProvider = ({ children }) => {
       console.warn("fetchVehiculeDetails: devices est invalide :", devices);
       return [];
     }
-
-    console.log("fetchVehiculeDetails: lancement pour", accountID);
 
     const adjustedTimeFrom = "2020-01-01 21:00:00";
     const adjustedTimeTo = "2030-05-14 21:00:00";
@@ -2561,7 +2417,6 @@ const DataContextProvider = ({ children }) => {
 
   x;
   useEffect(() => {
-    console.log("🔄 Fusion + enrichissement des données");
     if (!comptes?.length) return;
 
     const merged = comptes?.map((acct) => {
@@ -2644,7 +2499,6 @@ const DataContextProvider = ({ children }) => {
     });
 
     setGestionAccountData(merged);
-    console.log("✅ Résultat fusionné et enrichi :", merged);
   }, [
     comptes,
     accountDevices,
@@ -2702,8 +2556,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -2712,7 +2564,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -2721,7 +2572,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
@@ -2730,7 +2581,7 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(description);
 
         setError("");
-        console.log("Groupe ajouter avec success");
+
         const id = accountID;
         const pwd = password;
 
@@ -2830,8 +2681,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -2840,7 +2689,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Modifier d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -2849,10 +2697,9 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         setError("");
-        console.log("Groupe ajouter avec success");
 
         setAccountGroupes((prevGroupes) =>
           prevGroupes.map((groupe) =>
@@ -2971,8 +2818,6 @@ const DataContextProvider = ({ children }) => {
       </RecordKey>
       </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -2981,19 +2826,15 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Modifier d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(result);
       if (result === "success") {
         setError("");
-        console.log("Groupe supprimer avec success");
 
         setAccountGroupes((prevGroupes) =>
           prevGroupes.filter((groupe) => groupe.groupID !== groupID)
@@ -3017,7 +2858,6 @@ const DataContextProvider = ({ children }) => {
 
         handleUserError(xmlDoc);
 
-        // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           `${t("Échec de la Suppression du groupe")}`
@@ -3027,8 +2867,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la suppression du groupe.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -3105,8 +2943,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
   `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3115,7 +2951,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau role", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3124,7 +2959,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         fetchAccountRules(accountID, password);
         setShowConfirmationMessagePopup(true);
@@ -3134,7 +2969,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(ruleID);
 
         setError("");
-        console.log("role ajouter avec success");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
@@ -3215,8 +3049,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
   `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3225,7 +3057,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau role", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3234,7 +3065,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         // fetchAccountRules(accountID, password);
 
@@ -3273,7 +3104,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(ruleID);
 
         setError("");
-        console.log("role ajouter avec success");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
@@ -3318,8 +3148,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
     `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3328,7 +3156,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau role", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3337,7 +3164,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         setAccountRules((rules) =>
           rules.filter((rule) => rule?.ruleID !== ruleID)
@@ -3350,7 +3177,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName("");
 
         setError("");
-        console.log("role supprimer avec success");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
@@ -3401,8 +3227,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
     `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3411,7 +3235,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau role", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3420,7 +3243,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         setAccountRulesActive((rules) =>
           rules.filter(
@@ -3441,7 +3264,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName("");
 
         setError("");
-        console.log("role supprimer avec success");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0]?.textContent ||
@@ -3478,8 +3300,6 @@ const DataContextProvider = ({ children }) => {
         </Record>
     </GTSRequest> `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3488,7 +3308,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Récupération des règles :", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3497,7 +3316,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         setError("");
       } else {
@@ -3539,8 +3358,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
   `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3549,7 +3366,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajout d'une nouvelle affectation", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3558,7 +3374,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         fetchAccountRulesActive(accountID, password);
         setShowConfirmationMessagePopup(true);
@@ -3568,7 +3384,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(ruleID);
 
         setError("");
-        console.log("Rôle affecté avec succès");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -3620,8 +3435,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
   `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3630,7 +3443,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajout d'une nouvelle affectation", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3639,7 +3451,7 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
         fetchAccountRulesActive(accountID, password);
         setShowConfirmationMessagePopup(true);
@@ -3649,7 +3461,6 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(ruleID);
 
         setError("");
-        console.log("Rôle affecté avec succès");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -3711,8 +3522,6 @@ const DataContextProvider = ({ children }) => {
         </Record>
     </GTSRequest> `;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3721,7 +3530,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau role", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3730,12 +3538,11 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
-      console.log(result);
+
       if (result === "success") {
-        firmationMessagePopupName(description);
+        // firmationMessagePopupName(description);
 
         setError("");
-        console.log("role ajouter avec success");
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -3831,8 +3638,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3841,21 +3646,15 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-      );
-      console.log(result);
+
       if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
         // setSuccessCreateUserGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
@@ -3863,7 +3662,6 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName(description);
         setError("");
-        console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
         const id = accountID;
         const pwd = password;
 
@@ -3907,9 +3705,6 @@ const DataContextProvider = ({ children }) => {
         );
 
         handleUserError(xmlDoc);
-        console.log(
-          "8888888888888888888888888888888888888888888888888888888888"
-        );
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
@@ -3919,8 +3714,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la création du user.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -3991,8 +3784,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4001,16 +3792,13 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Modification d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(result);
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
@@ -4018,7 +3806,6 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName(description);
         setError("");
-        console.log("User modifier avec success ++>>>>>>>>>>>>>>.");
         const id = accountID;
         const pwd = password;
 
@@ -4044,21 +3831,6 @@ const DataContextProvider = ({ children }) => {
           )
         );
         setTimeout(() => {
-          console.log(
-            "mise a jour de setListeGestionDesUsers : ",
-            (prevUSers) =>
-              prevUSers.map((user) =>
-                user.userID === userIDField
-                  ? {
-                      ...user,
-                      userIDField,
-                      displayName,
-                      description,
-                      passwordField,
-                    }
-                  : user
-              )
-          );
           setListeGestionDesUsers((prevUSers) =>
             prevUSers.map((user) =>
               user.userID === userIDField
@@ -4127,8 +3899,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la modification du user.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -4166,8 +3936,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4176,21 +3944,15 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Modification d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       // setError("");
-      console.log(result);
       if (result === "success") {
-        console.log(
-          "User lastLoginTime modifier avec success ++>>>>>>>>>>>>>>.",
-          lastLoginTime
-        );
+        ///
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -4211,8 +3973,6 @@ const DataContextProvider = ({ children }) => {
     userPassword,
     userID
   ) => {
-    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
-
     // /////////
     setCreateVéhiculeLoading(true);
 
@@ -4225,8 +3985,6 @@ const DataContextProvider = ({ children }) => {
       `</RecordKey>` +
       `</GTSRequest>`;
 
-    console.log("requestBody", requestBody);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4236,12 +3994,9 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
-      console.log(response);
       if (response.ok) {
         if (userAccount && userUsername && userPassword) {
-          //   console.log("vehicule Delete avec successsssssssss...............");
           // } else {
-          console.log("Delete successsssssssss...............");
           setShowConfirmationMessagePopup(true); // succès  Échec
           setConfirmationMessagePopupTexte(
             `${t("Suppression de l'utilisateur avec succès")}`
@@ -4273,8 +4028,6 @@ const DataContextProvider = ({ children }) => {
 
         setCreateVéhiculeLoading(false);
       }
-
-      console.log("finish Deleting.........");
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
@@ -4337,8 +4090,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4347,20 +4098,15 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(result);
       if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
         setError("");
-        console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
 
         const fetchAllOtherData = false;
         fetchAllComptes(
@@ -4450,8 +4196,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4460,22 +4204,18 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Ajoute d'un nouveau groupe", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(result);
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(`${t("Compte modifié avec succès")}`);
         setConfirmationMessagePopupName(description);
         setError("");
-        console.log("Groupe ajouter avec success ++>>>>>>>>>>>>>>.");
 
         setComptes((prevCompte) =>
           prevCompte.map((account) =>
@@ -4509,7 +4249,6 @@ const DataContextProvider = ({ children }) => {
 
         handleUserError(xmlDoc);
 
-        // console.log("errorrrrrrrrr");
         // setEchecModifyAccountGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
@@ -4519,8 +4258,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la modification du compte.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -4539,8 +4276,6 @@ const DataContextProvider = ({ children }) => {
     // password,
     accountIDField
   ) => {
-    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
-
     // /////////
     setCreateVéhiculeLoading(true);
 
@@ -4552,8 +4287,6 @@ const DataContextProvider = ({ children }) => {
       `</RecordKey>` +
       `</GTSRequest>`;
 
-    console.log("requestBody", requestBody);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4563,13 +4296,8 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
-      console.log(response);
       if (response.ok) {
         if (account && username && password) {
-          //   console.log("vehicule Delete avec successsssssssss...............");
-          // } else {
-          console.log("Delete successsssssssss...............");
-
           setShowConfirmationMessagePopup(true); // succès  Échec
           setConfirmationMessagePopupTexte(
             `${t("Compte supprimer avec succès")}`
@@ -4597,8 +4325,6 @@ const DataContextProvider = ({ children }) => {
 
         setCreateVéhiculeLoading(false);
       }
-
-      console.log("finish Deleting.........");
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
@@ -4637,7 +4363,6 @@ const DataContextProvider = ({ children }) => {
 
     groupesSelectionnes
   ) => {
-    // console.log(
     //   userAccount,
     //   userUsername,
     //   userPassword,
@@ -4667,8 +4392,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4677,17 +4400,13 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("data from add véhicule", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(result);
       if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           `${t("Creation du nouveau appareil avec succès")}`
@@ -4740,7 +4459,6 @@ const DataContextProvider = ({ children }) => {
 
         handleUserError(xmlDoc);
 
-        // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           `${t("Échec de la Creation de l'appareil")}`
@@ -4750,8 +4468,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la création du véhicule.");
       console.error("Erreur lors de la création du véhicule", error);
@@ -4781,15 +4497,6 @@ const DataContextProvider = ({ children }) => {
 
     groupesSelectionnes
   ) => {
-    // console.log(
-    //   userAccount,
-    //   userUsername,
-    //   userPassword,
-    //   deviceID,
-    //   groupesSelectionnes
-    // );
-    // // /////////
-
     setError("");
     setCreateVéhiculeLoading(true);
 
@@ -4810,8 +4517,6 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log(xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4820,17 +4525,13 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("data from add véhicule", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      // console.log("Almost thereeee..............");
       setError("");
-      console.log(result);
       if (result === "success") {
-        // console.log("Véhicule créé avec succès :");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           `${t("Modification de l'appareil avec succès")}`
@@ -4890,7 +4591,6 @@ const DataContextProvider = ({ children }) => {
 
         handleUserError(xmlDoc);
 
-        // console.log("errorrrrrrrrr");
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           `${t("Échec de la modification de l'appareil")}`
@@ -4900,8 +4600,6 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
         handleUserError(xmlDoc);
       }
-
-      // console.log("End creating..............");
     } catch (error) {
       setError("Erreur lors de la modification du véhicule.");
       console.error("Erreur lors de la modification du véhicule", error);
@@ -4922,8 +4620,6 @@ const DataContextProvider = ({ children }) => {
     userPassword,
     showMessage = true
   ) => {
-    console.log("++++++++++++++++ Requête effectué: deleteVehicle");
-
     // /////////
     setCreateVéhiculeLoading(true);
 
@@ -4936,8 +4632,6 @@ const DataContextProvider = ({ children }) => {
       `</RecordKey>` +
       `</GTSRequest>`;
 
-    console.log("requestBody", requestBody);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4947,12 +4641,8 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
-      console.log(response);
       if (response.ok) {
         if (userAccount && userUsername && userPassword) {
-          //   console.log("vehicule Delete avec successsssssssss...............");
-          // } else {
-          console.log("Delete successsssssssss...............");
           if (showMessage) {
             setShowConfirmationMessagePopup(true); // succès  Échec
             setConfirmationMessagePopupTexte(
@@ -5058,8 +4748,6 @@ const DataContextProvider = ({ children }) => {
 
         setCreateVéhiculeLoading(false);
       }
-
-      console.log("finish Deleting.........");
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
@@ -5102,7 +4790,6 @@ const DataContextProvider = ({ children }) => {
     if (failed.length > 0) {
       console.warn("Échec d’assignation pour les devices suivants :", failed);
     } else {
-      console.log("Tous les devices ont été assignés au groupe avec succès.");
     }
 
     // Rafraîchir les données si besoin
@@ -5148,8 +4835,6 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
-    console.log("xmlData", xmlData);
-
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -5157,15 +4842,11 @@ const DataContextProvider = ({ children }) => {
         body: xmlData,
       });
       const text = await res.text();
-      console.log("text", text);
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
         ?.getAttribute("result");
-      console.log(
-        `assignDeviceToGroup: Résultat pour ${deviceID} -> ${groupID} :`,
-        result
-      );
+
       return result === "success";
     } catch (error) {
       console.error(
@@ -5194,7 +4875,6 @@ const DataContextProvider = ({ children }) => {
     if (failed.length > 0) {
       console.warn("Échec pour les groupes suivants :", failed);
     } else {
-      console.log("Le device a été assigné à tous les groupes avec succès.");
     }
 
     // ✅ Rafraîchir les données des groupes et des devices dans les groupes
@@ -5236,11 +4916,6 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>`;
     // <Field name="groupID">${groupID1}</Field>
 
-    console.log(
-      "xmlData affectation user to groupe ?????????????????",
-      xmlData
-    );
-
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -5249,16 +4924,12 @@ const DataContextProvider = ({ children }) => {
       });
 
       const text = await res.text();
-      console.log("Resultat............", text);
+
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
         ?.getAttribute("result");
 
-      console.log(
-        `assignUserToGroup: Résultat pour ${userID} -> ${groupID} :`,
-        result
-      );
       return result === "success";
     } catch (error) {
       console.error(
@@ -5286,9 +4957,6 @@ const DataContextProvider = ({ children }) => {
     if (failed.length > 0) {
       console.warn("Échec pour les utilisateurs suivants :", failed);
     } else {
-      console.log(
-        "Tous les utilisateurs ont été assignés au groupe avec succès."
-      );
     }
 
     const id = account;
@@ -5342,8 +5010,6 @@ const DataContextProvider = ({ children }) => {
 
 </GTSRequest>`;
 
-    console.log("xmlData", xmlData);
-
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -5351,13 +5017,12 @@ const DataContextProvider = ({ children }) => {
         body: xmlData,
       });
       const text = await res.text();
-      console.log("resultat......", text);
+
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
         ?.getAttribute("result");
 
-      console.log(`removeUserFromGroup: ${userID} -> ${groupID} :`, result);
       return result === "success";
     } catch (error) {
       console.error(
@@ -5385,8 +5050,6 @@ const DataContextProvider = ({ children }) => {
   </RecordKey>
 </GTSRequest>`;
 
-    console.log("xmlData", xmlData);
-
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -5394,13 +5057,12 @@ const DataContextProvider = ({ children }) => {
         body: xmlData,
       });
       const text = await res.text();
-      console.log("Result........................", text);
+
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
         ?.getAttribute("result");
 
-      console.log(`removeDeviceFromGroup: ${deviceID} -> ${groupID} :`, result);
       return result === "success";
     } catch (error) {
       console.error(
@@ -5414,10 +5076,7 @@ const DataContextProvider = ({ children }) => {
   function handleUserError(xmlDoc) {
     const errorMessage = xmlDoc.getElementsByTagName("Message")[0]?.textContent;
 
-    // console.log("errorMessage inactive", errorMessage);
-
     if (errorMessage === "User inactive") {
-      console.log("Logout the user, and navigate to /login");
       handleLogout();
       navigate("/login");
     }
@@ -5501,7 +5160,7 @@ const DataContextProvider = ({ children }) => {
     setVehicleDetails([]);
 
     localStorage.removeItem("mergedDataHome");
-    console.log("setMergedDataHome77777777777777");
+
     setMergedDataHome(null);
     setDonneeFusionnéForRapport([]);
 
@@ -5582,11 +5241,8 @@ const DataContextProvider = ({ children }) => {
     userPassword
   ) => {
     // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log("++++++++++++++++ Requête effectué: GeofenceDataFonction");
 
     // /////////
-    console.log("Startttttt geofence");
 
     const account = localStorage.getItem("account") || "";
     const username = localStorage.getItem("username") || "";
@@ -5610,7 +5266,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const xmlText = await response.text();
-      console.log("Received XML Data:", xmlText);
 
       // Convert XML to JSON
       const parser = new DOMParser();
@@ -5631,8 +5286,6 @@ const DataContextProvider = ({ children }) => {
           return fields;
         }
       );
-
-      console.log("Geofence Data:", records);
 
       // Map records to geofence structure
       const geofences = records.map((record, index) => ({
@@ -5681,8 +5334,6 @@ const DataContextProvider = ({ children }) => {
           },
         ].filter((point) => !isNaN(point.lat) && !isNaN(point.lng)), // Filter invalid points
       }));
-
-      console.log("Mapped Geofence Data:", geofences);
 
       try {
         setGeofenceData(geofences); // Mise à jour de la variable
@@ -5739,8 +5390,6 @@ const DataContextProvider = ({ children }) => {
   ) => {
     // if (!userData || !adminUserData) return;
     // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log("++++++++++++++++ Requête effectué: createNewGeofence");
 
     // /////////
 
@@ -5800,19 +5449,14 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
-    console.log("xmlData", xmlData);
-
     try {
-      console.log("Sending request to create Geofence...");
       const response = await fetch(currentAPI, {
         method: "POST",
         headers: { "Content-Type": "application/xml" },
         body: xmlData,
       });
 
-      console.log("Response received:", response);
       const data = await response.text();
-      console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -5821,14 +5465,10 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       if (result === "success") {
-        console.log("Geofence created successfully...");
-
         if (isDashboardHomePage) {
-          console.log("1111111111111111111111111111111111111111111111");
           fetchAccountGeofences(accountIDProp, passwordProp);
           // setCreateGeofenceLoading(false);
         } else {
-          console.log("2222222222222222222222222222222222222222222222");
           setGeofenceData((prevGeofences) => [
             ...prevGeofences,
             {
@@ -5868,7 +5508,6 @@ const DataContextProvider = ({ children }) => {
         );
         setConfirmationMessagePopupName(description);
       } else {
-        console.log("Error occurred while creating Geofence...");
         // setCreateGeofenceLoading(false);
 
         setShowConfirmationMessagePopup(true);
@@ -5964,9 +5603,6 @@ const DataContextProvider = ({ children }) => {
     </Record>
   </GTSRequest>`;
 
-    console.log("🚀 Requête envoyée à l'API :");
-    console.log(requestBody);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -5974,9 +5610,7 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
-      console.log("✅ Réponse brute reçue :", response);
       const data = await response.text();
-      console.log("📦 Texte de la réponse :", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -5990,11 +5624,8 @@ const DataContextProvider = ({ children }) => {
       }
 
       const result = gtsResponse.getAttribute("result");
-      console.log("📍 Résultat extrait du XML :", result);
 
       if (result && result === "success") {
-        console.log("🎉 Geofence modifié avec succès.");
-
         const coordinates = [
           { lat: lat1, lng: lng1 },
           { lat: lat2, lng: lng2 },
@@ -6098,8 +5729,6 @@ const DataContextProvider = ({ children }) => {
   </RecordKey>
 </GTSRequest>`;
 
-    console.log("requestBody", requestBody);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -6109,9 +5738,7 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
-      console.log("Response received:", response);
       const data = await response.text();
-      console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -6120,9 +5747,6 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       if (result === "success") {
-        // console.log("Réponse serveur:", await response.text());
-        console.log("Réponse serveur:", data);
-
         if (isDashboardHomePage) {
           setAccountGeofences((prevGeofence) =>
             prevGeofence.filter((geofence) => geofence.geozoneID !== geozoneID)
@@ -6144,14 +5768,12 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName("");
 
         setCreateGeofenceLoading(false);
-
-        console.log("Geofence Supprimer avec succès.");
       } else {
         console.error(
           "Erreur lors de la Suppression du geofence:",
           response.statusText
         );
-        console.log("Erreur lors de la Suppression du geofence");
+
         // setErrorDeleteGeofencePopup(true);
         // succès  Échec
         setShowConfirmationMessagePopup(true);
@@ -6163,7 +5785,6 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
       }
     } catch (error) {
-      console.log("Erreur lors de la Suppression du geofence");
       // setErrorDeleteGeofencePopup(true);
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
@@ -6177,10 +5798,6 @@ const DataContextProvider = ({ children }) => {
   const activerOuDesactiverGeofence = async (geozoneID, isActiveValue) => {
     // if (!userData) return;
     // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log(
-      "++++++++++++++++ Requête effectué: activerOuDesactiverGeofence"
-    );
 
     // /////////
 
@@ -6215,9 +5832,7 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
-      console.log("Response received:", response);
       const data = await response.text();
-      // console.log("Response text:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -6226,8 +5841,6 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       if (result === "success") {
-        console.log("Réponse serveur:", data);
-
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
           `${t("Modification du geofence avec succès")}`
@@ -6237,23 +5850,12 @@ const DataContextProvider = ({ children }) => {
         GeofenceDataFonction(account, username, password);
 
         navigate("/gestion_geofences?tab=geozone");
-
-        console.log(
-          `Geofence ${
-            isActiveValue === 1 ? "activer" : "desactiver"
-          } avec succès.`
-        );
       } else {
         console.error(
           `Erreur lors de ${
             isActiveValue === 1 ? "l'activation" : "la desactivation"
           } du geofence:`,
           response.statusText
-        );
-        console.log(
-          `Erreur lors de ${
-            isActiveValue === 1 ? "l'activation" : "la desactivation"
-          } du geofence:`
         );
 
         setShowConfirmationMessagePopup(true); // succès  Échec
@@ -6265,12 +5867,6 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
       }
     } catch (error) {
-      console.log(
-        `Erreur lors de ${
-          isActiveValue === 1 ? "l'activation" : "la desactivation"
-        } du geofence:`
-      );
-
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
         `${t("Échec de la Modification du geofence")}`
@@ -6409,10 +6005,6 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
-    console.log("currentAPI", currentAPI);
-
-    console.log("xmlData : ===>", xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -6421,13 +6013,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log(
-        "data...... fetchvehiculeData......, accountID,    userID,  password,",
-        accountID,
-        userID,
-        password,
-        data
-      );
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -6447,8 +6032,6 @@ const DataContextProvider = ({ children }) => {
         véhiculeData.push(vehicleRecord);
       }
 
-      console.log("véhiculeData", véhiculeData);
-      console.log("onlyLastResult", onlyLastResult);
       setVehicleData(véhiculeData);
       if (onlyLastResult) {
         if (véhiculeData?.length <= 0) return;
@@ -6541,8 +6124,6 @@ const DataContextProvider = ({ children }) => {
     </EventData>
   </GTSRequest>`;
 
-    console.log("xml...", xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -6575,8 +6156,6 @@ const DataContextProvider = ({ children }) => {
         details.backupAddress = "";
         newVehicleDetails.push(details);
       }
-
-      console.log("newVehicleDetails", newVehicleDetails);
 
       if (fromSelectOnPosition) {
         setFromSelectOnPositionValue(newVehicleDetails);
@@ -6710,7 +6289,7 @@ const DataContextProvider = ({ children }) => {
 
     // if (!userData) return;
     // Pour suivre le nombre de requête
-    incrementerRequête();
+
     console
       .log
       // "++++++++++++++++ Requête effectué: "
@@ -6733,13 +6312,6 @@ const DataContextProvider = ({ children }) => {
       userID = username || localStorage.getItem("username") || "";
       password = localStorage.getItem("password") || "";
     }
-
-    console.log("TimeFrom", TimeFrom);
-    console.log("TimeTo", TimeTo);
-    console.log("adjustedTimeFrom", adjustedTimeFrom);
-    console.log("adjustedTimeTo", adjustedTimeTo);
-    console.log("addHoursFrom", addHoursFrom);
-    console.log("addHoursTo", addHoursTo);
 
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -6772,8 +6344,6 @@ const DataContextProvider = ({ children }) => {
       </EventData>
     </GTSRequest>`;
 
-    console.log("xml:", xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -6782,7 +6352,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      console.log("Data........", data);
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -6835,13 +6404,6 @@ const DataContextProvider = ({ children }) => {
           recordTimestamp <= timeToTimestamp
         );
       });
-
-      console.log(
-        "filteredVehicleDetails pour le device: :",
-        Device,
-        "---------",
-        filteredVehicleDetails
-      );
 
       setRapportVehicleDetails((prevDetails) => {
         const autresDetails = prevDetails.filter(
@@ -6939,10 +6501,6 @@ const DataContextProvider = ({ children }) => {
 
     // if (!userData) return;
     // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log(
-      "++++++++++++++++ Requête effectué: fetchSearchRapportVehicleDetails"
-    );
 
     // /////////
     // Ajuste les heures de TimeFrom et TimeTo
@@ -7082,10 +6640,7 @@ const DataContextProvider = ({ children }) => {
 
     if (oneVehicleProcessed) {
       setRapportDataLoading(false);
-
-      console.log("Au moins un véhicule a ses détails mis à jour !");
     } else {
-      console.log("Aucun véhicule n'a encore ses détails.");
     }
 
     // Vérifiez si chaque véhicule a ses détails ajoutés
@@ -7099,10 +6654,8 @@ const DataContextProvider = ({ children }) => {
 
     // 2. Met à jour le chargement uniquement lorsque toutes les données sont traitées
     if (allVehiclesProcessed) {
-      console.log("Tous les véhicules ont leurs détails mis à jour !");
       setSearchDonneeFusionnéForRapport(dataFusionné);
     } else {
-      console.log("Certains véhicules n'ont pas encore leurs détails.");
     }
 
     return dataFusionné;
@@ -7283,8 +6836,6 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (currentVéhicule) {
-        console.log("mise a jour véhicule Details");
-
         const deviceID = currentVéhicule?.deviceID;
 
         const foundVehicle = currentDataFusionné?.find(
@@ -7293,7 +6844,6 @@ const DataContextProvider = ({ children }) => {
 
         setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
         setVéhiculeHistoriqueDetails(foundVehicle.véhiculeDetails);
-        setSelectedVehicleToShowInMap(foundVehicle.deviceID); // Met à jour la sélection      console.log("Mise à jour régulière des données");
       }
     }, 20000);
 
@@ -7339,18 +6889,6 @@ const DataContextProvider = ({ children }) => {
     const adjustedTimeFrom = adjustTime(TimeFrom, addHoursFrom); // Retire d'heures en plus.
     const adjustedTimeTo = adjustTime(TimeTo, addHoursTo); // Ajoute d'heures en plus.
 
-    console.log("TimeFrom", TimeFrom);
-    console.log("TimeTo", TimeTo);
-    console.log("adjustedTimeFrom", adjustedTimeFrom);
-    console.log("adjustedTimeTo", adjustedTimeTo);
-    console.log("addHoursFrom", addHoursFrom);
-    console.log("addHoursTo", addHoursTo);
-    console.log("adminAccount", adminAccount);
-    console.log("adminUser", adminUser);
-    console.log("adminPassword", adminPassword);
-    console.log("fromUpdateAuto", fromUpdateAuto);
-
-    console.log("Start fetching.........");
     if (fromUpdateAuto) {
       setLoadingHistoriqueFilter(false);
     } else {
@@ -7359,10 +6897,6 @@ const DataContextProvider = ({ children }) => {
 
     // if (!userData) return;
     // Pour suivre le nombre de requête
-    incrementerRequête();
-    console.log(
-      "++++++++++++++++ Requête effectué: fetchHistoriqueVehicleDetails"
-    );
 
     // /////////
     // Ajuste les heures de TimeFrom et TimeTo
@@ -7400,8 +6934,6 @@ const DataContextProvider = ({ children }) => {
       </EventData>
     </GTSRequest>`;
 
-    console.log("xmlData", xmlData);
-
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -7410,7 +6942,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-      // console.log("data", data);
+
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const records = xmlDoc.getElementsByTagName("Record");
@@ -7464,7 +6996,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       setVéhiculeHistoriqueDetails(filteredVehicleDetails);
-      console.log("filteredVehicleDetails", filteredVehicleDetails);
       // if (forCurrentDevice) {
       const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
@@ -7482,13 +7013,7 @@ const DataContextProvider = ({ children }) => {
         setCurrentVéhicule(foundVehicleWidthFilteredVehicleDetails);
         setLoadingHistoriqueFilter(false);
         setRapportDataLoading(false);
-
-        console.log(
-          "foundVehicleWidthFilteredVehicleDetails",
-          foundVehicleWidthFilteredVehicleDetails
-        );
       } else {
-        console.log("Pas d'appareil trouver avec l'ID:", Device);
       }
       // }
       setRapportDataLoading(false);
@@ -7730,8 +7255,6 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>`;
     const api = "/octagono-plus-api/track/Service";
 
-    console.log("xmlData", xmlData);
-
     try {
       const response = await fetch(api, {
         method: "POST",
@@ -7740,7 +7263,6 @@ const DataContextProvider = ({ children }) => {
       });
 
       const xmlText = await response.text();
-      console.log("Received XML Data:", xmlText);
 
       // Convert XML to JSON
       const parser = new DOMParser();
@@ -7761,8 +7283,6 @@ const DataContextProvider = ({ children }) => {
           return fields;
         }
       );
-
-      console.log("Resultat Data:", records);
     } catch (error) {
       console.error("Error fetching or parsing geofence data:", error);
     }
@@ -8432,7 +7952,6 @@ const DataContextProvider = ({ children }) => {
       // Mets à jour les données AVANT de rediriger
       localStorage.setItem("customHistory", JSON.stringify(storedHistory));
       sessionStorage.setItem("isGoingBack", "true");
-      console.log("Navigation vers :", lastPath);
       setDocumentationPage(lastPath.replace(/^\//, ""));
 
       // Petite astuce : on force une redirection propre
@@ -8552,7 +8071,6 @@ const DataContextProvider = ({ children }) => {
         for (let name of names) {
           caches.delete(name);
         }
-        console.log("Caches supprimés");
       });
     }
   }
@@ -8589,7 +8107,6 @@ const DataContextProvider = ({ children }) => {
 
       // Supprime les plus anciens si on dépasse la limite
       if (totalSize > maxSizeBytes) {
-        console.log("Taille du cache dépassée. Nettoyage...");
         entries.sort((a, b) => a.size - b.size); // supprime petits d’abord
         while (totalSize > maxSizeBytes && entries.length > 0) {
           const entry = entries.shift();
@@ -8670,7 +8187,6 @@ const DataContextProvider = ({ children }) => {
     const message = `Le client ${user}\n du compte ${accountConnected}\n s'est connecté le ${dateAujourdhui}\n à ${hereActurel}\n en ${
       country === "ht" ? "Haiti" : "Republique dominicaine"
     }`;
-    console.log("message envoyer:", message);
   };
 
   useEffect(() => {
@@ -8711,21 +8227,18 @@ const DataContextProvider = ({ children }) => {
     if (!isClique) return;
     setTimeout(() => {
       setIsClique(false);
-      console.log("setIsClique to false");
     }, 10000);
   }, [isClique]);
 
   const testClique = () => {
     if (isClique) return;
     setIsClique(true);
-    console.log("Fonction appeler.........");
   };
   // mafonction
   // ma fonction
   const autoUpdateFonction = () => {
     if (isClique) return;
     setIsClique(true);
-    console.log("Fonction appeler.........");
 
     ////////////////////////////////////////
     setDashboardLoadingEffect(true);
@@ -8767,11 +8280,6 @@ const DataContextProvider = ({ children }) => {
         !storedLastExecution ||
         now - storedLastExecution >= timeBeforAUtoUpdate
       ) {
-        console.log(
-          "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$,",
-          isUserNotInteractingNow,
-          isAuthenticated
-        );
         autoUpdateFonction();
         storedLastExecution = Date.now();
         localStorage.setItem("lastExecution", storedLastExecution);
@@ -8795,12 +8303,6 @@ const DataContextProvider = ({ children }) => {
     const checkId = setInterval(() => {
       if (Date.now() - lastExecutionRef.current >= timeBeforAUtoUpdate) {
         if (!isUserNotInteractingNow && isAuthenticated) {
-          console.log(
-            "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$,",
-            isUserNotInteractingNow,
-            isAuthenticated
-          );
-
           autoUpdateFonction();
           lastExecutionRef.current = Date.now();
           localStorage.setItem("lastExecution", lastExecutionRef.current);
@@ -9135,6 +8637,8 @@ const DataContextProvider = ({ children }) => {
         DeviceEnStationnement,
         DeviceInactifsWidthDetails,
         DeviceInactifsWidthNoDetails,
+        isFilteredCartePositionByCategorie,
+        setIsFilteredCartePositionByCategorie,
 
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}

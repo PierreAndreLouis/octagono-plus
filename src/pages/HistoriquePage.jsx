@@ -428,14 +428,14 @@ function HistoriquePage() {
   const [timeFrom, settimeFrom] = useState();
   const [timeTo, settimeTo] = useState();
 
-  useEffect(() => {
-    // console.log(startDate);
-    // console.log(endDate);
-    // console.log(startTime);
-    // console.log(endTime);
-    // console.log(timeFrom);
-    // console.log(timeTo);
-  }, [startDate, endDate, startTime, endTime, timeFrom, timeTo]);
+  useEffect(() => {}, [
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    timeFrom,
+    timeTo,
+  ]);
 
   const formatDateToISO = (date) => {
     if (!(date instanceof Date)) {
@@ -664,13 +664,6 @@ function HistoriquePage() {
     } else {
       setIsFetchFromUpdateAuro(false);
     }
-    // centerOnFirstMarker();
-
-    // setTimeout(() => {
-    //   centerOnFirstMarker();
-    //   // console.log("centrage auto......................")
-
-    // }, 500);
   };
 
   useEffect(() => {

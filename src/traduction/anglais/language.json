@@ -1004,7 +1004,32 @@
 
 "Mettre à jour les données maintenant" : "Update data now",
 "Désactiver la mise à jour automatique" : "Disable automatic update",
-"Activer la mise à jour automatique" : "Enable automatic update"
+"Activer la mise à jour automatique" : "Enable automatic update",
+
+
+
+
+
+
+
+"Type d'installation": "Installation type",
+
+"Appareils non déplacer" : "Devices not moved",
+"Appareils En Stationnement" : "Devices parked",
+"Appareils Inactifs Configurer" : "Inactive devices configured",
+"Appareils Inactifs non Configurer" : "Inactive devices not configured",
+"Configurés" : "Configured",
+"Non Configurés" : "Not configured",
+"Email de notification" : "Notification email",
+"Rôle" : "Role",
+"Appareils Inactifs Actualisés" : "Inactive devices updated",
+"Appareils Inactifs non Actualisés" : "Inactive devices not updated",
+"Actualisés" : "Updated",
+"Non Actualisés": "Not updated",
+"Voir cette liste sur la carte": "View this list on the map",
+"Filtrer les positions": "Filter positions",
+"Trier les appareils par statut": "Sort devices by status",
+"Ordre de déplacement": "Movement order"
 
 
 

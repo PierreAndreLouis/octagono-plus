@@ -3,7 +3,9 @@ import { FaChevronDown } from "react-icons/fa6";
 import { DataContext } from "../../context/DataContext";
 import Tooltip from "@mui/material/Tooltip";
 import { useTranslation } from "react-i18next";
-import { MdUpdate } from "react-icons/md";
+import { MdLocationPin, MdUpdate } from "react-icons/md";
+import { FaSortAmountDownAlt } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 function HeaderLocation({
   setShowVehiculeListe,
@@ -25,6 +27,20 @@ function HeaderLocation({
     autoUpdateFonction,
     setDashboardLoadingEffect,
     currentVéhicule,
+    setIsFilteredCartePositionByCategorie,
+    isFilteredCartePositionByCategorie,
+    setFilteredColorCategorieListe,
+    allDevices,
+    véhiculeDetails,
+    EnDéplacement,
+    DeviceDéplacer,
+    DeviceNonDeplacer,
+    DeviceListeActif,
+    DeviceEnStationnement,
+    DeviceInactifs,
+    DeviceInactifsWidthDetails,
+    DeviceInactifsWidthNoDetails,
+    setSelectedVehicleToShowInMap,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -60,8 +76,141 @@ function HeaderLocation({
     }
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
 
+  const [filtrerLesPositionPopup, setFiltrerLesPositionPopup] = useState(false);
+
   return (
     <>
+      {filtrerLesPositionPopup && (
+        <div className="fixed z-[999999909999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
+          <div
+            className="bg-white dark:bg-gray-700 max-w-[40rem] relative flex flex-col gap-1 w-full mx-2-- p-6 px-4  border border-gray-600 mt-2 rounded-md"
+            id="mapType"
+          >
+            <IoClose
+              onClick={() => {
+                setFiltrerLesPositionPopup(false);
+              }}
+              className="absolute right-4 cursor-pointer top-6 text-2xl text-red-600"
+            />
+            <h2 className="border-b border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
+              {t("Trier les appareils par")}:
+            </h2>
+
+            <div
+              onClick={() => {
+                setIsFilteredCartePositionByCategorie(true);
+
+                setSelectedVehicleToShowInMap(null);
+              }}
+              className="w-full flex flex-col items-center gap-3 flex-wrap mt-8"
+            >
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(
+                    addVehiculeDetailsFonction(allDevices, véhiculeDetails)
+                  );
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50 w-full hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+              >
+                {t("Tous")}
+                <span>({allDevices?.length})</span>
+              </p>
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(EnDéplacement);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className={
+                  "px-2 cursor-pointer flex justify-between items-center w-full sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                }
+              >
+                {t("Appareils En déplacement")}
+                <span>({EnDéplacement?.length})</span>
+              </p>
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceDéplacer);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className={
+                  "px-2 flex justify-between items-center cursor-pointer w-full sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                }
+              >
+                {t("Appareils déplacés")}
+                <span>({DeviceDéplacer?.length})</span>
+              </p>
+
+              {/* ///////////////////////////////////////////////////////////////////////////////// */}
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceNonDeplacer);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+              >
+                {t("Appareils non déplacés")}
+                <span>({DeviceNonDeplacer?.length})</span>
+              </p>
+
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceListeActif);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+              >
+                {t("Appareils Actifs")}
+                <span>({DeviceListeActif?.length})</span>
+              </p>
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceEnStationnement);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+              >
+                {t("Appareils En Stationnement")}
+                <span>({DeviceEnStationnement?.length})</span>
+              </p>
+              {/* ///////////////////////////////////////////////////////////////////////////////// */}
+
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceInactifs);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+              >
+                {t("Appareils Inactifs")}
+                <span>({DeviceInactifs?.length})</span>
+              </p>
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceInactifsWidthDetails);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center  cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+              >
+                {t("Appareils Inactifs Actualisés")}
+                <span>({DeviceInactifsWidthDetails?.length})</span>
+              </p>
+              <p
+                onClick={() => {
+                  setFilteredColorCategorieListe(DeviceInactifsWidthNoDetails);
+                  setFiltrerLesPositionPopup(false);
+                }}
+                className="px-2 flex justify-between items-center  cursor-pointer sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
+              >
+                {t("Appareils Inactifs non Actualisés")}
+                <span>({DeviceInactifsWidthNoDetails?.length})</span>
+              </p>
+
+              {/* ///////////////////////////////////////////////////////////////////////////////// */}
+            </div>
+          </div>
+        </div>
+      )}
       <div
         className={`${
           isDashBoardComptnent ? "absolute top-0" : "fixed top-12"
@@ -110,42 +259,79 @@ function HeaderLocation({
           </h2>
         </Tooltip>
 
-        <div className="grid  gap-3 w-full max-w-[40rem] mx-auto grid-cols-2 items-center justify-between">
-          {/* Changer le type de vue sur la carte */}
-          <Tooltip
-            PopperProps={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10], // Décalage horizontal et vertical
+        <div className="flex gap-1 w-full max-w-[40rem] mx-auto">
+          <div className="grid  w-full gap-1  grid-cols-2 items-center justify-between">
+            {/* Changer le type de vue sur la carte */}
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
                   },
-                },
-                {
-                  name: "zIndex",
-                  enabled: true,
-                  phase: "write",
-                  fn: ({ state }) => {
-                    state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
                   },
-                },
-              ],
-            }}
-            title={`${t("Changer le type de vue sur la carte")}`}
-          >
-            <div
-              onClick={() => {
-                setTypeDeVue(true);
+                ],
               }}
-              className="flex items-center md:shadow-xl justify-between gap-1 border px-2 py-1 cursor-pointer  dark:bg-gray-900/50 dark:text-gray-100 dark:border-gray-300/40 bg-orange-50 md:bg-white md:border md:border-gray-300  rounded-md"
+              title={`${t("Changer le type de vue sur la carte")}`}
             >
-              <label htmlFor="mapType">{t("Type de vue")} </label>
-              <FaChevronDown />
-            </div>
-          </Tooltip>
+              <div
+                onClick={() => {
+                  setTypeDeVue(true);
+                }}
+                className="flex items-center md:shadow-xl justify-between gap-1 border px-2 py-1 cursor-pointer  dark:bg-gray-900/50 dark:text-gray-100 dark:border-gray-300/40 bg-orange-50 md:bg-white md:border md:border-gray-300  rounded-md"
+              >
+                <label htmlFor="mapType">{t("Type de vue")} </label>
+                <FaChevronDown />
+              </div>
+            </Tooltip>
 
-          {/* Voir la position géographique de tous les véhicules */}
+            {/* Voir la position géographique de tous les véhicules */}
+            <Tooltip
+              PopperProps={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10], // Décalage horizontal et vertical
+                    },
+                  },
+                  {
+                    name: "zIndex",
+                    enabled: true,
+                    phase: "write",
+                    fn: ({ state }) => {
+                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                    },
+                  },
+                ],
+              }}
+              title={`${t(
+                "Voir la position géographique de tous les véhicules"
+              )}`}
+            >
+              <h3
+                onClick={() => {
+                  showAllVehicles();
+                  setShowVehiculeListe(false);
+                  setIsFilteredCartePositionByCategorie(false);
+                }}
+                className="text-end md:bg-white md:border md:border-gray-300  md:shadow-xl md:py-1 md:px-4 rounded-lg text-orange-600 font-semibold cursor-pointer underline"
+              >
+                {t("Tous les véhicules")}
+              </h3>
+            </Tooltip>
+          </div>
           <Tooltip
+            title={`${t("Filtrer les positions")}`}
             PopperProps={{
               modifiers: [
                 {
@@ -164,19 +350,15 @@ function HeaderLocation({
                 },
               ],
             }}
-            title={`${t(
-              "Voir la position géographique de tous les véhicules"
-            )}`}
           >
-            <h3
+            <p
               onClick={() => {
-                showAllVehicles();
-                setShowVehiculeListe(false);
+                setFiltrerLesPositionPopup(true);
               }}
-              className="text-end md:bg-white md:border md:border-gray-300  md:shadow-xl md:py-1 md:px-4 rounded-lg text-orange-600 font-semibold cursor-pointer underline"
+              className="text-md py-[.45rem] md:py-1-- bg-orange-50 hover:bg-orange-100 h-full border border-orange-200 px-2 rounded-md text-orange-500 cursor-pointer"
             >
-              {t("Tous les véhicules")}
-            </h3>
+              <FaSortAmountDownAlt className="text-[1rem]" />
+            </p>
           </Tooltip>
         </div>
         {lastUpdate?.mostRecentTimestamp && (

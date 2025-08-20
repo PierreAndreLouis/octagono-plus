@@ -96,6 +96,7 @@ function SideBarSysadmin({
     versionApplication,
     setListeGestionDesRulesActive,
     accountRulesActive,
+    setIsFilteredCartePositionByCategorie,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
@@ -465,6 +466,7 @@ function SideBarSysadmin({
       link: "/Localisation_devices",
       setVariable: () => {
         setDocumentationPage("Localisation_devices");
+        setIsFilteredCartePositionByCategorie(false);
         if (currentAccountSelected) {
           setListeGestionDesVehicules(currentAccountSelected?.accountDevices);
         } else {
@@ -910,6 +912,8 @@ function SideBarSysadmin({
                 } else {
                   setListeGestionDesVehicules(accountDevices);
                 }
+                setIsFilteredCartePositionByCategorie(false);
+
                 updateAppareilsEtGeofencesPourCarte();
                 scrollToTop();
                 setDocumentationPage("Localisation_devices");
