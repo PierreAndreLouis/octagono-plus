@@ -212,9 +212,9 @@ function CreateNewAccountPage({
     "contactPhone",
     "contactName",
     "contactEmail",
-    "notifyEmail",
     "password",
     "password2",
+    "addressCountry",
   ];
 
   // Pour mettre a jour les nouvelle donnee du véhicule a modifier
@@ -361,8 +361,8 @@ function CreateNewAccountPage({
 
                   {
                     id: "notifyEmail",
-                    label: `${t("Email")}`,
-                    placeholder: `${t("Email")}`,
+                    label: `${t("Email de notification")}`,
+                    placeholder: `${t("Email de notification")}`,
                   },
                   {
                     id: "addressCountry",

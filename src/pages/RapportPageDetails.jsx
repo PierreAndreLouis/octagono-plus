@@ -101,7 +101,7 @@ function RapportPageDetails() {
   // Pour télécharger la table récapitulatif en excel
   const [downloadExelPDF, setdownloadExelPDF] = useState(false);
   useEffect(() => {
-    console.log("downloadExelPDF :", downloadExelPDF);
+    // console.log("downloadExelPDF :", downloadExelPDF);
   }, [downloadExelPDF]);
 
   // Pour donnee un signale de téléchargement
@@ -132,7 +132,7 @@ function RapportPageDetails() {
       // behavior: "smooth", // Défilement fluide
     });
     const forCurrentDevice = true;
-    console.log("xxxxxxxxxxxxxx", deviceID, TimeFrom, TimeTo);
+    // console.log("xxxxxxxxxxxxxx", deviceID, TimeFrom, TimeTo);
 
     if (isDashboardHomePage) {
       fetchHistoriqueVehicleDetails(
@@ -202,8 +202,8 @@ function RapportPageDetails() {
   const filteredVehicles = [];
 
   useEffect(() => {
-    console.log("stopsPositionsListe", stopsPositionsListe);
-    console.log("filteredVehicles", filteredVehicles);
+    // console.log("stopsPositionsListe", stopsPositionsListe);
+    // console.log("filteredVehicles", filteredVehicles);
   }, [stopsPositionsListe]);
 
   let lastZeroSpeedTimestamp = null;
@@ -904,10 +904,10 @@ function RapportPageDetails() {
   const [endTimeToDisplay, setEndTimeToDisplay] = useState(endTime);
 
   useEffect(() => {
-    console.log(startDateToDisplay);
-    console.log(startTimeToDisplay);
-    console.log(endTimeToDisplay);
-    console.log(endTimeToDisplay);
+    // console.log(startDateToDisplay);
+    // console.log(startTimeToDisplay);
+    // console.log(endTimeToDisplay);
+    // console.log(endTimeToDisplay);
   }, [
     startTimeToDisplay,
     startDateToDisplay,
@@ -1049,16 +1049,6 @@ function RapportPageDetails() {
         timeFrom,
         timeTo
       );
-
-      console.log(
-        "recherche avec les info: ",
-        accountID,
-        userID,
-        password,
-        onlyLastResult,
-        timeFrom,
-        timeTo
-      );
     } else if (pageSection === "unite" && !isDashboardHomePage) {
       fetchHistoriqueVehicleDetails(
         currentVéhicule?.deviceID || dataFusionné[0]?.deviceID,
@@ -1088,16 +1078,6 @@ function RapportPageDetails() {
         timeFrom,
         timeTo
       );
-
-      console.log(
-        "recherche avec les info: ",
-        accountID,
-        userID,
-        password,
-        onlyLastResult,
-        timeFrom,
-        timeTo
-      );
     }
 
     //
@@ -1108,8 +1088,8 @@ function RapportPageDetails() {
 
     // setRapportDataLoading(true);
 
-    console.log("TimeFrom---------", timeFrom);
-    console.log("TimeTo------", timeTo);
+    // console.log("TimeFrom---------", timeFrom);
+    // console.log("TimeTo------", timeTo);
 
     setStartDateToDisplay(selectedDate);
     setStartTimeToDisplay(startTime);
@@ -1244,16 +1224,6 @@ function RapportPageDetails() {
         timeFrom,
         timeTo
       );
-
-      console.log(
-        "recherche avec les info: ",
-        accountID,
-        userID,
-        password,
-        onlyLastResult,
-        timeFrom,
-        timeTo
-      );
     } else if (pageSection === "unite" && !isDashboardHomePage) {
       fetchHistoriqueVehicleDetails(
         currentVéhicule?.deviceID || dataFusionné[0]?.deviceID,
@@ -1283,16 +1253,6 @@ function RapportPageDetails() {
         timeFrom,
         timeTo
       );
-
-      console.log(
-        "recherche avec les info: ",
-        accountID,
-        userID,
-        password,
-        onlyLastResult,
-        timeFrom,
-        timeTo
-      );
     }
 
     setShowDatePicker2(false);
@@ -1310,7 +1270,7 @@ function RapportPageDetails() {
   x;
 
   useEffect(() => {
-    console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
+    // console.log("rapportDataLoading >>>>>>>>>>>>.", rapportDataLoading);
   }, [rapportDataLoading]);
 
   //

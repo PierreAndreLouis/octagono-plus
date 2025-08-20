@@ -451,17 +451,6 @@ function RapportPersonnel({
               );
               console.log("longestStopIndex", longestStopIndex);
 
-              // console.log(
-              //   "rapportPersonelleData?.stopsPositions",
-              //   rapportPersonelleData?.stopsPositions[0]
-              // );
-              // console.log(
-              //   "currentVéhicule?.véhiculeDetails",
-              //   currentVéhicule?.véhiculeDetails[0]
-              // );
-              // console.log("Début des arrêts:", stops);
-              // console.log("vehicles", vehicles);
-
               rapportPersonelleData?.stopsPositions;
             }}
             className="text-center mb-2 mt-[2rem] md:mt-0 font-semibold text-xl mt-16-- dark:text-gray-300"

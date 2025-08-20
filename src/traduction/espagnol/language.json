@@ -313,7 +313,7 @@
   "Noir": "Negro",
   "Vitesse": "Velocidad",
   "Statut": "Estado",
-  "En stationnement": "Estacionado",
+  "En stationnement": "Estacionado(s)",
   "En mouvement rapide": "Movimiento rápido",
   "En mouvement lent": "Movimiento lento",
   "Chargement...": "Cargando...",
@@ -380,7 +380,7 @@
   "Chargement des données": "Cargando datos",
   "Adresse non disponible": "Dirección no disponible",
   "Aucun véhicule trouvé": "No se encontró vehículo",
-  "En Stationnement": "Estacionado",
+  "En Stationnement": "Estacionado(s)",
   "Bloquer le véhicule": "Bloquear el vehículo",
   "Débloquer le véhicule": "Desbloquear el vehículo",
   "Écouter": "Escuchar",
@@ -555,7 +555,7 @@
   "Heure de recherche trouvée": "Hora de búsqueda encontrada",
   "Pas d'heure disponible": "Hora no disponible",
   "Heure d'arrivée": "Hora de llegada",
-  "Pas de mouvement": "Sin movimiento",
+  "Pas de mouvement": "No movimiento(s)",
   "Durée total en mouvement": "Duración total en movimiento",
   "Durée des arrêts lors du déplacement": "Duración de paradas durante el desplazamiento",
   "Duree de l’arrêts le plus long": "Duración de la parada más larga",
@@ -756,7 +756,7 @@
   "Statut du véhicule": "Estado del vehículo",
   "Veuillez choisir un véhicule": "Por favor, elija un vehículo",
   "Choisir": "Elegir",
-  "En Déplacement": "En movimiento",
+  "En Déplacement": "En movimiento(s)",
 
 
 
@@ -772,7 +772,7 @@
   "Il n’est pas possible de fournir un rapport global pour tous.": "No es posible proporcionar un informe global para todos.",
   "Ce compte comprend plus de 50 appareils": "Esta cuenta incluye más de 50 dispositivos",
   "Documentation": "Documentación",
-  "ID du geofence": "ID de geovalla",
+  "ID du geofence": "ID de geozona",
   "Nombre de coordonnées": "Número de coordenadas",
   "Choisissez une date et une heure": "Elija una fecha y hora",
   "Une recherche portant sur plus de 3 jours ralentira un peu la carte": "Una búsqueda de más de 3 días ralentizará un poco el mapa",
@@ -792,10 +792,10 @@
 
   "Résultat": "Resultado",
   "Recherche d'une alerte": "Búsqueda de alerta",
-  "Appareils non déplacés": "Dispositivos sin movimiento",
+  "Appareils non déplacés": "Dispositivos No movimiento",
   "Appareils en stationnement": "Dispositivos estacionados",
-  "Non déplacés": "Sin movimiento(s)",
-  "Non Déplacer": "Sin movimiento(s)",
+  "Non déplacés": "No movimiento(s)",
+  "Non Déplacer": "No movimiento(s)",
 
   "Appareils déplacés": "Dispositivos movidos",
   "Statistiques par compte": "Estadísticas por cuenta",
@@ -810,7 +810,7 @@
   "Veuillez cliquer sur l'option de l'utilisateur à modifier, puis sur 'Modifier l'utilisateur'": "Haga clic en la opción del usuario para editar, luego en 'Editar usuario'",
   "Veuillez cliquer sur l'option du groupe à modifier, puis sur 'Modifier le groupe'": "Haga clic en la opción del grupo para editar, luego en 'Editar grupo'",
   "Veuillez cliquer sur l'option de l'appareil à modifier, puis sur 'Modifier l'appareil'": "Haga clic en la opción del dispositivo para editar, luego en 'Editar dispositivo'",
-  "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité à modifier": "Haga clic en el botón 'Editar' del geovalla que desea modificar",
+  "Veuillez cliquer sur le bouton 'Modifier' du geofence souhaité à modifier": "Haga clic en el botón 'Editar' del geozona que desea modificar",
 
   "Informations utilisateur": "Información del usuario",
 
@@ -840,8 +840,8 @@
   "Veuillez ajouter au moins 3 positions": "Por favor agregue al menos 3 posiciones",
   "Veuillez ajouter une description": "Por favor agregue una descripción",
   "Choisir une couleur": "Elegir un color",
-  "Modifier Geofence": "Editar geovalla",
-  "Créer Geofence": "Crear geovalla",
+  "Modifier Geofence": "Guardar",
+  "Créer Geofence": "Crear geozona",
   "Marqueur": "Marcador",
   "Coordonnées": "Coordenadas",
 
@@ -1017,7 +1017,7 @@
 "Annuler le filtre pour" : "Quitar Filtro para",
 "Filtrer les appareils" : "Filtrar Dispositivos",
 "Trier les appareils par" : "Ordenar Dispositivos por",
-"Dernière mouvement" : "Último Movimiento",
+"Dernière mouvement" : "Último vehículo en desplazarse",
 
 
 "Mettre à jour les données maintenant" : "Actualizar los datos ahora",

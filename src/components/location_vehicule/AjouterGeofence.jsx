@@ -166,22 +166,7 @@ const AjouterGeofence = ({
       password = localStorage.getItem("password") || "";
     }
 
-    // Affichage de debug (facultatif)
-    // console.log("Soumission de geofence :");
-    // console.log("Description :", description);
-    // console.log("Couleur :", color);
-    // console.log("Geozone ID :", geozoneID);
-    // console.log("Account ID :", accountID);
-    // console.log("Mot de passe :", password);
-    // console.log("Positions :");
-    // console.log("pos1 :", pos1);
-    // console.log("pos2 :", pos2);
-    // console.log("pos3 :", pos3);
-    // console.log("pos4 :", pos4);
-    // console.log("pos5 :", pos5);
-    // console.log("pos6 :", pos6);
-    // console.log("pos7 :", pos7);
-    // console.log("pos8 :", pos8);
+  
 
     if (isEditingGeofence) {
       ModifierGeofence(
@@ -377,7 +362,7 @@ const AjouterGeofence = ({
             onClick={handleSubmitGeofence}
           >
             {isEditingGeofence
-              ? `${t("Modifier Geofence")}`
+              ? `${t("Enregistrer")}`
               : `${t("Créer Geofence")}`}
           </button>
         </div>

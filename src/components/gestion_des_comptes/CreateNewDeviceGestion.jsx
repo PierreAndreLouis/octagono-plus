@@ -53,7 +53,7 @@ function CreateNewDeviceGestion({
     deviceID: "",
     description: "",
     equipmentType: "",
-    uniqueIdentifier: "",
+    uniqueID: "",
     imeiNumber: "",
     licensePlate: "",
     simPhoneNumber: "",
@@ -183,13 +183,13 @@ function CreateNewDeviceGestion({
 
       const deviceID = addVéhiculeData.deviceID;
       const imeiNumber = addVéhiculeData.imeiNumber;
-      const uniqueIdentifier = addVéhiculeData.uniqueIdentifier;
+      const uniqueID = "tk_" + deviceID;
       const description = addVéhiculeData.description;
       const displayName = addVéhiculeData.description;
       const licensePlate = addVéhiculeData.licensePlate;
       const equipmentType = addVéhiculeData.equipmentType;
       const simPhoneNumber = addVéhiculeData.simPhoneNumber;
-      const vehicleID = deviceID + uniqueIdentifier || "";
+      const vehicleID = deviceID + uniqueID || "";
 
       // console.log(
       //   currentAccountSelected?.accountID,
@@ -198,7 +198,7 @@ function CreateNewDeviceGestion({
 
       //   deviceID,
       //   imeiNumber,
-      //   uniqueIdentifier,
+      //   uniqueID,
       //   description,
       //   displayName,
       //   licensePlate,
@@ -215,15 +215,16 @@ function CreateNewDeviceGestion({
             currentAccountSelected?.accountID,
             "admin",
             currentAccountSelected?.password,
+
             deviceID,
             imeiNumber,
-            uniqueIdentifier,
+            uniqueID,
             description,
             displayName,
             licensePlate,
             equipmentType,
             simPhoneNumber,
-            vehicleID,
+
             groupesSelectionnes
           );
         } else {
@@ -232,20 +233,23 @@ function CreateNewDeviceGestion({
               gestionAccountData.find(
                 (account) => account.accountID === accountID
               )?.accountID,
+
             "admin",
+
             currentAccountSelected?.password ||
               gestionAccountData.find(
                 (account) => account.accountID === accountID
               )?.password,
+
             deviceID,
             imeiNumber,
-            uniqueIdentifier,
+            uniqueID,
             description,
             displayName,
             licensePlate,
             equipmentType,
             simPhoneNumber,
-            vehicleID,
+
             groupesSelectionnes
           );
         }
@@ -271,7 +275,7 @@ function CreateNewDeviceGestion({
         deviceID: currentSelectedDeviceGestion.deviceID || "",
         description: currentSelectedDeviceGestion.description || "",
         equipmentType: currentSelectedDeviceGestion.equipmentType || "",
-        uniqueIdentifier: currentSelectedDeviceGestion.uniqueID || "---",
+        uniqueID: currentSelectedDeviceGestion.uniqueID || "---",
         imeiNumber: currentSelectedDeviceGestion.imeiNumber || "",
         licensePlate: currentSelectedDeviceGestion.licensePlate || "",
         simPhoneNumber: currentSelectedDeviceGestion.simPhoneNumber || "",
@@ -432,11 +436,11 @@ function CreateNewDeviceGestion({
                     label: `${t("Numéro IMEI")}`,
                     placeholder: `${t("Numéro IMEI")}`,
                   },
-                  {
-                    id: "uniqueIdentifier",
-                    label: `${t("IMEI")}`,
-                    placeholder: `${t("IMEI")}`,
-                  },
+                  // {
+                  //   id: "uniqueID",
+                  //   label: `${t("Identificateur unique")}`,
+                  //   placeholder: `${t("Identificateur unique")}`,
+                  // },
                   {
                     id: "description",
                     label: `${t("Description du véhicule")}`,
@@ -450,7 +454,7 @@ function CreateNewDeviceGestion({
                   },
                   {
                     id: "equipmentType",
-                    label: `${t("Type d'appareil")}`,
+                    label: `${t("Type d'installation")}`,
                     placeholder: "Ex. : BO, B1, B2",
                   },
                   {

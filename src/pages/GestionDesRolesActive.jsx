@@ -75,7 +75,7 @@ function GestionDesRolesActive({
     if (inputPassword === adminPassword) {
       setDeleRolePopup(false);
 
-      //   console.log(
+      // console.log(
       DeleteRoleActiveEnGestionAccount(
         currentAccountSelected?.accountID ||
           gestionAccountData.find(
@@ -167,7 +167,7 @@ function GestionDesRolesActive({
             >
               <div
                 onClick={() => {
-                  console.log(currentSelectedRoleActive);
+                  // console.log(currentSelectedRoleActive);
                 }}
                 className="bg-red-500 px-3 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0"
               >
@@ -417,7 +417,7 @@ function GestionDesRolesActive({
                               <div className="flex justify-end md:flex-col  sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
                                 {/* <button
                         onClick={() => {
-                          console.log(rule);
+                          // console.log(rule);
                           setCurrentSelectedRoleActive(rule);
                           setDocumentationPage("Modifier_role_active");
                           navigate("/Modifier_role_active");
@@ -431,7 +431,7 @@ function GestionDesRolesActive({
                       </button> */}
                                 <button
                                   onClick={() => {
-                                    console.log(rule);
+                                    // console.log(rule);
                                     setCurrentSelectedRoleActive(rule);
                                     setDeleRolePopup(true);
 

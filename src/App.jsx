@@ -35,13 +35,10 @@ import ListeDesUtilisateur from "./pages/ListeDesUtilisateur";
 import ListeDesVehiculesGestion from "./pages/ListeDesVehiculesGestion";
 import ListeDesGroupes from "./pages/ListeDesGroupes";
 import CreateNewAccountPage from "./components/gestion_des_comptes/CreateNewAccountPage";
-import ModifyAccountPage from "./components/gestion_des_comptes/ModifyAccountPage";
 import CreateNewUserGestion from "./components/gestion_des_comptes/CreateNewUserGestion";
-import ModifyUserGroupeGestion from "./components/gestion_des_comptes/ModifyUserGroupeGestion";
+
 import CreateNewGroupeGestion from "./components/gestion_des_comptes/CreateNewGroupeGestion";
-import ModifyGroupeGestion from "./components/gestion_des_comptes/ModifyGroupeGestion";
 import CreateNewDeviceGestion from "./components/gestion_des_comptes/CreateNewDeviceGestion";
-import ModifyDeviceGestion from "./components/gestion_des_comptes/ModifyDeviceGestion";
 
 import LocationPage from "./pages/LocationPage";
 import GestionGeofences from "./pages/GestionGeofences";
@@ -69,26 +66,17 @@ import RapportPageDetails from "./pages/RapportPageDetails";
 // const CreateNewAccountPage = React.lazy(() =>
 //   import("./components/gestion_des_comptes/CreateNewAccountPage")
 // );
-// const ModifyAccountPage = React.lazy(() =>
-//   import("./components/gestion_des_comptes/ModifyAccountPage")
-// );
+
 // const CreateNewUserGestion = React.lazy(() =>
 //   import("./components/gestion_des_comptes/CreateNewUserGestion")
 // );
-// const ModifyUserGroupeGestion = React.lazy(() =>
-//   import("./components/gestion_des_comptes/ModifyUserGroupeGestion")
-// );
+
 // const CreateNewGroupeGestion = React.lazy(() =>
 //   import("./components/gestion_des_comptes/CreateNewGroupeGestion")
 // );
-// const ModifyGroupeGestion = React.lazy(() =>
-//   import("./components/gestion_des_comptes/ModifyGroupeGestion")
-// );
+
 // const CreateNewDeviceGestion = React.lazy(() =>
 //   import("./components/gestion_des_comptes/CreateNewDeviceGestion")
-// );
-// const ModifyDeviceGestion = React.lazy(() =>
-//   import("./components/gestion_des_comptes/ModifyDeviceGestion")
 // );
 
 // const LocationPage = React.lazy(() => import("./pages/LocationPage"));
@@ -118,7 +106,6 @@ import ChooseOtherGroupeDashboard from "./components/dashboard_containt/ChooseOt
 import HeaderDashboardSysadmin from "./components/dashboard_containt/HeaderDashboardSysadmin";
 import SideBarSysadmin from "./components/dashboard_containt/SideBarSysadmin";
 import AjouterGeofence from "./components/location_vehicule/AjouterGeofence";
-import ModifyRole from "./components/gestion_des_comptes/ModifyRole";
 import GestionDesRolesActive from "./pages/GestionDesRolesActive";
 import CreateNewRoleActive from "./components/gestion_des_comptes/CreateNewRoleActive";
 
@@ -584,8 +571,8 @@ function App() {
   const [isCreatingNewElement, setIsCreatingNewElement] = useState(true);
 
   return (
-    <div className="dark:bg-gray-700 md:p-4 bg-gray-100 min-h-[100vh] transition-all">
-      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-screen">
+    <div className="dark:bg-gray-700 md:p-4 bg-gray-100 transition-all">
+      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-[70vh]">
         <ScrollToTop />
         <GoogleTranslate />
         {/* {!readDocumentation && ( */}
@@ -790,6 +777,7 @@ function App() {
           </div>
         )}{" "}
         {/*  */}
+        {/* <Login2 /> */}
         <SuccèsÉchecMessagePopup />
         <Routes>
           <Route
@@ -1325,34 +1313,6 @@ function App() {
               />
             }
           />
-
-          {/* <Route
-            path="/Modifier_role"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ModifyRole
-                          accountIdFromRole={accountIdFromRole}
-                          documentationPage={documentationPage}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                        />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          /> */}
 
           <Route
             path="/Localisation_devices"

@@ -217,26 +217,7 @@ function CreateNewRoleActive({
       const isActive = addNewRoleData.isActive;
       const description = addNewRoleData.description;
 
-      console.log("accountID ", accountID);
-      console.log("imeiNumber ", imeiNumber);
-      console.log("deviceID ", deviceID);
-      console.log("groupID ", groupID);
-      console.log("isCronRule ", isCronRule);
-      console.log("ruleTag ", ruleTag);
-      console.log("selector ", selector);
-      console.log("actionMask ", actionMask);
-      console.log("cannedActions ", cannedActions);
-      console.log("priority ", priority);
-      console.log("notifyEmail ", notifyEmail);
-      console.log("emailSubject ", emailSubject);
-      console.log("emailText ", emailText);
-      console.log("smsText ", smsText);
-      console.log("useEmailWrapper ", useEmailWrapper);
-      console.log("ruleDisable ", ruleDisable);
-      console.log("ruleEnable ", ruleEnable);
-      console.log("sendCommand ", sendCommand);
-      console.log("isActive ", isActive);
-      console.log("description ", description);
+
 
       if (
         currentAccountSelected?.accountID &&

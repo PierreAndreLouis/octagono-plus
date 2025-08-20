@@ -1,9 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { useTranslation } from "react-i18next";
-import { FaChevronDown } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaChevronCircleRight,
+  FaChevronDown,
+  FaChevronRight,
+} from "react-icons/fa";
 import { MdOutlineCheckBoxOutlineBlank, MdUpdate } from "react-icons/md";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
+import {
+  FaArrowDownLong,
+  FaArrowRightArrowLeft,
+  FaArrowRightLong,
+} from "react-icons/fa6";
 import Tooltip from "@mui/material/Tooltip";
 import { IoMdCheckboxOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
@@ -19,7 +29,7 @@ function StatisticDashboard({
   animatedTotal,
   animatedDeplaces,
   animatedEnDéplacement,
-  DeviceEnStationnement,
+  DeviceNonDeplacer,
   animatedStationnement,
   animatedInactifs,
 }) {
@@ -43,6 +53,9 @@ function StatisticDashboard({
     setTimeLeftBeforeAutoUpdate,
     updateAutoSetting,
     setUpdateAutoSetting,
+    DeviceEnStationnement,
+    DeviceInactifsWidthDetails,
+    DeviceInactifsWidthNoDetails,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -50,14 +63,54 @@ function StatisticDashboard({
   const [isDeviceEnStationnement, setIsDeviceEnStationnement] = useState(true);
   const [showUpdateAutoSettingPopup, setShowUpdateAutoSettingPopup] =
     useState(false);
-  //
+  ///////////////////////////////////
+  const [enDeplacementCount, setEnDeplacementCount] = useState(1);
+  const [enStationnementCount, setEnStationnementCount] = useState(1);
+  const [inactifsCount, setInactifsCount] = useState(1);
+
+  const increaseCountFonction = (x) => {
+    ///////////////////////////
+    if (x === "orange") {
+      if (enStationnementCount < 3) {
+        setEnStationnementCount(enStationnementCount + 1);
+      } else {
+        setEnStationnementCount(1);
+      }
+      console.log(enStationnementCount);
+    }
+
+    if (x === "green") {
+      if (enDeplacementCount < 2) {
+        setEnDeplacementCount(enDeplacementCount + 1);
+      } else {
+        setEnDeplacementCount(1);
+      }
+      console.log(enDeplacementCount);
+    }
+
+    if (x === "purple") {
+      if (inactifsCount < 3) {
+        setInactifsCount(inactifsCount + 1);
+      } else {
+        setInactifsCount(1);
+      }
+      console.log(inactifsCount);
+    }
+    ///////////////////////////
+    ///////////////////////////
+  };
 
   return (
     <div className="">
       <div className="w-full h-full shadow-lg shadow-black/5 bg-white md:rounded-lg p-4 ">
         <div className=" relative mb-4 ">
           <div className="">
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div
+              onClick={() => {
+                testClique();
+              }}
+              className="flex items-center gap-2 sm:gap-3"
+            >
               <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
                 {t("Pour Aujourd'hui")}
               </h1>
@@ -90,49 +143,6 @@ function StatisticDashboard({
               <FaChevronDown className="mt-1" />
             </div>
           )}
-
-          {/* <div className="  flex gap-1 sm:gap-3 items-center absolute right-0 py-2  rounded-lg bottom-4 ">
-            {lastUpdate?.mostRecentTimestamp && (
-              <p className="font-semibold flex items-center text-[.8rem] md:text-[.9rem] text-gray-700">
-                <span className="hidden md:block mr-2">{t("Last Update")}</span>
-                {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
-                {" / "}
-                {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
-              </p>
-            )}
-            <Tooltip
-              PopperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [0, -10], // Décalage horizontal et vertical
-                    },
-                  },
-                  {
-                    name: "zIndex",
-                    enabled: true,
-                    phase: "write",
-                    fn: ({ state }) => {
-                      state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
-                    },
-                  },
-                ],
-              }}
-              title={`${t("Mettre a jour les donnes")}`}
-            >
-              <div
-                onClick={() => {
-                  fetchNewDataDevices();
-                }}
-                className={`${
-                  isLoading2 ? "animate-spin" : ""
-                }  text-orange-500 min-w-2  translate-y-1-- md:translate-y-0 cursor-pointer   dark:text-gray-200 `}
-              >
-                <MdUpdate className="sm:text-[1.35rem]  text-[1.2rem]  " />
-              </div>
-            </Tooltip>
-          </div> */}
         </div>
 
         {/* Liste des statistics */}
@@ -170,12 +180,13 @@ function StatisticDashboard({
           </div>
           <div
             onClick={() => {
-              if (isDeviceEnDeplacement) {
+              if (enDeplacementCount === 2) {
                 setFilteredColorCategorieListe(EnDéplacement);
                 setStatisticFilteredDeviceListeText(
                   `${t("Appareils En déplacement")}`
                 );
-              } else {
+              }
+              if (enDeplacementCount === 1) {
                 setFilteredColorCategorieListe(DeviceDéplacer);
                 setStatisticFilteredDeviceListeText(
                   `${t("Appareils Déplacer")}`
@@ -193,17 +204,15 @@ function StatisticDashboard({
                     }}
                     className="text-gray-500 max-w-[70%]-- w-full  whitespace-nowrap text-ellipsis overflow-hidden  dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- "
                   >
-                    {isDeviceEnDeplacement
-                      ? t("En Déplacement")
-                      : t("Déplacés")}
+                    {enDeplacementCount === 1 ? `${t("Déplacés")}` : ""}
+                    {enDeplacementCount === 2 ? `${t("En Déplacement")}` : ""}
                   </h3>
 
-                  <div className=" text-[1.2rem] flex justify-end w-[30%]  text-green-800">
-                    <FaArrowRightArrowLeft
-                      onClick={() => {
-                        setIsDeviceEnDeplacement(!isDeviceEnDeplacement);
-                      }}
-                    />
+                  <div className=" text-[1.2rem] flex justify-end items-center w-[30%]  text-green-600">
+                    <span className="font-bold text-sm mb-">
+                      {enDeplacementCount}/2
+                    </span>
+                    <FaChevronCircleRight className="text-[2rem]- ml-1 border min-w-[1rem]" />{" "}
                   </div>
                 </div>
                 <h2
@@ -212,9 +221,8 @@ function StatisticDashboard({
                   }}
                   className="text-gray-900  dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- "
                 >
-                  {isDeviceEnDeplacement
-                    ? EnDéplacement?.length
-                    : animatedDeplaces}
+                  {enDeplacementCount === 1 ? animatedDeplaces : ""}
+                  {enDeplacementCount === 2 ? EnDéplacement?.length : ""}
                 </h2>
               </div>
               <div
@@ -229,33 +237,38 @@ function StatisticDashboard({
                   alt="Total"
                 />
               </div>
+              <div
+                onClick={() => {
+                  increaseCountFonction("green");
+                }}
+                className="absolute top-0 bottom-0 right-0 min-w-[35%] z-30 hover:border  hover:border-l-green-400"
+              >
+                {" "}
+              </div>
             </div>
           </div>
           <div
             onClick={() => {
-              if (isDeviceEnStationnement) {
-                setFilteredColorCategorieListe(DeviceEnStationnement);
+              if (enStationnementCount === 1) {
+                setFilteredColorCategorieListe(DeviceNonDeplacer);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils en Stationnement")}`
+                  `${t("Appareils non déplacer")}`
                 );
-              } else {
+              }
+              if (enStationnementCount === 2) {
                 setFilteredColorCategorieListe(DeviceListeActif);
                 setStatisticFilteredDeviceListeText(`${t("Appareils Actifs")}`);
+              }
+              if (enStationnementCount === 3) {
+                setFilteredColorCategorieListe(DeviceEnStationnement);
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils En Stationnement")}`
+                );
               }
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border border-orange-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-orange-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-              {/* <div>
-                <div className="flex items-center  gap-2">
-                  <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
-                    {t("Actifs")}
-                  </h3>
-                </div>
-                <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
-                  {animatedStationnement}
-                </h2>
-              </div> */}
               <div className=" w-full">
                 <div className="flex items-center  gap-2 w-full">
                   <h3
@@ -264,53 +277,79 @@ function StatisticDashboard({
                     }}
                     className="text-gray-500 max-w-[70%]-- w-full  whitespace-nowrap text-ellipsis overflow-hidden  dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- "
                   >
-                    {isDeviceEnStationnement ? t("Non Déplacer") : t("Actifs")}
+                    {enStationnementCount === 1 ? `${t("Non Déplacer")}` : ""}
+                    {enStationnementCount === 2 ? `${t("Actifs")}` : ""}
+                    {enStationnementCount === 3
+                      ? `${t("En Stationnement")}`
+                      : ""}
                   </h3>
 
-                  <div className=" text-[1.2rem] flex justify-end w-[30%]  text-orange-600">
-                    <FaArrowRightArrowLeft
-                      onClick={() => {
-                        setIsDeviceEnStationnement(!isDeviceEnStationnement);
-                      }}
-                    />
+                  <div className=" text-[1.2rem] flex justify-end items-center w-[30%]  text-orange-600">
+                    <span className="font-bold text-sm mb-">
+                      {enStationnementCount}/3
+                    </span>
+                    <FaChevronCircleRight className="text-[2rem]- ml-1 border  min-w-[1rem]" />{" "}
                   </div>
                 </div>
+
                 <h2
                   onClick={() => {
                     setShowStatisticDeviceListeDashboard(true);
                   }}
                   className="text-gray-900  dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- "
                 >
-                  {isDeviceEnStationnement
-                    ? animatedStationnement || 0
-                    : DeviceListeActif?.length || 0}{" "}
-                  {/* {DeviceEnStationnement?.length} - {DeviceListeActif?.length} */}
+                  {enStationnementCount === 1 ? animatedStationnement : ""}
+                  {enStationnementCount === 2 ? DeviceListeActif?.length : ""}
+                  {enStationnementCount === 3
+                    ? DeviceEnStationnement?.length
+                    : ""}
                 </h2>
               </div>
-              <div
-                onClick={() => {
-                  setShowStatisticDeviceListeDashboard(true);
-                }}
-                className="absolute mt-1.5 right-4 bottom-4 "
-              >
+              <div className="absolute mt-1.5 right-4 bottom-4 ">
                 <img
                   className=" w-8 md:w-10 lg:w-14--"
                   src="/img/cars/parking.png"
                   alt="Total"
                 />
               </div>
+              <div
+                onClick={() => {
+                  increaseCountFonction("orange");
+                }}
+                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 hover:border  hover:border-l-orange-400"
+              >
+                {" "}
+              </div>
             </div>
           </div>
           <div
             onClick={() => {
-              setShowStatisticDeviceListeDashboard(true);
-              setFilteredColorCategorieListe(DeviceInactifs);
-              setStatisticFilteredDeviceListeText(`${t("Appareils Inactifs")}`);
+              if (inactifsCount === 1) {
+                // setShowStatisticDeviceListeDashboard(true);
+                setFilteredColorCategorieListe(DeviceInactifs);
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils Inactifs")}`
+                );
+              }
+              if (inactifsCount === 2) {
+                // setShowStatisticDeviceListeDashboard(true);
+                setFilteredColorCategorieListe(DeviceInactifsWidthDetails);
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils Inactifs Actualisés")}`
+                );
+              }
+              if (inactifsCount === 3) {
+                // setShowStatisticDeviceListeDashboard(true);
+                setFilteredColorCategorieListe(DeviceInactifsWidthNoDetails);
+                setStatisticFilteredDeviceListeText(
+                  `${t("Appareils Inactifs non Actualisés")}`
+                );
+              }
             }}
             className="bg-white cursor-pointer dark:bg-gray-800 rounded-lg"
           >
             <div className="border border-purple-300 relative overflow-hidden dark:border-gray-800 dark:shadow-gray-900  bg-purple-300/40 dark:bg-blue-700/40 flex justify-between items-start rounded-lg shadow-md-- p-3">
-              <div>
+              {/* <div>
                 <div className="flex items-center  gap-2">
                   <h3 className="text-gray-500 dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- ">
                     {t("Inactifs")}{" "}
@@ -322,13 +361,59 @@ function StatisticDashboard({
                 <h2 className="text-gray-900 dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- ">
                   {animatedInactifs}
                 </h2>
+              </div> */}
+              <div className=" w-full">
+                <div className="flex items-center  gap-2 w-full">
+                  <h3
+                    onClick={() => {
+                      setShowStatisticDeviceListeDashboard(true);
+                    }}
+                    className="text-gray-500 max-w-[70%]-- w-full  whitespace-nowrap text-ellipsis overflow-hidden  dark:text-gray-300 md:font-semibold  text-[.91rem] xs:text-[1.1rem] font-semibold md:text-xl-- "
+                  >
+                    {inactifsCount === 1 ? "Inactifs" : ""}
+                    {inactifsCount === 2 ? "Actualisés" : ""}
+                    {inactifsCount === 3 ? "Non Actualisés" : ""}
+
+                    {/* {isDeviceEnStationnement ? t("Non Déplacer") : t("Actifs")} */}
+                  </h3>
+
+                  <div className=" text-[1.2rem] flex justify-end items-center w-[30%]  text-purple-800">
+                    <span className="font-bold text-sm mb-">
+                      {inactifsCount}/3
+                    </span>
+                    <FaChevronCircleRight className="text-[2rem]- ml-1 border  min-w-[1rem]" />{" "}
+                  </div>
+                </div>
+
+                <h2
+                  onClick={() => {
+                    setShowStatisticDeviceListeDashboard(true);
+                  }}
+                  className="text-gray-900  dark:text-gray-200 font-bold text-2xl md:text-2xl lg:text-4xl-- "
+                >
+                  {inactifsCount === 1 ? animatedInactifs : ""}
+                  {inactifsCount === 2
+                    ? DeviceInactifsWidthDetails?.length
+                    : ""}
+                  {inactifsCount === 3
+                    ? DeviceInactifsWidthNoDetails?.length
+                    : ""}
+                </h2>
               </div>
-              <div className="absolute mt-1.5 right-4 bottom-4 ">
+              <div className="absolute mt-1.5 right-4 bottom-3 ">
                 <img
-                  className=" w-8 md:w-10 lg:w-14--"
+                  className=" w-8 md:w-8"
                   src="/img/home_icon/payer.png"
                   alt="Total"
                 />
+              </div>
+              <div
+                onClick={() => {
+                  increaseCountFonction("purple");
+                }}
+                className="absolute top-0 bottom-0 right-0 min-w-[30%] z-30 hover:border  hover:border-l-purple-400"
+              >
+                {" "}
               </div>
             </div>
           </div>

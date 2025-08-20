@@ -109,10 +109,10 @@ const LocationPage = ({
   ]);
 
   useEffect(() => {
-    console.log(
-      "appareilPourAfficherSurCarte====================",
-      appareilPourAfficherSurCarte
-    );
+    // console.log(
+    //   "appareilPourAfficherSurCarte====================",
+    //   appareilPourAfficherSurCarte
+    // );
   }, [historiqueSelectedLocationIndex, appareilPourAfficherSurCarte]);
 
   const véhiculeData = useMemo(() => {
@@ -184,7 +184,7 @@ const LocationPage = ({
   /////////////////////////////////////////vvvvvvvvvvvvvvvvvvvvvvvvv/////////////////////////
   // Pour afficher une seule véhicule sur la carte
   const handleVehicleClick = (véhicule, fromUpdateAuto = false) => {
-    console.log("devrais lancer la requette......", véhicule);
+    // console.log("devrais lancer la requette......", véhicule);
     fetchVehicleDetails(véhicule, true);
     setSelectedVehicleToShowInMap(véhicule?.deviceID);
     setShowVehiculeListe(false);
@@ -200,7 +200,7 @@ const LocationPage = ({
 
   // Pour mettre a jour le véhicules choisis pour afficher sur la carte
   useEffect(() => {
-    console.log(selectedVehicleToShowInMap);
+    // console.log(selectedVehicleToShowInMap);
   }, [selectedVehicleToShowInMap]);
 
   // Pour afficher tous les véhicules en Generale sur la carte
@@ -356,6 +356,7 @@ const LocationPage = ({
             setTypeDeVue={setTypeDeVue}
             showAllVehicles={showAllVehicles}
             isDashBoardComptnent={isDashBoardComptnent}
+            handleVehicleClick={handleVehicleClick}
           />
         )}
 

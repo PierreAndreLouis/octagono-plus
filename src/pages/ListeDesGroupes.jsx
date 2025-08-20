@@ -48,6 +48,7 @@ function ListeDesGroupes({
     accountGroupes,
     documentationPage,
     isDashboardHomePage,
+    adminPassword,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -62,7 +63,7 @@ function ListeDesGroupes({
 
   const handlePasswordCheck = (e) => {
     e.preventDefault();
-    if (inputPassword === password) {
+    if (inputPassword === adminPassword) {
       deleteGroupeEnGestionAccount(
         currentAccountSelected?.accountID ||
           gestionAccountData.find(
@@ -89,10 +90,10 @@ function ListeDesGroupes({
     useState(false);
 
   useEffect(() => {
-    console.log(
-      "showSelectedGroupeOptionsPopup",
-      showSelectedGroupeOptionsPopup
-    );
+    // // console.log(
+    //   "showSelectedGroupeOptionsPopup",
+    //   showSelectedGroupeOptionsPopup
+    // );
   }, [showSelectedGroupeOptionsPopup]);
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
@@ -532,7 +533,7 @@ function ListeDesGroupes({
                           <div
                             onClick={() => {
                               setCurrentSelectedGroupeGestion(foundGroupe);
-                              console.log("foundGroupe----------", foundGroupe);
+                              // console.log("foundGroupe----------", foundGroupe);
                             }}
                             key={index}
                             className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
@@ -572,7 +573,7 @@ function ListeDesGroupes({
                                   <div className="flex flex-wrap border-b py-1">
                                     <p
                                       onClick={() => {
-                                        console.log(userListeAffected);
+                                        // console.log(userListeAffected);
                                       }}
                                       className="font-bold- text-gray-700"
                                     >
@@ -592,7 +593,7 @@ function ListeDesGroupes({
                                     setCurrentSelectedGroupeGestion(groupe);
                                   }, 500);
                                   setListeGestionDesUsers(userListeAffected);
-                                  console.log(groupe);
+                                  // console.log(groupe);
                                   setShowSelectedGroupeOptionsPopup(true);
                                   setshowChooseItemToModifyMessage("");
                                 }}

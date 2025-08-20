@@ -124,26 +124,19 @@ function Login2() {
   const [showLangueAndCountryOption, setShowLangueAndCountryOption] =
     useState(false);
   return (
-    <div className="grid md:pb-12  relative md:grid-cols-2 items-center min-h-[100vh] bg-sky-700  md:mx-auto md:px-[5vw]  lg:gap-20 m-0  text-white">
+    <div className="grid  relative md:grid-cols-2 items-center min-h-[90vh] bg-orange-200 px-4 md:mx-auto md:px-[5vw] lg:gap-20 m-0  text-white">
       <img
-        className="fixed z-1 h-[115%] -bottom-[2rem] right-[0rem] object-cover"
-        loading="lazy"
-        src="/img/login_bg4.png"
+        className="fixed left-0 z-0 inset-0-- object-cover w-full bottom-[0rem]"
+        src="/img/login_bg3.webp"
+        // src="/img/login_bg2.jpg"
         alt=""
       />
-      <img
-        className="fixed z-2 h-[115%] -bottom-[2rem] left-[0rem] object-cover"
-        loading="lazy"
-        src="/img/login_bg4.png"
-        alt=""
-      />
-      <div></div>
-      <div className="flex md:scale-90 hover:scale-100 transition-all bg-white/60 relative  z-10 flex-1 flex-col justify-center pt-4 py-10  border-2--- border-blue-900 px-4 pb-20 md:pb-8 md:rounded-lg backdrop-blur-lg  bg-blue-800/30--">
-        <div className=" flex bg-white--- rounded-lg py-6 pb-0 gap-5 justify-center items-center">
+      {/* <div></div> */}
+      <div className="flex md:scale-75 hover:scale-100 transition-all bg-white/70 relative  z-10 flex-1 flex-col justify-center pt-4 py-10  border-2--- border-blue-900 px-4 rounded-lg backdrop-blur-lg  bg-blue-800/30--">
+        <div className=" flex bg-white--- rounded-lg py-6 gap-5 justify-center items-center">
           <div className=" flex  gap-5 justify-center items-center scale-75 md:scale-100">
             <div className="order flex flex-col justify-center items-center">
               <img
-                loading="lazy"
                 alt="Your Company"
                 src="/img/cars/logo.png"
                 className="mx-auto-- translate-y-0 w-[4.4rem] w-auto-- "
@@ -154,7 +147,6 @@ function Login2() {
             </div>
             <img
               alt="Your Company"
-              loading="lazy"
               src="/img/logo/OctagonoGPS.png"
               className="mx-auto-- w-[10rem]  w-auto--"
             />
@@ -319,6 +311,19 @@ function Login2() {
                   {t("Se souvenir de moi")}
                 </label>
               </div>
+
+              {/* <div
+                // to="/gestion_geofences?tab=geozone"
+                onClick={() => {
+                  setReadDocumentation(true);
+                  // setShowSideBar(true);
+                  // handleTabClick("geozone");
+                }}
+                className={`flex text-gray-600  py-4 gap-2 text-lg hover:text-orange-500 cursor-pointer items-center $ dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
+              >
+                <FaBook className="text-blue-600" />
+                <h3 className="text-sm">{t("Manuel d'utilisation")}</h3>
+              </div> */}
             </div>
             {error && (
               <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
@@ -328,7 +333,7 @@ function Login2() {
               <button
                 type="submit"
                 disabled={isHomePageLoading}
-                className="flex w-full justify-center rounded-md bg-sky-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-900"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-400"
               >
                 {isHomePageLoading
                   ? `${t("Chargement")}...`
@@ -344,7 +349,7 @@ function Login2() {
                     onClick={() => {
                       demoAccountLogin();
                     }}
-                    className="flex w-full justify-center bg-gray-200/60 -- rounded-md hover:bg-indigo-50 border-2 border-sky-700 text-sky-800 px-3 py-2 text-sm font-bold shadow-sm   cursor-pointer mt-3 "
+                    className="flex w-full justify-center rounded-md hover:bg-indigo-50 border border-indigo-500 text-gray-800 px-3 py-2 text-sm font-semibold dark:text-white shadow-sm  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:bg-indigo-500 cursor-pointer mt-3 dark:focus:ring-indigo-400"
                   >
                     {t("Compte Demo")}
                   </div>
@@ -355,7 +360,7 @@ function Login2() {
         </div>
       </div>
 
-      {/* <div></div> */}
+      <div></div>
     </div>
   );
 }

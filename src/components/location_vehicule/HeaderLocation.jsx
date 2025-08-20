@@ -12,6 +12,7 @@ function HeaderLocation({
   setTypeDeVue,
   showAllVehicles,
   isDashBoardComptnent = false,
+  handleVehicleClick,
 }) {
   const {
     isDashboardHomePage,
@@ -23,6 +24,7 @@ function HeaderLocation({
     dashboardLoadingEffect,
     autoUpdateFonction,
     setDashboardLoadingEffect,
+    currentVéhicule,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
   const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
@@ -188,7 +190,12 @@ function HeaderLocation({
             <MdUpdate
               onClick={() => {
                 setDashboardLoadingEffect(true);
-                autoUpdateFonction();
+
+                if (selectedVehicleToShowInMap) {
+                  handleVehicleClick(currentVéhicule, true);
+                } else {
+                  autoUpdateFonction();
+                }
               }}
               className={`${
                 dashboardLoadingEffect

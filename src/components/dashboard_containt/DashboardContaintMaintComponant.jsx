@@ -68,7 +68,7 @@ function DashboardContaintMaintComponant({
     updateAppareilsEtGeofencesPourCarte,
     DeviceDéplacer,
     EnDéplacement,
-    DeviceEnStationnement,
+    DeviceNonDeplacer,
     DeviceInactifs,
     allDevices,
     filteredColorCategorieListe,
@@ -154,7 +154,7 @@ function DashboardContaintMaintComponant({
 
     animateValue(
       animatedStationnement,
-      DeviceEnStationnement?.length,
+      DeviceNonDeplacer?.length,
       1000,
       setAnimatedStationnement
     );
@@ -164,7 +164,7 @@ function DashboardContaintMaintComponant({
       1000,
       setAnimatedInactifs
     );
-  }, [allDevices]);
+  }, [allDevices, filteredColorCategorieListe]);
 
   //
   //
@@ -403,7 +403,7 @@ function DashboardContaintMaintComponant({
 
   const inactivVehicule = DeviceInactifs?.length;
 
-  const parkingVehicule = DeviceEnStationnement?.length;
+  const parkingVehicule = DeviceNonDeplacer?.length;
 
   const [animatedActivePct, setAnimatedActivePct] = useState(0);
   const [animatedInactivePct, setAnimatedInactivePct] = useState(0);
@@ -504,8 +504,27 @@ function DashboardContaintMaintComponant({
   // Pour le loading lors du clique sur l'icon reload in home page.
   const [isLoading2, setIsLoading2] = useState(false);
 
+  const [isClique, setIsClique] = useState(false);
+  useEffect(() => {
+    if (!isClique) return;
+    setTimeout(() => {
+      setIsClique(false);
+      console.log("setIsClique to false");
+    }, 10000);
+  }, [isClique]);
+
+  const testClique = () => {
+    if (isClique) return;
+    setIsClique(true);
+    console.log("Fonction appeler.........");
+  };
+
   //Pour Simuler un délai de 10 secondes pour le loading de l'icon loading dans la page home
   const fetchNewDataDevices = () => {
+    if (isClique) return;
+    setIsClique(true);
+    console.log("Fonction appeler.........");
+    /////////////////////////////////
     setDashboardLoadingEffect(true);
     setIsLoading2(true);
     setTimeout(() => {
@@ -1137,7 +1156,7 @@ function DashboardContaintMaintComponant({
                   animatedTotal={animatedTotal}
                   animatedDeplaces={animatedDeplaces}
                   animatedEnDéplacement={animatedEnDéplacement}
-                  DeviceEnStationnement={DeviceEnStationnement}
+                  DeviceNonDeplacer={DeviceNonDeplacer}
                   animatedStationnement={animatedStationnement}
                   DeviceInactifs={DeviceInactifs}
                   animatedInactifs={animatedInactifs}
@@ -1310,7 +1329,7 @@ function DashboardContaintMaintComponant({
         animatedTotal={animatedTotal}
         animatedDeplaces={animatedDeplaces}
         animatedEnDéplacement={animatedEnDéplacement}
-        DeviceEnStationnement={DeviceEnStationnement}
+        DeviceNonDeplacer={DeviceNonDeplacer}
         animatedStationnement={animatedStationnement}
         DeviceInactifs={DeviceInactifs}
         animatedInactifs={animatedInactifs}
@@ -1633,7 +1652,7 @@ function DashboardContaintMaintComponant({
                     {" "}
                   </p>{" "}
                   <p>
-                    {t("Actifs")} ({DeviceEnStationnement?.length})
+                    {t("Actifs")} ({DeviceNonDeplacer?.length})
                   </p>
                 </div>
               </div>
@@ -1880,100 +1899,6 @@ function DashboardContaintMaintComponant({
               })}
             </div>
           </div>
-          {/* <div className="col-span-1 flex overflow-hidden flex-col justify-between bg-orange-100-- bg-white shadow-lg shadow-black/10 rounded-lg mt-6">
-            <h2 className="font-semibold text-lg m-2 mb-0 mb-4-- text-gray-700">
-              {t("Chart des Alertes")} ({ListeDesAlertes?.length})
-            </h2>
-
-            {dataPieChart?.length > 0 ? (
-              <div className="w-full h-[15rem] scale-110 mt-10-- ">
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Pie
-                      data={dataPieChart}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={renderCustomizedLabel}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                      onClick={(data, index) => {
-                        const code = parseInt(data?.name, 16);
-                        const codeDescription =
-                          statusDescriptions[code] || t("Statut inconnu");
-
-                        setSearchTermInput(codeDescription);
-                        setExpandSection("deviceAlerts");
-
-                        if (!isDashboardHomePage) {
-                          setListeGestionDesVehicules(dataFusionné);
-                        } else if (currentAccountSelected) {
-                          setListeGestionDesVehicules(
-                            currentAccountSelected?.accountDevices
-                          );
-                        } else {
-                          setListeGestionDesVehicules(accountDevices);
-                        }
-                      }}
-                    >
-                      {dataPieChart?.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltipChartPie />} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            ) : (
-              <div className="flex h-full   justify-center items-center font-semibold text-lg">
-                <p className="mb-10 md:mt-20">{t("Pas de résultat")}</p>
-              </div>
-            )}
-            <div className=" rounded-lg max-h-[6rem] flex flex-col gap-1 px-3 mb-2 overflow-auto">
-              {dataPieChart
-                ?.filter((item) => item?.statusCode !== "0xF952")
-                ?.map((status, index) => {
-                  const code = parseInt(status?.name, 16);
-                  const codeDescription =
-                    statusDescriptions[code] || `${t("Statut inconnu")}`;
-                  const color = COLORS[index % COLORS.length]; // correspondance avec le PieChart
-
-                  return (
-                    <div
-                      onClick={() => {
-                        setSearchTermInput(codeDescription);
-                        setExpandSection("deviceAlerts");
-
-                        if (!isDashboardHomePage) {
-                          setListeGestionDesVehicules(dataFusionné);
-                        } else if (currentAccountSelected) {
-                          setListeGestionDesVehicules(
-                            currentAccountSelected?.accountDevices
-                          );
-                        } else {
-                          setListeGestionDesVehicules(accountDevices);
-                        }
-                      }}
-                      key={index}
-                      className="flex cursor-pointer hover:bg-gray-200 gap-3 items-center"
-                    >
-                      <div
-                        style={{ backgroundColor: color }}
-                        className="min-w-[1rem] min-h-[1rem] rounded-full bg-orange-600--"
-                      ></div>
-                      <p>{status?.name}</p>
-                      <p className="whitespace-nowrap">
-                        {codeDescription} ({status?.value})
-                      </p>
-                    </div>
-                  );
-                })}
-            </div>
-          </div> */}
         </div>
         {/*  */}
         {/*  */}

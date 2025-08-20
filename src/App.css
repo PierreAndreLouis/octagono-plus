@@ -74,4 +74,5 @@
 
 .animate-progress {
   animation: progress 10s linear forwards;
+  /* background-color: #ffa500; */
 }

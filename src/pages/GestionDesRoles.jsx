@@ -144,7 +144,7 @@ function GestionDesRoles({
   ////////////////////////////////////////////////////////////////////////////
 
   return (
-    <div>
+    <div className=" ">
       {/* {account === "sysadmin" ? ( */}
       <div>
         {/* Loading effect quand le donnee sont recherche... */}
@@ -269,7 +269,7 @@ function GestionDesRoles({
             </div>
           </div>
           {/* Liste des Comptes */}
-          <div className="hidden-- flex mt-[5rem] min-h-[50vh] flex-col gap-6 max-w-[50rem] mx-auto">
+          <div className=" flex mt-[5rem] min-h-[50vh] flex-col gap-6 max-w-[50rem] mx-auto">
             {sortedGroups?.length > 0 ? (
               sortedGroups?.map(([accountID, rules]) => (
                 <div key={accountID}>
@@ -307,7 +307,7 @@ function GestionDesRoles({
                           return (
                             <div
                               key={index}
-                              className="shadow-lg- overflow-hidden shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
+                              className="shadow-lg- overflow-hidden shadow-inner shadow-black/10 bg-gray-50  relative md:flex-- gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                             >
                               <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                                 {index + 1}
@@ -408,34 +408,36 @@ function GestionDesRoles({
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex justify-end md:flex-col  sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
-                                <button
-                                  onClick={() => {
-                                    console.log(rule);
-                                    setCurrentSelectedRole(rule);
-                                    setDocumentationPage(
-                                      "Ajouter_nouveau_role"
-                                    );
-                                    navigate("/Modifier_role");
-                                  }}
-                                  className={` bg-gray-200 text-gray-800 text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                                >
-                                  <FaEdit className="text-xl" />
-                                  <p>{t("Modifier")}</p>
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    console.log(rule);
-                                    setCurrentSelectedRole(rule);
-                                    setDeleRolePopup(true);
-                                    // setDocumentationPage("Ajouter_nouveau_role");
-                                    // navigate("/Modifier_role");
-                                  }}
-                                  className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
-                                >
-                                  <RiDeleteBin6Line className="text-xl" />
-                                  <p>{t("Supprimer")}</p>
-                                </button>
+                              <div className="flex justify-end w-full mt-6">
+                                <div className="flex w-full  sm:max-w-[20rem] gap-3 mt-3  items-center ">
+                                  <button
+                                    onClick={() => {
+                                      // console.log(rule);
+                                      setCurrentSelectedRole(rule);
+                                      setDocumentationPage(
+                                        "Ajouter_nouveau_role"
+                                      );
+                                      navigate("/Modifier_role");
+                                    }}
+                                    className={` bg-gray-200 text-gray-800 text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                                  >
+                                    <FaEdit className="text-xl" />
+                                    <p>{t("Modifier")}</p>
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      // console.log(rule);
+                                      setCurrentSelectedRole(rule);
+                                      setDeleRolePopup(true);
+                                      // setDocumentationPage("Ajouter_nouveau_role");
+                                      // navigate("/Modifier_role");
+                                    }}
+                                    className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
+                                  >
+                                    <RiDeleteBin6Line className="text-xl" />
+                                    <p>{t("Supprimer")}</p>
+                                  </button>
+                                </div>{" "}
                               </div>
                             </div>
                           );

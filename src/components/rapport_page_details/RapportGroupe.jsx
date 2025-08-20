@@ -190,7 +190,7 @@ function RapportGroupe({
 
   // Pour le filtrage du tableau en ordre croissant ou décroissant
   useEffect(() => {
-    console.log("");
+    // console.log("");
   }, [tableSortCroissant]);
 
   const [voirVehiculeListePupup, setvoirVehiculeListePupup] = useState(false);
@@ -534,7 +534,7 @@ function RapportGroupe({
 
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   useEffect(() => {
-    console.log("currentVéhicule");
+    // console.log("currentVéhicule");
   }, [currentVehiculeInCarte]);
   // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -637,7 +637,7 @@ function RapportGroupe({
   const [showsortfilterpupup, setshowsortfilterpupup] = useState(false);
 
   useEffect(() => {
-    console.log("tableSortBy:");
+    // console.log("tableSortBy:");
   }, [tableSortBy, tableSortByColorBg]);
 
   useEffect(() => {
@@ -1530,9 +1530,7 @@ function RapportGroupe({
 
   // preparation a l'exportation
   const [preparationDownloadPDF, setPreparationDownloadPDF] = useState(false);
-  useEffect(() => {
-    console.log("");
-  }, [preparationDownloadPDF]);
+  useEffect(() => {}, [preparationDownloadPDF]);
 
   useEffect(() => {
     if (downloadExelPDF) {
@@ -4261,11 +4259,6 @@ function RapportGroupe({
                         settableSortBy(vehiclesByDistance);
                         settableSortByColorBg("vehiclesByDistance");
                         setshowsortfilterpupup(false);
-
-                        console.log(
-                          "xxxxxxxxxxxxxxxxxxxxxxx",
-                          tableSortByColorBg
-                        );
                       }}
                       className={`${
                         tableSortByColorBg === "vehiclesByDistance" &&
@@ -4279,8 +4272,6 @@ function RapportGroupe({
                         settableSortBy(vehiclesByMovingDuration);
                         settableSortByColorBg("vehiclesByMovingDuration");
                         setshowsortfilterpupup(false);
-
-                        console.log("xxxxxxxxxxxxxxxxxxxxxxx", tableSortBy);
                       }}
                       className={`${
                         tableSortByColorBg === "vehiclesByMovingDuration" &&

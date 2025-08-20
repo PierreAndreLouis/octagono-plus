@@ -58,11 +58,10 @@ export default defineConfig({
            "Guide-utilisation-Octagono-es.pdf",
         "/Guide-utilisation-Octagono-es.pdf",
       
-  'img/screenshot/*.png',
-  'img/screenshot/ajouter_nouveau_appareil/*.png',
-  'img/screenshot/localisation/*.png',
-  'img/screenshot/modifier_ou_supprimer/*.png',
-  'img/screenshot/trajet/*.png',],
+
+
+
+],
       
       
       manifest: {

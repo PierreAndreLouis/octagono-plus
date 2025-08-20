@@ -205,7 +205,7 @@ function GestionGeofences({
 
         <h2
           onClick={() => {
-            console.log(accountGeofences);
+            // console.log(accountGeofences);
           }}
           className="mt-[6rem] text-lg text-center font-bold "
         >
@@ -388,7 +388,7 @@ function GestionGeofences({
                         return (
                           <div
                             onClick={() => {
-                              console.log(geozone);
+                              // console.log(geozone);
                             }}
                             className="shadow-inner bg-gray-50 shadow-black/10 /50 relative md:flex gap-4 justify-between rounded-lg px-2 md:px-4 py-4"
                             key={index}

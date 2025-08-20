@@ -50,12 +50,12 @@ function DetailsVehiculePage() {
   const handleVehicleClick = (véhicule) => {
     setCurrentVéhicule(véhicule);
     setShowVehiculeListe(!showVehiculeListe);
-    console.log("véhicule", véhicule);
+    // console.log("véhicule", véhicule);
   };
 
   // Pour mettre a jour le véhicules actuel
   useEffect(() => {
-    console.log("Véhicule mis à jour", currentVéhicule);
+    // console.log("Véhicule mis à jour", currentVéhicule);
   }, [currentVéhicule]);
 
   // Pour la recherche d'autre véhicules
@@ -107,7 +107,7 @@ function DetailsVehiculePage() {
           >
             <p
               onClick={() => {
-                console.log(currentVéhicule);
+                // console.log(currentVéhicule);
               }}
               className="text-start notranslate w-[90%] overflow-hidden whitespace-nowrap text-ellipsis"
             >

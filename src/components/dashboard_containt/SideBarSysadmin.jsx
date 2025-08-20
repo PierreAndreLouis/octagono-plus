@@ -619,8 +619,9 @@ function SideBarSysadmin({
         onClick={() => {
           scrollToTop();
         }}
-        className="h-[105vh] pb-[20rem] mt-5 font-semibold-- flex flex-col overflow-auto"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="h-[85vh] pb-[20rem] mt-5 font-semibold-- flex flex-col overflow-auto"
+        style={{ scrollbarColor: "#ffa500" }}
+        // style={{ scrollbarWidth: "none", msOverflowStyle: "none", scrollbarColor }}
       >
         {/* Debut */}
         {/*  */}
@@ -1374,27 +1375,7 @@ function SideBarSysadmin({
           {/* )} */}
           {/* setReadDocumentation(false); */}
           {/*  */}
-          {/* <div className="ajouter-appareil-container transition-all hover:border-b  ">
-              <div
-                onClick={() => {
-                  closeSideBar();
-          setShowSideBar2(false);
-
-                  setReadDocumentation(true);
-                  navigate("/installation_application");
-                }}
-                className={`${
-                  documentationPage === "installation" ? "bg-orange-50" : ""
-                } flex items-center ajouter-appareil-container-2 gap-2   border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <FaBook className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 text-[1rem] font-semibold">
-                    {t("Manuel d'utilisation")}
-                  </p>
-                </div>
-              </div>
-            </div> */}
+   
           {/*  */}
           <div className="ajouter-appareil-container transition-all hover:border-b  ">
             <div

@@ -61,10 +61,10 @@ function GestionDesCompts({
 
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
-    console.log("Clicked......");
+    // console.log("Clicked......");
 
     if (inputPassword === adminPassword) {
-      console.log("Clicked...... 222");
+      // console.log("Clicked...... 222");
 
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);

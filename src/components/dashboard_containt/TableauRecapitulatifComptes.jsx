@@ -95,8 +95,6 @@ function TableauRecapitulatifComptes({
       (c) => c.accountID === acctID
     );
     setCurrentAccountSelected(foundAccount);
-    // console.log("foundAccount", foundAccount);
-    // console.log("gestionAccountData", gestionAccountData);
   };
 
   const handleSetAllDevice = (acct) => {
@@ -197,15 +195,15 @@ function TableauRecapitulatifComptes({
               <tr key={acct.index} className="border dark:border-gray-600">
                 <td className="py-3 w-[3rem] px-2">{acct.index}</td>
                 <td
-                  onClick={() => {
-                    handleChooseCompte(acct);
-                    if (isLongueur === "true") {
-                      setExpandSectionTable("");
-                      setExpandSection("");
-                      setVoirPlusDeColonneDansTableauCompte(false);
-                    }
-                  }}
-                  className="py-3 text-center px-2 w-[12rem] notranslate cursor-pointer hover:bg-orange-50"
+                  // onClick={() => {
+                  //   handleChooseCompte(acct);
+                  //   if (isLongueur === "true") {
+                  //     setExpandSectionTable("");
+                  //     setExpandSection("");
+                  //     setVoirPlusDeColonneDansTableauCompte(false);
+                  //   }
+                  // }}
+                  className="py-3 text-center px-2 w-[12rem] notranslate"
                 >
                   {acct.id}
                 </td>
@@ -250,11 +248,6 @@ function TableauRecapitulatifComptes({
                           (ac) => ac?.accountID === acct?.id
                         );
                         const accountUsers = foundUserAccount?.accountUsers;
-
-                        console.log("acct.id", acct.id);
-                        console.log("gestionAccountData", gestionAccountData);
-                        console.log("foundUserAccount", foundUserAccount);
-                        console.log("accountUsers", accountUsers);
 
                         setListeGestionDesUsers(accountUsers);
                         setExpandSection("userListe");

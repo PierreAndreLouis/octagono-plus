@@ -161,24 +161,13 @@ function MapComponent({
       address: fromSelectOnPositionValue[0].address,
     };
 
-    console.log(
-      "update 1111111111",
-      FormatDateHeure(fromSelectOnPositionValue?.[0]?.timestamp)?.time
-    );
-    console.log(
-      "old 22222222",
-      FormatDateHeure(selectDeviceInSearch?.[0]?.timestamp)?.time
-    );
-
     setSelectDeviceInSearch([updatedDevice]);
 
-    console.log("updatedDevice ------------------", updatedDevice);
-    // onClickVehicle([updatedDevice]);
+
   }, [fromSelectOnPositionValue, selectedVehicleToShowInMap, véhiculeData]);
 
   useEffect(() => {
-    console.log("77777777777777", selectDeviceInSearch);
-    console.log("4444444444444444", selectDeviceInSearch?.[0]);
+
     onClickVehicle(selectDeviceInSearch?.[0]);
   }, [selectDeviceInSearch]);
 
@@ -263,7 +252,7 @@ function MapComponent({
 
       return "/pin/ping_red.png";
     } else {
-      if (isNotRecentlyUpdate) return "bg-purple-600";
+      if (isNotRecentlyUpdate) return "bg-purple-600 text-white ";
 
       if (
         speed > 0 &&
@@ -271,15 +260,15 @@ function MapComponent({
         // &&
         // (isStillSpeedActive || historiqueSelectedLocationIndex)
       )
-        return "bg-yellow-600";
+        return "bg-yellow-300 border text-black   font-bold border-b border-b-black";
 
       if (
         speed > 20
         // && (isStillSpeedActive || historiqueSelectedLocationIndex)
       )
-        return "bg-green-600";
+        return "bg-green-600 text-white ";
 
-      return "bg-red-500";
+      return "bg-red-500 text-white ";
     }
   };
 
@@ -517,7 +506,7 @@ function MapComponent({
           } fixed   right-4 overflow-hidden bg-white p-4 rounded-md shadow-lg max-w-sm z-[1000]`}
         >
           <div className="w-[70vw] max-w-[20rem] relative ">
-            <div className="absolute z-10 -top-[2.7rem] text-lg -right-2 flex justify-center items-center text-white cursor-pointer w-[2rem] h-[2rem] border border-white  rounded-full ">
+            <div className="absolute z-10 -top-[2.7rem] text-lg -right-2 flex justify-center items-center text-white-- cursor-pointer w-[2rem] h-[2rem] border border-black   rounded-full ">
               <IoClose
                 onClick={() => {
                   setSelectedVehicle(null);
@@ -604,7 +593,7 @@ function MapComponent({
               className={`${getMarkerIcon(
                 selectedVehicle,
                 getColor
-              )}  mt-2 px-3 py-1  text-white rounded-md`}
+              )}  mt-2 px-3 py-1  text-white-- rounded-md`}
             >
               {t("Voir sur Google Maps")}
             </button>

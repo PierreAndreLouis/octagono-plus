@@ -80,7 +80,9 @@ function GestionAppareilOptionPopup({
             (account) =>
               account.accountID === currentSelectedDeviceGestion?.accountID
           )?.accountID,
+
         "admin",
+
         currentAccountSelected?.password ||
           gestionAccountData.find(
             (account) =>

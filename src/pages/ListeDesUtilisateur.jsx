@@ -55,14 +55,14 @@ function ListeDesUtilisateur({
 
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
-    console.log("Clicked......");
+    // console.log("Clicked......");
 
     if (inputPassword === adminPassword) {
-      console.log("Clicked...... 222");
+      // console.log("Clicked...... 222");
 
       const sendConnectionMail = false;
       setSeConnecterAutreComptePopup(false);
-      console.log("currentSelectedUserToConnect", currentSelectedUserToConnect);
+      // console.log("currentSelectedUserToConnect", currentSelectedUserToConnect);
       setTimeout(() => {
         handleLogin(
           currentSelectedUserToConnect?.accountID,
@@ -435,15 +435,7 @@ function ListeDesUtilisateur({
                                       {user?.accountID}
                                     </span>
                                   </div>{" "}
-                                  <div
-                                    onClick={() => {
-                                      console.log(
-                                        "foundUser?.userGroupes",
-                                        foundUser?.userGroupes
-                                      );
-                                    }}
-                                    className="flex flex-wrap"
-                                  >
+                                  <div className="flex flex-wrap">
                                     <p className="font-bold- text-gray-700">
                                       {t("Groupes affectés")} :
                                     </p>
@@ -481,7 +473,7 @@ function ListeDesUtilisateur({
                                 </div>
                               </div>
                             </div>
-                            <div className="flex justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center ">
+                            <div className="flex justify-end md:mr-10 sm:max-w-[30rem] gap-3 mt-3 justify-between-- items-center md:flex-col">
                               {" "}
                               <button
                                 onClick={() => {

@@ -97,9 +97,9 @@ function CreateNewUserGestion({
       errors.push(`${t("L'email de contact n'est pas valide")}`);
     }
 
-    if (!emailRegex.test(addNewUserData.notifyEmail)) {
-      errors.push(`${t("L'email de notification n'est pas valide")}`);
-    }
+    // if (!emailRegex.test(addNewUserData.notifyEmail)) {
+    //   errors.push(`${t("L'email de notification n'est pas valide")}`);
+    // }
 
     if (!phoneRegex.test(addNewUserData.contactPhone)) {
       errors.push(`${t("Le numéro de téléphone est invalide")}`);
@@ -773,7 +773,7 @@ function CreateNewUserGestion({
                   },
                   {
                     id: "roleID",
-                    label: `${t("roleID")}`,
+                    label: `${t("Rôle")}`,
                     placeholder: "",
                   },
 
@@ -788,122 +788,144 @@ function CreateNewUserGestion({
                     label: `${t("Confirmer le mot de passe")}`,
                     placeholder: `${t("Confirmer le mot de passe")}`,
                   },
-                ].map((field) => (
-                  <div key={field.id}>
-                    <label
-                      htmlFor={field.id}
-                      className="block-- flex justify-between items-center text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
-                    >
-                      {field.label}{" "}
-                      {!addNewUserData[field.id] && (
+                ].map((field) => {
+                  const requiredFields = [
+                    "userID",
+                    "description",
+                    "isActive",
+                    "contactEmail",
+                    "contactPhone",
+                    "addressCity",
+                    "password",
+                    "password2",
+                  ];
+
+                  return (
+                    <div key={field.id}>
+                      <label
+                        htmlFor={field.id}
+                        className="block-- flex justify-between items-center text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
+                      >
+                        {field.label}{" "}
+                        {/* {!addNewUserData[field.id] && (
                         <span className="text-red-600 text-lg"> *</span>
+                      )} */}
+                        {requiredFields.includes(field.id) &&
+                          !addNewUserData[field.id] && (
+                            <span className="text-red-600 text-lg"> *</span>
+                          )}
+                      </label>
+                      {/*  */}
+                      {field.id === "maxAccessLevel" ? (
+                        <div
+                          onClick={() => {
+                            setShowMaxAccessLevelPopup(true);
+                          }}
+                          className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        >
+                          <p>{maxAccessLevelText}</p>
+                          <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : field.id === "addressCountry" ? (
+                        <select
+                          id="addressCountry"
+                          name="addressCountry"
+                          value={addNewUserData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">{t("Sélectionner une Pays")}</option>
+                          <option value="República Dominicana">
+                            {t("República Dominicana")}
+                          </option>
+                          <option value="Haïti">{t("Haïti")}</option>
+                        </select>
+                      ) : field.id === "isActive" ? (
+                        <select
+                          id="isActive"
+                          name="isActive"
+                          value={addNewUserData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">
+                            {t("Activer l'utilisateur")} ?
+                          </option>
+                          <option value="true">{t("oui")}</option>
+                          <option value="false">{t("non")}</option>
+                        </select>
+                      ) : field.id === "timeZone" ? (
+                        <div
+                          onClick={() => {
+                            setShowTimeZonePopup(true);
+                          }}
+                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        >
+                          <p>{addNewUserData?.timeZone}</p>
+                          <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : field.id === "roleID" ? (
+                        <div
+                          onClick={() => {
+                            setShowUserRolePopup(true);
+                          }}
+                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        >
+                          <p>{addNewUserData?.roleID}</p>
+                          <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : // : field.id === "userType" ? (
+                      //   <div
+                      //     onClick={() => {
+                      //       setShowUserTypePopup(true);
+                      //     }}
+                      //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                      //   >
+                      //     <p>
+                      //       {addNewUserData?.userType === "1"
+                      //         ? "Utilisateur standard / limité"
+                      //         : "Utilisateur Administrateur / Superviseur"}
+                      //     </p>
+                      //     <FaChevronDown className="text-gray-700 mr-4" />
+                      //   </div>
+                      // )
+                      field.id === "isActive" ? (
+                        <div
+                          onClick={() => {
+                            setShowIsUserActivePopup(true);
+                          }}
+                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        >
+                          <p>
+                            {addNewUserData?.isActive === "1"
+                              ? "true"
+                              : "false"}
+                          </p>
+                          <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : (
+                        <input
+                          id={field.id}
+                          name={field.id}
+                          type="text"
+                          placeholder={field.placeholder}
+                          value={addNewUserData[field.id]}
+                          onChange={handleChange}
+                          // { field.id === "groupID" && disable}
+                          // disabled={field.id === "userID"}
+                          disabled={
+                            !isCreatingNewElement && field.id === "userID"
+                          }
+                          // requiredFields.includes(field.id)
+                          required={requiredFields.includes(field.id)}
+                          className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                        />
                       )}
-                    </label>
-                    {/*  */}
-                    {field.id === "maxAccessLevel" ? (
-                      <div
-                        onClick={() => {
-                          setShowMaxAccessLevelPopup(true);
-                        }}
-                        className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>{maxAccessLevelText}</p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : field.id === "addressCountry" ? (
-                      <select
-                        id="addressCountry"
-                        name="addressCountry"
-                        value={addNewUserData[field.id]}
-                        onChange={handleChange}
-                        required
-                        className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
-                      >
-                        <option value="">{t("Sélectionner une Pays")}</option>
-                        <option value="República Dominicana">
-                          {t("República Dominicana")}
-                        </option>
-                        <option value="Haïti">{t("Haïti")}</option>
-                      </select>
-                    ) : field.id === "isActive" ? (
-                      <select
-                        id="isActive"
-                        name="isActive"
-                        value={addNewUserData[field.id]}
-                        onChange={handleChange}
-                        required
-                        className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
-                      >
-                        <option value="">{t("Activer l'utilisateur")} ?</option>
-                        <option value="true">{t("oui")}</option>
-                        <option value="false">{t("non")}</option>
-                      </select>
-                    ) : field.id === "timeZone" ? (
-                      <div
-                        onClick={() => {
-                          setShowTimeZonePopup(true);
-                        }}
-                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>{addNewUserData?.timeZone}</p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : field.id === "roleID" ? (
-                      <div
-                        onClick={() => {
-                          setShowUserRolePopup(true);
-                        }}
-                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>{addNewUserData?.roleID}</p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : // : field.id === "userType" ? (
-                    //   <div
-                    //     onClick={() => {
-                    //       setShowUserTypePopup(true);
-                    //     }}
-                    //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                    //   >
-                    //     <p>
-                    //       {addNewUserData?.userType === "1"
-                    //         ? "Utilisateur standard / limité"
-                    //         : "Utilisateur Administrateur / Superviseur"}
-                    //     </p>
-                    //     <FaChevronDown className="text-gray-700 mr-4" />
-                    //   </div>
-                    // )
-                    field.id === "isActive" ? (
-                      <div
-                        onClick={() => {
-                          setShowIsUserActivePopup(true);
-                        }}
-                        className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      >
-                        <p>
-                          {addNewUserData?.isActive === "1" ? "true" : "false"}
-                        </p>
-                        <FaChevronDown className="text-gray-700 mr-4" />
-                      </div>
-                    ) : (
-                      <input
-                        id={field.id}
-                        name={field.id}
-                        type="text"
-                        placeholder={field.placeholder}
-                        value={addNewUserData[field.id]}
-                        onChange={handleChange}
-                        // { field.id === "groupID" && disable}
-                        // disabled={field.id === "userID"}
-                        disabled={
-                          !isCreatingNewElement && field.id === "userID"
-                        }
-                        required
-                        className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                      />
-                    )}
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
 
                 {errorID && (
                   <p className="flex items-start gap-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 text-md translate-y-4 px-4 py-1 rounded-md text-center">

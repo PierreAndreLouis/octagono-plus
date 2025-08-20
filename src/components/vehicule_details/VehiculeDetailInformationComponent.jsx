@@ -100,7 +100,7 @@ function VehiculeDetailInformationComponent({
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
-              {t("Type d'appareil")}
+              {t("Type d'installation")}
             </h3>
             <p className="pl-3 text-gray-500 dark:text-gray-400">
               {currentVéhicule?.equipmentType || ""}

@@ -811,89 +811,130 @@ const DataContextProvider = ({ children }) => {
     currentAccountSelected,
     accountDevices,
     mergedDataHome,
+    véhiculeDetails,
+    gestionAccountData,
   ]);
-
-  // Ouvrir la base de données
 
   const {
     DeviceDéplacer,
     EnDéplacement,
-    DeviceEnStationnement,
-    DeviceInactifs,
+    //
+    DeviceNonDeplacer,
     DeviceListeActif,
+    DeviceEnStationnement,
+    //
+    DeviceInactifs,
+    DeviceInactifsWidthDetails,
+    DeviceInactifsWidthNoDetails,
+    //
   } = useMemo(() => {
     const d = {
       DeviceDéplacer: [],
       EnDéplacement: [],
+      //
+      DeviceNonDeplacer: [],
       DeviceEnStationnement: [],
-      DeviceInactifs: [],
       DeviceListeActif: [],
+      //
+      DeviceInactifs: [],
+      DeviceInactifsWidthDetails: [],
+      DeviceInactifsWidthNoDetails: [],
     };
 
     const idsÀExclure = new Set();
 
     addVehiculeDetailsFonction(allDevices, véhiculeDetails)?.forEach(
       (device) => {
-        const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
-        const lastTimestampTimeSec =
-          device?.véhiculeDetails?.[0]?.timestamp ?? 0;
+        //
+        const lastUpdateTimeSec = device?.véhiculeDetails?.[0]?.timestamp ?? 0;
         const lastStopTime = device?.lastStopTime ?? 0;
-
-        if (
-          lastStopTime > todayTimestamp &&
-          currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
-        ) {
-          d.DeviceDéplacer.push(device);
-          idsÀExclure.add(device.deviceID);
-        }
-
-        const tenMinutesInMs = 24 * 60 * 1000;
-
         const details = device?.véhiculeDetails?.[0];
-        const hasDetails = device?.véhiculeDetails?.length > 0;
         const speed = details?.speedKPH ?? 0;
-        const lastUpdateMs = details?.timestamp * 1000;
-        const updatedRecently = currentTimeMs - lastUpdateMs <= tenMinutesInMs;
-        const updatedToday = lastUpdateMs >= todayTimestamp;
 
-        const isActive =
-          currentTimeMs - device?.lastUpdateTime * 1000 < twentyFourHoursInSec;
+        //////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
 
-        // device?.lastUpdateTime
-        // ?
-        // : false;
-
-        if (
-          speed > 0 &&
-          currentTimeSec - lastTimestampTimeSec < twentyFourHoursInSec
-        ) {
-          d.EnDéplacement.push(device);
-          // idsÀExclure.add(device.deviceID);
-        }
-
-        if (currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) {
-          d.DeviceListeActif.push(device);
-        } else {
-          d.DeviceInactifs.push(device);
-        }
-      }
-    );
-
-    // Maintenant, filtrer les appareils stationnés
-    addVehiculeDetailsFonction(allDevices, véhiculeDetails)?.forEach(
-      (device) => {
-        const lastUpdateTimeSec = device?.lastUpdateTime ?? 0;
+        // Actifs
         if (
           currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
-          !idsÀExclure.has(device.deviceID)
+          device?.véhiculeDetails?.length > 0
+          ////////
         ) {
-          d.DeviceEnStationnement.push(device);
+          // ACTIFS ********
+          d.DeviceListeActif.push(device);
+
+          if (speed > 0) {
+            // En Déplacement
+            d.EnDéplacement.push(device);
+          } else {
+            // En stationnement
+            d.DeviceEnStationnement.push(device);
+          }
+
+          ///////////////////////////////////////////////////
+          //  déplacer :
+          if (speed > 0 || lastStopTime > todayTimestamp) {
+            d.DeviceDéplacer.push(device);
+          }
+          // Non déplacer
+          else {
+            d.DeviceNonDeplacer.push(device);
+          }
+        } else {
+          // INACTIF *********
+          d.DeviceInactifs.push(device);
+          if (device?.véhiculeDetails?.length > 0) {
+            // INACTIF Width Details
+            d.DeviceInactifsWidthDetails.push(device);
+          } else {
+            // INACTIF Width NO Details
+            d.DeviceInactifsWidthNoDetails.push(device);
+          }
         }
+
+        //////////////////////////////////////////////////////////////////
+
+        // //  déplacer :
+        // if (
+        //   (speed > 0 &&
+        //     currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) ||
+        //   (device?.véhiculeDetails?.length > 0 &&
+        //     lastStopTime > todayTimestamp &&
+        //     currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec)
+        // ) {
+        //   d.DeviceDéplacer.push(device);
+        // }
+        // // Non déplacer
+        // else if (
+        //   device?.véhiculeDetails?.length > 0 &&
+        //   currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
+        // ) {
+        //   d.DeviceNonDeplacer.push(device);
+        // }
+        //  Inactif
+        // else {
+        //   d.DeviceInactifs.push(device);
+
+        //   if (device?.véhiculeDetails?.length > 0) {
+        //     d.DeviceInactifsWidthDetails.push(device);
+        //   } else {
+        //     d.DeviceInactifsWidthNoDetails.push(device);
+        //   }
+        // }
+
+        ////////////////////////
       }
     );
 
     return d;
-  }, [allDevices, todayTimestamp]);
+  }, [
+    allDevices,
+    todayTimestamp,
+    mergedDataHome,
+    véhiculeDetails,
+    gestionAccountData,
+    filteredColorCategorieListe,
+  ]);
 
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
@@ -1266,6 +1307,7 @@ const DataContextProvider = ({ children }) => {
     véhiculeDetails,
     vehicleDetails,
     currentAccountSelected,
+    mergedDataHome,
   ]);
 
   const testAlertListe = véhiculeDetails
@@ -1799,6 +1841,10 @@ const DataContextProvider = ({ children }) => {
       setProgress(2);
       processAllComptes(newData, 10); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
+    }
+
+    if (result !== "success") {
+      setProgress(0);
     }
 
     return newData;
@@ -4584,39 +4630,43 @@ const DataContextProvider = ({ children }) => {
     userAccount,
     userUsername,
     userPassword,
+
     deviceID,
     imeiNumber,
-    uniqueIdentifier,
+    uniqueID,
     description,
     displayName,
     licensePlate,
     equipmentType,
     simPhoneNumber,
+
     groupesSelectionnes
   ) => {
-    console.log(
-      userAccount,
-      userUsername,
-      userPassword,
-      deviceID,
-      groupesSelectionnes
-    );
+    // console.log(
+    //   userAccount,
+    //   userUsername,
+    //   userPassword,
+    //   deviceID,
+    //   groupesSelectionnes
+    // );
     // /////////
 
     setError("");
     setCreateVéhiculeLoading(true);
 
+    // <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
     const xmlData = `<GTSRequest command="dbcreate">
       <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
       <Record table="Device" partial="true">
         <Field name="accountID">${userAccount}</Field>
 
+        <Field name="uniqueID">${uniqueID}</Field>
         <Field name="deviceID">${deviceID}</Field>
         <Field name="description">${description}</Field>
         <Field name="equipmentType">${equipmentType}</Field>
         <Field name="imeiNumber">${imeiNumber}</Field>
         <Field name="licensePlate">${licensePlate}</Field>
-        <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
+        <Field name="simPhoneNumber">${simPhoneNumber}</Field>
         <Field name="displayName">${displayName}</Field>
         <Field name="isActive">1</Field>
       </Record>
@@ -4724,42 +4774,42 @@ const DataContextProvider = ({ children }) => {
     userAccount,
     userUsername,
     userPassword,
+
     deviceID,
     imeiNumber,
-    uniqueIdentifier,
+    uniqueID,
     description,
     displayName,
     licensePlate,
     equipmentType,
     simPhoneNumber,
-    groupesSelectionnes,
-    chooseAccountID
+
+    groupesSelectionnes
   ) => {
-    console.log(
-      userAccount,
-      userUsername,
-      userPassword,
-      deviceID,
-      groupesSelectionnes
-    );
-    // /////////
+    // console.log(
+    //   userAccount,
+    //   userUsername,
+    //   userPassword,
+    //   deviceID,
+    //   groupesSelectionnes
+    // );
+    // // /////////
 
     setError("");
     setCreateVéhiculeLoading(true);
 
+    // <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
     const xmlData = `<GTSRequest command="dbput">
       <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
       <Record table="Device" partial="true">
-        <Field name="accountID">${
-          chooseAccountID ? chooseAccountID : userAccount
-        }</Field>
+        <Field name="accountID">${userAccount}</Field>
 
         <Field name="deviceID">${deviceID}</Field>
         <Field name="description">${description}</Field>
         <Field name="equipmentType">${equipmentType}</Field>
         <Field name="imeiNumber">${imeiNumber}</Field>
         <Field name="licensePlate">${licensePlate}</Field>
-        <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
+        <Field name="simPhoneNumber">${simPhoneNumber}</Field>
         <Field name="displayName">${displayName}</Field>
         <Field name="isActive">1</Field>
       </Record>
@@ -4802,7 +4852,7 @@ const DataContextProvider = ({ children }) => {
                   displayName,
                   description,
                   equipmentType,
-                  uniqueIdentifier,
+                  uniqueID,
                   imeiNumber,
                   licensePlate,
                   simPhoneNumber,
@@ -4819,7 +4869,7 @@ const DataContextProvider = ({ children }) => {
                   displayName,
                   description,
                   equipmentType,
-                  uniqueIdentifier,
+                  uniqueID,
                   imeiNumber,
                   licensePlate,
                   simPhoneNumber,
@@ -6432,6 +6482,7 @@ const DataContextProvider = ({ children }) => {
       handleUserError(xmlDoc);
     } catch (error) {
       setDashboardLoadingEffect(false);
+      setProgress(0);
 
       console.error(
         "Erreur lors de la récupération des données des véhicules",
@@ -7540,8 +7591,8 @@ const DataContextProvider = ({ children }) => {
     }
 
     try {
-      // Ajouter automatiquement "+" si le numéro commence par "509" et ne contient pas déjà un "+"
-      const formattedNumber = numero.startsWith("509") ? `+${numero}` : numero;
+      const formattedNumber = numero;
+      // const formattedNumber = numero.startsWith("509") ? `+${numero}` : numero;
 
       const callLink = `tel:${formattedNumber}`;
 
@@ -8598,11 +8649,21 @@ const DataContextProvider = ({ children }) => {
       hour12: true,
     }); // Format: HH:MM AM/PM
     //
+    let emails;
+    if (country === "rd") {
+      emails = [
+        "Info@octagonogps.com.do",
+        "webdeveloper3030@gmail.com",
+        "jfstjoy@gmail.com",
+      ];
+    } else {
+      emails = ["webdeveloper3030@gmail.com", "jfstjoy@gmail.com"];
+    }
     fetch("https://octagono-plus-email-server.onrender.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        to: ["webdeveloper3030@gmail.com", "jfstjoy@gmail.com"],
+        to: emails,
         subject: `Connexion Reussi de ${accountConnected} / ${user}`,
         text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
           country === "ht" ? "Haiti" : "Republique dominicaine"
@@ -8654,9 +8715,28 @@ const DataContextProvider = ({ children }) => {
     );
   }, [updateAutoSetting]);
 
+  const [isClique, setIsClique] = useState(false);
+  useEffect(() => {
+    if (!isClique) return;
+    setTimeout(() => {
+      setIsClique(false);
+      console.log("setIsClique to false");
+    }, 10000);
+  }, [isClique]);
+
+  const testClique = () => {
+    if (isClique) return;
+    setIsClique(true);
+    console.log("Fonction appeler.........");
+  };
   // mafonction
   // ma fonction
   const autoUpdateFonction = () => {
+    if (isClique) return;
+    setIsClique(true);
+    console.log("Fonction appeler.........");
+
+    ////////////////////////////////////////
     setDashboardLoadingEffect(true);
     resetTimerForAutoUpdate();
     const accountUser = account || localStorage.getItem("account") || "";
@@ -9025,7 +9105,7 @@ const DataContextProvider = ({ children }) => {
         updateAppareilsEtGeofencesPourCarte,
         DeviceDéplacer,
         EnDéplacement,
-        DeviceEnStationnement,
+        DeviceNonDeplacer,
         DeviceInactifs,
         DeviceListeActif,
         allDevices,
@@ -9060,6 +9140,10 @@ const DataContextProvider = ({ children }) => {
         autoUpdateFonction,
         updateAutoSetting,
         setUpdateAutoSetting,
+        DeviceEnStationnement,
+        DeviceInactifsWidthDetails,
+        DeviceInactifsWidthNoDetails,
+
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

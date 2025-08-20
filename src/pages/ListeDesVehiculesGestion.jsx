@@ -69,7 +69,7 @@ function ListeDesVehiculesGestion({
 
     DeviceDéplacer,
     EnDéplacement,
-    DeviceEnStationnement,
+    DeviceNonDeplacer,
     DeviceInactifs,
     DeviceListeActif,
     allDevices,
@@ -242,14 +242,8 @@ function ListeDesVehiculesGestion({
       const distanceTotalA = parseFloat(a?.lastOdometerKM) || 0;
       const distanceTotalB = parseFloat(b?.lastOdometerKM) || 0;
 
-      const lastUpdateA =
-        Number(a?.véhiculeDetails?.[0]?.timestamp) ||
-        Number(a?.lastUpdateTime) ||
-        0;
-      const lastUpdateB =
-        Number(b?.véhiculeDetails?.[0]?.timestamp) ||
-        Number(b?.lastUpdateTime) ||
-        0;
+      const lastUpdateA = Number(a?.véhiculeDetails?.[0]?.timestamp) || 0;
+      const lastUpdateB = Number(b?.véhiculeDetails?.[0]?.timestamp) || 0;
 
       // --- Tri dynamique ---
       let result = 0;
@@ -332,7 +326,7 @@ function ListeDesVehiculesGestion({
       setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
       setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
     }
-  }, [currentAccountSelected, documentationPage, listeGestionDesVehicules]);
+  }, [currentAccountSelected, documentationPage, filteredColorCategorieListe]);
 
   ////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////
@@ -342,9 +336,8 @@ function ListeDesVehiculesGestion({
 
   function getMostRecentTimestamp(data) {
     if (data) {
-      // console.log("data...............", data);
       const validTimestamps = data
-        .map((véhicule) => parseInt(véhicule?.lastUpdateTime))
+        .map((véhicule) => parseInt(véhicule?.véhiculeDetails?.[0]?.timestamp))
         .filter((timestamp) => !isNaN(timestamp));
 
       const mostRecentTimestamp =
@@ -352,7 +345,7 @@ function ListeDesVehiculesGestion({
 
       return { mostRecentTimestamp };
     } else {
-      console.log("Pas de donnees");
+      // console.log("Pas de donnees");
     }
   }
 
@@ -379,23 +372,6 @@ function ListeDesVehiculesGestion({
     e.preventDefault();
 
     if (inputPassword === adminPassword) {
-      console.log("currentSelectedDeviceGestion", currentSelectedDeviceGestion);
-      console.log(
-        "currentSelectedDeviceGestion.accountID",
-        currentSelectedDeviceGestion.accountID
-      );
-      console.log(
-        "currentSelectedDeviceGestion.password",
-        currentSelectedDeviceGestion.password
-      );
-      console.log(
-        "FoundAccount--------",
-        gestionAccountData.find(
-          (account) =>
-            account.accountID === currentSelectedDeviceGestion?.accountID
-        )
-      );
-
       createVehicleEnGestionAccount(
         gestionAccountData.find(
           (account) => account.accountID === chooseAccountID
@@ -417,7 +393,6 @@ function ListeDesVehiculesGestion({
       );
       const showMessage = false;
 
-      // console.log(
       deleteVehicleEnGestionAccount(
         currentSelectedDeviceGestion?.deviceID,
 
@@ -425,18 +400,20 @@ function ListeDesVehiculesGestion({
           (account) =>
             account.accountID === currentSelectedDeviceGestion?.accountID
         )?.accountID,
+
         "admin",
 
         gestionAccountData.find(
           (account) =>
             account.accountID === currentSelectedDeviceGestion?.accountID
         )?.password,
+
         showMessage
       );
 
       setMoveDeviceToOtherCompte(false);
     } else {
-      console.log("Mot de passe incorrect");
+      // console.log("Mot de passe incorrect");
       setErrorMessage(`${t("Mot de passe incorrect. Veuillez réessayer")}`);
     }
   };
@@ -837,7 +814,7 @@ function ListeDesVehiculesGestion({
                       `${t("Appareils non déplacés")}`
                     );
                   }
-                  setFilteredColorCategorieListe(DeviceEnStationnement);
+                  setFilteredColorCategorieListe(DeviceNonDeplacer);
                 }}
                 className="px-2  cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50/60 hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
               >
@@ -955,8 +932,9 @@ function ListeDesVehiculesGestion({
                           ? lastDetail.timestamp * 1000
                           : 0;
 
-                        const isActive = device?.lastUpdateTime
-                          ? currentTime - device.lastUpdateTime * 1000 <
+                        const isActive = device?.véhiculeDetails?.[0]?.timestamp
+                          ? currentTime -
+                              device?.véhiculeDetails?.[0]?.timestamp * 1000 <
                             twentyFourHoursInMs
                           : false;
 
@@ -965,30 +943,30 @@ function ListeDesVehiculesGestion({
                         let border_color = "bg-gray-50";
                         let text_color = "text-orange-500/80";
                         let bg_color = "bg-orange-500";
+
                         if (
-                          currentTimeSec - device?.lastUpdateTime <
-                          twentyFourHoursInSec
+                          (device?.lastStopTime > todayTimestamp &&
+                            hasDetails) ||
+                          (hasDetails && isActive && speed > 0)
+                        ) {
+                          border_color = "border-l-[.4rem] border-green-500";
+                          text_color = "text-green-600/80";
+                          bg_color = "bg-green-600/90";
+                        } else if (
+                          isActive &&
+                          hasDetails &&
+                          device?.lastStopTime <= todayTimestamp &&
+                          speed <= 0
                         ) {
                           border_color = "border-l-[.4rem] border-orange-300";
                           text_color = "text-orange-500/80";
                           bg_color = "bg-orange-500";
-                        } else if (
-                          currentTimeSec - device?.lastUpdateTime >
-                          twentyFourHoursInSec
-                        ) {
+                        } else {
                           border_color = "border-l-[.4rem] border-purple-300";
                           text_color = "text-purple-500/80";
                           bg_color = "bg-purple-500";
                         }
 
-                        if (
-                          device?.lastStopTime > todayTimestamp ||
-                          (hasDetails && isActive && speed >= 1 && updatedToday)
-                        ) {
-                          border_color = "border-l-[.4rem] border-green-500";
-                          text_color = "text-green-600/80";
-                          bg_color = "bg-green-600/90";
-                        }
                         //
                         //
                         //
@@ -1020,7 +998,7 @@ function ListeDesVehiculesGestion({
                           >
                             <div
                               onClick={() => {
-                                console.log(foundDetails);
+                                // console.log(foundDetails);
                               }}
                               className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center"
                             >
@@ -1091,22 +1069,38 @@ function ListeDesVehiculesGestion({
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
                                         {
                                           FormatDateHeure(
-                                            device?.véhiculeDetails[0]
-                                              ?.timestamp ||
-                                              device?.lastUpdateTime
+                                            device?.véhiculeDetails?.[0]
+                                              ?.timestamp
                                           ).date
                                         }
                                         <span className="px-2">/</span>{" "}
                                         {
                                           FormatDateHeure(
-                                            device?.véhiculeDetails[0]
-                                              ?.timestamp ||
-                                              device?.lastUpdateTime
+                                            device?.véhiculeDetails?.[0]
+                                              ?.timestamp
                                           ).time
                                         }
                                       </span>
                                     </p>
                                   </div>{" "}
+                                  {/* <div className="flex flex-wrap border-b py-1">
+                                    <p className="font-bold">
+                                      {t("Dernière mise a jour EventData")} :
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                        {
+                                          FormatDateHeure(
+                                            device?.lastUpdateTime
+                                          ).date
+                                        }
+                                        <span className="px-2">/</span>{" "}
+                                        {
+                                          FormatDateHeure(
+                                            device?.lastUpdateTime
+                                          ).time
+                                        }
+                                      </span>
+                                    </p>
+                                  </div>{" "} */}
                                   <div className="flex flex-wrap border-b py-1">
                                     <p className="font-bold">
                                       {t("Account ID")} :
@@ -1132,7 +1126,7 @@ function ListeDesVehiculesGestion({
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
-                                        {t("Alerte")} :
+                                        {t("Statut")} :
                                       </p>
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                         {codeDescription}
@@ -1167,7 +1161,7 @@ function ListeDesVehiculesGestion({
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
-                                        {t("Type d'appareil")} :
+                                        {t("Type d'installation")} :
                                       </p>
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                         {device?.equipmentType}
@@ -1191,7 +1185,9 @@ function ListeDesVehiculesGestion({
                                         !isNaN(Number(device?.lastOdometerKM))
                                           ? Number(
                                               device?.lastOdometerKM
-                                            ).toFixed(0) + `${t("km")}`
+                                            ).toFixed(0) +
+                                            " " +
+                                            `${t("km")}`
                                           : `${t("Non disponible")}`}{" "}
                                       </span>
                                     </div>{" "}

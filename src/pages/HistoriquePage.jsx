@@ -272,7 +272,7 @@ function HistoriquePage() {
   // Mettre a jour le data
   useEffect(() => {
     setvehicles(véhiculeData);
-    // console.log(vehicles);
+    // // console.log(vehicles);
   }, [véhiculeHistoriqueDetails, currentVéhicule]);
   //
   //
@@ -341,14 +341,14 @@ function HistoriquePage() {
   }, [vehicles]);
 
   useEffect(() => {
-    console.log("vehicles mise a jour..................");
+    // console.log("vehicles mise a jour..................");
   }, [vehicles]);
 
   const centerOnFirstMarker = () => {
     if (mapRef.current && véhiculeHistoriqueDetails.length > 0) {
       const { lastValidLatitude, lastValidLongitude } = vehiclesRef.current[0];
       mapRef.current.setView([lastValidLatitude, lastValidLongitude], 13);
-      console.log("centrer la carte 33333333333333333333333333333333333333333");
+      // console.log("centrer la carte 33333333333333333333333333333333333333333");
     }
   };
 
@@ -429,12 +429,12 @@ function HistoriquePage() {
   const [timeTo, settimeTo] = useState();
 
   useEffect(() => {
-    console.log(startDate);
-    console.log(endDate);
-    console.log(startTime);
-    console.log(endTime);
-    console.log(timeFrom);
-    console.log(timeTo);
+    // console.log(startDate);
+    // console.log(endDate);
+    // console.log(startTime);
+    // console.log(endTime);
+    // console.log(timeFrom);
+    // console.log(timeTo);
   }, [startDate, endDate, startTime, endTime, timeFrom, timeTo]);
 
   const formatDateToISO = (date) => {
@@ -559,19 +559,6 @@ function HistoriquePage() {
         "admin",
         userPassword
       );
-
-      console.log(
-        "Infoooooooo",
-        currentVéhicule.deviceID,
-
-        timeFromFetch || timeFrom,
-
-        timeToFetch || timeTo,
-
-        accountID,
-        "admin",
-        userPassword
-      );
     } else {
       fetchHistoriqueVehicleDetails(
         currentVéhicule.deviceID,
@@ -595,7 +582,7 @@ function HistoriquePage() {
   // Recherche du véhicule correspondant dans la liste
   const handleVehicleClick = (véhicule, fromUpdateAuto = false) => {
     const deviceID = véhicule?.deviceID;
-    console.log("véhicule", véhicule);
+    // console.log("véhicule", véhicule);
 
     setCurrentDeviceToAutoUpdate(véhicule); // Définit le véhicule actuel
     setCurrentVéhicule(véhicule); // Définit le véhicule actuel
@@ -681,7 +668,7 @@ function HistoriquePage() {
 
     // setTimeout(() => {
     //   centerOnFirstMarker();
-    //   console.log("centrage auto......................")
+    //   // console.log("centrage auto......................")
 
     // }, 500);
   };
@@ -690,7 +677,7 @@ function HistoriquePage() {
     if (isFetchFromUpdateAuro) return;
     setTimeout(() => {
       centerOnFirstMarker();
-      console.log("centrage auto......................");
+      // console.log("centrage auto......................");
     }, 500);
   }, [véhiculeHistoriqueDetails, isFetchFromUpdateAuro]);
 
@@ -705,7 +692,7 @@ function HistoriquePage() {
   x;
 
   useEffect(() => {
-    // console.log("xxxxxxxxxxxxxxxxxxxxxx", currentVéhicule);
+    // // console.log("xxxxxxxxxxxxxxxxxxxxxx", currentVéhicule);
   }, [currentVéhicule]);
 
   return (
