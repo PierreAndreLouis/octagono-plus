@@ -429,14 +429,14 @@ function CreateNewGroupeGestion({
                         }
                       });
                     }}
-                    className={`shadow-lg justify-between cursor-pointer relative flex gap-3 items-start rounded-lg py-2 px-2 ${
+                    className={`shadow-lg justify-between cursor-pointer relative flex flex-col-reverse md:flex-row gap-3 items-start w-full rounded-lg py-2 px-2 ${
                       isSelected ? "bg-gray-50/50" : "bg-gray-50/50"
                     }`}
                   >
                     <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                       {index + 1}
                     </p>
-                    <FaUserCircle className="text-gray-500 text-[2.5rem]" />
+                    <FaUserCircle className="text-gray-500 text-[2.5rem] hidden md:block min-w-[4rem]" />
                     <div
                       onClick={() => {
                         console.log(user);
@@ -485,13 +485,17 @@ function CreateNewGroupeGestion({
                         </p>
                       )}
                     </div>
-                    <div className="min-w-[4rem]">
-                      {isSelected ? (
-                        <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
-                      ) : (
-                        <IoMdSquareOutline className="text-[2rem] text-red-400" />
-                      )}
-                    </div>
+                    <div className="flex justify-between items-center w-full md:w-auto">
+                      <FaUserCircle className="text-gray-500 text-[2.5rem] md:hidden" />
+
+                      <div className="min-w-[3.5rem]">
+                        {isSelected ? (
+                          <IoMdCheckboxOutline className="text-[2rem] text-green-500" />
+                        ) : (
+                          <IoMdSquareOutline className="text-[2rem] text-red-400" />
+                        )}
+                      </div>
+                    </div>{" "}
                   </div>
                 );
               })}

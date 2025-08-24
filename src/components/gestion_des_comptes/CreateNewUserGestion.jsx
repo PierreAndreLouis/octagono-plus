@@ -671,8 +671,10 @@ function CreateNewUserGestion({
                     <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                       {index + 1}
                     </p>
-                    <PiIntersectThreeBold className="text-gray-500 text-[2.5rem]" />
+                    <PiIntersectThreeBold className="text-gray-500 text-[2.5rem] hidden md:block" />
                     <div className="w-full">
+                      <PiIntersectThreeBold className="text-gray-500 text-[2.5rem] md:hidden" />
+
                       <p className="text-gray-600">
                         {t("Nom du Groupe")} :{" "}
                         <span className="font-bold notranslate">

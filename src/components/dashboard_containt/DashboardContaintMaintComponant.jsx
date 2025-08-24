@@ -4,6 +4,7 @@ import { FiAlertCircle } from "react-icons/fi";
 
 import { IoClose } from "react-icons/io5";
 import { MdLockOutline } from "react-icons/md";
+import { debounce } from "lodash";
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { PiIntersectThreeBold } from "react-icons/pi";
@@ -144,28 +145,71 @@ function DashboardContaintMaintComponant({
     frameId = requestAnimationFrame(animate);
   };
 
-  useEffect(() => {
-    animateValue(animatedTotal, allDevices?.length, 1000, setAnimatedTotal);
-    animateValue(
-      animatedDeplaces,
-      DeviceDéplacer?.length,
-      1000,
-      setAnimatedDeplaces
-    );
+  // import { useMemo, useEffect } from "react";
+  // import { debounce } from "lodash";
 
-    animateValue(
-      animatedStationnement,
-      DeviceNonDeplacer?.length,
-      1000,
-      setAnimatedStationnement
-    );
-    animateValue(
-      animatedInactifs,
-      DeviceInactifs?.length,
-      1000,
-      setAnimatedInactifs
-    );
-  }, [allDevices, filteredColorCategorieListe]);
+  useEffect(() => {
+    const handler = debounce(() => {
+      animateValue(animatedTotal, allDevices?.length, 1000, setAnimatedTotal);
+      animateValue(
+        animatedDeplaces,
+        DeviceDéplacer?.length,
+        1000,
+        setAnimatedDeplaces
+      );
+      animateValue(
+        animatedStationnement,
+        DeviceNonDeplacer?.length,
+        1000,
+        setAnimatedStationnement
+      );
+      animateValue(
+        animatedInactifs,
+        DeviceInactifs?.length,
+        1000,
+        setAnimatedInactifs
+      );
+    }, 300); // max une fois toutes les 500ms
+
+    handler();
+    return () => handler.cancel();
+  }, [allDevices, DeviceDéplacer, DeviceNonDeplacer, DeviceInactifs]);
+
+  //   // Mémoriser les longueurs pour éviter de recalculer à chaque rendu
+  // const devicesCount = useMemo(() => allDevices?.length || 0, [allDevices]);
+  // const deplacesCount = useMemo(() => DeviceDéplacer?.length || 0, [DeviceDéplacer]);
+  // const stationnementCount = useMemo(() => DeviceNonDeplacer?.length || 0, [DeviceNonDeplacer]);
+  // const inactifsCount = useMemo(() => DeviceInactifs?.length || 0, [DeviceInactifs]);
+
+  // useEffect(() => {
+  //   animateValue(animatedTotal, devicesCount, 1000, setAnimatedTotal);
+  //   animateValue(animatedDeplaces, deplacesCount, 1000, setAnimatedDeplaces);
+  //   animateValue(animatedStationnement, stationnementCount, 1000, setAnimatedStationnement);
+  //   animateValue(animatedInactifs, inactifsCount, 1000, setAnimatedInactifs);
+  // }, [devicesCount, deplacesCount, stationnementCount, inactifsCount]);
+
+  // useEffect(() => {
+  //   animateValue(animatedTotal, allDevices?.length, 1000, setAnimatedTotal);
+  //   animateValue(
+  //     animatedDeplaces,
+  //     DeviceDéplacer?.length,
+  //     1000,
+  //     setAnimatedDeplaces
+  //   );
+
+  //   animateValue(
+  //     animatedStationnement,
+  //     DeviceNonDeplacer?.length,
+  //     1000,
+  //     setAnimatedStationnement
+  //   );
+  //   animateValue(
+  //     animatedInactifs,
+  //     DeviceInactifs?.length,
+  //     1000,
+  //     setAnimatedInactifs
+  //   );
+  // }, [allDevices, filteredColorCategorieListe]);
 
   //
   //
@@ -724,7 +768,6 @@ function DashboardContaintMaintComponant({
     setShowStatisticDeviceListeDashboard,
   ] = useState(false);
 
-
   const [
     statisticFilteredDeviceListeText,
     setStatisticFilteredDeviceListeText,
@@ -1146,7 +1189,6 @@ function DashboardContaintMaintComponant({
                   setShowStatisticDeviceListeDashboard={
                     setShowStatisticDeviceListeDashboard
                   }
-            
                   setStatisticFilteredDeviceListeText={
                     setStatisticFilteredDeviceListeText
                   }
