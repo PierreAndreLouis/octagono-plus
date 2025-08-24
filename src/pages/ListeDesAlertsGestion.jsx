@@ -6,7 +6,6 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 function ListeDesAlertsGestion({
   fromDashboard = false,
-  statisticFilteredDeviceListe,
   searchTermInput,
   setSearchTermInput,
 }) {

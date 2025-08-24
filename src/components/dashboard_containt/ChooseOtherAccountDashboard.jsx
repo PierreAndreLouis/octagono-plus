@@ -32,11 +32,11 @@ function ChooseOtherAccountDashboard({
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
   const filterListeDesCompte = searchInputTerm
-    ? gestionAccountData.filter(
+    ? gestionAccountData?.filter(
         (item) =>
           item?.description
-            .toLowerCase()
-            .includes(searchInputTerm.toLowerCase()) ||
+            ?.toLowerCase()
+            ?.includes(searchInputTerm.toLowerCase()) ||
           item?.accountID.toLowerCase().includes(searchInputTerm.toLowerCase())
       )
     : gestionAccountData;

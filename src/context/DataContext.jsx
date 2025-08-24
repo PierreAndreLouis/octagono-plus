@@ -13,11 +13,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { useTranslation } from "react-i18next";
 import pLimit from "p-limit";
+import { debounce } from "lodash";
 
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "7.7";
+  let versionApplication = "7.8";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -66,6 +67,8 @@ const DataContextProvider = ({ children }) => {
   ] = useState(true);
 
   const [documentationPage, setDocumentationPage] = useState("Dashboard");
+  const [showPageRaccourciComponent, setShowPageRaccourciComponent] =
+    useState("");
 
   const [progressAnimationStart, setProgressAnimationStart] = useState(0);
   const [chooseAccountID, setChooseAccountID] = useState("");
@@ -752,6 +755,7 @@ const DataContextProvider = ({ children }) => {
   };
 
   const [allDevices, setAllDevices] = useState([]);
+
   const [filteredColorCategorieListe, setFilteredColorCategorieListe] =
     useState(null);
   const [
@@ -773,10 +777,6 @@ const DataContextProvider = ({ children }) => {
     setAllDevices(initialList);
     setListeGestionDesVehicules(initialList);
     setFilteredColorCategorieListe(initialList);
-
-    // setListeGestionDesVehicules(
-    //   addVehiculeDetailsFonction(initialList, véhiculeDetails)
-    // );
   }, [
     isDashboardHomePage,
     currentAccountSelected,
@@ -786,118 +786,72 @@ const DataContextProvider = ({ children }) => {
     gestionAccountData,
   ]);
 
-  const {
-    DeviceDéplacer,
-    EnDéplacement,
-    //
-    DeviceNonDeplacer,
-    DeviceListeActif,
-    DeviceEnStationnement,
-    //
-    DeviceInactifs,
-    DeviceInactifsWidthDetails,
-    DeviceInactifsWidthNoDetails,
-    //
-  } = useMemo(() => {
-    const d = {
-      DeviceDéplacer: [],
-      EnDéplacement: [],
-      //
-      DeviceNonDeplacer: [],
-      DeviceEnStationnement: [],
-      DeviceListeActif: [],
-      //
-      DeviceInactifs: [],
-      DeviceInactifsWidthDetails: [],
-      DeviceInactifsWidthNoDetails: [],
-    };
+  const [devicesCalculated, setDevicesCalculated] = useState({
+    DeviceDéplacer: [],
+    EnDéplacement: [],
+    DeviceNonDeplacer: [],
+    DeviceListeActif: [],
+    DeviceEnStationnement: [],
+    DeviceInactifs: [],
+    DeviceInactifsWidthDetails: [],
+    DeviceInactifsWidthNoDetails: [],
+  });
 
-    const idsÀExclure = new Set();
+  useEffect(() => {
+    const computeDevices = () => {
+      const d = {
+        DeviceDéplacer: [],
+        EnDéplacement: [],
+        DeviceNonDeplacer: [],
+        DeviceEnStationnement: [],
+        DeviceListeActif: [],
+        DeviceInactifs: [],
+        DeviceInactifsWidthDetails: [],
+        DeviceInactifsWidthNoDetails: [],
+      };
 
-    addVehiculeDetailsFonction(allDevices, véhiculeDetails)?.forEach(
-      (device) => {
-        //
-        const lastUpdateTimeSec = device?.véhiculeDetails?.[0]?.timestamp ?? 0;
-        const lastStopTime = device?.lastStopTime ?? 0;
-        const details = device?.véhiculeDetails?.[0];
-        const speed = details?.speedKPH ?? 0;
+      const idsÀExclure = new Set();
 
-        //////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////
+      addVehiculeDetailsFonction(allDevices, véhiculeDetails)?.forEach(
+        (device) => {
+          const lastUpdateTimeSec =
+            device?.véhiculeDetails?.[0]?.timestamp ?? 0;
+          const lastStopTime = device?.lastStopTime ?? 0;
+          const details = device?.véhiculeDetails?.[0];
+          const speed = details?.speedKPH ?? 0;
 
-        // Actifs
-        if (
-          currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
-          device?.véhiculeDetails?.length > 0
-          ////////
-        ) {
-          // ACTIFS ********
-          d.DeviceListeActif.push(device);
+          // Actifs
+          if (
+            currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
+            device?.véhiculeDetails?.length > 0
+          ) {
+            d.DeviceListeActif.push(device);
 
-          if (speed > 0) {
-            // En Déplacement
-            d.EnDéplacement.push(device);
+            if (speed > 0) d.EnDéplacement.push(device);
+            else d.DeviceEnStationnement.push(device);
+
+            if (speed > 0 || lastStopTime > todayTimestamp)
+              d.DeviceDéplacer.push(device);
+            else d.DeviceNonDeplacer.push(device);
           } else {
-            // En stationnement
-            d.DeviceEnStationnement.push(device);
-          }
-
-          ///////////////////////////////////////////////////
-          //  déplacer :
-          if (speed > 0 || lastStopTime > todayTimestamp) {
-            d.DeviceDéplacer.push(device);
-          }
-          // Non déplacer
-          else {
-            d.DeviceNonDeplacer.push(device);
-          }
-        } else {
-          // INACTIF *********
-          d.DeviceInactifs.push(device);
-          if (device?.véhiculeDetails?.length > 0) {
-            // INACTIF Width Details
-            d.DeviceInactifsWidthDetails.push(device);
-          } else {
-            // INACTIF Width NO Details
-            d.DeviceInactifsWidthNoDetails.push(device);
+            // Inactifs
+            d.DeviceInactifs.push(device);
+            if (device?.véhiculeDetails?.length > 0)
+              d.DeviceInactifsWidthDetails.push(device);
+            else d.DeviceInactifsWidthNoDetails.push(device);
           }
         }
+      );
 
-        //////////////////////////////////////////////////////////////////
+      return d;
+    };
 
-        // //  déplacer :
-        // if (
-        //   (speed > 0 &&
-        //     currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec) ||
-        //   (device?.véhiculeDetails?.length > 0 &&
-        //     lastStopTime > todayTimestamp &&
-        //     currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec)
-        // ) {
-        //   d.DeviceDéplacer.push(device);
-        // }
-        // // Non déplacer
-        // else if (
-        //   device?.véhiculeDetails?.length > 0 &&
-        //   currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec
-        // ) {
-        //   d.DeviceNonDeplacer.push(device);
-        // }
-        //  Inactif
-        // else {
-        //   d.DeviceInactifs.push(device);
+    const handler = debounce(() => {
+      setDevicesCalculated(computeDevices());
+    }, 1000); // recalcul max toutes les 100ms
 
-        //   if (device?.véhiculeDetails?.length > 0) {
-        //     d.DeviceInactifsWidthDetails.push(device);
-        //   } else {
-        //     d.DeviceInactifsWidthNoDetails.push(device);
-        //   }
-        // }
-
-        ////////////////////////
-      }
-    );
-
-    return d;
+    handler();
+    return () => handler.cancel();
   }, [
     allDevices,
     todayTimestamp,
@@ -906,6 +860,109 @@ const DataContextProvider = ({ children }) => {
     gestionAccountData,
     filteredColorCategorieListe,
   ]);
+
+  // Tu peux ensuite déstructurer
+  const {
+    DeviceDéplacer,
+    EnDéplacement,
+    DeviceNonDeplacer,
+    DeviceListeActif,
+    DeviceEnStationnement,
+    DeviceInactifs,
+    DeviceInactifsWidthDetails,
+    DeviceInactifsWidthNoDetails,
+  } = devicesCalculated;
+
+  // const {
+  //   DeviceDéplacer,
+  //   EnDéplacement,
+  //   //
+  //   DeviceNonDeplacer,
+  //   DeviceListeActif,
+  //   DeviceEnStationnement,
+  //   //
+  //   DeviceInactifs,
+  //   DeviceInactifsWidthDetails,
+  //   DeviceInactifsWidthNoDetails,
+  //   //
+  // } = useMemo(() => {
+  //   const d = {
+  //     DeviceDéplacer: [],
+  //     EnDéplacement: [],
+  //     //
+  //     DeviceNonDeplacer: [],
+  //     DeviceEnStationnement: [],
+  //     DeviceListeActif: [],
+  //     //
+  //     DeviceInactifs: [],
+  //     DeviceInactifsWidthDetails: [],
+  //     DeviceInactifsWidthNoDetails: [],
+  //   };
+
+  //   const idsÀExclure = new Set();
+
+  //   addVehiculeDetailsFonction(allDevices, véhiculeDetails)?.forEach(
+  //     (device) => {
+  //       //
+  //       const lastUpdateTimeSec = device?.véhiculeDetails?.[0]?.timestamp ?? 0;
+  //       const lastStopTime = device?.lastStopTime ?? 0;
+  //       const details = device?.véhiculeDetails?.[0];
+  //       const speed = details?.speedKPH ?? 0;
+
+  //       //////////////////////////////////////////////////////////////////
+  //       //////////////////////////////////////////////////////////////////
+
+  //       // Actifs
+  //       if (
+  //         currentTimeSec - lastUpdateTimeSec < twentyFourHoursInSec &&
+  //         device?.véhiculeDetails?.length > 0
+  //         ////////
+  //       ) {
+  //         // ACTIFS ********
+  //         d.DeviceListeActif.push(device);
+
+  //         if (speed > 0) {
+  //           // En Déplacement
+  //           d.EnDéplacement.push(device);
+  //         } else {
+  //           // En stationnement
+  //           d.DeviceEnStationnement.push(device);
+  //         }
+
+  //         ///////////////////////////////////////////////////
+  //         //  déplacer :
+  //         if (speed > 0 || lastStopTime > todayTimestamp) {
+  //           d.DeviceDéplacer.push(device);
+  //         }
+  //         // Non déplacer
+  //         else {
+  //           d.DeviceNonDeplacer.push(device);
+  //         }
+  //       } else {
+  //         // INACTIF *********
+  //         d.DeviceInactifs.push(device);
+  //         if (device?.véhiculeDetails?.length > 0) {
+  //           // INACTIF Width Details
+  //           d.DeviceInactifsWidthDetails.push(device);
+  //         } else {
+  //           // INACTIF Width NO Details
+  //           d.DeviceInactifsWidthNoDetails.push(device);
+  //         }
+  //       }
+
+  //       ////////////////////////
+  //     }
+  //   );
+
+  //   return d;
+  // }, [
+  //   allDevices,
+  //   todayTimestamp,
+  //   mergedDataHome,
+  //   véhiculeDetails,
+  //   gestionAccountData,
+  //   filteredColorCategorieListe,
+  // ]);
 
   const openDatabase = () => {
     return new Promise((resolve, reject) => {
@@ -1729,6 +1786,8 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
+    console.log("xml", xml);
+
     const res = await fetch(currentAPI, {
       method: "POST",
       headers: { "Content-Type": "application/xml" },
@@ -1742,6 +1801,8 @@ const DataContextProvider = ({ children }) => {
       ?.getAttribute("result");
     const records = Array.from(doc.getElementsByTagName("Record"));
 
+    console.log("result", result);
+
     const data =
       result === "success"
         ? records.map((rec) =>
@@ -1752,23 +1813,27 @@ const DataContextProvider = ({ children }) => {
           )
         : [];
 
-    let newData;
-    if (user === "admin") {
-      newData = data;
-    } else if (user === "ht") {
-      newData = data?.filter((account) => account?.notes === "ht");
-    } else if (user === "rd") {
-      newData = data?.filter((account) => account?.notes === "rd");
-    }
+    // let newData;
 
-    setComptes(newData);
+    // if (user === "admin") {
+    //   newData = data;
+    // } else if (user === "ht") {
+    //   newData = data?.filter((account) => account?.notes === "ht");
+    // } else if (user === "rd") {
+    //   newData = data?.filter((account) => account?.notes === "rd");
+    // }
+    // console.log("newData", newData);
+
+    console.log("newData data", data);
+
+    setComptes(data);
 
     if (fetchAllOtherData) {
       loadForManySecond();
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
       setProgress(2);
-      processAllComptes(newData, 10); // 👈 traitement séquentiel en lots de 3
+      processAllComptes(data, 10); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
@@ -1776,7 +1841,7 @@ const DataContextProvider = ({ children }) => {
       setProgress(0);
     }
 
-    return newData;
+    return data;
   };
 
   const fetchAccountDevices = async (accountID, password) => {
@@ -1809,6 +1874,11 @@ const DataContextProvider = ({ children }) => {
           <Field name="speedLimitKPH" />
           <Field name="uniqueID" />
           <Field name="lastEventStatusCode" />
+          <Field name="notes" />
+          <Field name="allowNotify" />
+
+        
+
           
 
   </Record>
@@ -2416,89 +2486,98 @@ const DataContextProvider = ({ children }) => {
   };
 
   x;
+
   useEffect(() => {
     if (!comptes?.length) return;
 
-    const merged = comptes?.map((acct) => {
-      const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
-      const rules = accountRules?.filter((u) => u.accountID === acct.accountID);
-      const rulesActive = accountRulesActive?.filter(
-        (u) => u.accountID === acct.accountID
-      );
-
-      const devices = accountDevices?.filter(
-        (d) => d.accountID === acct.accountID
-      );
-
-      const geofences = accountGeofences?.filter(
-        (d) => d.accountID === acct.accountID
-      );
-
-      const groupes = accountGroupes?.filter(
-        (g) => g.accountID === acct.accountID
-      );
-
-      const userGrp = userGroupes?.filter((ug) =>
-        users?.some((u) => u.userID === ug.userID)
-      );
-
-      const grpDevs = groupeDevices?.filter((gd) =>
-        groupes?.some((g) => g.groupID === gd.groupID)
-      );
-
-      // Création d’une map des devices de groupes
-      const groupMap = {};
-      groupes?.forEach((group) => {
-        groupMap[group.groupID] =
-          grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
-          [];
-      });
-
-      // Enrichissement des utilisateurs avec les groupes et les devices des groupes
-      const updatedUsers = users?.map((u) => {
-        const groupesDuUser =
-          userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
-
-        const devicesFromGroups =
-          groupesDuUser?.length > 0
-            ? groupesDuUser.flatMap(
-                (groupLink) => groupMap[groupLink.groupID] || []
-              )
-            : // : [];
-              devices || [];
-
-        const uniqueDevices = Object.values(
-          devicesFromGroups?.reduce((acc, device) => {
-            acc[device.deviceID] = device;
-            return acc;
-          }, {})
+    const computeGestionAccounts = () => {
+      const merged = comptes?.map((acct) => {
+        const users = accountUsers?.filter(
+          (u) => u.accountID === acct.accountID
+        );
+        const rules = accountRules?.filter(
+          (u) => u.accountID === acct.accountID
+        );
+        const rulesActive = accountRulesActive?.filter(
+          (u) => u.accountID === acct.accountID
         );
 
+        const devices = accountDevices?.filter(
+          (d) => d.accountID === acct.accountID
+        );
+        const geofences = accountGeofences?.filter(
+          (d) => d.accountID === acct.accountID
+        );
+        const groupes = accountGroupes?.filter(
+          (g) => g.accountID === acct.accountID
+        );
+        const userGrp = userGroupes?.filter((ug) =>
+          users?.some((u) => u.userID === ug.userID)
+        );
+        const grpDevs = groupeDevices?.filter((gd) =>
+          groupes?.some((g) => g.groupID === gd.groupID)
+        );
+
+        const groupMap = {};
+        groupes?.forEach((group) => {
+          groupMap[group.groupID] =
+            grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
+            [];
+        });
+
+        const updatedUsers = users?.map((u) => {
+          const groupesDuUser =
+            userGrp
+              .find((ug) => ug.userID === u.userID)
+              ?.userGroupes?.filter((gl) => gl.accountID === u.accountID) || [];
+
+          const devicesFromGroups =
+            groupesDuUser?.length > 0
+              ? groupesDuUser.flatMap(
+                  (groupLink) => groupMap[groupLink.groupID] || []
+                )
+              : devices || [];
+
+          const uniqueDevices = Object.values(
+            devicesFromGroups.reduce((acc, device) => {
+              acc[device.deviceID] = device;
+              return acc;
+            }, {})
+          );
+
+          return {
+            ...u,
+            userGroupes: groupesDuUser,
+            userDevices: uniqueDevices,
+          };
+        });
+
+        const updatedGroupes = groupes?.map((g) => ({
+          ...g,
+          groupeDevices:
+            grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
+        }));
+
         return {
-          ...u,
-          userGroupes: groupesDuUser,
-          userDevices: uniqueDevices,
+          ...acct,
+          accountUsers: updatedUsers,
+          accountRules: rules,
+          accountRulesActive: rulesActive,
+          accountDevices: devices,
+          accountGeofences: geofences,
+          accountGroupes: updatedGroupes,
         };
       });
 
-      const updatedGroupes = groupes?.map((g) => ({
-        ...g,
-        groupeDevices:
-          grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
-      }));
+      return merged;
+    };
 
-      return {
-        ...acct,
-        accountUsers: updatedUsers,
-        accountRules: rules,
-        accountRulesActive: rulesActive,
-        accountDevices: devices,
-        accountGeofences: geofences,
-        accountGroupes: updatedGroupes,
-      };
-    });
+    const handler = debounce(() => {
+      setGestionAccountData(computeGestionAccounts());
+    }, 1000); // recalcul max toutes les 100ms
 
-    setGestionAccountData(merged);
+    handler();
+    return () => handler.cancel();
   }, [
     comptes,
     accountDevices,
@@ -2508,10 +2587,114 @@ const DataContextProvider = ({ children }) => {
     accountUsers,
     accountRules,
     accountRulesActive,
-    // userDevices,
     userGroupes,
     véhiculeDetails,
   ]);
+
+  // useEffect(() => {
+  //   if (!comptes?.length) return;
+
+  //   const merged = comptes?.map((acct) => {
+  //     const users = accountUsers?.filter((u) => u.accountID === acct.accountID);
+  //     const rules = accountRules?.filter((u) => u.accountID === acct.accountID);
+  //     const rulesActive = accountRulesActive?.filter(
+  //       (u) => u.accountID === acct.accountID
+  //     );
+
+  //     const devices = accountDevices?.filter(
+  //       (d) => d.accountID === acct.accountID
+  //     );
+
+  //     const geofences = accountGeofences?.filter(
+  //       (d) => d.accountID === acct.accountID
+  //     );
+
+  //     const groupes = accountGroupes?.filter(
+  //       (g) => g.accountID === acct.accountID
+  //     );
+
+  //     const userGrp = userGroupes?.filter((ug) =>
+  //       users?.some((u) => u.userID === ug.userID)
+  //     );
+
+  //     const grpDevs = groupeDevices?.filter((gd) =>
+  //       groupes?.some((g) => g.groupID === gd.groupID)
+  //     );
+
+  //     // Création d’une map des devices de groupes
+  //     const groupMap = {};
+
+  //     groupes?.forEach((group) => {
+  //       groupMap[group.groupID] =
+  //         grpDevs.find((gd) => gd.groupID === group.groupID)?.groupeDevices ||
+  //         [];
+  //     });
+
+  //     // Enrichissement des utilisateurs avec les groupes et les devices des groupes
+  //     const updatedUsers = users?.map((u) => {
+  //       // const groupesDuUser =
+  //       //   userGrp.find((ug) => ug.userID === u.userID)?.userGroupes || [];
+
+  //       const groupesDuUser =
+  //         userGrp
+  //           .find((ug) => ug.userID === u.userID)
+  //           ?.userGroupes?.filter(
+  //             (groupLink) => groupLink.accountID === u.accountID
+  //           ) || [];
+
+  //       const devicesFromGroups =
+  //         groupesDuUser?.length > 0
+  //           ? groupesDuUser.flatMap(
+  //               (groupLink) => groupMap[groupLink.groupID] || []
+  //             )
+  //           : // : [];
+  //             devices || [];
+
+  //       const uniqueDevices = Object.values(
+  //         devicesFromGroups?.reduce((acc, device) => {
+  //           acc[device.deviceID] = device;
+  //           return acc;
+  //         }, {})
+  //       );
+
+  //       return {
+  //         ...u,
+  //         userGroupes: groupesDuUser,
+  //         userDevices: uniqueDevices,
+  //       };
+  //     });
+
+  //     const updatedGroupes = groupes?.map((g) => ({
+  //       ...g,
+  //       groupeDevices:
+  //         grpDevs.find((gd) => gd.groupID === g.groupID)?.groupeDevices || [],
+  //     }));
+
+  //     return {
+  //       ...acct,
+  //       accountUsers: updatedUsers,
+  //       accountRules: rules,
+  //       accountRulesActive: rulesActive,
+  //       accountDevices: devices,
+  //       accountGeofences: geofences,
+  //       accountGroupes: updatedGroupes,
+  //     };
+  //   });
+
+  //   setGestionAccountData(merged);
+  // }, [
+  //   comptes,
+  //   accountDevices,
+  //   accountGeofences,
+  //   accountGroupes,
+  //   groupeDevices,
+  //   accountUsers,
+  //   accountRules,
+  //   accountRulesActive,
+  //   // userDevices,
+  //   userGroupes,
+  //   véhiculeDetails,
+  // ]);
 
   x;
 
@@ -2538,6 +2721,8 @@ const DataContextProvider = ({ children }) => {
     deviceSelectionnes,
     usersSelectionnes
   ) => {
+    console.log("deviceSelectionnes", deviceSelectionnes);
+    console.log("usersSelectionnes", usersSelectionnes);
     setError("");
     setCreateVéhiculeLoading(true);
 
@@ -2573,56 +2758,114 @@ const DataContextProvider = ({ children }) => {
 
       setError("");
 
+      // if (result === "success") {
+      //   setShowConfirmationMessagePopup(true); // succès  Échec
+      //   setConfirmationMessagePopupTexte(
+      //     `${t("Creation du nouveau groupe avec succès")}`
+      //   );
+      //   setConfirmationMessagePopupName(description);
+
+      //   setError("");
+
+      //   const id = accountID;
+      //   const pwd = password;
+
+      //   setCreateVéhiculeLoading(false);
+      //   setTimeout(() => {
+      //     if (deviceSelectionnes) {
+      //       console.log(
+      //         "@@@@@@@@@@@@@@@@@111111111111111111",
+      //         deviceSelectionnes
+      //       );
+
+      //       deviceSelectionnes?.map((deviceID) =>
+      //         assignDeviceToGroup(
+      //           accountID,
+      //           userID,
+      //           password,
+      //           groupID,
+      //           deviceID
+      //         )
+      //       );
+      //     }
+      //     if (usersSelectionnes) {
+      //       console.log("#############111111111111111111", usersSelectionnes);
+      //       usersSelectionnes?.map((user) =>
+      //         assignUserToGroup(accountID, userID, password, groupID, user)
+      //       );
+      //     }
+      //   }, 2000);
+
+      //   setTimeout(() => {
+      //     try {
+      //       fetchAccountGroupes(id, pwd)
+      //         .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+      //         .catch((err) => {
+      //           console.error(
+      //             "Erreur lors du rafraîchissement des groupes :",
+      //             err
+      //           );
+      //           setError("Erreur lors de la mise à jour des groupes.");
+      //         });
+      //     } catch (err) {
+      //       console.error("Erreur lors du rafraîchissement des groupes :", err);
+      //       setError("Erreur lors de la mise à jour des groupes.");
+      //     }
+
+      //     fetchAccountUsers(id, pwd)
+      //       .then((users) => {
+      //         // fetchUserDevices(id, users);
+      //         fetchUserGroupes(id, users);
+      //       })
+      //       .catch((err) => {
+      //         console.error(
+      //           "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+      //           err
+      //         );
+      //         setError("Erreur lors de la creation des utilisateurs.");
+      //       });
+      //   }, 4000);
+      // }
+
       if (result === "success") {
-        setShowConfirmationMessagePopup(true); // succès  Échec
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Creation du nouveau groupe avec succès")}`
         );
         setConfirmationMessagePopupName(description);
-
         setError("");
 
-        const id = accountID;
-        const pwd = password;
-
-        setCreateVéhiculeLoading(false);
-        setTimeout(() => {
-          if (deviceSelectionnes) {
-            assignMultipleDevicesToGroup(
+        try {
+          // assigner les devices un par un
+          for (const deviceID of deviceSelectionnes || []) {
+            await assignDeviceToGroup(
               accountID,
               userID,
               password,
               groupID,
-              deviceSelectionnes
+              deviceID
             );
           }
-          if (usersSelectionnes) {
-            assignMultipleUsersToGroup(
-              accountID,
-              userID, // utilisateur qui fait la requête
-              password,
-              groupID,
-              usersSelectionnes
-            );
-          }
-        }, 4000);
 
-        setTimeout(() => {
-          try {
-            fetchAccountGroupes(id, pwd)
-              .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
-              .catch((err) => {
-                console.error(
-                  "Erreur lors du rafraîchissement des groupes :",
-                  err
-                );
-                setError("Erreur lors de la mise à jour des groupes.");
-              });
-          } catch (err) {
-            console.error("Erreur lors du rafraîchissement des groupes :", err);
-            setError("Erreur lors de la mise à jour des groupes.");
+          // assigner les users un par un
+          for (const user of usersSelectionnes || []) {
+            await assignUserToGroup(accountID, userID, password, groupID, user);
           }
-        }, 8000);
+
+          // recharger les données après les assignations
+          const groupes = await fetchAccountGroupes(accountID, password);
+          await fetchGroupeDevices(accountID, groupes, password);
+
+          const users = await fetchAccountUsers(accountID, password);
+          await fetchUserGroupes(accountID, users);
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour :", err);
+          setError(
+            "Erreur lors de la mise à jour des groupes ou utilisateurs."
+          );
+        }
+
+        setCreateVéhiculeLoading(false);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -2650,36 +2893,41 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
     }
   };
+
   const modifyGroupeEnGestionAccount = async (
     accountID,
     userID,
     password,
-
     groupID,
     description,
     displayName,
     notes,
     workOrderID,
-    //
     deviceSelectionnes,
-    deviceNonSelectionnes
+    deviceNonSelectionnes,
+    usersSelectionnes,
+    usersNonSelectionnes
   ) => {
+    console.log("deviceSelectionnes", deviceSelectionnes);
+    console.log("deviceNonSelectionnes", deviceNonSelectionnes);
+    console.log("usersSelectionnes", usersSelectionnes);
+    console.log("usersNonSelectionnes", usersNonSelectionnes);
+
     setError("");
     setCreateVéhiculeLoading(true);
+
     const xmlData = `<GTSRequest command="dbput">
-      <Authorization account="${accountID}" user="${userID}" password="${password}" />
-      <Record table="DeviceGroup" partial="true">
-        <Field name="accountID">${accountID}</Field>
-
-        <Field name="displayName">${displayName}</Field>
-        <Field name="description">${description}</Field>
-        <Field name="groupID">${groupID}</Field>
-        <Field name="notes">${notes}</Field>
-        <Field name="workOrderID">${workOrderID}</Field>
-
-        <Field name="isActive">1</Field>
-      </Record>
-    </GTSRequest>`;
+    <Authorization account="${accountID}" user="${userID}" password="${password}" />
+    <Record table="DeviceGroup" partial="true">
+      <Field name="accountID">${accountID}</Field>
+      <Field name="displayName">${displayName}</Field>
+      <Field name="description">${description}</Field>
+      <Field name="groupID">${groupID}</Field>
+      <Field name="notes">${notes}</Field>
+      <Field name="workOrderID">${workOrderID}</Field>
+      <Field name="isActive">1</Field>
+    </Record>
+  </GTSRequest>`;
 
     try {
       const response = await fetch(currentAPI, {
@@ -2696,100 +2944,95 @@ const DataContextProvider = ({ children }) => {
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
 
-      setError("");
-
       if (result === "success") {
-        setError("");
-
-        setAccountGroupes((prevGroupes) =>
-          prevGroupes.map((groupe) =>
+        // Mettre à jour le state local
+        setAccountGroupes((prev) =>
+          prev.map((groupe) =>
             groupe.groupID === groupID
-              ? {
-                  ...groupe,
-                  displayName,
-                  description,
-                  notes,
-                  workOrderID,
-                }
+              ? { ...groupe, displayName, description, notes, workOrderID }
               : groupe
           )
         );
 
-        setListeGestionDesGroupe((prevGroupes) =>
-          prevGroupes.map((groupe) =>
+        setListeGestionDesGroupe((prev) =>
+          prev.map((groupe) =>
             groupe.groupID === groupID
-              ? {
-                  ...groupe,
-                  displayName,
-                  description,
-                  notes,
-                  workOrderID,
-                }
+              ? { ...groupe, displayName, description, notes, workOrderID }
               : groupe
           )
         );
 
-        setCreateVéhiculeLoading(false);
-
-        setTimeout(() => {
-          if (deviceSelectionnes) {
-            deviceSelectionnes?.map((deviceID) =>
-              assignDeviceToGroup(
-                accountID,
-                userID,
-                password,
-                groupID,
-                deviceID
-              )
-            );
-          }
-
-          deviceNonSelectionnes?.map((deviceID) => {
-            removeDeviceFromGroup(
+        try {
+          // === Assignation / suppression des devices ===
+          for (const deviceID of deviceSelectionnes || []) {
+            await assignDeviceToGroup(
               accountID,
               userID,
               password,
               groupID,
               deviceID
             );
-          });
-        }, 3000);
-
-        setTimeout(() => {
-          try {
-            fetchAccountGroupes(accountID, password).then((groupes) =>
-              fetchGroupeDevices(accountID, groupes, password)
-            );
-          } catch (err) {
-            console.error("Erreur lors de la mise à jour des groupes :", err);
-            setError("Erreur lors de la mise à jour des groupes.");
           }
-        }, 6000);
+          for (const deviceID of deviceNonSelectionnes || []) {
+            await removeDeviceFromGroup(
+              accountID,
+              userID,
+              password,
+              groupID,
+              deviceID
+            );
+          }
 
-        setShowConfirmationMessagePopup(true); // succès  Échec
+          // === Assignation / suppression des users ===
+          for (const user of usersSelectionnes || []) {
+            await assignUserToGroup(accountID, userID, password, groupID, user);
+          }
+          for (const user of usersNonSelectionnes || []) {
+            await removeUserFromGroup(
+              accountID,
+              userID,
+              password,
+              groupID,
+              user
+            );
+          }
+
+          // === Rafraîchissement après modification ===
+          const groupes = await fetchAccountGroupes(accountID, password);
+          await fetchGroupeDevices(accountID, groupes, password);
+
+          const users = await fetchAccountUsers(accountID, password);
+          await fetchUserGroupes(accountID, users);
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour :", err);
+          setError(
+            "Erreur lors de la mise à jour des groupes ou utilisateurs."
+          );
+        }
+
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Modification du groupe avec succès")}`
         );
         setConfirmationMessagePopupName(description);
+        setCreateVéhiculeLoading(false);
       } else {
         const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0].textContent;
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent;
         setError(errorMessage || "Erreur lors de la modification du groupe.");
         handleUserError(xmlDoc);
 
-        setShowConfirmationMessagePopup(true); // succès  Échec
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Échec de la Modification du groupe")}`
         );
         setConfirmationMessagePopupName(description);
-
         setCreateVéhiculeLoading(false);
-        handleUserError(xmlDoc);
       }
     } catch (error) {
-      setError("Erreur lors de la moodification du groupe.");
-      console.error("Erreur lors de la création du véhicule", error);
-      setShowConfirmationMessagePopup(true); // succès  Échec
+      console.error("Erreur lors de la modification du groupe", error);
+      setError("Erreur lors de la modification du groupe.");
+      setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
         `${t("Échec de la Modification du groupe")}`
       );
@@ -2797,6 +3040,211 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
     }
   };
+
+  // const modifyGroupeEnGestionAccount = async (
+  //   accountID,
+  //   userID,
+  //   password,
+
+  //   groupID,
+  //   description,
+  //   displayName,
+  //   notes,
+  //   workOrderID,
+  //   //
+  //   deviceSelectionnes,
+  //   deviceNonSelectionnes,
+  //   //
+  //   usersSelectionnes,
+  //   usersNonSelectionnes
+  // ) => {
+  //   console.log("deviceSelectionnes", deviceSelectionnes);
+  //   console.log("deviceNonSelectionnes", deviceNonSelectionnes);
+  //   console.log("usersSelectionnes", usersSelectionnes);
+  //   console.log("usersNonSelectionnes", usersNonSelectionnes);
+
+  //   setError("");
+  //   setCreateVéhiculeLoading(true);
+  //   const xmlData = `<GTSRequest command="dbput">
+  //     <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  //     <Record table="DeviceGroup" partial="true">
+  //       <Field name="accountID">${accountID}</Field>
+
+  //       <Field name="displayName">${displayName}</Field>
+  //       <Field name="description">${description}</Field>
+  //       <Field name="groupID">${groupID}</Field>
+  //       <Field name="notes">${notes}</Field>
+  //       <Field name="workOrderID">${workOrderID}</Field>
+
+  //       <Field name="isActive">1</Field>
+  //     </Record>
+  //   </GTSRequest>`;
+
+  //   console.log("xmlData", xmlData);
+
+  //   console.log("");
+
+  //   try {
+  //     const response = await fetch(currentAPI, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     const data = await response.text();
+
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       .getAttribute("result");
+
+  //     setError("");
+
+  //     if (result === "success") {
+  //       setError("");
+
+  //       setAccountGroupes((prevGroupes) =>
+  //         prevGroupes.map((groupe) =>
+  //           groupe.groupID === groupID
+  //             ? {
+  //                 ...groupe,
+  //                 displayName,
+  //                 description,
+  //                 notes,
+  //                 workOrderID,
+  //               }
+  //             : groupe
+  //         )
+  //       );
+
+  //       setListeGestionDesGroupe((prevGroupes) =>
+  //         prevGroupes.map((groupe) =>
+  //           groupe.groupID === groupID
+  //             ? {
+  //                 ...groupe,
+  //                 displayName,
+  //                 description,
+  //                 notes,
+  //                 workOrderID,
+  //               }
+  //             : groupe
+  //         )
+  //       );
+
+  //       setCreateVéhiculeLoading(false);
+
+  //       // ///////////////////////
+
+  //       setTimeout(() => {
+  //         if (deviceSelectionnes) {
+  //           deviceSelectionnes?.map((deviceID) =>
+  //             assignDeviceToGroup(
+  //               accountID,
+  //               userID,
+  //               password,
+  //               groupID,
+  //               deviceID
+  //             )
+  //           );
+  //         }
+
+  //         if (deviceNonSelectionnes) {
+  //           deviceNonSelectionnes?.map((deviceID) => {
+  //             removeDeviceFromGroup(
+  //               accountID,
+  //               userID,
+  //               password,
+  //               groupID,
+  //               deviceID
+  //             );
+  //           });
+  //         }
+  //         if (usersSelectionnes) {
+  //           console.log("#############111111111111111111", usersSelectionnes);
+  //           usersSelectionnes?.map((user) =>
+  //             assignUserToGroup(accountID, userID, password, groupID, user)
+  //           );
+  //         }
+
+  //         if (usersNonSelectionnes) {
+  //           console.log(
+  //             "^^^^^^^^^^^^^^^^^^1111111111111",
+  //             usersNonSelectionnes
+  //           );
+
+  //           usersNonSelectionnes?.map((user) =>
+  //             removeUserFromGroup(accountID, userID, password, groupID, user)
+  //           );
+  //         }
+  //       }, 2000);
+
+  //       /////////////////////////////////////////////////////////////
+
+  //       const id = accountID;
+  //       const pwd = password;
+
+  //       setTimeout(() => {
+  //         try {
+  //           fetchAccountGroupes(id, pwd)
+  //             .then((groupes) => fetchGroupeDevices(id, groupes, pwd))
+  //             .catch((err) => {
+  //               console.error(
+  //                 "Erreur lors du rafraîchissement des groupes :",
+  //                 err
+  //               );
+  //               setError("Erreur lors de la mise à jour des groupes.");
+  //             });
+  //         } catch (err) {
+  //           console.error("Erreur lors du rafraîchissement des groupes :", err);
+  //           setError("Erreur lors de la mise à jour des groupes.");
+  //         }
+
+  //         fetchAccountUsers(id, pwd)
+  //           .then((users) => {
+  //             // fetchUserDevices(id, users);
+  //             fetchUserGroupes(id, users);
+  //           })
+  //           .catch((err) => {
+  //             console.error(
+  //               "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+  //               err
+  //             );
+  //             setError("Erreur lors de la creation des utilisateurs.");
+  //           });
+  //       }, 4000);
+
+  //       setShowConfirmationMessagePopup(true); // succès  Échec
+  //       setConfirmationMessagePopupTexte(
+  //         `${t("Modification du groupe avec succès")}`
+  //       );
+  //       setConfirmationMessagePopupName(description);
+  //     } else {
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0].textContent;
+  //       setError(errorMessage || "Erreur lors de la modification du groupe.");
+  //       handleUserError(xmlDoc);
+
+  //       setShowConfirmationMessagePopup(true); // succès  Échec
+  //       setConfirmationMessagePopupTexte(
+  //         `${t("Échec de la Modification du groupe")}`
+  //       );
+  //       setConfirmationMessagePopupName(description);
+
+  //       setCreateVéhiculeLoading(false);
+  //       handleUserError(xmlDoc);
+  //     }
+  //   } catch (error) {
+  //     setError("Erreur lors de la moodification du groupe.");
+  //     console.error("Erreur lors de la création du véhicule", error);
+  //     setShowConfirmationMessagePopup(true); // succès  Échec
+  //     setConfirmationMessagePopupTexte(
+  //       `${t("Échec de la Modification du groupe")}`
+  //     );
+  //     setConfirmationMessagePopupName(description);
+  //     setCreateVéhiculeLoading(false);
+  //   }
+  // };
 
   const deleteGroupeEnGestionAccount = async (
     accountID,
@@ -3570,17 +4018,167 @@ const DataContextProvider = ({ children }) => {
   //
   x;
 
+  // const createNewUserEnGestionAccount = async (
+  //   accountID,
+  //   user,
+  //   password,
+
+  //   userIDField,
+  //   description,
+  //   displayName,
+  //   passwordField,
+
+  //   //
+  //   contactEmail,
+  //   notifyEmail,
+  //   isActive,
+  //   contactPhone,
+  //   contactName,
+  //   timeZone,
+  //   maxAccessLevel,
+  //   roleID,
+  //   //
+  //   addressCity,
+  //   addressCountry,
+  //   userType,
+  //   //
+
+  //   groupesSelectionnes,
+  //   groupesNonSelectionnes
+
+  //   /////////////////////
+
+  //   //
+  // ) => {
+  //   // /////////
+
+  //   setError("");
+  //   setCreateVéhiculeLoading(true);
+  //   //  <Field name="GroupList">${userAccount}</Field>
+  //   // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+  //   const xmlData = `<GTSRequest command="dbcreate">
+  //     <Authorization account="${accountID}" user="${user}" password="${password}" />
+  //     <Record table="User" partial="true">
+  //       <Field name="accountID">${accountID}</Field>
+
+  //       <Field name="userID">${userIDField}</Field>
+  //       <Field name="displayName">${displayName}</Field>
+  //       <Field name="description">${description}</Field>
+  //       <Field name="password">${passwordField}</Field>
+
+  //       <Field name="roleID">${roleID}</Field>
+  //       <Field name="contactEmail">${contactEmail}</Field>
+  //       <Field name="notifyEmail">${notifyEmail}</Field>
+  //       <Field name="isActive">${isActive}</Field>
+  //       <Field name="contactPhone">${contactPhone}</Field>
+  //       <Field name="contactName">${contactName}</Field>
+  //       <Field name="timeZone">${timeZone}</Field>
+  //       <Field name="maxAccessLevel">${maxAccessLevel}</Field>
+
+  //       <Field name="addressCity">${addressCity}</Field>
+  //       <Field name="addressCountry">${addressCountry}</Field>
+  //       <Field name="userType">${userType}</Field>
+
+  //       <Field name="isActive">1</Field>
+  //     </Record>
+  //   </GTSRequest>`;
+
+  //   try {
+  //     const response = await fetch(currentAPI, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     const data = await response.text();
+
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       .getAttribute("result");
+  //     setError("");
+
+  //     if (result === "success") {
+  //       // setSuccessCreateUserGestionPopup(true);
+  //       setShowConfirmationMessagePopup(true); // succès  Échec
+  //       setConfirmationMessagePopupTexte(
+  //         `${t("Creation du nouveau utilisateur avec succès")}`
+  //       );
+  //       setConfirmationMessagePopupName(description);
+  //       setError("");
+  //       const id = accountID;
+  //       const pwd = password;
+
+  //       setCreateVéhiculeLoading(false);
+
+  //       // Ajouter l’utilisateur aux groupes sélectionnés
+
+  //       setTimeout(() => {
+  //         if (groupesSelectionnes) {
+  //           // groupesSelectionnes?.map((groupID) =>
+  //           assignUserToGroup(
+  //             accountID,
+  //             user,
+  //             password,
+  //             groupesSelectionnes,
+  //             userIDField
+  //           );
+  //           // );
+  //         }
+  //       }, 3000);
+
+  //       setTimeout(() => {
+  //         fetchAccountUsers(id, pwd)
+  //           .then((users) => {
+  //             fetchUserDevices(id, users);
+  //             fetchUserGroupes(id, users);
+  //           })
+  //           .catch((err) => {
+  //             console.error(
+  //               "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+  //               err
+  //             );
+  //             setError("Erreur lors de la creation des utilisateurs.");
+  //           });
+  //       }, 5000);
+  //     } else {
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0].textContent;
+  //       setError(
+  //         errorMessage || "Erreur lors de la création de l'utilisateur."
+  //       );
+
+  //       handleUserError(xmlDoc);
+
+  //       setShowConfirmationMessagePopup(true); // succès  Échec
+  //       setConfirmationMessagePopupTexte(
+  //         `${t("Échec de la Creation du l'utilisateur")}`
+  //       );
+  //       setConfirmationMessagePopupName(description);
+  //       setCreateVéhiculeLoading(false);
+  //       handleUserError(xmlDoc);
+  //     }
+  //   } catch (error) {
+  //     setError("Erreur lors de la création du user.");
+  //     console.error("Erreur lors de la création du véhicule", error);
+  //     setShowConfirmationMessagePopup(true); // succès  Échec
+  //     setConfirmationMessagePopupTexte(
+  //       `${t("Échec de la Creation du l'utilisateur")}`
+  //     );
+  //     setConfirmationMessagePopupName(description);
+  //     setCreateVéhiculeLoading(false);
+  //   }
+  // };
+
   const createNewUserEnGestionAccount = async (
     accountID,
     user,
     password,
-
     userIDField,
     description,
     displayName,
     passwordField,
-
-    //
     contactEmail,
     notifyEmail,
     isActive,
@@ -3589,54 +4187,39 @@ const DataContextProvider = ({ children }) => {
     timeZone,
     maxAccessLevel,
     roleID,
-    //
     addressCity,
     addressCountry,
     userType,
-    //
-
     groupesSelectionnes,
-    groupesNonSelectionnes
-
-    /////////////////////
-
-    //
+    groupesNonSelectionnes // ← même si inutilisé pour l’instant
   ) => {
-    // /////////
-
     setError("");
     setCreateVéhiculeLoading(true);
-    //  <Field name="GroupList">${userAccount}</Field>
-    // <Authorization account="${accountID}" user="${userID}" password="${password}" />
+
     const xmlData = `<GTSRequest command="dbcreate">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
-      <Record table="User" partial="true">
-        <Field name="accountID">${accountID}</Field>
+    <Authorization account="${accountID}" user="${user}" password="${password}" />
+    <Record table="User" partial="true">
+      <Field name="accountID">${accountID}</Field>
+      <Field name="userID">${userIDField}</Field>
+      <Field name="displayName">${displayName}</Field>
+      <Field name="description">${description}</Field>
+      <Field name="password">${passwordField}</Field>
 
-        <Field name="userID">${userIDField}</Field>
-        <Field name="displayName">${displayName}</Field>
-        <Field name="description">${description}</Field>
-        <Field name="password">${passwordField}</Field>
-
-
-
-        <Field name="roleID">${roleID}</Field>
-        <Field name="contactEmail">${contactEmail}</Field>
-        <Field name="notifyEmail">${notifyEmail}</Field>
-        <Field name="isActive">${isActive}</Field>
-        <Field name="contactPhone">${contactPhone}</Field>
-        <Field name="contactName">${contactName}</Field>
-        <Field name="timeZone">${timeZone}</Field>
-        <Field name="maxAccessLevel">${maxAccessLevel}</Field>
-        
-        <Field name="addressCity">${addressCity}</Field>
-        <Field name="addressCountry">${addressCountry}</Field>
-        <Field name="userType">${userType}</Field>
-   
-
-        <Field name="isActive">1</Field>
-      </Record>
-    </GTSRequest>`;
+      <Field name="roleID">${roleID}</Field>
+      <Field name="contactEmail">${contactEmail}</Field>
+      <Field name="notifyEmail">${notifyEmail}</Field>
+      <Field name="isActive">${isActive}</Field>
+      <Field name="contactPhone">${contactPhone}</Field>
+      <Field name="contactName">${contactName}</Field>
+      <Field name="timeZone">${timeZone}</Field>
+      <Field name="maxAccessLevel">${maxAccessLevel}</Field>
+      
+      <Field name="addressCity">${addressCity}</Field>
+      <Field name="addressCountry">${addressCountry}</Field>
+      <Field name="userType">${userType}</Field>
+      <Field name="isActive">1</Field>
+    </Record>
+  </GTSRequest>`;
 
     try {
       const response = await fetch(currentAPI, {
@@ -3646,96 +4229,80 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      setError("");
 
       if (result === "success") {
-        // setSuccessCreateUserGestionPopup(true);
-        setShowConfirmationMessagePopup(true); // succès  Échec
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Creation du nouveau utilisateur avec succès")}`
+          `${t("Création du nouvel utilisateur avec succès")}`
         );
         setConfirmationMessagePopupName(description);
         setError("");
-        const id = accountID;
-        const pwd = password;
+
+        try {
+          // Assigner l’utilisateur aux groupes sélectionnés (séquentiellement)
+          // for (const groupID of groupesSelectionnes || []) {
+          await assignUserToGroup(
+            accountID,
+            user,
+            password,
+            groupesSelectionnes,
+            userIDField
+          );
+          // }
+
+          // Rafraîchir les utilisateurs + leurs groupes / devices
+          const users = await fetchAccountUsers(accountID, password);
+          await fetchUserDevices(accountID, users);
+          await fetchUserGroupes(accountID, users);
+        } catch (err) {
+          console.error(
+            "Erreur lors de l’ajout aux groupes ou du rafraîchissement :",
+            err
+          );
+          setError("Erreur lors de la mise à jour des utilisateurs.");
+        }
 
         setCreateVéhiculeLoading(false);
-
-        // Ajouter l’utilisateur aux groupes sélectionnés
-
-        setTimeout(() => {
-          if (groupesSelectionnes) {
-            // groupesSelectionnes?.map((groupID) =>
-            assignUserToGroup(
-              accountID,
-              user,
-              password,
-              groupesSelectionnes,
-              userIDField
-            );
-            // );
-          }
-        }, 6000);
-
-        setTimeout(() => {
-          fetchAccountUsers(id, pwd)
-            .then((users) => {
-              fetchUserDevices(id, users);
-              fetchUserGroupes(id, users);
-            })
-            .catch((err) => {
-              console.error(
-                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-                err
-              );
-              setError("Erreur lors de la creation des utilisateurs.");
-            });
-        }, 10000);
       } else {
         const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0].textContent;
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent;
         setError(
           errorMessage || "Erreur lors de la création de l'utilisateur."
         );
-
         handleUserError(xmlDoc);
 
-        setShowConfirmationMessagePopup(true); // succès  Échec
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Creation du l'utilisateur")}`
+          `${t("Échec de la création de l'utilisateur")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
-        handleUserError(xmlDoc);
       }
     } catch (error) {
-      setError("Erreur lors de la création du user.");
-      console.error("Erreur lors de la création du véhicule", error);
-      setShowConfirmationMessagePopup(true); // succès  Échec
+      console.error("Erreur lors de la création du user", error);
+      setError("Erreur lors de la création de l'utilisateur.");
+      setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Creation du l'utilisateur")}`
+        `${t("Échec de la création de l'utilisateur")}`
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
     }
   };
+
   const ModifyUserEnGestionAccountFonction = async (
     accountID,
     user,
     password,
-
     userIDField,
     description,
     displayName,
     passwordField,
-
-    //
     contactEmail,
     notifyEmail,
     isActive,
@@ -3744,45 +4311,36 @@ const DataContextProvider = ({ children }) => {
     timeZone,
     maxAccessLevel,
     roleID,
-    //
     userType,
     addressCity,
     addressCountry,
-
     groupesSelectionnes,
     groupesNonSelectionnes
   ) => {
-    // /////////
-
     setError("");
     setCreateVéhiculeLoading(true);
+
     const xmlData = `<GTSRequest command="dbput">
-      <Authorization account="${accountID}" user="${user}" password="${password}" />
-      <Record table="User" partial="true">
-        <Field name="accountID">${accountID}</Field>
-
-        <Field name="userID">${userIDField}</Field>
-        <Field name="displayName">${displayName}</Field>
-        <Field name="description">${description}</Field>
-        <Field name="password">${passwordField}</Field>
-
-
-          <Field name="roleID">${roleID}</Field>
-        <Field name="contactEmail">${contactEmail}</Field>
-        <Field name="notifyEmail">${notifyEmail}</Field>
-        <Field name="isActive">${isActive}</Field>
-        <Field name="contactPhone">${contactPhone}</Field>
-        <Field name="contactName">${contactName}</Field>
-        <Field name="timeZone">${timeZone}</Field>
-        <Field name="maxAccessLevel">${maxAccessLevel}</Field>
-        
-        
-        <Field name="userType">${userType}</Field>
-        <Field name="addressCity">${addressCity}</Field>
-        <Field name="addressCountry">${addressCountry}</Field>
-        
-      </Record>
-    </GTSRequest>`;
+    <Authorization account="${accountID}" user="${user}" password="${password}" />
+    <Record table="User" partial="true">
+      <Field name="accountID">${accountID}</Field>
+      <Field name="userID">${userIDField}</Field>
+      <Field name="displayName">${displayName}</Field>
+      <Field name="description">${description}</Field>
+      <Field name="password">${passwordField}</Field>
+      <Field name="roleID">${roleID}</Field>
+      <Field name="contactEmail">${contactEmail}</Field>
+      <Field name="notifyEmail">${notifyEmail}</Field>
+      <Field name="isActive">${isActive}</Field>
+      <Field name="contactPhone">${contactPhone}</Field>
+      <Field name="contactName">${contactName}</Field>
+      <Field name="timeZone">${timeZone}</Field>
+      <Field name="maxAccessLevel">${maxAccessLevel}</Field>
+      <Field name="userType">${userType}</Field>
+      <Field name="addressCity">${addressCity}</Field>
+      <Field name="addressCountry">${addressCountry}</Field>
+    </Record>
+  </GTSRequest>`;
 
     try {
       const response = await fetch(currentAPI, {
@@ -3792,28 +4350,27 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
-
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
-      setError("");
+
       if (result === "success") {
-        setShowConfirmationMessagePopup(true); // succès  Échec
+        // ✅ Popup succès
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Modification de l'utilisateur avec succès")}`
         );
         setConfirmationMessagePopupName(description);
         setError("");
-        const id = accountID;
-        const pwd = password;
 
-        setAccountUsers((prevUSers) =>
-          prevUSers.map((user) =>
-            user.userID === userIDField
+        // ✅ Update local states
+        setAccountUsers((prevUsers) =>
+          prevUsers.map((u) =>
+            u.userID === userIDField
               ? {
-                  ...user,
+                  ...u,
                   userIDField,
                   displayName,
                   description,
@@ -3827,83 +4384,70 @@ const DataContextProvider = ({ children }) => {
                   maxAccessLevel,
                   roleID,
                 }
-              : user
+              : u
           )
         );
-        setTimeout(() => {
-          setListeGestionDesUsers((prevUSers) =>
-            prevUSers.map((user) =>
-              user.userID === userIDField
-                ? {
-                    ...user,
-                    userIDField,
-                    displayName,
-                    description,
-                    passwordField,
-                  }
-                : user
-            )
-          );
-        }, 1000);
 
-        setCreateVéhiculeLoading(false);
+        setListeGestionDesUsers((prevUsers) =>
+          prevUsers.map((u) =>
+            u.userID === userIDField
+              ? { ...u, userIDField, displayName, description, passwordField }
+              : u
+          )
+        );
 
-        setTimeout(() => {
-          groupesNonSelectionnes.map((groupID) =>
-            removeUserFromGroup(accountID, user, password, groupID, userIDField)
-          );
-        }, 3000);
+        try {
+          // ✅ Supprimer des groupes
+          for (const groupID of groupesNonSelectionnes || []) {
+            await removeUserFromGroup(
+              accountID,
+              user,
+              password,
+              groupID,
+              userIDField
+            );
+          }
 
-        let key = "dbcreate";
-
-        // if (groupesSelectionnes) {
-
-        setTimeout(() => {
-          assignUserToGroup(
+          // ✅ Ajouter aux groupes
+          // for (const groupID of groupesSelectionnes || []) {
+          await assignUserToGroup(
             accountID,
             user,
             password,
             groupesSelectionnes,
             userIDField
           );
-        }, 6000);
+          // }
 
-        setTimeout(() => {
-          fetchAccountUsers(id, pwd)
-            .then((users) => {
-              fetchUserDevices(id, users);
-              fetchUserGroupes(id, users);
-            })
-            .catch((err) => {
-              console.error(
-                "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-                err
-              );
-              setError("Erreur lors de la mise à jour de utilisateur.");
-            });
-        }, 10000);
+          // ✅ Rafraîchir les données utilisateurs
+          const users = await fetchAccountUsers(accountID, password);
+          await fetchUserDevices(accountID, users);
+          await fetchUserGroupes(accountID, users);
+        } catch (err) {
+          console.error("Erreur lors de la mise à jour des groupes :", err);
+          setError("Erreur lors de la mise à jour de l'utilisateur.");
+        }
+
+        setCreateVéhiculeLoading(false);
       } else {
         const errorMessage =
-          xmlDoc.getElementsByTagName("Message")[0].textContent;
+          xmlDoc.getElementsByTagName("Message")[0]?.textContent;
         setError(
           errorMessage || "Erreur lors de la modification de l'utilisateur."
         );
-
         handleUserError(xmlDoc);
 
-        setShowConfirmationMessagePopup(true); // succès  Échec
+        setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Échec de la Modification de l'utilisateur")}`
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
-        handleUserError(xmlDoc);
       }
     } catch (error) {
-      setError("Erreur lors de la modification du user.");
-      console.error("Erreur lors de la création du véhicule", error);
-      // setEchecModifyUserGestionPopup(true);
-      setShowConfirmationMessagePopup(true); // succès  Échec
+      console.error("Erreur lors de la modification de l'utilisateur", error);
+      setError("Erreur lors de la modification de l'utilisateur.");
+      setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
         `${t("Échec de la Modification de l'utilisateur")}`
       );
@@ -3911,6 +4455,191 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
     }
   };
+
+  // const ModifyUserEnGestionAccountFonction = async (
+  //   accountID,
+  //   user,
+  //   password,
+
+  //   userIDField,
+  //   description,
+  //   displayName,
+  //   passwordField,
+
+  //   //
+  //   contactEmail,
+  //   notifyEmail,
+  //   isActive,
+  //   contactPhone,
+  //   contactName,
+  //   timeZone,
+  //   maxAccessLevel,
+  //   roleID,
+  //   //
+  //   userType,
+  //   addressCity,
+  //   addressCountry,
+
+  //   groupesSelectionnes,
+  //   groupesNonSelectionnes
+  // ) => {
+  //   // /////////
+
+  //   setError("");
+  //   setCreateVéhiculeLoading(true);
+  //   const xmlData = `<GTSRequest command="dbput">
+  //     <Authorization account="${accountID}" user="${user}" password="${password}" />
+  //     <Record table="User" partial="true">
+  //       <Field name="accountID">${accountID}</Field>
+
+  //       <Field name="userID">${userIDField}</Field>
+  //       <Field name="displayName">${displayName}</Field>
+  //       <Field name="description">${description}</Field>
+  //       <Field name="password">${passwordField}</Field>
+
+  //         <Field name="roleID">${roleID}</Field>
+  //       <Field name="contactEmail">${contactEmail}</Field>
+  //       <Field name="notifyEmail">${notifyEmail}</Field>
+  //       <Field name="isActive">${isActive}</Field>
+  //       <Field name="contactPhone">${contactPhone}</Field>
+  //       <Field name="contactName">${contactName}</Field>
+  //       <Field name="timeZone">${timeZone}</Field>
+  //       <Field name="maxAccessLevel">${maxAccessLevel}</Field>
+
+  //       <Field name="userType">${userType}</Field>
+  //       <Field name="addressCity">${addressCity}</Field>
+  //       <Field name="addressCountry">${addressCountry}</Field>
+
+  //     </Record>
+  //   </GTSRequest>`;
+
+  //   try {
+  //     const response = await fetch(currentAPI, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/xml" },
+  //       body: xmlData,
+  //     });
+
+  //     const data = await response.text();
+
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(data, "application/xml");
+  //     const result = xmlDoc
+  //       .getElementsByTagName("GTSResponse")[0]
+  //       .getAttribute("result");
+  //     setError("");
+  //     if (result === "success") {
+  //       setShowConfirmationMessagePopup(true); // succès  Échec
+  //       setConfirmationMessagePopupTexte(
+  //         `${t("Modification de l'utilisateur avec succès")}`
+  //       );
+  //       setConfirmationMessagePopupName(description);
+  //       setError("");
+  //       const id = accountID;
+  //       const pwd = password;
+
+  //       setAccountUsers((prevUSers) =>
+  //         prevUSers.map((user) =>
+  //           user.userID === userIDField
+  //             ? {
+  //                 ...user,
+  //                 userIDField,
+  //                 displayName,
+  //                 description,
+  //                 passwordField,
+  //                 contactEmail,
+  //                 notifyEmail,
+  //                 isActive,
+  //                 contactPhone,
+  //                 contactName,
+  //                 timeZone,
+  //                 maxAccessLevel,
+  //                 roleID,
+  //               }
+  //             : user
+  //         )
+  //       );
+  //       setTimeout(() => {
+  //         setListeGestionDesUsers((prevUSers) =>
+  //           prevUSers.map((user) =>
+  //             user.userID === userIDField
+  //               ? {
+  //                   ...user,
+  //                   userIDField,
+  //                   displayName,
+  //                   description,
+  //                   passwordField,
+  //                 }
+  //               : user
+  //           )
+  //         );
+  //       }, 1000);
+
+  //       setCreateVéhiculeLoading(false);
+
+  //       setTimeout(() => {
+  //         groupesNonSelectionnes.map((groupID) =>
+  //           removeUserFromGroup(accountID, user, password, groupID, userIDField)
+  //         );
+  //       }, 2000);
+
+  //       let key = "dbcreate";
+
+  //       // if (groupesSelectionnes) {
+
+  //       setTimeout(() => {
+  //         assignUserToGroup(
+  //           accountID,
+  //           user,
+  //           password,
+  //           groupesSelectionnes,
+  //           userIDField
+  //         );
+  //       }, 3000);
+
+  //       setTimeout(() => {
+  //         fetchAccountUsers(id, pwd)
+  //           .then((users) => {
+  //             fetchUserDevices(id, users);
+  //             fetchUserGroupes(id, users);
+  //           })
+  //           .catch((err) => {
+  //             console.error(
+  //               "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+  //               err
+  //             );
+  //             setError("Erreur lors de la mise à jour de utilisateur.");
+  //           });
+  //       }, 4000);
+  //     } else {
+  //       const errorMessage =
+  //         xmlDoc.getElementsByTagName("Message")[0].textContent;
+  //       setError(
+  //         errorMessage || "Erreur lors de la modification de l'utilisateur."
+  //       );
+
+  //       handleUserError(xmlDoc);
+
+  //       setShowConfirmationMessagePopup(true); // succès  Échec
+  //       setConfirmationMessagePopupTexte(
+  //         `${t("Échec de la Modification de l'utilisateur")}`
+  //       );
+  //       setConfirmationMessagePopupName(description);
+  //       setCreateVéhiculeLoading(false);
+  //       handleUserError(xmlDoc);
+  //     }
+  //   } catch (error) {
+  //     setError("Erreur lors de la modification du user.");
+  //     console.error("Erreur lors de la création du véhicule", error);
+  //     // setEchecModifyUserGestionPopup(true);
+  //     setShowConfirmationMessagePopup(true); // succès  Échec
+  //     setConfirmationMessagePopupTexte(
+  //       `${t("Échec de la Modification de l'utilisateur")}`
+  //     );
+  //     setConfirmationMessagePopupName(description);
+  //     setCreateVéhiculeLoading(false);
+  //   }
+  // };
   const UpdateUserConnexion = async (
     accountID,
     username,
@@ -4090,6 +4819,8 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
+    console.log("xml:", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4098,6 +4829,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("data:", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -4105,6 +4837,9 @@ const DataContextProvider = ({ children }) => {
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
       setError("");
+
+      console.log("result:", result);
+
       if (result === "success") {
         setError("");
 
@@ -4270,12 +5005,7 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
     }
   };
-  const deleteAccountEnGestionAccountFonction = async (
-    // account,
-    // user,
-    // password,
-    accountIDField
-  ) => {
+  const deleteAccountEnGestionAccountFonction = async (accountIDField) => {
     // /////////
     setCreateVéhiculeLoading(true);
 
@@ -4287,6 +5017,8 @@ const DataContextProvider = ({ children }) => {
       `</RecordKey>` +
       `</GTSRequest>`;
 
+    console.log("requestBody", requestBody);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4296,21 +5028,22 @@ const DataContextProvider = ({ children }) => {
         body: requestBody,
       });
 
+      console.log("response", response);
+
       if (response.ok) {
-        if (account && username && password) {
-          setShowConfirmationMessagePopup(true); // succès  Échec
-          setConfirmationMessagePopupTexte(
-            `${t("Compte supprimer avec succès")}`
-          );
-          setConfirmationMessagePopupName("");
+        console.log("Reuisiiiiiiiiiiiiiiiiiiiii.................", response);
 
-          setComptes((prev) =>
-            prev?.filter((v) => v.accountID !== accountIDField)
-          );
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          `${t("Compte supprimer avec succès")}`
+        );
+        setConfirmationMessagePopupName("");
 
-          setCreateVéhiculeLoading(false);
-          // navigate("/home");
-        }
+        setComptes((prev) =>
+          prev?.filter((v) => v.accountID !== accountIDField)
+        );
+
+        setCreateVéhiculeLoading(false);
       } else {
         console.error(
           "Erreur lors de la mise a jour de la suppression du véhicule:",
@@ -4360,6 +5093,9 @@ const DataContextProvider = ({ children }) => {
     licensePlate,
     equipmentType,
     simPhoneNumber,
+    notes,
+    allowNotify,
+    isActive,
 
     groupesSelectionnes
   ) => {
@@ -4380,6 +5116,9 @@ const DataContextProvider = ({ children }) => {
       <Record table="Device" partial="true">
         <Field name="accountID">${userAccount}</Field>
 
+        <Field name="notes">${notes}</Field>
+        <Field name="allowNotify">${allowNotify}</Field>
+        <Field name="isActive">${isActive}</Field>
         <Field name="uniqueID">${uniqueID}</Field>
         <Field name="deviceID">${deviceID}</Field>
         <Field name="description">${description}</Field>
@@ -4451,7 +5190,7 @@ const DataContextProvider = ({ children }) => {
             deviceID,
             groupesSelectionnes
           );
-        }, 5000);
+        }, 3000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -4494,6 +5233,9 @@ const DataContextProvider = ({ children }) => {
     licensePlate,
     equipmentType,
     simPhoneNumber,
+    notes,
+    allowNotify,
+    isActive,
 
     groupesSelectionnes
   ) => {
@@ -4505,6 +5247,12 @@ const DataContextProvider = ({ children }) => {
       <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
       <Record table="Device" partial="true">
         <Field name="accountID">${userAccount}</Field>
+
+
+            <Field name="notes">${notes}</Field>
+        <Field name="allowNotify">${allowNotify}</Field>
+        <Field name="isActive">${isActive}</Field>
+        <Field name="uniqueID">${uniqueID}</Field>
 
         <Field name="deviceID">${deviceID}</Field>
         <Field name="description">${description}</Field>
@@ -4583,7 +5331,7 @@ const DataContextProvider = ({ children }) => {
             deviceID,
             groupesSelectionnes
           );
-        }, 5000);
+        }, 3000);
       } else {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0].textContent;
@@ -4632,6 +5380,8 @@ const DataContextProvider = ({ children }) => {
       `</RecordKey>` +
       `</GTSRequest>`;
 
+    console.log("xml", requestBody);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -4673,62 +5423,6 @@ const DataContextProvider = ({ children }) => {
               ),
             }))
           );
-
-          // 🧠 Mise à jour d'IndexedDB
-          const db = await openDatabase();
-          const tx = db.transaction(
-            ["accountDevices", "userDevices"],
-            "readwrite"
-          );
-
-          const removeFromStore = async (storeName) => {
-            const store = tx.objectStore(storeName);
-            const getAllReq = store.getAll();
-            getAllReq.onsuccess = () => {
-              let updated;
-
-              if (storeName === "userDevices") {
-                // Suppression imbriquée dans chaque user
-                updated = (getAllReq.result || []).map((user) => ({
-                  ...user,
-                  userDevices: (user.userDevices || []).filter(
-                    (device) => device.deviceID !== deviceID
-                  ),
-                }));
-              } else {
-                // Suppression simple
-                updated = (getAllReq.result || []).filter(
-                  (v) => v.deviceID !== deviceID
-                );
-              }
-
-              store.clear();
-              updated?.forEach((v) => store.put(v));
-            };
-          };
-
-          removeFromStore("accountDevices");
-          removeFromStore("userDevices");
-
-          //
-          // Supprimer le véhicule de IndexedDB
-          openDatabase().then((db) => {
-            const transaction = db.transaction(["mergedDataHome"], "readwrite");
-            const store = transaction.objectStore("mergedDataHome");
-
-            // Récupérer toutes les données actuelles
-            const getRequest = store.getAll();
-
-            getRequest.onsuccess = () => {
-              const existingData = getRequest.result || [];
-              const updatedData = existingData.filter(
-                (vehicle) => vehicle.deviceID !== deviceID
-              );
-
-              store.clear(); // Supprime les anciennes données
-              updatedData?.forEach((vehicle) => store.put(vehicle)); // Sauvegarde les données mises à jour
-            };
-          });
 
           setCreateVéhiculeLoading(false);
           // navigate("/home");
@@ -4835,6 +5529,8 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>
   `;
 
+    console.log("@@@@@@@@@@@@@@@@@22222 xmlData", xmlData);
+
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -4842,6 +5538,8 @@ const DataContextProvider = ({ children }) => {
         body: xmlData,
       });
       const text = await res.text();
+      console.log("@@@@@@@@@@@@@@@@@3333333 text", text);
+
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
@@ -4916,6 +5614,8 @@ const DataContextProvider = ({ children }) => {
 </GTSRequest>`;
     // <Field name="groupID">${groupID1}</Field>
 
+    console.log("#############2222222 xmlData", xmlData);
+
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -4924,6 +5624,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const text = await res.text();
+      console.log("#############333333333 text", text);
 
       const doc = new DOMParser().parseFromString(text, "application/xml");
       const result = doc
@@ -5010,6 +5711,8 @@ const DataContextProvider = ({ children }) => {
 
 </GTSRequest>`;
 
+    console.log("^^^^^^^^^^^^^^^^^^22222222222 xmlData", xmlData);
+
     try {
       const res = await fetch(currentAPI, {
         method: "POST",
@@ -5022,6 +5725,8 @@ const DataContextProvider = ({ children }) => {
       const result = doc
         .getElementsByTagName("GTSResponse")[0]
         ?.getAttribute("result");
+
+      console.log("^^^^^^^^^^^^^^^^^^33333333333 result", text);
 
       return result === "success";
     } catch (error) {
@@ -6000,6 +6705,10 @@ const DataContextProvider = ({ children }) => {
           <Field name="speedLimitKPH" />
           <Field name="uniqueID" />
           <Field name="lastEventStatusCode" />
+          <Field name="notes" />
+          <Field name="allowNotify" />
+
+
 
           
         </Record>
@@ -8159,13 +8868,9 @@ const DataContextProvider = ({ children }) => {
     //
     let emails;
     if (country === "rd") {
-      emails = [
-        "Info@octagonogps.com.do",
-        "webdeveloper3030@gmail.com",
-        "jfstjoy@gmail.com",
-      ];
+      emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
     } else {
-      emails = ["webdeveloper3030@gmail.com", "jfstjoy@gmail.com"];
+      emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     }
     fetch("https://octagono-plus-email-server.onrender.com/send-email", {
       method: "POST",
@@ -8639,6 +9344,8 @@ const DataContextProvider = ({ children }) => {
         DeviceInactifsWidthNoDetails,
         isFilteredCartePositionByCategorie,
         setIsFilteredCartePositionByCategorie,
+        showPageRaccourciComponent,
+        setShowPageRaccourciComponent,
 
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}

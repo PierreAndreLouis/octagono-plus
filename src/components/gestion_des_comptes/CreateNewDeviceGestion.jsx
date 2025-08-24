@@ -58,6 +58,10 @@ function CreateNewDeviceGestion({
     licensePlate: "",
     simPhoneNumber: "",
     displayName: "",
+    phoneCode: "",
+    notes: "",
+    allowNotify: "true",
+    isActive: "true",
   });
 
   // Gestion de la modification des champs
@@ -93,16 +97,27 @@ function CreateNewDeviceGestion({
     }
 
     // Validation du numéro SIM
-    if (isNaN(addVéhiculeData.simPhoneNumber)) {
-      setErrorID(`${t("Le numéro de la carte SIM doit être un nombre")}`);
-      return; // Empêche la soumission si le numéro SIM n'est pas valide
-    }
+    // if (isNaN(addVéhiculeData.simPhoneNumber)) {
+    //   setErrorID(`${t("Le numéro de la carte SIM doit être un nombre")}`);
+    //   return; // Empêche la soumission si le numéro SIM n'est pas valide
+    // }
 
     // Validation du numéro SIM
-    if (isNaN(addVéhiculeData.imeiNumber)) {
-      setErrorID(`${t("L'IMEI doit être un nombre")}`);
-      return; // Empêche la soumission si le numéro SIM n'est pas valide
-    }
+    // if (isNaN(addVéhiculeData.imeiNumber)) {
+    //   setErrorID(`${t("L'IMEI doit être un nombre")}`);
+    //   return; // Empêche la soumission si le numéro SIM n'est pas valide
+    // }
+
+    //     if (isNaN(addVéhiculeData.simPhoneNumber)) {
+    //   setErrorID(`${t("Le téléphone n'est pas valide")}`);
+    //   return; // Empêche la soumission si le numéro SIM n'est pas valide
+    // }
+
+    //  const phoneRegex = /^\+?\d{6,15}$/;
+
+    // if (!phoneRegex.test(addNewAccountData.contactPhone)) {
+    //   setErrorID(`${t("Le téléphone n'est pas valide")}`);
+    // }
 
     if (!currentAccountSelected) {
       setChooseOneAccountToContinue(true);
@@ -183,12 +198,18 @@ function CreateNewDeviceGestion({
 
       const deviceID = addVéhiculeData.deviceID;
       const imeiNumber = addVéhiculeData.imeiNumber;
-      const uniqueID = "tk_" + deviceID;
+      const uniqueID = "tk_" + imeiNumber;
       const description = addVéhiculeData.description;
       const displayName = addVéhiculeData.description;
       const licensePlate = addVéhiculeData.licensePlate;
       const equipmentType = addVéhiculeData.equipmentType;
-      const simPhoneNumber = addVéhiculeData.simPhoneNumber;
+      const phoneCode = addVéhiculeData.phoneCode;
+      const simPhoneNumber = phoneCode + addVéhiculeData.simPhoneNumber;
+
+      const notes = addVéhiculeData.notes;
+      const allowNotify = addVéhiculeData.allowNotify;
+      const isActive = addVéhiculeData.isActive;
+
       const vehicleID = deviceID + uniqueID || "";
 
       // console.log(
@@ -224,6 +245,9 @@ function CreateNewDeviceGestion({
             licensePlate,
             equipmentType,
             simPhoneNumber,
+            notes,
+            allowNotify,
+            isActive,
 
             groupesSelectionnes
           );
@@ -249,6 +273,9 @@ function CreateNewDeviceGestion({
             licensePlate,
             equipmentType,
             simPhoneNumber,
+            notes,
+            allowNotify,
+            isActive,
 
             groupesSelectionnes
           );
@@ -280,6 +307,10 @@ function CreateNewDeviceGestion({
         licensePlate: currentSelectedDeviceGestion.licensePlate || "",
         simPhoneNumber: currentSelectedDeviceGestion.simPhoneNumber || "",
         displayName: currentSelectedDeviceGestion.displayName || "",
+
+        notes: currentSelectedDeviceGestion.notes || "",
+        allowNotify: currentSelectedDeviceGestion.allowNotify || "",
+        isActive: currentSelectedDeviceGestion.isActive || "",
       });
     }
   }, [currentSelectedDeviceGestion, isCreatingNewElement]);
@@ -448,6 +479,22 @@ function CreateNewDeviceGestion({
                   },
 
                   {
+                    id: "isActive",
+                    label: `${t("isActive")}`,
+                    placeholder: `${t("isActive")}`,
+                  },
+                  {
+                    id: "allowNotify",
+                    label: `${t("Autorisation de notification")}`,
+                    placeholder: `${t("Autorisation de notification")}`,
+                  },
+                  {
+                    id: "notes",
+                    label: `${t("Mensualité")}`,
+                    placeholder: `${t("Mensualité")}`,
+                  },
+
+                  {
                     id: "licensePlate",
                     label: `${t("Plaque du véhicule")}`,
                     placeholder: `${t("Plaque du véhicule")}`,
@@ -473,19 +520,91 @@ function CreateNewDeviceGestion({
                         <span className="text-red-600 text-lg"> *</span>
                       )}
                     </label>
-                    <input
-                      id={field.id}
-                      name={field.id}
-                      type="text"
-                      placeholder={field.placeholder}
-                      value={addVéhiculeData[field.id]}
-                      onChange={handleChange}
-                      disabled={
-                        !isCreatingNewElement && field.id === "deviceID"
-                      }
-                      required
-                      className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
-                    />
+
+                    {field.id === "simPhoneNumber" ? (
+                      <div className=" pt-1 pb-2 flex gap-3 justify-between items-center text-gray-600 w-full cursor-pointer">
+                        <select
+                          id="phoneCode"
+                          name="phoneCode"
+                          value={addVéhiculeData?.phoneCode}
+                          onChange={handleChange}
+                          required
+                          className="   border-0 pb-3 py-1.5 px-3 text-gray-900       border-b focus:outline-none  "
+                        >
+                          <option value="">{t("Code pays")}</option>
+                          <option value="509">509</option>
+                          <option value="809">809</option>
+                          <option value="829">829</option>
+                          <option value="849">849</option>
+                        </select>
+
+                        <input
+                          id={field.id}
+                          name={field.id}
+                          type="number"
+                          placeholder={field.placeholder}
+                          value={addVéhiculeData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className=" w-full border-b pb-3  py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm  "
+                        />
+                      </div>
+                    ) : field.id === "isActive" ? (
+                      <select
+                        id="isActive"
+                        name="isActive"
+                        value={addVéhiculeData[field.id]}
+                        onChange={handleChange}
+                        required
+                        className="  w-full placeholder:text-gray-400  border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                      >
+                        <option value="">{t("Activer le l'appareil")} ?</option>
+                        <option value="true">{t("oui")}</option>
+                        <option value="false">{t("non")}</option>
+                      </select>
+                    ) : field.id === "allowNotify" ? (
+                      <select
+                        id="allowNotify"
+                        name="allowNotify"
+                        value={addVéhiculeData[field.id]}
+                        onChange={handleChange}
+                        required
+                        className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                      >
+                        <option value="">
+                          {t("Autorisation de notification")} ?
+                        </option>
+                        <option value="true">{t("oui")}</option>
+                        <option value="false">{t("non")}</option>
+                      </select>
+                    ) : field.id === "imeiNumber" ? (
+                      <div className=" pt-1 pb-2 flex gap-3 justify-between items-center text-gray-600 w-full cursor-pointer">
+                        <input
+                          id={field.id}
+                          name={field.id}
+                          type="number"
+                          placeholder={field.placeholder}
+                          value={addVéhiculeData[field.id]}
+                          onChange={handleChange}
+                          required
+                          className=" w-full border-b pb-3  py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm  "
+                        />
+                      </div>
+                    ) : (
+                      <input
+                        id={field.id}
+                        name={field.id}
+                        type="text"
+                        placeholder={field.placeholder}
+                        value={addVéhiculeData[field.id]}
+                        onChange={handleChange}
+                        disabled={
+                          !isCreatingNewElement && field.id === "deviceID"
+                        }
+                        required
+                        className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                      />
+                    )}
                   </div>
                 ))}
 

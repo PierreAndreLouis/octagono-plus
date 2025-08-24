@@ -149,7 +149,7 @@ function Login2() {
             <div className="order flex flex-col justify-center items-center">
               <img
                 // loading="lazy"
-                alt="Your Company"
+                alt="Logo OctagonoPlus"
                 src="/img/cars/logo.png"
                 className="mx-auto-- translate-y-0 w-[4.4rem] w-auto-- "
               />
@@ -158,7 +158,7 @@ function Login2() {
               </h2>
             </div>
             <img
-              alt="Your Company"
+              alt="Logo OctagonoGPS"
               // loading="lazy"
               src="/img/logo/OctagonoGPS.png"
               className="mx-auto-- w-[10rem]  w-auto--"

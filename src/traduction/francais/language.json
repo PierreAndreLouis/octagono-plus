@@ -147,7 +147,7 @@
   "statut inconnu": "Statut inconnu",
   "Pas de nom disponible": "Aucun nom disponible",
   "Dernière mise a jour": "Dernière mise à jour",
-  "Code Alerte": "Code d'alerte",
+  "Code Alerte": "Code de l'alerte",
   "Plaque du véhicule": "Plaque du véhicule",
   "Telephone": "Téléphone",
   "Type d'appareil": "Type d'appareil",
@@ -1053,9 +1053,63 @@
 "Trier les appareils par statut": "Trier les appareils par statut",
 "Ordre de déplacement": "Ordre de déplacement",
 
-"": "",
-"": "",
-"": ""
+
+
+
+
+
+
+
+
+
+
+
+"Liste Des Utilisateurs": "Liste des utilisateurs",
+"Choisissez un ou plusieurs utilisateur(s) pour affecter le groupe": "Choisissez un ou plusieurs utilisateur(s) pour affecter le groupe",
+"Pas d'utilisateur sélectionné": "Pas d'utilisateur sélectionné",
+"Type d'utilisateur": "Type d'utilisateur",
+"Niveau d’accès": "Niveau d’accès",
+"Niveau d’accès non autorisé pour affecter un utilisateur": "Niveau d’accès non autorisé pour affecter un utilisateur",
+"Rôle non autorisé pour affecter un utilisateur à un groupe": "Rôle non autorisé pour affecter un utilisateur à un groupe",
+"Cet utilisateur n’est pas autorisé à être affecté à un groupe": "Cet utilisateur n’est pas autorisé à être affecté à un groupe",
+"Aucune": "Aucune",
+"null": "null",
+
+
+
+"appareil(s) non trouvé(s)": "appareil(s) non trouvé(s)",
+"Nombre d'appareils final": "Nombre d'appareils final",
+
+
+
+
+
+
+
+
+
+"Naviguer vers la page": "Naviguer vers la page",
+"Code pays": "Code pays",
+"Mensualité": "Mensualité",
+"Autorisation de notification" : "Autorisation de notification",
+"Activer le l'appareil" : "Activer l'appareil",
+"Informations générales" : "Informations générales",
+"Statut & suivi" : "Statut et suivi",
+"Informations d’identification" : "Informations d’identification",
+
+
+
+
+
+
+
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : "",
+"" : ""
  
 
 

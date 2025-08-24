@@ -41,6 +41,7 @@ function ListeDesUtilisateur({
     accountUsers,
     documentationPage,
     isDashboardHomePage,
+    setShowPageRaccourciComponent,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -238,7 +239,12 @@ function ListeDesUtilisateur({
         <div className="mb-[4rem]">
           {fromExpandSectionDashboard === "false" && (
             <>
-              <h2 className="notranslate mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+              <h2
+                onClick={() => {
+                  console.log(gestionAccountData);
+                }}
+                className="notranslate mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
+              >
                 {t("Liste des Utilisateur")}
               </h2>
 
@@ -262,6 +268,7 @@ function ListeDesUtilisateur({
                     setDocumentationPage("Ajouter_nouveau_utilisateur");
                     navigate("/Ajouter_nouveau_utilisateur");
                     setIsCreatingNewElement(true);
+                    setShowPageRaccourciComponent("");
                   }}
                   className="bg-orange-500 w-full shadow-lg shadow-black/20 hover:px-8 transition-all text-white font-semibold rounded-lg py-2 px-6"
                 >
@@ -347,7 +354,7 @@ function ListeDesUtilisateur({
         </div>
         {/* )} */}
         <div className="hidden-- flex mt-[1rem]  flex-col gap-6 max-w-[50rem] mx-auto">
-          {showChooseItemToModifyMessage &&
+          {/* {showChooseItemToModifyMessage &&
             showChooseItemToModifyPage === "Gestion_des_utilisateurs" && (
               <div className=" flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
                 <p className="w-full">{showChooseItemToModifyMessage}</p>
@@ -357,7 +364,7 @@ function ListeDesUtilisateur({
                   }}
                 />
               </div>
-            )}
+            )} */}
 
           {/* //////////////////////////////////////// */}
 
@@ -391,6 +398,26 @@ function ListeDesUtilisateur({
                           `${user?.userID}_${user?.accountID}`
                         );
 
+                        const foundAccount = gestionAccountData?.find(
+                          (acct) => acct?.accountID === user?.accountID
+                        );
+
+                        // ✅ présents dans les deux
+                        const dansAllDevice = foundUser?.userDevices?.filter(
+                          (g) =>
+                            foundAccount?.accountDevices?.some(
+                              (d) => d.deviceID === g.deviceID
+                            )
+                        );
+
+                        // ❌ présents dans foundUser?.userDevices? mais pas dans foundAccount?.accountDevices
+                        const pasDansAllDevice = foundUser?.userDevices?.filter(
+                          (g) =>
+                            !foundAccount?.accountDevices.some(
+                              (d) => d.deviceID === g.deviceID
+                            )
+                        );
+
                         return (
                           <div
                             onClick={() => {
@@ -405,10 +432,10 @@ function ListeDesUtilisateur({
                             <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                               {index + 1}
                             </div>
-                            <div className="flex  gap-3  ">
+                            <div className="flex  gap-3  w-full">
                               <FaUserCircle className="text-[3rem] hidden sm:block text-orange-500/80 md:mr-4" />
                               <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                                <div>
+                                <div className="w-full ">
                                   <FaUserCircle className="text-[3rem] sm:hidden  text-orange-500/80 md:mr-4" />
                                   <div className="flex flex-wrap">
                                     <p className="font-bold- text-gray-700">
@@ -434,7 +461,12 @@ function ListeDesUtilisateur({
                                       {user?.accountID}
                                     </span>
                                   </div>{" "}
-                                  <div className="flex flex-wrap">
+                                  <div
+                                    onClick={() => {
+                                      console.log(foundUser);
+                                    }}
+                                    className="flex flex-wrap"
+                                  >
                                     <p className="font-bold- text-gray-700">
                                       {t("Groupes affectés")} :
                                     </p>
@@ -469,6 +501,32 @@ function ListeDesUtilisateur({
                                       }
                                     </span>
                                   </div>{" "}
+                                  {pasDansAllDevice?.length > 0 && (
+                                    <div className="bg-yellow-100 mt-3 border border-yellow-600 rounded-lg w-full p-3">
+                                      <div className="flex flex-wrap border-b py-1 border-b-yellow-500">
+                                        <p className="font-semibold  text-gray-700">
+                                          {pasDansAllDevice?.length}{" "}
+                                          {t("appareil(s) non trouvé(s)")}
+                                        </p>
+                                        {pasDansAllDevice?.map((d) => {
+                                          return (
+                                            <span className=" dark:text-orange-500 font-semibold--- text-gray-600 pl-5">
+                                              {d?.deviceID}
+                                            </span>
+                                          );
+                                        })}
+                                      </div>
+
+                                      <div className="flex flex-wrap border-b-- py-1">
+                                        <p className="font-semibold  text-gray-700">
+                                          {t("Nombre d'appareils final")}:
+                                        </p>
+                                        <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                                          {dansAllDevice?.length}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -491,7 +549,9 @@ function ListeDesUtilisateur({
                                 onClick={() => {
                                   setShowSelectedUserOptionsPopup(true);
                                   setCurrentSelectedUserToConnect(user);
-                                  showChooseItemToModifyMessage("");
+                                  console.log(user);
+                                  // setShowPageRaccourciComponent("");
+                                  // showChooseItemToModifyMessage("");
                                 }}
                                 className={` bg-orange-500 text-white text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                               >

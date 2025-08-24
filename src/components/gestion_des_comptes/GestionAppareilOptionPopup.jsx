@@ -157,12 +157,15 @@ function GestionAppareilOptionPopup({
         <div className="fixed  z-[9999999999999999999999999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={deleteVehicleFonction}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
+            className="bg-white relative pt-14 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
               {t("Voulez-vous Supprimer l'Appareil ?")}
             </div>
             <div>
+              <span className="w-full text-center font-bold text-lg flex justify-center mb-3 ">
+                {currentSelectedDeviceGestion?.description}
+              </span>
               <label
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"

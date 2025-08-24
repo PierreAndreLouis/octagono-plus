@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function ConfirmationPassword({
   showConfirmPassword,
@@ -10,6 +11,8 @@ function ConfirmationPassword({
   inputPassword,
   setIsPasswordConfirmed,
 }) {
+  const [t, i18n] = useTranslation();
+
   return (
     <>
       {showConfirmPassword && (
@@ -23,14 +26,14 @@ function ConfirmationPassword({
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
               >
-                Veuillez entrer votre mot de passe
+                {t("Veuillez entrer votre mot de passe")}
               </label>
               <div className="mt-2">
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mot de passe"
+                  placeholder={t("Mot de passe")}
                   required
                   value={inputPassword}
                   onChange={(e) => setInputPassword(e.target.value)}
@@ -46,7 +49,7 @@ function ConfirmationPassword({
                 // onClick={handlePasswordCheck}
                 className="py-1 px-5 bg-orange-500 rounded-lg text-white"
               >
-                Confirmer
+                {t("Confirmer")}
               </button>
 
               <h3
@@ -58,7 +61,7 @@ function ConfirmationPassword({
                 }}
                 className="py-1 px-5 cursor-pointer text-center text-orange-500 rounded-lg font-semibold border border-orange-500"
               >
-                Annuler
+                {t("Annuler")}
               </h3>
             </div>
           </form>

@@ -724,8 +724,7 @@ function DashboardContaintMaintComponant({
     setShowStatisticDeviceListeDashboard,
   ] = useState(false);
 
-  const [statisticFilteredDeviceListe, setStatisticFilteredDeviceListe] =
-    useState([]);
+
   const [
     statisticFilteredDeviceListeText,
     setStatisticFilteredDeviceListeText,
@@ -1137,7 +1136,6 @@ function DashboardContaintMaintComponant({
                 <ListeDesVehiculesGestion
                   setDocumentationPage={setDocumentationPage}
                   fromDashboard={fromDashboard}
-                  statisticFilteredDeviceListe={statisticFilteredDeviceListe}
                   statisticFilteredDeviceListeText={
                     statisticFilteredDeviceListeText
                   }
@@ -1148,9 +1146,7 @@ function DashboardContaintMaintComponant({
                   setShowStatisticDeviceListeDashboard={
                     setShowStatisticDeviceListeDashboard
                   }
-                  setStatisticFilteredDeviceListe={
-                    setStatisticFilteredDeviceListe
-                  }
+            
                   setStatisticFilteredDeviceListeText={
                     setStatisticFilteredDeviceListeText
                   }
@@ -1329,7 +1325,6 @@ function DashboardContaintMaintComponant({
         setShowStatisticDeviceListeDashboard={
           setShowStatisticDeviceListeDashboard
         }
-        setStatisticFilteredDeviceListe={setStatisticFilteredDeviceListe}
         setStatisticFilteredDeviceListeText={
           setStatisticFilteredDeviceListeText
         }
@@ -1588,7 +1583,6 @@ function DashboardContaintMaintComponant({
                       // setExpandSection("tableau");
                       // setDocumentationPage("Gestion_des_appareils");
                       setShowStatisticDeviceListeDashboard(true);
-                      setStatisticFilteredDeviceListe(allDevices);
                       setStatisticFilteredDeviceListeText(
                         `${t("Tous les Appareils")}`
                       );

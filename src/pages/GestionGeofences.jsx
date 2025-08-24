@@ -532,7 +532,7 @@ function GestionGeofences({
                         : `${t("Désactiver")}`}{" "}
                       {t("le geozone")} ?
                     </p>
-                    <p className="text-red-500 notranslate notranslate font-semibold">
+                    <p className="text-red-500 notranslate text-lg notranslate font-semibold">
                       {currentGeozone?.description}
                     </p>
                   </div>

@@ -1029,7 +1029,50 @@
 "Voir cette liste sur la carte": "View this list on the map",
 "Filtrer les positions": "Filter positions",
 "Trier les appareils par statut": "Sort devices by status",
-"Ordre de déplacement": "Movement order"
+"Ordre de déplacement": "Movement order",
+
+
+
+
+
+
+
+
+
+"Liste Des Utilisateurs": "User list",
+"Choisissez un ou plusieurs utilisateur(s) pour affecter le groupe": "Select one or more user(s) to assign to the group",
+"Pas d'utilisateur sélectionné": "No user selected",
+"Type d'utilisateur": "User type",
+"Niveau d’accès": "Access level",
+"Niveau d’accès non autorisé pour affecter un utilisateur": "Access level not authorized to assign a user",
+"Rôle non autorisé pour affecter un utilisateur à un groupe": "Role not authorized to assign a user to a group",
+"Cet utilisateur n’est pas autorisé à être affecté à un groupe": "This user is not authorized to be assigned to a group",
+"Aucune": "None",
+"null": "null",
+
+
+
+
+
+
+"appareil(s) non trouvé(s)": "Device(s) not found",
+"Nombre d'appareils final": "Final number of devices",
+
+
+
+
+
+
+"Naviguer vers la page": "Navigate to page",
+"Code pays": "Country code",
+"Mensualité": "Monthly payment",
+"Autorisation de notification" : "Notification permission",
+"Activer le l'appareil" : "Activate device",
+"Informations générales" : "General information",
+"Statut & suivi" : "Status and tracking",
+"Informations d’identification" : "Identification information"
+
+
 
 
 

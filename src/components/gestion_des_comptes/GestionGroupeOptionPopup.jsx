@@ -20,6 +20,7 @@ function GestionGroupeOptionPopup({
     currentSelectedGroupeGestion,
     gestionAccountData,
     accountDevices,
+    setFilteredColorCategorieListe,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -27,9 +28,17 @@ function GestionGroupeOptionPopup({
   const navigate = useNavigate();
 
   const currentSelectedGroupeGestionDevices = () => {
+    const foundAccount = gestionAccountData?.find(
+      (acct) => acct?.accountID === currentSelectedGroupeGestion?.accountID
+    );
+
     const foundGroupe = gestionAccountData
       ?.flatMap((account) => account.accountGroupes)
-      ?.find((u) => u.groupID === currentSelectedGroupeGestion?.groupID);
+      ?.find(
+        (u) =>
+          u.groupID === currentSelectedGroupeGestion?.groupID &&
+          u.accountID === currentSelectedGroupeGestion?.accountID
+      );
 
     const deviceIDsInInfo = new Set(
       foundGroupe?.groupeDevices?.map((device) => device.deviceID)
@@ -39,7 +48,9 @@ function GestionGroupeOptionPopup({
     const notFoundDeviceIDs = [];
 
     deviceIDsInInfo.forEach((id) => {
-      const isFound = accountDevices?.some((device) => device.deviceID === id);
+      const isFound = foundAccount?.accountDevices?.some(
+        (device) => device.deviceID === id
+      );
       if (isFound) {
         foundDeviceIDs.push(id);
       } else {
@@ -47,10 +58,16 @@ function GestionGroupeOptionPopup({
       }
     });
 
-    const updateListe = accountDevices?.filter((device) =>
+    const updateListe = foundAccount?.accountDevices?.filter((device) =>
       deviceIDsInInfo.has(device.deviceID)
     );
 
+    console.log("updateListe x.......................", updateListe);
+    console.log("foundGroupe x.......................", foundGroupe);
+    console.log("deviceIDsInInfo x.......................", deviceIDsInInfo);
+
+    setFilteredColorCategorieListe(null);
+    setListeGestionDesVehicules(updateListe);
     setTimeout(() => {
       setListeGestionDesVehicules(updateListe);
     }, 500);

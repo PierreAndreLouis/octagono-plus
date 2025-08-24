@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/DataContext";
 import { IoMdClose } from "react-icons/io";
 import { PiIntersectThreeBold } from "react-icons/pi";
@@ -22,7 +22,7 @@ function GestionAccountOptionPopup({
     setDeviceListeTitleGestion,
     setListeGestionDesGroupe,
     setListeGestionDesGroupeTitre,
-
+    showPageRaccourciComponent,
     scrollToTop,
     setListeGestionDesGeofences,
     deleteAccountEnGestionAccountFonction,
@@ -31,6 +31,8 @@ function GestionAccountOptionPopup({
     accountRules,
     setListeGestionDesRulesActive,
     setListeGestionDesRules,
+    setShowPageRaccourciComponent,
+    documentationPage,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -51,24 +53,29 @@ function GestionAccountOptionPopup({
     }
   };
 
+  // useEffect(() => {
+  //   if (documentationPage !== "Gestion_des_comptes")
+  //     setShowAccountOptionsPopup(false);
+  // }, [documentationPage]);
+
   return (
     <div>
       {deleteAccountPopup && (
         <div className="fixed  z-[999999999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={deleteAccountFonction}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
+            className="bg-white relative pt-14 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
-              {t("Voulez-vous Supprimer le compte")} :<br /> "
-              <span className="notranslate">
-                {currentAccountSelected?.description}" ?
-              </span>
+              {t("Voulez-vous Supprimer le compte")}
             </div>
             <div>
+              <span className="w-full text-center font-bold text-xl flex justify-center mb-3 ">
+                {currentAccountSelected?.description}
+              </span>
               <label
                 htmlFor="password"
-                className="block text-lg mt-6 text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
+                className="block text-lg  text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
               >
                 {t("Veuillez entrer votre mot de passe")}
               </label>
@@ -105,6 +112,7 @@ function GestionAccountOptionPopup({
       )}
 
       {showAccountOptionsPopup && (
+        // && !showPageRaccourciComponent
         <div className="fixed  flex justify-center items-center z-[9999999999999999999999999] inset-0 bg-black/50 dark:bg-black/70">
           <div className="relative w-[100vw]  max-w-[40rem] bg-white dark:bg-gray-700 dark:border dark:border-gray-500 dark:shadow-gray-500-- overflow-hidden rounded-lg shadow-lg">
             <IoMdClose
@@ -136,6 +144,7 @@ function GestionAccountOptionPopup({
                 onClick={() => {
                   setDocumentationPage("Gestion_des_utilisateurs");
                   navigate("/Gestion_des_utilisateurs");
+                  setShowPageRaccourciComponent("Gestion_des_utilisateurs");
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 dark:text-white p-2 rounded-md flex items-center gap-4"
               >
@@ -159,6 +168,7 @@ function GestionAccountOptionPopup({
                     setDeviceListeTitleGestion(`${t("Tous les Appareils")}`);
                     setDocumentationPage("Gestion_des_appareils");
                     navigate("/Gestion_des_appareils");
+                    setShowPageRaccourciComponent("Gestion_des_appareils");
                   }, 200);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
@@ -211,13 +221,7 @@ function GestionAccountOptionPopup({
                 onClick={() => {
                   setDocumentationPage("Gestion_des_roles");
                   navigate("/Gestion_des_roles");
-                  if (currentAccountSelected) {
-                    setListeGestionDesRules(
-                      currentAccountSelected?.accountRules
-                    );
-                  } else {
-                    setListeGestionDesRules(accountRules);
-                  }
+                  setListeGestionDesRules(currentAccountSelected?.accountRules);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >
@@ -232,13 +236,9 @@ function GestionAccountOptionPopup({
                   setDocumentationPage("Gestion_des_roles_actives");
                   navigate("/Gestion_des_roles_actives");
 
-                  if (currentAccountSelected) {
-                    setListeGestionDesRulesActive(
-                      currentAccountSelected?.accountRulesActive
-                    );
-                  } else {
-                    setListeGestionDesRulesActive(accountRulesActive);
-                  }
+                  setListeGestionDesRulesActive(
+                    currentAccountSelected?.accountRulesActive
+                  );
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
               >

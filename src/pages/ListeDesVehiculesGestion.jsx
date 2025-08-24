@@ -10,12 +10,15 @@ import {
   FaChevronDown,
   FaChevronRight,
   FaSortAmountDownAlt,
+  FaInfo,
+  FaInfoCircle,
+  FaFlagCheckered,
 } from "react-icons/fa";
 import GestionAccountOptionPopup from "../components/gestion_des_comptes/GestionAccountOptionPopup";
-import { MdLocationPin, MdUpdate } from "react-icons/md";
+import { MdLocationPin, MdOutlineInfo, MdUpdate } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import GestionAppareilOptionPopup from "../components/gestion_des_comptes/GestionAppareilOptionPopup";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import { LuArrowDownUp } from "react-icons/lu";
 import { FaLocationPin } from "react-icons/fa6";
@@ -27,9 +30,7 @@ function ListeDesVehiculesGestion({
   setChooseOtherAccountGestion,
   chooseOtherAccountGestion,
   fromDashboard = false,
-  statisticFilteredDeviceListe,
-  statisticFilteredDeviceListeText,
-  setStatisticFilteredDeviceListe,
+
   setStatisticFilteredDeviceListeText,
   showChooseAppareilToModifyMessage,
   setShowChooseAppareilToModifyMessage,
@@ -137,46 +138,49 @@ function ListeDesVehiculesGestion({
   const [showPasswordInput, setShowPasswordInput] = useState(false);
 
   const currentListe = useMemo(() => {
-    if (fromDashboard) {
-      return addVehiculeDetailsFonction(
-        statisticFilteredDeviceListe,
-        véhiculeDetails
-      );
-    }
-
     if (isDashboardHomePage) {
       return addVehiculeDetailsFonction(
         listeGestionDesVehicules,
         véhiculeDetails
       );
+    } else {
+      return dataFusionné;
     }
-
-    return dataFusionné;
   }, [
-    fromDashboard,
     isDashboardHomePage,
-    statisticFilteredDeviceListe,
     listeGestionDesVehicules,
     dataFusionné,
     véhiculeDetails,
   ]);
 
+  useEffect(() => {
+    console.log(
+      "listeGestionDesVehicules ..........................",
+      listeGestionDesVehicules
+    );
+  }, [listeGestionDesVehicules]);
+
   const displayListeDevice = filteredColorCategorieListe
     ? filteredColorCategorieListe
     : currentListe;
+
+  // const displayListeDevice = currentListe;
 
   const filteredListeGestionDesVehicules = searchTermInput
     ? displayListeDevice?.filter(
         (item) =>
           item?.description
-            .toLowerCase()
-            .includes(searchTermInput.toLowerCase()) ||
+            ?.toLowerCase()
+            ?.includes(searchTermInput.toLowerCase()) ||
           item?.imeiNumber
-            .toLowerCase()
-            .includes(searchTermInput.toLowerCase()) ||
+            ?.toLowerCase()
+            ?.includes(searchTermInput.toLowerCase()) ||
+          item?.deviceID
+            ?.toLowerCase()
+            ?.includes(searchTermInput.toLowerCase()) ||
           item?.simPhoneNumber
-            .toLowerCase()
-            .includes(searchTermInput.toLowerCase()) ||
+            ?.toLowerCase()
+            ?.includes(searchTermInput.toLowerCase()) ||
           item?.accountID.toLowerCase().includes(searchTermInput.toLowerCase())
       )
     : displayListeDevice;
@@ -475,7 +479,15 @@ function ListeDesVehiculesGestion({
         <div>
           {!fromDashboard && (
             <div>
-              <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+              <h2
+                onClick={() => {
+                  console.log(
+                    "listeGestionDesVehicules",
+                    listeGestionDesVehicules
+                  );
+                }}
+                className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
+              >
                 {t("Liste des Appareils")}
               </h2>
 
@@ -1034,7 +1046,7 @@ function ListeDesVehiculesGestion({
           </div>
 
           {/*  */}
-          {showChooseItemToModifyMessage &&
+          {/* {showChooseItemToModifyMessage &&
             showChooseItemToModifyPage === "Gestion_des_appareils" && (
               <div className=" flex items-center cursor-pointer justify-between  px-3 py-1 rounded-md bg-yellow-200 text-yellow-700 border border-yellow-700 font-semibold text-sm text-center mb-2">
                 <p className="w-full">{showChooseItemToModifyMessage}</p>
@@ -1044,7 +1056,7 @@ function ListeDesVehiculesGestion({
                   }}
                 />
               </div>
-            )}
+            )} */}
 
           {sortedGroups?.length > 0 ? (
             sortedGroups?.map(([accountID, devices]) => (
@@ -1101,7 +1113,7 @@ function ListeDesVehiculesGestion({
                           (hasDetails && isActive && speed > 0)
                         ) {
                           border_color = "border-l-[.4rem] border-green-500";
-                          text_color = "text-green-600/80";
+                          text_color = "text-green-600";
                           bg_color = "bg-green-600/90";
                         } else if (
                           isActive &&
@@ -1109,12 +1121,12 @@ function ListeDesVehiculesGestion({
                           device?.lastStopTime <= todayTimestamp &&
                           speed <= 0
                         ) {
-                          border_color = "border-l-[.4rem] border-orange-300";
-                          text_color = "text-orange-500/80";
+                          border_color = "border-l-[.4rem] border-orange-500";
+                          text_color = "text-orange-500";
                           bg_color = "bg-orange-500";
                         } else {
-                          border_color = "border-l-[.4rem] border-purple-300";
-                          text_color = "text-purple-500/80";
+                          border_color = "border-l-[.4rem] border-purple-500";
+                          text_color = "text-purple-500";
                           bg_color = "bg-purple-500";
                         }
 
@@ -1156,8 +1168,15 @@ function ListeDesVehiculesGestion({
                               {index + 1}
                             </div>
                             <div className="absolute bottom-3 right-3 "></div>
-                            <div className="flex  gap-3  ">
-                              <div className=" hidden sm:flex flex-col  items-center   md:mr-4">
+                            <div className="flex  gap-3   w-full">
+                              {/* {showMoreDeviceInfo !== index && ( */}
+                              <div
+                                className={`${
+                                  showMoreDeviceInfo !== index
+                                    ? "max-w-[100vw] md:mr-4"
+                                    : "max-w-[0vw] opacity-0"
+                                } overflow-hidden transition-all hidden sm:flex flex-col  items-center    `}
+                              >
                                 <FaCar
                                   className={`${text_color} text-[3rem]   `}
                                 />
@@ -1166,9 +1185,9 @@ function ListeDesVehiculesGestion({
                                 >
                                   {foundDetails?.speedKPH > 0
                                     ? parseFloat(
-                                        device?.véhiculeDetails[0]?.speedKPH ||
-                                          foundDetails?.speedKPH
-                                      ).toFixed(0)
+                                        device?.véhiculeDetails?.[0]
+                                          ?.speedKPH || foundDetails?.speedKPH
+                                      )?.toFixed(0)
                                     : 0}{" "}
                                 </h3>
                                 <h3
@@ -1177,9 +1196,16 @@ function ListeDesVehiculesGestion({
                                   Km/h
                                 </h3>
                               </div>
-                              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                                <div>
-                                  <div className="flex sm:hidden gap-6 items-center">
+                              {/* )} */}
+                              <div className=" w-full flex flex-wrap justify-between gap-x-4 ">
+                                <div className="w-full">
+                                  <div
+                                    className={` ${
+                                      showMoreDeviceInfo !== index
+                                        ? "max-h-[5rem]"
+                                        : "max-h-[0rem] opacity-0"
+                                    } flex sm:hidden overflow-hidden  gap-6 items-center`}
+                                  >
                                     <FaCar
                                       className={`${text_color} text-[3rem] sm:hidden   md:mr-4 `}
                                     />
@@ -1187,12 +1213,22 @@ function ListeDesVehiculesGestion({
                                       className={`${text_color} font-bold text-lg md:text-2xl`}
                                     >
                                       {parseFloat(
-                                        device?.véhiculeDetails[0]?.speedKPH ||
-                                          foundDetails?.speedKPH
-                                      ).toFixed(0)}{" "}
+                                        device?.véhiculeDetails?.[0]
+                                          ?.speedKPH || foundDetails?.speedKPH
+                                      )?.toFixed(0)}{" "}
                                       Km/h
                                     </h3>
                                   </div>
+                                  {showMoreDeviceInfo === index && (
+                                    <div
+                                      className={`${text_color} text-[1rem] mt-4 border-b border-b-gray-600 py-1 flex items-center gap-3 `}
+                                    >
+                                      <FaCar className="text-[1.7rem]" />
+                                      <p className="font-bold">
+                                        {t("Informations générales")} :
+                                      </p>
+                                    </div>
+                                  )}
                                   <div className=" border-b py-1">
                                     <p className="font-bold">
                                       {t("Description")} :
@@ -1203,6 +1239,16 @@ function ListeDesVehiculesGestion({
                                       </span>
                                     </p>
                                   </div>{" "}
+                                  {showMoreDeviceInfo !== index && (
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Account ID")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 notranslate text-gray-600 pl-2">
+                                        {device?.accountID}
+                                      </span>
+                                    </div>
+                                  )}
                                   <div className=" border-b py-1">
                                     <p className="font-bold">
                                       {t("Adresse")} :
@@ -1234,39 +1280,87 @@ function ListeDesVehiculesGestion({
                                       </span>
                                     </p>
                                   </div>{" "}
-                                  {/* <div className="flex flex-wrap border-b py-1">
-                                    <p className="font-bold">
-                                      {t("Dernière mise a jour EventData")} :
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
-                                        {
-                                          FormatDateHeure(
-                                            device?.lastUpdateTime
-                                          ).date
-                                        }
-                                        <span className="px-2">/</span>{" "}
-                                        {
-                                          FormatDateHeure(
-                                            device?.lastUpdateTime
-                                          ).time
-                                        }
-                                      </span>
-                                    </p>
-                                  </div>{" "} */}
-                                  <div className="flex flex-wrap border-b py-1">
-                                    <p className="font-bold">
-                                      {t("Account ID")} :
-                                    </p>
-                                    <span className=" dark:text-orange-500 notranslate text-gray-600 pl-2">
-                                      {device?.accountID}
-                                    </span>
-                                  </div>{" "}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
                                   <div
                                     className={`${
                                       showMoreDeviceInfo === index
-                                        ? "max-h-[20rem]"
+                                        ? "max-h-[30rem]"
                                         : "max-h-0"
                                     }  overflow-hidden transition-all`}
                                   >
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Date Creation")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {
+                                          FormatDateHeure(device?.creationTime)
+                                            .date
+                                        }
+                                        <span className="px-2">/</span>{" "}
+                                        {
+                                          FormatDateHeure(device?.creationTime)
+                                            .time
+                                        }
+                                      </span>
+                                    </div>{" "}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Plaque du véhicule")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {device?.licensePlate}
+                                      </span>
+                                    </div>{" "}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Type d'installation")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {device?.equipmentType}
+                                      </span>
+                                    </div>{" "}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {showMoreDeviceInfo === index && (
+                                      <div
+                                        className={`${text_color} text-[1rem] mt-4 border-b border-b-gray-600 py-1 flex items-center gap-3 `}
+                                      >
+                                        <FaInfoCircle className="text-[1.4rem]" />
+                                        <p className="font-bold">
+                                          {t("Informations d’identification")} :
+                                        </p>
+                                      </div>
+                                    )}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Account ID")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 notranslate text-gray-600 pl-2">
+                                        {device?.accountID}
+                                      </span>
+                                    </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
                                         {t("deviceID")} :
@@ -1275,6 +1369,42 @@ function ListeDesVehiculesGestion({
                                         {device?.deviceID}
                                       </span>
                                     </div>{" "}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Numéro de la carte SIM")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {device?.simPhoneNumber}
+                                      </span>
+                                    </div>{" "}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("ImeiNumber")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {device?.imeiNumber}
+                                      </span>
+                                    </div>{" "}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    <div
+                                      className={`${text_color} text-[1rem] mt-4 border-b border-b-gray-600 py-1 flex items-center gap-3 `}
+                                    >
+                                      <FaFlagCheckered className="text-[1.4rem]" />
+                                      <p className="font-bold">
+                                        {t("Statut & suivi")} :
+                                      </p>
+                                    </div>{" "}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
+                                    {/*  */}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
                                         {t("Statut")} :
@@ -1296,38 +1426,6 @@ function ListeDesVehiculesGestion({
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
-                                        {t("Plaque du véhicule")} :
-                                      </p>
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {device?.licensePlate}
-                                      </span>
-                                    </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
-                                      <p className="font-bold">
-                                        {t("Numéro de la carte SIM")} :
-                                      </p>
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {device?.simPhoneNumber}
-                                      </span>
-                                    </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
-                                      <p className="font-bold">
-                                        {t("Type d'installation")} :
-                                      </p>
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {device?.equipmentType}
-                                      </span>
-                                    </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
-                                      <p className="font-bold">
-                                        {t("ImeiNumber")} :
-                                      </p>
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {device?.imeiNumber}
-                                      </span>
-                                    </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
-                                      <p className="font-bold">
                                         {t("Distance totale parcourue")} :
                                       </p>
                                       <span className="notranslate dark:text-orange-500 text-gray-600 pl-2">
@@ -1340,22 +1438,6 @@ function ListeDesVehiculesGestion({
                                             " " +
                                             `${t("km")}`
                                           : `${t("Non disponible")}`}{" "}
-                                      </span>
-                                    </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
-                                      <p className="font-bold">
-                                        {t("Date Creation")} :
-                                      </p>
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
-                                        {
-                                          FormatDateHeure(device?.creationTime)
-                                            .date
-                                        }
-                                        <span className="px-2">/</span>{" "}
-                                        {
-                                          FormatDateHeure(device?.creationTime)
-                                            .time
-                                        }
                                       </span>
                                     </div>{" "}
                                   </div>
@@ -1378,7 +1460,7 @@ function ListeDesVehiculesGestion({
                             </div>
                             {/* {isDashboardHomePage && ( */}
                             <div
-                              className="flex justify-between md:mr-10-- md:flex-col mt-6 sm:max-w-[30rem] gap-3 md:mt-3 justify-between-- 
+                              className="flex  justify-between md:mr-10-- md:flex-col mt-6 sm:max-w-[30rem] gap-3 md:mt-3 justify-between-- 
                       items-center "
                             >
                               <div

@@ -126,7 +126,7 @@
   "Dernière connexion": "Última conexión",
   "Mot de passe incorrect. Veuillez réessayer": "Contraseña incorrecta. Inténtalo de nuevo.",
   "Voulez-vous changer de Compte ?": "¿Quieres cambiar de cuenta?",
-  "Veuillez entrer votre mot de passe": "Ingresa tu contraseña",
+  "Veuillez entrer votre mot de passe": "Ingresa su contraseña",
   "Mot de passe": "Contraseña",
   "Confirmer": "Confirmar",
   "Annuler": "Cancelar",
@@ -147,14 +147,14 @@
   "statut inconnu": "Estado desconocido",
   "Pas de nom disponible": "Nombre no disponible",
   "Dernière mise a jour": "Última actualización",
-  "Code Alerte": "Código de alerta",
+  "Code Alerte": "Codigo del Estado",
   "Plaque du véhicule": "Placa del vehículo",
   "Telephone": "Teléfono",
   "Type d'appareil": "Tipo de dispositivo",
   "Distance totale parcourue": "Distancia total recorrida",
   "km": "km",
   "Non disponible": "No disponible",
-  "Numéro de la carte SIM": "Número de tarjeta SIM",
+  "Numéro de la carte SIM": "Numero del sim",
   "Date Creation": "Fecha de creación",
   "Voir moins": "Ver menos",
   "Voir plus": "Ver más",
@@ -1049,7 +1049,49 @@
 "Voir cette liste sur la carte": "Ver esta lista en el mapa",
 "Filtrer les positions": "Filtrar las posiciones",
 "Trier les appareils par statut": "Ordenar los dispositivos por estado",
-"Ordre de déplacement": "Orden de movimiento"
+"Ordre de déplacement": "Orden de movimiento",
+
+
+
+
+
+
+
+
+
+
+"Liste Des Utilisateurs": "Lista de usuarios",
+"Choisissez un ou plusieurs utilisateur(s) pour affecter le groupe": "Elija uno o varios usuario(s) para asignar al grupo",
+"Pas d'utilisateur sélectionné": "Ningún usuario seleccionado",
+"Type d'utilisateur": "Tipo de usuario",
+"Niveau d’accès": "Nivel de acceso",
+"Niveau d’accès non autorisé pour affecter un utilisateur": "Nivel de acceso no autorizado para asignar un usuario",
+"Rôle non autorisé pour affecter un utilisateur à un groupe": "Rol no autorizado para asignar un usuario a un grupo",
+"Cet utilisateur n’est pas autorisé à être affecté à un groupe": "Este usuario no está autorizado para ser asignado a un grupo",
+"Aucune": "Ninguno",
+"null": "null",
+
+
+
+
+
+"appareil(s) non trouvé(s)": "Dispositivo(s) no encontrado(s)",
+"Nombre d'appareils final": "Número final de dispositivos",
+
+
+
+
+
+"Naviguer vers la page": "Navegar a la página",
+"Code pays": "Código de país",
+"Mensualité": "Mensualidad",
+"Autorisation de notification" : "Autorización de notificación",
+"Activer le l'appareil" : "Activar el dispositivo",
+"Informations générales" : "Información general",
+"Statut & suivi" : "Estado y seguimiento",
+"Informations d’identification" : "Información de identificación"
+
+
 
 
 

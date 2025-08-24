@@ -24,7 +24,6 @@ function StatisticDashboard({
   fetchNewDataDevices,
   isLoading2,
   setShowStatisticDeviceListeDashboard,
-  setStatisticFilteredDeviceListe,
   setStatisticFilteredDeviceListeText,
   animatedTotal,
   animatedDeplaces,

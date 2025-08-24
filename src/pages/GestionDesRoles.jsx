@@ -163,7 +163,9 @@ function GestionDesRoles({
                 {" : "}
                 <br />
                 <span className="text-black">
-                  {currentSelectedRole?.description} ?
+                  {currentSelectedRole?.description ||
+                    currentSelectedRole?.ruleID}{" "}
+                  ?
                 </span>
               </div>
               <div>

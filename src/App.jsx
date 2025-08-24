@@ -18,7 +18,7 @@ import { DataContext } from "./context/DataContext";
 
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Page_404 from "./components/page_404/Page_404";
-import Login2 from "./components/login/Login2";
+// import Login2 from "./components/login/Login2";
 import Navigation_bar from "./components/home/Navigation_bar";
 import ScrollToTop from "./components/scrollToTop/ScrollToTop";
 import SuccèsÉchecMessagePopup from "./components/Reutilisable/SuccèsÉchecMessagePopup";
@@ -26,7 +26,7 @@ import GoogleTranslate from "./components/home/GoogleTranslate";
 
 /////////////////////////////////////////////////////////
 
-import { IoLogInOutline } from "react-icons/io5";
+import { IoClose, IoLogInOutline } from "react-icons/io5";
 
 import DashboardContaintMaintComponant from "./components/dashboard_containt/DashboardContaintMaintComponant";
 
@@ -50,6 +50,10 @@ import CreateNewRole from "./components/gestion_des_comptes/CreateNewRole";
 import DetailsVehiculePage from "./pages/DetailsVehiculePage";
 import HistoriquePage from "./pages/HistoriquePage";
 import RapportPageDetails from "./pages/RapportPageDetails";
+
+import Login2 from "./components/login/Login2";
+
+// const Login2 = React.lazy(() => import("./components/login/Login2"));
 
 // const DashboardContaintMaintComponant = React.lazy(() =>
 //   import("./components/dashboard_containt/DashboardContaintMaintComponant")
@@ -108,6 +112,7 @@ import SideBarSysadmin from "./components/dashboard_containt/SideBarSysadmin";
 import AjouterGeofence from "./components/location_vehicule/AjouterGeofence";
 import GestionDesRolesActive from "./pages/GestionDesRolesActive";
 import CreateNewRoleActive from "./components/gestion_des_comptes/CreateNewRoleActive";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 function App() {
   const {
@@ -147,6 +152,8 @@ function App() {
     clearCacheFonction,
     allDevices,
     setAllDevices,
+    showPageRaccourciComponent,
+    setShowPageRaccourciComponent,
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -776,6 +783,102 @@ function App() {
           </div>
         )}{" "}
         {/*  */}
+        {/* {showPageRaccourciComponent && !chooseOtherAccountGestion && (
+          <div className="fixed px-3-- inset-0 bg-black/50 z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] flex justify-center items-center">
+            <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw] ">
+              <div className="absolute flex flex-col justify-center items-center top-0 left-0 right-0 h-[5rem] bg-orange-200 z-[8]">
+                <h2 className="font-bold text-lg">
+                  {showPageRaccourciComponent === "Gestion_des_utilisateurs" &&
+                    `${t("Gestion des Utilisateurs")}}`}
+
+                  {showPageRaccourciComponent === "Gestion_des_appareils" &&
+                    `${t("Gestion des Appareils")}}`}
+                </h2>
+                <button
+                  onClick={() => {
+                    if (
+                      showPageRaccourciComponent === "Gestion_des_utilisateurs"
+                    ) {
+                      setDocumentationPage("Gestion_des_utilisateurs");
+                      navigate("/Gestion_des_utilisateurs");
+                    } else if (
+                      showPageRaccourciComponent === "Gestion_des_appareils"
+                    ) {
+                      setDocumentationPage("Gestion_des_appareils");
+                      navigate("/Gestion_des_appareils");
+                    }
+                    setShowPageRaccourciComponent("");
+                    scrollToTop();
+                  }}
+                  className="flex gap-3 justify-center items-center rounded-lg bg-orange-500 text-white/90 font-semibold  px-4 py-1"
+                >
+                  {t("Naviguer vers la page")} <FaArrowRight />{" "}
+                </button>
+              </div>
+              <IoClose
+                onClick={() => {
+                  setShowPageRaccourciComponent("");
+                  scrollToTop();
+                }}
+                className="absolute top-5 right-4 z-[99999999999] text-[1.6rem] cursor-pointer text-red-600"
+              />
+              <FaArrowLeft
+                onClick={() => {
+                  // setShowPageRaccourciComponent("");
+                  // scrollToTop();
+                }}
+                className="absolute top-5 left-4 z-[99999999999] text-[1.6rem] cursor-pointer text-red-600"
+              />
+              <div className=" min-h-[80vh] max-h-[80vh] mt-[4rem] overflow-auto">
+                <div>
+                  {showPageRaccourciComponent ===
+                    "Gestion_des_utilisateurs" && (
+                    <ListeDesUtilisateur
+                      setDocumentationPage={setDocumentationPage}
+                      showChooseItemToModifyMessage={
+                        showChooseItemToModifyMessage
+                      }
+                      setshowChooseItemToModifyMessage={
+                        setshowChooseItemToModifyMessage
+                      }
+                      showChooseItemToModifyPage={showChooseItemToModifyPage}
+                      setChooseOneAccountToContinue={
+                        setChooseOneAccountToContinue
+                      }
+                      setChooseOtherAccountGestion={
+                        setChooseOtherAccountGestion
+                      }
+                      isCreatingNewElement={isCreatingNewElement}
+                      setIsCreatingNewElement={setIsCreatingNewElement}
+                    />
+                  )}
+
+                  {showPageRaccourciComponent === "Gestion_des_appareils" && (
+                    <ListeDesVehiculesGestion
+                      setDocumentationPage={setDocumentationPage}
+                      setChooseOneAccountToContinue={
+                        setChooseOneAccountToContinue
+                      }
+                      setChooseOtherAccountGestion={
+                        setChooseOtherAccountGestion
+                      }
+                      showChooseItemToModifyMessage={
+                        showChooseItemToModifyMessage
+                      }
+                      setshowChooseItemToModifyMessage={
+                        setshowChooseItemToModifyMessage
+                      }
+                      showChooseItemToModifyPage={showChooseItemToModifyPage}
+                      chooseOtherAccountGestion={chooseOtherAccountGestion}
+                      isCreatingNewElement={isCreatingNewElement}
+                      setIsCreatingNewElement={setIsCreatingNewElement}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )} */}
         {/* <Login2 /> */}
         <SuccèsÉchecMessagePopup />
         <Routes>
@@ -792,7 +895,15 @@ function App() {
               )
             }
           />
-          <Route path="/login" element={<Login2 />} />
+
+          <Route
+            path="/login"
+            element={
+              <Suspense fallback={<LoadingLazyAnimation />}>
+                <Login2 />
+              </Suspense>
+            }
+          />
 
           <Route
             path="/home"

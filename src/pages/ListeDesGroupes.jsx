@@ -125,15 +125,29 @@ function ListeDesGroupes({
     );
   }, [filterGroupeAccountData]);
 
+  // const groupUsersMap = useMemo(() => {
+  //   const map = new Map();
+  //   (gestionAccountData || []).forEach((account) => {
+  //     (account.accountUsers || []).forEach((user) => {
+  //       (user.userGroupes || []).forEach((group) => {
+  //         if (!map.has(group.groupID)) map.set(group.groupID, []);
+  //         map.get(group.groupID).push(user);
+  //       });
+  //     });
+  //   });
+  //   return map;
+  // }, [gestionAccountData]);
   const groupUsersMap = useMemo(() => {
     const map = new Map();
     (gestionAccountData || []).forEach((account) => {
+      const groupMap = new Map();
       (account.accountUsers || []).forEach((user) => {
         (user.userGroupes || []).forEach((group) => {
-          if (!map.has(group.groupID)) map.set(group.groupID, []);
-          map.get(group.groupID).push(user);
+          if (!groupMap.has(group.groupID)) groupMap.set(group.groupID, []);
+          groupMap.get(group.groupID).push(user);
         });
       });
+      map.set(account.accountID, groupMap);
     });
     return map;
   }, [gestionAccountData]);
@@ -307,12 +321,16 @@ function ListeDesGroupes({
         <div className="fixed  z-[9999999999999999999999999] flex justify-center items-center inset-0 bg-black/50">
           <form
             onSubmit={handlePasswordCheck}
-            className="bg-white relative pt-20 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
+            className="bg-white relative pt-14 overflow-hidden dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div className="bg-red-500 font-bold text-white text-xl text-center py-3 absolute top-0 left-0 right-0">
               {t("Voulez-vous Supprimer le groupe ?")}
             </div>
             <div>
+              <span className="w-full text-center font-bold text-xl flex justify-center mb-3 ">
+                {currentSelectedGroupeGestion?.description ||
+                  currentSelectedGroupeGestion?.groupID}
+              </span>
               <label
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"
@@ -361,7 +379,8 @@ function ListeDesGroupes({
             <>
               <h2
                 onClick={() => {
-                  fetchAccountGroupes();
+                  // fetchAccountGroupes();
+                  console.log(gestionAccountData);
                 }}
                 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
               >
@@ -522,29 +541,66 @@ function ListeDesGroupes({
                         //
                         //
                         //
+                        // const userListeAffected =
+                        //   groupUsersMap.get(groupe.groupID) || [];
+
+                        // const userListeAffected =
+                        //   groupUsersMap
+                        //     .get(groupe.accountID)
+                        //     ?.get(groupe.groupID) || [];
+
+                        const foundAccount = gestionAccountData?.find(
+                          (acct) => acct?.accountID === groupe?.accountID
+                        );
+
                         const userListeAffected =
-                          groupUsersMap.get(groupe.groupID) || [];
+                          foundAccount?.accountUsers?.filter((user) =>
+                            user.userGroupes?.some(
+                              (group) => group.groupID === groupe?.groupID
+                            )
+                          );
 
                         const foundGroupe = gestionAccountData
                           ?.flatMap((account) => account.accountGroupes)
-                          ?.find((u) => u.groupID === groupe?.groupID);
+                          ?.find(
+                            (u) =>
+                              u.groupID === groupe?.groupID &&
+                              u.accountID === groupe?.accountID
+                          );
+
+                        // ✅ présents dans les deux
+                        const dansAllDevice =
+                          foundGroupe?.groupeDevices?.filter((g) =>
+                            foundAccount?.accountDevices?.some(
+                              (d) => d.deviceID === g.deviceID
+                            )
+                          );
+
+                        // ❌ présents dans foundGroupe?.groupeDevices? mais pas dans foundAccount?.accountDevices
+                        const pasDansAllDevice =
+                          foundGroupe?.groupeDevices?.filter(
+                            (g) =>
+                              !foundAccount?.accountDevices.some(
+                                (d) => d.deviceID === g.deviceID
+                              )
+                          );
 
                         return (
                           <div
-                            onClick={() => {
-                              setCurrentSelectedGroupeGestion(foundGroupe);
-                              // console.log("foundGroupe----------", foundGroupe);
-                            }}
+                            // onClick={() => {
+                            //   setCurrentSelectedGroupeGestion(foundGroupe);
+                            // console.log("foundGroupe----------", foundGroupe);
+                            // }}
                             key={index}
                             className="shadow-lg- shadow-inner shadow-black/10 bg-gray-50  relative md:flex gap-4 justify-between items-end rounded-lg px-2 md:px-4 py-4"
                           >
                             <div className="bg-gray-100 pb-1 pl-2 text-sm absolute top-0 right-0 rounded-bl-full font-bold w-[2rem] h-[2rem] flex justify-center items-center">
                               {index + 1}
                             </div>
-                            <div className="flex  gap-3  ">
+                            <div className="flex  gap-3  w-full">
                               <PiIntersectThreeBold className="text-[3rem] hidden sm:block text-orange-500 md:mr-4" />
-                              <div className=" w-full flex flex-wrap justify-between gap-x-4">
-                                <div>
+                              <div className=" w-full flex flex-wrap justify-between gap-x-4 ">
+                                <div className="w-full">
                                   <PiIntersectThreeBold className="text-[3rem] sm:hidden text-orange-500 md:mr-4" />
                                   <div className="flex flex-wrap border-b py-1">
                                     <p className="font-bold- text-gray-700">
@@ -556,13 +612,37 @@ function ListeDesGroupes({
                                   </div>{" "}
                                   <div className="flex flex-wrap border-b py-1">
                                     <p className="font-bold- text-gray-700">
+                                      {t("ID du Compte")} :
+                                    </p>
+                                    <span className=" dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
+                                      {groupe?.accountID}
+                                    </span>
+                                  </div>{" "}
+                                  <div className="flex flex-wrap border-b py-1">
+                                    <p className="font-bold- text-gray-700">
                                       {t("Nom du Groupe")} :
                                     </p>
                                     <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                                       {groupe?.description || "---"}
                                     </span>
                                   </div>{" "}
-                                  <div className="flex flex-wrap border-b py-1">
+                                  <div
+                                    onClick={() => {
+                                      console.log(
+                                        "✅ GroupeListe + AllDevice:",
+                                        dansAllDevice
+                                      );
+                                      console.log(
+                                        "❌ GroupeListe seulement:",
+                                        pasDansAllDevice
+                                      );
+                                      console.log(
+                                        "❌ foundGroupe?.groupeDevices:",
+                                        foundGroupe?.groupeDevices
+                                      );
+                                    }}
+                                    className="flex flex-wrap border-b py-1"
+                                  >
                                     <p className="font-bold- text-gray-700">
                                       {t("Nombre d'appareils")} :
                                     </p>
@@ -573,7 +653,7 @@ function ListeDesGroupes({
                                   <div className="flex flex-wrap border-b py-1">
                                     <p
                                       onClick={() => {
-                                        // console.log(userListeAffected);
+                                        console.log(userListeAffected);
                                       }}
                                       className="font-bold- text-gray-700"
                                     >
@@ -583,6 +663,32 @@ function ListeDesGroupes({
                                       {userListeAffected?.length}
                                     </span>
                                   </div>{" "}
+                                  {pasDansAllDevice?.length > 0 && (
+                                    <div className="bg-yellow-100 mt-3 border border-yellow-600 rounded-lg w-full p-3">
+                                      <div className="flex flex-wrap border-b py-1 border-b-yellow-500">
+                                        <p className="font-semibold text-gray-700">
+                                          {pasDansAllDevice?.length}{" "}
+                                          {t("appareil(s) non trouvé(s)")}
+                                        </p>
+                                        {pasDansAllDevice?.map((d) => {
+                                          return (
+                                            <span className=" dark:text-orange-500  text-gray-600 pl-5">
+                                              {d?.deviceID}
+                                            </span>
+                                          );
+                                        })}
+                                      </div>
+
+                                      <div className="flex flex-wrap border-b-- py-1">
+                                        <p className="font-semibold text-gray-700">
+                                          {t("Nombre d'appareils final")}:
+                                        </p>
+                                        <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                                          {dansAllDevice?.length}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -590,10 +696,21 @@ function ListeDesGroupes({
                               <button
                                 onClick={() => {
                                   setTimeout(() => {
-                                    setCurrentSelectedGroupeGestion(groupe);
+                                    setCurrentSelectedGroupeGestion(
+                                      foundGroupe
+                                    );
                                   }, 500);
                                   setListeGestionDesUsers(userListeAffected);
+                                  console.log(
+                                    "userListeAffected",
+                                    userListeAffected
+                                  );
                                   // console.log(groupe);
+                                  // console.log(
+                                  //   "foundGroupe----------",
+                                  //   foundGroupe
+                                  // );
+
                                   setShowSelectedGroupeOptionsPopup(true);
                                   setshowChooseItemToModifyMessage("");
                                 }}

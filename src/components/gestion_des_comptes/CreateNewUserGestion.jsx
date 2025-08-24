@@ -49,6 +49,7 @@ function CreateNewUserGestion({
 
   // État pour chaque champ du formulaire
   const [addNewUserData, setAddNewUserData] = useState({
+    accountID: "",
     userID: "",
     description: "",
     displayName: "",
@@ -56,6 +57,7 @@ function CreateNewUserGestion({
     notifyEmail: "",
     isActive: "1",
     contactPhone: "",
+    phoneCode: "",
     contactName: "",
     userType: "0",
     addressCity: "",
@@ -93,17 +95,17 @@ function CreateNewUserGestion({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const errors = [];
 
-    if (!emailRegex.test(addNewUserData.contactEmail)) {
-      errors.push(`${t("L'email de contact n'est pas valide")}`);
-    }
+    // if (!emailRegex.test(addNewUserData.contactEmail)) {
+    //   errors.push(`${t("L'email de contact n'est pas valide")}`);
+    // }
 
     // if (!emailRegex.test(addNewUserData.notifyEmail)) {
     //   errors.push(`${t("L'email de notification n'est pas valide")}`);
     // }
 
-    if (!phoneRegex.test(addNewUserData.contactPhone)) {
-      errors.push(`${t("Le numéro de téléphone est invalide")}`);
-    }
+    // if (!phoneRegex.test(addNewUserData.contactPhone)) {
+    //   errors.push(`${t("Le numéro de téléphone est invalide")}`);
+    // }
 
     if (addNewUserData.password.length < 6) {
       errors.push(
@@ -156,7 +158,9 @@ function CreateNewUserGestion({
 
   const [showTimeZonePopup, setShowTimeZonePopup] = useState(false);
   const [showUserRolePopup, setShowUserRolePopup] = useState(false);
-  const [maxAccessLevelText, setMaxAccessLevelText] = useState("Write/Edit");
+  const [maxAccessLevelText, setMaxAccessLevelText] = useState(
+    `${t("Accès complet")}`
+  );
   const [showIsUserActivePopup, setShowIsUserActivePopup] = useState(false);
   const [showUserTypePopup, setShowUserTypePopup] = useState(false);
   const [showIsUserActivePopupText, setShowIsUserActivePopupText] =
@@ -165,25 +169,61 @@ function CreateNewUserGestion({
   const [showMaxAccessLevelPopup, setShowMaxAccessLevelPopup] = useState(false);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // tous les groupes disponibles
+  // const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
+  //   (groupe) => groupe?.groupID
+  // );
 
+  // // groupe sélectionner avant mise a jour // actuel
+  // const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
+  //   (groupe) => groupe?.groupID
+  // );
+
+  // // groupe sélectionner pour la mise a jour dans la selection
+  // const [groupesSelectionnes, setGroupesSelectionnes] = useState(
+  //   groupeDuSelectedUser?.[0] || ""
+  // );
+
+  const foundAccount = gestionAccountData?.find(
+    (acct) =>
+      acct?.accountID ===
+      (currentAccountSelected?.accountID || addNewUserData?.accountID)
+  );
+
+  // tous les groupes disponibles
+  const allGroupIDs = foundAccount?.accountGroupes?.map(
+    (groupe) => groupe?.groupID
+  );
+
+  // groupes sélectionnés avant mise à jour (actuels)
   const groupeDuSelectedUser = currentSelectedUserToConnect?.userGroupes?.map(
     (groupe) => groupe?.groupID
   );
 
-  const allGroupIDs = currentAccountSelected?.accountGroupes?.map(
-    (groupe) => groupe?.groupID
-  );
+  // groupes sélectionnés pour la mise à jour
   const [groupesSelectionnes, setGroupesSelectionnes] = useState(
-    groupeDuSelectedUser?.[0] || ""
+    groupeDuSelectedUser?.[0] || "" // ⚠️ un tableau pas juste [0]
   );
 
-  const groupesNonSelectionnes = allGroupIDs?.filter(
+  // groupes à retirer (avant présents mais plus sélectionnés)
+  const groupesNonSelectionnes = groupeDuSelectedUser?.filter(
+    (oldID) => !groupesSelectionnes.includes(oldID)
+  );
+
+  // groupe non sélectionner pour la mise a jour dans la selection
+  const groupeRestantNonChoisis = allGroupIDs?.filter(
     (userID) => !groupesSelectionnes.includes(userID)
   );
 
   const [showGroupesSelectionnesPopup, setShowGroupesSelectionnesPopup] =
     useState(false);
   //////////////////
+
+  useEffect(() => {
+    console.log("groupesNonSelectionnes", groupesNonSelectionnes);
+    console.log("groupesSelectionnes", groupesSelectionnes);
+    console.log("groupeRestantNonChoisis", groupeRestantNonChoisis);
+  }, [groupesSelectionnes]);
 
   useEffect(() => {
     if (isCreatingNewElement) {
@@ -205,7 +245,9 @@ function CreateNewUserGestion({
       const contactEmail = addNewUserData.contactEmail;
       const notifyEmail = addNewUserData.notifyEmail;
       const isActive = addNewUserData.isActive;
-      const contactPhone = addNewUserData.contactPhone;
+
+      const phoneCode = addNewUserData.phoneCode;
+      const contactPhone = phoneCode + addNewUserData.contactPhone;
       const contactName = addNewUserData.contactName;
       const userType = addNewUserData.userType;
 
@@ -298,12 +340,14 @@ function CreateNewUserGestion({
   useEffect(() => {
     if (currentSelectedUserToConnect && !isCreatingNewElement) {
       setAddNewUserData({
+        accountID: currentSelectedUserToConnect.accountID || "",
         userID: currentSelectedUserToConnect.userID || "",
         description: currentSelectedUserToConnect.description || "",
         displayName: currentSelectedUserToConnect.displayName || "",
         contactEmail: currentSelectedUserToConnect.contactEmail || "",
         notifyEmail: currentSelectedUserToConnect.notifyEmail || "",
         isActive: currentSelectedUserToConnect.isActive === "true" ? "1" : "0",
+        // isActive: currentSelectedUserToConnect.isActive === "true" ? "1" : "0",
         contactPhone: currentSelectedUserToConnect.contactPhone || "",
         contactName: currentSelectedUserToConnect.contactName || "",
         userType: currentSelectedUserToConnect.userType || "",
@@ -317,13 +361,13 @@ function CreateNewUserGestion({
         password2: currentSelectedUserToConnect.password || "",
       });
       if (currentSelectedUserToConnect.maxAccessLevel === "0") {
-        setMaxAccessLevelText("New/Delete");
+        setMaxAccessLevelText(`${t("New/Delete")}`);
       } else if (currentSelectedUserToConnect.maxAccessLevel === "1") {
-        setMaxAccessLevelText("Read/View");
+        setMaxAccessLevelText(`${t("Read/View")}`);
       } else if (currentSelectedUserToConnect.maxAccessLevel === "2") {
-        setMaxAccessLevelText("Write/Edit");
+        setMaxAccessLevelText(`${t("Write/Edit")}`);
       } else if (currentSelectedUserToConnect.maxAccessLevel === "3") {
-        setMaxAccessLevelText("Accès complet");
+        setMaxAccessLevelText(`${t("Accès complet")}`);
       }
     }
   }, [currentSelectedUserToConnect, isCreatingNewElement]);
@@ -349,12 +393,12 @@ function CreateNewUserGestion({
 
             <div
               className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                maxAccessLevelText === "New/Delete"
+                maxAccessLevelText === `${t("New/Delete")}`
                   ? "bg-gray-100 dark:bg-gray-800/70"
                   : ""
               }`}
               onClick={() => {
-                setMaxAccessLevelText("New/Delete");
+                setMaxAccessLevelText(`${t("New/Delete")}`);
                 setAddNewUserData((prev) => ({
                   ...prev,
                   maxAccessLevel: "0",
@@ -368,12 +412,12 @@ function CreateNewUserGestion({
 
             <div
               className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                maxAccessLevelText === "Read/View"
+                maxAccessLevelText === `${t("Read/View")}`
                   ? "bg-gray-100 dark:bg-gray-800/70"
                   : ""
               }`}
               onClick={() => {
-                setMaxAccessLevelText("Read/View");
+                setMaxAccessLevelText(`${t("Read/View")}`);
                 setAddNewUserData((prev) => ({
                   ...prev,
                   maxAccessLevel: "1",
@@ -387,12 +431,12 @@ function CreateNewUserGestion({
 
             <div
               className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                maxAccessLevelText === "Write/Edit"
+                maxAccessLevelText === `${t("Write/Edit")}`
                   ? "bg-gray-100 dark:bg-gray-800/70"
                   : ""
               }`}
               onClick={() => {
-                setMaxAccessLevelText("Write/Edit");
+                setMaxAccessLevelText(`${t("Write/Edit")}`);
                 setAddNewUserData((prev) => ({
                   ...prev,
                   maxAccessLevel: "2",
@@ -405,12 +449,12 @@ function CreateNewUserGestion({
             </div>
             <div
               className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                maxAccessLevelText === "Accès complet"
+                maxAccessLevelText === `${t("Accès complet")}`
                   ? "bg-gray-100 dark:bg-gray-800/70"
                   : ""
               }`}
               onClick={() => {
-                setMaxAccessLevelText("Accès complet");
+                setMaxAccessLevelText(`${t("Accès complet")}`);
                 setAddNewUserData((prev) => ({
                   ...prev,
                   maxAccessLevel: "3",
@@ -563,6 +607,23 @@ function CreateNewUserGestion({
                   </div>
                 );
               })}
+              <div
+                className={`cursor-pointer border-b py-3 hover:bg-gray-100 flex justify-between items-center dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
+                  addNewUserData.roleID === ""
+                    ? "bg-gray-100 dark:bg-gray-800/70"
+                    : ""
+                }`}
+                onClick={() => {
+                  setAddNewUserData((prev) => ({
+                    ...prev,
+                    roleID: "",
+                  }));
+                  setShowUserRolePopup(false);
+                }}
+              >
+                <p className="notranslate">{t("Aucune")}</p>
+                <p className="notranslate">{t("null")}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -584,12 +645,12 @@ function CreateNewUserGestion({
               }}
               className="text-[2rem] text-red-600 absolute top-3 right-4 cursor-pointer"
             />
+
             <p className="mx-2 mb-3 text-center mt-4 text-lg">
               {t("Choisissez un Groupe pour affecter l'utilisateur")}
             </p>
-
             <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
-              {currentAccountSelected?.accountGroupes?.map((groupe, index) => {
+              {foundAccount?.accountGroupes?.map((groupe, index) => {
                 const isSelected = groupesSelectionnes === groupe.groupID;
 
                 return (
@@ -615,7 +676,7 @@ function CreateNewUserGestion({
                       <p className="text-gray-600">
                         {t("Nom du Groupe")} :{" "}
                         <span className="font-bold notranslate">
-                          {groupe?.description}
+                          {groupe?.description || groupe?.groupID}
                         </span>
                       </p>
                       <p className="text-gray-600">
@@ -636,25 +697,25 @@ function CreateNewUserGestion({
                 );
               })}
             </div>
-
-            {/* <div className="grid grid-cols-2 gap-4 px-4 mb-4 mt-2">
+            <div className="grid grid-cols-1 gap-4 px-4 mb-4 mt-2">
               <button
                 onClick={() => {
                   setShowGroupesSelectionnesPopup(false);
+                  setGroupesSelectionnes("");
                 }}
                 className="py-2 text-white rounded-md bg-orange-600 font-bold"
               >
-                {t("Confirmer")}
+                {t("Aucune")}
               </button>
-              <button
+              {/* <button
                 onClick={() => {
                   setShowGroupesSelectionnesPopup(false);
                 }}
                 className="py-2  rounded-md bg-gray-100 font-bold"
               >
                 {t("Annuler")}
-              </button>
-            </div> */}
+              </button> */}
+            </div>
           </div>
         </div>
       )}
@@ -693,6 +754,19 @@ function CreateNewUserGestion({
                 {t("Retour")}
               </button>
             </div>
+            {(addNewUserData.maxAccessLevel === "1" ||
+              addNewUserData.maxAccessLevel === "2") && (
+              <p className="mb-2 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
+                {t("Niveau d’accès non autorisé pour affecter un utilisateur")}
+              </p>
+            )}
+            {addNewUserData.roleID !== "!clientproprietaire" && (
+              <p className="mb-2 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
+                {t(
+                  "Rôle non autorisé pour affecter un utilisateur à un groupe"
+                )}
+              </p>
+            )}
 
             <p className="mb-2 font-semibold text-gray-700">
               {t("Choisissez un groupe pour affecter l'utilisateur")}
@@ -776,6 +850,17 @@ function CreateNewUserGestion({
                     label: `${t("Rôle")}`,
                     placeholder: "",
                   },
+                  {
+                    id: "userType",
+                    label: `${t("Type d'utilisateur")}`,
+                    placeholder: "",
+                  },
+
+                  {
+                    id: "maxAccessLevel",
+                    label: `${t("Niveau d’accès")}`,
+                    placeholder: "",
+                  },
 
                   //
                   {
@@ -816,15 +901,52 @@ function CreateNewUserGestion({
                           )}
                       </label>
                       {/*  */}
-                      {field.id === "maxAccessLevel" ? (
+                      {field.id === "contactPhone" ? (
+                        <div className=" pt-1 pb-2 flex gap-3 justify-between items-center text-gray-600 w-full cursor-pointer">
+                          <select
+                            id="phoneCode"
+                            name="phoneCode"
+                            value={addNewUserData?.phoneCode}
+                            onChange={handleChange}
+                            required
+                            className="   border-0 pb-3 py-1.5 px-3 text-gray-900       border-b focus:outline-none  "
+                          >
+                            <option value="">{t("Code pays")}</option>
+                            <option value="509">509</option>
+                            <option value="809">809</option>
+                            <option value="829">829</option>
+                            <option value="849">849</option>
+                          </select>
+
+                          <input
+                            id={field.id}
+                            name={field.id}
+                            type="number"
+                            placeholder={field.placeholder}
+                            value={addNewUserData[field.id]}
+                            onChange={handleChange}
+                            required
+                            className=" w-full border-b pb-3  py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm  "
+                          />
+                        </div>
+                      ) : field.id === "maxAccessLevel" ? (
                         <div
                           onClick={() => {
                             setShowMaxAccessLevelPopup(true);
                           }}
-                          className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
-                          <p>{maxAccessLevelText}</p>
-                          <FaChevronDown className="text-gray-700 mr-4" />
+                          <div className="pl-4 pt-1 border-b pb-2 flex justify-between items-center text-gray-600 w-full cursor-pointer">
+                            <p>{maxAccessLevelText}</p>
+                            <FaChevronDown className="text-gray-700 mr-4" />
+                          </div>
+                          {(addNewUserData.maxAccessLevel === "1" ||
+                            addNewUserData.maxAccessLevel === "2") && (
+                            <p className="mb-2 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
+                              {t(
+                                "Niveau d’accès non autorisé pour affecter un utilisateur"
+                              )}
+                            </p>
+                          )}
                         </div>
                       ) : field.id === "addressCountry" ? (
                         <select
@@ -853,8 +975,8 @@ function CreateNewUserGestion({
                           <option value="">
                             {t("Activer l'utilisateur")} ?
                           </option>
-                          <option value="true">{t("oui")}</option>
-                          <option value="false">{t("non")}</option>
+                          <option value="1">{t("oui")}</option>
+                          <option value="0">{t("non")}</option>
                         </select>
                       ) : field.id === "timeZone" ? (
                         <div
@@ -871,41 +993,49 @@ function CreateNewUserGestion({
                           onClick={() => {
                             setShowUserRolePopup(true);
                           }}
-                          className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
-                          <p>{addNewUserData?.roleID}</p>
-                          <FaChevronDown className="text-gray-700 mr-4" />
+                          <div className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer">
+                            <p>{addNewUserData?.roleID}</p>
+                            <FaChevronDown className="text-gray-700 mr-4" />
+                          </div>
+                          {addNewUserData.roleID !== "!clientproprietaire" && (
+                            <p className="mb-2 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
+                              {t(
+                                "Rôle non autorisé pour affecter un utilisateur à un groupe"
+                              )}
+                            </p>
+                          )}
                         </div>
-                      ) : // : field.id === "userType" ? (
-                      //   <div
-                      //     onClick={() => {
-                      //       setShowUserTypePopup(true);
-                      //     }}
-                      //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
-                      //   >
-                      //     <p>
-                      //       {addNewUserData?.userType === "1"
-                      //         ? "Utilisateur standard / limité"
-                      //         : "Utilisateur Administrateur / Superviseur"}
-                      //     </p>
-                      //     <FaChevronDown className="text-gray-700 mr-4" />
-                      //   </div>
-                      // )
-                      field.id === "isActive" ? (
+                      ) : field.id === "userType" ? (
                         <div
                           onClick={() => {
-                            setShowIsUserActivePopup(true);
+                            setShowUserTypePopup(true);
                           }}
                           className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
                           <p>
-                            {addNewUserData?.isActive === "1"
-                              ? "true"
-                              : "false"}
+                            {addNewUserData?.userType === "1"
+                              ? "Utilisateur standard / limité"
+                              : "Utilisateur Administrateur / Superviseur"}
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
                       ) : (
+                        // field.id === "isActive" ? (
+                        //   <div
+                        //     onClick={() => {
+                        //       setShowIsUserActivePopup(true);
+                        //     }}
+                        //     className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                        //   >
+                        //     <p>
+                        //       {addNewUserData?.isActive === "1"c
+                        //         ? "true"
+                        //         : "false"}
+                        //     </p>
+                        //     <FaChevronDown className="text-gray-700 mr-4" />
+                        //   </div>
+                        // ) :
                         <input
                           id={field.id}
                           name={field.id}
