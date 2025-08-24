@@ -8872,22 +8872,22 @@ const DataContextProvider = ({ children }) => {
     } else {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     }
-    // fetch("https://octagono-plus-email-server.onrender.com/send-email", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     to: emails,
-    //     subject: `Connexion Reussi de ${accountConnected} / ${user}`,
-    //     text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
-    //       country === "ht" ? "Haiti" : "Republique dominicaine"
-    //     }`,
+    fetch("https://octagono-plus-email-server.onrender.com/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: emails,
+        subject: `Connexion Reussi de ${accountConnected} / ${user}`,
+        text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
+          country === "ht" ? "Haiti" : "Republique dominicaine"
+        }`,
 
-    //     // text: "Bonjour depuis React !",
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data))
-    //   .catch((err) => console.error(err));
+        // text: "Bonjour depuis React !",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
 
     const message = `Le client ${user}\n du compte ${accountConnected}\n s'est connecté le ${dateAujourdhui}\n à ${hereActurel}\n en ${
       country === "ht" ? "Haiti" : "Republique dominicaine"
