@@ -159,18 +159,18 @@ function ListeDesVehiculesGestion({
     véhiculeDetails,
   ]);
 
-  useEffect(() => {
-    console.log(
-      "listeGestionDesVehicules ..........................",
-      listeGestionDesVehicules
-    );
-  }, [listeGestionDesVehicules]);
-
-  const displayListeDevice = filteredColorCategorieListe
+  const displayListeDevice1 = filteredColorCategorieListe
     ? filteredColorCategorieListe
     : currentListe;
 
-  // const displayListeDevice = currentListe;
+  const [filterDeviceForItUser, setFilterDeviceForItUser] = useState(false);
+  const displayListeDevice2 = filterDeviceForItUser
+    ? filteredColorCategorieListe
+    : DeviceInactifs;
+
+  const displayListeDevice = isItUser
+    ? displayListeDevice2
+    : displayListeDevice1;
 
   const filteredListeGestionDesVehicules = searchTermInput
     ? displayListeDevice?.filter(
@@ -497,15 +497,7 @@ function ListeDesVehiculesGestion({
         <div>
           {!fromDashboard && (
             <div>
-              <h2
-                onClick={() => {
-                  console.log(
-                    "listeGestionDesVehicules",
-                    listeGestionDesVehicules
-                  );
-                }}
-                className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
-              >
+              <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
                 {t("Liste des Appareils")}
               </h2>
 
@@ -707,29 +699,27 @@ function ListeDesVehiculesGestion({
                     <h2 className="border-b w-full text-start border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
                       {t("Trier les appareils par statut")}:
                     </h2>
-
-                    <p
-                      onClick={() => {
-                        if (fromDashboard) {
-                          setStatisticFilteredDeviceListeText(
-                            `${t("Tous les Appareils")}`
-                          );
-                        }
-                        setFilteredColorCategorieListe(
-                          addVehiculeDetailsFonction(
-                            allDevices,
-                            véhiculeDetails
-                          )
-                        );
-                      }}
-                      className="px-2  flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50 w-full hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
-                    >
-                      {t("Tous")}
-                      <span>({allDevices?.length})</span>
-                    </p>
-
                     {!isItUser && (
                       <>
+                        <p
+                          onClick={() => {
+                            if (fromDashboard) {
+                              setStatisticFilteredDeviceListeText(
+                                `${t("Tous les Appareils")}`
+                              );
+                            }
+                            setFilteredColorCategorieListe(
+                              addVehiculeDetailsFonction(
+                                allDevices,
+                                véhiculeDetails
+                              )
+                            );
+                          }}
+                          className="px-2  flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50 w-full hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
+                        >
+                          {t("Tous")}
+                          <span>({allDevices?.length})</span>
+                        </p>
                         <p
                           onClick={() => {
                             if (fromDashboard) {
@@ -811,25 +801,10 @@ function ListeDesVehiculesGestion({
                     )}
                     {/* ///////////////////////////////////////////////////////////////////////////////// */}
 
-                    {isItUser && (
-                      <p
-                        onClick={() => {
-                          if (fromDashboard) {
-                            setStatisticFilteredDeviceListeText(
-                              `${t("Appareils Actifs")}`
-                            );
-                          }
-                          setFilteredColorCategorieListe(DeviceListeActif);
-                        }}
-                        className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
-                      >
-                        {t("Appareils Actifs")}
-                        <span>({DeviceListeActif?.length})</span>
-                      </p>
-                    )}
-
                     <p
                       onClick={() => {
+                        setFilterDeviceForItUser(true);
+
                         if (fromDashboard) {
                           setStatisticFilteredDeviceListeText(
                             `${t("Appareils Inactifs")}`
@@ -844,6 +819,8 @@ function ListeDesVehiculesGestion({
                     </p>
                     <p
                       onClick={() => {
+                        setFilterDeviceForItUser(true);
+
                         if (fromDashboard) {
                           setStatisticFilteredDeviceListeText(
                             `${t("Appareils Inactifs Actualisés")}`
@@ -860,6 +837,8 @@ function ListeDesVehiculesGestion({
                     </p>
                     <p
                       onClick={() => {
+                        setFilterDeviceForItUser(true);
+
                         if (fromDashboard) {
                           setStatisticFilteredDeviceListeText(
                             `${t("Appareils Inactifs non Actualisés")}`
@@ -1134,8 +1113,9 @@ function ListeDesVehiculesGestion({
                   onClick={() => {
                     setShowSortDeviceByPopup(true);
                   }}
-                  className="text-md h-[2.5rem] bg-orange-50 hover:bg-orange-100  border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                  className="text-md flex justify-center gap-4 font-bold px-4 h-[2.5rem] bg-orange-50 hover:bg-orange-100  border border-orange-500 p-2 rounded-md text-orange-500 cursor-pointer"
                 >
+                  <span>{t("Filtrer")}</span>{" "}
                   <FaSortAmountDownAlt className="text-[1.3rem]" />
                 </p>
               </Tooltip>
