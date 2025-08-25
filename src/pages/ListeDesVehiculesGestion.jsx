@@ -1605,18 +1605,20 @@ function ListeDesVehiculesGestion({
                                     : t("Voir plus")}
                                 </p>
                               </div>
-                              <button
-                                onClick={() => {
-                                  setCurrentSelectedDeviceGestion(device);
-                                  setShowOptionAppareilOptionPopup(true);
-                                  setshowChooseItemToModifyMessage("");
-                                }}
-                                className={` ${bg_color} text-white  text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-4 flex justify-center items-center`}
-                              >
-                                <p className="text-sm mr-2">{t("Options")}</p>
+                              {!isItUser && (
+                                <button
+                                  onClick={() => {
+                                    setCurrentSelectedDeviceGestion(device);
+                                    setShowOptionAppareilOptionPopup(true);
+                                    setshowChooseItemToModifyMessage("");
+                                  }}
+                                  className={` ${bg_color} text-white  text-sm- w-[50%] text-lg md:w-full font-semibold rounded-lg py-1.5 px-4 flex justify-center items-center`}
+                                >
+                                  <p className="text-sm mr-2">{t("Options")}</p>
 
-                                <IoOptions />
-                              </button>
+                                  <IoOptions />
+                                </button>
+                              )}
                             </div>
                             {/* // )} */}
                           </div>
