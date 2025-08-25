@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 const PORT = 3001;

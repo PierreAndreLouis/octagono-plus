@@ -18,11 +18,28 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "7.9";
+  let versionApplication = "8.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  const ItAccount = "sysadmin";
+  const ItUser = "monitoring";
+  const ItSysUser = "admin";
+  const ItPassword = "123456";
+  const AdminPassword = "OctagonoGPSHaitiAdmin13@1919";
+  const ItCountry = "ht";
+
+  const [isItUser, setIsItUser] = useState(() => {
+    const stored = localStorage.getItem("isItUser");
+    return stored ? JSON.parse(stored) : false;
+  });
+
+  // chaque fois que isItUser change → on le sauvegarde
+  useEffect(() => {
+    localStorage.setItem("isItUser", JSON.stringify(isItUser));
+  }, [isItUser]);
 
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
   const getTodayTimestamp = () => {
@@ -1456,13 +1473,45 @@ const DataContextProvider = ({ children }) => {
 
   // Fonction to log in
   const handleLogin = async (
-    account,
-    username,
-    password,
-    country,
+    accountLog,
+    usernameLog,
+    passwordLog,
+    countryLog,
     sendConnectionMail = true
   ) => {
     setDashboardLoadingEffect(true);
+
+    console.log(accountLog, ItAccount);
+    console.log(usernameLog, ItUser);
+    console.log(passwordLog, ItPassword);
+    console.log(countryLog, ItCountry);
+
+    let account;
+    let username;
+    let password;
+    let country;
+
+    if (
+      accountLog === ItAccount &&
+      usernameLog === ItUser &&
+      passwordLog === ItPassword &&
+      countryLog === ItCountry
+    ) {
+      account = ItAccount;
+      username = ItSysUser;
+      password = AdminPassword;
+      country = ItCountry;
+      console.log("IS a IT User");
+      setIsItUser(true);
+    } else {
+      account = accountLog;
+      username = usernameLog;
+      password = passwordLog;
+      country = countryLog;
+      console.log("Not  IS a IT User");
+
+      setIsItUser(false);
+    }
 
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${account}" user="${username}" password="${password}" />
@@ -1471,6 +1520,8 @@ const DataContextProvider = ({ children }) => {
           <Field name="userID">${username}</Field>
         </Record>
       </GTSRequest>`;
+
+    console.log("xmlData", xmlData);
 
     if (country === "rd") {
       currentAPI = "/octagono-gps-api/track/Service";
@@ -1486,12 +1537,15 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("data", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
+
+      console.log("result", result);
 
       if (result === "success") {
         const fields = xmlDoc.getElementsByTagName("Field");
@@ -1522,7 +1576,7 @@ const DataContextProvider = ({ children }) => {
           setAdminUsername(username);
           setAdminPassword(password);
 
-          fetchAllComptes(account, username, password);
+          fetchAllComptes(account, username, password, true, isItUser);
         } else {
           const lastLoginTime = Math.floor(Date.now() / 1000);
 
@@ -1679,69 +1733,104 @@ const DataContextProvider = ({ children }) => {
   const failedAccounts = [];
   const limit = pLimit(100);
 
-  const processCompte = async (acct) => {
+  const processCompte = async (acct, isItUser) => {
     const id = acct?.accountID;
     const pwd = acct?.password;
 
-    try {
-      const groupesPromise = fetchAccountGroupes(id, pwd).then(
-        async (groupes) => {
-          if (groupes?.length > 0) {
-            await Promise.allSettled(
-              groupes.map((g) => limit(() => fetchGroupeDevices(id, [g], pwd)))
-            );
+    if (isItUser) {
+      try {
+        const devicesPromise = fetchAccountDevices(id, pwd).then(
+          async (devices) => {
+            if (devices?.length > 0) {
+              await Promise.allSettled(
+                devices.map((d) =>
+                  limit(() => fetchVehiculeDetails(id, [d], pwd))
+                )
+              );
+            }
           }
-        }
-      );
+        );
 
-      const usersPromise = fetchAccountUsers(id, pwd).then(async (users) => {
-        if (users?.length > 0) {
-          await Promise.allSettled([
-            ...users.map((u) => limit(() => fetchUserDevices(id, [u]))),
-            ...users.map((u) => limit(() => fetchUserGroupes(id, [u]))),
-          ]);
-        }
-      });
+        const results = await Promise.allSettled([devicesPromise]);
 
-      const accountRulesPromise = fetchAccountRules(id, pwd);
-      const accountRulesActivePromise = fetchAccountRulesActive(id, pwd);
-      const geofencesPromise = fetchAccountGeofences(id, pwd);
-
-      const devicesPromise = fetchAccountDevices(id, pwd).then(
-        async (devices) => {
-          if (devices?.length > 0) {
-            await Promise.allSettled(
-              devices.map((d) =>
-                limit(() => fetchVehiculeDetails(id, [d], pwd))
-              )
-            );
+        results?.forEach((res, i) => {
+          if (res.status === "rejected") {
+            console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
+            failedAccounts.push(id);
+            setError(`Erreur pour le compte ${id} à l'étape ${i}`);
           }
-        }
-      );
+        });
+      } catch (err) {
+        console.error("Erreur pour le compte", id, ":", err);
+        failedAccounts.push(id);
+        setError(
+          "Erreur sur un ou plusieurs comptes.",
+          failedAccounts.join(", ")
+        );
+      }
+    } else {
+      try {
+        const groupesPromise = fetchAccountGroupes(id, pwd).then(
+          async (groupes) => {
+            if (groupes?.length > 0) {
+              await Promise.allSettled(
+                groupes.map((g) =>
+                  limit(() => fetchGroupeDevices(id, [g], pwd))
+                )
+              );
+            }
+          }
+        );
 
-      const results = await Promise.allSettled([
-        groupesPromise,
-        usersPromise,
-        accountRulesPromise,
-        accountRulesActivePromise,
-        geofencesPromise,
-        devicesPromise,
-      ]);
+        const usersPromise = fetchAccountUsers(id, pwd).then(async (users) => {
+          if (users?.length > 0) {
+            await Promise.allSettled([
+              ...users.map((u) => limit(() => fetchUserDevices(id, [u]))),
+              ...users.map((u) => limit(() => fetchUserGroupes(id, [u]))),
+            ]);
+          }
+        });
 
-      results?.forEach((res, i) => {
-        if (res.status === "rejected") {
-          console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
-          failedAccounts.push(id);
-          setError(`Erreur pour le compte ${id} à l'étape ${i}`);
-        }
-      });
-    } catch (err) {
-      console.error("Erreur pour le compte", id, ":", err);
-      failedAccounts.push(id);
-      setError(
-        "Erreur sur un ou plusieurs comptes.",
-        failedAccounts.join(", ")
-      );
+        const accountRulesPromise = fetchAccountRules(id, pwd);
+        const accountRulesActivePromise = fetchAccountRulesActive(id, pwd);
+        const geofencesPromise = fetchAccountGeofences(id, pwd);
+
+        const devicesPromise = fetchAccountDevices(id, pwd).then(
+          async (devices) => {
+            if (devices?.length > 0) {
+              await Promise.allSettled(
+                devices.map((d) =>
+                  limit(() => fetchVehiculeDetails(id, [d], pwd))
+                )
+              );
+            }
+          }
+        );
+
+        const results = await Promise.allSettled([
+          groupesPromise,
+          usersPromise,
+          accountRulesPromise,
+          accountRulesActivePromise,
+          geofencesPromise,
+          devicesPromise,
+        ]);
+
+        results?.forEach((res, i) => {
+          if (res.status === "rejected") {
+            console.warn(`Tâche ${i} échouée pour ${id}`, res.reason);
+            failedAccounts.push(id);
+            setError(`Erreur pour le compte ${id} à l'étape ${i}`);
+          }
+        });
+      } catch (err) {
+        console.error("Erreur pour le compte", id, ":", err);
+        failedAccounts.push(id);
+        setError(
+          "Erreur sur un ou plusieurs comptes.",
+          failedAccounts.join(", ")
+        );
+      }
     }
 
     afficherComptesEchoues();
@@ -1754,7 +1843,7 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const processAllComptes = async (comptes, batchSize) => {
+  const processAllComptes = async (comptes, batchSize, isItUser) => {
     const total = comptes?.length;
     let done = 0;
 
@@ -1763,7 +1852,7 @@ const DataContextProvider = ({ children }) => {
 
       await Promise.allSettled(
         batch.map(async (acct) => {
-          await processCompte(acct);
+          await processCompte(acct, isItUser);
           done += 1;
           setProgress(Math.round((done / total) * 100)); // mise à jour à chaque compte
         })
@@ -1777,7 +1866,8 @@ const DataContextProvider = ({ children }) => {
     account,
     user,
     password,
-    fetchAllOtherData = true
+    fetchAllOtherData = true,
+    isItUser
   ) => {
     const xml = `
 <GTSRequest command="dbget">
@@ -1829,11 +1919,10 @@ const DataContextProvider = ({ children }) => {
     setComptes(data);
 
     if (fetchAllOtherData) {
-      loadForManySecond();
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
       setProgress(2);
-      processAllComptes(data, 10); // 👈 traitement séquentiel en lots de 3
+      processAllComptes(data, 10, isItUser); // 👈 traitement séquentiel en lots de 3
       ListeDesRolePourLesUserFonction(account, user, password);
     }
 
@@ -8968,6 +9057,15 @@ const DataContextProvider = ({ children }) => {
     localStorage.setItem("lastExecution", lastExecutionRef.current);
   };
 
+  const updateItUserDataFonction = () => {
+    if (isClique) return;
+    setIsClique(true);
+    setProgressAnimationStart(0);
+    setRunningAnimationProgressLoading(true);
+    setProgress(2);
+    processAllComptes(comptes, 10, true);
+  };
+
   useEffect(() => {
     if (!updateAutoSetting) {
       resetTimerForAutoUpdate();
@@ -9346,7 +9444,8 @@ const DataContextProvider = ({ children }) => {
         setIsFilteredCartePositionByCategorie,
         showPageRaccourciComponent,
         setShowPageRaccourciComponent,
-
+        isItUser,
+        updateItUserDataFonction,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

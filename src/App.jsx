@@ -154,6 +154,7 @@ function App() {
     setAllDevices,
     showPageRaccourciComponent,
     setShowPageRaccourciComponent,
+    isItUser,
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -578,11 +579,14 @@ function App() {
 
   return (
     <div className="dark:bg-gray-700 md:p-4 bg-gray-100 transition-all">
-      <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-[70vh]">
-        <ScrollToTop />
-        <GoogleTranslate />
-        {/* {!readDocumentation && ( */}
-        {/* <div className="absolute z-[8]">
+      {!isItUser ||
+      (!isAuthenticated && isItUser) ||
+      (!isItUser && !isAuthenticated) ? (
+        <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-[70vh]">
+          <ScrollToTop />
+          <GoogleTranslate />
+          {/* {!readDocumentation && ( */}
+          {/* <div className="absolute z-[8]">
           {!shouldHideComponent && (
             <Navigation_bar
               documentationPage={documentationPage}
@@ -590,200 +594,202 @@ function App() {
             />
           )}
         </div> */}
-        {/* )} */}
-        <ChooseOtherAccountDashboard
-          chooseOtherAccountGestion={chooseOtherAccountGestion}
-          setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-          searchInputTerm={searchInputTerm}
-          setSearchInputTerm={setSearchInputTerm}
-          filterGestionAccountData={filterGestionAccountData}
-          setAllDevices={setAllDevices}
-          chooseOneAccountToContinue={chooseOneAccountToContinue}
-          setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-          documentationPage={documentationPage}
-          chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
-          setAccountIdFromRole={setAccountIdFromRole}
-        />
-        <ChooseOtherGroupeDashboard
-          chooseOtherAccountGestion={chosseOtherGroupeDashboard}
-          setChooseOtherAccountGestion={setChosseOtherGroupeDashboard}
-          searchInputTerm={searchInputTerm}
-          setSearchInputTerm={setSearchInputTerm}
-          filterGestionGroupData={filterGestionGroupData}
-          setAllDevices={setAllDevices}
-        />
-        {isAuthenticated && (
-          <HeaderDashboardSysadmin
-            readDocumentationSideBar={readDocumentationSideBar}
-            setDocumentationPage={setDocumentationPage}
+          {/* )} */}
+          <ChooseOtherAccountDashboard
+            chooseOtherAccountGestion={chooseOtherAccountGestion}
             setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+            searchInputTerm={searchInputTerm}
+            setSearchInputTerm={setSearchInputTerm}
+            filterGestionAccountData={filterGestionAccountData}
+            setAllDevices={setAllDevices}
+            chooseOneAccountToContinue={chooseOneAccountToContinue}
             setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-            setChooseAccountFromGeozoneSection={
-              setChooseAccountFromGeozoneSection
-            }
-            setReadDocumentationSideBar={setReadDocumentationSideBar}
-          />
-        )}
-        {isAuthenticated && (
-          <SideBarSysadmin
-            readDocumentationSideBar={readDocumentationSideBar}
-            setReadDocumentationSideBar={setReadDocumentationSideBar}
             documentationPage={documentationPage}
-            backToPagePrecedent={backToPagePrecedent}
-            setChooseOtherAccountGestion={setChooseOtherAccountGestion}
-            setChooseOneAccountToContinue={setChooseOneAccountToContinue}
-            setChooseAccountFromGeozoneSection={
-              setChooseAccountFromGeozoneSection
-            }
-            closeSideBar={closeSideBar}
-            setDocumentationPage={setDocumentationPage}
-            setListeGestionDesGroupeTitre={setListeGestionDesGroupeTitre}
-            setListeGestionDesGeofences={setListeGestionDesGeofences}
-            setChooseOtherLanguagePopup={setChooseOtherLanguagePopup}
-            setAjouterGeofencePopup={setAjouterGeofencePopup}
-            setLogOutPopup={setLogOutPopup}
-            generatePersonelPDF={generatePersonelPDF}
-            //
-
-            //
-            showChooseItemToModifyMessage={showChooseItemToModifyMessage}
-            setshowChooseItemToModifyMessage={setshowChooseItemToModifyMessage}
-            showChooseItemToModifyPage={showChooseItemToModifyPage}
-            setshowChooseItemToModifyPage={setshowChooseItemToModifyPage}
+            chooseAccountFromGeozoneSection={chooseAccountFromGeozoneSection}
+            setAccountIdFromRole={setAccountIdFromRole}
           />
-        )}
-        {/* Side Bar 2 */}
-        {(dashboardLoadingEffect || dashboardLoadingEffectLogin) &&
-          isAuthenticated && (
-            <div className="fixed flex  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
+          <ChooseOtherGroupeDashboard
+            chooseOtherAccountGestion={chosseOtherGroupeDashboard}
+            setChooseOtherAccountGestion={setChosseOtherGroupeDashboard}
+            searchInputTerm={searchInputTerm}
+            setSearchInputTerm={setSearchInputTerm}
+            filterGestionGroupData={filterGestionGroupData}
+            setAllDevices={setAllDevices}
+          />
+          {isAuthenticated && (
+            <HeaderDashboardSysadmin
+              readDocumentationSideBar={readDocumentationSideBar}
+              setDocumentationPage={setDocumentationPage}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseAccountFromGeozoneSection={
+                setChooseAccountFromGeozoneSection
+              }
+              setReadDocumentationSideBar={setReadDocumentationSideBar}
+            />
+          )}
+          {isAuthenticated && (
+            <SideBarSysadmin
+              readDocumentationSideBar={readDocumentationSideBar}
+              setReadDocumentationSideBar={setReadDocumentationSideBar}
+              documentationPage={documentationPage}
+              backToPagePrecedent={backToPagePrecedent}
+              setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+              setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+              setChooseAccountFromGeozoneSection={
+                setChooseAccountFromGeozoneSection
+              }
+              closeSideBar={closeSideBar}
+              setDocumentationPage={setDocumentationPage}
+              setListeGestionDesGroupeTitre={setListeGestionDesGroupeTitre}
+              setListeGestionDesGeofences={setListeGestionDesGeofences}
+              setChooseOtherLanguagePopup={setChooseOtherLanguagePopup}
+              setAjouterGeofencePopup={setAjouterGeofencePopup}
+              setLogOutPopup={setLogOutPopup}
+              generatePersonelPDF={generatePersonelPDF}
+              //
+
+              //
+              showChooseItemToModifyMessage={showChooseItemToModifyMessage}
+              setshowChooseItemToModifyMessage={
+                setshowChooseItemToModifyMessage
+              }
+              showChooseItemToModifyPage={showChooseItemToModifyPage}
+              setshowChooseItemToModifyPage={setshowChooseItemToModifyPage}
+            />
+          )}
+          {/* Side Bar 2 */}
+          {(dashboardLoadingEffect || dashboardLoadingEffectLogin) &&
+            isAuthenticated && (
+              <div className="fixed flex  shadow-lg-- shadow-black/10 max- w-[5rem]  rounded-full max- h-[5rem] left-[50%] -translate-x-[50%] top-[40%]  z-30 inset-0 bg-white/0 -200/50">
+                <div
+                  className={`${
+                    readDocumentationSideBar
+                      ? "translate-x-0"
+                      : "-translate-x-[100%]"
+                  } ${
+                    !readDocumentationSideBar ? "hidden" : "lg:flex"
+                  } transition-all lg:translate-x-0-- bg-white/0 hidden min-w-[11.7rem]  lg:relative left-0 top-[5rem] z-[0]`}
+                ></div>
+                <div className="w-full h-full flex justify-center items-center">
+                  <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
+                </div>
+              </div>
+            )}
+          {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
+          {!readDocumentation && (
+            <div className="absolute z-[10000000000000000000000000000000000000000]">
+              {!shouldHideComponent && <Navigation_bar />}
+            </div>
+          )}
+          {errors && (
+            <div className="space-y-2 fixed flex flex-col items-center justify-center w-full left-0 right-0  top-[3rem] z-[9999999999999999999999999999999999999999999999999999999999999999999999999]">
+              {errors?.map((err) => (
+                <div
+                  key={err.id}
+                  className="relative w-full  mx-auto max-w-[30rem] p-4 py-2 bg-red-100 text-red-800 rounded shadow-lg shadow-black/20"
+                >
+                  {err.message}
+                  <div
+                    className="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress"
+                    style={{ width: "100%" }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          {readDocumentation && (
+            <div className="fixed overflow-hidden rounded-lg bg-white shadow-lg shadow-black/10 top-[5rem] right-[1rem] z-30">
               <div
-                className={`${
-                  readDocumentationSideBar
-                    ? "translate-x-0"
-                    : "-translate-x-[100%]"
-                } ${
-                  !readDocumentationSideBar ? "hidden" : "lg:flex"
-                } transition-all lg:translate-x-0-- bg-white/0 hidden min-w-[11.7rem]  lg:relative left-0 top-[5rem] z-[0]`}
-              ></div>
-              <div className="w-full h-full flex justify-center items-center">
-                <div className="border-blue-500 h-10 w-10 animate-spin rounded-full border-4 border-t-gray-100/0" />
+                onClick={() => {
+                  generatePersonelPDF();
+                  setWaitToDownload(true);
+                  // generatePersonelPDF();
+                }}
+                className=" flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
+              >
+                <p className="hidden md:block">Télécharger en PDF</p>
+                <img className="w-[2rem]" src="/img/pdf_download.png" alt="" />
               </div>
             </div>
           )}
-        {/* Ces composant vont pouvoir apparaitre dans tous les page, sauf dans /login */}
-        {!readDocumentation && (
-          <div className="absolute z-[10000000000000000000000000000000000000000]">
-            {!shouldHideComponent && <Navigation_bar />}
-          </div>
-        )}
-        {errors && (
-          <div className="space-y-2 fixed flex flex-col items-center justify-center w-full left-0 right-0  top-[3rem] z-[9999999999999999999999999999999999999999999999999999999999999999999999999]">
-            {errors?.map((err) => (
-              <div
-                key={err.id}
-                className="relative w-full  mx-auto max-w-[30rem] p-4 py-2 bg-red-100 text-red-800 rounded shadow-lg shadow-black/20"
+          {/* container */}
+          {isUserNotInteractingNow && isAuthenticated && !logOutPopup && (
+            <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] backdrop-blur-sm-- bg-black/50 backdrop-blur-sm flex justify-center  items-center">
+              <form
+                onSubmit={reactiverSessionUser}
+                className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
               >
-                {err.message}
-                <div
-                  className="absolute bottom-0 left-0 h-1 bg-red-500 animate-progress"
-                  style={{ width: "100%" }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-        {readDocumentation && (
-          <div className="fixed overflow-hidden rounded-lg bg-white shadow-lg shadow-black/10 top-[5rem] right-[1rem] z-30">
-            <div
-              onClick={() => {
-                generatePersonelPDF();
-                setWaitToDownload(true);
-                // generatePersonelPDF();
-              }}
-              className=" flex justify-between gap-2 items-center pb-2 text-[.951rem] font-semibold hover:bg-orange-50 p-2 cursor-pointer"
-            >
-              <p className="hidden md:block">Télécharger en PDF</p>
-              <img className="w-[2rem]" src="/img/pdf_download.png" alt="" />
-            </div>
-          </div>
-        )}
-        {/* container */}
-        {isUserNotInteractingNow && isAuthenticated && !logOutPopup && (
-          <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] backdrop-blur-sm-- bg-black/50 backdrop-blur-sm flex justify-center  items-center">
-            <form
-              onSubmit={reactiverSessionUser}
-              className="w-[95vw] mx-auto md:max-w-md bg-white rounded-2xl py-8 px-2 md:p-8 shadow-2xl border border-gray-200"
-            >
-              <h2
-                onClick={() => {
-                  // clearCacheFonction();
-                }}
-                className="text-2xl font-bold text-gray-800 mb-0 text-center"
-              >
-                {t("Session inactive")}
-              </h2>
-              <p className="text-orange-600 text-md mb-4  font-semibold text-center">
-                {isDashboardHomePage
-                  ? localStorage.getItem("adminAccount")
-                  : localStorage.getItem("account")}{" "}
-                {" / "}
-                {isDashboardHomePage
-                  ? localStorage.getItem("adminUsername")
-                  : localStorage.getItem("username")}
-              </p>
-              <p className="text-gray-600 text-sm mb-6 text-center">
-                {t(
-                  "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer"
-                )}
-                .
-              </p>
-              {errorMessage && (
-                <p className="text-red-500 text-sm mt-2 mb-3 text-center">
-                  {errorMessage}
-                </p>
-              )}
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder={`${t("Confirmer ton Mot de passe")}`}
-                required
-                value={inputPassword}
-                onChange={(e) => {
-                  setInputPassword(e.target.value);
-                  setErrorMessage("");
-                }}
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 mb-4"
-              />
-              <div className="flex justify-center w-full items-center gap-2">
-                <button
-                  type="submit"
-                  // onClick={() => {
-                  //   resetInteraction();
-                  // }}
-                  className="bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg w-full hover:bg-orange-700 transition-all duration-150"
-                >
-                  {t("Confirmer")}
-                </button>
-                <div
+                <h2
                   onClick={() => {
-                    setLogOutPopup(true);
+                    // clearCacheFonction();
                   }}
-                  className="flex h-full py-[.2rem] cursor-pointer px-2 justify-center items-center text-2xl rounded-lg border-2 text-orange-600 border-orange-600"
+                  className="text-2xl font-bold text-gray-800 mb-0 text-center"
                 >
-                  <IoLogInOutline />
+                  {t("Session inactive")}
+                </h2>
+                <p className="text-orange-600 text-md mb-4  font-semibold text-center">
+                  {isDashboardHomePage
+                    ? localStorage.getItem("adminAccount")
+                    : localStorage.getItem("account")}{" "}
+                  {" / "}
+                  {isDashboardHomePage
+                    ? localStorage.getItem("adminUsername")
+                    : localStorage.getItem("username")}
+                </p>
+                <p className="text-gray-600 text-sm mb-6 text-center">
+                  {t(
+                    "Inactivité de 30 minutes détectée. Veuillez confirmer votre mot de passe pour continuer"
+                  )}
+                  .
+                </p>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-2 mb-3 text-center">
+                    {errorMessage}
+                  </p>
+                )}
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder={`${t("Confirmer ton Mot de passe")}`}
+                  required
+                  value={inputPassword}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+                    setErrorMessage("");
+                  }}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 mb-4"
+                />
+                <div className="flex justify-center w-full items-center gap-2">
+                  <button
+                    type="submit"
+                    // onClick={() => {
+                    //   resetInteraction();
+                    // }}
+                    className="bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-lg w-full hover:bg-orange-700 transition-all duration-150"
+                  >
+                    {t("Confirmer")}
+                  </button>
+                  <div
+                    onClick={() => {
+                      setLogOutPopup(true);
+                    }}
+                    className="flex h-full py-[.2rem] cursor-pointer px-2 justify-center items-center text-2xl rounded-lg border-2 text-orange-600 border-orange-600"
+                  >
+                    <IoLogInOutline />
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        )}
-        {logOutPopup && (
-          <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999]">
-            <Logout setLogOutPopup={setLogOutPopup} />
-          </div>
-        )}{" "}
-        {/*  */}
-        {/* {showPageRaccourciComponent && !chooseOtherAccountGestion && (
+              </form>
+            </div>
+          )}
+          {logOutPopup && (
+            <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999]">
+              <Logout setLogOutPopup={setLogOutPopup} />
+            </div>
+          )}{" "}
+          {/*  */}
+          {/* {showPageRaccourciComponent && !chooseOtherAccountGestion && (
           <div className="fixed px-3-- inset-0 bg-black/50 z-[999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999] flex justify-center items-center">
             <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw] ">
               <div className="absolute flex flex-col justify-center items-center top-0 left-0 right-0 h-[5rem] bg-orange-200 z-[8]">
@@ -879,852 +885,877 @@ function App() {
             </div>
           </div>
         )} */}
-        {/* <Login2 /> */}
-        <SuccèsÉchecMessagePopup />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              isAuthenticated ? (
-                <Navigate
-                  // to={isDashboardHomePage ? "/home" : "/home"}
-                  to={"/home"}
+          {/* <Login2 /> */}
+          <SuccèsÉchecMessagePopup />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? (
+                  <Navigate
+                    // to={isDashboardHomePage ? "/home" : "/home"}
+                    to={"/home"}
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/login"
+              element={
+                <Suspense fallback={<LoadingLazyAnimation />}>
+                  <Login2 />
+                </Suspense>
+              }
+            />
+
+            <Route
+              path="/home"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <DashboardContaintMaintComponant
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setDocumentationPage={setDocumentationPage}
+                            setChosseOtherGroupeDashboard={
+                              setChosseOtherGroupeDashboard
+                            }
+                            allDevices={allDevices}
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
                 />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+              }
+            />
 
-          <Route
-            path="/login"
-            element={
-              <Suspense fallback={<LoadingLazyAnimation />}>
-                <Login2 />
-              </Suspense>
-            }
-          />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <DashboardContaintMaintComponant
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setDocumentationPage={setDocumentationPage}
+                            setChosseOtherGroupeDashboard={
+                              setChosseOtherGroupeDashboard
+                            }
+                            allDevices={allDevices}
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <DashboardContaintMaintComponant
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setDocumentationPage={setDocumentationPage}
-                          setChosseOtherGroupeDashboard={
-                            setChosseOtherGroupeDashboard
-                          }
-                          allDevices={allDevices}
-                        />
-                      </Suspense>
+            <Route
+              path="/Dashboard"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <DashboardContaintMaintComponant
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setDocumentationPage={setDocumentationPage}
+                            setChosseOtherGroupeDashboard={
+                              setChosseOtherGroupeDashboard
+                            }
+                            allDevices={allDevices}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <DashboardContaintMaintComponant
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setDocumentationPage={setDocumentationPage}
-                          setChosseOtherGroupeDashboard={
-                            setChosseOtherGroupeDashboard
-                          }
-                          allDevices={allDevices}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_des_comptes"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <GestionDesCompts
+                            setDocumentationPage={setDocumentationPage}
+                            showChooseItemToModifyMessage={
+                              showChooseItemToModifyMessage
+                            }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
+                            showChooseItemToModifyPage={
+                              showChooseItemToModifyPage
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
+            <Route
+              path="/Ajouter_nouveau_compte"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewAccountPage
+                            setDocumentationPage={setDocumentationPage}
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Dashboard"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <DashboardContaintMaintComponant
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setDocumentationPage={setDocumentationPage}
-                          setChosseOtherGroupeDashboard={
-                            setChosseOtherGroupeDashboard
-                          }
-                          allDevices={allDevices}
-                        />
-                      </Suspense>
+            <Route
+              path="/Modifier_compte"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewAccountPage
+                            setDocumentationPage={setDocumentationPage}
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_des_comptes"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <GestionDesCompts
-                          setDocumentationPage={setDocumentationPage}
-                          showChooseItemToModifyMessage={
-                            showChooseItemToModifyMessage
-                          }
-                          setshowChooseItemToModifyMessage={
-                            setshowChooseItemToModifyMessage
-                          }
-                          showChooseItemToModifyPage={
-                            showChooseItemToModifyPage
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_des_utilisateurs"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <ListeDesUtilisateur
+                            setDocumentationPage={setDocumentationPage}
+                            showChooseItemToModifyMessage={
+                              showChooseItemToModifyMessage
+                            }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
+                            showChooseItemToModifyPage={
+                              showChooseItemToModifyPage
+                            }
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
-          <Route
-            path="/Ajouter_nouveau_compte"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewAccountPage
-                          setDocumentationPage={setDocumentationPage}
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Modifier_compte"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewAccountPage
-                          setDocumentationPage={setDocumentationPage}
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Ajouter_nouveau_utilisateur"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewUserGestion
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_des_utilisateurs"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ListeDesUtilisateur
-                          setDocumentationPage={setDocumentationPage}
-                          showChooseItemToModifyMessage={
-                            showChooseItemToModifyMessage
-                          }
-                          setshowChooseItemToModifyMessage={
-                            setshowChooseItemToModifyMessage
-                          }
-                          showChooseItemToModifyPage={
-                            showChooseItemToModifyPage
-                          }
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Modifier_utilisateur"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewUserGestion
+                            setDocumentationPage={setDocumentationPage}
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Ajouter_nouveau_utilisateur"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewUserGestion
-                          documentationPage={documentationPage}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_des_appareils"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <ListeDesVehiculesGestion
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            showChooseItemToModifyMessage={
+                              showChooseItemToModifyMessage
+                            }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
+                            showChooseItemToModifyPage={
+                              showChooseItemToModifyPage
+                            }
+                            chooseOtherAccountGestion={
+                              chooseOtherAccountGestion
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Modifier_utilisateur"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewUserGestion
-                          setDocumentationPage={setDocumentationPage}
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Ajouter_nouveau_appareil"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewDeviceGestion
+                            setDocumentationPage={setDocumentationPage}
+                            documentationPage={documentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_des_appareils"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ListeDesVehiculesGestion
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          showChooseItemToModifyMessage={
-                            showChooseItemToModifyMessage
-                          }
-                          setshowChooseItemToModifyMessage={
-                            setshowChooseItemToModifyMessage
-                          }
-                          showChooseItemToModifyPage={
-                            showChooseItemToModifyPage
-                          }
-                          chooseOtherAccountGestion={chooseOtherAccountGestion}
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Modifier_appareil"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewDeviceGestion
+                            setDocumentationPage={setDocumentationPage}
+                            documentationPage={documentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Ajouter_nouveau_appareil"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewDeviceGestion
-                          setDocumentationPage={setDocumentationPage}
-                          documentationPage={documentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_des_roles"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <GestionDesRoles
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setCurrentSelectedRole={setCurrentSelectedRole}
+                            currentSelectedRole={currentSelectedRole}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Modifier_appareil"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewDeviceGestion
-                          setDocumentationPage={setDocumentationPage}
-                          documentationPage={documentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_des_roles_actives"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <GestionDesRolesActive
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setCurrentSelectedRoleActive={
+                              setCurrentSelectedRoleActive
+                            }
+                            currentSelectedRoleActive={
+                              currentSelectedRoleActive
+                            }
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_des_roles"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <GestionDesRoles
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setCurrentSelectedRole={setCurrentSelectedRole}
-                          currentSelectedRole={currentSelectedRole}
-                        />
-                      </Suspense>
+            <Route
+              path="/Ajouter_nouveau_role"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewRole
+                            accountIdFromRole={accountIdFromRole}
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            currentSelectedRole={currentSelectedRole}
+                            setCurrentSelectedRole={setCurrentSelectedRole}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
+            <Route
+              path="/Ajouter_nouveau_role_active"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewRoleActive
+                            accountIdFromRole={accountIdFromRole}
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            currentSelectedRoleActive={
+                              currentSelectedRoleActive
+                            }
+                            setCurrentSelectedRoleActive={
+                              setCurrentSelectedRoleActive
+                            }
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
+            <Route
+              path="/Modifier_role_active"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewRoleActive
+                            accountIdFromRole={accountIdFromRole}
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            currentSelectedRoleActive={
+                              currentSelectedRoleActive
+                            }
+                            setCurrentSelectedRoleActive={
+                              setCurrentSelectedRoleActive
+                            }
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_des_roles_actives"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <GestionDesRolesActive
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setCurrentSelectedRoleActive={
-                            setCurrentSelectedRoleActive
-                          }
-                          currentSelectedRoleActive={currentSelectedRoleActive}
-                        />
-                      </Suspense>
+            <Route
+              path="/Modifier_role"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewRole
+                            accountIdFromRole={accountIdFromRole}
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            currentSelectedRole={currentSelectedRole}
+                            setCurrentSelectedRole={setCurrentSelectedRole}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Ajouter_nouveau_role"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewRole
-                          accountIdFromRole={accountIdFromRole}
-                          documentationPage={documentationPage}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          currentSelectedRole={currentSelectedRole}
-                          setCurrentSelectedRole={setCurrentSelectedRole}
-                        />
-                      </Suspense>
+            <Route
+              path="/Localisation_devices"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <LocationPage
+                            isDashBoardComptnent={isDashBoardComptnent}
+                            setDocumentationPage={setDocumentationPage}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
-          <Route
-            path="/Ajouter_nouveau_role_active"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewRoleActive
-                          accountIdFromRole={accountIdFromRole}
-                          documentationPage={documentationPage}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          currentSelectedRoleActive={currentSelectedRoleActive}
-                          setCurrentSelectedRoleActive={
-                            setCurrentSelectedRoleActive
-                          }
-                        />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
-          <Route
-            path="/Modifier_role_active"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewRoleActive
-                          accountIdFromRole={accountIdFromRole}
-                          documentationPage={documentationPage}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          currentSelectedRoleActive={currentSelectedRoleActive}
-                          setCurrentSelectedRoleActive={
-                            setCurrentSelectedRoleActive
-                          }
-                        />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Modifier_role"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewRole
-                          accountIdFromRole={accountIdFromRole}
-                          documentationPage={documentationPage}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          currentSelectedRole={currentSelectedRole}
-                          setCurrentSelectedRole={setCurrentSelectedRole}
-                        />
-                      </Suspense>
+            <Route
+              path="/Ajouter_modifier_geofence"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <AjouterGeofence
+                            isDashBoardComptnent={isDashBoardComptnent}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Localisation_devices"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <LocationPage
-                          isDashBoardComptnent={isDashBoardComptnent}
-                          setDocumentationPage={setDocumentationPage}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_des_groupes"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <ListeDesGroupes
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            showChooseItemToModifyMessage={
+                              showChooseItemToModifyMessage
+                            }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
+                            showChooseItemToModifyPage={
+                              showChooseItemToModifyPage
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Ajouter_modifier_geofence"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <AjouterGeofence
-                          isDashBoardComptnent={isDashBoardComptnent}
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                        />
-                      </Suspense>
+            <Route
+              path="/Ajouter_nouveau_groupe"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewGroupeGestion
+                            setDocumentationPage={setDocumentationPage}
+                            documentationPage={documentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_des_groupes"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <ListeDesGroupes
-                          setDocumentationPage={setDocumentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          showChooseItemToModifyMessage={
-                            showChooseItemToModifyMessage
-                          }
-                          setshowChooseItemToModifyMessage={
-                            setshowChooseItemToModifyMessage
-                          }
-                          showChooseItemToModifyPage={
-                            showChooseItemToModifyPage
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Modifier_groupe"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewGroupeGestion
+                            setDocumentationPage={setDocumentationPage}
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Ajouter_nouveau_groupe"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewGroupeGestion
-                          setDocumentationPage={setDocumentationPage}
-                          documentationPage={documentationPage}
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/userInfo"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <InfoUserComponent
+                            setDocumentationPage={setDocumentationPage}
+                            isCreatingNewElement={isCreatingNewElement}
+                            setIsCreatingNewElement={setIsCreatingNewElement}
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Modifier_groupe"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <CreateNewGroupeGestion
-                          setDocumentationPage={setDocumentationPage}
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Info_appareil"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <DetailsVehiculePage />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/userInfo"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <InfoUserComponent
-                          setDocumentationPage={setDocumentationPage}
-                          isCreatingNewElement={isCreatingNewElement}
-                          setIsCreatingNewElement={setIsCreatingNewElement}
-                        />
-                      </Suspense>
+            <Route
+              path="/Gestion_geofences"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <GestionGeofences
+                            setDocumentationPage={setDocumentationPage}
+                            isDashBoardComptnent={isDashBoardComptnent}
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            chooseAccountFromGeozoneSection={
+                              chooseAccountFromGeozoneSection
+                            }
+                            setChooseAccountFromGeozoneSection={
+                              setChooseAccountFromGeozoneSection
+                            }
+                            showChooseItemToModifyMessage={
+                              showChooseItemToModifyMessage
+                            }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
+                            showChooseItemToModifyPage={
+                              showChooseItemToModifyPage
+                            }
+                          />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Info_appareil"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <DetailsVehiculePage />
-                      </Suspense>
+            <Route
+              path="/Historique_appareil"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <HistoriquePage />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Gestion_geofences"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <GestionGeofences
-                          setDocumentationPage={setDocumentationPage}
-                          isDashBoardComptnent={isDashBoardComptnent}
-                          setChooseOtherAccountGestion={
-                            setChooseOtherAccountGestion
-                          }
-                          setChooseOneAccountToContinue={
-                            setChooseOneAccountToContinue
-                          }
-                          chooseAccountFromGeozoneSection={
-                            chooseAccountFromGeozoneSection
-                          }
-                          setChooseAccountFromGeozoneSection={
-                            setChooseAccountFromGeozoneSection
-                          }
-                          showChooseItemToModifyMessage={
-                            showChooseItemToModifyMessage
-                          }
-                          setshowChooseItemToModifyMessage={
-                            setshowChooseItemToModifyMessage
-                          }
-                          showChooseItemToModifyPage={
-                            showChooseItemToModifyPage
-                          }
-                        />
-                      </Suspense>
+            <Route
+              path="/Trajet_appareil"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <HistoriquePage />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Historique_appareil"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <HistoriquePage />
-                      </Suspense>
+            <Route
+              path="/Rapport_unite"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <RapportPageDetails />
+                        </Suspense>
+                      </div>
                     </div>
-                  </div>
-                }
-              />
-            }
-          />
+                  }
+                />
+              }
+            />
 
-          <Route
-            path="/Trajet_appareil"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <HistoriquePage />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
-
-          <Route
-            path="/Rapport_unite"
-            element={
-              <PrivateRoute
-                element={
-                  <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
-                    <SideBarSpaceLeft />
-                    <div className="w-full">
-                      <Suspense fallback={<LoadingLazyAnimation />}>
-                        <RapportPageDetails />
-                      </Suspense>
-                    </div>
-                  </div>
-                }
-              />
-            }
-          />
-
-          <Route path="*" element={<Page_404 />} />
-        </Routes>
-        <div
-          className={` absolute  ${
-            !isAuthenticated
-              ? "bottom-6"
-              : "bottom-20 md:bottom-12 lg:-bottom-14"
-          }  right-4 z-[1]`}
-        >
-          <div className="flex gap-3 font-semibold">
-            <p
-              onClick={() => {
-                if (localStorage.getItem("lang") === "es") {
-                  window.open("/Guide-utilisation-Octagono-es.pdf", "_blank");
-                } else {
-                  window.open("/Guide-utilisation-Octagono.pdf", "_blank");
-                }
-                // window.open("/Guide-utilisation-Octagono.pdf", "_blank");
-              }}
-              className="cursor-pointer text-orange-500 underline"
-            >
-              {t("Guide d'utilisation")}
-            </p>
-            <p>
-              {t("version")}: {versionApplication}
-            </p>
+            <Route path="*" element={<Page_404 />} />
+          </Routes>
+          <div
+            className={` absolute  ${
+              !isAuthenticated
+                ? "bottom-6"
+                : "bottom-20 md:bottom-12 lg:-bottom-14"
+            }  right-4 z-[1]`}
+          >
+            <div className="flex gap-3 font-semibold">
+              <p
+                onClick={() => {
+                  if (localStorage.getItem("lang") === "es") {
+                    window.open("/Guide-utilisation-Octagono-es.pdf", "_blank");
+                  } else {
+                    window.open("/Guide-utilisation-Octagono.pdf", "_blank");
+                  }
+                  // window.open("/Guide-utilisation-Octagono.pdf", "_blank");
+                }}
+                className="cursor-pointer text-orange-500 underline"
+              >
+                {t("Guide d'utilisation")}
+              </p>
+              <p>
+                {t("version")}: {versionApplication}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="dark:bg-slate-800/70 dark:border dark:border-slate-800 relative pb-20 lg:p-0 min-h-[70vh]">
+          <ListeDesVehiculesGestion
+            setDocumentationPage={setDocumentationPage}
+            setChooseOneAccountToContinue={setChooseOneAccountToContinue}
+            setChooseOtherAccountGestion={setChooseOtherAccountGestion}
+            showChooseItemToModifyMessage={showChooseItemToModifyMessage}
+            setshowChooseItemToModifyMessage={setshowChooseItemToModifyMessage}
+            showChooseItemToModifyPage={showChooseItemToModifyPage}
+            chooseOtherAccountGestion={chooseOtherAccountGestion}
+            isCreatingNewElement={isCreatingNewElement}
+            setIsCreatingNewElement={setIsCreatingNewElement}
+          />
+        </div>
+      )}
+
+      {/* {!isAuthenticated && <Login2 />} */}
     </div>
   );
 }

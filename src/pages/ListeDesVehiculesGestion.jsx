@@ -23,6 +23,7 @@ import { useMemo } from "react";
 import { LuArrowDownUp } from "react-icons/lu";
 import { FaLocationPin } from "react-icons/fa6";
 import LocationPage from "./LocationPage";
+import Logout from "../components/login/Logout";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
@@ -94,6 +95,11 @@ function ListeDesVehiculesGestion({
     DeviceInactifsWidthNoDetails,
     isFilteredCartePositionByCategorie,
     setIsFilteredCartePositionByCategorie,
+    progressBarForLoadingData,
+    fetchVehicleDataFromRapportGroupe,
+    showAnnimationProgresseBarDashboard,
+    updateItUserDataFonction,
+    isItUser,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -309,7 +315,7 @@ function ListeDesVehiculesGestion({
     {}
   );
 
-  const sortedGroups = Object.entries(grouped).sort(
+  const sortedGroups = Object.entries(grouped || {})?.sort(
     (a, b) => b[1].length - a[1].length
   );
 
@@ -364,9 +370,11 @@ function ListeDesVehiculesGestion({
   // Pour stocker le timestamp le plus récent lorsque "data" change
 
   const [lastUpdate, setLastUpdate] = useState();
-  const data = isDashboardHomePage
-    ? currentAccountSelected?.accountDevices || accountDevices
-    : dataFusionné;
+  const data = allDevices;
+
+  // isDashboardHomePage
+  //   ? currentAccountSelected?.accountDevices || accountDevices
+  //   : dataFusionné;
 
   // Mettre à jour le timestamp le plus récent lorsque "data" change
   useEffect(() => {
@@ -375,6 +383,12 @@ function ListeDesVehiculesGestion({
       setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
     }
   }, [listeGestionDesVehicules, currentAccountSelected, accountDevices]);
+  useEffect(() => {
+    const result = getMostRecentTimestamp(data);
+    if (result) {
+      setLastUpdate(result); // garde l'objet { mostRecentTimestamp }
+    }
+  }, []);
 
   const [moveDeviceToOtherCompte, setMoveDeviceToOtherCompte] = useState(false);
 
@@ -433,9 +447,15 @@ function ListeDesVehiculesGestion({
   // const foundAccount = comptes?.find((acct) => acct?.accountID === chooseAccountID)
 
   const [showCarte, setShowCarte] = useState(false);
+  const [logOutPopup, setLogOutPopup] = useState(false);
 
   return (
     <div>
+      {logOutPopup && (
+        <div className="fixed inset-0 z-[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999]">
+          <Logout setLogOutPopup={setLogOutPopup} />
+        </div>
+      )}{" "}
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
       <GestionAppareilOptionPopup
         setShowOptionAppareilOptionPopup={setShowOptionAppareilOptionPopup}
@@ -447,7 +467,6 @@ function ListeDesVehiculesGestion({
         isCreatingNewElement={isCreatingNewElement}
         setIsCreatingNewElement={setIsCreatingNewElement}
       />
-
       {showCarte && (
         <div className="fixed mx-auto  flex-col bg-black/50 z-[99999999999999999999999] inset-0 flex justify-center items-center">
           <div
@@ -473,7 +492,6 @@ function ListeDesVehiculesGestion({
           </div>
         </div>
       )}
-
       <div className="px-2 pb-40 bg-white pt-10 rounded-lg">
         {/* {!fromDashboard && ( */}
         <div>
@@ -689,6 +707,7 @@ function ListeDesVehiculesGestion({
                     <h2 className="border-b w-full text-start border-orange-400 dark:text-orange-50 text-orange-600 text-lg pb-2 mb-3 font-semibold">
                       {t("Trier les appareils par statut")}:
                     </h2>
+
                     <p
                       onClick={() => {
                         if (fromDashboard) {
@@ -708,84 +727,106 @@ function ListeDesVehiculesGestion({
                       {t("Tous")}
                       <span>({allDevices?.length})</span>
                     </p>
-                    <p
-                      onClick={() => {
-                        if (fromDashboard) {
-                          setStatisticFilteredDeviceListeText(
-                            `${t("Appareils En déplacement")}`
-                          );
-                        }
-                        setFilteredColorCategorieListe(EnDéplacement);
-                      }}
-                      className={
-                        "px-2 cursor-pointer w-full flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
-                      }
-                    >
-                      {t("Appareils En déplacement")}
-                      <span>({EnDéplacement?.length})</span>
-                    </p>
-                    <p
-                      onClick={() => {
-                        if (fromDashboard) {
-                          setStatisticFilteredDeviceListeText(
-                            `${t("Appareils déplacés")}`
-                          );
-                        }
-                        setFilteredColorCategorieListe(DeviceDéplacer);
-                      }}
-                      className={
-                        "px-2 cursor-pointer w-full flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
-                      }
-                    >
-                      {t("Appareils déplacés")}
-                      <span>({DeviceDéplacer?.length})</span>
-                    </p>
 
+                    {!isItUser && (
+                      <>
+                        <p
+                          onClick={() => {
+                            if (fromDashboard) {
+                              setStatisticFilteredDeviceListeText(
+                                `${t("Appareils En déplacement")}`
+                              );
+                            }
+                            setFilteredColorCategorieListe(EnDéplacement);
+                          }}
+                          className={
+                            "px-2 cursor-pointer w-full flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                          }
+                        >
+                          {t("Appareils En déplacement")}
+                          <span>({EnDéplacement?.length})</span>
+                        </p>
+                        <p
+                          onClick={() => {
+                            if (fromDashboard) {
+                              setStatisticFilteredDeviceListeText(
+                                `${t("Appareils déplacés")}`
+                              );
+                            }
+                            setFilteredColorCategorieListe(DeviceDéplacer);
+                          }}
+                          className={
+                            "px-2 cursor-pointer w-full flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-green-600 font-semibold bg-green-50 hover:bg-green-100  dark:text-green-200 dark:bg-gray-700 border-l-green-600 "
+                          }
+                        >
+                          {t("Appareils déplacés")}
+                          <span>({DeviceDéplacer?.length})</span>
+                        </p>
+                        {/* ///////////////////////////////////////////////////////////////////////////////// */}
+                        <p
+                          onClick={() => {
+                            if (fromDashboard) {
+                              setStatisticFilteredDeviceListeText(
+                                `${t("Appareils non déplacés")}`
+                              );
+                            }
+                            setFilteredColorCategorieListe(DeviceNonDeplacer);
+                          }}
+                          className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                        >
+                          {t("Appareils non déplacés")}
+                          <span>({DeviceNonDeplacer?.length})</span>
+                        </p>
+                        <p
+                          onClick={() => {
+                            if (fromDashboard) {
+                              setStatisticFilteredDeviceListeText(
+                                `${t("Appareils Actifs")}`
+                              );
+                            }
+                            setFilteredColorCategorieListe(DeviceListeActif);
+                          }}
+                          className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                        >
+                          {t("Appareils Actifs")}
+                          <span>({DeviceListeActif?.length})</span>
+                        </p>
+                        <p
+                          onClick={() => {
+                            if (fromDashboard) {
+                              setStatisticFilteredDeviceListeText(
+                                `${t("Appareils En Stationnement")}`
+                              );
+                            }
+                            setFilteredColorCategorieListe(
+                              DeviceEnStationnement
+                            );
+                          }}
+                          className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                        >
+                          {t("Appareils En Stationnement")}
+                          <span>({DeviceEnStationnement?.length})</span>
+                        </p>{" "}
+                      </>
+                    )}
                     {/* ///////////////////////////////////////////////////////////////////////////////// */}
-                    <p
-                      onClick={() => {
-                        if (fromDashboard) {
-                          setStatisticFilteredDeviceListeText(
-                            `${t("Appareils non déplacés")}`
-                          );
-                        }
-                        setFilteredColorCategorieListe(DeviceNonDeplacer);
-                      }}
-                      className="px-2 flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
-                    >
-                      {t("Appareils non déplacés")}
-                      <span>({DeviceNonDeplacer?.length})</span>
-                    </p>
 
-                    <p
-                      onClick={() => {
-                        if (fromDashboard) {
-                          setStatisticFilteredDeviceListeText(
-                            `${t("Appareils Actifs")}`
-                          );
-                        }
-                        setFilteredColorCategorieListe(DeviceListeActif);
-                      }}
-                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
-                    >
-                      {t("Appareils Actifs")}
-                      <span>({DeviceListeActif?.length})</span>
-                    </p>
-                    <p
-                      onClick={() => {
-                        if (fromDashboard) {
-                          setStatisticFilteredDeviceListeText(
-                            `${t("Appareils En Stationnement")}`
-                          );
-                        }
-                        setFilteredColorCategorieListe(DeviceEnStationnement);
-                      }}
-                      className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
-                    >
-                      {t("Appareils En Stationnement")}
-                      <span>({DeviceEnStationnement?.length})</span>
-                    </p>
-                    {/* ///////////////////////////////////////////////////////////////////////////////// */}
+                    {isItUser && (
+                      <p
+                        onClick={() => {
+                          if (fromDashboard) {
+                            setStatisticFilteredDeviceListeText(
+                              `${t("Appareils Actifs")}`
+                            );
+                          }
+                          setFilteredColorCategorieListe(DeviceListeActif);
+                        }}
+                        className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
+                      >
+                        {t("Appareils Actifs")}
+                        <span>({DeviceListeActif?.length})</span>
+                      </p>
+                    )}
 
                     <p
                       onClick={() => {
@@ -842,9 +883,36 @@ function ListeDesVehiculesGestion({
           )}
 
           <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
+            {lastUpdate?.mostRecentTimestamp && (
+              <p className="font-bold w-full text-center justify-center flex flex-wrap items-center text-[.8rem] md:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
+                <span className="text-gray-700  mr-2">
+                  {t("Last Update")} :
+                </span>
+                <span>
+                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
+                  {" / "}
+                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
+                </span>
+                <MdUpdate
+                  onClick={() => {
+                    setDashboardLoadingEffect(true);
+                    if (isItUser) {
+                      updateItUserDataFonction();
+                    } else {
+                      autoUpdateFonction();
+                    }
+                  }}
+                  className={`${
+                    dashboardLoadingEffect
+                      ? "animate-spin rounded-full hover:bg-orange-50"
+                      : " hover:bg-orange-500 hover:text-white rounded-sm"
+                  } min-w-[2rem] cursor-pointer min-h-[1.7rem]  `}
+                />
+              </p>
+            )}
             {/*  */}
-            {isDashboardHomePage && !fromDashboard && (
-              <div className="flex gap-2 justify-center mt-4">
+            {isDashboardHomePage && !fromDashboard && !isItUser && (
+              <div className="flex gap-2 justify-center mt-4--">
                 <button
                   onClick={() => {
                     // setShowCreateNewDevicePage(true);
@@ -871,33 +939,36 @@ function ListeDesVehiculesGestion({
                 </button>{" "}
               </div>
             )}
-
-            {!showPasswordInput && isDashboardHomePage && !fromDashboard && (
-              <div className="flex gap-2 w-full justify-between items-center">
-                <div
-                  onClick={() => {
-                    setChooseOtherAccountGestion(true);
-                    setShowUserGroupeCategorieSection(true);
-                  }}
-                  className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
-                >
-                  <h3 className="w-full text-center font-semibold">
-                    {/* Compte: */}
-                    <span className="max-w-[13rem] overflow-hidden whitespace-nowrap text-ellipsis sm:max-w-full">
-                      {deviceListeTitleGestion || `${t("Tous les Appareils")}`}
-                    </span>
-                  </h3>
-                  <FaChevronDown />
-                </div>
-                <div
-                  onClick={() => {
-                    setShowPasswordInput(true);
-                  }}
-                  className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
-                >
-                  <IoSearchOutline className="text-xl " />
-                </div>
-                {/* <div
+            {!showPasswordInput &&
+              isDashboardHomePage &&
+              !fromDashboard &&
+              !isItUser && (
+                <div className="flex gap-2 w-full justify-between items-center">
+                  <div
+                    onClick={() => {
+                      setChooseOtherAccountGestion(true);
+                      setShowUserGroupeCategorieSection(true);
+                    }}
+                    className="w-full cursor-pointer flex justify-center items-center py-2 px-4 border bg-gray-50 rounded-lg"
+                  >
+                    <h3 className="w-full text-center font-semibold">
+                      {/* Compte: */}
+                      <span className="max-w-[13rem] overflow-hidden whitespace-nowrap text-ellipsis sm:max-w-full">
+                        {deviceListeTitleGestion ||
+                          `${t("Tous les Appareils")}`}
+                      </span>
+                    </h3>
+                    <FaChevronDown />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setShowPasswordInput(true);
+                    }}
+                    className="border cursor-pointer px-3  py-2 border-gray-300 rounded-md bg-gray-100"
+                  >
+                    <IoSearchOutline className="text-xl " />
+                  </div>
+                  {/* <div
                   onClick={() => {
                     deviceUpdateFonction();
                   }}
@@ -905,10 +976,12 @@ function ListeDesVehiculesGestion({
                 >
                   <MdUpdate className="text-xl " />
                 </div> */}
-              </div>
-            )}
-
-            {(showPasswordInput || !isDashboardHomePage || fromDashboard) && (
+                </div>
+              )}
+            {(showPasswordInput ||
+              !isDashboardHomePage ||
+              fromDashboard ||
+              isItUser) && (
               <div className="mt-2-- border border-gray-300 rounded-md overflow-hidden flex justify-between items-center">
                 <input
                   id="search"
@@ -940,30 +1013,7 @@ function ListeDesVehiculesGestion({
               </div>
             )}
 
-            {lastUpdate?.mostRecentTimestamp && (
-              <p className="font-bold  flex flex-wrap items-center text-[.8rem] md:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
-                <span className="text-gray-700  mr-2">
-                  {t("Last Update")} :
-                </span>
-                <span>
-                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.date}
-                  {" / "}
-                  {FormatDateHeure(lastUpdate?.mostRecentTimestamp)?.time}{" "}
-                </span>
-                <MdUpdate
-                  onClick={() => {
-                    setDashboardLoadingEffect(true);
-                    autoUpdateFonction();
-                  }}
-                  className={`${
-                    dashboardLoadingEffect
-                      ? "animate-spin rounded-full hover:bg-orange-50"
-                      : " hover:bg-orange-500 hover:text-white rounded-sm"
-                  } min-w-[2rem] cursor-pointer min-h-[1.7rem]  `}
-                />
-              </p>
-            )}
-            {fromDashboard && searchTermInput && (
+            {(fromDashboard || isItUser) && searchTermInput && (
               <div className="w-full flex justify-center">
                 <p className="text-lg">
                   {t("Résultat")} :{" "}
@@ -975,42 +1025,89 @@ function ListeDesVehiculesGestion({
             )}
           </div>
         </div>
+
+        {/*  */}
+
+        {/*  */}
         {/* )} */}
         <div className="hidden-- flex mt-[5rem] relative flex-col max-w-[50rem] mx-auto gap-4">
+          {progressBarForLoadingData > 0 &&
+            progressBarForLoadingData < 100 &&
+            !fetchVehicleDataFromRapportGroupe &&
+            showAnnimationProgresseBarDashboard && (
+              <div className="flex justify-center items-center">
+                <div
+                  className="rounded-md shadow-sm shadow-black/10 overflow-hidden max-w-[50rem] mx-auto w-full border"
+                  style={{
+                    width: "100%",
+                    background: "#fff",
+                    margin: "10px 0",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${progressBarForLoadingData}%`,
+                      background: "#4caf50",
+                      color: "#fff",
+                      padding: "4px",
+                      transition: "width 1s linear",
+                      textAlign: "center",
+                    }}
+                  >
+                    <p className="font-semibold drop-shadow-2xl">
+                      {Math.floor(progressBarForLoadingData)}%
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           <div className="flex justify-end mt-4 items-end gap-3">
             <div className="flex  gap-2">
-              <Tooltip
-                title={`${t("Voir cette liste sur la carte")}`}
-                PopperProps={{
-                  modifiers: [
-                    {
-                      name: "offset",
-                      options: {
-                        offset: [0, -10], // Décalage horizontal et vertical
+              {!isItUser && (
+                <Tooltip
+                  title={`${t("Voir cette liste sur la carte")}`}
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, -10], // Décalage horizontal et vertical
+                        },
                       },
-                    },
-                    {
-                      name: "zIndex",
-                      enabled: true,
-                      phase: "write",
-                      fn: ({ state }) => {
-                        state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                      {
+                        name: "zIndex",
+                        enabled: true,
+                        phase: "write",
+                        fn: ({ state }) => {
+                          state.styles.popper.zIndex = 9999999999999; // Niveau très élevé
+                        },
                       },
-                    },
-                  ],
-                }}
-              >
-                <p
-                  onClick={() => {
-                    setSelectedVehicleToShowInMap(null);
-                    setShowCarte(true);
-                    setIsFilteredCartePositionByCategorie(true);
+                    ],
                   }}
-                  className="text-md  bg-orange-50 hover:bg-orange-100 h-[2.5rem] border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
                 >
-                  <MdLocationPin className="text-[1.5rem]" />
-                </p>
-              </Tooltip>
+                  <p
+                    onClick={() => {
+                      setSelectedVehicleToShowInMap(null);
+                      setShowCarte(true);
+                      setIsFilteredCartePositionByCategorie(true);
+                    }}
+                    className="text-md  bg-orange-50 hover:bg-orange-100 h-[2.5rem] border border-orange-200 p-2 rounded-md text-orange-500 cursor-pointer"
+                  >
+                    <MdLocationPin className="text-[1.5rem]" />
+                  </p>
+                </Tooltip>
+              )}
+
+              {isItUser && (
+                <button
+                  onClick={() => {
+                    setLogOutPopup(true);
+                  }}
+                  className="rounded-lg border-2 border-red-500 bg-white hover:bg-red-500 hover:text-white text-red-500 font-bold px-4"
+                >
+                  {t("Se Déconnecter")}
+                </button>
+              )}
 
               <Tooltip
                 title={`${t("Filtrer les appareils")}`}
@@ -1064,7 +1161,11 @@ function ListeDesVehiculesGestion({
                 {!currentAccountSelected && isDashboardHomePage && (
                   <div
                     className="flex justify-between text-md items-center border-b border-gray-300 cursor-pointer hover:bg-orange-100 bg-orange-50 p-3 rounded-lg"
-                    onClick={() => toggleGroup(accountID)}
+                    onClick={() => {
+                      toggleGroup(accountID);
+
+                      setShowMoreDeviceInfo(null);
+                    }}
                   >
                     <h2>
                       {t("Liste des appareils de")} :{" "}
@@ -1405,6 +1506,29 @@ function ListeDesVehiculesGestion({
                                     {/*  */}
                                     {/*  */}
                                     {/*  */}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Mensualité")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {device?.notes || "---"}
+                                      </span>
+                                    </div>{" "}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">
+                                        {t("Vitesse")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {(foundDetails?.statusCode &&
+                                          Number(
+                                            device?.véhiculeDetails[0]?.speedKPH
+                                          )?.toFixed(1)) ||
+                                          Number(
+                                            foundDetails?.speedKPH
+                                          )?.toFixed(1)}{" "}
+                                        Km/h{" "}
+                                      </span>
+                                    </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold">
                                         {t("Statut")} :
