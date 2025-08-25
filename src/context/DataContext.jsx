@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.0";
+  let versionApplication = "8.1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1490,6 +1490,7 @@ const DataContextProvider = ({ children }) => {
     let username;
     let password;
     let country;
+    let isItUser;
 
     if (
       accountLog === ItAccount &&
@@ -1503,6 +1504,7 @@ const DataContextProvider = ({ children }) => {
       country = ItCountry;
       console.log("IS a IT User");
       setIsItUser(true);
+      isItUser = true;
     } else {
       account = accountLog;
       username = usernameLog;
@@ -1511,6 +1513,7 @@ const DataContextProvider = ({ children }) => {
       console.log("Not  IS a IT User");
 
       setIsItUser(false);
+      isItUser = false;
     }
 
     const xmlData = `<GTSRequest command="dbget">
