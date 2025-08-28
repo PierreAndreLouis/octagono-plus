@@ -1588,6 +1588,7 @@ function ListeDesVehiculesGestion({
                               {!isItUser && (
                                 <button
                                   onClick={() => {
+                                    console.log(device);
                                     setCurrentSelectedDeviceGestion(device);
                                     setShowOptionAppareilOptionPopup(true);
                                     setshowChooseItemToModifyMessage("");

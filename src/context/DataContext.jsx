@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.3";
+  let versionApplication = "8.4";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1922,6 +1922,7 @@ const DataContextProvider = ({ children }) => {
     setComptes(data);
 
     if (fetchAllOtherData) {
+      // fetchAccountRules(account, password);
       setProgressAnimationStart(0);
       setRunningAnimationProgressLoading(true);
       setProgress(2);
@@ -3483,6 +3484,8 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
   `;
 
+    console.log("xmlData", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3491,6 +3494,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("data", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3499,6 +3503,8 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
+
+      console.log("result", result);
 
       if (result === "success") {
         fetchAccountRules(accountID, password);
@@ -3710,6 +3716,10 @@ const DataContextProvider = ({ children }) => {
           rules.filter((rule) => rule?.ruleID !== ruleID)
         );
 
+        setListeGestionDesRules((rules) =>
+          rules.filter((rule) => rule?.ruleID !== ruleID)
+        );
+
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
           `${t("Suppression du Role avec succès")}`
@@ -3898,6 +3908,8 @@ const DataContextProvider = ({ children }) => {
     </GTSRequest>
   `;
 
+    console.log("xmlData", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3906,6 +3918,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("data", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3914,6 +3927,8 @@ const DataContextProvider = ({ children }) => {
         .getAttribute("result");
 
       setError("");
+
+      console.log("result", result);
 
       if (result === "success") {
         fetchAccountRulesActive(accountID, password);
@@ -8958,21 +8973,41 @@ const DataContextProvider = ({ children }) => {
       hour12: true,
     }); // Format: HH:MM AM/PM
     //
+    // let emails;
+    // if (country === "rd") {
+    //   emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
+    // } else {
+    //   emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
+    // }
+
+    const host = window.location.hostname.replace(/^www\./, "");
     let emails;
-    if (country === "rd") {
+
+    if (host === "octagonogps.com.do" || host === "app.octagonogps.com.do") {
       emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
+    } else if (host === "octagonoplus.com") {
+      emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     } else {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     }
+
+    const emailText = `
+Client : ${accountConnected}  \n
+Utilisateur : ${user}  \n
+Date : ${dateAujourdhui} ___ ${hereActurel}  \n
+Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
+   `;
+
+    //  text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
+    //           country === "ht" ? "Haiti" : "Republique dominicaine"
+    //         }`,
     fetch("https://octagono-plus-email-server.onrender.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         to: emails,
-        subject: `Connexion Reussi de ${accountConnected} / ${user}`,
-        text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
-          country === "ht" ? "Haiti" : "Republique dominicaine"
-        }`,
+        subject: `Connexion réussie`,
+        text: emailText,
 
         // text: "Bonjour depuis React !",
       }),

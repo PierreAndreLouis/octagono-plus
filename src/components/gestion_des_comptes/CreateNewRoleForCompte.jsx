@@ -9,7 +9,7 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-function CreateNewRole({
+function CreateNewRoleForCompte({
   setDocumentationPage,
   documentationPage,
   accountIdFromRole,
@@ -28,7 +28,6 @@ function CreateNewRole({
     gestionAccountData,
     createNewRuleEnGestionAccount,
     ModifyRuleEnGestionAccount,
-    accountRules,
   } = useContext(DataContext);
 
   const navigate = useNavigate();
@@ -51,7 +50,7 @@ function CreateNewRole({
 
   // État pour chaque champ du formulaire
   const [addNewRoleData, setAddNewRoleData] = useState({
-    // accountID: accountIdFromRole,
+    accountID: accountIdFromRole,
     imeiNumber: "*",
     groupID: "-",
     ruleID: "",
@@ -116,12 +115,12 @@ function CreateNewRole({
       return;
     }
 
-    // if (!currentAccountSelected) {
-    //   // setErrorID(`${t("Veuillez choisir un compte")}`);
-    //   setChooseOneAccountToContinue(true);
-    //   setChooseOtherAccountGestion(true);
-    //   return;
-    // }
+    if (!currentAccountSelected) {
+      // setErrorID(`${t("Veuillez choisir un compte")}`);
+      setChooseOneAccountToContinue(true);
+      setChooseOtherAccountGestion(true);
+      return;
+    }
 
     if (!addNewRoleData?.selector) {
       setErrorID(`${t("Le champ selector est vide")}`);
@@ -130,10 +129,9 @@ function CreateNewRole({
 
     const ruleID = addNewRoleData.ruleID;
 
-    // const ruleExists = currentAccountSelected?.accountRules?.some(
-    //   (rule) => rule?.ruleID === ruleID
-    // );
-    const ruleExists = accountRules?.some((rule) => rule?.ruleID === ruleID);
+    const ruleExists = currentAccountSelected?.accountRules?.some(
+      (rule) => rule?.ruleID === ruleID
+    );
 
     if (!currentSelectedRole && ruleExists) {
       setErrorID(
@@ -183,7 +181,7 @@ function CreateNewRole({
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === adminPassword) {
-      // const accountID = accountIdFromRole;
+      const accountID = accountIdFromRole;
 
       const imeiNumber = addNewRoleData.imeiNumber;
       const groupID = addNewRoleData.groupID;
@@ -206,7 +204,7 @@ function CreateNewRole({
       const isActive = addNewRoleData.isActive;
       const description = addNewRoleData.description;
 
-      // console.log("accountID ", accountID);
+      console.log("accountID ", accountID);
       console.log("imeiNumber ", imeiNumber);
       console.log("groupID ", groupID);
       console.log("isCronRule ", isCronRule);
@@ -226,91 +224,93 @@ function CreateNewRole({
       console.log("isActive ", isActive);
       console.log("description ", description);
 
-      const accountID = localStorage.getItem("adminAccount");
-      const password = localStorage.getItem("adminPassword");
-      // if (
-      //   currentAccountSelected?.accountID &&
-      //   currentAccountSelected?.password
-      // ) {
-      console.log(
-        accountID,
-        "admin",
-        password,
-
-        ruleID,
-
-        emailSubject,
-        emailText,
-        selector,
-        isActive
-      );
-
-      if (currentSelectedRole) {
-        console.log("xxxxxxxx");
-
-        ModifyRuleEnGestionAccount(
-          // currentAccountSelected?.accountID,
-          // "admin",
-          // currentAccountSelected?.password,
-          accountID,
+      if (
+        currentAccountSelected?.accountID &&
+        currentAccountSelected?.password
+      ) {
+        console.log(
+          currentAccountSelected?.accountID,
           "admin",
-          password,
+          currentAccountSelected?.password,
 
-          // imeiNumber,
-          // groupID,
           ruleID,
-          isCronRule,
-          ruleTag,
-          selector,
-          actionMask,
-          cannedActions,
-          priority,
-          notifyEmail,
+
           emailSubject,
           emailText,
-          smsText,
-          useEmailWrapper,
-          ruleDisable,
-          ruleEnable,
-          sendCommand,
-          isActive,
-          description
-        );
-      } else {
-        createNewRuleEnGestionAccount(
-          // currentAccountSelected?.accountID,
-          // "admin",
-          // currentAccountSelected?.password,
-          accountID,
-          "admin",
-          password,
-
-          // imeiNumber,
-          // groupID,
-          ruleID,
-          isCronRule,
-          ruleTag,
           selector,
-          actionMask,
-          cannedActions,
-          priority,
-          notifyEmail,
-          emailSubject,
-          emailText,
-          smsText,
-          useEmailWrapper,
-          ruleDisable,
-          ruleEnable,
-          sendCommand,
-          isActive,
-          description
+          isActive
         );
+
+        if (currentSelectedRole) {
+          console.log("xxxxxxxx");
+
+          ModifyRuleEnGestionAccount(
+            // currentAccountSelected?.accountID,
+            // "admin",
+            // currentAccountSelected?.password,
+
+            currentAccountSelected?.accountID ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.accountID,
+            "admin",
+            currentAccountSelected?.password ||
+              gestionAccountData.find(
+                (account) => account.accountID === accountID
+              )?.password,
+
+            // imeiNumber,
+            // groupID,
+            ruleID,
+            isCronRule,
+            ruleTag,
+            selector,
+            actionMask,
+            cannedActions,
+            priority,
+            notifyEmail,
+            emailSubject,
+            emailText,
+            smsText,
+            useEmailWrapper,
+            ruleDisable,
+            ruleEnable,
+            sendCommand,
+            isActive,
+            description
+          );
+        } else {
+          createNewRuleEnGestionAccount(
+            currentAccountSelected?.accountID,
+            "admin",
+            currentAccountSelected?.password,
+
+            // imeiNumber,
+            // groupID,
+            ruleID,
+            isCronRule,
+            ruleTag,
+            selector,
+            actionMask,
+            cannedActions,
+            priority,
+            notifyEmail,
+            emailSubject,
+            emailText,
+            smsText,
+            useEmailWrapper,
+            ruleDisable,
+            ruleEnable,
+            sendCommand,
+            isActive,
+            description
+          );
+        }
+
+        navigate("/Gestion_des_roles_compte");
+
+        setDocumentationPage("Gestion_des_roles");
       }
-
-      navigate("/Gestion_des_roles");
-
-      setDocumentationPage("Gestion_des_roles");
-      // }
 
       setShowConfirmAddGroupeGestionPopup(false);
       setErrorMessage("");
@@ -714,7 +714,7 @@ function CreateNewRole({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_roles");
-                  navigate("/Gestion_des_roles");
+                  navigate("/Gestion_des_roles_compte");
                 }}
                 className="border hover:bg-gray-100 flex items-center gap-3 rounded-lg text-gray-700 px-6 py-2 font-bold  "
               >
@@ -727,6 +727,21 @@ function CreateNewRole({
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
                 {/* Champs du formulaire */}
                 {[
+                  // {
+                  //   id: "accountID",
+                  //   label: `${t("accountID")}`,
+                  //   placeholder: `${t("accountID")}`,
+                  // },
+                  // {
+                  //   id: "deviceID",
+                  //   label: `${t("deviceID")}`,
+                  //   placeholder: "deviceID",
+                  // },
+                  // {
+                  //   id: "groupID",
+                  //   label: `${t("groupID")}`,
+                  //   placeholder: "groupID",
+                  // },
                   {
                     id: "ruleID",
                     label: `${t("ruleID")}`,
@@ -886,7 +901,7 @@ function CreateNewRole({
                     onClick={() => {
                       setDocumentationPage("Gestion_des_roles");
                       scrollToTop();
-                      navigate("/Gestion_des_roles");
+                      navigate("/Gestion_des_roles_compte");
                     }}
                     className="flex w-full justify-center rounded-md border text-orange-500 dark:text-orange-400 border-orange-600 px-3 py-1.5 text-md font-semibold hover:bg-orange-100 dark:hover:bg-orange-900"
                   >
@@ -902,6 +917,8 @@ function CreateNewRole({
   );
 }
 
-export default CreateNewRole;
+// export default CreateNewRole;
 
 // export default CreateNewRole
+
+export default CreateNewRoleForCompte;

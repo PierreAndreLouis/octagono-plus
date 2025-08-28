@@ -495,6 +495,9 @@ function SideBarSysadmin({
         } else {
           setListeGestionDesRules(accountRules);
         }
+        // setListeGestionDesRules(
+        //   accountRules?.filter((acct) => acct?.accountID === "sysadmin")
+        // );
       },
     },
     {
@@ -545,6 +548,8 @@ function SideBarSysadmin({
       window.open("/Guide-utilisation-Octagono.pdf", "_blank");
     }
   };
+
+  const [showRulesOptions, setShowRulesOptions] = useState(false);
 
   return (
     <div
@@ -1271,7 +1276,7 @@ function SideBarSysadmin({
 
           {/* Gestion_des_roles */}
 
-          {isDashboardHomePage && (
+          {/* {isDashboardHomePage && (
             <Link
               to="/Gestion_des_roles"
               className="ajouter-appareil-container transition-all hover:border-b  "
@@ -1289,6 +1294,11 @@ function SideBarSysadmin({
                   } else {
                     setListeGestionDesRules(accountRules);
                   }
+                  // setListeGestionDesRules(
+                  //   accountRules?.filter(
+                  //     (acct) => acct?.accountID === "sysadmin"
+                  //   )
+                  // );
                 }}
                 className={`${
                   documentationPage === "Gestion_des_roles"
@@ -1299,54 +1309,179 @@ function SideBarSysadmin({
                 <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
                 <div className="flex w-full justify-between">
                   <p className="text-gray-600 font-semibold">
-                    {t("Liste des règles")} (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountRules?.length
-                      : accountRules?.length}{" "}
+                    {t("Gestion des Roles")} (
+                  
                     )
                   </p>
                 </div>
               </div>
             </Link>
-          )}
+          )} */}
 
           {isDashboardHomePage && (
-            <Link
-              to="/Gestion_des_roles_actives"
-              className="ajouter-appareil-container transition-all hover:border-b  "
+            <div
+              // to="/Gestion_des_roles_actives"
+              className="ajouter-appareil-container transition-all   relative"
             >
-              <div
-                onClick={() => {
-                  scrollToTop();
-                  setDocumentationPage("Gestion_des_roles_actives");
-                  closeSideBar();
-                  setShowSideBar2(false);
-                  if (currentAccountSelected) {
-                    setListeGestionDesRulesActive(
-                      currentAccountSelected?.accountRulesActive
-                    );
-                  } else {
-                    setListeGestionDesRulesActive(accountRulesActive);
-                  }
-                }}
-                className={`${
-                  documentationPage === "Gestion_des_roles_actives"
-                    ? "bg-orange-50"
-                    : ""
-                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-              >
-                <TbSettingsCheck className="text-xl min-w-[1.5rem] text-orange-600" />
-                <div className="flex w-full justify-between">
-                  <p className="text-gray-600 font-semibold">
-                    {t("Règles actives")} (
-                    {currentAccountSelected
-                      ? currentAccountSelected?.accountRulesActive?.length
-                      : accountRulesActive?.length}{" "}
-                    )
-                  </p>
+              <div className="ajouter-appareil-container transition-all   ">
+                <div
+                  onClick={() => {
+                    // scrollToTop();
+                    setDocumentationPage("Gestion_des_roles");
+                    setShowRulesOptions(true);
+                    // closeSideBar();
+                    // setShowSideBar2(false);
+                    // if (currentAccountSelected) {
+                    //   setListeGestionDesRules(
+                    //     currentAccountSelected?.accountRules
+                    //   );
+                    // } else {
+                    //   setListeGestionDesRules(accountRules);
+                    // }
+                    // setListeGestionDesRules(
+                    //   accountRules?.filter(
+                    //     (acct) => acct?.accountID === "sysadmin"
+                    //   )
+                    // );
+                  }}
+                  className={`${
+                    documentationPage === "Gestion_des_roles" ||
+                    documentationPage === "Gestion_des_roles_actives" ||
+                    documentationPage === "Gestion_des_roles_compte"
+                      ? "bg-orange-50"
+                      : ""
+                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50-- cursor-pointer px-3`}
+                >
+                  <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
+                  <div className="flex w-full justify-between">
+                    <p className="text-gray-600 font-semibold">
+                      {t("Gestion des Roles")}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </Link>
+
+              {showRulesOptions && (
+                <div
+                  onClick={() => {
+                    // setShowRulesOptions(false);
+                  }}
+                  className="absolute- my-2 hover:bg-none flex flex-col z-20 -bottom-[14rem] left-0 right-0 overflow-hidden bg-white shadow-lg shadow-black/20 rounded-lg min-h-[4rem] border border-black -400"
+                >
+                  <div
+                    onClick={() => {
+                      setShowRulesOptions(false);
+                    }}
+                    className="w-full justify-between items-center border flex p-3 text-lg text-red-600 cursor-pointer pb"
+                  >
+                    <p className="font-bold text-gray-700 text-sm">
+                      {t("Options")}
+                    </p>
+                    <IoClose />
+                  </div>
+                  <Link
+                    to="/Gestion_des_roles"
+                    onClick={() => {
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_roles");
+                      closeSideBar();
+                      setShowSideBar2(false);
+                      if (currentAccountSelected) {
+                        setListeGestionDesRulesActive(
+                          currentAccountSelected?.accountRulesActive
+                        );
+                      } else {
+                        setListeGestionDesRulesActive(accountRulesActive);
+                      }
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_roles"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 -- cursor-pointer px-3`}
+                  >
+                    <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        {t("Rôle principales")} (
+                        {
+                          accountRules?.filter(
+                            (acct) => acct?.accountID === "sysadmin"
+                          )?.length
+                        }{" "}
+                        )
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    to="/Gestion_des_roles_compte"
+                    onClick={() => {
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_roles_compte");
+                      closeSideBar();
+                      setShowSideBar2(false);
+                      if (currentAccountSelected) {
+                        setListeGestionDesRulesActive(
+                          currentAccountSelected?.accountRulesActive
+                        );
+                      } else {
+                        setListeGestionDesRulesActive(accountRulesActive);
+                      }
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_roles_compte"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex  gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        {t("Rôles du compte")} (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountRules?.length
+                          : accountRules?.length}{" "}
+                        )
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    to="/Gestion_des_roles_actives"
+                    onClick={() => {
+                      scrollToTop();
+                      setDocumentationPage("Gestion_des_roles_actives");
+                      closeSideBar();
+                      setShowSideBar2(false);
+                      if (currentAccountSelected) {
+                        setListeGestionDesRulesActive(
+                          currentAccountSelected?.accountRulesActive
+                        );
+                      } else {
+                        setListeGestionDesRulesActive(accountRulesActive);
+                      }
+                    }}
+                    className={`${
+                      documentationPage === "Gestion_des_roles_actives"
+                        ? "bg-orange-50"
+                        : ""
+                    } flex  gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+                  >
+                    <TbSettingsCheck className="text-xl min-w-[1.5rem] text-orange-600" />
+                    <div className="flex w-full justify-between">
+                      <p className="text-gray-600 font-semibold">
+                        {t("Règles actives")} (
+                        {currentAccountSelected
+                          ? currentAccountSelected?.accountRulesActive?.length
+                          : accountRulesActive?.length}{" "}
+                        )
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
           )}
 
           {/*  */}

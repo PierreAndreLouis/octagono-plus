@@ -19,7 +19,7 @@ import { PiIntersectThreeBold } from "react-icons/pi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbSettings } from "react-icons/tb";
 
-function GestionDesRoles({
+function GestionDesRolesForCompte({
   setDocumentationPage,
   setCurrentSelectedRole,
   currentSelectedRole,
@@ -50,23 +50,15 @@ function GestionDesRoles({
   const [inputSearchItem, setInputSearchItem] = useState("");
 
   const filterListeGestionDesRules = inputSearchItem
-    ? // listeGestionDesRules
-      accountRules
-        ?.filter((acct) => acct?.accountID === "sysadmin")
-        ?.filter(
-          (item) =>
-            item?.description
-              .toLowerCase()
-              .includes(inputSearchItem.toLowerCase()) ||
-            item?.ruleID
-              .toLowerCase()
-              .includes(inputSearchItem.toLowerCase()) ||
-            item?.accountID
-              .toLowerCase()
-              .includes(inputSearchItem.toLowerCase())
-        )
-    : accountRules?.filter((acct) => acct?.accountID === "sysadmin");
-  // : listeGestionDesRules;
+    ? listeGestionDesRules.filter(
+        (item) =>
+          item?.description
+            .toLowerCase()
+            .includes(inputSearchItem.toLowerCase()) ||
+          item?.ruleID.toLowerCase().includes(inputSearchItem.toLowerCase()) ||
+          item?.accountID.toLowerCase().includes(inputSearchItem.toLowerCase())
+      )
+    : listeGestionDesRules;
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -79,22 +71,16 @@ function GestionDesRoles({
     if (inputPassword === adminPassword) {
       setDeleRolePopup(false);
 
-      const accountID = localStorage.getItem("adminAccount");
-      const password = localStorage.getItem("adminPassword");
-
       DeleteRoleEnGestionAccount(
-        // currentAccountSelected?.accountID ||
-        //   gestionAccountData.find(
-        //     (account) => account.accountID === currentSelectedRole?.accountID
-        //   )?.accountID,
-        // "admin",
-        // currentAccountSelected?.password ||
-        //   gestionAccountData.find(
-        //     (account) => account.accountID === currentSelectedRole?.accountID
-        //   )?.password,
-        accountID,
+        currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) => account.accountID === currentSelectedRole?.accountID
+          )?.accountID,
         "admin",
-        password,
+        currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) => account.accountID === currentSelectedRole?.accountID
+          )?.password,
 
         currentSelectedRole?.ruleID,
         currentSelectedRole?.isCronRule,
@@ -151,29 +137,11 @@ function GestionDesRoles({
       setOpenGroups({ [firstAccountID]: true }); // 👈 ouvre uniquement le premier
       setVisibleCounts({ [firstAccountID]: 1 }); // 👈 initialise la pagination pour le premier
     }
-  }, [
-    currentAccountSelected,
-    documentationPage,
-    listeGestionDesRules,
-    accountRules,
-  ]);
+  }, [currentAccountSelected, documentationPage, listeGestionDesRules]);
 
   ////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////
-
-  function formatInfo(template = "", vars = {}) {
-    // Remplace ${key}
-    const filled = template.replace(
-      /\$\{([^}]+)\}/g,
-      (_, key) => vars[key] ?? ""
-    );
-    // Décode entités HTML (&#9888;, &#128100; ...)
-    if (typeof document === "undefined") return filled;
-    const tmp = document.createElement("textarea");
-    tmp.innerHTML = filled;
-    return tmp.value;
-  }
 
   return (
     <div className=" ">
@@ -251,31 +219,27 @@ function GestionDesRoles({
             }}
             className="mt-[10rem]-- text-lg text-center font-bold "
           >
-            {t("Rôle principales")}
+            {t("Rôles du compte")}
             {/* ({filterListeDesCompte?.length}) */}
           </h2>
           <p className="text-center mx-auto font-semibold text-gray-500">
             {t("Nombre de Roles")}:{" "}
             <span className="text-orange-500">
               {" "}
-              {/* {listeGestionDesRules?.length} */}
-              {
-                accountRules?.filter((acct) => acct?.accountID === "sysadmin")
-                  ?.length
-              }
+              {listeGestionDesRules?.length}
             </span>
           </p>
           <div className="flex  justify-center mt-4">
             <button
               onClick={() => {
                 setDocumentationPage("Ajouter_nouveau_role");
-                navigate("/Ajouter_nouveau_role");
+                navigate("/Ajouter_nouveau_role_compte");
                 setCurrentSelectedRole(null);
 
-                // if (!currentAccountSelected) {
-                //   setChooseOneAccountToContinue(true);
-                //   setChooseOtherAccountGestion(true);
-                // }
+                if (!currentAccountSelected) {
+                  setChooseOneAccountToContinue(true);
+                  setChooseOtherAccountGestion(true);
+                }
                 //
                 //
                 //
@@ -340,6 +304,7 @@ function GestionDesRoles({
                           //
                           //
                           //
+                          //
 
                           return (
                             <div
@@ -386,21 +351,12 @@ function GestionDesRoles({
                                         {rule?.emailSubject}{" "}
                                       </span>
                                     </div>{" "}
-                                    <div className="flex flex-col flex-wrap border-b py-1">
-                                      <p className="font-semibold mt-3  text-orange-600">
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold- text-gray-700">
                                         {t("emailText")} :
                                       </p>
-                                      <span className=" dark:text-orange-500 border border-orange-300 mt-2 mb-2 rounded-lg bg-orange-50 text-gray-600 pl-5">
-                                        {/* {rule?.emailText}{" "} */}
-                                        <div
-                                          className="whitespace-pre-line font-mono"
-                                          dangerouslySetInnerHTML={{
-                                            __html: rule?.emailText.replace(
-                                              /\\n/g,
-                                              "\n"
-                                            ),
-                                          }}
-                                        />{" "}
+                                      <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
+                                        {rule?.emailText}{" "}
                                       </span>
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
@@ -463,7 +419,7 @@ function GestionDesRoles({
                                       setDocumentationPage(
                                         "Ajouter_nouveau_role"
                                       );
-                                      navigate("/Modifier_role");
+                                      navigate("/Modifier_role_compte");
                                     }}
                                     className={` bg-gray-200 text-gray-800 text-sm- w-[50%] border-[0.02rem] border-gray-300 text-sm md:w-full font-semibold rounded-lg py-2 px-4 flex gap-2 justify-center items-center`}
                                   >
@@ -520,4 +476,6 @@ function GestionDesRoles({
   );
 }
 
-export default GestionDesRoles;
+// export default GestionDesRoles;
+
+export default GestionDesRolesForCompte;

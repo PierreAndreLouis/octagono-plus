@@ -296,7 +296,8 @@ function CreateNewDeviceGestion({
 
   // Pour mettre a jour les nouvelle donnee du véhicule a modifier
   useEffect(() => {
-    if (currentSelectedDeviceGestion && !isCreatingNewElement) {
+    if (isCreatingNewElement) return;
+    if (currentSelectedDeviceGestion) {
       setAddVehicleData({
         accountID: currentSelectedDeviceGestion.accountID || "",
         deviceID: currentSelectedDeviceGestion.deviceID || "",

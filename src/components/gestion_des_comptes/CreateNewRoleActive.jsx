@@ -52,7 +52,7 @@ function CreateNewRoleActive({
   const [errorID, setErrorID] = useState("");
 
   // État pour chaque champ du formulaire
-  const [addNewRoleData, setAddNewRoleData] = useState({
+  const [addNewRoleActiveData, setAddNewRoleActiveData] = useState({
     accountID: "",
     imeiNumber: "*",
     deviceID: "*",
@@ -77,8 +77,31 @@ function CreateNewRoleActive({
     description: "",
   });
 
+  const [addNewRoleData, setAddNewRoleData] = useState({
+    // accountID: accountIdFromRole,
+    imeiNumber: "*",
+    groupID: "-",
+    ruleID: "",
+    isCronRule: "0",
+    ruleTag: "",
+    selector: "",
+    actionMask: "1287",
+    cannedActions: "",
+    priority: "0",
+    notifyEmail: "",
+    emailSubject: "",
+    emailText: "",
+    smsText: "",
+    useEmailWrapper: "",
+    ruleDisable: "",
+    ruleEnable: "",
+    sendCommand: "",
+    isActive: "1",
+    description: "",
+  });
+
   // Gestion de la modification des champs
-  const handleChange = (e) => {
+  const handleChangePreset = (e) => {
     const { name, value } = e.target;
 
     let newValue = value;
@@ -97,12 +120,32 @@ function CreateNewRoleActive({
     setErrorID(""); // Réinitialise l'erreur lorsque l'utilisateur modifie l'entrée
   };
 
+  // Gestion de la modification des champs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    let newValue = value;
+
+    if (["ruleID"].includes(name)) {
+      newValue = value.replace(/\s/g, "_"); // remplace les espaces par des underscores
+    }
+
+    if (name === "ruleID") {
+      newValue = newValue.toLowerCase(); // convertit en minuscules
+    }
+    setAddNewRoleActiveData((prevData) => ({
+      ...prevData,
+      [name]: newValue,
+    }));
+    setErrorID(""); // Réinitialise l'erreur lorsque l'utilisateur modifie l'entrée
+  };
+
   const isValidUserData = () => {
     const phoneRegex = /^\+?\d{6,15}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const errors = [];
 
-    // if (!emailRegex.test(addNewRoleData.notifyEmail)) {
+    // if (!emailRegex.test(addNewRoleActiveData.notifyEmail)) {
     //   errors.push(`${t("l'email de notification n'est pas valide")}`);
     // }
 
@@ -127,14 +170,40 @@ function CreateNewRoleActive({
       return;
     }
 
-    if (!addNewRoleData?.ruleID) {
-      setErrorID(`${t("Le champ ruleID est vide")}`);
+    // if (!addNewRoleActiveData?.ruleID) {
+    //   setErrorID(`${t("Le champ ruleID est vide")}`);
+    //   return;
+    // }
+
+    if (!addNewRoleData?.selector) {
+      setErrorID(`${t("Le champ selector est vide")}`);
       return;
     }
 
-    const ruleID = addNewRoleData.ruleID;
-    const deviceID = addNewRoleData.deviceID;
-    const groupID = addNewRoleData.groupID;
+    if (
+      addNewRoleActiveData.groupID === "-" &&
+      addNewRoleActiveData.deviceID === "-"
+    ) {
+      setErrorID(`${t("Veuillez choisir un appareil ou un groupe")}`);
+      return;
+    }
+
+    const ruleExists2 = currentAccountSelected?.accountRules?.some(
+      (rule) => rule?.ruleID === addNewRoleData.ruleID
+    );
+
+    if (ruleExists2) {
+      setErrorID(
+        `${t(
+          "Cet identifiant (ID du Rôle) est déjà utilisé. Veuillez en choisir un autre"
+        )}`
+      );
+      return;
+    }
+
+    const ruleID = addNewRoleActiveData.ruleID;
+    const deviceID = addNewRoleActiveData.deviceID;
+    const groupID = addNewRoleActiveData.groupID;
 
     const ruleExists = currentAccountSelected?.accountRulesActive?.some(
       (rule) =>
@@ -155,7 +224,7 @@ function CreateNewRoleActive({
 
   useEffect(() => {
     setErrorID("");
-  }, [addNewRoleData]);
+  }, [addNewRoleActiveData]);
 
   const [showIsUserActivePopup, setShowIsUserActivePopup] = useState(false);
 
@@ -184,6 +253,10 @@ function CreateNewRoleActive({
     setdeviceSelectionne("");
   }, [documentationPage]);
 
+  useEffect(() => {
+    console.log("addNewRoleData", addNewRoleData);
+  }, [addNewRoleData]);
+
   //////////////////////////////////////////////////////////
 
   // fonction pour lancer la requête d'ajout de vehicle
@@ -191,33 +264,31 @@ function CreateNewRoleActive({
     event.preventDefault(); // Prevents the form from submitting
 
     if (inputPassword === adminPassword) {
-      const accountID = addNewRoleData.accountID;
-      const imeiNumber = addNewRoleData.imeiNumber;
-      const deviceID = addNewRoleData.deviceID;
+      const accountID = addNewRoleActiveData.accountID;
+      const imeiNumber = addNewRoleActiveData.imeiNumber;
+      const deviceID = addNewRoleActiveData.deviceID;
 
-      const groupID = addNewRoleData.groupID;
+      const groupID = addNewRoleActiveData.groupID;
 
-      const ruleID = addNewRoleData.ruleID;
-      const statusCode = addNewRoleData.statusCode;
+      const ruleID = addNewRoleActiveData.ruleID;
+      const statusCode = addNewRoleActiveData.statusCode;
 
-      const isCronRule = addNewRoleData.isCronRule;
-      const ruleTag = addNewRoleData.ruleTag;
-      const selector = addNewRoleData.selector;
-      const actionMask = addNewRoleData.actionMask;
-      const cannedActions = addNewRoleData.cannedActions;
-      const priority = addNewRoleData.priority;
-      const notifyEmail = addNewRoleData.notifyEmail;
-      const emailSubject = addNewRoleData.emailSubject;
-      const emailText = addNewRoleData.emailText;
-      const smsText = addNewRoleData.smsText;
-      const useEmailWrapper = addNewRoleData.useEmailWrapper;
-      const ruleDisable = addNewRoleData.ruleDisable;
-      const ruleEnable = addNewRoleData.ruleEnable;
-      const sendCommand = addNewRoleData.sendCommand;
-      const isActive = addNewRoleData.isActive;
-      const description = addNewRoleData.description;
-
-
+      const isCronRule = addNewRoleActiveData.isCronRule;
+      const ruleTag = addNewRoleActiveData.ruleTag;
+      const selector = addNewRoleActiveData.selector;
+      const actionMask = addNewRoleActiveData.actionMask;
+      const cannedActions = addNewRoleActiveData.cannedActions;
+      const priority = addNewRoleActiveData.priority;
+      const notifyEmail = addNewRoleActiveData.notifyEmail;
+      const emailSubject = addNewRoleActiveData.emailSubject;
+      const emailText = addNewRoleActiveData.emailText;
+      const smsText = addNewRoleActiveData.smsText;
+      const useEmailWrapper = addNewRoleActiveData.useEmailWrapper;
+      const ruleDisable = addNewRoleActiveData.ruleDisable;
+      const ruleEnable = addNewRoleActiveData.ruleEnable;
+      const sendCommand = addNewRoleActiveData.sendCommand;
+      const isActive = addNewRoleActiveData.isActive;
+      const description = addNewRoleActiveData.description;
 
       if (
         currentAccountSelected?.accountID &&
@@ -240,7 +311,24 @@ function CreateNewRoleActive({
         if (currentSelectedRoleActive) {
           console.log("xxxxxxxx");
 
-          ModifierassignRulesToDeviceOrGroupe(
+          // ModifierassignRulesToDeviceOrGroupe(
+          //   currentAccountSelected?.accountID ||
+          //     gestionAccountData.find(
+          //       (account) => account.accountID === accountID
+          //     )?.accountID,
+          //   "admin",
+          //   currentAccountSelected?.password ||
+          //     gestionAccountData.find(
+          //       (account) => account.accountID === accountID
+          //     )?.password,
+          //   //
+          //   deviceID,
+          //   groupID,
+          //   statusCode,
+          //   ruleID
+          // );
+        } else {
+          createNewRuleEnGestionAccount(
             currentAccountSelected?.accountID ||
               gestionAccountData.find(
                 (account) => account.accountID === accountID
@@ -250,24 +338,40 @@ function CreateNewRoleActive({
               gestionAccountData.find(
                 (account) => account.accountID === accountID
               )?.password,
-            //
-            deviceID,
-            groupID,
-            statusCode,
-            ruleID
+
+            // imeiNumber,
+            // groupID,
+            addNewRoleData.ruleID,
+            addNewRoleData.isCronRule,
+            addNewRoleData.ruleTag,
+            addNewRoleData.selector,
+            addNewRoleData.actionMask,
+            addNewRoleData.cannedActions,
+            addNewRoleData.priority,
+            addNewRoleData.notifyEmail,
+            addNewRoleData.emailSubject,
+            addNewRoleData.emailText,
+            addNewRoleData.smsText,
+            addNewRoleData.useEmailWrapper,
+            addNewRoleData.ruleDisable,
+            addNewRoleData.ruleEnable,
+            addNewRoleData.sendCommand,
+            addNewRoleData.isActive,
+            addNewRoleData.description
           );
-        } else {
+          setTimeout(() => {
+            assignRulesToDeviceOrGroupe(
+              currentAccountSelected?.accountID,
+              "admin",
+              currentAccountSelected?.password,
+              //
+              deviceID,
+              groupID,
+              statusCode,
+              ruleID || addNewRoleData.ruleID
+            );
+          }, 5000);
           //   console.log(
-          assignRulesToDeviceOrGroupe(
-            currentAccountSelected?.accountID,
-            "admin",
-            currentAccountSelected?.password,
-            //
-            deviceID,
-            groupID,
-            statusCode,
-            ruleID
-          );
         }
 
         navigate("/Gestion_des_roles_actives");
@@ -306,24 +410,27 @@ function CreateNewRoleActive({
     : accountDevices;
 
   const filterRulesGestionAccountData = searchInputTermRole
-    ? (currentAccountSelected
-        ? currentAccountSelected?.accountRules
-        : accountRules
-      )?.filter(
-        (item) =>
-          item?.description
-            .toLowerCase()
-            .includes(searchInputTermRole.toLowerCase()) ||
-          item?.ruleID
-            .toLowerCase()
-            .includes(searchInputTermRole.toLowerCase()) ||
-          item?.accountID
-            .toLowerCase()
-            .includes(searchInputTermRole.toLowerCase())
-      )
-    : currentAccountSelected
-    ? currentAccountSelected?.accountRules
-    : accountRules;
+    ? // (currentAccountSelected
+      //     ? currentAccountSelected?.accountRules
+      //     : accountRules
+      //   )
+      accountRules
+        ?.filter((acct) => acct?.accountID === "sysadmin")
+        ?.filter(
+          (item) =>
+            item?.description
+              .toLowerCase()
+              .includes(searchInputTermRole.toLowerCase()) ||
+            item?.ruleID
+              .toLowerCase()
+              .includes(searchInputTermRole.toLowerCase()) ||
+            item?.accountID
+              .toLowerCase()
+              .includes(searchInputTermRole.toLowerCase())
+        )
+    : // : currentAccountSelected
+      // ? currentAccountSelected?.accountRules
+      accountRules?.filter((acct) => acct?.accountID === "sysadmin");
 
   const filterGroupAccountData = searchInputTermGroup
     ? (currentAccountSelected
@@ -347,7 +454,7 @@ function CreateNewRoleActive({
 
   useEffect(() => {
     if (currentSelectedRoleActive) {
-      setAddNewRoleData({
+      setAddNewRoleActiveData({
         accountID: currentSelectedRoleActive.accountID || "",
         deviceID: currentSelectedRoleActive.deviceID || "",
         imeiNumber: currentSelectedRoleActive.imeiNumber || "",
@@ -377,8 +484,29 @@ function CreateNewRoleActive({
   }, [currentSelectedRoleActive]);
 
   const foundDeviceDescription = accountDevices?.find(
-    (d) => d?.deviceID === addNewRoleData?.deviceID
+    (d) => d?.deviceID === addNewRoleActiveData?.deviceID
   )?.description;
+
+  // useEffect(() => {
+  //   if (
+  //     addNewRoleActiveData?.groupID !== "-" &&
+  //     addNewRoleActiveData?.deviceID !== "-"
+  //   ) {
+  // setAddNewRoleActiveData((prev) => ({
+  //   ...prev,
+  //   deviceID: "-",
+  // }));
+  //     // setdeviceSelectionne("-");
+  //   } else if (
+  //     addNewRoleActiveData?.deviceID !== "-" &&
+  //     addNewRoleActiveData?.groupID !== "-"
+  //   ) {
+  //     setAddNewRoleActiveData((prev) => ({
+  //       ...prev,
+  //       groupID: "-",
+  //     }));
+  //   }
+  // }, [addNewRoleActiveData?.groupID, addNewRoleActiveData?.deviceID]);
 
   return (
     <div className="px-3 rounded-lg  bg-white">
@@ -401,13 +529,13 @@ function CreateNewRoleActive({
 
             <div
               className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewRoleData?.isActive === "1"
+                addNewRoleActiveData?.isActive === "1"
                   ? "bg-gray-100 dark:bg-gray-800/70"
                   : ""
               }`}
               onClick={() => {
                 // setShowIsUserActivePopupText("true");
-                setAddNewRoleData((prev) => ({
+                setAddNewRoleActiveData((prev) => ({
                   ...prev,
                   isActive: "1",
                 }));
@@ -419,13 +547,13 @@ function CreateNewRoleActive({
 
             <div
               className={`cursor-pointer flex justify-between items-center py-1 dark:text-gray-50 dark:hover:bg-gray-800/70 px-3 rounded-md ${
-                addNewRoleData?.isActive === "0"
+                addNewRoleActiveData?.isActive === "0"
                   ? "bg-gray-100 dark:bg-gray-800/70"
                   : ""
               }`}
               onClick={() => {
                 // setShowIsUserActivePopupText("false");
-                setAddNewRoleData((prev) => ({
+                setAddNewRoleActiveData((prev) => ({
                   ...prev,
                   isActive: "0",
                 }));
@@ -471,22 +599,47 @@ function CreateNewRoleActive({
                 <IoSearchOutline className="text-xl " />
               </div>
             </div>
-
-            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
+            <div className="grid grid-cols-2 justify-center  gap-3  mx-4">
               <button
                 onClick={() => {
-                  setAddNewRoleData((prev) => ({
+                  setAddNewRoleActiveData((prev) => ({
                     ...prev,
-                    groupID: "-",
+                    groupID: "*",
                   }));
+                  setAddNewRoleActiveData((prev) => ({
+                    ...prev,
+                    deviceID: "-",
+                  }));
+                  setdeviceSelectionne("");
                   setShowGroupesSelectionnesPopup(false);
                 }}
-                className="py-2 text-white rounded-md bg-orange-500 font-bold"
+                className="py-1.5 text-white rounded-md bg-orange-500 font-bold"
               >
                 {t("Tous")}
               </button>
+              <button
+                onClick={() => {
+                  setAddNewRoleActiveData((prev) => ({
+                    ...prev,
+                    groupID: "-",
+                  }));
+                  // setAddNewRoleActiveData((prev) => ({
+                  //   ...prev,
+                  //   deviceID: "-",
+                  // }));
+                  // setdeviceSelectionne("");
+                  setShowGroupesSelectionnesPopup(false);
+                }}
+                className="py-1.5 text-orange-500  rounded-md bg-white border-2 border-orange-500 font-bold"
+              >
+                {t("Aucune")}
+              </button>{" "}
+            </div>
+
+            <div className="flex mt-4 flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
               {filterGroupAccountData?.map((groupe, index) => {
-                const isSelected = addNewRoleData?.groupID === groupe.groupID;
+                const isSelected =
+                  addNewRoleActiveData?.groupID === groupe.groupID;
 
                 const foundGroupe = gestionAccountData
                   ?.flatMap((account) => account.accountGroupes)
@@ -496,16 +649,21 @@ function CreateNewRoleActive({
                   <div
                     key={index}
                     onClick={() => {
-                      if (addNewRoleData?.groupID === groupe.groupID) {
-                        setAddNewRoleData((prev) => ({
+                      if (addNewRoleActiveData?.groupID === groupe.groupID) {
+                        setAddNewRoleActiveData((prev) => ({
                           ...prev,
                           groupID: "-",
                         }));
                       } else {
-                        setAddNewRoleData((prev) => ({
+                        setAddNewRoleActiveData((prev) => ({
                           ...prev,
                           groupID: groupe?.groupID,
                         }));
+                        setAddNewRoleActiveData((prev) => ({
+                          ...prev,
+                          deviceID: "-",
+                        }));
+                        setdeviceSelectionne("");
                       }
                       setShowGroupesSelectionnesPopup(false);
                     }}
@@ -575,7 +733,40 @@ function CreateNewRoleActive({
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
+            <div className="grid grid-cols-2 gap-3 px-3">
+              <button
+                onClick={() => {
+                  setAddNewRoleActiveData((prev) => ({
+                    ...prev,
+                    deviceID: "*",
+                  }));
+                  setAddNewRoleActiveData((prev) => ({
+                    ...prev,
+                    groupID: "-",
+                  }));
+                  setShowdeviceSelectionnePopup(false);
+                }}
+                className="w-full-- flex justify-center items-center cursor-pointer bg-orange-500 font-semibold rounded-lg py-1.5 text-white "
+              >
+                {t("Tous")}
+              </button>
+              <button
+                onClick={() => {
+                  setdeviceSelectionne("");
+                  setAddNewRoleActiveData((prev) => ({
+                    ...prev,
+                    deviceID: "-",
+                  }));
+                  setdeviceSelectionne("");
+                  setShowdeviceSelectionnePopup(false);
+                }}
+                className="w-full-- border-2 border-orange-500 flex justify-center items-center cursor-pointer bg-white -500 font-semibold rounded-lg py-1.5 text-orange-500 "
+              >
+                {t("Aucune")}
+              </button>
+            </div>
+
+            <div className="flex mt-4 flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
               {filterGestionAccountData?.map((device, index) => {
                 const isSelected = deviceSelectionne === device?.deviceID;
 
@@ -585,15 +776,20 @@ function CreateNewRoleActive({
                     onClick={() => {
                       if (deviceSelectionne === device.deviceID) {
                         setdeviceSelectionne("");
-                        setAddNewRoleData((prev) => ({
+                        setAddNewRoleActiveData((prev) => ({
                           ...prev,
-                          deviceID: "*",
+                          deviceID: "-",
                         }));
+                        setdeviceSelectionne("");
                       } else {
                         setdeviceSelectionne(device.deviceID);
-                        setAddNewRoleData((prev) => ({
+                        setAddNewRoleActiveData((prev) => ({
                           ...prev,
                           deviceID: device?.deviceID,
+                        }));
+                        setAddNewRoleActiveData((prev) => ({
+                          ...prev,
+                          groupID: "-",
                         }));
                         setShowdeviceSelectionnePopup(false);
                       }
@@ -674,8 +870,44 @@ function CreateNewRoleActive({
                 <IoSearchOutline className="text-xl " />
               </div>
             </div>
+            <div
+              onClick={() => {
+                setShowRoleSelectionnePopup(false);
 
-            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto">
+                setRuleSelectionne("");
+                setAddNewRoleActiveData((prev) => ({
+                  ...prev,
+                  ruleID: "",
+                }));
+
+                setAddNewRoleData({
+                  imeiNumber: "",
+                  groupID: "",
+                  ruleID: "",
+                  isCronRule: "",
+                  ruleTag: "",
+                  selector: "",
+                  actionMask: "",
+                  cannedActions: "",
+                  priority: "",
+                  notifyEmail: "",
+                  emailSubject: "",
+                  emailText: "",
+                  smsText: "",
+                  useEmailWrapper: "",
+                  ruleDisable: "",
+                  ruleEnable: "",
+                  sendCommand: "",
+                  isActive: "",
+                  description: "",
+                });
+              }}
+              className="w-full-- flex justify-center items-center cursor-pointer bg-orange-500 font-semibold rounded-lg py-1.5 text-white mx-4"
+            >
+              {t("Aucune")}
+            </div>
+
+            <div className="flex flex-col gap-4 px-3 pb-20 h-[60vh] overflow-auto mt-4">
               {filterRulesGestionAccountData?.map((rule, index) => {
                 const isSelected = ruleSelectionne === rule?.ruleID;
 
@@ -685,15 +917,65 @@ function CreateNewRoleActive({
                     onClick={() => {
                       if (ruleSelectionne === rule.ruleID) {
                         setRuleSelectionne("");
-                        setAddNewRoleData((prev) => ({
+                        setAddNewRoleActiveData((prev) => ({
                           ...prev,
                           ruleID: "",
                         }));
+
+                        setAddNewRoleData({
+                          imeiNumber: "",
+                          groupID: "",
+                          ruleID: "",
+                          isCronRule: "",
+                          ruleTag: "",
+                          selector: "",
+                          actionMask: "",
+                          cannedActions: "",
+                          priority: "",
+                          notifyEmail: "",
+                          emailSubject: "",
+                          emailText: "",
+                          smsText: "",
+                          useEmailWrapper: "",
+                          ruleDisable: "",
+                          ruleEnable: "",
+                          sendCommand: "",
+                          isActive: "",
+                          description: "",
+                        });
                       } else {
                         setRuleSelectionne(rule.ruleID);
-                        setAddNewRoleData((prev) => ({
+                        setAddNewRoleActiveData((prev) => ({
                           ...prev,
                           ruleID: rule?.ruleID,
+                        }));
+
+                        setAddNewRoleData({
+                          imeiNumber: rule.imeiNumber || "",
+                          groupID: rule.groupID || "",
+                          ruleID: rule.ruleID || "",
+                          isCronRule: rule.isCronRule || "",
+                          ruleTag: rule.ruleTag || "",
+                          // selector: rule.selector || "",
+                          actionMask: rule.actionMask || "",
+                          cannedActions: rule.cannedActions || "",
+                          priority: rule.priority || "",
+                          notifyEmail: rule.notifyEmail || "",
+                          emailSubject: rule.emailSubject || "",
+                          emailText: rule.emailText || "",
+                          smsText: rule.smsText || "",
+                          useEmailWrapper: rule.useEmailWrapper || "",
+                          ruleDisable: rule.ruleDisable || "",
+                          ruleEnable: rule.ruleEnable || "",
+                          sendCommand: rule.sendCommand || "",
+                          isActive: rule.isActive === "true" ? "1" : "0" || "",
+                          description: rule.description || "",
+                        });
+
+                        setAddNewRoleData((prev) => ({
+                          ...prev,
+                          // selector: rule?.selector + "---" + rule?.ruleID,
+                          selector: '$SYSRULE("' + rule?.ruleID + '")',
                         }));
                       }
                       setShowRoleSelectionnePopup(false);
@@ -747,6 +1029,8 @@ function CreateNewRoleActive({
         </div>
       )}
 
+      {/* ////////////////////////////////////////////// */}
+
       {/* Popup pour la confirmation du mot de passe */}
       <ConfirmationPassword
         showConfirmPassword={showConfirmAddGroupeGestionPopup}
@@ -782,19 +1066,25 @@ function CreateNewRoleActive({
 
             <>
               <form onSubmit={handleSubmit} className="space-y-4 px-4">
-                {foundDeviceDescription && (
+                {/* {foundDeviceDescription && (
                   <p className=" text-md font-medium leading-6 text-gray-700 dark:text-gray-300">
                     {t("Nom de l'appareil")} : <br />{" "}
                     <span className="font-normal pl-4">
-                      {foundDeviceDescription}
+                      {foundDeviceDescription || `${t("Aucune")}`}
                     </span>
                   </p>
-                )}
+                )} */}
+
                 {/* Champs du formulaire */}
                 {[
+                  ////////////////////////////////////////////////////////
                   {
                     id: "deviceID",
-                    label: `${t("deviceID")}`,
+                    label: `${t("deviceID")} ${
+                      foundDeviceDescription
+                        ? "---- (" + foundDeviceDescription + ")"
+                        : ""
+                    }`,
                     placeholder: "deviceID",
                   },
                   {
@@ -803,14 +1093,14 @@ function CreateNewRoleActive({
                     placeholder: "groupID",
                   },
                   {
-                    id: "ruleID",
-                    label: `${t("ruleID")}`,
-                    placeholder: "ruleID",
+                    id: "statusCode",
+                    label: `${t("Code de statut")}`,
+                    placeholder: "Code de statut",
                   },
                   {
-                    id: "statusCode",
-                    label: `${t("statusCode")}`,
-                    placeholder: "statusCode",
+                    id: "ruleID",
+                    label: `${t("Liste des rôles prédéfinis")}`,
+                    placeholder: "Liste des rôles prédéfinis",
                   },
                 ].map((field) => {
                   const requiredFields = [
@@ -829,7 +1119,7 @@ function CreateNewRoleActive({
                       >
                         {field.label}{" "}
                         {requiredFields.includes(field.id) &&
-                          !addNewRoleData[field.id] && (
+                          !addNewRoleActiveData[field.id] && (
                             <span className="text-red-600 text-lg"> *</span>
                           )}
                       </label>
@@ -856,9 +1146,13 @@ function CreateNewRoleActive({
                           className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
                           <p>
-                            {addNewRoleData?.deviceID === "*"
-                              ? `${t("Tous")}`
-                              : addNewRoleData?.deviceID}
+                            {addNewRoleActiveData?.deviceID === "*"
+                              ? t("Tous")
+                              : addNewRoleActiveData?.deviceID === "-"
+                              ? t("Aucune")
+                              : addNewRoleActiveData?.deviceID === ""
+                              ? t("Non défini")
+                              : addNewRoleActiveData?.deviceID}
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
@@ -870,7 +1164,8 @@ function CreateNewRoleActive({
                           className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
                           <p>
-                            {addNewRoleData?.ruleID || "Choisissez un role"}
+                            {addNewRoleActiveData?.ruleID ||
+                              "Choisissez un role"}
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
@@ -882,7 +1177,7 @@ function CreateNewRoleActive({
                           className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
                           <p>
-                            {addNewRoleData?.isActive === "1"
+                            {addNewRoleActiveData?.isActive === "1"
                               ? "true"
                               : "false"}
                           </p>
@@ -894,7 +1189,7 @@ function CreateNewRoleActive({
                           name={field.id}
                           type="text"
                           placeholder={field.placeholder}
-                          value={addNewRoleData[field.id]}
+                          value={addNewRoleActiveData[field.id]}
                           onChange={handleChange}
                           required
                           className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
@@ -905,7 +1200,7 @@ function CreateNewRoleActive({
                             id="statusCode"
                             name="statusCode"
                             placeholder={field.placeholder}
-                            value={addNewRoleData[field.id]}
+                            value={addNewRoleActiveData[field.id]}
                             onChange={handleChange}
                             required
                             className="block w-full focus:outline-none  py-1.5 px-3 text-gray-900     "
@@ -927,9 +1222,13 @@ function CreateNewRoleActive({
                           className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
                         >
                           <p>
-                            {addNewRoleData?.groupID === "-"
-                              ? `${t("Tous")}`
-                              : addNewRoleData?.groupID}
+                            {addNewRoleActiveData?.groupID === "*"
+                              ? t("Tous")
+                              : addNewRoleActiveData?.groupID === "-"
+                              ? t("Aucune")
+                              : addNewRoleActiveData?.groupID === ""
+                              ? t("Non défini")
+                              : addNewRoleActiveData?.groupID}
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
@@ -939,13 +1238,11 @@ function CreateNewRoleActive({
                           name={field.id}
                           type="text"
                           placeholder={field.placeholder}
-                          value={addNewRoleData[field.id]}
+                          value={addNewRoleActiveData[field.id]}
                           onChange={handleChange}
-                          disabled={
-                            currentSelectedRoleActive && field.id === "ruleID"
-                          }
-                          // { field.id === "groupID" && disable}
-                          // disabled={field.id === "userID"}
+                          // disabled
+                          // disabled={addNewRoleActiveData.ruleID}
+
                           required={requiredFields.includes(field.id)}
                           className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
@@ -953,6 +1250,188 @@ function CreateNewRoleActive({
                     </div>
                   );
                 })}
+
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+                {/* /////////////////////////////////////////////////////////////////////////////// */}
+
+                <div
+                  onClick={() => {
+                    console.log(
+                      "addNewRoleActiveData.ruleID",
+                      addNewRoleActiveData,
+                      addNewRoleData
+                    );
+                  }}
+                  className="w-full border-b-2 border-b-orange-600 my-6 py-6"
+                ></div>
+                <div className="w-full border-b-2-- border-b-orange-600 my-6 py-6"></div>
+                <div
+                  className={`${
+                    addNewRoleActiveData?.ruleID
+                      ? "border rounded-lg border-red-500 p-3 bg-red-50"
+                      : ""
+                  } `}
+                  // className="bg-red-50 rounded-lg px-2 pt-4 pb-3"
+                >
+                  {/* Champs du formulaire */}
+                  {[
+                    {
+                      id: "ruleID",
+                      label: `${t("ruleID")}`,
+                      placeholder: "ruleID",
+                    },
+                    {
+                      id: "description",
+                      label: `${t("description")}`,
+                      placeholder: "description",
+                    },
+
+                    {
+                      id: "notifyEmail",
+                      label: `${t("notifyEmail")}`,
+                      placeholder: `${t("notifyEmail")}`,
+                    },
+                    //
+                    {
+                      id: "emailSubject",
+                      label: `${t("emailSubject")}`,
+                      placeholder: `${t("emailSubject")}`,
+                    },
+
+                    {
+                      id: "smsText",
+                      label: `${t("smsText")}`,
+                      placeholder: `${t("smsText")}`,
+                    },
+
+                    {
+                      id: "isActive",
+                      label: `${t("isActive")}`,
+                      placeholder: `${t("isActive")}`,
+                    },
+                    {
+                      id: "selector",
+                      label: `${t("selector")}`,
+                      placeholder: `${t("selector")}`,
+                    },
+                    {
+                      id: "emailText",
+                      label: `${t("emailText")}`,
+                      placeholder: `${t("emailText")}`,
+                    },
+                  ].map((field) => {
+                    const requiredFields = [
+                      "accountID",
+                      "ruleID",
+                      "description",
+                      "emailSubject",
+                      "emailText",
+                      "selector",
+                    ];
+                    return (
+                      <div
+                        // onClick={(e) => {
+                        //   if (addNewRoleActiveData?.ruleID) {
+                        //     e.preventDefault();
+                        //     e.stopPropagation();
+                        //     return;
+                        //   }
+                        //   // ton code si clic autorisé
+                        // }}
+                        // className="bg-orange-200"
+                        key={field.id}
+                      >
+                        <label
+                          htmlFor={field.id}
+                          className="block-- flex justify-between items-center text-md font-medium leading-6 text-gray-700 dark:text-gray-300"
+                        >
+                          {field.label}{" "}
+                          {requiredFields.includes(field.id) &&
+                            !addNewRoleData[field.id] && (
+                              <span className="text-red-600 text-lg"> *</span>
+                            )}
+                        </label>
+
+                        {/*  */}
+                        {field.id === "accountID" ? (
+                          <div
+                            onClick={() => {
+                              setChooseOtherAccountGestion(true);
+                            }}
+                            className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                          >
+                            <p>
+                              {accountIdFromRole ||
+                                `${t("Pas de compte sélectionner")}`}
+                            </p>
+                            <FaChevronDown className="text-gray-700 mr-4" />
+                          </div>
+                        ) : field.id === "emailText" ? (
+                          <textarea
+                            id={field.id}
+                            name={field.id}
+                            disabled={addNewRoleActiveData?.ruleID}
+                            type="text"
+                            placeholder={field.placeholder}
+                            value={addNewRoleData[field.id]}
+                            onChange={handleChangePreset}
+                            required
+                            className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                          />
+                        ) : field.id === "isActive" ? (
+                          <select
+                            id="isActive"
+                            name="isActive"
+                            value={addNewRoleData[field.id]}
+                            onChange={handleChangePreset}
+                            disabled={addNewRoleActiveData?.ruleID}
+                            required
+                            className="  w-full   border-0 py-2 px-3 text-gray-900       border-b focus:outline-none  "
+                          >
+                            <option value="">{t("Activer le Role")} ?</option>
+                            <option value="1">{t("oui")}</option>
+                            <option value="0">{t("non")}</option>
+                          </select>
+                        ) : field.id === "groupID" ? (
+                          <div
+                            onClick={() => {
+                              setShowGroupesSelectionnesPopup(true);
+                            }}
+                            className="pl-4 pt-1 pb-2 border-b flex justify-between items-center text-gray-600 w-full cursor-pointer"
+                          >
+                            <p>
+                              {addNewRoleData?.groupID === "-"
+                                ? `${t("Tous")}`
+                                : addNewRoleData?.groupID}
+                            </p>
+                            <FaChevronDown className="text-gray-700 mr-4" />
+                          </div>
+                        ) : (
+                          <input
+                            id={field.id}
+                            name={field.id}
+                            type="text"
+                            placeholder={field.placeholder}
+                            value={addNewRoleData[field.id]}
+                            onChange={handleChangePreset}
+                            disabled={addNewRoleActiveData?.ruleID}
+                            // disabled={field.id === "ruleID"}
+                            // { field.id === "groupID" && disable}
+                            // disabled={field.id === "userID"}
+                            required={requiredFields.includes(field.id)}
+                            // required
+                            className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
 
                 {errorID && (
                   <p className="flex items-start gap-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 text-md translate-y-4 px-4 py-1 rounded-md text-center">

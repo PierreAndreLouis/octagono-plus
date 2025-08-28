@@ -113,6 +113,8 @@ import AjouterGeofence from "./components/location_vehicule/AjouterGeofence";
 import GestionDesRolesActive from "./pages/GestionDesRolesActive";
 import CreateNewRoleActive from "./components/gestion_des_comptes/CreateNewRoleActive";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import CreateNewRoleForCompte from "./components/gestion_des_comptes/CreateNewRoleForCompte";
+import GestionDesRolesForCompte from "./pages/GestionDesRolesForCompte";
 
 function App() {
   const {
@@ -1281,6 +1283,34 @@ function App() {
             />
 
             <Route
+              path="/Gestion_des_roles_compte"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <GestionDesRolesForCompte
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            setCurrentSelectedRole={setCurrentSelectedRole}
+                            currentSelectedRole={currentSelectedRole}
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
+
+            <Route
               path="/Gestion_des_roles_actives"
               element={
                 <PrivateRoute
@@ -1341,6 +1371,67 @@ function App() {
                 />
               }
             />
+
+            <Route
+              path="/Ajouter_nouveau_role_compte"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewRoleForCompte
+                            accountIdFromRole={accountIdFromRole}
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            currentSelectedRole={currentSelectedRole}
+                            setCurrentSelectedRole={setCurrentSelectedRole}
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
+
+            <Route
+              path="/Modifier_role_compte"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <CreateNewRoleForCompte
+                            accountIdFromRole={accountIdFromRole}
+                            documentationPage={documentationPage}
+                            setDocumentationPage={setDocumentationPage}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setChooseOtherAccountGestion={
+                              setChooseOtherAccountGestion
+                            }
+                            currentSelectedRole={currentSelectedRole}
+                            setCurrentSelectedRole={setCurrentSelectedRole}
+                          />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
+
             <Route
               path="/Ajouter_nouveau_role_active"
               element={
