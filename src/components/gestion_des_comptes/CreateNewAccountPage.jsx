@@ -225,11 +225,24 @@ function CreateNewAccountPage({
   // Pour mettre a jour les nouvelle donnee du véhicule a modifier
   useEffect(() => {
     if (currentAccountSelected && !isCreatingNewElement) {
+      let phoneCode = currentAccountSelected.phoneCode || "";
+      let contactPhone = currentAccountSelected.contactPhone || "";
+
+      if (/^(509|809|829|849)/.test(contactPhone)) {
+        phoneCode = contactPhone.substring(0, 3);
+        contactPhone = contactPhone.substring(3);
+      }
+
       setAddNewAccountData({
         accountID: currentAccountSelected.accountID || "",
         description: currentAccountSelected.description || "",
         displayName: currentAccountSelected.displayName || "",
-        contactPhone: currentAccountSelected.contactPhone || "",
+        contactPhone: contactPhone,
+        phoneCode: phoneCode,
+
+        // contactPhone: currentAccountSelected.contactPhone || "",
+        // phoneCode: currentAccountSelected.phoneCode || "",
+
         contactName: currentAccountSelected.contactName || "",
         contactEmail: currentAccountSelected.contactEmail || "",
         addressCity: currentAccountSelected.addressCity || "",

@@ -339,6 +339,14 @@ function CreateNewUserGestion({
   //   Pour mettre a jour les nouvelle donnee du véhicule a modifier
   useEffect(() => {
     if (currentSelectedUserToConnect && !isCreatingNewElement) {
+      let phoneCode = currentSelectedUserToConnect.phoneCode || "";
+      let contactPhone = currentSelectedUserToConnect.contactPhone || "";
+
+      if (/^(509|809|829|849)/.test(contactPhone)) {
+        phoneCode = contactPhone.substring(0, 3);
+        contactPhone = contactPhone.substring(3);
+      }
+
       setAddNewUserData({
         accountID: currentSelectedUserToConnect.accountID || "",
         userID: currentSelectedUserToConnect.userID || "",
@@ -348,7 +356,9 @@ function CreateNewUserGestion({
         notifyEmail: currentSelectedUserToConnect.notifyEmail || "",
         isActive: currentSelectedUserToConnect.isActive === "true" ? "1" : "0",
         // isActive: currentSelectedUserToConnect.isActive === "true" ? "1" : "0",
-        contactPhone: currentSelectedUserToConnect.contactPhone || "",
+        // contactPhone: currentSelectedUserToConnect.contactPhone || "",
+        contactPhone: contactPhone,
+        phoneCode: phoneCode,
         contactName: currentSelectedUserToConnect.contactName || "",
         userType: currentSelectedUserToConnect.userType || "",
         addressCity: currentSelectedUserToConnect.addressCity || "",

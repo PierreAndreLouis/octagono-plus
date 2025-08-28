@@ -298,6 +298,14 @@ function CreateNewDeviceGestion({
   useEffect(() => {
     if (isCreatingNewElement) return;
     if (currentSelectedDeviceGestion) {
+      let phoneCode = currentSelectedDeviceGestion.phoneCode || "";
+      let simPhoneNumber = currentSelectedDeviceGestion.simPhoneNumber || "";
+
+      if (/^(509|809|829|849)/.test(simPhoneNumber)) {
+        phoneCode = simPhoneNumber.substring(0, 3);
+        simPhoneNumber = simPhoneNumber.substring(3);
+      }
+
       setAddVehicleData({
         accountID: currentSelectedDeviceGestion.accountID || "",
         deviceID: currentSelectedDeviceGestion.deviceID || "",
@@ -306,7 +314,12 @@ function CreateNewDeviceGestion({
         uniqueID: currentSelectedDeviceGestion.uniqueID || "---",
         imeiNumber: currentSelectedDeviceGestion.imeiNumber || "",
         licensePlate: currentSelectedDeviceGestion.licensePlate || "",
-        simPhoneNumber: currentSelectedDeviceGestion.simPhoneNumber || "",
+
+        simPhoneNumber: simPhoneNumber,
+        phoneCode: phoneCode,
+
+        // simPhoneNumber: currentSelectedDeviceGestion.simPhoneNumber || "",
+
         displayName: currentSelectedDeviceGestion.displayName || "",
 
         notes: currentSelectedDeviceGestion.notes || "",

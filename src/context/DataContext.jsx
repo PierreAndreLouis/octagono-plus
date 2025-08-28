@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.5";
+  let versionApplication = "8.6";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -3656,6 +3656,33 @@ const DataContextProvider = ({ children }) => {
               : rule
           )
         );
+        setListeGestionDesRules((prevRules) =>
+          prevRules.map((rule) =>
+            rule.ruleID === ruleID
+              ? {
+                  ...rule,
+
+                  ruleID,
+                  isCronRule,
+                  ruleTag,
+                  selector,
+                  actionMask,
+                  cannedActions,
+                  priority,
+                  notifyEmail,
+                  emailSubject,
+                  emailText,
+                  smsText,
+                  useEmailWrapper,
+                  ruleDisable,
+                  ruleEnable,
+                  sendCommand,
+                  isActive,
+                  description,
+                }
+              : rule
+          )
+        );
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
@@ -6465,6 +6492,13 @@ const DataContextProvider = ({ children }) => {
 
         if (isDashboardHomePage) {
           setAccountGeofences((prevGeofences) =>
+            prevGeofences?.map((geofence) =>
+              geofence.geozoneID === geozoneID
+                ? { ...geofence, description, isActive, color, coordinates }
+                : geofence
+            )
+          );
+          setListeGestionDesGeofences((prevGeofences) =>
             prevGeofences?.map((geofence) =>
               geofence.geozoneID === geozoneID
                 ? { ...geofence, description, isActive, color, coordinates }
