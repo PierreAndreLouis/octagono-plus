@@ -157,6 +157,16 @@ function App() {
     showPageRaccourciComponent,
     setShowPageRaccourciComponent,
     isItUser,
+    isCreatingNewElement,
+    setIsCreatingNewElement,
+    chooseOneAccountToContinue,
+    setChooseOneAccountToContinue,
+    chooseOtherAccountGestion,
+    setChooseOtherAccountGestion,
+    showChooseItemToModifyMessage,
+    setshowChooseItemToModifyMessage,
+    showChooseItemToModifyPage,
+    setshowChooseItemToModifyPage,
   } = useContext(DataContext);
 
   const location = useLocation();
@@ -336,8 +346,6 @@ function App() {
     }
   };
 
-  const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
-    useState(false);
   const [searchInputTerm, setSearchInputTerm] = useState("");
 
   const filterGestionAccountData = searchInputTerm
@@ -403,9 +411,6 @@ function App() {
     useState(false);
 
   const isDashBoardComptnent = true;
-
-  const [chooseOneAccountToContinue, setChooseOneAccountToContinue] =
-    useState(false);
 
   const [chooseAccountFromGeozoneSection, setChooseAccountFromGeozoneSection] =
     useState(false);
@@ -558,11 +563,6 @@ function App() {
   const [showChooseCompteToModifyMessage, setShowChooseCompteToModifyMessage] =
     useState(false);
 
-  const [showChooseItemToModifyMessage, setshowChooseItemToModifyMessage] =
-    useState("");
-  const [showChooseItemToModifyPage, setshowChooseItemToModifyPage] =
-    useState("");
-
   useEffect(() => {
     if (showChooseItemToModifyMessage) {
       const timer = setTimeout(() => {
@@ -576,8 +576,6 @@ function App() {
   const [currentSelectedRole, setCurrentSelectedRole] = useState(null);
   const [currentSelectedRoleActive, setCurrentSelectedRoleActive] =
     useState(null);
-
-  const [isCreatingNewElement, setIsCreatingNewElement] = useState(true);
 
   return (
     <div className="dark:bg-gray-700 md:p-4 bg-gray-100 transition-all">
@@ -930,7 +928,13 @@ function App() {
                             setChosseOtherGroupeDashboard={
                               setChosseOtherGroupeDashboard
                             }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
                             allDevices={allDevices}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
                           />
                         </Suspense>
                       </div>
@@ -958,6 +962,12 @@ function App() {
                               setChosseOtherGroupeDashboard
                             }
                             allDevices={allDevices}
+                            setChooseOneAccountToContinue={
+                              setChooseOneAccountToContinue
+                            }
+                            setshowChooseItemToModifyMessage={
+                              setshowChooseItemToModifyMessage
+                            }
                           />
                         </Suspense>
                       </div>

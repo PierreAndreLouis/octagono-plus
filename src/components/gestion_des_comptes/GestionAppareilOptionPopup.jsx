@@ -25,11 +25,6 @@ function GestionAppareilOptionPopup({
   setDocumentationPage,
   showOptionAppareilOptionPopup,
   setShowOptionAppareilOptionPopup,
-  setChooseOneAccountToContinue,
-  setChooseOtherAccountGestion,
-  setMoveDeviceToOtherCompte,
-  isCreatingNewElement,
-  setIsCreatingNewElement,
 }) {
   const {
     currentSelectedUserToConnect,
@@ -56,6 +51,12 @@ function GestionAppareilOptionPopup({
     smsError,
     lancerAppel,
     isDashboardHomePage,
+    setChooseOneAccountToContinue,
+    setChooseOtherAccountGestion,
+
+    isCreatingNewElement,
+    setIsCreatingNewElement,
+    setMoveDeviceToOtherCompte,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -567,10 +568,13 @@ function GestionAppareilOptionPopup({
                   onClick={() => {
                     // setDocumentationPage("Modifier_appareil");
                     // navigate("/Modifier_appareil");
+                    // setMoveDeviceToOtherCompte(true);
                     setChooseOneAccountToContinue(true);
                     setChooseOtherAccountGestion(true);
-                    setMoveDeviceToOtherCompte(true);
+                    // setMoveDeviceToOtherCompte(true);
                     setShowOptionAppareilOptionPopup(false);
+                    setMoveDeviceToOtherCompte(true);
+                    // console.log("setMoveDeviceToOtherCompte(true)");
                   }}
                   className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
                 >

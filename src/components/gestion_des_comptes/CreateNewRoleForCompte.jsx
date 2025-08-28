@@ -115,7 +115,7 @@ function CreateNewRoleForCompte({
       return;
     }
 
-    if (!currentAccountSelected) {
+    if (!currentAccountSelected && !currentSelectedRole) {
       // setErrorID(`${t("Veuillez choisir un compte")}`);
       setChooseOneAccountToContinue(true);
       setChooseOtherAccountGestion(true);
@@ -224,93 +224,81 @@ function CreateNewRoleForCompte({
       console.log("isActive ", isActive);
       console.log("description ", description);
 
-      if (
-        currentAccountSelected?.accountID &&
-        currentAccountSelected?.password
-      ) {
-        console.log(
+      // if (
+      //   currentAccountSelected?.accountID &&
+      //   currentAccountSelected?.password
+      // ) {
+
+      if (currentSelectedRole) {
+        console.log("xxxxxxxx");
+
+        ModifyRuleEnGestionAccount(
+          // currentAccountSelected?.accountID,
+          // "admin",
+          // currentAccountSelected?.password,
+
+          currentAccountSelected?.accountID ||
+            gestionAccountData.find(
+              (account) => account.accountID === currentSelectedRole?.accountID
+            )?.accountID,
+          "admin",
+          currentAccountSelected?.password ||
+            gestionAccountData.find(
+              (account) => account.accountID === currentSelectedRole?.accountID
+            )?.password,
+
+          // imeiNumber,
+          // groupID,
+          ruleID,
+          isCronRule,
+          ruleTag,
+          selector,
+          actionMask,
+          cannedActions,
+          priority,
+          notifyEmail,
+          emailSubject,
+          emailText,
+          smsText,
+          useEmailWrapper,
+          ruleDisable,
+          ruleEnable,
+          sendCommand,
+          isActive,
+          description
+        );
+      } else {
+        createNewRuleEnGestionAccount(
           currentAccountSelected?.accountID,
           "admin",
           currentAccountSelected?.password,
 
+          // imeiNumber,
+          // groupID,
           ruleID,
-
+          isCronRule,
+          ruleTag,
+          selector,
+          actionMask,
+          cannedActions,
+          priority,
+          notifyEmail,
           emailSubject,
           emailText,
-          selector,
-          isActive
+          smsText,
+          useEmailWrapper,
+          ruleDisable,
+          ruleEnable,
+          sendCommand,
+          isActive,
+          description
         );
-
-        if (currentSelectedRole) {
-          console.log("xxxxxxxx");
-
-          ModifyRuleEnGestionAccount(
-            // currentAccountSelected?.accountID,
-            // "admin",
-            // currentAccountSelected?.password,
-
-            currentAccountSelected?.accountID ||
-              gestionAccountData.find(
-                (account) => account.accountID === accountID
-              )?.accountID,
-            "admin",
-            currentAccountSelected?.password ||
-              gestionAccountData.find(
-                (account) => account.accountID === accountID
-              )?.password,
-
-            // imeiNumber,
-            // groupID,
-            ruleID,
-            isCronRule,
-            ruleTag,
-            selector,
-            actionMask,
-            cannedActions,
-            priority,
-            notifyEmail,
-            emailSubject,
-            emailText,
-            smsText,
-            useEmailWrapper,
-            ruleDisable,
-            ruleEnable,
-            sendCommand,
-            isActive,
-            description
-          );
-        } else {
-          createNewRuleEnGestionAccount(
-            currentAccountSelected?.accountID,
-            "admin",
-            currentAccountSelected?.password,
-
-            // imeiNumber,
-            // groupID,
-            ruleID,
-            isCronRule,
-            ruleTag,
-            selector,
-            actionMask,
-            cannedActions,
-            priority,
-            notifyEmail,
-            emailSubject,
-            emailText,
-            smsText,
-            useEmailWrapper,
-            ruleDisable,
-            ruleEnable,
-            sendCommand,
-            isActive,
-            description
-          );
-        }
-
-        navigate("/Gestion_des_roles_compte");
-
-        setDocumentationPage("Gestion_des_roles");
       }
+
+      navigate("/Gestion_des_roles_compte");
+
+      setDocumentationPage("Gestion_des_roles");
+      // }
 
       setShowConfirmAddGroupeGestionPopup(false);
       setErrorMessage("");
@@ -828,7 +816,11 @@ function CreateNewRoleForCompte({
                           name={field.id}
                           type="text"
                           placeholder={field.placeholder}
-                          value={addNewRoleData[field.id]}
+                          // value={addNewRoleData[field.id]}
+                          value={addNewRoleData[field.id]?.replace(
+                            /\\n/g,
+                            "\n"
+                          )}
                           onChange={handleChange}
                           required
                           className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"

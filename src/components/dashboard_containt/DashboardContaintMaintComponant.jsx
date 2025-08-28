@@ -27,6 +27,8 @@ import StatisticDashboard from "./StatisticDashboard";
 function DashboardContaintMaintComponant({
   setDocumentationPage,
   setChosseOtherGroupeDashboard,
+  setshowChooseItemToModifyMessage,
+  setChooseOneAccountToContinue,
 }) {
   const {
     scrollToTop,
@@ -79,6 +81,7 @@ function DashboardContaintMaintComponant({
     testAlertListe,
     versionApplication,
     setIsFilteredCartePositionByCategorie,
+    chooseOtherAccountGestion,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -1158,7 +1161,7 @@ function DashboardContaintMaintComponant({
   };
   return (
     <div className="pb-20 md:pb-0 overflow-hidden">
-      {showStatisticDeviceListeDashboard && (
+      {showStatisticDeviceListeDashboard && !chooseOtherAccountGestion && (
         <div className="fixed px-3-- inset-0 bg-black/50 z-[99999999999999999999] flex justify-center items-center">
           <div className="bg-white overflow-hidden relative rounded-lg w-full md:max-w-[80vw] ">
             <div className="absolute flex justify-center items-center top-0 left-0 right-0 h-[4rem] bg-orange-200 z-[8]">
@@ -1204,6 +1207,10 @@ function DashboardContaintMaintComponant({
                   allDevices={allDevices}
                   setExpandSection={setExpandSection}
                   setSelectedVehicleToShowInMap={setSelectedVehicleToShowInMap}
+                  setshowChooseItemToModifyMessage={
+                    setshowChooseItemToModifyMessage
+                  }
+                  setChooseOneAccountToContinue={setChooseOneAccountToContinue}
                 />
               </div>
             </div>

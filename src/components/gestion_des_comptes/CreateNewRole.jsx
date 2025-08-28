@@ -206,26 +206,6 @@ function CreateNewRole({
       const isActive = addNewRoleData.isActive;
       const description = addNewRoleData.description;
 
-      // console.log("accountID ", accountID);
-      console.log("imeiNumber ", imeiNumber);
-      console.log("groupID ", groupID);
-      console.log("isCronRule ", isCronRule);
-      console.log("ruleTag ", ruleTag);
-      console.log("selector ", selector);
-      console.log("actionMask ", actionMask);
-      console.log("cannedActions ", cannedActions);
-      console.log("priority ", priority);
-      console.log("notifyEmail ", notifyEmail);
-      console.log("emailSubject ", emailSubject);
-      console.log("emailText ", emailText);
-      console.log("smsText ", smsText);
-      console.log("useEmailWrapper ", useEmailWrapper);
-      console.log("ruleDisable ", ruleDisable);
-      console.log("ruleEnable ", ruleEnable);
-      console.log("sendCommand ", sendCommand);
-      console.log("isActive ", isActive);
-      console.log("description ", description);
-
       const accountID = localStorage.getItem("adminAccount");
       const password = localStorage.getItem("adminPassword");
       // if (
@@ -813,7 +793,11 @@ function CreateNewRole({
                           name={field.id}
                           type="text"
                           placeholder={field.placeholder}
-                          value={addNewRoleData[field.id]}
+                          value={addNewRoleData[field.id]?.replace(
+                            /\\n/g,
+                            "\n"
+                          )}
+                          // value={addNewRoleData[field.id]}
                           onChange={handleChange}
                           required
                           className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"

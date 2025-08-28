@@ -623,7 +623,7 @@ function SideBarSysadmin({
       {/*  */}
       <div
         onClick={() => {
-          scrollToTop();
+          // scrollToTop();
         }}
         className="h-[85vh] pb-[20rem] mt-5 font-semibold-- flex flex-col overflow-auto"
         style={{ scrollbarColor: "#ffa500" }}
@@ -1353,10 +1353,11 @@ function SideBarSysadmin({
                   } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50-- cursor-pointer px-3`}
                 >
                   <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
-                  <div className="flex w-full justify-between">
+                  <div className="flex w-full justify-between items-center">
                     <p className="text-gray-600 font-semibold">
                       {t("Gestion des Roles")}
                     </p>
+                    <FaChevronDown />
                   </div>
                 </div>
               </div>
@@ -1422,11 +1423,11 @@ function SideBarSysadmin({
                       closeSideBar();
                       setShowSideBar2(false);
                       if (currentAccountSelected) {
-                        setListeGestionDesRulesActive(
-                          currentAccountSelected?.accountRulesActive
+                        setListeGestionDesRules(
+                          currentAccountSelected?.accountRules
                         );
                       } else {
-                        setListeGestionDesRulesActive(accountRulesActive);
+                        setListeGestionDesRules(accountRules);
                       }
                     }}
                     className={`${

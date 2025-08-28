@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.4";
+  let versionApplication = "8.5";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -82,6 +82,20 @@ const DataContextProvider = ({ children }) => {
     showAnnimationProgresseBarDashboard,
     setShowAnnimationProgresseBarDashboard,
   ] = useState(true);
+
+  const [isCreatingNewElement, setIsCreatingNewElement] = useState(true);
+  const [chooseOneAccountToContinue, setChooseOneAccountToContinue] =
+    useState(false);
+
+  const [chooseOtherAccountGestion, setChooseOtherAccountGestion] =
+    useState(false);
+
+  const [moveDeviceToOtherCompte, setMoveDeviceToOtherCompte] = useState(false);
+
+  const [showChooseItemToModifyMessage, setshowChooseItemToModifyMessage] =
+    useState("");
+  const [showChooseItemToModifyPage, setshowChooseItemToModifyPage] =
+    useState("");
 
   const [documentationPage, setDocumentationPage] = useState("Dashboard");
   const [showPageRaccourciComponent, setShowPageRaccourciComponent] =
@@ -8991,6 +9005,10 @@ const DataContextProvider = ({ children }) => {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     }
 
+    if (host === "octagonoplus.com" && country === "rd") {
+      emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
+    }
+
     const emailText = `
 Client : ${accountConnected}  \n
 Utilisateur : ${user}  \n
@@ -9043,7 +9061,7 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
   const [updateAutoSetting, setUpdateAutoSetting] = useState(() => {
     // Charger depuis localStorage au démarrage
     const saved = localStorage.getItem("updateAutoSetting");
-    return saved ? JSON.parse(saved) : false;
+    return saved ? JSON.parse(saved) : true;
   });
 
   useEffect(() => {
@@ -9484,6 +9502,18 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
         setShowPageRaccourciComponent,
         isItUser,
         updateItUserDataFonction,
+        isCreatingNewElement,
+        setIsCreatingNewElement,
+        chooseOneAccountToContinue,
+        setChooseOneAccountToContinue,
+        chooseOtherAccountGestion,
+        setChooseOtherAccountGestion,
+        moveDeviceToOtherCompte,
+        setMoveDeviceToOtherCompte,
+        showChooseItemToModifyMessage,
+        setshowChooseItemToModifyMessage,
+        showChooseItemToModifyPage,
+        setshowChooseItemToModifyPage,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

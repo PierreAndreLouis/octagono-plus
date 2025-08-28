@@ -390,7 +390,7 @@ function GestionDesRoles({
                                       <p className="font-semibold mt-3  text-orange-600">
                                         {t("emailText")} :
                                       </p>
-                                      <span className=" dark:text-orange-500 border border-orange-300 mt-2 mb-2 rounded-lg bg-orange-50 text-gray-600 pl-5">
+                                      <span className=" dark:text-orange-500 border border-orange-300 mt-2 mb-2 rounded-lg bg-orange-50 text-gray-600 pl-2">
                                         {/* {rule?.emailText}{" "} */}
                                         <div
                                           className="whitespace-pre-line font-mono"

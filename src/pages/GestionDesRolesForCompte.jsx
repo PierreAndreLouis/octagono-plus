@@ -351,12 +351,29 @@ function GestionDesRolesForCompte({
                                         {rule?.emailSubject}{" "}
                                       </span>
                                     </div>{" "}
-                                    <div className="flex flex-wrap border-b py-1">
+                                    {/* <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold- text-gray-700">
                                         {t("emailText")} :
                                       </p>
                                       <span className=" dark:text-orange-500 font-semibold text-gray-600 pl-5">
                                         {rule?.emailText}{" "}
+                                      </span>
+                                    </div>{" "} */}
+                                    <div className="flex flex-col flex-wrap border-b py-1">
+                                      <p className="font-semibold mt-3  text-orange-600">
+                                        {t("emailText")} :
+                                      </p>
+                                      <span className=" dark:text-orange-500 border border-orange-300 mt-2 mb-2 rounded-lg bg-orange-50 text-gray-600 pl-2">
+                                        {/* {rule?.emailText}{" "} */}
+                                        <div
+                                          className="whitespace-pre-line font-mono"
+                                          dangerouslySetInnerHTML={{
+                                            __html: rule?.emailText.replace(
+                                              /\\n/g,
+                                              "\n"
+                                            ),
+                                          }}
+                                        />{" "}
                                       </span>
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">

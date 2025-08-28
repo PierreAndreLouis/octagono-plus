@@ -27,20 +27,15 @@ import Logout from "../components/login/Logout";
 
 function ListeDesVehiculesGestion({
   setDocumentationPage,
-  setChooseOneAccountToContinue,
-  setChooseOtherAccountGestion,
-  chooseOtherAccountGestion,
+
   fromDashboard = false,
 
   setStatisticFilteredDeviceListeText,
   showChooseAppareilToModifyMessage,
   setShowChooseAppareilToModifyMessage,
-  isCreatingNewElement,
-  setIsCreatingNewElement,
 
   /////////////////////
-  showChooseItemToModifyMessage,
-  setshowChooseItemToModifyMessage,
+
   showChooseItemToModifyPage,
   setExpandSection,
 }) {
@@ -100,6 +95,15 @@ function ListeDesVehiculesGestion({
     showAnnimationProgresseBarDashboard,
     updateItUserDataFonction,
     isItUser,
+    setChooseOneAccountToContinue,
+    setChooseOtherAccountGestion,
+    chooseOtherAccountGestion,
+    isCreatingNewElement,
+    setIsCreatingNewElement,
+    moveDeviceToOtherCompte,
+    setMoveDeviceToOtherCompte,
+    showChooseItemToModifyMessage,
+    setshowChooseItemToModifyMessage,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -390,8 +394,6 @@ function ListeDesVehiculesGestion({
     }
   }, []);
 
-  const [moveDeviceToOtherCompte, setMoveDeviceToOtherCompte] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState("");
 
   const moveDeviceToOtherCompteFonction = (e) => {
@@ -448,6 +450,10 @@ function ListeDesVehiculesGestion({
 
   const [showCarte, setShowCarte] = useState(false);
   const [logOutPopup, setLogOutPopup] = useState(false);
+
+  useEffect(() => {
+    console.log("moveDeviceToOtherCompte", moveDeviceToOtherCompte);
+  }, [moveDeviceToOtherCompte]);
 
   return (
     <div>
@@ -515,8 +521,8 @@ function ListeDesVehiculesGestion({
               </h3>
             </div>
           )}
-
-          {moveDeviceToOtherCompte && !chooseOtherAccountGestion && (
+          {/* {moveDeviceToOtherCompte && !chooseOtherAccountGestion && ( */}
+          {moveDeviceToOtherCompte && (
             <div className="fixed  z-[2] flex justify-center items-center inset-0 bg-black/50">
               <form
                 onSubmit={moveDeviceToOtherCompteFonction}
@@ -577,7 +583,6 @@ function ListeDesVehiculesGestion({
               </form>
             </div>
           )}
-
           {showSortDeviceByPopup && (
             <div className="fixed z-[999999909999999999999999999999999999999999999999999999999999999999999999999999] inset-0 bg-black/50 flex justify-center items-center">
               <div
@@ -860,7 +865,6 @@ function ListeDesVehiculesGestion({
               </div>
             </div>
           )}
-
           <div className="flex flex-col gap-3 mx-auto max-w-[37rem]">
             {lastUpdate?.mostRecentTimestamp && (
               <p className="font-bold w-full text-center justify-center flex flex-wrap items-center text-[.8rem] md:text-[.9rem] text-orange-700 bg-orange-50 border border-orange-500/30 rounded-lg px-3 py-1.5 mx-auto ">
