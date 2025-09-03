@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.6";
+  let versionApplication = "8.7";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -231,7 +231,9 @@ const DataContextProvider = ({ children }) => {
     if (currentAccountSelected) {
       setListeGestionDesRules(currentAccountSelected?.accountRules);
     } else {
-      setListeGestionDesRules(accountRules);
+      setListeGestionDesRules(
+        accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+      );
     }
   }, [currentAccountSelected]);
 
@@ -254,7 +256,9 @@ const DataContextProvider = ({ children }) => {
     if (currentAccountSelected) {
       setListeGestionDesRules(currentAccountSelected?.accountRules);
     } else {
-      setListeGestionDesRules(accountRules);
+      setListeGestionDesRules(
+        accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+      );
     }
   }, []);
 
@@ -327,7 +331,9 @@ const DataContextProvider = ({ children }) => {
       setListeGestionDesGroupe(accountGroupes);
 
       setListeGestionDesUsers(accountUsers);
-      setListeGestionDesRules(accountRules);
+      setListeGestionDesRules(
+        accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+      );
       setListeGestionDesRulesActive(accountRulesActive);
     }
   }, [currentAccountSelected]);
@@ -3487,7 +3493,6 @@ const DataContextProvider = ({ children }) => {
         <Field name="notifyEmail">${notifyEmail}</Field>
         <Field name="emailSubject">${emailSubject}</Field>
         <Field name="emailText">${emailText}</Field>
-        <Field name="smsText">${smsText}</Field>
         <Field name="useEmailWrapper">${useEmailWrapper}</Field>
         <Field name="ruleDisable">${ruleDisable}</Field>
         <Field name="ruleEnable">${ruleEnable}</Field>
@@ -3598,7 +3603,6 @@ const DataContextProvider = ({ children }) => {
         <Field name="notifyEmail">${notifyEmail}</Field>
         <Field name="emailSubject">${emailSubject}</Field>
         <Field name="emailText">${emailText}</Field>
-        <Field name="smsText">${smsText}</Field>
         <Field name="useEmailWrapper">${useEmailWrapper}</Field>
         <Field name="ruleDisable">${ruleDisable}</Field>
         <Field name="ruleEnable">${ruleEnable}</Field>
@@ -3645,7 +3649,6 @@ const DataContextProvider = ({ children }) => {
                   notifyEmail,
                   emailSubject,
                   emailText,
-                  smsText,
                   useEmailWrapper,
                   ruleDisable,
                   ruleEnable,
@@ -3672,7 +3675,6 @@ const DataContextProvider = ({ children }) => {
                   notifyEmail,
                   emailSubject,
                   emailText,
-                  smsText,
                   useEmailWrapper,
                   ruleDisable,
                   ruleEnable,

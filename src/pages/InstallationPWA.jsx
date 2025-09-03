@@ -95,7 +95,7 @@ const InstallationPWA = () => {
           </p>
         </div>
       )}
-      {status === "idle----" && (
+      {status === "idle" && (
         <div
           className={`flex text-gray-600 border-b border-gray-300 py-4 gap-4 text-lg hover:text-orange-500 cursor-pointer items-center  dark:text-gray-300 dark:border-gray-600 dark:hover:text-orange-400`}
         >
@@ -104,7 +104,7 @@ const InstallationPWA = () => {
             onClick={handleInstallClick}
           >
             <GrInstallOption className="text-orange-500" />
-            {t("Installation non disponible")}
+            {t("Installation non disponible, réessayez plus tard")}
           </p>
         </div>
       )}

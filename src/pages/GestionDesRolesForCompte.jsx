@@ -219,11 +219,11 @@ function GestionDesRolesForCompte({
             }}
             className="mt-[10rem]-- text-lg text-center font-bold "
           >
-            {t("Rôles du compte")}
+            {t("Règles du compte")}
             {/* ({filterListeDesCompte?.length}) */}
           </h2>
           <p className="text-center mx-auto font-semibold text-gray-500">
-            {t("Nombre de Roles")}:{" "}
+            {t("Nombre de règles")}:{" "}
             <span className="text-orange-500">
               {" "}
               {listeGestionDesRules?.length}
@@ -232,8 +232,8 @@ function GestionDesRolesForCompte({
           <div className="flex  justify-center mt-4">
             <button
               onClick={() => {
-                setDocumentationPage("Ajouter_nouveau_role");
-                navigate("/Ajouter_nouveau_role_compte");
+                // setDocumentationPage("Ajouter_nouveau_role");
+                navigate("/Ajouter_nouveau_role_active");
                 setCurrentSelectedRole(null);
 
                 if (!currentAccountSelected) {
@@ -249,7 +249,7 @@ function GestionDesRolesForCompte({
               <div className="flex justify-center items-center gap-3">
                 <FaPlusCircle className="text-2xl" />
                 <p className="text-[1rem] text-center">
-                  {t("Créer un nouveau Role")}
+                  {t("Créer une nouvelle règle")}
                 </p>
               </div>
             </button>{" "}
@@ -260,7 +260,7 @@ function GestionDesRolesForCompte({
                 id="text"
                 name="text"
                 type="text"
-                placeholder={`${t("Rechercher un Role")}`}
+                placeholder={`${t("Rechercher une règle")}`}
                 required
                 value={inputSearchItem}
                 onChange={(e) => setInputSearchItem(e.target.value)}
@@ -281,7 +281,7 @@ function GestionDesRolesForCompte({
                       onClick={() => toggleGroup(accountID)}
                     >
                       <h2>
-                        {t("Liste des roles de")} :{" "}
+                        {t("Liste des règles de")} :{" "}
                         <span className="font-semibold">{accountID}</span> (
                         {rules?.length})
                       </h2>
@@ -329,7 +329,7 @@ function GestionDesRolesForCompte({
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
                                       <p className="font-bold- text-gray-700">
-                                        {t("ID du Role")} :
+                                        {t("ID du règle")} :
                                       </p>
                                       <span className="notranslate dark:text-orange-500 notranslate font-semibold text-gray-600 pl-5">
                                         {rule?.ruleID}{" "}

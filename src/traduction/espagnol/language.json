@@ -918,7 +918,6 @@
   "Filtrer par Vitesse": "Filtrar por velocidad",
   "Inverser l'ordre de la liste": "Invertir el orden de la lista",
   "Nombre de Roles": "Número de roles",
-  "Règles actives": "Reglas activas",
   "Liste des règles": "Lista de reglas",
   "l'email de notification n'est pas valide": "El correo de notificación no es válido",
   "Gestion des Roles Actives": "Gestión de roles activos",
@@ -1089,7 +1088,46 @@
 "Activer le l'appareil" : "Activar el dispositivo",
 "Informations générales" : "Información general",
 "Statut & suivi" : "Estado y seguimiento",
-"Informations d’identification" : "Información de identificación"
+"Informations d’identification" : "Información de identificación",
+
+
+
+
+
+
+
+
+
+"Code de statut" : "Código de estado",
+"Rôle principales" : "Roles principales",
+"ruleIDPredefini": "ID del rol predefinido",
+"Le champ 'ID de du rôle prédéfini' est vide" : "El campo 'ID del rol predefinido' está vacío",
+"Veuillez choisir un appareil ou un groupe" : "Por favor, elija un dispositivo o un grupo",
+"Liste des rôles prédéfinis" : "Lista de roles predefinidos",
+"Cet identifiant (ID du Rôle) est déjà utilisé. Veuillez en choisir un autre" : "Este identificador (ID del rol) ya está en uso. Por favor, elija otro",
+"Rôles du compte" : "Roles de la cuenta",
+"Installation non disponible, réessayez plus tard" : "Instalación no disponible, intente más tarde",
+
+
+
+
+
+
+"Règles principales" : "Reglas principales",
+"Règles du compte" : "Reglas de la cuenta",
+"Règles actives" : "Reglas activas",
+"Nombre de règles" : "Número de reglas",
+"Créer une nouvelle règle" : "Crear una nueva regla",
+"Rechercher une règle" : "Buscar una regla",
+"Liste des règles de" : "Lista de reglas de",
+"ID du règle" : "ID de la regla",
+"Gestion des Règles" : "Gestión de reglas",
+"Gestion des règles actives" : "Gestión de reglas activas",
+"Nombre de règles actives" : "Número de reglas activas",
+"Activer une nouvelle règle" : "Activar una nueva regla",
+"Liste des règles actives de" : "Lista de reglas activas de"
+
+
 
 
 

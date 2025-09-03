@@ -884,7 +884,6 @@
 
 
   "Nombre de Roles": "Number of Roles",
-  "Règles actives": "Active Rules",
   "Liste des règles": "Rules List",
   "l'email de notification n'est pas valide": "Notification email is invalid",
   "Gestion des Roles Actives": "Active Roles Management",
@@ -1070,7 +1069,50 @@
 "Activer le l'appareil" : "Activate device",
 "Informations générales" : "General information",
 "Statut & suivi" : "Status and tracking",
-"Informations d’identification" : "Identification information"
+"Informations d’identification" : "Identification information",
+
+
+
+
+
+
+
+"Code de statut" : "Status code",
+"Rôle principales" : "Main roles",
+"ruleIDPredefini": "Predefined role ID",
+"Le champ 'ID de du rôle prédéfini' est vide" : "The 'Predefined role ID' field is empty",
+"Veuillez choisir un appareil ou un groupe" : "Please choose a device or a group",
+"Liste des rôles prédéfinis" : "List of predefined roles",
+"Cet identifiant (ID du Rôle) est déjà utilisé. Veuillez en choisir un autre" : "This identifier (Role ID) is already used. Please choose another",
+"Rôles du compte" : "Account roles",
+"Installation non disponible, réessayez plus tard" : "Installation unavailable, please try again later",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Règles principales" : "Main rules",
+"Règles du compte" : "Account rules",
+"Règles actives" : "Active rules",
+"Nombre de règles" : "Number of rules",
+"Créer une nouvelle règle" : "Create a new rule",
+"Rechercher une règle" : "Search for a rule",
+"Liste des règles de" : "List of rules for",
+"ID du règle" : "Rule ID",
+"Gestion des Règles" : "Rules management",
+"Gestion des règles actives" : "Active rules management",
+"Nombre de règles actives" : "Number of active rules",
+"Activer une nouvelle règle" : "Activate a new rule",
+"Liste des règles actives de" : "List of active rules for"
 
 
 

@@ -1355,7 +1355,7 @@ function SideBarSysadmin({
                   <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
                   <div className="flex w-full justify-between items-center">
                     <p className="text-gray-600 font-semibold">
-                      {t("Gestion des Roles")}
+                      {t("Gestion des Règles")}
                     </p>
                     <FaChevronDown />
                   </div>
@@ -1367,7 +1367,7 @@ function SideBarSysadmin({
                   onClick={() => {
                     // setShowRulesOptions(false);
                   }}
-                  className="absolute- my-2 hover:bg-none flex flex-col z-20 -bottom-[14rem] left-0 right-0 overflow-hidden bg-white shadow-lg shadow-black/20 rounded-lg min-h-[4rem] border border-black -400"
+                  className="absolute- my-2 hover:bg-none flex flex-col z-20 -bottom-[14rem] left-0 right-0 overflow-hidden bg-white shadow-lg shadow-black/20 rounded-lg min-h-[4rem] border border-gray-300"
                 >
                   <div
                     onClick={() => {
@@ -1404,7 +1404,7 @@ function SideBarSysadmin({
                     <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        {t("Rôle principales")} (
+                        {t("Règles principales")} (
                         {
                           accountRules?.filter(
                             (acct) => acct?.accountID === "sysadmin"
@@ -1427,7 +1427,11 @@ function SideBarSysadmin({
                           currentAccountSelected?.accountRules
                         );
                       } else {
-                        setListeGestionDesRules(accountRules);
+                        setListeGestionDesRules(
+                          accountRules?.filter(
+                            (acct) => acct?.accountID !== "sysadmin"
+                          )
+                        );
                       }
                     }}
                     className={`${
@@ -1439,10 +1443,12 @@ function SideBarSysadmin({
                     <TbSettings className="text-xl min-w-[1.5rem] text-orange-600" />
                     <div className="flex w-full justify-between">
                       <p className="text-gray-600 font-semibold">
-                        {t("Rôles du compte")} (
+                        {t("Règles du compte")} (
                         {currentAccountSelected
                           ? currentAccountSelected?.accountRules?.length
-                          : accountRules?.length}{" "}
+                          : accountRules?.filter(
+                              (acct) => acct?.accountID !== "sysadmin"
+                            )?.length}{" "}
                         )
                       </p>
                     </div>

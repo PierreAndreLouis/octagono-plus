@@ -220,7 +220,7 @@ function GestionAccountOptionPopup({
               <button
                 onClick={() => {
                   setDocumentationPage("Gestion_des_roles");
-                  navigate("/Gestion_des_roles");
+                  navigate("/Gestion_des_roles_compte");
                   setListeGestionDesRules(currentAccountSelected?.accountRules);
                 }}
                 className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50/50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"

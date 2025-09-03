@@ -1048,7 +1048,7 @@ function CreateNewRoleActive({
           <div className="bg-white  dark:bg-gray-900/30 max-w-[40rem] rounded-xl w-full md:px-6 mt-6 mb-10- border-- shadow-lg- overflow-auto-">
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
-                {t("Activer un nouveau Role")}
+                {t("Activer une nouvelle règle")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
@@ -1099,8 +1099,8 @@ function CreateNewRoleActive({
                   },
                   {
                     id: "ruleID",
-                    label: `${t("Liste des rôles prédéfinis")}`,
-                    placeholder: "Liste des rôles prédéfinis",
+                    label: `${t("Liste des règle prédéfinis")}`,
+                    placeholder: "Liste des règle prédéfinis",
                   },
                 ].map((field) => {
                   const requiredFields = [
@@ -1189,7 +1189,11 @@ function CreateNewRoleActive({
                           name={field.id}
                           type="text"
                           placeholder={field.placeholder}
-                          value={addNewRoleActiveData[field.id]}
+                          // value={addNewRoleActiveData[field.id]}
+                          value={addNewRoleData[field.id]?.replace(
+                            /\\n/g,
+                            "\n"
+                          )}
                           onChange={handleChange}
                           required
                           className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
@@ -1378,7 +1382,11 @@ function CreateNewRoleActive({
                             disabled={addNewRoleActiveData?.ruleID}
                             type="text"
                             placeholder={field.placeholder}
-                            value={addNewRoleData[field.id]}
+                            // value={addNewRoleData[field.id]}
+                            value={addNewRoleData[field.id]?.replace(
+                              /\\n/g,
+                              "\n"
+                            )}
                             onChange={handleChangePreset}
                             required
                             className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"

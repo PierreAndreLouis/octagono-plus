@@ -694,8 +694,8 @@ function CreateNewRoleForCompte({
             <div className="flex justify-center items-center w-full mb-10 pt-10 ">
               <h3 className="text-center font-semibold text-gray-600 dark:text-gray-100 text-xl">
                 {currentSelectedRole
-                  ? t("Modifier un nouveau Role")
-                  : t("Créer un nouveau Role")}
+                  ? t("Modifier la règle")
+                  : t("Créer une nouvelle règle")}
               </h3>
             </div>
             <div className="flex justify-center mb-10">
