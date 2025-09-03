@@ -104,7 +104,8 @@ const InstallationPWA = () => {
             onClick={handleInstallClick}
           >
             <GrInstallOption className="text-orange-500" />
-            {t("Installation non disponible, réessayez plus tard")}
+            {/* {t("Installation non disponible, réessayez plus tard")} */}
+            {t("Application déjà installée")}
           </p>
         </div>
       )}
