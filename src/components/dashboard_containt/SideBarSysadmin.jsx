@@ -481,30 +481,77 @@ function SideBarSysadmin({
       setVariable: () => setDocumentationPage("Info_appareil"),
     },
     {
-      name: t("Gestion des Roles"),
+      name: t("Règles principales"),
       isSysadmin: true,
       link: "/Gestion_des_roles",
       setVariable: () => {
-        setDocumentationPage("Gestion_des_roles");
-
         scrollToTop();
         setDocumentationPage("Gestion_des_roles");
         closeSideBar();
+        setShowSideBar2(false);
         if (currentAccountSelected) {
-          setListeGestionDesRules(currentAccountSelected?.accountRules);
+          setListeGestionDesRulesActive(
+            currentAccountSelected?.accountRulesActive
+          );
         } else {
-          setListeGestionDesRules(accountRules);
+          setListeGestionDesRulesActive(accountRulesActive);
         }
         // setListeGestionDesRules(
         //   accountRules?.filter((acct) => acct?.accountID === "sysadmin")
         // );
       },
     },
+
     {
-      name: t("Gestion des Roles Actives"),
+      name: t("Règles du compte"),
+      isSysadmin: true,
+      link: "/Gestion_des_roles_compte",
+      setVariable: () => {
+        scrollToTop();
+        setDocumentationPage("Gestion_des_roles_compte");
+        closeSideBar();
+        setShowSideBar2(false);
+        if (currentAccountSelected) {
+          setListeGestionDesRules(currentAccountSelected?.accountRules);
+        } else {
+          setListeGestionDesRules(
+            accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+          );
+        }
+        // setDocumentationPage("Gestion_des_roles_compte");
+
+        // scrollToTop();
+        // setDocumentationPage("Gestion_des_roles_compte");
+        // closeSideBar();
+        // if (currentAccountSelected) {
+        //   setListeGestionDesRules(currentAccountSelected?.accountRules);
+        // } else {
+        //   setListeGestionDesRules(accountRules);
+        // }
+        // setListeGestionDesRules(
+        //   accountRules?.filter((acct) => acct?.accountID === "sysadmin")
+        // );
+      },
+    },
+
+    {
+      name: t("Règles actives"),
       isSysadmin: true,
       link: "/Gestion_des_roles_actives",
-      setVariable: () => setDocumentationPage("Gestion_des_roles_actives"),
+      setVariable: () => {
+        setDocumentationPage("Gestion_des_roles_actives");
+
+        scrollToTop();
+        closeSideBar();
+        setShowSideBar2(false);
+        if (currentAccountSelected) {
+          setListeGestionDesRulesActive(
+            currentAccountSelected?.accountRulesActive
+          );
+        } else {
+          setListeGestionDesRulesActive(accountRulesActive);
+        }
+      },
     },
     {
       name: t("Informations utilisateur"),
@@ -859,43 +906,39 @@ function SideBarSysadmin({
           {/*  */}
           {/*  */}
           {/*admi_ Dashboard */}
-          {account &&
-            username &&
-            adminAccount === "sysadmin" &&
-            !currentAccountSelected && (
-              <Link
-                to="/Dashboard"
-                className="ajouter-appareil-container transition-all hover:border-b  "
+          {account && username && adminAccount === "sysadmin" && (
+            // !currentAccountSelected &&
+            <Link
+              to="/Dashboard"
+              className="ajouter-appareil-container transition-all hover:border-b  "
+            >
+              <div
+                onClick={() => {
+                  setIsDashboardHomePage(!isDashboardHomePage);
+                  scrollToTop();
+                  setDocumentationPage("Dashboard");
+                  closeSideBar();
+                  setShowSideBar2(false);
+                }}
+                className={`${
+                  documentationPage === "Admin_Dashboard" ? "bg-orange-50" : ""
+                } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
               >
-                <div
-                  onClick={() => {
-                    setIsDashboardHomePage(!isDashboardHomePage);
-                    scrollToTop();
-                    setDocumentationPage("Dashboard");
-                    closeSideBar();
-                    setShowSideBar2(false);
-                  }}
-                  className={`${
-                    documentationPage === "Admin_Dashboard"
-                      ? "bg-orange-50"
-                      : ""
-                  } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
-                >
-                  {isDashboardHomePage ? (
-                    <FaUserCircle className="text-xl min-w-[1.5rem] text-orange-600" />
-                  ) : (
-                    <MdOutlineSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
-                  )}
-                  <div className="flex w-full justify-between">
-                    <p className="text-gray-600 font-semibold">
-                      {isDashboardHomePage
-                        ? t("Mode Utilisateur")
-                        : t("sysadmin Dashboard")}
-                    </p>
-                  </div>
+                {isDashboardHomePage ? (
+                  <FaUserCircle className="text-xl min-w-[1.5rem] text-orange-600" />
+                ) : (
+                  <MdOutlineSpaceDashboard className="text-xl min-w-[1.5rem] text-orange-600" />
+                )}
+                <div className="flex w-full justify-between">
+                  <p className="text-gray-600 font-semibold">
+                    {isDashboardHomePage
+                      ? t("Mode Utilisateur")
+                      : t("sysadmin Dashboard")}
+                  </p>
                 </div>
-              </Link>
-            )}
+              </div>
+            </Link>
+          )}
 
           {/*  */}
           {/*  */}
@@ -1415,7 +1458,7 @@ function SideBarSysadmin({
                     </div>
                   </Link>
 
-                  <Link
+                  {/* <Link
                     to="/Gestion_des_roles_compte"
                     onClick={() => {
                       scrollToTop();
@@ -1452,7 +1495,7 @@ function SideBarSysadmin({
                         )
                       </p>
                     </div>
-                  </Link>
+                  </Link> */}
 
                   <Link
                     to="/Gestion_des_roles_actives"

@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.8";
+  let versionApplication = "8.9";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -9060,7 +9060,9 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         to: emails,
-        subject: `Connexion réussie`,
+        subject: `Connexion réussie de ${accountConnected}  /  ${user}  /  ${
+          country === "ht" ? "Haiti" : "Republique dominicaine"
+        }`,
         text: emailText,
 
         // text: "Bonjour depuis React !",

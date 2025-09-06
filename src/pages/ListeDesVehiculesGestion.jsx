@@ -1258,8 +1258,8 @@ function ListeDesVehiculesGestion({
                               <div
                                 className={`${
                                   showMoreDeviceInfo !== index
-                                    ? "max-w-[100vw] md:mr-4"
-                                    : "max-w-[0vw] opacity-0"
+                                    ? "max-w-[100vw] min-w-[5rem] md:mr-4"
+                                    : "max-w-[0vw] min-w-[0rem] opacity-0"
                                 } overflow-hidden transition-all hidden sm:flex flex-col  items-center    `}
                               >
                                 <FaCar
@@ -1268,12 +1268,17 @@ function ListeDesVehiculesGestion({
                                 <h3
                                   className={`${text_color} font-bold text-2xl`}
                                 >
-                                  {foundDetails?.speedKPH > 0
+                                  {foundDetails?.speedKPH > 0 ||
+                                  device?.véhiculeDetails?.[0]?.speedKPH
                                     ? parseFloat(
                                         device?.véhiculeDetails?.[0]
                                           ?.speedKPH || foundDetails?.speedKPH
                                       )?.toFixed(0)
                                     : 0}{" "}
+                                  {/* {parseFloat(
+                                    device?.véhiculeDetails?.[0]?.speedKPH ||
+                                      foundDetails?.speedKPH
+                                  )?.toFixed(0)}{" "} */}
                                 </h3>
                                 <h3
                                   className={`${text_color} font-bold text-lg`}
@@ -1297,10 +1302,18 @@ function ListeDesVehiculesGestion({
                                     <h3
                                       className={`${text_color} font-bold text-lg md:text-2xl`}
                                     >
-                                      {parseFloat(
+                                      {/* {parseFloat(
                                         device?.véhiculeDetails?.[0]
                                           ?.speedKPH || foundDetails?.speedKPH
-                                      )?.toFixed(0)}{" "}
+                                      )?.toFixed(0)}{" "} */}
+                                      {foundDetails?.speedKPH > 0 ||
+                                      device?.véhiculeDetails?.[0]?.speedKPH
+                                        ? parseFloat(
+                                            device?.véhiculeDetails?.[0]
+                                              ?.speedKPH ||
+                                              foundDetails?.speedKPH
+                                          )?.toFixed(0)
+                                        : 0}{" "}
                                       Km/h
                                     </h3>
                                   </div>
