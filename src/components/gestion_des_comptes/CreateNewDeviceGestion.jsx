@@ -51,6 +51,7 @@ function CreateNewDeviceGestion({
   const [addVéhiculeData, setAddVehicleData] = useState({
     accountID: "",
     deviceID: "",
+    vehicleID: "",
     description: "",
     equipmentType: "",
     uniqueID: "",
@@ -197,10 +198,12 @@ function CreateNewDeviceGestion({
       const accountID = addVéhiculeData.accountID;
 
       const deviceID = addVéhiculeData.deviceID;
+      const vehicleID = addVéhiculeData.vehicleID;
+
       const imeiNumber = addVéhiculeData.imeiNumber;
       const uniqueID = "tk_" + imeiNumber;
       const description = addVéhiculeData.description;
-      const displayName = addVéhiculeData.description;
+      const displayName = addVéhiculeData.licensePlate;
       const licensePlate = addVéhiculeData.licensePlate;
       const equipmentType = addVéhiculeData.equipmentType;
       const phoneCode = addVéhiculeData.phoneCode;
@@ -210,7 +213,7 @@ function CreateNewDeviceGestion({
       const allowNotify = addVéhiculeData.allowNotify;
       const isActive = addVéhiculeData.isActive;
 
-      const vehicleID = deviceID + uniqueID || "";
+      // const vehicleID = deviceID + uniqueID || "";
 
       // console.log(
       //   currentAccountSelected?.accountID,
@@ -238,6 +241,7 @@ function CreateNewDeviceGestion({
             currentAccountSelected?.password,
 
             deviceID,
+            vehicleID,
             imeiNumber,
             uniqueID,
             description,
@@ -266,6 +270,7 @@ function CreateNewDeviceGestion({
               )?.password,
 
             deviceID,
+            vehicleID,
             imeiNumber,
             uniqueID,
             description,
@@ -309,6 +314,8 @@ function CreateNewDeviceGestion({
       setAddVehicleData({
         accountID: currentSelectedDeviceGestion.accountID || "",
         deviceID: currentSelectedDeviceGestion.deviceID || "",
+        vehicleID: currentSelectedDeviceGestion.vehicleID || "",
+
         description: currentSelectedDeviceGestion.description || "",
         equipmentType: currentSelectedDeviceGestion.equipmentType || "",
         uniqueID: currentSelectedDeviceGestion.uniqueID || "---",
@@ -476,6 +483,8 @@ function CreateNewDeviceGestion({
                 {/* Champs du formulaire */}
                 {[
                   { id: "deviceID", label: "ID", placeholder: "ID" },
+                  { id: "vehicleID", label: "VIN", placeholder: "VIN" },
+
                   {
                     id: "imeiNumber",
                     label: `${t("Numéro IMEI")}`,

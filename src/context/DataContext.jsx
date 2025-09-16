@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "8.9";
+  let versionApplication = "9.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1967,6 +1967,8 @@ const DataContextProvider = ({ children }) => {
     
      <Field name="creationTime" />
           <Field name="description" />
+          <Field name="vehicleID" />
+
           <Field name="deviceCode" />
           <Field name="displayName" />
           <Field name="equipmentType" />
@@ -5236,6 +5238,7 @@ const DataContextProvider = ({ children }) => {
     userPassword,
 
     deviceID,
+    vehicleID,
     imeiNumber,
     uniqueID,
     description,
@@ -5249,18 +5252,9 @@ const DataContextProvider = ({ children }) => {
 
     groupesSelectionnes
   ) => {
-    //   userAccount,
-    //   userUsername,
-    //   userPassword,
-    //   deviceID,
-    //   groupesSelectionnes
-    // );
-    // /////////
-
     setError("");
     setCreateVéhiculeLoading(true);
 
-    // <Field name="simPhoneNumber">${"509" + simPhoneNumber}</Field>
     const xmlData = `<GTSRequest command="dbcreate">
       <Authorization account="${userAccount}" user="${userUsername}" password="${userPassword}" />
       <Record table="Device" partial="true">
@@ -5271,6 +5265,7 @@ const DataContextProvider = ({ children }) => {
         <Field name="isActive">${isActive}</Field>
         <Field name="uniqueID">${uniqueID}</Field>
         <Field name="deviceID">${deviceID}</Field>
+        <Field name="vehicleID">${vehicleID}</Field>
         <Field name="description">${description}</Field>
         <Field name="equipmentType">${equipmentType}</Field>
         <Field name="imeiNumber">${imeiNumber}</Field>
@@ -5376,6 +5371,7 @@ const DataContextProvider = ({ children }) => {
     userPassword,
 
     deviceID,
+    vehicleID,
     imeiNumber,
     uniqueID,
     description,
@@ -5405,6 +5401,7 @@ const DataContextProvider = ({ children }) => {
         <Field name="uniqueID">${uniqueID}</Field>
 
         <Field name="deviceID">${deviceID}</Field>
+        <Field name="vehicleID">${vehicleID}</Field>
         <Field name="description">${description}</Field>
         <Field name="equipmentType">${equipmentType}</Field>
         <Field name="imeiNumber">${imeiNumber}</Field>
@@ -6840,6 +6837,7 @@ const DataContextProvider = ({ children }) => {
         <Record table="Device" partial="true">
           <Field name="accountID">${accountID}</Field>
 
+          <Field name="vehicleID" />
           <Field name="creationTime" />
           <Field name="description" />
           <Field name="deviceCode" />
@@ -9013,7 +9011,7 @@ const DataContextProvider = ({ children }) => {
     rapportVehicleDetails,
   ]);
 
-  const sendGMailConfirmation = (accountConnected, user, country) => {
+  const sendGMailConfirmation = (accountConnected, user, country2) => {
     // Obtenir la date et l'heure actuelles
     const now = new Date();
     const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
@@ -9032,13 +9030,17 @@ const DataContextProvider = ({ children }) => {
 
     const host = window.location.hostname.replace(/^www\./, "");
     let emails;
+    let country;
 
     if (host === "octagonogps.com.do" || host === "app.octagonogps.com.do") {
       emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
+      country = "rd";
     } else if (host === "octagonoplus.com") {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
+      country = "ht";
     } else {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
+      country = "ht";
     }
 
     if (host === "octagonoplus.com" && country === "rd") {

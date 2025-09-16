@@ -411,6 +411,8 @@ function ListeDesVehiculesGestion({
         )?.password,
 
         currentSelectedDeviceGestion?.deviceID,
+        currentSelectedDeviceGestion?.vehicleID,
+
         currentSelectedDeviceGestion?.imeiNumber,
         currentSelectedDeviceGestion?.uniqueIdentifier,
         currentSelectedDeviceGestion?.description,
@@ -1385,7 +1387,7 @@ function ListeDesVehiculesGestion({
                                   <div
                                     className={`${
                                       showMoreDeviceInfo === index
-                                        ? "max-h-[30rem]"
+                                        ? "max-h-[40rem]"
                                         : "max-h-0"
                                     }  overflow-hidden transition-all`}
                                   >
@@ -1465,6 +1467,12 @@ function ListeDesVehiculesGestion({
                                       </p>
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                         {device?.deviceID}
+                                      </span>
+                                    </div>{" "}
+                                    <div className="flex flex-wrap border-b py-1">
+                                      <p className="font-bold">{t("VIN")} :</p>
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2">
+                                        {device?.vehicleID || "---"}
                                       </span>
                                     </div>{" "}
                                     <div className="flex flex-wrap border-b py-1">
