@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "9.0";
+  let versionApplication = "9.1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -9011,7 +9011,7 @@ const DataContextProvider = ({ children }) => {
     rapportVehicleDetails,
   ]);
 
-  const sendGMailConfirmation = (accountConnected, user, country2) => {
+  const sendGMailConfirmation = (accountConnected, user, country) => {
     // Obtenir la date et l'heure actuelles
     const now = new Date();
     const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
@@ -9021,31 +9021,34 @@ const DataContextProvider = ({ children }) => {
       hour12: true,
     }); // Format: HH:MM AM/PM
     //
-    // let emails;
-    // if (country === "rd") {
-    //   emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
-    // } else {
-    //   emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
-    // }
 
     const host = window.location.hostname.replace(/^www\./, "");
     let emails;
-    let country;
 
-    if (host === "octagonogps.com.do" || host === "app.octagonogps.com.do") {
+    if (country === "rd") {
       emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
-      country = "rd";
-    } else if (host === "octagonoplus.com") {
+    } else if (country === "ht") {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
-      country = "ht";
     } else {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
-      country = "ht";
     }
 
     if (host === "octagonoplus.com" && country === "rd") {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     }
+    // let emails;
+    // let country;
+
+    // if (host === "octagonogps.com.do" || host === "app.octagonogps.com.do") {
+    //   emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
+    //   country = "rd";
+    // } else if (host === "octagonoplus.com") {
+    //   emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
+    //   country = "ht";
+    // } else {
+    //   emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
+    //   country = "ht";
+    // }
 
     const emailText = `
 Client : ${accountConnected}  \n

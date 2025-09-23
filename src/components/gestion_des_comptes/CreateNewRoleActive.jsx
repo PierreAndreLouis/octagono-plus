@@ -1307,11 +1307,11 @@ function CreateNewRoleActive({
                       placeholder: `${t("emailSubject")}`,
                     },
 
-                    {
-                      id: "smsText",
-                      label: `${t("smsText")}`,
-                      placeholder: `${t("smsText")}`,
-                    },
+                    // {
+                    //   id: "smsText",
+                    //   label: `${t("smsText")}`,
+                    //   placeholder: `${t("smsText")}`,
+                    // },
 
                     {
                       id: "isActive",

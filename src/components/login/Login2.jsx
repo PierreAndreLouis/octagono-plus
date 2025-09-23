@@ -171,7 +171,7 @@ function Login2() {
             <InstallationPWA />
           </p>
         </div>
-        {/* <div className=" w-full  flex justify-end z-10">
+        <div className=" w-full  flex justify-end z-10">
           <IoChevronDownCircleSharp
             onClick={() => {
               setShowLangueAndCountryOption(!showLangueAndCountryOption);
@@ -180,7 +180,7 @@ function Login2() {
               showLangueAndCountryOption ? "rotate-180" : ""
             }  text-end translate-y-[.5rem] max-h- translate-x-[.8rem]  text-[1.7rem] text-orange-500  transition-all cursor-pointer hover:text-orange-400  px-[.78rem]   min-w-[3rem]`}
           />
-        </div> */}
+        </div>
 
         <div className="mt-2 -translate-y-[1.5rem]">
           <form onSubmit={handleSubmit} className="space-y-4">
