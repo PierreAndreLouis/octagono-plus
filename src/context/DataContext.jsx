@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "9.1";
+  let versionApplication = "1.0.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -1632,6 +1632,7 @@ const DataContextProvider = ({ children }) => {
 
         if (window.location.hostname !== "localhost" || sendConnectionMail) {
           sendGMailConfirmation(account, username, country);
+          console.log("---------", account, username, country);
         }
 
         resetTimerForAutoUpdate();
@@ -5250,7 +5251,8 @@ const DataContextProvider = ({ children }) => {
     allowNotify,
     isActive,
 
-    groupesSelectionnes
+    groupesSelectionnes,
+    fromMoveDeviceToOtherCompteFonction = false
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -5276,6 +5278,8 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
+    console.log("xmlData", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -5290,6 +5294,9 @@ const DataContextProvider = ({ children }) => {
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
       setError("");
+
+      console.log("result", result);
+
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
@@ -5327,6 +5334,50 @@ const DataContextProvider = ({ children }) => {
 
         setCreateVéhiculeLoading(false);
         // Attendre que le device apparaisse dans la liste
+
+        if (fromMoveDeviceToOtherCompteFonction) {
+          deleteVehicleEnGestionAccount(
+            currentSelectedDeviceGestion?.deviceID,
+
+            gestionAccountData.find(
+              (account) =>
+                account.accountID === currentSelectedDeviceGestion?.accountID
+            )?.accountID,
+
+            "admin",
+
+            gestionAccountData.find(
+              (account) =>
+                account.accountID === currentSelectedDeviceGestion?.accountID
+            )?.password,
+
+            false
+          );
+
+          try {
+            // Devices du compte
+            fetchAccountDevices(id, pwd).catch((err) => {
+              console.error("Erreur lors du chargement des devices :", err);
+              setError("Erreur lors du chargement des devices.");
+            });
+            fetchAccountUsers(id, pwd)
+              .then((users) => {
+                fetchUserDevices(id, users);
+                fetchUserGroupes(id, users);
+              })
+              .catch((err) => {
+                console.error(
+                  "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+                  err
+                );
+                setError("Erreur lors de la mise à jour des utilisateurs.");
+              });
+          } catch (err) {
+            console.error("Erreur lors du rafraîchissement des données :", err);
+            setError("Erreur lors de la mise à jour des données.");
+          }
+        }
+
         setTimeout(() => {
           assignDeviceToMultipleGroups(
             userAccount,
@@ -7731,6 +7782,9 @@ const DataContextProvider = ({ children }) => {
   // Historique page
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   x;
+
+  const [rechercheCarburantData1, setRechercheCarburantData1] = useState();
+  const [rechercheCarburantData2, setRechercheCarburantData2] = useState();
   // pour afficher les detail d'hun véhicule dans Historique page (utilise pour les recherches)
   const fetchHistoriqueVehicleDetails = async (
     Device,
@@ -7741,7 +7795,8 @@ const DataContextProvider = ({ children }) => {
     adminUser,
     adminPassword,
 
-    fromUpdateAuto
+    fromUpdateAuto,
+    fromGestionCarburant = ""
   ) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
@@ -7859,7 +7914,15 @@ const DataContextProvider = ({ children }) => {
         );
       });
 
-      setVéhiculeHistoriqueDetails(filteredVehicleDetails);
+      if (fromGestionCarburant === "partie1") {
+        setRechercheCarburantData1(filteredVehicleDetails);
+        setVéhiculeHistoriqueDetails(filteredVehicleDetails);
+      } else if (fromGestionCarburant === "partie2") {
+        setRechercheCarburantData2(filteredVehicleDetails);
+      } else {
+        setVéhiculeHistoriqueDetails(filteredVehicleDetails);
+        setRechercheCarburantData1(filteredVehicleDetails);
+      }
       // if (forCurrentDevice) {
       const dataFusionné = mergedDataHome ? Object.values(mergedDataHome) : [];
 
@@ -7875,6 +7938,7 @@ const DataContextProvider = ({ children }) => {
 
         setCurrentPersonelVéhicule(foundVehicleWidthFilteredVehicleDetails);
         setCurrentVéhicule(foundVehicleWidthFilteredVehicleDetails);
+
         setLoadingHistoriqueFilter(false);
         setRapportDataLoading(false);
       } else {
@@ -8882,6 +8946,12 @@ const DataContextProvider = ({ children }) => {
         username || storedUserName,
         localStorage.getItem("currentCountry")
       );
+      console.log(
+        "---------",
+        account,
+        username || storedUserName,
+        localStorage.getItem("currentCountry")
+      );
     }
   };
 
@@ -9012,6 +9082,8 @@ const DataContextProvider = ({ children }) => {
   ]);
 
   const sendGMailConfirmation = (accountConnected, user, country) => {
+    console.log("---------", accountConnected, user, country);
+
     // Obtenir la date et l'heure actuelles
     const now = new Date();
     const dateAujourdhui = now.toLocaleDateString("fr-FR"); // Format: JJ/MM/AAAA
@@ -9036,19 +9108,6 @@ const DataContextProvider = ({ children }) => {
     if (host === "octagonoplus.com" && country === "rd") {
       emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
     }
-    // let emails;
-    // let country;
-
-    // if (host === "octagonogps.com.do" || host === "app.octagonogps.com.do") {
-    //   emails = ["Info@octagonogps.com.do", "support@octagonoplus.com"];
-    //   country = "rd";
-    // } else if (host === "octagonoplus.com") {
-    //   emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
-    //   country = "ht";
-    // } else {
-    //   emails = ["webdeveloper3030@gmail.com", "support@octagonoplus.com"];
-    //   country = "ht";
-    // }
 
     const emailText = `
 Client : ${accountConnected}  \n
@@ -9057,9 +9116,6 @@ Date : ${dateAujourdhui} ___ ${hereActurel}  \n
 Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
    `;
 
-    //  text: `Le client ${user}\n     du compte ${accountConnected}\n     s'est connecté le ${dateAujourdhui}\n     à ${hereActurel}\n     en ${
-    //           country === "ht" ? "Haiti" : "Republique dominicaine"
-    //         }`,
     fetch("https://octagono-plus-email-server.onrender.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -9069,17 +9125,23 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
           country === "ht" ? "Haiti" : "Republique dominicaine"
         }`,
         text: emailText,
-
-        // text: "Bonjour depuis React !",
       }),
     })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
-
-    const message = `Le client ${user}\n du compte ${accountConnected}\n s'est connecté le ${dateAujourdhui}\n à ${hereActurel}\n en ${
-      country === "ht" ? "Haiti" : "Republique dominicaine"
-    }`;
+      .then(async (res) => {
+        console.log("↩️ Reçu du serveur, status:", res.status);
+        const text = await res.text();
+        console.log("↩️ Réponse brute:", text);
+      })
+      .catch((err) => {
+        console.error("❌ Erreur réseau/fetch:", err);
+      });
+    // .then((res) => res.json())
+    // .then((data) => {
+    //   console.log("✅ Email envoyé avec succès :", data);
+    // })
+    // .catch((err) => {
+    //   console.error("❌ Échec d'envoi de l'email :", err.message);
+    // });
   };
 
   useEffect(() => {
@@ -9557,6 +9619,8 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
         setshowChooseItemToModifyMessage,
         showChooseItemToModifyPage,
         setshowChooseItemToModifyPage,
+        rechercheCarburantData1,
+        rechercheCarburantData2,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

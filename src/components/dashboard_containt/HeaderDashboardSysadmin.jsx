@@ -22,9 +22,16 @@ function HeaderDashboardSysadmin({
     account,
     username,
     appareilPourAfficherSurCarte,
+    véhiculeDetails,
+    véhiculeHistoriqueDetails,
   } = useContext(DataContext);
   return (
-    <header className="fixed z-[999999999999999999999] top-0 left-0 right-0 bg-white">
+    <header
+      onClick={() => {
+        console.log("xxxx", véhiculeHistoriqueDetails);
+      }}
+      className="fixed z-[999999999999999999999] top-0 left-0 right-0 bg-white"
+    >
       <div className="flex shadow-lg-- shadow-black/20 justify-between items-center md:px-6 px-4 py-2">
         <div
           onClick={() => {

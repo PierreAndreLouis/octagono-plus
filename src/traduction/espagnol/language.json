@@ -239,7 +239,9 @@
   "Type de l'utilisateur": "Tipo de usuario",
   "Utilisateur standard / limité": "Usuario estándar / limitado",
   "Utilisateur Administrateur / Superviseur": "Usuario administrador / supervisor",
-  "choisissez un role": "Elija un rol",
+  "choisissez un role": "Elija un rol Sysadmin",
+  "Choisissez un rôle Sysadmin": "Elija un rol Sysadmin",
+
   "Choisis un Groupe pour intégrer l'appareil": "Elija un grupo para asignar el dispositivo",
   "Ajouter un nouveau Utilisateur": "Agregar un nuevo usuario",
   "Choisissez un groupe pour affecter l'utilisateur": "Elija un grupo para asignar el usuario",

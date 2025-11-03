@@ -132,7 +132,7 @@ function VehiculeDetailInformationComponent({
             </p>
           </div>
 
-          <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
+          {/* <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">
               {t("Distance totale parcourue")}
             </h3>
@@ -142,7 +142,7 @@ function VehiculeDetailInformationComponent({
                 ? Number(currentVéhicule?.lastOdometerKM).toFixed(2) + " km"
                 : `${t("Non disponible")}`}
             </p>
-          </div>
+          </div> */}
 
           <div className="flex justify-start flex-col sm:flex-row mt-2 border-b border-gray-300 pb-2 dark:border-gray-600">
             <h3 className="font-bold text-gray-600 min-w-[11.8rem] lg:min-w-[16rem] dark:text-gray-200">

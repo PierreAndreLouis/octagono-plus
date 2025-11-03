@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ImEnlarge } from "react-icons/im";
 import { FiAlertCircle } from "react-icons/fi";
+import ReactECharts from "echarts-for-react";
 
 import { IoClose } from "react-icons/io5";
 import { MdLockOutline } from "react-icons/md";
@@ -481,7 +482,139 @@ function DashboardContaintMaintComponant({
   const parkingPct = (parkingVehicule / allVehicule) * 100;
 
   // Fonction pour construire les styles dynamiques
-  const buildCircle = (radius, strokeWidth, percent, color, trackColor) => {
+  // const buildCircle = (radius, strokeWidth, percent, color, trackColor) => {
+  //   const normalizedRadius = radius - strokeWidth / 2;
+  //   const circumference = 2 * Math.PI * normalizedRadius;
+  //   const strokeDashoffset = circumference - (percent / 100) * circumference;
+
+  //   return {
+  //     strokeDasharray: `${circumference} ${circumference}`,
+  //     strokeDashoffset,
+  //     stroke: color,
+  //     strokeWidth,
+  //     r: normalizedRadius,
+  //     cx: 100,
+  //     cy: 100,
+  //     fill: "transparent",
+  //     strokeLinecap: "round",
+  //     transform: "rotate(0deg)", // rotation vers le haut
+  //     transformOrigin: "center",
+  //     trackColor,
+  //   };
+  // };
+
+  // const layers = [
+  //   buildCircle(
+  //     90,
+  //     14,
+  //     animatedInactivePct,
+  //     "rgba(147,51,234,1)",
+  //     "rgba(147,51,234,0.1)"
+  //   ), // purple
+  //   buildCircle(
+  //     70,
+  //     14,
+  //     animatedParkingPct,
+  //     "rgba(251,146,60,1)",
+  //     "rgba(251,146,60,0.1)"
+  //   ), // orange
+  //   buildCircle(
+  //     50,
+  //     14,
+  //     animatedActivePct,
+  //     "rgba(34,197,94,1)",
+  //     "rgba(34,197,94,0.1)"
+  //   ), // green
+  // ];
+
+  //
+  //
+  //
+  //
+  //
+  //
+
+  // const maxFuel = 80;
+  // const currentFuel = 30;
+
+  // const [animatedFuelPct, setAnimatedFuelPct] = useState(0);
+
+  // useEffect(() => {
+  //   // Réinitialiser puis animer le niveau de carburant
+  //   setAnimatedFuelPct(0);
+  //   const timeout = setTimeout(() => {
+  //     animateValue(0, (currentFuel / maxFuel) * 100, 1000, setAnimatedFuelPct);
+  //   }, 50);
+
+  //   return () => clearTimeout(timeout);
+  // }, [currentFuel]);
+
+  // // Fonction pour construire le cercle
+  // const buildCircle = (radius, strokeWidth, percent, color, trackColor) => {
+  //   const normalizedRadius = radius - strokeWidth / 2;
+  //   const circumference = 2 * Math.PI * normalizedRadius;
+  //   const strokeDashoffset = circumference - (percent / 100) * circumference;
+
+  //   return {
+  //     strokeDasharray: `${circumference} ${circumference}`,
+  //     strokeDashoffset,
+  //     stroke: color,
+  //     strokeWidth,
+  //     r: normalizedRadius,
+  //     cx: 100,
+  //     cy: 100,
+  //     fill: "transparent",
+  //     strokeLinecap: "round",
+  //     transform: "rotate(-90deg)",
+  //     transformOrigin: "center",
+  //   };
+  // };
+
+  // // Ton seul layer
+  // const fuelLayer = buildCircle(
+  //   90,
+  //   16,
+  //   animatedFuelPct,
+  //   "rgba(34,197,94,1)", // vert
+  //   "rgba(34,197,94,0.1)" // vert clair
+  // );
+
+  const maxFuel = 80;
+  const currentFuel = 30;
+  const [animatedFuelPct, setAnimatedFuelPct] = useState(0);
+
+  // Fonction d’animation fluide
+  const animateValue2 = (start, end, duration, callback) => {
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = start + (end - start) * progress;
+      callback(value);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
+    setAnimatedFuelPct(0);
+    const timeout = setTimeout(() => {
+      animateValue2(0, (currentFuel / maxFuel) * 100, 1000, setAnimatedFuelPct);
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [currentFuel]);
+
+  // Cercle centré, démarrant à 12h
+  const buildCircle = (
+    radius,
+    strokeWidth,
+    percent,
+    color,
+    cx = 100,
+    cy = 100
+  ) => {
     const normalizedRadius = radius - strokeWidth / 2;
     const circumference = 2 * Math.PI * normalizedRadius;
     const strokeDashoffset = circumference - (percent / 100) * circumference;
@@ -492,40 +625,30 @@ function DashboardContaintMaintComponant({
       stroke: color,
       strokeWidth,
       r: normalizedRadius,
-      cx: 100,
-      cy: 100,
+      cx,
+      cy,
       fill: "transparent",
       strokeLinecap: "round",
-      transform: "rotate(0deg)", // rotation vers le haut
-      transformOrigin: "center",
-      trackColor,
+      transform: `rotate(-90 ${cx} ${cy})`, // <-- correct pour SVG
     };
   };
 
-  const layers = [
-    buildCircle(
-      90,
-      14,
-      animatedInactivePct,
-      "rgba(147,51,234,1)",
-      "rgba(147,51,234,0.1)"
-    ), // purple
-    buildCircle(
-      70,
-      14,
-      animatedParkingPct,
-      "rgba(251,146,60,1)",
-      "rgba(251,146,60,0.1)"
-    ), // orange
-    buildCircle(
-      50,
-      14,
-      animatedActivePct,
-      "rgba(34,197,94,1)",
-      "rgba(34,197,94,0.1)"
-    ), // green
-  ];
+  // Cercle plus épais (strokeWidth 24)
+  const fuelLayer = buildCircle(
+    90,
+    24, // plus épais ici
+    animatedFuelPct,
+    "rgba(34,197,94,1)" // vert
+  );
 
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
   ///////////////////////////////////////////////////
 
   const [readDocumentationSideBar, setReadDocumentationSideBar] =
@@ -1159,6 +1282,102 @@ function DashboardContaintMaintComponant({
     setListeGestionDesGroupeTitre(t("Tous les Groupes"));
     setExpandSection("userGroupe");
   };
+
+  {
+    /*  */
+  }
+
+  // // Génération de données de test
+  // const hours = [
+  //   "08:00",
+  //   "09:00",
+  //   "10:00",
+  //   "11:00",
+  //   "12:00",
+  //   "13:00",
+  //   "14:00",
+  //   "15:00",
+  //   "16:00",
+  //   "17:00",
+  //   "18:00",
+  //   "19:00",
+  // ];
+
+  // // Données fictives pour aujourd'hui
+  // const todayData = [
+  //   { timestamp: "08:00", fuelLevel: 70 },
+  //   { timestamp: "09:00", fuelLevel: 68 },
+  //   { timestamp: "10:00", fuelLevel: 65 },
+  //   { timestamp: "11:00", fuelLevel: 63 },
+  //   { timestamp: "12:00", fuelLevel: 60 },
+  //   { timestamp: "13:00", fuelLevel: 58 },
+  //   { timestamp: "14:00", fuelLevel: 55 },
+  //   { timestamp: "15:00", fuelLevel: 53 },
+  //   { timestamp: "16:00", fuelLevel: 50 },
+  //   { timestamp: "17:00", fuelLevel: 48 },
+  //   { timestamp: "18:00", fuelLevel: 45 },
+  //   { timestamp: "19:00", fuelLevel: 43 },
+  // ];
+
+  // // Données fictives pour hier
+  // const yesterdayData = [
+  //   { timestamp: "08:00", fuelLevel: 65 },
+  //   { timestamp: "09:00", fuelLevel: 64 },
+  //   { timestamp: "10:00", fuelLevel: 62 },
+  //   { timestamp: "11:00", fuelLevel: 60 },
+  //   { timestamp: "12:00", fuelLevel: 58 },
+  //   { timestamp: "13:00", fuelLevel: 56 },
+  //   { timestamp: "14:00", fuelLevel: 54 },
+  //   { timestamp: "15:00", fuelLevel: 52 },
+  //   { timestamp: "16:00", fuelLevel: 50 },
+  //   { timestamp: "17:00", fuelLevel: 48 },
+  //   { timestamp: "18:00", fuelLevel: 46 },
+  //   { timestamp: "19:00", fuelLevel: 44 },
+  // ];
+
+  // // Extraction des valeurs pour le graphique
+  // const fuelToday = todayData.map((d) => d.fuelLevel);
+  // const fuelYesterday = yesterdayData.map((d) => d.fuelLevel);
+
+  // const options = {
+  //   tooltip: {
+  //     trigger: "axis",
+  //     formatter: function (params) {
+  //       const details = params
+  //         .map((item) => `${item.seriesName}: ${item.value} gallons`)
+  //         .join("<br />");
+  //       return `${params[0].axisValue}<br />${details}`;
+  //     },
+  //   },
+  //   xAxis: {
+  //     type: "category",
+  //     data: hours,
+  //     name: "Heures",
+  //   },
+  //   yAxis: {
+  //     type: "value",
+  //     name: "Carburant (Gallons)",
+  //   },
+  //   series: [
+  //     {
+  //       name: "Aujourd'hui",
+  //       data: fuelToday,
+  //       type: "line",
+  //       smooth: true,
+  //       lineStyle: { color: "rgba(75, 192, 192, 0.8)" },
+  //       areaStyle: { opacity: 0.1 },
+  //     },
+  //     {
+  //       name: "Hier",
+  //       data: fuelYesterday,
+  //       type: "line",
+  //       smooth: true,
+  //       lineStyle: { color: "rgba(255, 99, 132, 0.8)" },
+  //       areaStyle: { opacity: 0.1 },
+  //     },
+  //   ],
+  // };
+
   return (
     <div className="pb-20 md:pb-0 overflow-hidden">
       {showStatisticDeviceListeDashboard && !chooseOtherAccountGestion && (
@@ -1424,7 +1643,73 @@ function DashboardContaintMaintComponant({
               </div>
             </div>
           )}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/* <div className="flex gap-4 bg-white">
+          <div className="w-[100%]">
+            <ReactECharts option={options} style={{ height: 400 }} />;
+          </div>
 
+          <div className=" flex flex-col justify-center items-center mr-10">
+            <h2 className="font-bold text-xl mb-8 text-purple-800">
+              Nineau actuel
+            </h2>
+
+            <svg width="200" height="200">
+              <circle
+                r={fuelLayer.r}
+                cx={fuelLayer.cx}
+                cy={fuelLayer.cy}
+                stroke="rgba(107,33,168,0.1)" // violet clair pour le fond
+                strokeWidth={fuelLayer.strokeWidth}
+                fill="transparent"
+              />
+              <circle
+                {...fuelLayer}
+                stroke="rgba(107,33,168,1)" // violet foncé pour la progression
+              />
+              <text
+                x="50%"
+                y="50%"
+                dominantBaseline="middle"
+                textAnchor="middle"
+                fontSize="20"
+                fill="#6B21A8" // violet foncé pour le texte
+                fontWeight="bold"
+              >
+                <tspan x="50%" dy="-0.3em">
+                  {`${currentFuel} / ${maxFuel}`}
+                </tspan>
+                <tspan x="50%" dy="1.2em" fontSize="20" fontWeight="bold">
+                  Gallons
+                </tspan>
+              </text>
+            </svg>
+          </div>
+        </div> */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
+        {/*  */}
         {/* Graphe deplacement et graphe des véhicules */}
         <div className="grid grid-cols-1  md:grid-cols-2 items-stretch justify-center  gap-4 ">
           {/*  */}
@@ -1714,7 +1999,6 @@ function DashboardContaintMaintComponant({
 
           {/*  */}
         </div>
-
         {!currentAccountSelected && isDashboardHomePage && (
           <div className="w-full relative bg-white min-h-[20rem] max-h-[20rem] overflow-hidden rounded-lg mt-4">
             <div className="w-full overflow-hidden rounded-md z-0">
@@ -2083,7 +2367,6 @@ function DashboardContaintMaintComponant({
             </div>
           </div>
         )}
-
         {/* <div className="flex justify-end pr-2">
           <p className="ml-4 mt-6 font-semibold">
             {t("version")} : {versionApplication}

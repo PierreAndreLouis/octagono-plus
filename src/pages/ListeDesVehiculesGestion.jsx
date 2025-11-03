@@ -104,6 +104,7 @@ function ListeDesVehiculesGestion({
     setMoveDeviceToOtherCompte,
     showChooseItemToModifyMessage,
     setshowChooseItemToModifyMessage,
+    fetchHistoriqueVehicleDetails,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -399,6 +400,8 @@ function ListeDesVehiculesGestion({
   const moveDeviceToOtherCompteFonction = (e) => {
     e.preventDefault();
 
+    const fromMoveDeviceToOtherCompteFonction = true;
+
     if (inputPassword === adminPassword) {
       createVehicleEnGestionAccount(
         gestionAccountData.find(
@@ -414,32 +417,38 @@ function ListeDesVehiculesGestion({
         currentSelectedDeviceGestion?.vehicleID,
 
         currentSelectedDeviceGestion?.imeiNumber,
-        currentSelectedDeviceGestion?.uniqueIdentifier,
+        currentSelectedDeviceGestion?.uniqueID,
         currentSelectedDeviceGestion?.description,
         currentSelectedDeviceGestion?.displayName,
         currentSelectedDeviceGestion?.licensePlate,
         currentSelectedDeviceGestion?.equipmentType,
-        currentSelectedDeviceGestion?.simPhoneNumber
+        currentSelectedDeviceGestion?.simPhoneNumber,
+        currentSelectedDeviceGestion?.notes,
+        currentSelectedDeviceGestion?.allowNotify,
+        currentSelectedDeviceGestion?.isActive,
+        [],
+        fromMoveDeviceToOtherCompteFonction
       );
+
       const showMessage = false;
 
-      deleteVehicleEnGestionAccount(
-        currentSelectedDeviceGestion?.deviceID,
+      // deleteVehicleEnGestionAccount(
+      //   currentSelectedDeviceGestion?.deviceID,
 
-        gestionAccountData.find(
-          (account) =>
-            account.accountID === currentSelectedDeviceGestion?.accountID
-        )?.accountID,
+      //   gestionAccountData.find(
+      //     (account) =>
+      //       account.accountID === currentSelectedDeviceGestion?.accountID
+      //   )?.accountID,
 
-        "admin",
+      //   "admin",
 
-        gestionAccountData.find(
-          (account) =>
-            account.accountID === currentSelectedDeviceGestion?.accountID
-        )?.password,
+      //   gestionAccountData.find(
+      //     (account) =>
+      //       account.accountID === currentSelectedDeviceGestion?.accountID
+      //   )?.password,
 
-        showMessage
-      );
+      //   showMessage
+      // );
 
       setMoveDeviceToOtherCompte(false);
     } else {
@@ -456,6 +465,178 @@ function ListeDesVehiculesGestion({
   useEffect(() => {
     console.log("moveDeviceToOtherCompte", moveDeviceToOtherCompte);
   }, [moveDeviceToOtherCompte]);
+
+  /////////////////////////////////////////////////////////////
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate2, setSelectedDate2] = useState(yesterday);
+
+  // Formatage de la date actuelle
+  const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
+
+  const [startDate, setStartDate] = useState(today);
+  const [startTime, setStartTime] = useState("00:00"); // Heure de début fixée à minuit
+  const [endDate, setEndDate] = useState(today);
+  const [endTime, setEndTime] = useState(getCurrentTime());
+
+  const [startDateToDisplay, setStartDateToDisplay] = useState(startDate);
+  const [startTimeToDisplay, setStartTimeToDisplay] = useState(startTime); // Heure de début fixée à minuit
+  const [endDateToDisplay, setEndDateToDisplay] = useState(endDate);
+  const [endTimeToDisplay, setEndTimeToDisplay] = useState(endTime);
+
+  useEffect(() => {}, [
+    startTimeToDisplay,
+    startDateToDisplay,
+    endDateToDisplay,
+    endTimeToDisplay,
+  ]);
+
+  useEffect(() => {
+    console.log(selectedDate);
+    console.log(selectedDate2);
+  }, [selectedDate, selectedDate2]);
+
+  const handleApply = (selectedDate, isPart1, device) => {
+    // e.preventDefault();
+
+    const formatDateToISO = (date) => {
+      if (!(date instanceof Date)) {
+        date = new Date(date); // Convertir en objet Date si nécessaire
+      }
+      const adjustedDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      return adjustedDate.toISOString().split("T")[0];
+    };
+
+    // Conversion des variables startDate et endDate
+    const formattedStartDate = formatDateToISO(selectedDate);
+    const formattedEndDate = formatDateToISO(selectedDate);
+    //
+
+    const startTime = "00:00:00";
+    const endTime = "23:59:59";
+
+    // Combine les dates formatées avec les heures
+    const baseTimeFrom = new Date(`${formattedStartDate}T${startTime}`);
+    const baseTimeTo = new Date(`${formattedEndDate}T${endTime}`);
+
+    // Ajout de l'ajustement UTC
+    const adjustedTimeFrom = baseTimeFrom;
+    const adjustedTimeTo = baseTimeTo;
+
+    // Formatage en chaîne pour les heures ajustées
+    const timeFrom = `${adjustedTimeFrom.getFullYear()}-${(
+      adjustedTimeFrom.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeFrom
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeFrom
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeFrom
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    const timeTo = `${adjustedTimeTo.getFullYear()}-${(
+      adjustedTimeTo.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${adjustedTimeTo
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${adjustedTimeTo
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${adjustedTimeTo
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+    //
+    //
+    //
+    //
+
+    //
+    //
+    //
+    //
+
+    const vehicleID =
+      device?.deviceID ||
+      currentVéhicule?.deviceID ||
+      dataFusionné[0]?.deviceID;
+    const vehicleAccountID =
+      device?.accountID ||
+      currentVéhicule?.accountID ||
+      dataFusionné[0]?.accountID;
+
+    let fromGestionCarburant;
+    if (isDashboardHomePage) {
+      // console.log(
+      fetchHistoriqueVehicleDetails(
+        vehicleID,
+        timeFrom,
+        timeTo,
+
+        currentAccountSelected?.accountID ||
+          gestionAccountData.find(
+            (account) => account.accountID === vehicleAccountID
+          )?.accountID,
+        "admin",
+        currentAccountSelected?.password ||
+          gestionAccountData.find(
+            (account) => account.accountID === vehicleAccountID
+          )?.password,
+        false,
+        isPart1 ? "partie1" : "partie2"
+      );
+    } else {
+      fetchHistoriqueVehicleDetails(
+        vehicleID,
+        timeFrom,
+        timeTo,
+        false,
+        isPart1 ? "partie1" : "partie2"
+      );
+    }
+
+    //
+    //
+    //
+
+    setStartDateToDisplay(selectedDate);
+    setStartTimeToDisplay(startTime);
+    setEndDateToDisplay(selectedDate);
+    setEndTimeToDisplay(endTime);
+  };
+
+  const handleClick = (véhicule) => {
+    handleApply(selectedDate, true, véhicule);
+    handleApply(selectedDate2, false, véhicule);
+    navigate("/Gestion_Carburant");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "auto", // Défilement fluide
+      // behavior: "smooth", // Défilement fluide
+    });
+
+    // ,,,,,,,,,,,    // }
+  };
 
   return (
     <div>
@@ -1241,6 +1422,10 @@ function ListeDesVehiculesGestion({
                           )
                         )?.véhiculeDetails?.[0];
 
+                        const max = 80;
+                        const value = 35;
+                        const percent = (value / max) * 100;
+
                         return (
                           <div
                             key={index}
@@ -1360,25 +1545,97 @@ function ListeDesVehiculesGestion({
                                       </span>
                                     </p>
                                   </div>{" "}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/* <div className="flex flex-wrap border-b py-2 ">
+                                    <div className="font-bold w-full flex gap-3 flex-wrap--">
+                                      <p className="whitespace-nowrap">
+                                        {t("Niveau de carburant")} :
+                                      </p>
+                                      <div
+                                        className={`${text_color} font-bold  pl-2  flex gap-3 justify-between items-center w-full`}
+                                      >
+                                        <p className="whitespace-nowrap">
+                                          35 / 80
+                                        </p>
+                                        <p
+                                          onClick={() => {
+                                            handleClick(device);
+                                          }}
+                                          className="cursor-pointer underline font-normal"
+                                        >
+                                          statistiques
+                                        </p>
+                                      <div
+                                          className="w-full"
+                                          style={{
+                                            // width: "300px",
+                                            background: "#eee",
+                                            borderRadius: "8px",
+                                            overflow: "hidden",
+                                          }}
+                                        >
+                                          <div
+                                            style={{
+                                              width: `${percent}%`,
+                                              height: "5px",
+                                              backgroundColor: "purple",
+                                              transition: "width 0.5s ease",
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>{" "} */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
                                   <div className="flex flex-wrap border-b py-1">
                                     <p className="font-bold">
-                                      {t("Dernière mise a jour")} :
-                                      <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
-                                        {
-                                          FormatDateHeure(
-                                            device?.véhiculeDetails?.[0]
-                                              ?.timestamp
-                                          ).date
-                                        }
-                                        <span className="px-2">/</span>{" "}
-                                        {
-                                          FormatDateHeure(
-                                            device?.véhiculeDetails?.[0]
-                                              ?.timestamp
-                                          ).time
-                                        }
-                                      </span>
+                                      {t("Date d’actualisation EventData")} :
                                     </p>
+
+                                    <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                      {
+                                        FormatDateHeure(
+                                          device?.véhiculeDetails?.[0]
+                                            ?.timestamp
+                                        ).date
+                                      }
+                                      <span className="px-2">/</span>{" "}
+                                      {
+                                        FormatDateHeure(
+                                          device?.véhiculeDetails?.[0]
+                                            ?.timestamp
+                                        ).time
+                                      }
+                                    </span>
+                                  </div>{" "}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  {/*  */}
+                                  <div className="flex flex-wrap border-b py-1">
+                                    <p className="font-bold">
+                                      {t("Date d’actualisation de l’appareil")}{" "}
+                                      :
+                                    </p>
+
+                                    <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                      {
+                                        FormatDateHeure(device?.lastUpdateTime)
+                                          .date
+                                      }
+                                      <span className="px-2">/</span>{" "}
+                                      {
+                                        FormatDateHeure(device?.lastUpdateTime)
+                                          .time
+                                      }
+                                    </span>
                                   </div>{" "}
                                   {/*  */}
                                   {/*  */}

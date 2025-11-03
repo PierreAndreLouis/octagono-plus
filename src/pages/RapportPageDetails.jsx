@@ -60,6 +60,7 @@ function RapportPageDetails() {
     setRapportVehicleDetails,
     setIsSearchingFromRapportGroupePage,
     rapportPersonelleData,
+    véhiculeHistoriqueDetails,
   } = useContext(DataContext);
 
   let x;
@@ -334,9 +335,9 @@ function RapportPageDetails() {
   x;
 
   // Graphe des vitesse
-  const data = filteredVehicles.reverse() || [];
+  const data = véhiculeHistoriqueDetails.reverse() || [];
+  // const data = filteredVehicles.reverse() || [];
 
-  // const speedData = data.map((véhicule) => parseFloat(véhicule.speedKPH));
   const speedData = data.map((véhicule) => {
     const speed = parseFloat(véhicule.speedKPH);
     return !isNaN(speed) ? speed.toFixed(0) : null;
@@ -345,45 +346,85 @@ function RapportPageDetails() {
     (véhicule) => FormatDateHeure(véhicule.timestamp)?.time
   );
 
+  //   const options = {
+  //     tooltip: {
+  //       trigger: "axis",
+  //       formatter: function (params) {
+  //         const index = params[0].dataIndex;
+  //         const véhicule = data[index];
+  //         const time = params[0].axisValue;
+
+  //         const details = params
+  //           .map((item) => {
+  //             return ` ${item.seriesName}: ${item.value} km/h`;
+  //           })
+  //           .join("<br />");
+
+  //         const address = véhicule?.address || "Adresse inconnue";
+
+  //         return `<div className="max-w-10"> Heure: ${time}<br />${details}<br />
+  //           <p style="max-width: 400px; white-space: normal; margin-top: 10px;"><strong> Adresse: </strong>  ${address}</p>
+  //  <div/>
+  //        `;
+  //       },
+  //     },
+
+  //     xAxis: {
+  //       type: "category",
+  //       data: timeData, // Heure sur l'axe des X
+  //       boundaryGap: false,
+  //     },
+  //     yAxis: {
+  //       type: "value",
+  //       name: `${t("Vitesse")} (Km/h)`,
+  //     },
+  //     series: [
+  //       {
+  //         name: "Vitesse",
+  //         data: speedData, // Vitesses sur l'axe des Y
+  //         type: "line",
+  //         smooth: true,
+  //         lineStyle: {
+  //           color: "#9c08f1",
+  //         },
+  //       },
+  //     ],
+  //   };
+
   const options = {
     tooltip: {
       trigger: "axis",
+      confine: true, // empêche de sortir du graphique
+      position: ["80%", "5%"], // toujours en haut à droite
+      backgroundColor: "rgba(50, 50, 50, 0.8)",
+      borderWidth: 0,
+      textStyle: {
+        color: "#fff",
+        width: 250, // largeur max
+      },
       formatter: function (params) {
         const index = params[0].dataIndex;
         const véhicule = data[index];
         const time = params[0].axisValue;
 
         const details = params
-          .map((item) => {
-            return ` ${item.seriesName}: ${item.value} km/h`;
-          })
-          .join("<br />");
+          .map((item) => `${item.seriesName}: ${item.value} km/h`)
+          .join("<br/>");
 
         const address = véhicule?.address || "Adresse inconnue";
 
-        return `Heure: ${time}<br />${details}<br /> 
-          <p style="max-width: 400px; white-space: normal; margin-top: 10px;"><strong> Adresse: </strong>  ${address}</p>
- 
-       `;
+        return `
+        <div style="max-width:250px; white-space:normal;">
+          <strong>Heure:</strong> ${time}<br/>
+          ${details}<br/>
+          <p style="margin-top:8px;"><strong>Adresse:</strong> ${address}</p>
+        </div>
+      `;
       },
     },
-    // tooltip: {
-    //   trigger: "axis",
-    //   formatter: function (params) {
-    //     // La première entrée contient les informations de l'axe X (temps)
-    //     const time = params[0].axisValue;
-    //     const details = params
-    //       .map((item) => {
-    //         return `${item.marker} ${item.seriesName}: ${item.value} km/h`;
-    //       })
-    //       .join("<br />");
-    //     return `Heure: ${time}<br />${details}`;
-    //   },
-    // },
-
     xAxis: {
       type: "category",
-      data: timeData, // Heure sur l'axe des X
+      data: timeData,
       boundaryGap: false,
     },
     yAxis: {
@@ -393,12 +434,10 @@ function RapportPageDetails() {
     series: [
       {
         name: "Vitesse",
-        data: speedData, // Vitesses sur l'axe des Y
+        data: speedData,
         type: "line",
         smooth: true,
-        lineStyle: {
-          color: "rgba(75, 192, 192, 0.8)",
-        },
+        lineStyle: { color: "#6B21A8" },
       },
     ],
   };
@@ -429,11 +468,11 @@ function RapportPageDetails() {
 
   const firstIndex =
     details.findIndex((item) => parseFloat(item.speedKPH) > 0) - 1;
+
   const lastIndex =
     details.length -
     1 -
-    [...details].reverse().findIndex((item) => parseFloat(item.speedKPH) > 0) +
-    1;
+    [...details].reverse().findIndex((item) => parseFloat(item.speedKPH) > 0);
 
   let filteredList = details.filter((item) => parseFloat(item.speedKPH) > 0);
 
@@ -451,9 +490,9 @@ function RapportPageDetails() {
   // /////////////////////////////////////////////////////////////////////////////////////
 
   // heure de fin
-  const heureActiveDebut = currentVéhicule?.véhiculeDetails?.[lastIndex];
+  const heureActiveDebut = currentVéhicule?.véhiculeDetails?.[firstIndex];
   // Heure d'arrive
-  const heureActiveFin = currentVéhicule?.véhiculeDetails?.[firstIndex];
+  const heureActiveFin = currentVéhicule?.véhiculeDetails?.[lastIndex];
 
   //
   //

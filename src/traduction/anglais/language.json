@@ -228,7 +228,9 @@
   "Type de l'utilisateur": "User type",
   "Utilisateur standard / limité": "Standard / limited user",
   "Utilisateur Administrateur / Superviseur": "Administrator / supervisor user",
-  "choisissez un role": "Choose a role",
+  "choisissez un role": "Choose a Sysadmin role",
+  "Choisissez un rôle Sysadmin": "Choose a Sysadmin role",
+
   "Choisis un Groupe pour intégrer l'appareil": "Choose a group to assign the device",
   "Ajouter un nouveau Utilisateur": "Add a new user",
   "Choisissez un groupe pour affecter l'utilisateur": "Choose a group to assign the user",

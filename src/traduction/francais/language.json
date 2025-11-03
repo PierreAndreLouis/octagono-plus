@@ -239,7 +239,8 @@
   "Type de l'utilisateur": "Type d'utilisateur",
   "Utilisateur standard / limité": "Utilisateur standard / limité",
   "Utilisateur Administrateur / Superviseur": "Utilisateur administrateur / superviseur",
-  "choisissez un role": "Choisissez un rôle",
+  "Choisissez un rôle Sysadmin": "Choisissez un rôle Sysadmin",
+  "choisissez un role": "Choisissez un rôle Sysadmin",
   "Choisis un Groupe pour intégrer l'appareil": "Choisissez un groupe pour intégrer l'appareil",
   "Ajouter un nouveau Utilisateur": "Ajouter un nouvel utilisateur",
   "Choisissez un groupe pour affecter l'utilisateur": "Choisissez un groupe pour affecter l'utilisateur",
@@ -1071,7 +1072,7 @@
 "Niveau d’accès non autorisé pour affecter un utilisateur": "Niveau d’accès non autorisé pour affecter un utilisateur",
 "Rôle non autorisé pour affecter un utilisateur à un groupe": "Rôle non autorisé pour affecter un utilisateur à un groupe",
 "Cet utilisateur n’est pas autorisé à être affecté à un groupe": "Cet utilisateur n’est pas autorisé à être affecté à un groupe",
-"Aucune": "Aucune",
+"Aucune": "Aucun",
 "null": "null",
 
 
@@ -1143,14 +1144,14 @@
 
 "Modifier la règle" : "Modifier la règle",
 "Liste des règle prédéfinis" : "Liste des règle prédéfinis",
-"" : "",
-"" : "",
-"" : "",
-"" : "",
-"" : "",
-"" : "",
-"" : "",
-"" : ""
+"Gestion_Carburant" : "Gestion_Carburant",
+"Niveau de carburant actuel" : "Niveau de carburant actuel",
+"Départ / Arrivée du véhicule" : "Départ / Arrivée du véhicule",
+"Évolution du niveau de carburant" : "Évolution du niveau de carburant",
+"Niveau de carburant" : "Niveau de carburant",
+"Gestion du carburant" : "Gestion du carburant",
+"Date d’actualisation EventData" : "Date d’actualisation EventData",
+"Date d’actualisation de l’appareil" : "Date d’actualisation de l’appareil"
  
 
 

@@ -115,6 +115,7 @@ import CreateNewRoleActive from "./components/gestion_des_comptes/CreateNewRoleA
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import CreateNewRoleForCompte from "./components/gestion_des_comptes/CreateNewRoleForCompte";
 import GestionDesRolesForCompte from "./pages/GestionDesRolesForCompte";
+import Gestion_Carburant from "./pages/Gestion_Carburant";
 
 function App() {
   const {
@@ -1707,6 +1708,24 @@ function App() {
                       <div className="w-full">
                         <Suspense fallback={<LoadingLazyAnimation />}>
                           <DetailsVehiculePage />
+                        </Suspense>
+                      </div>
+                    </div>
+                  }
+                />
+              }
+            />
+
+            <Route
+              path="/Gestion_Carburant"
+              element={
+                <PrivateRoute
+                  element={
+                    <div className="flex mx-auto w-full justify-center mt-[3.2rem] bg-gray-100">
+                      <SideBarSpaceLeft />
+                      <div className="w-full">
+                        <Suspense fallback={<LoadingLazyAnimation />}>
+                          <Gestion_Carburant />
                         </Suspense>
                       </div>
                     </div>

@@ -55,6 +55,7 @@ function StatisticDashboard({
     DeviceEnStationnement,
     DeviceInactifsWidthDetails,
     DeviceInactifsWidthNoDetails,
+    sendGMailConfirmation,
   } = useContext(DataContext);
   const [t, i18n] = useTranslation();
 
@@ -106,7 +107,8 @@ function StatisticDashboard({
           <div className="">
             <div
               onClick={() => {
-                testClique();
+                // testClique();
+                sendGMailConfirmation("Pedro", "PedroTest", "HT");
               }}
               className="flex items-center gap-2 sm:gap-3"
             >

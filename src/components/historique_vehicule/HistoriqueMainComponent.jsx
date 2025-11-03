@@ -211,6 +211,7 @@ function HistoriqueMainComponent({
               <p
                 onClick={() => {
                   setFilterByColor("mouvement rapide");
+                  console.log("xxxxxxx", filteredVehicles);
                 }}
                 className={`${
                   filterByColor === "mouvement rapide"
@@ -224,6 +225,7 @@ function HistoriqueMainComponent({
               <p
                 onClick={() => {
                   setFilterByColor("mouvement lent");
+                  console.log("xxxxxxx", filteredVehicles);
                 }}
                 className={` ${
                   filterByColor === "mouvement lent"

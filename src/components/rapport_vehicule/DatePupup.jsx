@@ -63,15 +63,7 @@ function DatePupup({
             <h2 className="font-semibold dark:text-gray-200 text-lg px-3 text-gray-700">
               {t("Recherche pour une journée")}
             </h2>
-
-            {/* <h2 className="pt-4 pl-4 text-gray-900 dark:text-gray-100">
-                      Choisissez une date :
-                    </h2> */}
-            {/* <p> {formatDate(selectedDate)}</p> */}
             <label className="px-3- w-full-- border border-orange-100 rounded-lg mx-4 mt-3 mb-6 bg-orange-100  dark:border-gray-600">
-             
-
-           
               <DatePicker
                 id="date"
                 className="focus:outline-none  shadow-lg-- shadow-gray-300/40 bg-black/0 border- p-2 rounded-lg w-full bg-orange-100- dark:bg-gray-400--  dark:border-gray-600- dark:text-gray-200--"
@@ -81,8 +73,7 @@ function DatePupup({
                 selected={selectedDate} // Passer directement l'objet Date
                 onChange={(date) => {
                   if (date) {
-                
-                    setSelectedDate(date); // Mettre à jour l'état  
+                    setSelectedDate(date); // Mettre à jour l'état
                   }
                 }}
                 maxDate={today}

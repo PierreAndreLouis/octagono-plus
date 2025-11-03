@@ -610,8 +610,26 @@ function CreateNewDeviceGestion({
                           value={addVéhiculeData[field.id]}
                           onChange={handleChange}
                           required
-                          className=" w-full border-b pb-3  py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm  "
+                          className=" w-[130%] border-b pb-3  py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm  "
                         />
+                        <div className="w-full relative">
+                          <label
+                            className="absolute -top-6 font-semibold left-0"
+                            htmlFor=""
+                          >
+                            Unique ID
+                          </label>
+                          <input
+                            // id={field.id}
+                            // name={field.id}
+                            type="text"
+                            // placeholder={field.placeholder}
+                            value={"tk_" + addVéhiculeData[field.id]}
+                            // required
+                            disabled
+                            className=" w-full border-b pb-3  py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm  "
+                          />
+                        </div>
                       </div>
                     ) : (
                       <input

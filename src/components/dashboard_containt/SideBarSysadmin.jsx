@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Tooltip from "@mui/material/Tooltip";
+import { BsFillFuelPumpFill } from "react-icons/bs";
 
 import {
   FaArrowLeft,
@@ -1278,6 +1279,46 @@ function SideBarSysadmin({
           {/*  */}
           {/*  */}
           {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+
+          {/* <Link
+            to="/Gestion_Carburant"
+            className="ajouter-appareil-container transition-all hover:border-b  "
+          >
+            <div
+              onClick={() => {
+                scrollToTop();
+                setDocumentationPage("Gestion du carburant");
+                closeSideBar();
+                setShowSideBar2(false);
+
+                setReadDocumentation(false);
+              }}
+              className={`${
+                documentationPage === "Gestion du carburant"
+                  ? "bg-orange-50"
+                  : ""
+              } flex items-center-- ajouter-appareil-container-2 gap-2  border-b border-b-gray-200 py-4 hover:bg-orange-50 cursor-pointer px-3`}
+            >
+              <BsFillFuelPumpFill className="text-xl min-w-[1.5rem] text-orange-600" />
+              <div className="flex w-full justify-between">
+                <p className="text-gray-600 font-semibold">
+                  {t("Gestion du carburant")}
+                </p>
+              </div>
+            </div>
+          </Link> */}
+
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
 
           <Link
             to="/Gestion_geofences"
@@ -1363,7 +1404,7 @@ function SideBarSysadmin({
 
           {isDashboardHomePage && (
             <div
-              // to="/Gestion_des_roles_actives"
+              // to="/Gestion_des_roles"
               className="ajouter-appareil-container transition-all   relative"
             >
               <div className="ajouter-appareil-container transition-all   ">
@@ -1371,6 +1412,7 @@ function SideBarSysadmin({
                   onClick={() => {
                     // scrollToTop();
                     setDocumentationPage("Gestion_des_roles");
+                    navigate("/Gestion_des_roles");
                     setShowRulesOptions(true);
                     // closeSideBar();
                     // setShowSideBar2(false);

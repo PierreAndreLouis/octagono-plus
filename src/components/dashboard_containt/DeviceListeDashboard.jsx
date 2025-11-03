@@ -104,13 +104,32 @@ function DeviceListeDashboard() {
                       {device?.véhiculeDetails?.[0]?.address}
                     </span>{" "}
                   </p>
-                  <p className="text-gray-600 font-bold">
-                    {t("Last Update")} :{" "}
-                    <span className="font-normal text-gray-500 ml-0">
+                  <div className="flex flex-wrap">
+                    <p className="text-gray-600 font-bold">
+                      {t("Date d’actualisation EventData")} :{" "}
+                    </p>
+                    <span className="font-normal text-gray-500 ml-3">
+                      {
+                        FormatDateHeure(device?.véhiculeDetails?.[0]?.timestamp)
+                          ?.date
+                      }{" "}
+                      {" / "}
+                      {
+                        FormatDateHeure(device?.véhiculeDetails?.[0]?.timestamp)
+                          ?.time
+                      }
+                    </span>{" "}
+                  </div>
+
+                  <div className="flex flex-wrap">
+                    <p className="text-gray-600 font-bold">
+                      {t("Date d’actualisation de l’appareil")} :{" "}
+                    </p>
+                    <span className="font-normal text-gray-500 ml-3">
                       {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
                       {FormatDateHeure(device?.lastUpdateTime)?.time}
                     </span>{" "}
-                  </p>
+                  </div>
                 </div>
               </div>
             );

@@ -487,6 +487,15 @@ function CreateNewRoleActive({
     (d) => d?.deviceID === addNewRoleActiveData?.deviceID
   )?.description;
 
+  useEffect(() => {
+    if (addNewRoleActiveData?.ruleID) {
+      setAddNewRoleActiveData((prev) => ({
+        ...prev,
+        statusCode: "0",
+      }));
+    }
+  }, [addNewRoleActiveData]);
+
   // useEffect(() => {
   //   if (
   //     addNewRoleActiveData?.groupID !== "-" &&
@@ -847,7 +856,7 @@ function CreateNewRoleActive({
         <div className="fixed inset-0 bg-black/50 z-[99999999999999999999999999999999999999] flex justify-center items-center">
           <div className="max-w-[40rem] overflow-hidden w-full min-h-[40vh] relative  bg-white rounded-lg">
             <h2 className="text-center py-4 bg-orange-300 font-bold text-lg">
-              {t("Choisissez un Role")}
+              {t("Choisissez un rôle Sysadmin")}
             </h2>
             <IoClose
               onClick={() => {
@@ -1093,14 +1102,14 @@ function CreateNewRoleActive({
                     placeholder: "groupID",
                   },
                   {
-                    id: "statusCode",
-                    label: `${t("Code de statut")}`,
-                    placeholder: "Code de statut",
-                  },
-                  {
                     id: "ruleID",
                     label: `${t("Liste des règle prédéfinis")}`,
                     placeholder: "Liste des règle prédéfinis",
+                  },
+                  {
+                    id: "statusCode",
+                    label: `${t("Code de statut")}`,
+                    placeholder: "Code de statut",
                   },
                 ].map((field) => {
                   const requiredFields = [
@@ -1165,7 +1174,7 @@ function CreateNewRoleActive({
                         >
                           <p>
                             {addNewRoleActiveData?.ruleID ||
-                              "Choisissez un role"}
+                              "Choisissez un rôle Sysadmin"}
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
@@ -1198,26 +1207,6 @@ function CreateNewRoleActive({
                           required
                           className="block px-3 w-full border-b min-h-40 pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
-                      ) : field.id === "statusCode" ? (
-                        <div className="border border-gray-800/0  border-b-gray-300">
-                          <select
-                            id="statusCode"
-                            name="statusCode"
-                            placeholder={field.placeholder}
-                            value={addNewRoleActiveData[field.id]}
-                            onChange={handleChange}
-                            required
-                            className="block w-full focus:outline-none  py-1.5 px-3 text-gray-900     "
-                          >
-                            <option value="">
-                              {t("Sélectionner un statut de code")}
-                            </option>
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                          </select>
-                        </div>
                       ) : field.id === "groupID" ? (
                         <div
                           onClick={() => {
@@ -1235,6 +1224,27 @@ function CreateNewRoleActive({
                               : addNewRoleActiveData?.groupID}
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
+                        </div>
+                      ) : field.id === "statusCode" ? (
+                        <div className="border border-gray-800/0  border-b-gray-300">
+                          <select
+                            id="statusCode"
+                            name="statusCode"
+                            placeholder={field.placeholder}
+                            value={addNewRoleActiveData[field.id]}
+                            onChange={handleChange}
+                            required
+                            disabled={addNewRoleActiveData?.ruleID}
+                            className="block w-full focus:outline-none  py-1.5 px-3 text-gray-900     "
+                          >
+                            <option value="">
+                              {t("Sélectionner un statut de code")}
+                            </option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
                         </div>
                       ) : (
                         <input
