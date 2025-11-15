@@ -108,6 +108,9 @@ function StatisticDashboard({
             <div
               onClick={() => {
                 // testClique();
+                console.log(
+                  JSON.parse(localStorage.getItem("userPersonnelData"))?.gender
+                );
                 sendGMailConfirmation("Pedro", "PedroTest", "HT");
               }}
               className="flex items-center gap-2 sm:gap-3"

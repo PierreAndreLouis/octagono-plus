@@ -72,7 +72,13 @@ function GestionDesRolesActive({
 
   const deleteRoleFonction = (e) => {
     e.preventDefault();
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       setDeleRolePopup(false);
 
       // console.log(

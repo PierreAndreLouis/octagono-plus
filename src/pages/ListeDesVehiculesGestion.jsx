@@ -105,6 +105,8 @@ function ListeDesVehiculesGestion({
     showChooseItemToModifyMessage,
     setshowChooseItemToModifyMessage,
     fetchHistoriqueVehicleDetails,
+    testExecutionRequette,
+    changerCompte,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -402,33 +404,47 @@ function ListeDesVehiculesGestion({
 
     const fromMoveDeviceToOtherCompteFonction = true;
 
-    if (inputPassword === adminPassword) {
-      createVehicleEnGestionAccount(
-        gestionAccountData.find(
-          (account) => account.accountID === chooseAccountID
-        )?.accountID,
-        "admin",
-
-        gestionAccountData.find(
-          (account) => account.accountID === chooseAccountID
-        )?.password,
-
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
+      // changerCompte(newCompte, oldCompte, imei, description)
+      changerCompte(
+        chooseAccountID,
+        currentSelectedDeviceGestion?.accountID,
         currentSelectedDeviceGestion?.deviceID,
-        currentSelectedDeviceGestion?.vehicleID,
-
-        currentSelectedDeviceGestion?.imeiNumber,
-        currentSelectedDeviceGestion?.uniqueID,
-        currentSelectedDeviceGestion?.description,
-        currentSelectedDeviceGestion?.displayName,
-        currentSelectedDeviceGestion?.licensePlate,
-        currentSelectedDeviceGestion?.equipmentType,
-        currentSelectedDeviceGestion?.simPhoneNumber,
-        currentSelectedDeviceGestion?.notes,
-        currentSelectedDeviceGestion?.allowNotify,
-        currentSelectedDeviceGestion?.isActive,
-        [],
-        fromMoveDeviceToOtherCompteFonction
+        currentSelectedDeviceGestion?.description
       );
+
+      // createVehicleEnGestionAccount(
+      //   gestionAccountData.find(
+      //     (account) => account.accountID === chooseAccountID
+      //   )?.accountID,
+      //   "admin",
+
+      //   gestionAccountData.find(
+      //     (account) => account.accountID === chooseAccountID
+      //   )?.password,
+
+      //   currentSelectedDeviceGestion?.deviceID,
+      //   currentSelectedDeviceGestion?.vehicleID,
+
+      //   currentSelectedDeviceGestion?.imeiNumber,
+      //   currentSelectedDeviceGestion?.uniqueID,
+      //   currentSelectedDeviceGestion?.description,
+      //   currentSelectedDeviceGestion?.displayName,
+      //   currentSelectedDeviceGestion?.licensePlate,
+      //   currentSelectedDeviceGestion?.equipmentType,
+      //   currentSelectedDeviceGestion?.simPhoneNumber,
+      //   currentSelectedDeviceGestion?.notes,
+      //   currentSelectedDeviceGestion?.allowNotify,
+      //   currentSelectedDeviceGestion?.isActive,
+      //   [],
+      //   fromMoveDeviceToOtherCompteFonction
+      // );
 
       const showMessage = false;
 
@@ -686,7 +702,18 @@ function ListeDesVehiculesGestion({
         <div>
           {!fromDashboard && (
             <div>
-              <h2 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold ">
+              <h2
+                onClick={() => {
+                  console.log("Lancement requette");
+                  changerCompte(
+                    "new compte",
+                    "old demo",
+                    "231341234",
+                    "test déplacement"
+                  );
+                }}
+                className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
+              >
                 {t("Liste des Appareils")}
               </h2>
 
@@ -1541,7 +1568,7 @@ function ListeDesVehiculesGestion({
                                         {foundDetails?.address
                                           ? device?.véhiculeDetails[0]
                                               ?.address || foundDetails?.address
-                                          : `${t("Pas de nom disponible")}`}
+                                          : `${t("-------")}`}
                                       </span>
                                     </p>
                                   </div>{" "}
@@ -1596,30 +1623,34 @@ function ListeDesVehiculesGestion({
                                   {/*  */}
                                   <div className="flex flex-wrap border-b py-1">
                                     <p className="font-bold">
-                                      {t("Date d’actualisation EventData")} :
+                                      {t("Dernière mise a jour")} :
                                     </p>
 
-                                    <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
-                                      {
-                                        FormatDateHeure(
-                                          device?.véhiculeDetails?.[0]
-                                            ?.timestamp
-                                        ).date
-                                      }
-                                      <span className="px-2">/</span>{" "}
-                                      {
-                                        FormatDateHeure(
-                                          device?.véhiculeDetails?.[0]
-                                            ?.timestamp
-                                        ).time
-                                      }
-                                    </span>
+                                    {foundDetails?.timestamp ? (
+                                      <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                        {
+                                          FormatDateHeure(
+                                            foundDetails?.timestamp
+                                          ).date
+                                        }
+                                        <span className="px-2">/</span>{" "}
+                                        {
+                                          FormatDateHeure(
+                                            foundDetails?.timestamp
+                                          ).time
+                                        }
+                                      </span>
+                                    ) : (
+                                      <p className=" ml-3 text-gray-600">
+                                        {t("-------")}
+                                      </p>
+                                    )}
                                   </div>{" "}
                                   {/*  */}
                                   {/*  */}
                                   {/*  */}
                                   {/*  */}
-                                  <div className="flex flex-wrap border-b py-1">
+                                  {/* <div className="flex flex-wrap border-b py-1">
                                     <p className="font-bold">
                                       {t("Date d’actualisation de l’appareil")}{" "}
                                       :
@@ -1636,7 +1667,7 @@ function ListeDesVehiculesGestion({
                                           .time
                                       }
                                     </span>
-                                  </div>{" "}
+                                  </div>{" "} */}
                                   {/*  */}
                                   {/*  */}
                                   {/*  */}

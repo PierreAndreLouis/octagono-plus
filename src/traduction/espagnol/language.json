@@ -126,7 +126,7 @@
   "Dernière connexion": "Última conexión",
   "Mot de passe incorrect. Veuillez réessayer": "Contraseña incorrecta. Inténtalo de nuevo.",
   "Voulez-vous changer de Compte ?": "¿Quieres cambiar de cuenta?",
-  "Veuillez entrer votre mot de passe": "Ingrese su contraseña",
+  "Veuillez entrer votre mot de passe": "Ingrese su PIN or contraseña",
   "Mot de passe": "Contraseña",
   "Confirmer": "Confirmar",
   "Annuler": "Cancelar",
@@ -1127,7 +1127,27 @@
 "Gestion des règles actives" : "Gestión de reglas activas",
 "Nombre de règles actives" : "Número de reglas activas",
 "Activer une nouvelle règle" : "Activar una nueva regla",
-"Liste des règles actives de" : "Lista de reglas activas de"
+"Liste des règles actives de" : "Lista de reglas activas de",
+
+
+
+
+
+
+
+
+"Modifier la règle" : "Modificar la regla",
+"Liste des règle prédéfinis" : "Lista de reglas predefinidas",
+"Gestion_Carburant" : "Gestión de combustible",
+"Niveau de carburant actuel" : "Nivel de combustible actual",
+"Départ / Arrivée du véhicule" : "Salida / llegada del vehículo",
+"Évolution du niveau de carburant" : "Evolución del nivel de combustible",
+"Niveau de carburant" : "Nivel de combustible",
+"Gestion du carburant" : "Gestión del combustible",
+"Date d’actualisation EventData" : "Fecha de actualización de EventData",
+"Date d’actualisation de l’appareil" : "Fecha de actualización del dispositivo",
+"Pas de mise a jour": "Sin actualización"
+
 
 
 

@@ -49,27 +49,70 @@ function DeviceListeDashboard() {
       {DataDevices?.length > 0 ? (
         addVehiculeDetailsFonction(DataDevices, véhiculeDetails)?.map(
           (device, index) => {
+            const currentTime = Date.now(); // Heure actuelle en millisecondes
+            const twentyFourHoursInMs = 24 * 60 * 60 * 1000; // 20 heures en millisecondes
+
+            const hasDetails = device?.véhiculeDetails?.length > 0;
+            const lastDetail = device?.véhiculeDetails?.[0];
+            const speed = lastDetail?.speedKPH ?? 0;
+            const lastUpdateMs = lastDetail?.timestamp
+              ? lastDetail.timestamp * 1000
+              : 0;
+
+            const isActive = device?.véhiculeDetails?.[0]?.timestamp
+              ? currentTime - device?.véhiculeDetails?.[0]?.timestamp * 1000 <
+                twentyFourHoursInMs
+              : false;
+
+            const updatedToday = lastUpdateMs >= todayTimestamp;
+
             let border_color = "bg-gray-50";
             let text_color = "text-orange-500/80";
+            let bg_color = "bg-orange-500";
 
             if (
-              currentTimeSec - device?.lastUpdateTime <
-              twentyFourHoursInSec
+              (device?.lastStopTime > todayTimestamp && hasDetails) ||
+              (hasDetails && isActive && speed > 0)
             ) {
-              border_color = "border-l-[.4rem] border-orange-400";
-              text_color = "text-orange-400";
+              border_color = "border-l-[.4rem] border-green-500";
+              text_color = "text-green-600";
+              bg_color = "bg-green-600/90";
             } else if (
-              currentTimeSec - device?.lastUpdateTime >
-              twentyFourHoursInSec
+              isActive &&
+              hasDetails &&
+              device?.lastStopTime <= todayTimestamp &&
+              speed <= 0
             ) {
-              border_color = "border-l-[.4rem] border-purple-300";
-              text_color = "text-purple-400";
+              border_color = "border-l-[.4rem] border-orange-500";
+              text_color = "text-orange-500";
+              bg_color = "bg-orange-500";
+            } else {
+              border_color = "border-l-[.4rem] border-purple-500";
+              text_color = "text-purple-500";
+              bg_color = "bg-purple-500";
             }
 
-            if (device?.lastStopTime > todayTimestamp) {
-              border_color = "border-l-[.4rem] border-green-500";
-              text_color = "text-green-400";
-            }
+            // let border_color = "bg-gray-50";
+            // let text_color = "text-orange-500/80";
+
+            // if (
+            //   currentTimeSec - device?.lastUpdateTime <
+            //   twentyFourHoursInSec
+            // ) {
+            //   border_color = "border-l-[.4rem] border-orange-400";
+            //   text_color = "text-orange-400";
+            // } else if (
+            //   currentTimeSec - device?.lastUpdateTime >
+            //   twentyFourHoursInSec
+            // ) {
+            //   border_color = "border-l-[.4rem] border-purple-300";
+            //   text_color = "text-purple-400";
+            // }
+
+            // if (device?.lastStopTime > todayTimestamp) {
+            //   border_color = "border-l-[.4rem] border-green-500";
+            //   text_color = "text-green-400";
+            // }
 
             return (
               <div
@@ -101,27 +144,35 @@ function DeviceListeDashboard() {
                   <p className="text-gray-600 font-bold">
                     {t("Adresse")} :{" "}
                     <span className="font-normal notranslate text-gray-500 ml-0 ">
-                      {device?.véhiculeDetails?.[0]?.address}
+                      {device?.véhiculeDetails?.[0]?.address
+                        ? device?.véhiculeDetails?.[0]?.address
+                        : `${t("-------")}`}
                     </span>{" "}
                   </p>
                   <div className="flex flex-wrap">
                     <p className="text-gray-600 font-bold">
-                      {t("Date d’actualisation EventData")} :{" "}
+                      {t("Dernière mise a jour")} :{" "}
                     </p>
-                    <span className="font-normal text-gray-500 ml-3">
-                      {
-                        FormatDateHeure(device?.véhiculeDetails?.[0]?.timestamp)
-                          ?.date
-                      }{" "}
-                      {" / "}
-                      {
-                        FormatDateHeure(device?.véhiculeDetails?.[0]?.timestamp)
-                          ?.time
-                      }
-                    </span>{" "}
+                    {device?.véhiculeDetails?.[0]?.timestamp ? (
+                      <span className="font-normal text-gray-500 ml-3">
+                        {
+                          FormatDateHeure(
+                            device?.véhiculeDetails?.[0]?.timestamp
+                          )?.date
+                        }{" "}
+                        {" / "}
+                        {
+                          FormatDateHeure(
+                            device?.véhiculeDetails?.[0]?.timestamp
+                          )?.time
+                        }
+                      </span>
+                    ) : (
+                      <p className=" ml-3 text-gray-600">{t("-------")}</p>
+                    )}
                   </div>
 
-                  <div className="flex flex-wrap">
+                  {/* <div className="flex flex-wrap">
                     <p className="text-gray-600 font-bold">
                       {t("Date d’actualisation de l’appareil")} :{" "}
                     </p>
@@ -129,7 +180,7 @@ function DeviceListeDashboard() {
                       {FormatDateHeure(device?.lastUpdateTime)?.date} {" / "}
                       {FormatDateHeure(device?.lastUpdateTime)?.time}
                     </span>{" "}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             );

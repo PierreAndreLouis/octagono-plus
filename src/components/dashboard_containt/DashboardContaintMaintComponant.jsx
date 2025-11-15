@@ -83,6 +83,8 @@ function DashboardContaintMaintComponant({
     versionApplication,
     setIsFilteredCartePositionByCategorie,
     chooseOtherAccountGestion,
+    addVehiculeDetailsFonction,
+    setFilteredColorCategorieListe,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -907,7 +909,8 @@ function DashboardContaintMaintComponant({
     if (data) {
       // console.log("data...............", data);
       const validTimestamps = data
-        .map((véhicule) => parseInt(véhicule?.lastUpdateTime))
+        .map((véhicule) => parseInt(véhicule?.véhiculeDetails?.[0]?.timestamp))
+        // .map((véhicule) => parseInt(véhicule?.lastUpdateTime))
         .filter((timestamp) => !isNaN(timestamp));
 
       const mostRecentTimestamp =
@@ -922,8 +925,16 @@ function DashboardContaintMaintComponant({
   // Pour stocker le timestamp le plus récent lorsque "data" change
 
   const [lastUpdate, setLastUpdate] = useState();
+
+  // const data = isDashboardHomePage
+  //   ? currentAccountSelected?.accountDevices || accountDevices
+  //   : dataFusionné;
+
   const data = isDashboardHomePage
-    ? currentAccountSelected?.accountDevices || accountDevices
+    ? addVehiculeDetailsFonction(
+        currentAccountSelected?.accountDevices,
+        véhiculeDetails
+      ) || addVehiculeDetailsFonction(accountDevices, véhiculeDetails)
     : dataFusionné;
 
   // Mettre à jour le timestamp le plus récent lorsque "data" change
@@ -1919,6 +1930,10 @@ function DashboardContaintMaintComponant({
                       setShowStatisticDeviceListeDashboard(true);
                       setStatisticFilteredDeviceListeText(
                         `${t("Tous les Appareils")}`
+                      );
+
+                      setFilteredColorCategorieListe(
+                        addVehiculeDetailsFonction(allDevices, véhiculeDetails)
                       );
                     }}
                     className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"

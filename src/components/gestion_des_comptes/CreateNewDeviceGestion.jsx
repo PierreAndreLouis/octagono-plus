@@ -68,9 +68,16 @@ function CreateNewDeviceGestion({
   // Gestion de la modification des champs
   const handleChange = (e) => {
     const { name, value } = e.target;
+    let newValue = value;
+
+    // Limite description à 128 caractères
+    if (name === "description") {
+      newValue = newValue.slice(0, 128);
+    }
+
     setAddVehicleData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue, // <-- utiliser newValue ici
     }));
     setErrorID("");
   };
@@ -194,7 +201,13 @@ function CreateNewDeviceGestion({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       const accountID = addVéhiculeData.accountID;
 
       const deviceID = addVéhiculeData.deviceID;

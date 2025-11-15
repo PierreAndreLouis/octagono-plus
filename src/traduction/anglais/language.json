@@ -120,7 +120,7 @@
   "Dernière connexion": "Last login",
   "Mot de passe incorrect. Veuillez réessayer": "Incorrect password. Please try again.",
   "Voulez-vous changer de Compte ?": "Do you want to switch account?",
-  "Veuillez entrer votre mot de passe": "Please enter your password",
+  "Veuillez entrer votre mot de passe": "Please enter your PIN or password",
   "Mot de passe": "Password",
   "Confirmer": "Confirm",
   "Annuler": "Cancel",
@@ -1114,7 +1114,26 @@
 "Gestion des règles actives" : "Active rules management",
 "Nombre de règles actives" : "Number of active rules",
 "Activer une nouvelle règle" : "Activate a new rule",
-"Liste des règles actives de" : "List of active rules for"
+"Liste des règles actives de" : "List of active rules for",
+
+
+
+
+
+
+
+"Modifier la règle" : "Edit the rule",
+"Liste des règle prédéfinis" : "List of predefined rules",
+"Gestion_Carburant" : "Fuel Management",
+"Niveau de carburant actuel" : "Current fuel level",
+"Départ / Arrivée du véhicule" : "Vehicle departure / arrival",
+"Évolution du niveau de carburant" : "Fuel level evolution",
+"Niveau de carburant" : "Fuel level",
+"Gestion du carburant" : "Fuel management",
+"Date d’actualisation EventData" : "EventData update date",
+"Date d’actualisation de l’appareil" : "Device update date",
+"Pas de mise a jour": "No update"
+
 
 
 

@@ -126,7 +126,7 @@
   "Dernière connexion": "Dernière connexion",
   "Mot de passe incorrect. Veuillez réessayer": "Mot de passe incorrect. Veuillez réessayer.",
   "Voulez-vous changer de Compte ?": "Voulez-vous changer de compte ?",
-  "Veuillez entrer votre mot de passe": "Veuillez entrer votre mot de passe",
+  "Veuillez entrer votre mot de passe": "Veuillez entrer votre PIN ou mot de passe",
   "Mot de passe": "Mot de passe",
   "Confirmer": "Confirmer",
   "Annuler": "Annuler",
@@ -1143,7 +1143,7 @@
 
 
 "Modifier la règle" : "Modifier la règle",
-"Liste des règle prédéfinis" : "Liste des règle prédéfinis",
+"Liste des règle prédéfinis" : "Liste des règles prédéfinies",
 "Gestion_Carburant" : "Gestion_Carburant",
 "Niveau de carburant actuel" : "Niveau de carburant actuel",
 "Départ / Arrivée du véhicule" : "Départ / Arrivée du véhicule",
@@ -1151,7 +1151,19 @@
 "Niveau de carburant" : "Niveau de carburant",
 "Gestion du carburant" : "Gestion du carburant",
 "Date d’actualisation EventData" : "Date d’actualisation EventData",
-"Date d’actualisation de l’appareil" : "Date d’actualisation de l’appareil"
+"Date d’actualisation de l’appareil" : "Date d’actualisation de l’appareil",
+"Pas de mise a jour": "Pas de mise à jour",
+
+
+
+
+
+
+
+
+"Échec de déplacement de l'appareil": "Échec de déplacement de l'appareil",
+"Déplacement de l'appareil avec succès": "Déplacement de l'appareil avec succès"
+
  
 
 

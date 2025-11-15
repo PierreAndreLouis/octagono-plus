@@ -36,6 +36,7 @@ function HeaderDashboardSysadmin({
         <div
           onClick={() => {
             navigate("/Dashboard");
+            setDocumentationPage("Dashboard");
             // console.log(
             //   "appareilPourAfficherSurCarte",
             //   appareilPourAfficherSurCarte

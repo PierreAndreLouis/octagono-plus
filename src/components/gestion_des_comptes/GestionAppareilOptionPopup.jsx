@@ -57,6 +57,7 @@ function GestionAppareilOptionPopup({
     isCreatingNewElement,
     setIsCreatingNewElement,
     setMoveDeviceToOtherCompte,
+    currentCountry,
   } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -72,7 +73,13 @@ function GestionAppareilOptionPopup({
   const deleteVehicleFonction = (e) => {
     e.preventDefault();
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       deleteVehicleEnGestionAccount(
         currentSelectedDeviceGestion?.deviceID,
 
@@ -112,7 +119,14 @@ function GestionAppareilOptionPopup({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === password || inputPassword === adminPassword) {
+    if (
+      inputPassword === password ||
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       setShowControlPopup(true);
       setShowNotezBienPopup(true);
       setShowVéhiculeControl(false);
@@ -563,27 +577,29 @@ function GestionAppareilOptionPopup({
                 </h2>
               </div>
 
-              {adminAccount && (
-                <div
-                  onClick={() => {
-                    // setDocumentationPage("Modifier_appareil");
-                    // navigate("/Modifier_appareil");
-                    // setMoveDeviceToOtherCompte(true);
-                    setChooseOneAccountToContinue(true);
-                    setChooseOtherAccountGestion(true);
-                    // setMoveDeviceToOtherCompte(true);
-                    setShowOptionAppareilOptionPopup(false);
-                    setMoveDeviceToOtherCompte(true);
-                    // console.log("setMoveDeviceToOtherCompte(true)");
-                  }}
-                  className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
-                >
-                  <TiExportOutline className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
-                  <h2 className="font-semibold text-orange-900 dark:text-orange-50">
-                    {t("Changer l'appareil de Compte")}
-                  </h2>
-                </div>
-              )}
+              {adminAccount &&
+                (localStorage.getItem("currentCountry") === "rd" ||
+                  currentCountry === "rd") && (
+                  <div
+                    onClick={() => {
+                      // setDocumentationPage("Modifier_appareil");
+                      // navigate("/Modifier_appareil");
+                      // setMoveDeviceToOtherCompte(true);
+                      setChooseOneAccountToContinue(true);
+                      setChooseOtherAccountGestion(true);
+                      // setMoveDeviceToOtherCompte(true);
+                      setShowOptionAppareilOptionPopup(false);
+                      setMoveDeviceToOtherCompte(true);
+                      // console.log("setMoveDeviceToOtherCompte(true)");
+                    }}
+                    className="shadow-md cursor-pointer hover:bg-orange-100 dark:hover:bg-gray-900 bg-orange-50 dark:bg-gray-800 p-2 rounded-md flex items-center gap-4"
+                  >
+                    <TiExportOutline className="text-[1.7rem] min-w-8 text-orange-500 dark:text-orange-50" />
+                    <h2 className="font-semibold text-orange-900 dark:text-orange-50">
+                      {t("Changer l'appareil de Compte")}
+                    </h2>
+                  </div>
+                )}
               {adminAccount && (
                 <div
                   onClick={() => {

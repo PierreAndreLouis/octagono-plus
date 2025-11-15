@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { DataContext } from "../../context/DataContext";
 
 function ConfirmationPassword({
   showConfirmPassword,
@@ -13,6 +14,8 @@ function ConfirmationPassword({
 }) {
   const [t, i18n] = useTranslation();
 
+  const { adminPassword } = useContext(DataContext);
+
   return (
     <>
       {showConfirmPassword && (
@@ -22,6 +25,20 @@ function ConfirmationPassword({
             className="bg-white dark:bg-gray-700 dark:shadow-gray-600-- dark:shadow-lg dark:border dark:border-gray-600 max-w-[30rem] p-6 px-4 rounded-xl w-[100vw]"
           >
             <div>
+              {/* <p>Input: {inputPassword}</p>
+              <p>Admin password: {adminPassword} </p>
+              <p
+                onClick={() => {
+                  console.log(
+                    JSON.parse(localStorage.getItem("userAdminPersonnelData"))
+                      ?.gender
+                  );
+                }}
+              >
+                PIN:{" "}
+                {JSON.parse(localStorage.getItem("userAdminPersonnelData"))
+                  ?.gender || "---"}{" "}
+              </p> */}
               <label
                 htmlFor="password"
                 className="block text-lg text-center dark:text-gray-100 leading-6 text-gray-500 mb-3"

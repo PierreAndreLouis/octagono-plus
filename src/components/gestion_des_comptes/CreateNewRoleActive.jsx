@@ -263,7 +263,13 @@ function CreateNewRoleActive({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       const accountID = addNewRoleActiveData.accountID;
       const imeiNumber = addNewRoleActiveData.imeiNumber;
       const deviceID = addNewRoleActiveData.deviceID;

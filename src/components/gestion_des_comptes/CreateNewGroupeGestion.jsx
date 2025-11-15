@@ -315,7 +315,13 @@ function CreateNewGroupeGestion({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       const accountID = addNewGroupeData.accountID;
       const groupID = addNewGroupeData.groupID;
       const description = addNewGroupeData.description;
@@ -454,7 +460,7 @@ function CreateNewGroupeGestion({
                         </span>
                       </p>
 
-                      {(user?.roleID !== "!clientproprietaire" ||
+                      {/* {(user?.roleID !== "!clientproprietaire" ||
                         user?.maxAccessLevel === "2" ||
                         user?.maxAccessLevel === "1") && (
                         <p className="mb-2 mt-1 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
@@ -477,13 +483,9 @@ function CreateNewGroupeGestion({
                               - {t("Niveau d’accès")} : {t("Write/Edit")}
                             </span>
                           )}
-                          {/* {user?.maxAccessLevel === "" && (
-                            <span className="block">
-                              - {t("Niveau d’accès")} : {t("Aucune")}
-                            </span>
-                          )} */}
+                      
                         </p>
-                      )}
+                      )} */}
                     </div>
                     <div className="flex justify-between items-center w-full md:w-auto">
                       <FaUserCircle className="text-gray-500 text-[2.5rem] md:hidden" />

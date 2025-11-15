@@ -57,7 +57,13 @@ function ListeDesUtilisateur({
     event.preventDefault(); // Prevents the form from submitting
     // console.log("Clicked......");
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       // console.log("Clicked...... 222");
 
       const sendConnectionMail = false;

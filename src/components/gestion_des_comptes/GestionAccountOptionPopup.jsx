@@ -46,7 +46,13 @@ function GestionAccountOptionPopup({
 
   const deleteAccountFonction = (e) => {
     e.preventDefault();
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       deleteAccountEnGestionAccountFonction(currentAccountSelected?.accountID);
 
       setDeleteAccountPopup(false);

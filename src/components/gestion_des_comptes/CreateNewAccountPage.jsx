@@ -141,7 +141,13 @@ function CreateNewAccountPage({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       const accountID = addNewAccountData.accountID;
       const description = addNewAccountData.description;
       const displayName = addNewAccountData.description;

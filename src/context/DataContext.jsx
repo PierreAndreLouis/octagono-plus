@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.0.0";
+  let versionApplication = "1.0.1";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -166,6 +166,22 @@ const DataContextProvider = ({ children }) => {
     const storedUserData = localStorage.getItem("userData");
     return storedUserData ? JSON.parse(storedUserData) : null;
   });
+
+  const [userPersonnelData, setUserPersonnelData] = useState(() => {
+    const storedUserPersonnelData = localStorage.getItem("userPersonnelData");
+    return storedUserPersonnelData ? JSON.parse(storedUserPersonnelData) : null;
+  });
+
+  const [userAdminPersonnelData, setUserAdminPersonnelData] = useState(() => {
+    const storedUserAdminPersonnelData = localStorage.getItem(
+      "userAdminPersonnelData"
+    );
+    return storedUserAdminPersonnelData
+      ? JSON.parse(storedUserAdminPersonnelData)
+      : null;
+  });
+
+  userPersonnelData;
 
   const [adminUserData, setAdminUserData] = useState(() => {
     const storedUserData = localStorage.getItem("adminUserData");
@@ -1544,7 +1560,19 @@ const DataContextProvider = ({ children }) => {
         </Record>
       </GTSRequest>`;
 
+    const xmlDataUser = `
+<GTSRequest command="dbget">
+  <Authorization account="${account}" user="${username}" password="${password}" />
+  <Record table="User" partial="true">
+    <Field name="accountID">${account}</Field>
+        <Field name="userID">${username}</Field>
+
+  </Record>
+</GTSRequest>
+  `;
+
     console.log("xmlData", xmlData);
+    console.log("xmlDataUser", xmlDataUser);
 
     if (country === "rd") {
       currentAPI = "/octagono-gps-api/track/Service";
@@ -1655,6 +1683,66 @@ const DataContextProvider = ({ children }) => {
       setError("Erreur lors de la connexion à l'API .");
       console.error("Erreur lors de la connexion à l'API from Login", error);
       setIsHomePageLoading(false);
+    } finally {
+      setIsHomePageLoading(false);
+    }
+
+    ///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlDataUser,
+      });
+
+      const data = await response.text();
+      console.log("data userrrrrrrrrr", data);
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+
+      console.log("result userrrrrrrrrrrr", result);
+
+      if (result === "success") {
+        const fields = xmlDoc.getElementsByTagName("Field");
+        let userData = {};
+
+        for (let i = 0; i < fields.length; i++) {
+          const fieldName = fields[i].getAttribute("name");
+          let fieldValue = fields[i].textContent;
+          userData[fieldName] = fieldValue;
+        }
+
+        // navigate("/home");
+        if (account === "sysadmin") {
+          setUserAdminPersonnelData(userData);
+          localStorage.setItem(
+            "userAdminPersonnelData",
+            JSON.stringify(userData)
+          );
+        } else {
+          setUserPersonnelData(userData);
+          localStorage.setItem("userPersonnelData", JSON.stringify(userData));
+        }
+      } else if (result === "error") {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(
+          errorMessage ||
+            "Erreur lors de la recuperation des donnee de l'utilisateur."
+        );
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion à l'API .");
+      console.error("Erreur lors de la connexion à l'API from Login", error);
     } finally {
       setIsHomePageLoading(false);
     }
@@ -3045,6 +3133,8 @@ const DataContextProvider = ({ children }) => {
     </Record>
   </GTSRequest>`;
 
+    console.log("xmlData", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -3053,6 +3143,7 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("data", data);
 
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
@@ -3060,12 +3151,21 @@ const DataContextProvider = ({ children }) => {
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
 
+      console.log("result", result);
+
       if (result === "success") {
         // Mettre à jour le state local
         setAccountGroupes((prev) =>
           prev.map((groupe) =>
             groupe.groupID === groupID
-              ? { ...groupe, displayName, description, notes, workOrderID }
+              ? {
+                  ...groupe,
+
+                  displayName,
+                  description,
+                  notes,
+                  workOrderID,
+                }
               : groupe
           )
         );
@@ -4343,6 +4443,7 @@ const DataContextProvider = ({ children }) => {
     addressCity,
     addressCountry,
     userType,
+    gender,
     groupesSelectionnes,
     groupesNonSelectionnes // ← même si inutilisé pour l’instant
   ) => {
@@ -4358,6 +4459,7 @@ const DataContextProvider = ({ children }) => {
       <Field name="description">${description}</Field>
       <Field name="password">${passwordField}</Field>
 
+      <Field name="gender">${gender}</Field>
       <Field name="roleID">${roleID}</Field>
       <Field name="contactEmail">${contactEmail}</Field>
       <Field name="notifyEmail">${notifyEmail}</Field>
@@ -4467,6 +4569,7 @@ const DataContextProvider = ({ children }) => {
     userType,
     addressCity,
     addressCountry,
+    gender,
     groupesSelectionnes,
     groupesNonSelectionnes
   ) => {
@@ -4492,6 +4595,8 @@ const DataContextProvider = ({ children }) => {
       <Field name="userType">${userType}</Field>
       <Field name="addressCity">${addressCity}</Field>
       <Field name="addressCountry">${addressCountry}</Field>
+      <Field name="gender">${gender}</Field>
+      
     </Record>
   </GTSRequest>`;
 
@@ -4524,9 +4629,10 @@ const DataContextProvider = ({ children }) => {
             u.userID === userIDField
               ? {
                   ...u,
+
                   userIDField,
-                  displayName,
                   description,
+                  displayName,
                   passwordField,
                   contactEmail,
                   notifyEmail,
@@ -4536,6 +4642,10 @@ const DataContextProvider = ({ children }) => {
                   timeZone,
                   maxAccessLevel,
                   roleID,
+                  userType,
+                  addressCity,
+                  addressCountry,
+                  gender,
                 }
               : u
           )
@@ -4544,7 +4654,25 @@ const DataContextProvider = ({ children }) => {
         setListeGestionDesUsers((prevUsers) =>
           prevUsers.map((u) =>
             u.userID === userIDField
-              ? { ...u, userIDField, displayName, description, passwordField }
+              ? {
+                  ...u,
+                  userIDField,
+                  description,
+                  displayName,
+                  passwordField,
+                  contactEmail,
+                  notifyEmail,
+                  isActive,
+                  contactPhone,
+                  contactName,
+                  timeZone,
+                  maxAccessLevel,
+                  roleID,
+                  userType,
+                  addressCity,
+                  addressCountry,
+                  gender,
+                }
               : u
           )
         );
@@ -5416,6 +5544,120 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
     }
   };
+
+  const testExecutionRequette = async (
+    userAccount,
+    userUsername,
+    userPassword
+  ) => {
+    setError("");
+    setCreateVéhiculeLoading(true);
+
+    const sysadminAccount = "sysadmin";
+    const sysadminUser = "admin";
+    const sysadminPassword = "OctagonoGPSHaitiAdmin13@1919";
+    const oldAccountID = "dg";
+    const oldAccountIDPassword = "112233";
+    const targetDeviceID = "864035053821493";
+
+    const newAccountID = "sterlin";
+
+    // const xmlData2 = `
+    // <GTSRequest command="editDevice">
+    // <Authentication account="sysadmin" user="admin" password="OctagonoGPSHaitiAdmin13@1919"/>
+
+    // <Device accountID="dg" deviceID="868166051557569">
+    //     <AccountID>sterlin</AccountID>
+    // </Device>
+
+    // </GTSRequest>
+
+    // `;
+
+    const xmlData = `
+ <GTSRequest command="dbput">
+    <Authorization>
+        <Account>sysadmin</Account>
+        <User>admin</User>
+        <Password>OctagonoGPSHaitiAdmin13@1919</Password>
+    </Authorization>
+
+    <Device accountID="dg" deviceID="868166051557569">
+        <AccountID>sterlin</AccountID>
+    </Device>
+</GTSRequest>
+    `;
+
+    //     const xmlData = `<GTSRequest command="dbput">
+    //     <Authorization account="${oldAccountID}" user="${sysadminUser}" password="${oldAccountIDPassword}" />
+    //     <Record table="Device" partial="true">
+
+    //     <Field name="accountID">${oldAccountID}</Field>
+    //     <Field name="deviceID">${targetDeviceID}</Field>
+
+    //     <Field name="accountID">${newAccountID}</Field>
+
+    //     </Record>
+    // </GTSRequest>`;
+
+    console.log("xmlData", xmlData);
+
+    try {
+      const response = await fetch(currentAPI, {
+        method: "POST",
+        headers: { "Content-Type": "application/xml" },
+        body: xmlData,
+      });
+
+      const data = await response.text();
+      console.log("data", data);
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+      const result = xmlDoc
+        .getElementsByTagName("GTSResponse")[0]
+        .getAttribute("result");
+      setError("");
+
+      console.log("result", result);
+
+      if (result === "success") {
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          `${t("Creation du nouveau appareil avec succès")}`
+        );
+        setConfirmationMessagePopupName("xxxxxxxxxxxxxx");
+
+        setError("");
+      } else {
+        const errorMessage =
+          xmlDoc.getElementsByTagName("Message")[0].textContent;
+        setError(errorMessage || "Erreur lors de la création du véhicule.");
+
+        handleUserError(xmlDoc);
+
+        setShowConfirmationMessagePopup(true); // succès  Échec
+        setConfirmationMessagePopupTexte(
+          `${t("Échec de la Creation de l'appareil")}`
+        );
+        setConfirmationMessagePopupName("xxxxxxxxxxxxx");
+        //////////////////
+        setCreateVéhiculeLoading(false);
+        handleUserError(xmlDoc);
+      }
+    } catch (error) {
+      setError("Erreur lors de la création du véhicule.");
+      console.error("Erreur lors de la création du véhicule", error);
+
+      setShowConfirmationMessagePopup(true); // succès  Échec
+      setConfirmationMessagePopupTexte(
+        `${t("Échec de la Creation de l'appareil")}`
+      );
+      setConfirmationMessagePopupName("xxxxxxxxxxxx");
+      //////////////////
+      setCreateVéhiculeLoading(false);
+    }
+  };
+
   const modifyVehicleEnGestionAccount = async (
     userAccount,
     userUsername,
@@ -5463,6 +5705,8 @@ const DataContextProvider = ({ children }) => {
       </Record>
     </GTSRequest>`;
 
+    console.log("xmlData", xmlData);
+
     try {
       const response = await fetch(currentAPI, {
         method: "POST",
@@ -5471,11 +5715,16 @@ const DataContextProvider = ({ children }) => {
       });
 
       const data = await response.text();
+      console.log("data", data);
+
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(data, "application/xml");
       const result = xmlDoc
         .getElementsByTagName("GTSResponse")[0]
         .getAttribute("result");
+
+      console.log("result", result);
+
       setError("");
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
@@ -5491,13 +5740,18 @@ const DataContextProvider = ({ children }) => {
             device.deviceID === deviceID
               ? {
                   ...device,
-                  displayName,
-                  description,
-                  equipmentType,
-                  uniqueID,
+
+                  vehicleID,
                   imeiNumber,
+                  uniqueID,
+                  description,
+                  displayName,
                   licensePlate,
+                  equipmentType,
                   simPhoneNumber,
+                  notes,
+                  allowNotify,
+                  isActive,
                 }
               : device
           )
@@ -5508,13 +5762,18 @@ const DataContextProvider = ({ children }) => {
             device.deviceID === deviceID
               ? {
                   ...device,
-                  displayName,
-                  description,
-                  equipmentType,
-                  uniqueID,
+
+                  vehicleID,
                   imeiNumber,
+                  uniqueID,
+                  description,
+                  displayName,
                   licensePlate,
+                  equipmentType,
                   simPhoneNumber,
+                  notes,
+                  allowNotify,
+                  isActive,
                 }
               : device
           )
@@ -5559,6 +5818,120 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
     }
   };
+
+  const changerCompte = async (newCompte, oldCompte, imei, description) => {
+    console.log("newCompte", newCompte);
+    console.log("oldCompte", oldCompte);
+    console.log("imei", imei);
+    console.log("description", description);
+
+    //
+    const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Erreur serveur");
+
+      const data = await res.text();
+      const valeur = data.trim();
+
+      console.log("data:", valeur);
+      //
+      //
+      const idOld = oldCompte;
+      const pwdOld = gestionAccountData.find(
+        (account) => account.accountID === oldCompte
+      )?.password;
+      //
+      const idNew = newCompte;
+      const pwdNew = gestionAccountData.find(
+        (account) => account.accountID === newCompte
+      )?.password;
+      //
+      //
+
+      if (valeur === "1") {
+        console.log("Succès: compte changé");
+        //  setListeGestionDesVehicules((prev) =>
+        //   prev.map((user) => ({
+        //     ...user,
+        //     userDevices: user?.userDevices?.filter(
+        //       (device) => device?.deviceID !== imei
+        //     ),
+        //   }))
+        // );
+
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          t("Déplacement de l'appareil avec succès")
+        );
+        setConfirmationMessagePopupName(description);
+
+        setError("");
+
+        //
+        //
+        //
+        fetchAccountDevices(idOld, pwdOld).catch((err) => {
+          console.error("Erreur lors du chargement des devices :", err);
+          setError("Erreur lors du chargement des devices.");
+        });
+        fetchAccountDevices(idNew, pwdNew).catch((err) => {
+          console.error("Erreur lors du chargement des devices :", err);
+          setError("Erreur lors du chargement des devices.");
+        });
+
+        fetchAccountUsers(idOld, pwdOld)
+          .then((users) => {
+            fetchUserDevices(idOld, users);
+            fetchUserGroupes(idOld, users);
+          })
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+              err
+            );
+            setError("Erreur lors de la mise à jour des utilisateurs.");
+          });
+
+        fetchAccountUsers(idNew, pwdNew)
+          .then((users) => {
+            fetchUserDevices(idNew, users);
+            fetchUserGroupes(idNew, users);
+          })
+          .catch((err) => {
+            console.error(
+              "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
+              err
+            );
+            setError("Erreur lors de la mise à jour des utilisateurs.");
+          });
+        setCreateVéhiculeLoading(false);
+      } else {
+        console.log("Échec: le service a répondu 0");
+
+        setError("Erreur lors de déplacement de l'appareil");
+        console.error(
+          "Erreur lors de déplacement de l'appareil, data:",
+          valeur
+        );
+
+        setShowConfirmationMessagePopup(true);
+        setConfirmationMessagePopupTexte(
+          t("Échec de déplacement de l'appareil")
+        );
+        setConfirmationMessagePopupName(description);
+
+        setCreateVéhiculeLoading(false);
+      }
+
+      return valeur;
+    } catch (err) {
+      console.error("Échec:", err.message);
+      throw err;
+    }
+  };
+
   const deleteVehicleEnGestionAccount = async (
     deviceID,
     userAccount,
@@ -6038,6 +6411,9 @@ const DataContextProvider = ({ children }) => {
 
     localStorage.removeItem("userData");
     setUserData(null);
+
+    setUserPersonnelData(null);
+    localStorage.removeItem("userPersonnelData");
 
     localStorage.removeItem("userRole");
     setUserRole(null);
@@ -9621,6 +9997,10 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
         setshowChooseItemToModifyPage,
         rechercheCarburantData1,
         rechercheCarburantData2,
+        userPersonnelData,
+        userAdminPersonnelData,
+        testExecutionRequette,
+        changerCompte,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >

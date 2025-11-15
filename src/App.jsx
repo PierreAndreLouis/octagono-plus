@@ -429,6 +429,15 @@ function App() {
 
     if (
       (adminPassword && inputPassword === adminPassword) ||
+      //
+      (JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender &&
+        inputPassword ===
+          JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender) ||
+      //
+      (JSON.parse(localStorage.getItem("userPersonnelData"))?.gender &&
+        inputPassword ===
+          JSON.parse(localStorage.getItem("userPersonnelData"))?.gender) ||
+      //
       (password && inputPassword === password)
     ) {
       clearCacheFonction();

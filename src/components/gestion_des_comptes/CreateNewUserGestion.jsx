@@ -67,6 +67,7 @@ function CreateNewUserGestion({
     maxAccessLevel: "3",
     password: "",
     password2: "",
+    gender: "",
     roleID: "!clientproprietaire",
   });
 
@@ -76,13 +77,18 @@ function CreateNewUserGestion({
 
     let newValue = value;
 
-    if (["userID", "password", "password2"].includes(name)) {
+    if (["userID", "password", "password2", "gender"].includes(name)) {
       newValue = value.replace(/\s/g, "_"); // remplace les espaces par des underscores
     }
 
     if (name === "userID") {
       newValue = newValue.toLowerCase(); // convertit en minuscules uniquement pour userID
     }
+
+    if (name === "gender") {
+      newValue = newValue.slice(0, 3);
+    }
+
     setAddNewUserData((prevData) => ({
       ...prevData,
       [name]: newValue,
@@ -237,7 +243,13 @@ function CreateNewUserGestion({
   const handlePasswordCheck = (event) => {
     event.preventDefault(); // Prevents the form from submitting
 
-    if (inputPassword === adminPassword) {
+    if (
+      inputPassword === adminPassword ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userPersonnelData"))?.gender ||
+      inputPassword ===
+        JSON.parse(localStorage.getItem("userAdminPersonnelData"))?.gender
+    ) {
       const userID = addNewUserData.userID;
       const description = addNewUserData.description;
       const displayName = addNewUserData.description;
@@ -258,6 +270,7 @@ function CreateNewUserGestion({
       const addressCountry = addNewUserData.addressCountry;
 
       const password2 = addNewUserData.password2;
+      const gender = addNewUserData.gender;
 
       if (
         currentAccountSelected?.accountID &&
@@ -287,6 +300,7 @@ function CreateNewUserGestion({
             addressCity,
             addressCountry,
             userType,
+            gender,
             //
             groupesSelectionnes
           );
@@ -318,6 +332,7 @@ function CreateNewUserGestion({
             userType,
             addressCity,
             addressCountry,
+            gender,
             //
             groupesSelectionnes,
             groupesNonSelectionnes
@@ -369,6 +384,7 @@ function CreateNewUserGestion({
         roleID: currentSelectedUserToConnect.roleID || "",
         password: currentSelectedUserToConnect.password || "",
         password2: currentSelectedUserToConnect.password || "",
+        gender: currentSelectedUserToConnect.gender || "",
       });
       if (currentSelectedUserToConnect.maxAccessLevel === "0") {
         setMaxAccessLevelText(`${t("New/Delete")}`);
@@ -772,13 +788,13 @@ function CreateNewUserGestion({
                 {t("Niveau d’accès non autorisé pour affecter un utilisateur")}
               </p>
             )}
-            {addNewUserData.roleID !== "!clientproprietaire" && (
+            {/* {addNewUserData.roleID !== "!clientproprietaire" && (
               <p className="mb-2 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
                 {t(
                   "Rôle non autorisé pour affecter un utilisateur à un groupe"
                 )}
               </p>
-            )}
+            )} */}
 
             <p className="mb-2 font-semibold text-gray-700">
               {t("Choisissez un groupe pour affecter l'utilisateur")}
@@ -872,6 +888,12 @@ function CreateNewUserGestion({
                     id: "maxAccessLevel",
                     label: `${t("Niveau d’accès")}`,
                     placeholder: "",
+                  },
+
+                  {
+                    id: "gender",
+                    label: `${t("PIN")}`,
+                    placeholder: "PIN",
                   },
 
                   //
@@ -1010,13 +1032,13 @@ function CreateNewUserGestion({
                             <p>{addNewUserData?.roleID}</p>
                             <FaChevronDown className="text-gray-700 mr-4" />
                           </div>
-                          {addNewUserData.roleID !== "!clientproprietaire" && (
+                          {/* {addNewUserData.roleID !== "!clientproprietaire" && (
                             <p className="mb-2 font-semibold text-yellow-700 bg-yellow-100 border border-yellow-700 rounded-md px-2">
                               {t(
                                 "Rôle non autorisé pour affecter un utilisateur à un groupe"
                               )}
                             </p>
-                          )}
+                          )} */}
                         </div>
                       ) : field.id === "userType" ? (
                         <div
@@ -1032,6 +1054,16 @@ function CreateNewUserGestion({
                           </p>
                           <FaChevronDown className="text-gray-700 mr-4" />
                         </div>
+                      ) : field.id === "gender" ? (
+                        <input
+                          id={field.id}
+                          name={field.id}
+                          type="number"
+                          placeholder={field.placeholder}
+                          value={addNewUserData[field.id]}
+                          onChange={handleChange}
+                          className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                        />
                       ) : (
                         // field.id === "isActive" ? (
                         //   <div
@@ -1055,12 +1087,9 @@ function CreateNewUserGestion({
                           placeholder={field.placeholder}
                           value={addNewUserData[field.id]}
                           onChange={handleChange}
-                          // { field.id === "groupID" && disable}
-                          // disabled={field.id === "userID"}
                           disabled={
                             !isCreatingNewElement && field.id === "userID"
                           }
-                          // requiredFields.includes(field.id)
                           required={requiredFields.includes(field.id)}
                           className="block px-3 w-full border-b pb-4 py-1.5 outline-none text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900/0 shadow-sm focus:ring-orange-500 focus:border-orange-500"
                         />
