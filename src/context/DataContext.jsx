@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.0.1";
+  let versionApplication = "1.0.2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -379,6 +379,7 @@ const DataContextProvider = ({ children }) => {
   const [currentCountry, setCurrentCountry] = useState("");
 
   let currentAPI = "/octagono-plus-api/track/Service";
+  let changerAppareilCompteApi = "/changer-appareil-compte-api";
 
   if (
     localStorage.getItem("currentCountry") === "rd" ||
@@ -5826,7 +5827,8 @@ const DataContextProvider = ({ children }) => {
     console.log("description", description);
 
     //
-    const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     try {
       const res = await fetch(url);

@@ -448,24 +448,7 @@ function ListeDesVehiculesGestion({
 
       const showMessage = false;
 
-      // deleteVehicleEnGestionAccount(
-      //   currentSelectedDeviceGestion?.deviceID,
-
-      //   gestionAccountData.find(
-      //     (account) =>
-      //       account.accountID === currentSelectedDeviceGestion?.accountID
-      //   )?.accountID,
-
-      //   "admin",
-
-      //   gestionAccountData.find(
-      //     (account) =>
-      //       account.accountID === currentSelectedDeviceGestion?.accountID
-      //   )?.password,
-
-      //   showMessage
-      // );
-
+   
       setMoveDeviceToOtherCompte(false);
     } else {
       // console.log("Mot de passe incorrect");
@@ -703,15 +686,15 @@ function ListeDesVehiculesGestion({
           {!fromDashboard && (
             <div>
               <h2
-                onClick={() => {
-                  console.log("Lancement requette");
-                  changerCompte(
-                    "new compte",
-                    "old demo",
-                    "231341234",
-                    "test déplacement"
-                  );
-                }}
+                // onClick={() => {
+                //   console.log("Lancement requette");
+                //   changerCompte(
+                //     "new compte",
+                //     "old demo",
+                //     "231341234",
+                //     "test déplacement"
+                //   );
+                // }}
                 className="mt-[10rem]-- text-2xl text-gray-700 text-center font-bold "
               >
                 {t("Liste des Appareils")}

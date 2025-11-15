@@ -25,6 +25,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/octagono-gps-api/, ''),
       },
+       '/changer-appareil-compte-api': {
+        target: 'http://192.227.91.57',  // octagono-gps
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/changer-appareil-compte-api/, ''),
+      },
       '/other-api': {
   target: 'http://31.207.33.96',
   changeOrigin: true,
