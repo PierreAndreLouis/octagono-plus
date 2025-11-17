@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.0.7";
+  let versionApplication = "1.0.8";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
