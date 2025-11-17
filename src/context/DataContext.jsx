@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.0.3";
+  let versionApplication = "1.0.4";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5827,8 +5827,8 @@ const DataContextProvider = ({ children }) => {
     console.log("description", description);
 
     //
-    const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-    // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     console.log("URL :", url);
 
