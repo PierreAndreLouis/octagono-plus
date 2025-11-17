@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.0.4";
+  let versionApplication = "1.0.5";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -378,8 +378,8 @@ const DataContextProvider = ({ children }) => {
 
   const [currentCountry, setCurrentCountry] = useState("");
 
-  let currentAPI = "/octagono-plus-api/track/Service";
   let changerAppareilCompteApi = "/changer-appareil-compte-api";
+  let currentAPI = "/octagono-plus-api/track/Service";
 
   if (
     localStorage.getItem("currentCountry") === "rd" ||
@@ -5820,6 +5820,9 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+
+    // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
   const changerCompte = async (newCompte, oldCompte, imei, description) => {
     console.log("newCompte", newCompte);
     console.log("oldCompte", oldCompte);
@@ -5827,8 +5830,7 @@ const DataContextProvider = ({ children }) => {
     console.log("description", description);
 
     //
-    // const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-    const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     console.log("URL :", url);
 
