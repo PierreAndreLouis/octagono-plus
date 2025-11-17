@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.0.5";
+  let versionApplication = "1.0.7";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -379,6 +379,7 @@ const DataContextProvider = ({ children }) => {
   const [currentCountry, setCurrentCountry] = useState("");
 
   let changerAppareilCompteApi = "/changer-appareil-compte-api";
+
   let currentAPI = "/octagono-plus-api/track/Service";
 
   if (
@@ -5820,8 +5821,7 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-
-    // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+  // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
   const changerCompte = async (newCompte, oldCompte, imei, description) => {
     console.log("newCompte", newCompte);
@@ -5830,7 +5830,7 @@ const DataContextProvider = ({ children }) => {
     console.log("description", description);
 
     //
-    const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     console.log("URL :", url);
 
@@ -5860,14 +5860,6 @@ const DataContextProvider = ({ children }) => {
 
       if (valeur === "1") {
         console.log("Succès: compte changé");
-        //  setListeGestionDesVehicules((prev) =>
-        //   prev.map((user) => ({
-        //     ...user,
-        //     userDevices: user?.userDevices?.filter(
-        //       (device) => device?.deviceID !== imei
-        //     ),
-        //   }))
-        // );
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
@@ -5931,6 +5923,40 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(description);
 
         setCreateVéhiculeLoading(false);
+      }
+
+      return valeur;
+    } catch (err) {
+      console.error("Échec:", err.message);
+      throw err;
+    }
+  };
+
+  const changerAppareilDeCompte = async (
+    newCompte,
+    oldCompte,
+    imei,
+    description
+  ) => {
+    //
+    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
+    console.log("URL :", url);
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Erreur serveur");
+
+      const data = await res.text();
+      console.log("data:", data);
+
+      const valeur = data.trim();
+      console.log("valeur:", valeur);
+
+      if (valeur === "1") {
+        console.log("Succès: compte changé");
+      } else {
+        console.log("Échec: le service a répondu 0");
       }
 
       return valeur;
