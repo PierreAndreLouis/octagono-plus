@@ -5942,7 +5942,10 @@ const DataContextProvider = ({ children }) => {
     description
   ) => {
     //
-    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
+    const url = `http://180.149.199.98/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `http://180.149.199.98/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     console.log("URL :", url);
 
