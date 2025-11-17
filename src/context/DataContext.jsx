@@ -5830,14 +5830,18 @@ const DataContextProvider = ({ children }) => {
     const url = `${changerAppareilCompteApi}/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
     // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
+    console.log("URL :", url);
+
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error("Erreur serveur");
 
       const data = await res.text();
+      console.log("data:", data);
+
       const valeur = data.trim();
 
-      console.log("data:", valeur);
+      console.log("valeur:", valeur);
       //
       //
       const idOld = oldCompte;
