@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.2";
+  let versionApplication = "1.1.3";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5830,27 +5830,38 @@ const DataContextProvider = ({ children }) => {
     console.log("description", description);
 
     //
-    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
+    //  const url = `https://www.octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
+    //   console.log("URL :", url);
+
+    //   try {
+
+    //     const res = await fetch(url);
+
+    //     console.log("Respond :", res);
+    //     if (!res.ok) throw new Error("Erreur serveur");
+
+    //     const data = await res.text(); // ← texte brut
+    //     console.log("RAW DATA:", data); // devrait afficher '0' ou '1'
+
+    const url = `https://www.octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     console.log("URL :", url);
 
     try {
-      // const res = await fetch(url);
-      // if (!res.ok) throw new Error("Erreur serveur");
-
-      // const data = await res.text();
-      // console.log("data:", data);
-
-      // const valeur = data.trim();
-
-      // console.log("valeur:", valeur);
-
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: {
+          "Cache-Control": "no-cache", // empêche le service worker d’intercepter
+          "X-Requested-With": "XMLHttpRequest", // optionnel mais pratique pour signaler un appel API
+        },
+      });
 
       console.log("Respond :", res);
       if (!res.ok) throw new Error("Erreur serveur");
 
-      const data = await res.text(); // ← texte brut
+      const data = await res.text(); // texte brut
       console.log("RAW DATA:", data); // devrait afficher '0' ou '1'
 
       //////////////////////////////////////////////////////////////////
