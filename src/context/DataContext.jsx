@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.6.";
+  let versionApplication = "1.1.7.";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5847,16 +5847,20 @@ const DataContextProvider = ({ children }) => {
 
     // const url = `https://www.octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
-    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     try {
       const res = await fetch(url, {
+        method: "GET",
+        cache: "no-store",
         headers: {
-          "Cache-Control": "no-cache", // empêche le service worker d’intercepter
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
           "X-Requested-With": "XMLHttpRequest",
+          "Service-Worker-Navigation-Preload": "false",
         },
-        cache: "no-store", // force à ne rien utiliser en cache
-        credentials: "same-origin", // si cookies nécessaires
       });
 
       if (!res.ok) throw new Error("Erreur serveur");
