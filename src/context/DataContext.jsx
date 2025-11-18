@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.3";
+  let versionApplication = "1.1.4";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5848,21 +5848,20 @@ const DataContextProvider = ({ children }) => {
 
     const url = `https://www.octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
-    console.log("URL :", url);
-
     try {
       const res = await fetch(url, {
         headers: {
           "Cache-Control": "no-cache", // empêche le service worker d’intercepter
-          "X-Requested-With": "XMLHttpRequest", // optionnel mais pratique pour signaler un appel API
+          "X-Requested-With": "XMLHttpRequest",
         },
+        cache: "no-store", // force à ne rien utiliser en cache
+        credentials: "same-origin", // si cookies nécessaires
       });
 
-      console.log("Respond :", res);
       if (!res.ok) throw new Error("Erreur serveur");
-
-      const data = await res.text(); // texte brut
-      console.log("RAW DATA:", data); // devrait afficher '0' ou '1'
+      const data = await res.text();
+      console.log("respond", res);
+      console.log("RAW DATA:", data); // devrait afficher 0 ou 1
 
       //////////////////////////////////////////////////////////////////
       //
