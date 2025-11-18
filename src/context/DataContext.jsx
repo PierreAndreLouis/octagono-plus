@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.1";
+  let versionApplication = "1.1.2";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5832,21 +5832,28 @@ const DataContextProvider = ({ children }) => {
     //
     const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
-    // const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-    // const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-
     console.log("URL :", url);
 
     try {
+      // const res = await fetch(url);
+      // if (!res.ok) throw new Error("Erreur serveur");
+
+      // const data = await res.text();
+      // console.log("data:", data);
+
+      // const valeur = data.trim();
+
+      // console.log("valeur:", valeur);
+
       const res = await fetch(url);
+
+      console.log("Respond :", res);
       if (!res.ok) throw new Error("Erreur serveur");
 
-      const data = await res.text();
-      console.log("data:", data);
+      const data = await res.text(); // ← texte brut
+      console.log("RAW DATA:", data); // devrait afficher '0' ou '1'
 
-      const valeur = data.trim();
-
-      console.log("valeur:", valeur);
+      //////////////////////////////////////////////////////////////////
       //
       //
       const idOld = oldCompte;
@@ -5861,7 +5868,7 @@ const DataContextProvider = ({ children }) => {
       //
       //
 
-      if (valeur === "1") {
+      if (data === "1") {
         console.log("Succès: compte changé");
 
         setShowConfirmationMessagePopup(true);
@@ -5914,10 +5921,7 @@ const DataContextProvider = ({ children }) => {
         console.log("Échec: le service a répondu 0");
 
         setError("Erreur lors de déplacement de l'appareil");
-        console.error(
-          "Erreur lors de déplacement de l'appareil, data:",
-          valeur
-        );
+        console.error("Erreur lors de déplacement de l'appareil, data:", data);
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
@@ -5928,49 +5932,36 @@ const DataContextProvider = ({ children }) => {
         setCreateVéhiculeLoading(false);
       }
 
-      return valeur;
+      return data;
     } catch (err) {
       console.error("Échec:", err.message);
       throw err;
     }
   };
 
-  const changerAppareilDeCompte = async (
-    newCompte,
-    oldCompte,
-    imei,
-    description
-  ) => {
-    //
-    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+  // const changerCompte2 = async (newCompte, oldCompte, imei, description) => {
+  //   //
+  //   const url1 = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
-    // const url = `http://180.149.199.98/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-    // const url = `http://180.149.199.98/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+  //   console.log("URL :", url1);
 
-    console.log("URL :", url);
+  //   try {
+  //     const res = await fetch(url1);
+  //     console.log("Respond :", res);
+  //     if (!res.ok) throw new Error("Erreur serveur");
 
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Erreur serveur");
+  //     const data = await res.text(); // ← texte brut
+  //     console.log("RAW DATA:", data); // devrait afficher '0' ou '1'
 
-      const data = await res.text();
-      console.log("data:", data);
-
-      const valeur = data.trim();
-      console.log("valeur:", valeur);
-
-      if (valeur === "1") {
-        console.log("Succès: compte changé");
-      } else {
-        console.log("Échec: le service a répondu 0");
-      }
-
-      return valeur;
-    } catch (err) {
-      console.error("Échec:", err.message);
-      throw err;
-    }
-  };
+  //     if (data === "0") {
+  //       console.log("Échec du changement de compte");
+  //     } else {
+  //       console.log("Succès !");
+  //     }
+  //   } catch (err) {
+  //     console.error("Erreur lors du déplacement de l'appareil:", err);
+  //   }
+  // };
 
   const deleteVehicleEnGestionAccount = async (
     deviceID,
