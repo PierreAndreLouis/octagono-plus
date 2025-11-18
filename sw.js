@@ -56,6 +56,13 @@ self.addEventListener('fetch', evt => {
   const { request } = evt;
   const url = new URL(request.url);
 
+
+  // 🚫 IMPORTANT : Ne jamais intercepter cette API
+  if (url.pathname.startsWith('/changer-appareil-compte-api/')) {
+    return; // on laisse passer au réseau sans blocage
+  }
+
+
   // Ignorer les appels Firestore
   if (url.origin.includes('firestore.googleapis.com')) return;
 
