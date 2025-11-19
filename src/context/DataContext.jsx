@@ -5847,8 +5847,8 @@ const DataContextProvider = ({ children }) => {
 
     // const url = `https://www.octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
-    const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-    // const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+    const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     try {
       const res = await fetch(url, {
