@@ -1,20 +1,29 @@
+
 import express from "express";
 import cors from "cors";
+import fetch from "node-fetch"; // npm install node-fetch@2
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
-app.use(
-  cors({
-    origin: [
+// Autoriser uniquement ton front en prod
+const allowedOrigins = [
       "http://localhost:3000",
       "https://octagonoplus.com",
       "https://www.octagonoplus.com",
       "https://octagono-plus-gps.onrender.com"
-    ],
-    methods: ["GET", "POST"]
-  })
-);
+    ];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Origin non autorisée"));
+    }
+  },
+  methods: ["GET", "POST"]
+}));
 
 app.use(express.json());
 
@@ -39,8 +48,11 @@ app.get("/api/change-account", async (req, res) => {
 });
 
 app.listen(PORT, () =>
-  console.log(`Backend OK sur http://localhost:${PORT}`)
+  console.log(`Backend OK sur http://0.0.0.0:${PORT}`)
 );
+
+
+
 
 
 
