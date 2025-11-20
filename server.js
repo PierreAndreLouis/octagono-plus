@@ -1,37 +1,31 @@
 import express from "express";
-import fetch from "node-fetch"; // si Node >= 18 tu peux utiliser global fetch
 
 const app = express();
 const PORT = 3001;
 
-// Express n'a plus besoin de CORS, Nginx gère ça
 app.use(express.json());
 
-// Test
 app.get("/api/test", (req, res) => {
+  console.log("Route test OK !");
   res.json({ message: "Serveur Express OK" });
 });
 
-// Proxy vers le script PHP
 app.get("/api/change-account", async (req, res) => {
   const { imei, compte } = req.query;
-
   try {
     const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${compte}`;
     const response = await fetch(url);
-    const result = await response.text();
-    res.send(result);
-  } catch (err) {
-    console.error(err);
+    const text = await response.text();
+    res.send(text);
+  } catch (error) {
+    console.error(error);
     res.status(500).send("Erreur backend");
   }
 });
 
-// Écoute uniquement sur localhost
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`Backend Express OK sur http://127.0.0.1:${PORT}`);
-});
-
+app.listen(PORT, "127.0.0.1", () =>
+  console.log(`Backend Express OK http://127.0.0.1:${PORT}`)
+);
 
 
 
