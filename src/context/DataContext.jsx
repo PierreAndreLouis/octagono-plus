@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.4";
+  let versionApplication = "1.1.5";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5854,12 +5854,14 @@ const DataContextProvider = ({ children }) => {
     // const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
 
     // Auto-détection de l’URL backend
-    const API_BASE =
-      window.location.hostname === "localhost"
-        ? "http://localhost:3001"
-        : "https://www.octagonoplus.com"; // HTTPS + Nginx proxy
+    // const API_BASE =
+    //   window.location.hostname === "localhost"
+    //     ? "http://localhost:3001"
+    //     : "https://www.octagonoplus.com"; // HTTPS + Nginx proxy
 
-    const url = `${API_BASE}/api/change-account?imei=${imei}&compte=${newCompte}`;
+    // const url = `${API_BASE}/api/change-account?imei=${imei}&compte=${newCompte}`;
+
+    const url = `https://octagono-plus-email-server.onrender.com/api/change-account?imei=${imei}&compte=${newCompte}`;
 
     try {
       // const res = await fetch(url, {
