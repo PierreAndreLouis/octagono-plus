@@ -5,6 +5,12 @@ const PORT = 3001;
 
 app.use(express.json());
 
+console.log("SERVER STARTING…");
+
+process.on("SIGINT", () => {
+  console.log("SIGINT DETECTED !!");
+});
+
 app.get("/api/test", (req, res) => {
   console.log("Route test OK !");
   res.json({ message: "Serveur Express OK" });
