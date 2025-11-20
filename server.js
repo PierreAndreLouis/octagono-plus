@@ -5,33 +5,30 @@ const app = express();
 const PORT = 3001;
 
 app.use(
-      cors({
-        origin: [
-          "http://localhost:3000",
-          "https://octagonoplus.com",
-          "https://www.octagonoplus.com",
-          "https://octagono-plus-gps.onrender.com"
-        ],
-        methods: ["GET", "POST"]
-      })
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://octagonoplus.com",
+      "https://www.octagonoplus.com",
+      "https://octagono-plus-gps.onrender.com"
+    ],
+    methods: ["GET", "POST"]
+  })
 );
-
-
-
 
 app.use(express.json());
 
+// Test
 app.get("/api/test", (req, res) => {
   res.json({ message: "Serveur Express OK" });
 });
 
-// Proxy vers ton script PHP
+// Proxy vers le script PHP
 app.get("/api/change-account", async (req, res) => {
   const { imei, compte } = req.query;
 
   try {
     const url = `http://192.227.91.57/services/changeAccount.php?imei=${imei}&compte=${compte}`;
-    // const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${compte}`;
     const response = await fetch(url);
     const result = await response.text();
     res.send(result);
@@ -41,7 +38,9 @@ app.get("/api/change-account", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Backend OK sur http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Backend OK sur http://localhost:${PORT}`)
+);
 
 
 

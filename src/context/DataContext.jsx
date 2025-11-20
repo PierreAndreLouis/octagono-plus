@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.2.0";
+  let versionApplication = "1.1.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5851,7 +5851,15 @@ const DataContextProvider = ({ children }) => {
     // const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccountAPP.php?imei=${imei}&compte=${newCompte}`;
     // const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=TEST&compte=TEST`;
 
-    const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
+    // const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
+
+    // Auto-détection de l’URL backend
+    const API_BASE =
+      window.location.hostname === "localhost"
+        ? "http://localhost:3001"
+        : "https://www.octagonoplus.com";
+
+    const url = `${API_BASE}/api/change-account?imei=${imei}&compte=${newCompte}`;
 
     try {
       // const res = await fetch(url, {
@@ -5964,7 +5972,14 @@ const DataContextProvider = ({ children }) => {
   };
 
   const changerCompte2 = async (newCompte, oldCompte, imei, description) => {
-    const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
+    // const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
+    // Auto-détection de l’URL backend
+    const API_BASE =
+      window.location.hostname === "localhost"
+        ? "http://localhost:3001"
+        : "https://octagono-plus-gps.onrender.com";
+
+    const url = `${API_BASE}/api/change-account?imei=${imei}&compte=${newCompte}`;
 
     try {
       const res = await fetch(url);
