@@ -1,30 +1,10 @@
-
 import express from "express";
-import cors from "cors";
-import fetch from "node-fetch"; // npm install node-fetch@2
+import fetch from "node-fetch"; // si Node >= 18 tu peux utiliser global fetch
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 
-// Autoriser uniquement ton front en prod
-const allowedOrigins = [
-      "http://localhost:3000",
-      "https://octagonoplus.com",
-      "https://www.octagonoplus.com",
-      "https://octagono-plus-gps.onrender.com"
-    ];
-
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Origin non autorisée"));
-    }
-  },
-  methods: ["GET", "POST"]
-}));
-
+// Express n'a plus besoin de CORS, Nginx gère ça
 app.use(express.json());
 
 // Test
@@ -47,9 +27,10 @@ app.get("/api/change-account", async (req, res) => {
   }
 });
 
-app.listen(PORT, () =>
-  console.log(`Backend OK sur http://0.0.0.0:${PORT}`)
-);
+// Écoute uniquement sur localhost
+app.listen(PORT, "127.0.0.1", () => {
+  console.log(`Backend Express OK sur http://127.0.0.1:${PORT}`);
+});
 
 
 

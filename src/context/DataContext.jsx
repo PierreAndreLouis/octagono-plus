@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.1";
+  let versionApplication = "1.1.3";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5856,8 +5856,8 @@ const DataContextProvider = ({ children }) => {
     // Auto-détection de l’URL backend
     const API_BASE =
       window.location.hostname === "localhost"
-        ? "http://localhost:3001" // dev local
-        : "https://www.octagonoplus.com:3001"; // prod, backend Express sur le serveur
+        ? "http://localhost:3001"
+        : "https://www.octagonoplus.com"; // HTTPS + Nginx proxy
 
     const url = `${API_BASE}/api/change-account?imei=${imei}&compte=${newCompte}`;
 
