@@ -18,7 +18,7 @@ import { debounce } from "lodash";
 export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
-  let versionApplication = "1.1.9";
+  let versionApplication = "1.2.0";
   let x;
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
@@ -5848,25 +5848,34 @@ const DataContextProvider = ({ children }) => {
     // const url = `https://www.octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     // const url = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-    const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccountAPP.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccountAPP.php?imei=${imei}&compte=${newCompte}`;
+    // const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=TEST&compte=TEST`;
+
+    const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
 
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store",
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
-          Expires: "0",
-          "X-Requested-With": "XMLHttpRequest",
-          "Service-Worker-Navigation-Preload": "false",
-        },
-      });
+      // const res = await fetch(url, {
+      //   method: "GET",
+      //   cache: "no-store",
+      //   headers: {
+      //     "Cache-Control": "no-cache, no-store, must-revalidate",
+      //     Pragma: "no-cache",
+      //     Expires: "0",
+      //     "X-Requested-With": "XMLHttpRequest",
+      //     "Service-Worker-Navigation-Preload": "false",
+      //   },
+      // });
+
+      // if (!res.ok) throw new Error("Erreur serveur");
+      // const data = await res.text();
+      // console.log("respond", res);
+      // console.log("RAW DATA:", data); // devrait afficher 0 ou 1
+
+      const res = await fetch(url);
 
       if (!res.ok) throw new Error("Erreur serveur");
+
       const data = await res.text();
-      console.log("respond", res);
-      console.log("RAW DATA:", data); // devrait afficher 0 ou 1
 
       //////////////////////////////////////////////////////////////////
       //
@@ -5954,9 +5963,30 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
+  const changerCompte2 = async (newCompte, oldCompte, imei, description) => {
+    const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
+
+    try {
+      const res = await fetch(url);
+
+      if (!res.ok) throw new Error("Erreur serveur");
+
+      const data = await res.text();
+      console.log("Réponse brute:", data);
+
+      if (data === "0") {
+        console.log("Échec du changement");
+      } else {
+        console.log("Succès !");
+      }
+    } catch (err) {
+      console.error("Erreur:", err);
+    }
+  };
+
   // const changerCompte2 = async (newCompte, oldCompte, imei, description) => {
   //   //
-  //   const url1 = `/changer-appareil-compte-api/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+  //   const url = `https://octagonoplus.com/changer-appareil-compte-api/services/changeAccount.php?imei=TEST&compte=TEST`;
 
   //   console.log("URL :", url1);
 
@@ -10047,6 +10077,7 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
         userAdminPersonnelData,
         testExecutionRequette,
         changerCompte,
+        changerCompte2,
         // updateAccountDevicesWidthvéhiculeDetailsFonction,
       }}
     >
