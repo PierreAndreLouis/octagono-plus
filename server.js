@@ -7,16 +7,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
 
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log("process.env.EMAIL_USER", process.env.EMAIL_USER)
-  console.log("process.env.EMAIL_PASS", process.env.EMAIL_PASS)
+  // console.log("process.env.EMAIL_USER", process.env.EMAIL_USER)
+  // console.log("process.env.EMAIL_PASS", process.env.EMAIL_PASS)
 });
 
 
@@ -61,24 +61,24 @@ app.post('/send-email', async (req, res) => {
 });
 
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS
+//   }
+// });
 
-transporter.sendMail({
-  from: process.env.EMAIL_USER,
-  to: "webdeveloper3030@gmail.com",
-  subject: "Test email local",
-  text: "Hello, test from local machine!"
-})
-.then(() => console.log("Email envoyé !"))
-.catch(err => console.error("Erreur :", err));
+// transporter.sendMail({
+//   from: process.env.EMAIL_USER,
+//   to: "webdeveloper3030@gmail.com",
+//   subject: "Test email local",
+//   text: "Hello, test from local machine!"
+// })
+// .then(() => console.log("Email envoyé !"))
+// .catch(err => console.error("Erreur :", err));
 
 
 app.get("/api/change-account", async (req, res) => {
