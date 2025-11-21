@@ -108,6 +108,8 @@ function ListeDesVehiculesGestion({
     testExecutionRequette,
     changerCompte,
     changerCompte2,
+    sendGMailConfirmation,
+    createVéhiculeLoading,
   } = useContext(DataContext);
 
   const [t, i18n] = useTranslation();
@@ -644,6 +646,13 @@ function ListeDesVehiculesGestion({
           <Logout setLogOutPopup={setLogOutPopup} />
         </div>
       )}{" "}
+      {/* {createVéhiculeLoading && (
+        <div className="fixed z-30 inset-0 bg-gray-200/50 dark:bg-black/50">
+          <div className="w-full h-full flex justify-center items-center">
+            <div className="border-blue-500 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-100/0" />
+          </div>
+        </div>
+      )} */}
       <GestionAccountOptionPopup setDocumentationPage={setDocumentationPage} />
       <GestionAppareilOptionPopup
         setShowOptionAppareilOptionPopup={setShowOptionAppareilOptionPopup}
@@ -687,7 +696,8 @@ function ListeDesVehiculesGestion({
             <div>
               <h2
                 onClick={() => {
-                  // console.log("Lancement requette");
+                  console.log("Lancement requette");
+                  sendGMailConfirmation("Pedro", "testPedro", "ht");
                   // changerCompte(
                   //   "new compte",
                   //   "old demo",

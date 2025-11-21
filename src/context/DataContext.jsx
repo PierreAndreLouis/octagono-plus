@@ -21,7 +21,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.2.2";
+  let versionApplication = "1.2.3";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -5834,6 +5834,8 @@ const DataContextProvider = ({ children }) => {
     console.log("oldCompte", oldCompte);
     console.log("imei", imei);
     console.log("description", description);
+    setDashboardLoadingEffect(true);
+    setCreateVéhiculeLoading(true);
 
     const url = `https://octagono-plus-email-server.onrender.com/api/change-account?imei=${imei}&compte=${newCompte}`;
 
@@ -5906,6 +5908,7 @@ const DataContextProvider = ({ children }) => {
             setError("Erreur lors de la mise à jour des utilisateurs.");
           });
         setCreateVéhiculeLoading(false);
+        setDashboardLoadingEffect(false);
       } else {
         console.log("Échec: le service a répondu 0");
 
@@ -5919,11 +5922,15 @@ const DataContextProvider = ({ children }) => {
         setConfirmationMessagePopupName(description);
 
         setCreateVéhiculeLoading(false);
+        setDashboardLoadingEffect(false);
       }
 
       return data;
     } catch (err) {
       console.error("Échec:", err.message);
+      setDashboardLoadingEffect(false);
+      setCreateVéhiculeLoading(false);
+
       throw err;
     }
   };
@@ -9511,6 +9518,7 @@ Date : ${dateAujourdhui} ___ ${hereActurel}  \n
 Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
    `;
 
+    // fetch("http://localhost:3001/send-email", {
     fetch("https://octagono-plus-email-server.onrender.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
