@@ -687,15 +687,14 @@ function ListeDesVehiculesGestion({
             <div>
               <h2
                 onClick={() => {
-                  console.log("Lancement requette");
-                  changerCompte(
-                    "new compte",
-                    "old demo",
-                    "231341234",
-                    "test déplacement"
-                  );
+                  // console.log("Lancement requette");
+                  // changerCompte(
+                  //   "new compte",
+                  //   "old demo",
+                  //   "231341234",
+                  //   "test déplacement"
+                  // );
                   // console.log("Lancement requette222 -------");
-
                   // changerCompte2(
                   //   "new compte",
                   //   "old demo",
