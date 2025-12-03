@@ -5936,26 +5936,32 @@ const DataContextProvider = ({ children }) => {
   };
 
   const changerCompte2 = async (newCompte, oldCompte, imei, description) => {
-    // const url = `http://localhost:3001/api/change-account?imei=${imei}&compte=${newCompte}`;
-    // Auto-détection de l’URL backend
-    // const API_BASE =
-    //   window.location.hostname === "localhost"
-    //     ? "http://localhost:3001"
-    //     : "https://octagono-plus-gps.onrender.com";
-    // const url = `${API_BASE}/api/change-account?imei=${imei}&compte=${newCompte}`;
-    // try {
-    //   const res = await fetch(url);
-    //   if (!res.ok) throw new Error("Erreur serveur");
-    //   const data = await res.text();
-    //   console.log("Réponse brute:", data);
-    //   if (data === "0") {
-    //     console.log("Échec du changement");
-    //   } else {
-    //     console.log("Succès !");
-    //   }
-    // } catch (err) {
-    //   console.error("Erreur:", err);
-    // }
+    console.log("newCompte", newCompte);
+    console.log("oldCompte", oldCompte);
+    console.log("imei", imei);
+    console.log("description", description);
+
+    const url = `https://www.octagonoplus.com/proxy/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Erreur serveur");
+      const data = await res.text();
+
+      //////////////////////////////////////////////////////////////////
+
+      if (data === "1") {
+        console.log("Succès: compte changé");
+      } else {
+        console.log("Échec: le service a répondu 0");
+      }
+
+      return data;
+    } catch (err) {
+      console.error("Échec:", err.message);
+
+      throw err;
+    }
   };
 
   const deleteVehicleEnGestionAccount = async (
