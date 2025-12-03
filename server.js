@@ -41,13 +41,15 @@ app.post('/send-email', async (req, res) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        // user: process.env.EMAIL_USER,
+        // pass: process.env.EMAIL_PASS
+      user: "octagonoplushaiti@gmail.com",
+      pass: "uxraaujzcmkcvpna"
       }
     });
 
     await transporter.sendMail({
-      from: `"Octagon" <${process.env.EMAIL_USER}>`,
+      from: `"Octagon" <octagonoplushaiti@gmail.com>`,
       to,
       subject,
       text

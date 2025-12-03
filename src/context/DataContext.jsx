@@ -21,7 +21,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.2.4";
+  let versionApplication = "1.2.5";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -5837,7 +5837,8 @@ const DataContextProvider = ({ children }) => {
     setDashboardLoadingEffect(true);
     setCreateVéhiculeLoading(true);
 
-    const url = `https://octagono-plus-email-server.onrender.com/api/change-account?imei=${imei}&compte=${newCompte}`;
+    // const url = `https://octagono-plus-email-server.onrender.com/api/change-account?imei=${imei}&compte=${newCompte}`;
+    const url = `https://www.octagonoplus.com/proxy/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
 
     try {
       const res = await fetch(url);
@@ -9525,7 +9526,8 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
    `;
 
     // fetch("http://localhost:3001/send-email", {
-    fetch("https://octagono-plus-email-server.onrender.com/send-email", {
+    // fetch("https://octagono-plus-email-server.onrender.com/send-email", {
+    fetch("https://www.octagonoplus.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
