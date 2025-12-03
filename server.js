@@ -31,8 +31,8 @@ app.get("/api/test2", (req, res) => {
 });
 
 
+
 app.post('/send-email', async (req, res) => {
-    console.log("BODY REÇU :", req.body);
   const { to, subject, text } = req.body;
 
   try {
@@ -41,10 +41,8 @@ app.post('/send-email', async (req, res) => {
       port: 465,
       secure: true,
       auth: {
-        // user: process.env.EMAIL_USER,
-        // pass: process.env.EMAIL_PASS
-      user: "octagonoplushaiti@gmail.com",
-      pass: "uxraaujzcmkcvpna"
+        user: "octagonoplushaiti@gmail.com",
+        pass: "uxraaujzcmkcvpna"
       }
     });
 
@@ -57,30 +55,46 @@ app.post('/send-email', async (req, res) => {
 
     res.status(200).send({ message: 'Email sent successfully' });
   } catch (err) {
-    console.error(err);
-    res.status(500).send({ error: 'Failed to send email' });
+    console.error("❌ Nodemailer ERROR:", err);  // <-- log complet
+    res.status(500).send({ error: 'Failed to send email', details: err.toString() });
   }
 });
 
 
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
+
+// app.post('/send-email', async (req, res) => {
+//     console.log("BODY REÇU :", req.body);
+//   const { to, subject, text } = req.body;
+
+//   try {
+//     const transporter = nodemailer.createTransport({
+//   host: 'smtp.gmail.com',
 //   port: 465,
 //   secure: true,
 //   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS
+//     user: "octagonoplushaiti@gmail.com",
+//     pass: "uxraaujzcmkcvpna"
+//   },
+//   logger: true,
+//   debug: true
+// });
+
+
+
+//     await transporter.sendMail({
+//       from: `"Octagon" <octagonoplushaiti@gmail.com>`,
+//       to,
+//       subject,
+//       text
+//     });
+
+//     res.status(200).send({ message: 'Email sent successfully' });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send({ error: 'Failed to send email' });
 //   }
 // });
 
-// transporter.sendMail({
-//   from: process.env.EMAIL_USER,
-//   to: "webdeveloper3030@gmail.com",
-//   subject: "Test email local",
-//   text: "Hello, test from local machine!"
-// })
-// .then(() => console.log("Email envoyé !"))
-// .catch(err => console.error("Erreur :", err));
 
 
 app.get("/api/change-account", async (req, res) => {

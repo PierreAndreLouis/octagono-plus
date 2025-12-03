@@ -9546,13 +9546,6 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
       .catch((err) => {
         console.error("❌ Erreur réseau/fetch:", err);
       });
-    // .then((res) => res.json())
-    // .then((data) => {
-    //   console.log("✅ Email envoyé avec succès :", data);
-    // })
-    // .catch((err) => {
-    //   console.error("❌ Échec d'envoi de l'email :", err.message);
-    // });
   };
 
   useEffect(() => {
