@@ -21,7 +21,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.2.8";
+  let versionApplication = "1.2.9";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -10019,3 +10019,8 @@ export default DataContextProvider;
 // git pull origin main
 // npm run build
 // sudo systemctl restart nginx
+
+// git init
+// git add .
+// git commit -m "configuration email"
+// git push -u origin main

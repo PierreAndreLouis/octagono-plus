@@ -15,8 +15,8 @@ const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log("process.env.EMAIL_USER 11", process.env.EMAIL_USER)
-  console.log("process.env.EMAIL_PASS 11", process.env.EMAIL_PASS)
+  // console.log("process.env.EMAIL_USER 11", process.env.EMAIL_USER)
+  // console.log("process.env.EMAIL_PASS 11", process.env.EMAIL_PASS)
 });
 
 
@@ -36,8 +36,8 @@ app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
 
 
-  console.log("process.env.EMAIL_USER 22", process.env.EMAIL_USER)
-  console.log("process.env.EMAIL_PASS 22", process.env.EMAIL_PASS)
+  // console.log("process.env.EMAIL_USER 22", process.env.EMAIL_USER)
+  // console.log("process.env.EMAIL_PASS 22", process.env.EMAIL_PASS)
 
   try {
     const transporter = nodemailer.createTransport({
