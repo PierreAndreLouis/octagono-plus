@@ -21,7 +21,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.2.6";
+  let versionApplication = "1.2.7";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -9542,6 +9542,7 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
         console.log("↩️ Reçu du serveur, status:", res.status);
         const text = await res.text();
         console.log("↩️ Réponse brute:", text);
+        console.log("↩️ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       })
       .catch((err) => {
         console.error("❌ Erreur réseau/fetch:", err);
