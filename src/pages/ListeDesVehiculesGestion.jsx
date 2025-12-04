@@ -696,8 +696,8 @@ function ListeDesVehiculesGestion({
             <div>
               <h2
                 onClick={() => {
-                  console.log("Lancement requette");
-                  sendGMailConfirmation("Pedro", "testPedro", "ht");
+                  // console.log("Lancement requette");
+                  // sendGMailConfirmation("Pedro", "testPedro", "ht");
                   // changerCompte(
                   //   "new compte",
                   //   "old demo",

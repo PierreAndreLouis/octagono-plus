@@ -21,7 +21,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.2.7";
+  let versionApplication = "1.2.8";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -5936,34 +5936,7 @@ const DataContextProvider = ({ children }) => {
     }
   };
 
-  const changerCompte2 = async (newCompte, oldCompte, imei, description) => {
-    console.log("newCompte", newCompte);
-    console.log("oldCompte", oldCompte);
-    console.log("imei", imei);
-    console.log("description", description);
-
-    const url = `https://www.octagonoplus.com/proxy/services/changeAccount.php?imei=${imei}&compte=${newCompte}`;
-
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Erreur serveur");
-      const data = await res.text();
-
-      //////////////////////////////////////////////////////////////////
-
-      if (data === "1") {
-        console.log("Succès: compte changé");
-      } else {
-        console.log("Échec: le service a répondu 0");
-      }
-
-      return data;
-    } catch (err) {
-      console.error("Échec:", err.message);
-
-      throw err;
-    }
-  };
+  const changerCompte2 = async () => {};
 
   const deleteVehicleEnGestionAccount = async (
     deviceID,
