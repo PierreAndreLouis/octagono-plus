@@ -21,7 +21,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.2.5";
+  let versionApplication = "1.2.6";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -9525,8 +9525,8 @@ Date : ${dateAujourdhui} ___ ${hereActurel}  \n
 Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
    `;
 
-    // fetch("http://localhost:3001/send-email", {
     // fetch("https://octagono-plus-email-server.onrender.com/send-email", {
+    // fetch("http://localhost:3001/send-email", {
     fetch("https://www.octagonoplus.com/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -15,8 +15,8 @@ const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  // console.log("process.env.EMAIL_USER", process.env.EMAIL_USER)
-  // console.log("process.env.EMAIL_PASS", process.env.EMAIL_PASS)
+  console.log("process.env.EMAIL_USER 11", process.env.EMAIL_USER)
+  console.log("process.env.EMAIL_PASS 11", process.env.EMAIL_PASS)
 });
 
 
@@ -35,19 +35,26 @@ app.get("/api/test2", (req, res) => {
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
 
+
+  console.log("process.env.EMAIL_USER 22", process.env.EMAIL_USER)
+  console.log("process.env.EMAIL_PASS 22", process.env.EMAIL_PASS)
+
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
       auth: {
-        user: "octagonoplushaiti@gmail.com",
-        pass: "uxraaujzcmkcvpna"
-      }
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      },
+        tls: {
+    rejectUnauthorized: false
+  }
     });
 
     await transporter.sendMail({
-      from: `"Octagon" <octagonoplushaiti@gmail.com>`,
+      from: `"Octagon" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text
@@ -59,41 +66,6 @@ app.post('/send-email', async (req, res) => {
     res.status(500).send({ error: 'Failed to send email', details: err.toString() });
   }
 });
-
-
-
-// app.post('/send-email', async (req, res) => {
-//     console.log("BODY REÇU :", req.body);
-//   const { to, subject, text } = req.body;
-
-//   try {
-//     const transporter = nodemailer.createTransport({
-//   host: 'smtp.gmail.com',
-//   port: 465,
-//   secure: true,
-//   auth: {
-//     user: "octagonoplushaiti@gmail.com",
-//     pass: "uxraaujzcmkcvpna"
-//   },
-//   logger: true,
-//   debug: true
-// });
-
-
-
-//     await transporter.sendMail({
-//       from: `"Octagon" <octagonoplushaiti@gmail.com>`,
-//       to,
-//       subject,
-//       text
-//     });
-
-//     res.status(200).send({ message: 'Email sent successfully' });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send({ error: 'Failed to send email' });
-//   }
-// });
 
 
 
