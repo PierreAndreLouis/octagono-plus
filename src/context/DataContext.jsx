@@ -1,5 +1,6 @@
 // DataContextProvider.js
 // Q5w4i4w9M8V2P9P
+// IPXl30dTi9P
 
 import React, {
   createContext,
@@ -55,6 +56,8 @@ const DataContextProvider = ({ children }) => {
       localStorage.getItem("currentCountry") === ItCountry
     ) {
       setIsItUser(true);
+    } else {
+      setIsItUser(false);
     }
   }, []);
 
@@ -1654,6 +1657,8 @@ const DataContextProvider = ({ children }) => {
             localStorage.getItem("currentCountry") === ItCountry
           ) {
             setIsItUser(true);
+          } else {
+            setIsItUser(false);
           }
 
           fetchAllComptes(account, username, password, true, isItUser);
