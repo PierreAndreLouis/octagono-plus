@@ -47,6 +47,17 @@ const DataContextProvider = ({ children }) => {
     localStorage.setItem("isItUser", JSON.stringify(isItUser));
   }, [isItUser]);
 
+  useEffect(() => {
+    if (
+      localStorage.getItem("adminAccount") === ItAccount &&
+      localStorage.getItem("adminUsername") === ItSysUser &&
+      localStorage.getItem("adminPassword") === AdminPassword &&
+      localStorage.getItem("currentCountry") === ItCountry
+    ) {
+      setIsItUser(true);
+    }
+  }, []);
+
   // Fonction pour obtenir le timestamp d'aujourd'hui à minuit (en secondes)
   const getTodayTimestamp = () => {
     const now = new Date();
@@ -1634,6 +1645,16 @@ const DataContextProvider = ({ children }) => {
           setAdminAccount(account);
           setAdminUsername(username);
           setAdminPassword(password);
+
+          // ------------------------
+          if (
+            localStorage.getItem("adminAccount") === ItAccount &&
+            localStorage.getItem("adminUsername") === ItSysUser &&
+            localStorage.getItem("adminPassword") === AdminPassword &&
+            localStorage.getItem("currentCountry") === ItCountry
+          ) {
+            setIsItUser(true);
+          }
 
           fetchAllComptes(account, username, password, true, isItUser);
         } else {
@@ -9463,6 +9484,8 @@ const DataContextProvider = ({ children }) => {
     rapportVehicleDetails,
   ]);
 
+  const sendGMailConfirmation2 = () => {};
+
   const sendGMailConfirmation = (accountConnected, user, country) => {
     console.log("---------", accountConnected, user, country);
 
@@ -10022,5 +10045,5 @@ export default DataContextProvider;
 
 // git init
 // git add .
-// git commit -m "configuration email"
+// git commit -m "configuration email 5"
 // git push -u origin main
