@@ -22,7 +22,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.3.1";
+  let versionApplication = "1.3.2";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -1665,7 +1665,7 @@ const DataContextProvider = ({ children }) => {
           // ------------------------
           // if (
           //   localStorage.getItem("adminAccount") === ItAccount &&
-          //   localStorage.getItem("itUserName") === ItSysUser &&
+          //   localStorage.getItem("itUserName") === ItUser &&
           //   localStorage.getItem("currentCountry") === ItCountry
           // ) {
           //   setIsItUser(true);
