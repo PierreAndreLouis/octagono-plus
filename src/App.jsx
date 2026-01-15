@@ -1882,7 +1882,7 @@ function App() {
             setIsCreatingNewElement={setIsCreatingNewElement}
           />
           <br />
-          <p className="text-end w-full mr-4 font-bold pr-8 -translate-y-14">
+          <p className="text-end w-full mr-4 font-bold pr-4 -translate-y-14">
             {" "}
             {t("version")}: {versionApplication}
           </p>

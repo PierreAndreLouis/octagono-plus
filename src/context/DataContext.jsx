@@ -43,16 +43,24 @@ const DataContextProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : false;
   });
 
+  const [itUserName, setItUserName] = useState(() => {
+    const stored = localStorage.getItem("itUserName");
+    return stored ? JSON.parse(stored) : false;
+  });
+
   // chaque fois que isItUser change → on le sauvegarde
   useEffect(() => {
     localStorage.setItem("isItUser", JSON.stringify(isItUser));
   }, [isItUser]);
 
   useEffect(() => {
+    localStorage.setItem("itUserName", JSON.stringify(itUserName));
+  }, [itUserName]);
+
+  useEffect(() => {
     if (
       localStorage.getItem("adminAccount") === ItAccount &&
-      localStorage.getItem("adminUsername") === ItSysUser &&
-      localStorage.getItem("adminPassword") === AdminPassword &&
+      localStorage.getItem("itUserName") === ItSysUser &&
       localStorage.getItem("currentCountry") === ItCountry
     ) {
       setIsItUser(true);
@@ -1562,6 +1570,7 @@ const DataContextProvider = ({ children }) => {
       country = ItCountry;
       console.log("IS a IT User");
       setIsItUser(true);
+      setItUserName(usernameLog);
       isItUser = true;
     } else {
       account = accountLog;
@@ -1569,6 +1578,7 @@ const DataContextProvider = ({ children }) => {
       password = passwordLog;
       country = countryLog;
       console.log("Not  IS a IT User");
+      setItUserName(" ");
 
       setIsItUser(false);
       isItUser = false;
@@ -1650,16 +1660,15 @@ const DataContextProvider = ({ children }) => {
           setAdminPassword(password);
 
           // ------------------------
-          if (
-            localStorage.getItem("adminAccount") === ItAccount &&
-            localStorage.getItem("adminUsername") === ItSysUser &&
-            localStorage.getItem("adminPassword") === AdminPassword &&
-            localStorage.getItem("currentCountry") === ItCountry
-          ) {
-            setIsItUser(true);
-          } else {
-            setIsItUser(false);
-          }
+          // if (
+          //   localStorage.getItem("adminAccount") === ItAccount &&
+          //   localStorage.getItem("itUserName") === ItSysUser &&
+          //   localStorage.getItem("currentCountry") === ItCountry
+          // ) {
+          //   setIsItUser(true);
+          // } else {
+          //   setIsItUser(false);
+          // }
 
           fetchAllComptes(account, username, password, true, isItUser);
         } else {
