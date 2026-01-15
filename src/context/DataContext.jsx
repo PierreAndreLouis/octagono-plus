@@ -60,12 +60,15 @@ const DataContextProvider = ({ children }) => {
   useEffect(() => {
     if (
       localStorage.getItem("adminAccount") === ItAccount &&
-      localStorage.getItem("itUserName") === ItSysUser &&
+      (localStorage.getItem("itUserName") === ItUser ||
+        itUserName === ItUser) &&
       localStorage.getItem("currentCountry") === ItCountry
     ) {
       setIsItUser(true);
+      setItUserName(ItUser);
     } else {
       setIsItUser(false);
+      setItUserName(" ");
     }
   }, []);
 
