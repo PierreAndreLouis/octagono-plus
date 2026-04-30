@@ -157,7 +157,7 @@ function ListeDesVehiculesGestion({
     if (isDashboardHomePage) {
       return addVehiculeDetailsFonction(
         listeGestionDesVehicules,
-        véhiculeDetails
+        véhiculeDetails,
       );
     } else {
       return dataFusionné;
@@ -197,7 +197,7 @@ function ListeDesVehiculesGestion({
           item?.simPhoneNumber
             ?.toLowerCase()
             ?.includes(searchTermInput.toLowerCase()) ||
-          item?.accountID.toLowerCase().includes(searchTermInput.toLowerCase())
+          item?.accountID.toLowerCase().includes(searchTermInput.toLowerCase()),
       )
     : displayListeDevice;
 
@@ -217,7 +217,7 @@ function ListeDesVehiculesGestion({
           .catch((err) => {
             console.error(
               "Erreur lors du chargement des groupes ou des devices de groupes :",
-              err
+              err,
             );
           });
       }, 3000);
@@ -231,7 +231,7 @@ function ListeDesVehiculesGestion({
           .catch((err) => {
             console.error(
               "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-              err
+              err,
             );
             // setError("Erreur lors de la mise à jour des utilisateurs.");
           });
@@ -322,11 +322,11 @@ function ListeDesVehiculesGestion({
       acc[item.accountID].push(item);
       return acc;
     },
-    {}
+    {},
   );
 
   const sortedGroups = Object.entries(grouped || {})?.sort(
-    (a, b) => b[1].length - a[1].length
+    (a, b) => b[1].length - a[1].length,
   );
 
   const toggleGroup = (accountID) => {
@@ -419,7 +419,7 @@ function ListeDesVehiculesGestion({
         chooseAccountID,
         currentSelectedDeviceGestion?.accountID,
         currentSelectedDeviceGestion?.deviceID,
-        currentSelectedDeviceGestion?.description
+        currentSelectedDeviceGestion?.description,
       );
 
       // createVehicleEnGestionAccount(
@@ -509,7 +509,7 @@ function ListeDesVehiculesGestion({
         date = new Date(date); // Convertir en objet Date si nécessaire
       }
       const adjustedDate = new Date(
-        date.getTime() - date.getTimezoneOffset() * 60000
+        date.getTime() - date.getTimezoneOffset() * 60000,
       );
       return adjustedDate.toISOString().split("T")[0];
     };
@@ -595,15 +595,15 @@ function ListeDesVehiculesGestion({
 
         currentAccountSelected?.accountID ||
           gestionAccountData.find(
-            (account) => account.accountID === vehicleAccountID
+            (account) => account.accountID === vehicleAccountID,
           )?.accountID,
         "admin",
         currentAccountSelected?.password ||
           gestionAccountData.find(
-            (account) => account.accountID === vehicleAccountID
+            (account) => account.accountID === vehicleAccountID,
           )?.password,
         false,
-        isPart1 ? "partie1" : "partie2"
+        isPart1 ? "partie1" : "partie2",
       );
     } else {
       fetchHistoriqueVehicleDetails(
@@ -611,7 +611,7 @@ function ListeDesVehiculesGestion({
         timeFrom,
         timeTo,
         false,
-        isPart1 ? "partie1" : "partie2"
+        isPart1 ? "partie1" : "partie2",
       );
     }
 
@@ -920,14 +920,14 @@ function ListeDesVehiculesGestion({
                           onClick={() => {
                             if (fromDashboard) {
                               setStatisticFilteredDeviceListeText(
-                                `${t("Tous les Appareils")}`
+                                `${t("Tous les Appareils")}`,
                               );
                             }
                             setFilteredColorCategorieListe(
                               addVehiculeDetailsFonction(
                                 allDevices,
-                                véhiculeDetails
-                              )
+                                véhiculeDetails,
+                              ),
                             );
                           }}
                           className="px-2  flex justify-between items-center cursor-pointer sm:px-4 py-1 text-sm border-l-4 text-blue-600 font-semibold bg-blue-50 w-full hover:bg-blue-100 dark:text-blue-200 dark:bg-gray-700 border-l-blue-600 "
@@ -939,7 +939,7 @@ function ListeDesVehiculesGestion({
                           onClick={() => {
                             if (fromDashboard) {
                               setStatisticFilteredDeviceListeText(
-                                `${t("Appareils En déplacement")}`
+                                `${t("Appareils En déplacement")}`,
                               );
                             }
                             setFilteredColorCategorieListe(EnDéplacement);
@@ -955,7 +955,7 @@ function ListeDesVehiculesGestion({
                           onClick={() => {
                             if (fromDashboard) {
                               setStatisticFilteredDeviceListeText(
-                                `${t("Appareils déplacés")}`
+                                `${t("Appareils déplacés")}`,
                               );
                             }
                             setFilteredColorCategorieListe(DeviceDéplacer);
@@ -972,7 +972,7 @@ function ListeDesVehiculesGestion({
                           onClick={() => {
                             if (fromDashboard) {
                               setStatisticFilteredDeviceListeText(
-                                `${t("Appareils non déplacés")}`
+                                `${t("Appareils non déplacés")}`,
                               );
                             }
                             setFilteredColorCategorieListe(DeviceNonDeplacer);
@@ -986,7 +986,7 @@ function ListeDesVehiculesGestion({
                           onClick={() => {
                             if (fromDashboard) {
                               setStatisticFilteredDeviceListeText(
-                                `${t("Appareils Actifs")}`
+                                `${t("Appareils Actifs")}`,
                               );
                             }
                             setFilteredColorCategorieListe(DeviceListeActif);
@@ -1000,11 +1000,11 @@ function ListeDesVehiculesGestion({
                           onClick={() => {
                             if (fromDashboard) {
                               setStatisticFilteredDeviceListeText(
-                                `${t("Appareils En Stationnement")}`
+                                `${t("Appareils En Stationnement")}`,
                               );
                             }
                             setFilteredColorCategorieListe(
-                              DeviceEnStationnement
+                              DeviceEnStationnement,
                             );
                           }}
                           className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1 text-sm sm:text-sm border-l-4 text-orange-600 font-semibold bg-orange-50 w-full hover:bg-orange-100 dark:text-orange-200 dark:bg-gray-700 border-l-orange-600 "
@@ -1022,7 +1022,7 @@ function ListeDesVehiculesGestion({
 
                         if (fromDashboard) {
                           setStatisticFilteredDeviceListeText(
-                            `${t("Appareils Inactifs")}`
+                            `${t("Appareils Inactifs")}`,
                           );
                         }
                         setFilteredColorCategorieListe(DeviceInactifs);
@@ -1038,11 +1038,11 @@ function ListeDesVehiculesGestion({
 
                         if (fromDashboard) {
                           setStatisticFilteredDeviceListeText(
-                            `${t("Appareils Inactifs Actualisés")}`
+                            `${t("Appareils Inactifs Actualisés")}`,
                           );
                         }
                         setFilteredColorCategorieListe(
-                          DeviceInactifsWidthDetails
+                          DeviceInactifsWidthDetails,
                         );
                       }}
                       className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
@@ -1056,11 +1056,11 @@ function ListeDesVehiculesGestion({
 
                         if (fromDashboard) {
                           setStatisticFilteredDeviceListeText(
-                            `${t("Appareils Inactifs non Actualisés")}`
+                            `${t("Appareils Inactifs non Actualisés")}`,
                           );
                         }
                         setFilteredColorCategorieListe(
-                          DeviceInactifsWidthNoDetails
+                          DeviceInactifsWidthNoDetails,
                         );
                       }}
                       className="px-2  cursor-pointer flex justify-between items-center sm:px-4 py-1  text-sm border-l-4 text-purple-600 font-semibold bg-purple-50 w-full hover:bg-purple-100 dark:text-purple-200 dark:bg-gray-700 border-l-purple-600 "
@@ -1181,7 +1181,7 @@ function ListeDesVehiculesGestion({
                   name="search"
                   type="search"
                   placeholder={`${t(
-                    "Recherche un appareil par description, compte, IMEI, telephone"
+                    "Recherche un appareil par description, compte, IMEI, telephone",
                   )}`}
                   required
                   value={searchTermInput}
@@ -1445,8 +1445,8 @@ function ListeDesVehiculesGestion({
                           item?.véhiculeDetails?.some(
                             (detail) =>
                               detail.accountID === device?.accountID &&
-                              detail.deviceID === device?.deviceID
-                          )
+                              detail.deviceID === device?.deviceID,
+                          ),
                         )?.véhiculeDetails?.[0];
 
                         const max = 80;
@@ -1486,7 +1486,7 @@ function ListeDesVehiculesGestion({
                                   device?.véhiculeDetails?.[0]?.speedKPH
                                     ? parseFloat(
                                         device?.véhiculeDetails?.[0]
-                                          ?.speedKPH || foundDetails?.speedKPH
+                                          ?.speedKPH || foundDetails?.speedKPH,
                                       )?.toFixed(0)
                                     : 0}{" "}
                                   {/* {parseFloat(
@@ -1525,7 +1525,7 @@ function ListeDesVehiculesGestion({
                                         ? parseFloat(
                                             device?.véhiculeDetails?.[0]
                                               ?.speedKPH ||
-                                              foundDetails?.speedKPH
+                                              foundDetails?.speedKPH,
                                           )?.toFixed(0)
                                         : 0}{" "}
                                       Km/h
@@ -1565,10 +1565,26 @@ function ListeDesVehiculesGestion({
                                     <p className="font-bold">
                                       {t("Adresse")} :
                                       <span className="notranslate font-normal dark:text-orange-500 text-gray-600 pl-2">
-                                        {foundDetails?.address
+                                        {bg_color === "bg-purple-500" &&
+                                        localStorage.getItem(
+                                          "currentCountry",
+                                        ) === "ht"
+                                          ? t("Loading") + "..."
+                                          : foundDetails?.address
+                                            ? device?.véhiculeDetails[0]
+                                                ?.address ||
+                                              foundDetails?.address
+                                            : t("-------")}
+
+                                        {/* {foundDetails?.address
                                           ? device?.véhiculeDetails[0]
                                               ?.address || foundDetails?.address
-                                          : `${t("-------")}`}
+                                          : `${t("-------")}`}{" "}
+                                          ------------------
+                                        {bg_color === "bg-purple-500"
+                                          ? "Loading"
+                                          : "date"}
+                                        xxxxxxxxxxxxxxxx */}
                                       </span>
                                     </p>
                                   </div>{" "}
@@ -1626,17 +1642,43 @@ function ListeDesVehiculesGestion({
                                       {t("Dernière mise a jour")} :
                                     </p>
 
-                                    {foundDetails?.timestamp ? (
+                                    {bg_color === "bg-purple-500" &&
+                                    localStorage.getItem("currentCountry") ===
+                                      "ht" ? (
+                                      <span className="dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                        {t("Loading")}...
+                                      </span>
+                                    ) : foundDetails?.timestamp ? (
+                                      <span className="dark:text-orange-500 text-gray-600 pl-2 font-normal">
+                                        {
+                                          FormatDateHeure(
+                                            foundDetails?.timestamp,
+                                          ).date
+                                        }
+                                        <span className="px-2">/</span>
+                                        {
+                                          FormatDateHeure(
+                                            foundDetails?.timestamp,
+                                          ).time
+                                        }
+                                      </span>
+                                    ) : (
+                                      <p className="ml-3 text-gray-600">
+                                        {t("-------")}
+                                      </p>
+                                    )}
+
+                                    {/* {foundDetails?.timestamp ? (
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2 font-normal">
                                         {
                                           FormatDateHeure(
-                                            foundDetails?.timestamp
+                                            foundDetails?.timestamp,
                                           ).date
                                         }
                                         <span className="px-2">/</span>{" "}
                                         {
                                           FormatDateHeure(
-                                            foundDetails?.timestamp
+                                            foundDetails?.timestamp,
                                           ).time
                                         }
                                       </span>
@@ -1644,7 +1686,7 @@ function ListeDesVehiculesGestion({
                                       <p className=" ml-3 text-gray-600">
                                         {t("-------")}
                                       </p>
-                                    )}
+                                    )} */}
                                   </div>{" "}
                                   {/*  */}
                                   {/*  */}
@@ -1814,10 +1856,11 @@ function ListeDesVehiculesGestion({
                                       <span className=" dark:text-orange-500 text-gray-600 pl-2">
                                         {(foundDetails?.statusCode &&
                                           Number(
-                                            device?.véhiculeDetails[0]?.speedKPH
+                                            device?.véhiculeDetails[0]
+                                              ?.speedKPH,
                                           )?.toFixed(1)) ||
                                           Number(
-                                            foundDetails?.speedKPH
+                                            foundDetails?.speedKPH,
                                           )?.toFixed(1)}{" "}
                                         Km/h{" "}
                                       </span>
@@ -1850,7 +1893,7 @@ function ListeDesVehiculesGestion({
                                         {device?.lastOdometerKM &&
                                         !isNaN(Number(device?.lastOdometerKM))
                                           ? Number(
-                                              device?.lastOdometerKM
+                                              device?.lastOdometerKM,
                                             ).toFixed(0) +
                                             " " +
                                             `${t("km")}`

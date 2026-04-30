@@ -118,7 +118,7 @@ function MapComponent({
         v.lastValidLatitude !== "0.0" &&
         v.lastValidLongitude !== "0.0" &&
         v.lastValidLatitude !== "" &&
-        v.lastValidLongitude !== ""
+        v.lastValidLongitude !== "",
     );
   }, [
     appareilPourAfficherSurCarte,
@@ -131,7 +131,7 @@ function MapComponent({
   const véhiculeHistoriqueUnique = useMemo(() => {
     if (historiqueSelectedLocationIndex != null && selectedVehicleToShowInMap) {
       const véhicule = appareilPourAfficherSurCarte?.find(
-        (item) => item?.deviceID === selectedVehicleToShowInMap
+        (item) => item?.deviceID === selectedVehicleToShowInMap,
       );
       const details =
         véhiculeHistoriqueDetails?.[historiqueSelectedLocationIndex] || {};
@@ -166,7 +166,7 @@ function MapComponent({
     if (!fromSelectOnPositionValue?.length) return;
 
     const filtered = véhiculeData?.filter(
-      (v) => v.deviceID === selectedVehicleToShowInMap
+      (v) => v.deviceID === selectedVehicleToShowInMap,
     );
 
     if (filtered.length === 0) return;
@@ -207,7 +207,7 @@ function MapComponent({
         if (selectedVehicleToShowInMap) {
           // Si un véhicule est sélectionné, centrer sur lui
           const selectedVehicleData = vehicles?.find(
-            (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap
+            (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap,
           );
 
           if (selectedVehicleData) {
@@ -221,7 +221,7 @@ function MapComponent({
             vehicles?.map((véhicule) => [
               véhicule.lastValidLatitude,
               véhicule.lastValidLongitude,
-            ])
+            ]),
           );
           mapRef.current.fitBounds(bounds);
         }
@@ -249,31 +249,18 @@ function MapComponent({
     if (!getColor) {
       if (isNotRecentlyUpdate) return "/pin/ping_purple.png";
 
-      if (
-        speed > 0 &&
-        speed <= 20
-      )
-        return `/pin/ping_yellow_h${direction}.png`;
+      if (speed > 0 && speed <= 20) return `/pin/ping_yellow_h${direction}.png`;
 
-      if (
-        speed > 20
-      )
-        return `/pin/ping_green_h${direction}.png`;
+      if (speed > 20) return `/pin/ping_green_h${direction}.png`;
 
       return "/pin/ping_red.png";
     } else {
       if (isNotRecentlyUpdate) return "bg-purple-600 text-white ";
 
-      if (
-        speed > 0 &&
-        speed <= 20
-      )
+      if (speed > 0 && speed <= 20)
         return "bg-yellow-300 border text-black   font-bold border-b border-b-black";
 
-      if (
-        speed > 20
-      )
-        return "bg-green-600 text-white ";
+      if (speed > 20) return "bg-green-600 text-white ";
 
       return "bg-red-500 text-white ";
     }
@@ -523,7 +510,7 @@ function MapComponent({
             <div
               className={`${getMarkerIcon(
                 selectedVehicle,
-                getColor
+                getColor,
               )}   absolute z-4 -top-[3rem] -left-5 -right-5 h-10 `}
             >
               .
@@ -543,6 +530,7 @@ function MapComponent({
             </p>
 
             <p>
+              timestamp: {selectedVehicle?.timestamp}
               <strong>{t("Adresse")} :</strong>{" "}
               <span className="notranslate">
                 {selectedVehicle?.address || `${t("Non disponible")}`}
@@ -594,12 +582,12 @@ function MapComponent({
               onClick={() =>
                 openGoogleMaps(
                   selectedVehicle?.lastValidLatitude,
-                  selectedVehicle?.lastValidLongitude
+                  selectedVehicle?.lastValidLongitude,
                 )
               }
               className={`${getMarkerIcon(
                 selectedVehicle,
-                getColor
+                getColor,
               )}  mt-2 px-3 py-1  text-white-- rounded-md`}
             >
               {t("Voir sur Google Maps")}
@@ -812,7 +800,7 @@ function MapComponent({
                   point.lat !== "" &&
                   point.lng !== "" &&
                   point.lat !== 0 &&
-                  point.lng !== 0
+                  point.lng !== 0,
               );
 
               if (validCoordinates?.length === 0) return null; // Éviter d'afficher un polygone vide

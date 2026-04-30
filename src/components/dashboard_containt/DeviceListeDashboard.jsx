@@ -35,8 +35,8 @@ function DeviceListeDashboard() {
           new Map(
             gestionAccountData
               ?.flatMap((account) => account.accountDevices)
-              ?.map((device) => [device.deviceID, device])
-          ).values()
+              ?.map((device) => [device.deviceID, device]),
+          ).values(),
         )
     : dataFusionné;
 
@@ -144,32 +144,64 @@ function DeviceListeDashboard() {
                   <p className="text-gray-600 font-bold">
                     {t("Adresse")} :{" "}
                     <span className="font-normal notranslate text-gray-500 ml-0 ">
-                      {device?.véhiculeDetails?.[0]?.address
+                      {bg_color === "bg-purple-500" &&
+                      localStorage.getItem("currentCountry") === "ht" ? (
+                        <span className="font-normal text-gray-500 ml-3">
+                          {t("Loading")}...
+                        </span>
+                      ) : device?.véhiculeDetails?.[0]?.address ? (
+                        device?.véhiculeDetails?.[0]?.address
+                      ) : (
+                        t("-------")
+                      )}
+                      {/* {device?.véhiculeDetails?.[0]?.address
                         ? device?.véhiculeDetails?.[0]?.address
-                        : `${t("-------")}`}
+                        : `${t("-------")}`}{" "} */}
                     </span>{" "}
                   </p>
                   <div className="flex flex-wrap">
                     <p className="text-gray-600 font-bold">
                       {t("Dernière mise a jour")} :{" "}
                     </p>
-                    {device?.véhiculeDetails?.[0]?.timestamp ? (
+                    {bg_color === "bg-purple-500" &&
+                    localStorage.getItem("currentCountry") === "ht" ? (
+                      <span className="font-normal text-gray-500 ml-3">
+                        {t("Loading")}...
+                      </span>
+                    ) : device?.véhiculeDetails?.[0]?.timestamp ? (
                       <span className="font-normal text-gray-500 ml-3">
                         {
                           FormatDateHeure(
-                            device?.véhiculeDetails?.[0]?.timestamp
+                            device?.véhiculeDetails?.[0]?.timestamp,
                           )?.date
                         }{" "}
                         {" / "}
                         {
                           FormatDateHeure(
-                            device?.véhiculeDetails?.[0]?.timestamp
+                            device?.véhiculeDetails?.[0]?.timestamp,
+                          )?.time
+                        }
+                      </span>
+                    ) : (
+                      <p className="ml-3 text-gray-600">{t("-------")}</p>
+                    )}
+                    {/* {device?.véhiculeDetails?.[0]?.timestamp ? (
+                      <span className="font-normal text-gray-500 ml-3">
+                        {
+                          FormatDateHeure(
+                            device?.véhiculeDetails?.[0]?.timestamp,
+                          )?.date
+                        }{" "}
+                        {" / "}
+                        {
+                          FormatDateHeure(
+                            device?.véhiculeDetails?.[0]?.timestamp,
                           )?.time
                         }
                       </span>
                     ) : (
                       <p className=" ml-3 text-gray-600">{t("-------")}</p>
-                    )}
+                    )}{" "} */}
                   </div>
 
                   {/* <div className="flex flex-wrap">
@@ -184,7 +216,7 @@ function DeviceListeDashboard() {
                 </div>
               </div>
             );
-          }
+          },
         )
       ) : (
         <div className="flex h-full   justify-center items-center font-semibold text-lg">

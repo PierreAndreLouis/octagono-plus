@@ -1132,7 +1132,11 @@
 "Gestion du carburant" : "Fuel management",
 "Date d’actualisation EventData" : "EventData update date",
 "Date d’actualisation de l’appareil" : "Device update date",
-"Pas de mise a jour": "No update"
+"Pas de mise a jour": "No update",
+
+
+"Loading" : "Loading"
+
 
 
 

@@ -165,7 +165,7 @@ function MapComponent({
         v.lastValidLatitude !== "0.0" &&
         v.lastValidLongitude !== "0.0" &&
         v.lastValidLatitude !== "" &&
-        v.lastValidLongitude !== ""
+        v.lastValidLongitude !== "",
     );
   }, [
     appareilPourAfficherSurCarte,
@@ -178,7 +178,7 @@ function MapComponent({
   const véhiculeHistoriqueUnique = useMemo(() => {
     if (historiqueSelectedLocationIndex != null && selectedVehicleToShowInMap) {
       const véhicule = appareilPourAfficherSurCarte?.find(
-        (item) => item?.deviceID === selectedVehicleToShowInMap
+        (item) => item?.deviceID === selectedVehicleToShowInMap,
       );
       const details =
         véhiculeHistoriqueDetails?.[historiqueSelectedLocationIndex] || {};
@@ -213,7 +213,7 @@ function MapComponent({
     if (!fromSelectOnPositionValue?.length) return;
 
     const filtered = véhiculeData?.filter(
-      (v) => v.deviceID === selectedVehicleToShowInMap
+      (v) => v.deviceID === selectedVehicleToShowInMap,
     );
 
     if (filtered.length === 0) return;
@@ -254,7 +254,7 @@ function MapComponent({
         if (selectedVehicleToShowInMap) {
           // Si un véhicule est sélectionné, centrer sur lui
           const selectedVehicleData = vehicles?.find(
-            (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap
+            (véhicule) => véhicule?.deviceID === selectedVehicleToShowInMap,
           );
 
           if (selectedVehicleData) {
@@ -268,7 +268,7 @@ function MapComponent({
             vehicles?.map((véhicule) => [
               véhicule.lastValidLatitude,
               véhicule.lastValidLongitude,
-            ])
+            ]),
           );
           mapRef.current.fitBounds(bounds);
         }
@@ -509,7 +509,7 @@ function MapComponent({
       .filter((g) => g.isActive === 1)
       .map((geofence, index) => {
         const validCoordinates = geofence?.coordinates?.filter(
-          (point) => point.lat && point.lng
+          (point) => point.lat && point.lng,
         );
         if (!validCoordinates.length) return null;
 
@@ -549,6 +549,17 @@ function MapComponent({
   const VehiclePopup = React.memo(
     ({ véhicule, getMarkerIcon, t, openGoogleMaps }) => {
       if (!véhicule) return null;
+
+      const timestamp = selectedVehicle?.timestamp;
+      const now = Date.now();
+
+      // conversion secondes → millisecondes
+      const diff = now - timestamp * 1000;
+
+      // 24h en ms
+      const isOlderThan24h = diff >= 24 * 60 * 60 * 1000;
+
+      const isHaiti = localStorage.getItem("currentCountry") === "ht";
       return (
         <div
           className={`bottom-[4rem] lg:bottom-4  ${
@@ -570,7 +581,7 @@ function MapComponent({
             <div
               className={`${getMarkerIcon(
                 selectedVehicle,
-                getColor
+                getColor,
               )}   absolute z-4 -top-[3rem] -left-5 -right-5 h-10 `}
             >
               .
@@ -592,9 +603,25 @@ function MapComponent({
             <p>
               <strong>{t("Adresse")} :</strong>{" "}
               <span className="notranslate">
-                {selectedVehicle?.address || `${t("Non disponible")}`}
+                {isOlderThan24h && isHaiti
+                  ? t("Loading") + "..."
+                  : selectedVehicle?.address || t("Non disponible")}
               </span>
             </p>
+
+            {/* <p>
+              timestamp: {selectedVehicle?.timestamp}
+              <strong
+                onClick={() => {
+                  console.log(selectedVehicle?.timestamp);
+                }}
+              >
+                {t("Adresse")} :
+              </strong>{" "}
+              <span className="notranslate">
+                {selectedVehicle?.address || `${t("Non disponible")}`}
+              </span>
+            </p> */}
 
             <p>
               <strong>{t("Vitesse")} :</strong>{" "}
@@ -629,24 +656,29 @@ function MapComponent({
             </p>
             <p>
               <strong>{t("Last Update")} :</strong>{" "}
-              {selectedVehicle?.timestamp
-                ? FormatDateHeure(selectedVehicle.timestamp)?.date
-                : `${t("Pas de date disponible")}`}
-              <span className="px-3">/</span>
-              {FormatDateHeure(selectedVehicle.timestamp)?.time}
-              {/* {selectedVehicle.timestamp} */}
+              {isOlderThan24h && isHaiti ? (
+                t("Loading") + "..."
+              ) : (
+                <span>
+                  {selectedVehicle?.timestamp
+                    ? FormatDateHeure(selectedVehicle.timestamp)?.date
+                    : `${t("Pas de date disponible")}`}
+                  <span className="px-3">/</span>
+                  {FormatDateHeure(selectedVehicle.timestamp)?.time}
+                </span>
+              )}
             </p>
 
             <button
               onClick={() =>
                 openGoogleMaps(
                   selectedVehicle?.lastValidLatitude,
-                  selectedVehicle?.lastValidLongitude
+                  selectedVehicle?.lastValidLongitude,
                 )
               }
               className={`${getMarkerIcon(
                 selectedVehicle,
-                getColor
+                getColor,
               )}  mt-2 px-3 py-1  text-white-- rounded-md`}
             >
               {t("Voir sur Google Maps")}
@@ -654,7 +686,7 @@ function MapComponent({
           </div>
         </div>
       );
-    }
+    },
   );
 
   return (

@@ -1146,7 +1146,11 @@
 "Gestion du carburant" : "Gestión del combustible",
 "Date d’actualisation EventData" : "Fecha de actualización de EventData",
 "Date d’actualisation de l’appareil" : "Fecha de actualización del dispositivo",
-"Pas de mise a jour": "Sin actualización"
+"Pas de mise a jour": "Sin actualización",
+
+
+
+"Loading" : "Cargando"
 
 
 

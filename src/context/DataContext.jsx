@@ -22,7 +22,7 @@ const DataContextProvider = ({ children }) => {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
-  let versionApplication = "1.3.2";
+  let versionApplication = "1.3.3";
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -205,7 +205,7 @@ const DataContextProvider = ({ children }) => {
 
   const [userAdminPersonnelData, setUserAdminPersonnelData] = useState(() => {
     const storedUserAdminPersonnelData = localStorage.getItem(
-      "userAdminPersonnelData"
+      "userAdminPersonnelData",
     );
     return storedUserAdminPersonnelData
       ? JSON.parse(storedUserAdminPersonnelData)
@@ -226,7 +226,7 @@ const DataContextProvider = ({ children }) => {
 
   const [isDashboardHomePage, setIsDashboardHomePage] = useState(() => {
     const storedIsDashboardHomePage = localStorage.getItem(
-      "isDashboardHomePage"
+      "isDashboardHomePage",
     );
     return storedIsDashboardHomePage
       ? JSON.parse(storedIsDashboardHomePage)
@@ -271,7 +271,7 @@ const DataContextProvider = ({ children }) => {
   const [listeGestionDesUsers, setListeGestionDesUsers] = useState([]);
   const [listeGestionDesRules, setListeGestionDesRules] = useState([]);
   const [listeGestionDesRulesActive, setListeGestionDesRulesActive] = useState(
-    []
+    [],
   );
 
   useEffect(() => {
@@ -279,7 +279,7 @@ const DataContextProvider = ({ children }) => {
       setListeGestionDesRules(currentAccountSelected?.accountRules);
     } else {
       setListeGestionDesRules(
-        accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+        accountRules?.filter((acct) => acct?.accountID !== "sysadmin"),
       );
     }
   }, [currentAccountSelected]);
@@ -304,7 +304,7 @@ const DataContextProvider = ({ children }) => {
       setListeGestionDesRules(currentAccountSelected?.accountRules);
     } else {
       setListeGestionDesRules(
-        accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+        accountRules?.filter((acct) => acct?.accountID !== "sysadmin"),
       );
     }
   }, []);
@@ -314,7 +314,7 @@ const DataContextProvider = ({ children }) => {
     if (!currentAccountSelected) return;
 
     const compteMisAJour = gestionAccountData?.find(
-      (compte) => compte?.accountID === currentAccountSelected?.accountID
+      (compte) => compte?.accountID === currentAccountSelected?.accountID,
     );
 
     if (compteMisAJour) {
@@ -347,7 +347,7 @@ const DataContextProvider = ({ children }) => {
     if (!currentAccountSelected || !currentSelectedUserToConnect) return;
 
     const utilisateurActuel = currentAccountSelected?.accountUsers?.find(
-      (user) => user?.userID === currentSelectedUserToConnect?.userID
+      (user) => user?.userID === currentSelectedUserToConnect?.userID,
     );
 
     if (utilisateurActuel) {
@@ -379,7 +379,7 @@ const DataContextProvider = ({ children }) => {
 
       setListeGestionDesUsers(accountUsers);
       setListeGestionDesRules(
-        accountRules?.filter((acct) => acct?.accountID !== "sysadmin")
+        accountRules?.filter((acct) => acct?.accountID !== "sysadmin"),
       );
       setListeGestionDesRulesActive(accountRulesActive);
     }
@@ -642,7 +642,7 @@ const DataContextProvider = ({ children }) => {
 
   // Pour stocker les donnee dans la page Historique
   const [véhiculeHistoriqueDetails, setVéhiculeHistoriqueDetails] = useState(
-    []
+    [],
   );
 
   const [historiqueSelectedLocationIndex, setHistoriqueSelectedLocationIndex] =
@@ -797,7 +797,7 @@ const DataContextProvider = ({ children }) => {
       const appareils = currentAccountSelected?.accountDevices;
 
       setAppareilPourAfficherSurCarte(
-        addVehiculeDetailsFonction(appareils, véhiculeDetails)
+        addVehiculeDetailsFonction(appareils, véhiculeDetails),
       );
       setGeofencePourAfficherSurCarte(currentAccountSelected?.accountGeofences);
       //
@@ -805,7 +805,7 @@ const DataContextProvider = ({ children }) => {
       const appareils = accountDevices;
 
       setAppareilPourAfficherSurCarte(
-        addVehiculeDetailsFonction(appareils, véhiculeDetails)
+        addVehiculeDetailsFonction(appareils, véhiculeDetails),
       );
 
       setGeofencePourAfficherSurCarte(accountGeofences);
@@ -829,7 +829,7 @@ const DataContextProvider = ({ children }) => {
       const match = véhiculeDetails?.find(
         (v) =>
           v.deviceID === device.deviceID &&
-          v.véhiculeDetails?.[0]?.accountID === device.accountID
+          v.véhiculeDetails?.[0]?.accountID === device.accountID,
       );
 
       if (match && match.véhiculeDetails.length > 0) {
@@ -853,12 +853,12 @@ const DataContextProvider = ({ children }) => {
     const initialList = isDashboardHomePage
       ? addVehiculeDetailsFonction(
           currentAccountSelected?.accountDevices,
-          véhiculeDetails
+          véhiculeDetails,
         ) || addVehiculeDetailsFonction(accountDevices, véhiculeDetails)
       : // ? currentAccountSelected?.accountDevices || accountDevices
-      mergedDataHome
-      ? Object.values(mergedDataHome)
-      : [];
+        mergedDataHome
+        ? Object.values(mergedDataHome)
+        : [];
 
     setAllDevices(initialList);
     setListeGestionDesVehicules(initialList);
@@ -926,7 +926,7 @@ const DataContextProvider = ({ children }) => {
               d.DeviceInactifsWidthDetails.push(device);
             else d.DeviceInactifsWidthNoDetails.push(device);
           }
-        }
+        },
       );
 
       return d;
@@ -1406,12 +1406,12 @@ const DataContextProvider = ({ children }) => {
               deviceID: obj.deviceID,
               ...detail,
             };
-          }) ?? []
+          }) ?? [],
       )
       ?.filter((item) =>
         currentAccountSelected
           ? item?.accountID === currentAccountSelected?.accountID
-          : true
+          : true,
       );
   }, [
     isDashboardHomePage,
@@ -1427,12 +1427,12 @@ const DataContextProvider = ({ children }) => {
         obj.véhiculeDetails?.map((detail) => ({
           deviceID: obj.deviceID,
           ...detail,
-        })) ?? [] // important pour éviter undefined
+        })) ?? [], // important pour éviter undefined
     )
     ?.filter((item) =>
       currentAccountSelected
         ? item?.accountID === currentAccountSelected?.accountID
-        : true
+        : true,
     );
 
   //
@@ -1546,7 +1546,7 @@ const DataContextProvider = ({ children }) => {
     usernameLog,
     passwordLog,
     countryLog,
-    sendConnectionMail = true
+    sendConnectionMail = true,
   ) => {
     setDashboardLoadingEffect(true);
 
@@ -1772,7 +1772,7 @@ const DataContextProvider = ({ children }) => {
           setUserAdminPersonnelData(userData);
           localStorage.setItem(
             "userAdminPersonnelData",
-            JSON.stringify(userData)
+            JSON.stringify(userData),
           );
         } else {
           setUserPersonnelData(userData);
@@ -1783,7 +1783,7 @@ const DataContextProvider = ({ children }) => {
           xmlDoc.getElementsByTagName("Message")[0].textContent;
         setError(
           errorMessage ||
-            "Erreur lors de la recuperation des donnee de l'utilisateur."
+            "Erreur lors de la recuperation des donnee de l'utilisateur.",
         );
       }
     } catch (error) {
@@ -1902,11 +1902,11 @@ const DataContextProvider = ({ children }) => {
             if (devices?.length > 0) {
               await Promise.allSettled(
                 devices.map((d) =>
-                  limit(() => fetchVehiculeDetails(id, [d], pwd))
-                )
+                  limit(() => fetchVehiculeDetails(id, [d], pwd)),
+                ),
               );
             }
-          }
+          },
         );
 
         const results = await Promise.allSettled([devicesPromise]);
@@ -1923,7 +1923,7 @@ const DataContextProvider = ({ children }) => {
         failedAccounts.push(id);
         setError(
           "Erreur sur un ou plusieurs comptes.",
-          failedAccounts.join(", ")
+          failedAccounts.join(", "),
         );
       }
     } else {
@@ -1933,11 +1933,11 @@ const DataContextProvider = ({ children }) => {
             if (groupes?.length > 0) {
               await Promise.allSettled(
                 groupes.map((g) =>
-                  limit(() => fetchGroupeDevices(id, [g], pwd))
-                )
+                  limit(() => fetchGroupeDevices(id, [g], pwd)),
+                ),
               );
             }
-          }
+          },
         );
 
         const usersPromise = fetchAccountUsers(id, pwd).then(async (users) => {
@@ -1958,11 +1958,11 @@ const DataContextProvider = ({ children }) => {
             if (devices?.length > 0) {
               await Promise.allSettled(
                 devices.map((d) =>
-                  limit(() => fetchVehiculeDetails(id, [d], pwd))
-                )
+                  limit(() => fetchVehiculeDetails(id, [d], pwd)),
+                ),
               );
             }
-          }
+          },
         );
 
         const results = await Promise.allSettled([
@@ -1986,7 +1986,7 @@ const DataContextProvider = ({ children }) => {
         failedAccounts.push(id);
         setError(
           "Erreur sur un ou plusieurs comptes.",
-          failedAccounts.join(", ")
+          failedAccounts.join(", "),
         );
       }
     }
@@ -2013,7 +2013,7 @@ const DataContextProvider = ({ children }) => {
           await processCompte(acct, isItUser);
           done += 1;
           setProgress(Math.round((done / total) * 100)); // mise à jour à chaque compte
-        })
+        }),
       );
 
       await delay(500); // délai court entre les batches
@@ -2025,7 +2025,7 @@ const DataContextProvider = ({ children }) => {
     user,
     password,
     fetchAllOtherData = true,
-    isItUser
+    isItUser,
   ) => {
     const xml = `
 <GTSRequest command="dbget">
@@ -2057,7 +2057,7 @@ const DataContextProvider = ({ children }) => {
             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
               obj[fld.getAttribute("name")] = fld.textContent;
               return obj;
-            }, {})
+            }, {}),
           )
         : [];
 
@@ -2153,7 +2153,7 @@ const DataContextProvider = ({ children }) => {
             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
               obj[fld.getAttribute("name")] = fld.textContent;
               return obj;
-            }, {})
+            }, {}),
           )
         : [];
 
@@ -2216,7 +2216,7 @@ const DataContextProvider = ({ children }) => {
             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
               obj[fld.getAttribute("name")] = fld.textContent;
               return obj;
-            }, {})
+            }, {}),
           )
         : [];
 
@@ -2263,7 +2263,7 @@ const DataContextProvider = ({ children }) => {
             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
               obj[fld.getAttribute("name")] = fld.textContent;
               return obj;
-            }, {})
+            }, {}),
           )
         : [];
 
@@ -2309,7 +2309,7 @@ const DataContextProvider = ({ children }) => {
             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
               obj[fld.getAttribute("name")] = fld.textContent;
               return obj;
-            }, {})
+            }, {}),
           )
         : [];
 
@@ -2351,7 +2351,7 @@ const DataContextProvider = ({ children }) => {
             Array.from(rec.getElementsByTagName("Field")).reduce((obj, fld) => {
               obj[fld.getAttribute("name")] = fld.textContent;
               return obj;
-            }, {})
+            }, {}),
           )
         : [];
 
@@ -2377,7 +2377,7 @@ const DataContextProvider = ({ children }) => {
     if (!Array.isArray(groupes)) {
       console.warn(
         "fetchGroupeDevices: 'groupes' est invalide ou vide :",
-        groupes
+        groupes,
       );
       return [];
     }
@@ -2419,8 +2419,8 @@ const DataContextProvider = ({ children }) => {
                   obj[fld.getAttribute("name")] = fld.textContent;
                   return obj;
                 },
-                {}
-              )
+                {},
+              ),
             )
           : [];
 
@@ -2497,8 +2497,8 @@ const DataContextProvider = ({ children }) => {
                   obj[fld.getAttribute("name")] = fld.textContent;
                   return obj;
                 },
-                {}
-              )
+                {},
+              ),
             )
           : [];
 
@@ -2561,7 +2561,7 @@ const DataContextProvider = ({ children }) => {
       const records = Array.from(xmlDoc.getElementsByTagName("Record")).map(
         (record) => {
           const fields = Array.from(
-            record.getElementsByTagName("Field")
+            record.getElementsByTagName("Field"),
           ).reduce((acc, field) => {
             const name = field.getAttribute("name");
             const value =
@@ -2570,7 +2570,7 @@ const DataContextProvider = ({ children }) => {
             return acc;
           }, {});
           return fields;
-        }
+        },
       );
 
       // Map records to geofence structure
@@ -2637,7 +2637,7 @@ const DataContextProvider = ({ children }) => {
       } catch (error) {
         if (error.name === "QuotaExceededError") {
           console.error(
-            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
+            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage.",
           );
         } else {
           console.error("Erreur de stockage : ", error);
@@ -2715,8 +2715,8 @@ const DataContextProvider = ({ children }) => {
                   obj[fld.getAttribute("name")] = fld.textContent;
                   return obj;
                 },
-                {}
-              )
+                {},
+              ),
             )
           : [];
 
@@ -2743,29 +2743,29 @@ const DataContextProvider = ({ children }) => {
     const computeGestionAccounts = () => {
       const merged = comptes?.map((acct) => {
         const users = accountUsers?.filter(
-          (u) => u.accountID === acct.accountID
+          (u) => u.accountID === acct.accountID,
         );
         const rules = accountRules?.filter(
-          (u) => u.accountID === acct.accountID
+          (u) => u.accountID === acct.accountID,
         );
         const rulesActive = accountRulesActive?.filter(
-          (u) => u.accountID === acct.accountID
+          (u) => u.accountID === acct.accountID,
         );
 
         const devices = accountDevices?.filter(
-          (d) => d.accountID === acct.accountID
+          (d) => d.accountID === acct.accountID,
         );
         const geofences = accountGeofences?.filter(
-          (d) => d.accountID === acct.accountID
+          (d) => d.accountID === acct.accountID,
         );
         const groupes = accountGroupes?.filter(
-          (g) => g.accountID === acct.accountID
+          (g) => g.accountID === acct.accountID,
         );
         const userGrp = userGroupes?.filter((ug) =>
-          users?.some((u) => u.userID === ug.userID)
+          users?.some((u) => u.userID === ug.userID),
         );
         const grpDevs = groupeDevices?.filter((gd) =>
-          groupes?.some((g) => g.groupID === gd.groupID)
+          groupes?.some((g) => g.groupID === gd.groupID),
         );
 
         const groupMap = {};
@@ -2784,7 +2784,7 @@ const DataContextProvider = ({ children }) => {
           const devicesFromGroups =
             groupesDuUser?.length > 0
               ? groupesDuUser.flatMap(
-                  (groupLink) => groupMap[groupLink.groupID] || []
+                  (groupLink) => groupMap[groupLink.groupID] || [],
                 )
               : devices || [];
 
@@ -2792,7 +2792,7 @@ const DataContextProvider = ({ children }) => {
             devicesFromGroups.reduce((acc, device) => {
               acc[device.deviceID] = device;
               return acc;
-            }, {})
+            }, {}),
           );
 
           return {
@@ -2969,7 +2969,7 @@ const DataContextProvider = ({ children }) => {
     notes,
     workOrderID,
     deviceSelectionnes,
-    usersSelectionnes
+    usersSelectionnes,
   ) => {
     console.log("deviceSelectionnes", deviceSelectionnes);
     console.log("usersSelectionnes", usersSelectionnes);
@@ -3080,7 +3080,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Creation du nouveau groupe avec succès")}`
+          `${t("Creation du nouveau groupe avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
         setError("");
@@ -3093,7 +3093,7 @@ const DataContextProvider = ({ children }) => {
               userID,
               password,
               groupID,
-              deviceID
+              deviceID,
             );
           }
 
@@ -3111,7 +3111,7 @@ const DataContextProvider = ({ children }) => {
         } catch (err) {
           console.error("Erreur lors de la mise à jour :", err);
           setError(
-            "Erreur lors de la mise à jour des groupes ou utilisateurs."
+            "Erreur lors de la mise à jour des groupes ou utilisateurs.",
           );
         }
 
@@ -3124,7 +3124,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Creation du groupe")}`
+          `${t("Échec de la Creation du groupe")}`,
         );
         setConfirmationMessagePopupName(description);
 
@@ -3137,7 +3137,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Creation du groupe")}`
+        `${t("Échec de la Creation du groupe")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -3156,7 +3156,7 @@ const DataContextProvider = ({ children }) => {
     deviceSelectionnes,
     deviceNonSelectionnes,
     usersSelectionnes,
-    usersNonSelectionnes
+    usersNonSelectionnes,
   ) => {
     console.log("deviceSelectionnes", deviceSelectionnes);
     console.log("deviceNonSelectionnes", deviceNonSelectionnes);
@@ -3212,16 +3212,16 @@ const DataContextProvider = ({ children }) => {
                   notes,
                   workOrderID,
                 }
-              : groupe
-          )
+              : groupe,
+          ),
         );
 
         setListeGestionDesGroupe((prev) =>
           prev.map((groupe) =>
             groupe.groupID === groupID
               ? { ...groupe, displayName, description, notes, workOrderID }
-              : groupe
-          )
+              : groupe,
+          ),
         );
 
         try {
@@ -3232,7 +3232,7 @@ const DataContextProvider = ({ children }) => {
               userID,
               password,
               groupID,
-              deviceID
+              deviceID,
             );
           }
           for (const deviceID of deviceNonSelectionnes || []) {
@@ -3241,7 +3241,7 @@ const DataContextProvider = ({ children }) => {
               userID,
               password,
               groupID,
-              deviceID
+              deviceID,
             );
           }
 
@@ -3255,7 +3255,7 @@ const DataContextProvider = ({ children }) => {
               userID,
               password,
               groupID,
-              user
+              user,
             );
           }
 
@@ -3268,13 +3268,13 @@ const DataContextProvider = ({ children }) => {
         } catch (err) {
           console.error("Erreur lors de la mise à jour :", err);
           setError(
-            "Erreur lors de la mise à jour des groupes ou utilisateurs."
+            "Erreur lors de la mise à jour des groupes ou utilisateurs.",
           );
         }
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Modification du groupe avec succès")}`
+          `${t("Modification du groupe avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -3286,7 +3286,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Modification du groupe")}`
+          `${t("Échec de la Modification du groupe")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -3296,7 +3296,7 @@ const DataContextProvider = ({ children }) => {
       setError("Erreur lors de la modification du groupe.");
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Modification du groupe")}`
+        `${t("Échec de la Modification du groupe")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -3513,7 +3513,7 @@ const DataContextProvider = ({ children }) => {
     userID,
     password,
 
-    groupID
+    groupID,
   ) => {
     // /////////
 
@@ -3547,18 +3547,18 @@ const DataContextProvider = ({ children }) => {
         setError("");
 
         setAccountGroupes((prevGroupes) =>
-          prevGroupes.filter((groupe) => groupe.groupID !== groupID)
+          prevGroupes.filter((groupe) => groupe.groupID !== groupID),
         );
 
         setListeGestionDesGroupe((prevGroupes) =>
-          prevGroupes.filter((groupe) => groupe.groupID !== groupID)
+          prevGroupes.filter((groupe) => groupe.groupID !== groupID),
         );
 
         setCreateVéhiculeLoading(false);
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Suppression du groupe avec succès")}`
+          `${t("Suppression du groupe avec succès")}`,
         );
         setConfirmationMessagePopupName("");
       } else {
@@ -3570,7 +3570,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Suppression du groupe")}`
+          `${t("Échec de la Suppression du groupe")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -3584,7 +3584,7 @@ const DataContextProvider = ({ children }) => {
       setCreateVéhiculeLoading(false);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Suppression du groupe")}`
+        `${t("Échec de la Suppression du groupe")}`,
       );
       setConfirmationMessagePopupName("");
     }
@@ -3622,7 +3622,7 @@ const DataContextProvider = ({ children }) => {
     ruleEnable,
     sendCommand,
     isActive,
-    description
+    description,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -3678,7 +3678,7 @@ const DataContextProvider = ({ children }) => {
         fetchAccountRules(accountID, password);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Creation du nouveau Role avec succès")}`
+          `${t("Creation du nouveau Role avec succès")}`,
         );
         setConfirmationMessagePopupName(ruleID);
 
@@ -3692,7 +3692,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Creation du role")}`
+          `${t("Échec de la Creation du role")}`,
         );
         setConfirmationMessagePopupName(ruleID);
 
@@ -3731,7 +3731,7 @@ const DataContextProvider = ({ children }) => {
     ruleEnable,
     sendCommand,
     isActive,
-    description
+    description,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -3805,8 +3805,8 @@ const DataContextProvider = ({ children }) => {
                   isActive,
                   description,
                 }
-              : rule
-          )
+              : rule,
+          ),
         );
         setListeGestionDesRules((prevRules) =>
           prevRules.map((rule) =>
@@ -3831,13 +3831,13 @@ const DataContextProvider = ({ children }) => {
                   isActive,
                   description,
                 }
-              : rule
-          )
+              : rule,
+          ),
         );
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Modification du Role avec succès")}`
+          `${t("Modification du Role avec succès")}`,
         );
         setConfirmationMessagePopupName(ruleID);
 
@@ -3851,7 +3851,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la modification du role")}`
+          `${t("Échec de la modification du role")}`,
         );
         setConfirmationMessagePopupName(ruleID);
 
@@ -3871,7 +3871,7 @@ const DataContextProvider = ({ children }) => {
     accountID,
     userID,
     password,
-    ruleID
+    ruleID,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -3905,16 +3905,16 @@ const DataContextProvider = ({ children }) => {
 
       if (result === "success") {
         setAccountRules((rules) =>
-          rules.filter((rule) => rule?.ruleID !== ruleID)
+          rules.filter((rule) => rule?.ruleID !== ruleID),
         );
 
         setListeGestionDesRules((rules) =>
-          rules.filter((rule) => rule?.ruleID !== ruleID)
+          rules.filter((rule) => rule?.ruleID !== ruleID),
         );
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Suppression du Role avec succès")}`
+          `${t("Suppression du Role avec succès")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -3928,7 +3928,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la suppression du role")}`
+          `${t("Échec de la suppression du role")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -3951,7 +3951,7 @@ const DataContextProvider = ({ children }) => {
     ruleID,
     deviceID,
     groupID,
-    statusCode
+    statusCode,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -3995,13 +3995,13 @@ const DataContextProvider = ({ children }) => {
                 rule?.deviceID === deviceID &&
                 rule?.statusCode === statusCode &&
                 rule?.groupID === groupID
-              )
-          )
+              ),
+          ),
         );
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Suppression du Role avec succès")}`
+          `${t("Suppression du Role avec succès")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -4015,7 +4015,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la suppression du role")}`
+          `${t("Échec de la suppression du role")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -4082,7 +4082,7 @@ const DataContextProvider = ({ children }) => {
     deviceID,
     groupID,
     statusCode,
-    ruleID
+    ruleID,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -4126,7 +4126,7 @@ const DataContextProvider = ({ children }) => {
         fetchAccountRulesActive(accountID, password);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Affectation du nouveau rôle avec succès")}`
+          `${t("Affectation du nouveau rôle avec succès")}`,
         );
         setConfirmationMessagePopupName(ruleID);
 
@@ -4139,7 +4139,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de l'affectation du rôle")}`
+          `${t("Échec de l'affectation du rôle")}`,
         );
         setConfirmationMessagePopupName(ruleID);
       }
@@ -4149,7 +4149,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de l'affectation du rôle")}`
+        `${t("Échec de l'affectation du rôle")}`,
       );
       setConfirmationMessagePopupName(ruleID);
     } finally {
@@ -4164,7 +4164,7 @@ const DataContextProvider = ({ children }) => {
     deviceID,
     groupID,
     statusCode,
-    ruleID
+    ruleID,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -4203,7 +4203,7 @@ const DataContextProvider = ({ children }) => {
         fetchAccountRulesActive(accountID, password);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Affectation du nouveau rôle avec succès")}`
+          `${t("Affectation du nouveau rôle avec succès")}`,
         );
         setConfirmationMessagePopupName(ruleID);
 
@@ -4216,7 +4216,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de l'affectation du rôle")}`
+          `${t("Échec de l'affectation du rôle")}`,
         );
         setConfirmationMessagePopupName(ruleID);
       }
@@ -4226,7 +4226,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de l'affectation du rôle")}`
+        `${t("Échec de l'affectation du rôle")}`,
       );
       setConfirmationMessagePopupName(ruleID);
     } finally {
@@ -4245,7 +4245,7 @@ const DataContextProvider = ({ children }) => {
     notes,
     workOrderID,
     deviceSelectionnes,
-    usersSelectionnes
+    usersSelectionnes,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -4491,7 +4491,7 @@ const DataContextProvider = ({ children }) => {
     userType,
     gender,
     groupesSelectionnes,
-    groupesNonSelectionnes // ← même si inutilisé pour l’instant
+    groupesNonSelectionnes, // ← même si inutilisé pour l’instant
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -4539,7 +4539,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Création du nouvel utilisateur avec succès")}`
+          `${t("Création du nouvel utilisateur avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
         setError("");
@@ -4552,7 +4552,7 @@ const DataContextProvider = ({ children }) => {
             user,
             password,
             groupesSelectionnes,
-            userIDField
+            userIDField,
           );
           // }
 
@@ -4563,7 +4563,7 @@ const DataContextProvider = ({ children }) => {
         } catch (err) {
           console.error(
             "Erreur lors de l’ajout aux groupes ou du rafraîchissement :",
-            err
+            err,
           );
           setError("Erreur lors de la mise à jour des utilisateurs.");
         }
@@ -4573,13 +4573,13 @@ const DataContextProvider = ({ children }) => {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0]?.textContent;
         setError(
-          errorMessage || "Erreur lors de la création de l'utilisateur."
+          errorMessage || "Erreur lors de la création de l'utilisateur.",
         );
         handleUserError(xmlDoc);
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la création de l'utilisateur")}`
+          `${t("Échec de la création de l'utilisateur")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -4589,7 +4589,7 @@ const DataContextProvider = ({ children }) => {
       setError("Erreur lors de la création de l'utilisateur.");
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la création de l'utilisateur")}`
+        `${t("Échec de la création de l'utilisateur")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -4617,7 +4617,7 @@ const DataContextProvider = ({ children }) => {
     addressCountry,
     gender,
     groupesSelectionnes,
-    groupesNonSelectionnes
+    groupesNonSelectionnes,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -4664,7 +4664,7 @@ const DataContextProvider = ({ children }) => {
         // ✅ Popup succès
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Modification de l'utilisateur avec succès")}`
+          `${t("Modification de l'utilisateur avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
         setError("");
@@ -4693,8 +4693,8 @@ const DataContextProvider = ({ children }) => {
                   addressCountry,
                   gender,
                 }
-              : u
-          )
+              : u,
+          ),
         );
 
         setListeGestionDesUsers((prevUsers) =>
@@ -4719,8 +4719,8 @@ const DataContextProvider = ({ children }) => {
                   addressCountry,
                   gender,
                 }
-              : u
-          )
+              : u,
+          ),
         );
 
         try {
@@ -4731,7 +4731,7 @@ const DataContextProvider = ({ children }) => {
               user,
               password,
               groupID,
-              userIDField
+              userIDField,
             );
           }
 
@@ -4742,7 +4742,7 @@ const DataContextProvider = ({ children }) => {
             user,
             password,
             groupesSelectionnes,
-            userIDField
+            userIDField,
           );
           // }
 
@@ -4760,13 +4760,13 @@ const DataContextProvider = ({ children }) => {
         const errorMessage =
           xmlDoc.getElementsByTagName("Message")[0]?.textContent;
         setError(
-          errorMessage || "Erreur lors de la modification de l'utilisateur."
+          errorMessage || "Erreur lors de la modification de l'utilisateur.",
         );
         handleUserError(xmlDoc);
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Modification de l'utilisateur")}`
+          `${t("Échec de la Modification de l'utilisateur")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -4776,7 +4776,7 @@ const DataContextProvider = ({ children }) => {
       setError("Erreur lors de la modification de l'utilisateur.");
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Modification de l'utilisateur")}`
+        `${t("Échec de la Modification de l'utilisateur")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -4971,7 +4971,7 @@ const DataContextProvider = ({ children }) => {
     accountID,
     username,
     password,
-    lastLoginTime
+    lastLoginTime,
   ) => {
     // /////////
     if (!accountID && !username && !password && !lastLoginTime) return;
@@ -5019,7 +5019,7 @@ const DataContextProvider = ({ children }) => {
       // setError("Erreur lors de la modification lastLoginTime du user.");
       console.error(
         "Erreur lors de la modification lastLoginTime du user",
-        error
+        error,
       );
     }
   };
@@ -5027,7 +5027,7 @@ const DataContextProvider = ({ children }) => {
     userAccount,
     userUsername,
     userPassword,
-    userID
+    userID,
   ) => {
     // /////////
     setCreateVéhiculeLoading(true);
@@ -5055,7 +5055,7 @@ const DataContextProvider = ({ children }) => {
           // } else {
           setShowConfirmationMessagePopup(true); // succès  Échec
           setConfirmationMessagePopupTexte(
-            `${t("Suppression de l'utilisateur avec succès")}`
+            `${t("Suppression de l'utilisateur avec succès")}`,
           );
           setConfirmationMessagePopupName("");
 
@@ -5063,7 +5063,7 @@ const DataContextProvider = ({ children }) => {
 
           setTimeout(() => {
             setListeGestionDesUsers((prev) =>
-              prev?.filter((v) => v.userID !== userID)
+              prev?.filter((v) => v.userID !== userID),
             );
           }, 1000);
 
@@ -5073,12 +5073,12 @@ const DataContextProvider = ({ children }) => {
       } else {
         console.error(
           "Erreur lors de la suppression du véhicule:",
-          response.statusText
+          response.statusText,
         );
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de Suppression de l'utilisateur")}`
+          `${t("Échec de Suppression de l'utilisateur")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -5087,11 +5087,11 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
-        error
+        error,
       );
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de Suppression de l'utilisateur")}`
+        `${t("Échec de Suppression de l'utilisateur")}`,
       );
       setConfirmationMessagePopupName("");
 
@@ -5119,7 +5119,7 @@ const DataContextProvider = ({ children }) => {
     contactEmail,
     addressCity,
     addressCountry,
-    timeZone
+    timeZone,
   ) => {
     const xmlData = `<GTSRequest command="dbcreate">
       <Authorization account="${adminAccount}" user="${adminUsername}" password="${adminPassword}" />
@@ -5175,13 +5175,13 @@ const DataContextProvider = ({ children }) => {
           adminAccount,
           adminUsername,
           adminPassword,
-          fetchAllOtherData
+          fetchAllOtherData,
         );
 
         // setSuccessCreateAccountGestionPoupu(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Creation du nouveau compte avec succès")}`
+          `${t("Creation du nouveau compte avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
 
@@ -5195,7 +5195,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Creation du compte")}`
+          `${t("Échec de la Creation du compte")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -5207,7 +5207,7 @@ const DataContextProvider = ({ children }) => {
       // setEchecCreateAccountGestionPoupu(true);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Creation du compte")}`
+        `${t("Échec de la Creation du compte")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -5226,7 +5226,7 @@ const DataContextProvider = ({ children }) => {
     contactEmail,
     addressCity,
     addressCountry,
-    timeZone
+    timeZone,
   ) => {
     // /////////
 
@@ -5299,8 +5299,8 @@ const DataContextProvider = ({ children }) => {
                   addressCountry,
                   timeZone,
                 }
-              : account
-          )
+              : account,
+          ),
         );
 
         setCreateVéhiculeLoading(false);
@@ -5314,7 +5314,7 @@ const DataContextProvider = ({ children }) => {
         // setEchecModifyAccountGestionPopup(true);
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la  Modification du compte")}`
+          `${t("Échec de la  Modification du compte")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateVéhiculeLoading(false);
@@ -5326,7 +5326,7 @@ const DataContextProvider = ({ children }) => {
       // setEchecModifyAccountGestionPopup(true);
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la  Modification du compte")}`
+        `${t("Échec de la  Modification du compte")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateVéhiculeLoading(false);
@@ -5362,24 +5362,24 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Compte supprimer avec succès")}`
+          `${t("Compte supprimer avec succès")}`,
         );
         setConfirmationMessagePopupName("");
 
         setComptes((prev) =>
-          prev?.filter((v) => v.accountID !== accountIDField)
+          prev?.filter((v) => v.accountID !== accountIDField),
         );
 
         setCreateVéhiculeLoading(false);
       } else {
         console.error(
           "Erreur lors de la mise a jour de la suppression du véhicule:",
-          response.statusText
+          response.statusText,
         );
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de Suppression du compte")}`
+          `${t("Échec de Suppression du compte")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -5388,12 +5388,12 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
-        error
+        error,
       );
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de Suppression du compte")}`
+        `${t("Échec de Suppression du compte")}`,
       );
       setConfirmationMessagePopupName("");
       setCreateVéhiculeLoading(false);
@@ -5426,7 +5426,7 @@ const DataContextProvider = ({ children }) => {
     isActive,
 
     groupesSelectionnes,
-    fromMoveDeviceToOtherCompteFonction = false
+    fromMoveDeviceToOtherCompteFonction = false,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -5474,7 +5474,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Creation du nouveau appareil avec succès")}`
+          `${t("Creation du nouveau appareil avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
 
@@ -5497,7 +5497,7 @@ const DataContextProvider = ({ children }) => {
             .catch((err) => {
               console.error(
                 "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-                err
+                err,
               );
               setError("Erreur lors de la mise à jour des utilisateurs.");
             });
@@ -5515,17 +5515,17 @@ const DataContextProvider = ({ children }) => {
 
             gestionAccountData.find(
               (account) =>
-                account.accountID === currentSelectedDeviceGestion?.accountID
+                account.accountID === currentSelectedDeviceGestion?.accountID,
             )?.accountID,
 
             "admin",
 
             gestionAccountData.find(
               (account) =>
-                account.accountID === currentSelectedDeviceGestion?.accountID
+                account.accountID === currentSelectedDeviceGestion?.accountID,
             )?.password,
 
-            false
+            false,
           );
 
           try {
@@ -5542,7 +5542,7 @@ const DataContextProvider = ({ children }) => {
               .catch((err) => {
                 console.error(
                   "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-                  err
+                  err,
                 );
                 setError("Erreur lors de la mise à jour des utilisateurs.");
               });
@@ -5558,7 +5558,7 @@ const DataContextProvider = ({ children }) => {
             userUsername,
             userPassword,
             deviceID,
-            groupesSelectionnes
+            groupesSelectionnes,
           );
         }, 3000);
       } else {
@@ -5570,7 +5570,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Creation de l'appareil")}`
+          `${t("Échec de la Creation de l'appareil")}`,
         );
         setConfirmationMessagePopupName(description);
         //////////////////
@@ -5583,7 +5583,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Creation de l'appareil")}`
+        `${t("Échec de la Creation de l'appareil")}`,
       );
       setConfirmationMessagePopupName(description);
       //////////////////
@@ -5594,7 +5594,7 @@ const DataContextProvider = ({ children }) => {
   const testExecutionRequette = async (
     userAccount,
     userUsername,
-    userPassword
+    userPassword,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -5669,7 +5669,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Creation du nouveau appareil avec succès")}`
+          `${t("Creation du nouveau appareil avec succès")}`,
         );
         setConfirmationMessagePopupName("xxxxxxxxxxxxxx");
 
@@ -5683,7 +5683,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Creation de l'appareil")}`
+          `${t("Échec de la Creation de l'appareil")}`,
         );
         setConfirmationMessagePopupName("xxxxxxxxxxxxx");
         //////////////////
@@ -5696,7 +5696,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Creation de l'appareil")}`
+        `${t("Échec de la Creation de l'appareil")}`,
       );
       setConfirmationMessagePopupName("xxxxxxxxxxxx");
       //////////////////
@@ -5722,7 +5722,7 @@ const DataContextProvider = ({ children }) => {
     allowNotify,
     isActive,
 
-    groupesSelectionnes
+    groupesSelectionnes,
   ) => {
     setError("");
     setCreateVéhiculeLoading(true);
@@ -5775,7 +5775,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Modification de l'appareil avec succès")}`
+          `${t("Modification de l'appareil avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
 
@@ -5799,8 +5799,8 @@ const DataContextProvider = ({ children }) => {
                   allowNotify,
                   isActive,
                 }
-              : device
-          )
+              : device,
+          ),
         );
 
         setListeGestionDesVehicules((prevDevices) =>
@@ -5821,8 +5821,8 @@ const DataContextProvider = ({ children }) => {
                   allowNotify,
                   isActive,
                 }
-              : device
-          )
+              : device,
+          ),
         );
 
         // Attendre que le device apparaisse dans la liste
@@ -5832,7 +5832,7 @@ const DataContextProvider = ({ children }) => {
             userUsername,
             userPassword,
             deviceID,
-            groupesSelectionnes
+            groupesSelectionnes,
           );
         }, 3000);
       } else {
@@ -5844,7 +5844,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la modification de l'appareil")}`
+          `${t("Échec de la modification de l'appareil")}`,
         );
         setConfirmationMessagePopupName(description);
         //////////////////
@@ -5857,7 +5857,7 @@ const DataContextProvider = ({ children }) => {
 
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la modification de l'appareil")}`
+        `${t("Échec de la modification de l'appareil")}`,
       );
       setConfirmationMessagePopupName(description);
       //////////////////
@@ -5888,12 +5888,12 @@ const DataContextProvider = ({ children }) => {
       //
       const idOld = oldCompte;
       const pwdOld = gestionAccountData.find(
-        (account) => account.accountID === oldCompte
+        (account) => account.accountID === oldCompte,
       )?.password;
       //
       const idNew = newCompte;
       const pwdNew = gestionAccountData.find(
-        (account) => account.accountID === newCompte
+        (account) => account.accountID === newCompte,
       )?.password;
       //
       //
@@ -5903,7 +5903,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          t("Déplacement de l'appareil avec succès")
+          t("Déplacement de l'appareil avec succès"),
         );
         setConfirmationMessagePopupName(description);
 
@@ -5929,7 +5929,7 @@ const DataContextProvider = ({ children }) => {
           .catch((err) => {
             console.error(
               "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-              err
+              err,
             );
             setError("Erreur lors de la mise à jour des utilisateurs.");
           });
@@ -5942,7 +5942,7 @@ const DataContextProvider = ({ children }) => {
           .catch((err) => {
             console.error(
               "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-              err
+              err,
             );
             setError("Erreur lors de la mise à jour des utilisateurs.");
           });
@@ -5956,7 +5956,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          t("Échec de déplacement de l'appareil")
+          t("Échec de déplacement de l'appareil"),
         );
         setConfirmationMessagePopupName(description);
 
@@ -5981,7 +5981,7 @@ const DataContextProvider = ({ children }) => {
     userAccount,
     userUsername,
     userPassword,
-    showMessage = true
+    showMessage = true,
   ) => {
     // /////////
     setCreateVéhiculeLoading(true);
@@ -6011,13 +6011,13 @@ const DataContextProvider = ({ children }) => {
           if (showMessage) {
             setShowConfirmationMessagePopup(true); // succès  Échec
             setConfirmationMessagePopupTexte(
-              `${t("Suppression de l'appareil avec succès")}`
+              `${t("Suppression de l'appareil avec succès")}`,
             );
             setConfirmationMessagePopupName("");
           }
 
           setAccountDevices((prev) =>
-            prev?.filter((v) => v.deviceID !== deviceID)
+            prev?.filter((v) => v.deviceID !== deviceID),
           );
 
           // setUserDevices((prev) => prev?.filter((v) => v.deviceID !== deviceID));
@@ -6025,18 +6025,18 @@ const DataContextProvider = ({ children }) => {
             prev.map((user) => ({
               ...user,
               userDevices: user?.userDevices?.filter(
-                (device) => device.deviceID !== deviceID
+                (device) => device.deviceID !== deviceID,
               ),
-            }))
+            })),
           );
 
           setListeGestionDesVehicules((prev) =>
             prev.map((user) => ({
               ...user,
               userDevices: user?.userDevices?.filter(
-                (device) => device?.deviceID !== deviceID
+                (device) => device?.deviceID !== deviceID,
               ),
-            }))
+            })),
           );
 
           setCreateVéhiculeLoading(false);
@@ -6045,12 +6045,12 @@ const DataContextProvider = ({ children }) => {
       } else {
         console.error(
           "Erreur lors de la suppression du véhicule:",
-          response.statusText
+          response.statusText,
         );
         if (showMessage) {
           setShowConfirmationMessagePopup(true); // succès  Échec
           setConfirmationMessagePopupTexte(
-            `${t("Échec de Suppression de l'appareil")}`
+            `${t("Échec de Suppression de l'appareil")}`,
           );
           setConfirmationMessagePopupName("");
         }
@@ -6060,12 +6060,12 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         "Erreur de connexion lors de la suppression du véhicule:",
-        error
+        error,
       );
       if (showMessage) {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de Suppression de l'appareil")}`
+          `${t("Échec de Suppression de l'appareil")}`,
         );
         setConfirmationMessagePopupName("");
       }
@@ -6087,10 +6087,10 @@ const DataContextProvider = ({ children }) => {
     user,
     password,
     groupID,
-    devicesSelectionnes
+    devicesSelectionnes,
   ) => {
     const assignPromises = devicesSelectionnes.map((deviceID) =>
-      assignDeviceToGroup(account, user, password, groupID, deviceID)
+      assignDeviceToGroup(account, user, password, groupID, deviceID),
     );
 
     const results = await Promise.all(assignPromises);
@@ -6131,7 +6131,7 @@ const DataContextProvider = ({ children }) => {
     user,
     password,
     groupID,
-    deviceID
+    deviceID,
   ) => {
     const xmlData = `
 <GTSRequest command="dbcreate">
@@ -6164,7 +6164,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         `Erreur lors de l’assignation du device '${deviceID}' au groupe '${groupID}'`,
-        error
+        error,
       );
       return false;
     }
@@ -6176,10 +6176,10 @@ const DataContextProvider = ({ children }) => {
     user,
     password,
     deviceID,
-    groupesSelectionnes
+    groupesSelectionnes,
   ) => {
     const assignPromises = groupesSelectionnes.map((groupID) =>
-      assignDeviceToGroup(account, user, password, groupID, deviceID)
+      assignDeviceToGroup(account, user, password, groupID, deviceID),
     );
 
     const results = await Promise.all(assignPromises);
@@ -6213,7 +6213,7 @@ const DataContextProvider = ({ children }) => {
     password,
     groupID,
     userID,
-    key = "dbcreate" // l’utilisateur qu'on veut assigner
+    key = "dbcreate", // l’utilisateur qu'on veut assigner
   ) => {
     const xmlData = `
 <GTSRequest command="${key}">
@@ -6250,7 +6250,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         `Erreur lors de l’assignation de l’utilisateur '${userID}' au groupe '${groupID}'`,
-        error
+        error,
       );
       return false;
     }
@@ -6261,10 +6261,10 @@ const DataContextProvider = ({ children }) => {
     adminUser,
     password,
     groupID,
-    usersSelectionnes
+    usersSelectionnes,
   ) => {
     const assignPromises = usersSelectionnes.map((userID) =>
-      assignUserToGroup(account, adminUser, password, groupID, userID)
+      assignUserToGroup(account, adminUser, password, groupID, userID),
     );
 
     const results = await Promise.all(assignPromises);
@@ -6294,7 +6294,7 @@ const DataContextProvider = ({ children }) => {
         .catch((err) => {
           console.error(
             "Erreur lors du chargement des utilisateurs ou des données utilisateurs :",
-            err
+            err,
           );
           setError("Erreur lors de la mise à jour des utilisateurs.");
         });
@@ -6309,7 +6309,7 @@ const DataContextProvider = ({ children }) => {
     adminUser,
     password,
     groupID,
-    userID
+    userID,
   ) => {
     // <Field name="groupID">${groupID}</Field>
     const xmlData = `
@@ -6347,7 +6347,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         `Erreur lors du retrait de l’utilisateur '${userID}' du groupe '${groupID}'`,
-        error
+        error,
       );
       return false;
     }
@@ -6358,7 +6358,7 @@ const DataContextProvider = ({ children }) => {
     adminUser,
     password,
     groupID,
-    deviceID
+    deviceID,
   ) => {
     const xmlData = `
 <GTSRequest command="dbdel">
@@ -6387,7 +6387,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         `Erreur lors du retrait du device '${deviceID}' du groupe '${groupID}'`,
-        error
+        error,
       );
       return false;
     }
@@ -6561,7 +6561,7 @@ const DataContextProvider = ({ children }) => {
   const GeofenceDataFonction = async (
     userAccount,
     userUsername,
-    userPassword
+    userPassword,
   ) => {
     // Pour suivre le nombre de requête
 
@@ -6573,8 +6573,8 @@ const DataContextProvider = ({ children }) => {
 
     const xmlData = `<GTSRequest command="dbget">
       <Authorization account="${account || userAccount}" user="${
-      username || userUsername
-    }" password="${password || userPassword}" />
+        username || userUsername
+      }" password="${password || userPassword}" />
       <Record table="Geozone" partial="true">
         <Field name="accountID">${account || userAccount}</Field>
         <Field name="descriptionZone" />
@@ -6598,7 +6598,7 @@ const DataContextProvider = ({ children }) => {
       const records = Array.from(xmlDoc.getElementsByTagName("Record")).map(
         (record) => {
           const fields = Array.from(
-            record.getElementsByTagName("Field")
+            record.getElementsByTagName("Field"),
           ).reduce((acc, field) => {
             const name = field.getAttribute("name");
             const value =
@@ -6607,7 +6607,7 @@ const DataContextProvider = ({ children }) => {
             return acc;
           }, {});
           return fields;
-        }
+        },
       );
 
       // Map records to geofence structure
@@ -6664,7 +6664,7 @@ const DataContextProvider = ({ children }) => {
       } catch (error) {
         if (error.name === "QuotaExceededError") {
           console.error(
-            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage."
+            "Quota dépassé pour geofenceData : essayez de réduire la taille des données ou de nettoyer localStorage.",
           );
         } else {
           console.error("Erreur de stockage : ", error);
@@ -6709,7 +6709,7 @@ const DataContextProvider = ({ children }) => {
     lng8,
     accountIDProp,
     userProp,
-    passwordProp
+    passwordProp,
   ) => {
     // if (!userData || !adminUserData) return;
     // Pour suivre le nombre de requête
@@ -6731,8 +6731,8 @@ const DataContextProvider = ({ children }) => {
       <Authorization account="${
         accountIDProp ? accountIDProp : account
       }" user="${userProp ? userProp : username}" password="${
-      passwordProp ? passwordProp : password
-    }" />
+        passwordProp ? passwordProp : password
+      }" />
       <Record table="Geozone" partial="false">
         <Field name="accountID">${
           accountIDProp ? accountIDProp : account
@@ -6827,7 +6827,7 @@ const DataContextProvider = ({ children }) => {
         // setSuccesCreateGeofencePopup(true);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Vous avez ajoutee le geofence avec succès")}`
+          `${t("Vous avez ajoutee le geofence avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
       } else {
@@ -6835,7 +6835,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de l'ajout du Geofence")}`
+          `${t("Échec de l'ajout du Geofence")}`,
         );
         setConfirmationMessagePopupName(description);
 
@@ -6877,7 +6877,7 @@ const DataContextProvider = ({ children }) => {
     lng8,
     accountIDProp,
     userProp,
-    passwordProp
+    passwordProp,
   ) => {
     setCreateGeofenceLoading(true);
 
@@ -6941,7 +6941,7 @@ const DataContextProvider = ({ children }) => {
 
       if (!gtsResponse) {
         console.warn(
-          "⚠️ Aucun élément <GTSResponse> trouvé dans la réponse XML."
+          "⚠️ Aucun élément <GTSResponse> trouvé dans la réponse XML.",
         );
         throw new Error("Mauvaise structure XML");
       }
@@ -6965,15 +6965,15 @@ const DataContextProvider = ({ children }) => {
             prevGeofences?.map((geofence) =>
               geofence.geozoneID === geozoneID
                 ? { ...geofence, description, isActive, color, coordinates }
-                : geofence
-            )
+                : geofence,
+            ),
           );
           setListeGestionDesGeofences((prevGeofences) =>
             prevGeofences?.map((geofence) =>
               geofence.geozoneID === geozoneID
                 ? { ...geofence, description, isActive, color, coordinates }
-                : geofence
-            )
+                : geofence,
+            ),
           );
         } else {
           setGeofenceData((geofences) =>
@@ -7001,15 +7001,15 @@ const DataContextProvider = ({ children }) => {
                     lat8,
                     lng8,
                   }
-                : geofence
-            )
+                : geofence,
+            ),
           );
         }
 
         navigate("/gestion_geofences?tab=geozone");
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Modification du geofence avec succès")}`
+          `${t("Modification du geofence avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
@@ -7018,7 +7018,7 @@ const DataContextProvider = ({ children }) => {
         handleUserError(xmlDoc);
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la modification du geofence")}`
+          `${t("Échec de la modification du geofence")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
@@ -7027,7 +7027,7 @@ const DataContextProvider = ({ children }) => {
       console.error("💥 Erreur attrapée dans le try/catch :", error);
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la modification du geofence")}`
+        `${t("Échec de la modification du geofence")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateGeofenceLoading(false);
@@ -7038,7 +7038,7 @@ const DataContextProvider = ({ children }) => {
     geozoneID,
     accountIDProp,
     userProp,
-    passwordProp
+    passwordProp,
   ) => {
     // /////////
 
@@ -7050,8 +7050,8 @@ const DataContextProvider = ({ children }) => {
 
     const requestBody = `<GTSRequest command="dbdel">
   <Authorization account="${accountIDProp || account}" user="${
-      userProp || username
-    }" password="${passwordProp || password}" />
+    userProp || username
+  }" password="${passwordProp || password}" />
   <RecordKey table="Geozone" partial="false">
     <Field name="accountID">${accountIDProp || account}</Field>
     <Field name="geozoneID">${geozoneID}</Field>
@@ -7079,11 +7079,11 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         if (isDashboardHomePage) {
           setAccountGeofences((prevGeofence) =>
-            prevGeofence.filter((geofence) => geofence.geozoneID !== geozoneID)
+            prevGeofence.filter((geofence) => geofence.geozoneID !== geozoneID),
           );
         } else {
           setGeofenceData((geofences) =>
-            geofences.filter((geofence) => geofence?.geozoneID !== geozoneID)
+            geofences.filter((geofence) => geofence?.geozoneID !== geozoneID),
           );
 
           navigate("/gestion_geofences?tab=geozone");
@@ -7093,7 +7093,7 @@ const DataContextProvider = ({ children }) => {
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Suppression du geofence avec succès")}`
+          `${t("Suppression du geofence avec succès")}`,
         );
         setConfirmationMessagePopupName("");
 
@@ -7101,14 +7101,14 @@ const DataContextProvider = ({ children }) => {
       } else {
         console.error(
           "Erreur lors de la Suppression du geofence:",
-          response.statusText
+          response.statusText,
         );
 
         // setErrorDeleteGeofencePopup(true);
         // succès  Échec
         setShowConfirmationMessagePopup(true);
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Suppression du geofence")}`
+          `${t("Échec de la Suppression du geofence")}`,
         );
         setConfirmationMessagePopupName("");
         setCreateGeofenceLoading(false);
@@ -7118,7 +7118,7 @@ const DataContextProvider = ({ children }) => {
       // setErrorDeleteGeofencePopup(true);
       setShowConfirmationMessagePopup(true);
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Suppression du geofence")}`
+        `${t("Échec de la Suppression du geofence")}`,
       );
       setConfirmationMessagePopupName("");
       setCreateGeofenceLoading(false);
@@ -7173,7 +7173,7 @@ const DataContextProvider = ({ children }) => {
       if (result === "success") {
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Modification du geofence avec succès")}`
+          `${t("Modification du geofence avec succès")}`,
         );
         setConfirmationMessagePopupName(description);
 
@@ -7185,12 +7185,12 @@ const DataContextProvider = ({ children }) => {
           `Erreur lors de ${
             isActiveValue === 1 ? "l'activation" : "la desactivation"
           } du geofence:`,
-          response.statusText
+          response.statusText,
         );
 
         setShowConfirmationMessagePopup(true); // succès  Échec
         setConfirmationMessagePopupTexte(
-          `${t("Échec de la Modification du geofence")}`
+          `${t("Échec de la Modification du geofence")}`,
         );
         setConfirmationMessagePopupName(description);
         setCreateGeofenceLoading(false);
@@ -7199,7 +7199,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       setShowConfirmationMessagePopup(true); // succès  Échec
       setConfirmationMessagePopupTexte(
-        `${t("Échec de la Modification du geofence")}`
+        `${t("Échec de la Modification du geofence")}`,
       );
       setConfirmationMessagePopupName(description);
       setCreateGeofenceLoading(false);
@@ -7232,7 +7232,7 @@ const DataContextProvider = ({ children }) => {
       await fetchRapportVehicleDetails(
         vehicle?.deviceID,
         timeFrom || TimeFrom,
-        timeTo || TimeTo
+        timeTo || TimeTo,
       );
       await delay(500);
     } catch (error) {
@@ -7252,7 +7252,7 @@ const DataContextProvider = ({ children }) => {
         const progress = Math.round((doneRef.current / total) * 100);
         setProgress(progress);
         // setProgressDataUser(progress);
-      })
+      }),
     );
 
     await Promise.all(promises);
@@ -7283,7 +7283,7 @@ const DataContextProvider = ({ children }) => {
         const progress = Math.round((doneRef3.current / total) * 100);
         setProgress(progress);
         // setProgressDataUser(progress);
-      })
+      }),
     );
 
     await Promise.all(promises);
@@ -7301,7 +7301,7 @@ const DataContextProvider = ({ children }) => {
     password,
     onlyLastResult = true,
     timeFrom,
-    timeTo
+    timeTo,
   ) => {
     const xmlData = `<GTSRequest command="dbget">
         <Authorization account="${accountID}" user="${userID}" password="${password}" />
@@ -7395,7 +7395,7 @@ const DataContextProvider = ({ children }) => {
 
       console.error(
         "Erreur lors de la récupération des données des véhicules",
-        error
+        error,
       );
     }
   };
@@ -7404,7 +7404,7 @@ const DataContextProvider = ({ children }) => {
 
   const fetchVehicleDetails = async (
     vehicule,
-    fromSelectOnPosition = false
+    fromSelectOnPosition = false,
   ) => {
     setDashboardLoadingEffect(true);
 
@@ -7523,7 +7523,7 @@ const DataContextProvider = ({ children }) => {
 
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
-        error
+        error,
       );
     }
   };
@@ -7576,7 +7576,7 @@ const DataContextProvider = ({ children }) => {
     });
 
     const hasDeviceID = Object.values(dataFusionne)?.some(
-      (item) => !!item.deviceID
+      (item) => !!item.deviceID,
     );
     if (hasDeviceID) {
       setMergedDataHome(dataFusionne);
@@ -7592,7 +7592,7 @@ const DataContextProvider = ({ children }) => {
     password,
     onlyLastResult = true,
     timeFrom = null,
-    timeTo = null
+    timeTo = null,
   ) => {
     setShowAnnimationProgresseBarDashboard(true);
     fetchVehicleData(account, user, password, onlyLastResult, timeFrom, timeTo);
@@ -7724,8 +7724,8 @@ const DataContextProvider = ({ children }) => {
               t.Device === detail.Device &&
               t.timestamp === detail.timestamp &&
               t.latitude === detail.latitude &&
-              t.longitude === detail.longitude
-          )
+              t.longitude === detail.longitude,
+          ),
       );
 
       // Filtrage des timestamps
@@ -7742,7 +7742,7 @@ const DataContextProvider = ({ children }) => {
 
       setRapportVehicleDetails((prevDetails) => {
         const autresDetails = prevDetails.filter(
-          (detail) => detail.Device !== Device
+          (detail) => detail.Device !== Device,
         );
         if (filteredVehicleDetails.length === 0) {
           return autresDetails;
@@ -7755,7 +7755,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
-        error
+        error,
       );
     }
   };
@@ -7771,7 +7771,7 @@ const DataContextProvider = ({ children }) => {
 
     const dataFusionné = véhiculeData.map((véhicule) => {
       const newDetails = rapportVehicleDetails?.filter(
-        (detail) => detail.Device === véhicule?.deviceID
+        (detail) => detail.Device === véhicule?.deviceID,
       );
 
       return {
@@ -7822,7 +7822,7 @@ const DataContextProvider = ({ children }) => {
     TimeTo,
     adminAccount,
     adminUser,
-    adminPassword
+    adminPassword,
   ) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
@@ -7847,8 +7847,8 @@ const DataContextProvider = ({ children }) => {
 
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${adminAccount || accountID}" user="${
-      adminUser || userID
-    }" password="${adminPassword || password}" />
+        adminUser || userID
+      }" password="${adminPassword || password}" />
       <EventData>
         <Device>${Device}</Device>
         <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
@@ -7919,8 +7919,8 @@ const DataContextProvider = ({ children }) => {
               t.Device === detail.Device &&
               t.timestamp === detail.timestamp &&
               t.latitude === detail.latitude &&
-              t.longitude === detail.longitude
-          )
+              t.longitude === detail.longitude,
+          ),
       );
 
       // Filtrage des timestamps
@@ -7947,7 +7947,7 @@ const DataContextProvider = ({ children }) => {
 
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
-        error
+        error,
       );
     }
   };
@@ -7958,7 +7958,7 @@ const DataContextProvider = ({ children }) => {
 
     const dataFusionné = véhiculeData.map((véhicule) => {
       const events = searchRapportVehicleDetails?.filter(
-        (detail) => detail.Device === véhicule?.deviceID
+        (detail) => detail.Device === véhicule?.deviceID,
       );
 
       // Mettre à jour les informations du véhicule si les nouveaux détails ne sont pas vides
@@ -7970,7 +7970,7 @@ const DataContextProvider = ({ children }) => {
 
     const oneVehicleProcessed = dataFusionné?.some(
       (véhicule) =>
-        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
+        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0,
     );
 
     if (oneVehicleProcessed) {
@@ -7981,7 +7981,7 @@ const DataContextProvider = ({ children }) => {
     // Vérifiez si chaque véhicule a ses détails ajoutés
     const allVehiclesProcessed = dataFusionné.every(
       (véhicule) =>
-        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0
+        véhicule?.véhiculeDetails && véhicule?.véhiculeDetails.length > 0,
     );
 
     // 1. Met à jour l'état avec toutes les données fusionnées
@@ -8082,7 +8082,7 @@ const DataContextProvider = ({ children }) => {
 
         // Vérifie que tous les objets de véhiculeDetails ont speedKPH <= 0
         const noSpeed = véhicule?.véhiculeDetails?.every(
-          (detail) => detail.speedKPH <= 0
+          (detail) => detail.speedKPH <= 0,
         );
 
         const hasBeenMoving =
@@ -8127,7 +8127,7 @@ const DataContextProvider = ({ children }) => {
         (véhicule) =>
           véhicule?.véhiculeDetails &&
           véhicule?.véhiculeDetails?.length &&
-          véhicule?.véhiculeDetails[0]?.speedKPH > 0
+          véhicule?.véhiculeDetails[0]?.speedKPH > 0,
       );
 
       setVéhiculeEnMouvementMaintenant(véhiculeEnMouvementMaintenant);
@@ -8156,7 +8156,7 @@ const DataContextProvider = ({ children }) => {
 
         // Vérifier si le véhicule est actif
         const isActif = véhicule?.véhiculeDetails?.some(
-          (detail) => detail.speedKPH > 0
+          (detail) => detail.speedKPH > 0,
         );
 
         // Retourner true pour les véhicules sans détails ou inactifs, mais pas actifs
@@ -8174,7 +8174,7 @@ const DataContextProvider = ({ children }) => {
         const deviceID = currentVéhicule?.deviceID;
 
         const foundVehicle = currentDataFusionné?.find(
-          (v) => v.deviceID === deviceID
+          (v) => v.deviceID === deviceID,
         );
 
         setCurrentVéhicule(foundVehicle); // Définit le véhicule actuel
@@ -8216,7 +8216,7 @@ const DataContextProvider = ({ children }) => {
     adminPassword,
 
     fromUpdateAuto,
-    fromGestionCarburant = ""
+    fromGestionCarburant = "",
   ) => {
     // Ajuste les heures de TimeFrom et TimeTo
     const adjustTime = (time, hours) => {
@@ -8247,8 +8247,8 @@ const DataContextProvider = ({ children }) => {
 
     const xmlData = `<GTSRequest command="eventdata">
       <Authorization account="${adminAccount || accountID}" user="${
-      adminUser || userID
-    }" password="${adminPassword || password}" />
+        adminUser || userID
+      }" password="${adminPassword || password}" />
       <EventData>
         <Device>${Device}</Device>
         <TimeFrom timezone="GMT">${adjustedTimeFrom}</TimeFrom>
@@ -8318,8 +8318,8 @@ const DataContextProvider = ({ children }) => {
               t.Device === detail.Device &&
               t.timestamp === detail.timestamp &&
               t.latitude === detail.latitude &&
-              t.longitude === detail.longitude
-          )
+              t.longitude === detail.longitude,
+          ),
       );
 
       // Filtrage des timestamps
@@ -8374,7 +8374,7 @@ const DataContextProvider = ({ children }) => {
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des détails du véhicule",
-        error
+        error,
       );
     }
   };
@@ -8416,7 +8416,7 @@ const DataContextProvider = ({ children }) => {
 
     if (!isMobile) {
       setSmsError(
-        "Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité"
+        "Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité",
       );
       return;
     }
@@ -8432,7 +8432,7 @@ const DataContextProvider = ({ children }) => {
         if (window.location.href === smsLink) {
           // Si l'URL n'a pas changé, il y a probablement un problème
           setSmsError(
-            "Impossible d'ouvrir l'application de messagerie. Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité."
+            "Impossible d'ouvrir l'application de messagerie. Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité.",
           );
         }
       }, 3000); // Délai d'attente de 1 seconde (ajuster si nécessaire)
@@ -8449,7 +8449,7 @@ const DataContextProvider = ({ children }) => {
 
     if (!isMobile) {
       setSmsError(
-        "Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité"
+        "Veuillez utiliser de préférence votre téléphone pour l'utilisation de cette fonctionnalité",
       );
       return;
     }
@@ -8468,7 +8468,7 @@ const DataContextProvider = ({ children }) => {
         if (window.location.href === callLink) {
           // Si l'URL n'a pas changé, il y a probablement un problème
           setSmsError(
-            "Impossible d'ouvrir l'application d'appel. Veuillez vérifier que votre appareil supporte les appels."
+            "Impossible d'ouvrir l'application d'appel. Veuillez vérifier que votre appareil supporte les appels.",
           );
         }
       }, 3000); // Délai d'attente de 3 secondes
@@ -8515,7 +8515,7 @@ const DataContextProvider = ({ children }) => {
     try {
       localStorage.setItem(
         "isDashboardHomePage",
-        JSON.stringify(isDashboardHomePage)
+        JSON.stringify(isDashboardHomePage),
       );
     } catch (error) {
       if (error.name === "QuotaExceededError") {
@@ -8620,7 +8620,7 @@ const DataContextProvider = ({ children }) => {
       const records = Array.from(xmlDoc.getElementsByTagName("Record")).map(
         (record) => {
           const fields = Array.from(
-            record.getElementsByTagName("Field")
+            record.getElementsByTagName("Field"),
           ).reduce((acc, field) => {
             const name = field.getAttribute("name");
             const value =
@@ -8629,7 +8629,7 @@ const DataContextProvider = ({ children }) => {
             return acc;
           }, {});
           return fields;
-        }
+        },
       );
     } catch (error) {
       console.error("Error fetching or parsing geofence data:", error);
@@ -8660,7 +8660,7 @@ const DataContextProvider = ({ children }) => {
     const formattedDate = `${day}-${month}-${year}`;
     const formattedTime = `${String(hours).padStart(
       2,
-      "0"
+      "0",
     )}:${minutes} ${period}`;
 
     return {
@@ -8792,7 +8792,7 @@ const DataContextProvider = ({ children }) => {
 
       // Trouver le premier et le dernier index où speedKPH > 0
       const firstValidIndex = véhiculeDetails.findIndex(
-        (detail) => parseFloat(detail.speedKPH) > 0
+        (detail) => parseFloat(detail.speedKPH) > 0,
       );
 
       const lastValidIndex =
@@ -8826,7 +8826,7 @@ const DataContextProvider = ({ children }) => {
 
       const filteredVehiculeDetails = véhiculeDetails.slice(
         firstValidIndex,
-        lastValidIndex + 1
+        lastValidIndex + 1,
       );
 
       // Calculer la distance totale parcourue, la durée totale, la durée de pause et la durée en mouvement
@@ -8864,7 +8864,7 @@ const DataContextProvider = ({ children }) => {
               filteredVehiculeDetails[stopStartIndex].timestamp,
               filteredVehiculeDetails[
                 Math.min(stopEndIndex, filteredVehiculeDetails.length - 1)
-              ].timestamp
+              ].timestamp,
             );
             totalStopDuration += stopDuration;
             stopCount++;
@@ -8882,7 +8882,7 @@ const DataContextProvider = ({ children }) => {
       if (stopStartIndex !== null) {
         const stopDuration = calculateDuration(
           filteredVehiculeDetails[stopStartIndex].timestamp,
-          filteredVehiculeDetails[filteredVehiculeDetails.length - 1].timestamp
+          filteredVehiculeDetails[filteredVehiculeDetails.length - 1].timestamp,
         );
         totalStopDuration += stopDuration;
         stopCount++;
@@ -8938,7 +8938,7 @@ const DataContextProvider = ({ children }) => {
       const véhiculeDetails = item.véhiculeDetails;
 
       const firstValidIndex = véhiculeDetails.findIndex(
-        (detail) => parseFloat(detail.speedKPH) > 0
+        (detail) => parseFloat(detail.speedKPH) > 0,
       );
       const lastValidIndex =
         véhiculeDetails.length -
@@ -8972,7 +8972,7 @@ const DataContextProvider = ({ children }) => {
 
       const filteredVehiculeDetails = véhiculeDetails.slice(
         firstValidIndex,
-        lastValidIndex + 1
+        lastValidIndex + 1,
       );
 
       let totalDistance = 0;
@@ -9037,7 +9037,7 @@ const DataContextProvider = ({ children }) => {
         }
         stopCount++;
         stopsPositions.push(
-          filteredVehiculeDetails[filteredVehiculeDetails.length - 1]
+          filteredVehiculeDetails[filteredVehiculeDetails.length - 1],
         );
       }
 
@@ -9109,7 +9109,7 @@ const DataContextProvider = ({ children }) => {
         };
       })
       .sort((a, b) =>
-        tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed
+        tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed,
       );
   };
 
@@ -9132,7 +9132,7 @@ const DataContextProvider = ({ children }) => {
       .sort((a, b) =>
         tableSortCroissant
           ? b.totalDistance - a.totalDistance
-          : a.totalDistance - b.totalDistance
+          : a.totalDistance - b.totalDistance,
       );
   };
 
@@ -9187,7 +9187,7 @@ const DataContextProvider = ({ children }) => {
         véhiculeDetails: item.véhiculeDetails,
       }))
       .sort((a, b) =>
-        tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed
+        tableSortCroissant ? b.maxSpeed - a.maxSpeed : a.maxSpeed - b.maxSpeed,
       );
   };
 
@@ -9198,7 +9198,7 @@ const DataContextProvider = ({ children }) => {
 
         // Trouver le dernier index où speedKPH > 0
         const lastValidIndex = véhiculeDetails.findLastIndex(
-          (detail) => parseFloat(detail.speedKPH) > 0
+          (detail) => parseFloat(detail.speedKPH) > 0,
         );
 
         // Si aucun mouvement n'est trouvé, retourner un timestamp par défaut très élevé
@@ -9233,7 +9233,7 @@ const DataContextProvider = ({ children }) => {
   };
 
   const filteredData = processVehicleData(
-    currentDataFusionné && currentDataFusionné
+    currentDataFusionné && currentDataFusionné,
   );
 
   let rapportPersonelleData = {};
@@ -9332,7 +9332,7 @@ const DataContextProvider = ({ children }) => {
     account,
     username,
     password,
-    fromLoginFronction = false
+    fromLoginFronction = false,
   ) => {
     localStorage.setItem("lastInteraction", new Date().toISOString());
     setIsUserNotInteractingNow(false);
@@ -9355,7 +9355,7 @@ const DataContextProvider = ({ children }) => {
         account || storedAccount,
         username || storedUserName,
         password || storedPassword,
-        lastLoginTime
+        lastLoginTime,
       );
     }
 
@@ -9364,13 +9364,13 @@ const DataContextProvider = ({ children }) => {
       sendGMailConfirmation(
         account,
         username || storedUserName,
-        localStorage.getItem("currentCountry")
+        localStorage.getItem("currentCountry"),
       );
       console.log(
         "---------",
         account,
         username || storedUserName,
-        localStorage.getItem("currentCountry")
+        localStorage.getItem("currentCountry"),
       );
     }
   };
@@ -9430,10 +9430,13 @@ const DataContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      clearCacheFonction();
-      enforceCacheLimit(); // pour 30 MB
-    }, 5 * 60 * 1000);
+    const intervalId = setInterval(
+      () => {
+        clearCacheFonction();
+        enforceCacheLimit(); // pour 30 MB
+      },
+      5 * 60 * 1000,
+    );
 
     return () => clearInterval(intervalId);
   }, []); // Pas de dépendances, exécution régulière
@@ -9591,7 +9594,7 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
     // Sauvegarder automatiquement à chaque changement
     localStorage.setItem(
       "updateAutoSetting",
-      JSON.stringify(updateAutoSetting)
+      JSON.stringify(updateAutoSetting),
     );
   }, [updateAutoSetting]);
 
@@ -9652,7 +9655,7 @@ Plateforme : ${country === "ht" ? "Haiti" : "Republique dominicaine"}  \n
     }
     let storedLastExecution = parseInt(
       localStorage.getItem("lastExecution") || "0",
-      10
+      10,
     );
     const now = Date.now();
 
@@ -10059,6 +10062,8 @@ export default DataContextProvider;
 // git pull origin main
 // npm run build
 // sudo systemctl restart nginx
+
+// ----------------------------
 
 // git init
 // git add .

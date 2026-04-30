@@ -161,19 +161,19 @@ function DashboardContaintMaintComponant({
         animatedDeplaces,
         DeviceDéplacer?.length,
         1000,
-        setAnimatedDeplaces
+        setAnimatedDeplaces,
       );
       animateValue(
         animatedStationnement,
         DeviceNonDeplacer?.length,
         1000,
-        setAnimatedStationnement
+        setAnimatedStationnement,
       );
       animateValue(
         animatedInactifs,
         DeviceInactifs?.length,
         1000,
-        setAnimatedInactifs
+        setAnimatedInactifs,
       );
     }, 300); // max une fois toutes les 500ms
 
@@ -226,7 +226,7 @@ function DashboardContaintMaintComponant({
   const graphData =
     DeviceDéplacer &&
     DeviceDéplacer?.map((item) => ({
-      name: item?.description.slice(0, 7), // 4 premières lettres
+      name: item?.description?.slice(0, 7), // 4 premières lettres
       fullName: item?.description,
       accountID: item?.accountID,
       start: parseInt(item?.lastStartTime),
@@ -368,7 +368,7 @@ function DashboardContaintMaintComponant({
         const inactifs = total - actifs;
         const name = account?.description || "N/A";
         const short =
-          expandSection === "graphe" ? name.slice(0, 26) : name.slice(0, 6);
+          expandSection === "graphe" ? name?.slice(0, 26) : name?.slice(0, 6);
 
         return {
           name,
@@ -390,13 +390,13 @@ function DashboardContaintMaintComponant({
   const [voirToutGrapheAccount, setVoirToutGrapheAccount] = useState(false);
   const comptesAffichésDansGrapheAccount = useMemo(
     () => (voirToutGrapheAccount ? graphData2 : graphData2?.slice(0, 10)),
-    [voirToutGrapheAccount, graphData2]
+    [voirToutGrapheAccount, graphData2],
   );
 
   // Calcul largeur du graphe uniquement sur les données affichées
   const fixedWidth2 = useMemo(
     () => comptesAffichésDansGrapheAccount?.length * barSpacing2,
-    [comptesAffichésDansGrapheAccount, barSpacing2]
+    [comptesAffichésDansGrapheAccount, barSpacing2],
   );
 
   // Custom Tooltip pour afficher les vraies valeurs
@@ -434,7 +434,7 @@ function DashboardContaintMaintComponant({
           v.lastValidLatitude === "" ||
           v.lastValidLongitude === "" ||
           v.véhiculeDetails.length <= 0
-        )
+        ),
     )?.length;
   }, [
     isDashboardHomePage,
@@ -615,7 +615,7 @@ function DashboardContaintMaintComponant({
     percent,
     color,
     cx = 100,
-    cy = 100
+    cy = 100,
   ) => {
     const normalizedRadius = radius - strokeWidth / 2;
     const circumference = 2 * Math.PI * normalizedRadius;
@@ -640,7 +640,7 @@ function DashboardContaintMaintComponant({
     90,
     24, // plus épais ici
     animatedFuelPct,
-    "rgba(34,197,94,1)" // vert
+    "rgba(34,197,94,1)", // vert
   );
 
   ///////////////////////////////////////////////////
@@ -933,7 +933,7 @@ function DashboardContaintMaintComponant({
   const data = isDashboardHomePage
     ? addVehiculeDetailsFonction(
         currentAccountSelected?.accountDevices,
-        véhiculeDetails
+        véhiculeDetails,
       ) || addVehiculeDetailsFonction(accountDevices, véhiculeDetails)
     : dataFusionné;
 
@@ -1105,7 +1105,7 @@ function DashboardContaintMaintComponant({
     if (!enrichedDevices) return [];
     return enrichedDevices
       .flatMap((device) =>
-        device?.véhiculeDetails?.[0] ? [device.véhiculeDetails[0]] : []
+        device?.véhiculeDetails?.[0] ? [device.véhiculeDetails[0]] : [],
       )
       .filter((item) => item?.statusCode !== "0xF952");
   }, [enrichedDevices]);
@@ -1240,7 +1240,7 @@ function DashboardContaintMaintComponant({
       }
     });
 
-    return Array.from(uniqueUsersMap.values()).slice(0, 3);
+    return Array.from(uniqueUsersMap.values())?.slice(0, 3);
   }, [currentAccountSelected, gestionAccountData, accountUsers]);
 
   const totalUsers = currentAccountSelected
@@ -1267,14 +1267,14 @@ function DashboardContaintMaintComponant({
       ...new Map(
         gestionAccountData
           ?.flatMap((account) => account.accountGroupes || [])
-          .map((group) => [group.groupID, group])
+          .map((group) => [group.groupID, group]),
       ).values(),
     ];
 
     return groupesFusionnés;
   }, [currentAccountSelected, gestionAccountData]);
 
-  const afficherGroupes = groupesAffichés.slice(0, 4);
+  const afficherGroupes = groupesAffichés?.slice(0, 4);
 
   const handleVoirTousLesGroupe = () => {
     if (currentAccountSelected) {
@@ -1284,7 +1284,7 @@ function DashboardContaintMaintComponant({
         ...new Map(
           gestionAccountData
             ?.flatMap((account) => account.accountGroupes || [])
-            .map((group) => [group.groupID, group])
+            .map((group) => [group.groupID, group]),
         ).values(),
       ];
       setListeGestionDesGroupe(groupesFusionnés);
@@ -1467,7 +1467,7 @@ function DashboardContaintMaintComponant({
                     <h2 className="text-xl">{t("Statistiques par compte")}</h2>
                     <p className="mb-4 font-normal border border-yellow-600 bg-yellow-100 rounded-md px-4 py-1 mt-3">
                       {t(
-                        "Vous pouvez cliquer sur chaque case du tableau pour en savoir plus"
+                        "Vous pouvez cliquer sur chaque case du tableau pour en savoir plus",
                       )}
                     </p>
                   </div>
@@ -1549,8 +1549,8 @@ function DashboardContaintMaintComponant({
                     {listeGestionDesUsers
                       ? listeGestionDesUsers?.length
                       : currentAccountSelected
-                      ? currentAccountSelected?.accountUsers?.length
-                      : accountUsers?.length}
+                        ? currentAccountSelected?.accountUsers?.length
+                        : accountUsers?.length}
                     )
                   </h2>
                 </div>
@@ -1568,8 +1568,8 @@ function DashboardContaintMaintComponant({
                     {listeGestionDesGroupe
                       ? listeGestionDesGroupe?.length
                       : currentAccountSelected
-                      ? currentAccountSelected?.accountGroupes?.length
-                      : accountGroupes?.length}
+                        ? currentAccountSelected?.accountGroupes?.length
+                        : accountGroupes?.length}
                     )
                   </h2>
                 </div>
@@ -1929,11 +1929,11 @@ function DashboardContaintMaintComponant({
                       // setDocumentationPage("Gestion_des_appareils");
                       setShowStatisticDeviceListeDashboard(true);
                       setStatisticFilteredDeviceListeText(
-                        `${t("Tous les Appareils")}`
+                        `${t("Tous les Appareils")}`,
                       );
 
                       setFilteredColorCategorieListe(
-                        addVehiculeDetailsFonction(allDevices, véhiculeDetails)
+                        addVehiculeDetailsFonction(allDevices, véhiculeDetails),
                       );
                     }}
                     className="font-semibold absolute top-4 right-4 text-sm underline cursor-pointer text-orange-500"
@@ -2112,7 +2112,7 @@ function DashboardContaintMaintComponant({
                   const currentDevice = ListeOfDevice?.find(
                     (device) =>
                       device?.deviceID === details?.deviceID &&
-                      device?.accountID === details?.accountID
+                      device?.accountID === details?.accountID,
                   );
                   return (
                     <div
@@ -2129,7 +2129,9 @@ function DashboardContaintMaintComponant({
 
                         <p className="text-gray-600">
                           {t("Alerte")} :{" "}
-                          <span className="font-bold">{codeDescription}</span>{" "}
+                          <span className="font-bold">
+                            {codeDescription}
+                          </span>{" "}
                         </p>
                         <p className="text-gray-600">
                           {t("Code")} :{" "}
@@ -2154,7 +2156,7 @@ function DashboardContaintMaintComponant({
                           <span className="notranslate">
                             <span className="font-bold notranslate">
                               {details?.address ||
-                                `${t("Pas d'adresse disponible")}`}
+                                `${t("Pas d'adresse disponible")}`}{" "}
                             </span>{" "}
                           </span>
                         </p>
