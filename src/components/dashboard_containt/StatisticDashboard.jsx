@@ -106,19 +106,24 @@ function StatisticDashboard({
         <div className=" relative mb-4 ">
           <div className="">
             <div
-              onClick={() => {
-                // testClique();
-                console.log(
-                  JSON.parse(localStorage.getItem("userPersonnelData"))?.gender
-                );
-                sendGMailConfirmation("Pedro", "PedroTest", "HT");
-              }}
+              // onClick={() => {
+              //   // testClique();
+              //   console.log(
+              //     JSON.parse(localStorage.getItem("userPersonnelData"))?.gender,
+              //   );
+              //   sendGMailConfirmation("Pedro", "PedroTest", "HT");
+              // }}
               className="flex items-center gap-2 sm:gap-3"
             >
               <h1 className="font-bold md:hidden text-[1.1rem] md:text-xl text-gray-800">
                 {t("Pour Aujourd'hui")}
               </h1>
-              <h1 className="font-bold hidden md:block text-[1.1rem] md:text-xl text-gray-800">
+              <h1
+                onClick={() => {
+                  (console.log("..."), currentAccountSelected);
+                }}
+                className="font-bold hidden md:block text-[1.1rem] md:text-xl text-gray-800"
+              >
                 {t("Statistiques pour aujourd'hui")}
               </h1>
             </div>
@@ -156,7 +161,7 @@ function StatisticDashboard({
             onClick={() => {
               setShowStatisticDeviceListeDashboard(true);
               setFilteredColorCategorieListe(
-                addVehiculeDetailsFonction(allDevices, véhiculeDetails)
+                addVehiculeDetailsFonction(allDevices, véhiculeDetails),
               );
               setStatisticFilteredDeviceListeText(`${t("Tous les Appareils")}`);
             }}
@@ -187,13 +192,13 @@ function StatisticDashboard({
               if (enDeplacementCount === 2) {
                 setFilteredColorCategorieListe(EnDéplacement);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils En déplacement")}`
+                  `${t("Appareils En déplacement")}`,
                 );
               }
               if (enDeplacementCount === 1) {
                 setFilteredColorCategorieListe(DeviceDéplacer);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils Déplacer")}`
+                  `${t("Appareils Déplacer")}`,
                 );
               }
             }}
@@ -253,10 +258,12 @@ function StatisticDashboard({
           </div>
           <div
             onClick={() => {
+              console.log(DeviceListeActif, "ggggggggggggggggggggg");
+
               if (enStationnementCount === 1) {
                 setFilteredColorCategorieListe(DeviceNonDeplacer);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils non déplacer")}`
+                  `${t("Appareils non déplacer")}`,
                 );
               }
               if (enStationnementCount === 2) {
@@ -266,7 +273,7 @@ function StatisticDashboard({
               if (enStationnementCount === 3) {
                 setFilteredColorCategorieListe(DeviceEnStationnement);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils En Stationnement")}`
+                  `${t("Appareils En Stationnement")}`,
                 );
               }
             }}
@@ -332,21 +339,21 @@ function StatisticDashboard({
                 // setShowStatisticDeviceListeDashboard(true);
                 setFilteredColorCategorieListe(DeviceInactifs);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils Inactifs")}`
+                  `${t("Appareils Inactifs")}`,
                 );
               }
               if (inactifsCount === 2) {
                 // setShowStatisticDeviceListeDashboard(true);
                 setFilteredColorCategorieListe(DeviceInactifsWidthDetails);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils Inactifs Actualisés")}`
+                  `${t("Appareils Inactifs Actualisés")}`,
                 );
               }
               if (inactifsCount === 3) {
                 // setShowStatisticDeviceListeDashboard(true);
                 setFilteredColorCategorieListe(DeviceInactifsWidthNoDetails);
                 setStatisticFilteredDeviceListeText(
-                  `${t("Appareils Inactifs non Actualisés")}`
+                  `${t("Appareils Inactifs non Actualisés")}`,
                 );
               }
             }}

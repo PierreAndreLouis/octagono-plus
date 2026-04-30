@@ -22,7 +22,14 @@ function ChooseOtherGroupeDashboard({
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[99999999999999999999999999999999999999999999999999999999999999999999]">
           <div className="bg-white overflow-hidden w-full max-w-[40rem] min-h-[70vh] rounded-lg">
             <div className="relative">
-              <h2 className="text-center font-semibold text-lg bg-orange-100 py-4">
+              <h2
+                onClick={() => {
+                  console.log("rrrrrrrrrrrrrrrrrr");
+                  console.log("currentAccountSelected", currentAccountSelected);
+                  console.log("filterGestionGroupData", filterGestionGroupData);
+                }}
+                className="text-center font-semibold text-lg bg-orange-100 py-4"
+              >
                 {t("Liste des Groupes")}
               </h2>
 
@@ -55,7 +62,7 @@ function ChooseOtherGroupeDashboard({
                     setAllDevices(
                       currentAccountSelected
                         ? currentAccountSelected?.accountDevices
-                        : accountDevices
+                        : accountDevices,
                     );
                     setChooseOtherAccountGestion(false);
                     scrollToTop();
@@ -71,12 +78,39 @@ function ChooseOtherGroupeDashboard({
                   <div
                     key={index}
                     onClick={() => {
-                      setAllDevices(groupe?.groupeDevices);
+                      const deviceIdsSet = new Set(
+                        groupe?.groupeDevices?.map((d) => d.deviceID),
+                      );
+
+                      const filteredDevices =
+                        currentAccountSelected?.accountDevices?.filter(
+                          (device) => deviceIdsSet.has(device.deviceID),
+                        );
+
+                      console.log("Filtered devices:", filteredDevices);
+
+                      setAllDevices(filteredDevices);
                       setChooseOtherAccountGestion(false);
                       scrollToTop();
                     }}
                     className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center- rounded-lg py-2 px-2 "
                   >
+                    {/* {filterGestionGroupData?.map((groupe, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      console.log(
+                        "WWWWWWWWWWWWWWWWWWWWWWWW",
+                        groupe?.groupeDevices,
+                      );
+                      setAllDevices(groupe?.groupeDevices);
+                      // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                      setChooseOtherAccountGestion(false);
+                      scrollToTop();
+                    }}
+                    className="shadow-lg cursor-pointer relative overflow-hidden-- bg-orange-50/50 shadow-black/10 flex gap-3 items-center- rounded-lg py-2 px-2 "
+                  > */}
                     <p className="absolute font-semibold top-0 right-0 text-sm rounded-bl-full p-3 pt-2 pr-2 bg-orange-400/10">
                       {index + 1}
                     </p>

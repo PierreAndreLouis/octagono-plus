@@ -37,7 +37,7 @@ function ChooseOtherAccountDashboard({
           item?.description
             ?.toLowerCase()
             ?.includes(searchInputTerm.toLowerCase()) ||
-          item?.accountID.toLowerCase().includes(searchInputTerm.toLowerCase())
+          item?.accountID.toLowerCase().includes(searchInputTerm.toLowerCase()),
       )
     : gestionAccountData;
 
@@ -138,6 +138,7 @@ function ChooseOtherAccountDashboard({
                     onClick={() => {
                       setChooseAccountID(account?.accountID);
                       setCurrentAccountSelected(account);
+                      console.log(account, "xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                       setListeGestionDesVehicules(account?.accountDevices);
                       setListeGestionDesGeofences(account?.accountGeofences);
                       setVoir10DePlus(1);
