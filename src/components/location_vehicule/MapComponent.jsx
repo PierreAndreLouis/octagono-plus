@@ -603,7 +603,7 @@ function MapComponent({
             <p>
               <strong>{t("Adresse")} :</strong>{" "}
               <span className="notranslate">
-                {isOlderThan24h && isHaiti
+                {isOlderThan24h && isHaiti && !isDashboardHomePage
                   ? t("Loading") + "..."
                   : selectedVehicle?.address || t("Non disponible")}
               </span>
@@ -656,7 +656,7 @@ function MapComponent({
             </p>
             <p>
               <strong>{t("Last Update")} :</strong>{" "}
-              {isOlderThan24h && isHaiti ? (
+              {isOlderThan24h && isHaiti && !isDashboardHomePage ? (
                 t("Loading") + "..."
               ) : (
                 <span>

@@ -145,7 +145,8 @@ function DeviceListeDashboard() {
                     {t("Adresse")} :{" "}
                     <span className="font-normal notranslate text-gray-500 ml-0 ">
                       {bg_color === "bg-purple-500" &&
-                      localStorage.getItem("currentCountry") === "ht" ? (
+                      localStorage.getItem("currentCountry") === "ht" &&
+                      !isDashboardHomePage ? (
                         <span className="font-normal text-gray-500 ml-3">
                           {t("Loading")}...
                         </span>
@@ -164,7 +165,8 @@ function DeviceListeDashboard() {
                       {t("Dernière mise a jour")} :{" "}
                     </p>
                     {bg_color === "bg-purple-500" &&
-                    localStorage.getItem("currentCountry") === "ht" ? (
+                    localStorage.getItem("currentCountry") === "ht" &&
+                    !isDashboardHomePage ? (
                       <span className="font-normal text-gray-500 ml-3">
                         {t("Loading")}...
                       </span>

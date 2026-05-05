@@ -1568,7 +1568,8 @@ function ListeDesVehiculesGestion({
                                         {bg_color === "bg-purple-500" &&
                                         localStorage.getItem(
                                           "currentCountry",
-                                        ) === "ht"
+                                        ) === "ht" &&
+                                        !isDashboardHomePage
                                           ? t("Loading") + "..."
                                           : foundDetails?.address
                                             ? device?.véhiculeDetails[0]
@@ -1644,7 +1645,8 @@ function ListeDesVehiculesGestion({
 
                                     {bg_color === "bg-purple-500" &&
                                     localStorage.getItem("currentCountry") ===
-                                      "ht" ? (
+                                      "ht" &&
+                                    !isDashboardHomePage ? (
                                       <span className="dark:text-orange-500 text-gray-600 pl-2 font-normal">
                                         {t("Loading")}...
                                       </span>
